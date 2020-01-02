@@ -1,0 +1,376 @@
+{% extends 'extendables/base.html' %}
+
+{% block title %}
+    New Message
+{% endblock %}
+
+{% block subtitle %}
+    New Message
+{% endblock %}
+
+{% block toolbar %}
+    <a href="#" class="btn btn-warning">Cancel</a>
+    <button type="submit" href="#" class="btn btn-success"><i class="flaticon2-send-1"></i>Send Message</button>
+{% endblock %}
+
+{% block content %}
+    <div class="kt-container kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+
+                <div class="row">
+                    <div class="col-lg-12 form-group">
+                        <label>Recipients</label>
+                        <a href="#">
+                            <h5>warehouse@thomsom-chem.co.uk</h5>
+                            <div>and 5 others</div>
+                        </a>
+                        <div class="kt-margin-t-10">
+                            <!-- don't need this if recipients are set-->
+                            <!--<a href="#" class="btn btn-outline-primary" data-toggle="modal" data-target="#message_create__select_recipients">Select Recipients</a>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="kt-separator kt-separator--portlet-fit"></div>
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Recipient's Reference</label>
+                        <div class="kt-margin-10"></div>
+                        <div>
+                            <label class="kt-label-font-color-4 kt-font-bolder">Purchase Order (PO) Number</label>&nbsp;&nbsp;&nbsp;
+                            <span class="kt-label-font-color-3">1234567890</span>
+                        </div>
+                        <div class="kt-margin-t-10">
+                            <a href="#" class="btn btn-outline-primary" data-toggle="modal" data-target="#message_create__set_recipient_references">Set References</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Your Reference</label>
+                        <div class="kt-margin-10"></div>
+                        <div>
+                            <label class="kt-label-font-color-4 kt-font-bolder">Delivery Order (DO) Number</label>&nbsp;&nbsp;&nbsp;
+                            <span class="kt-label-font-color-3">1234567890</span>
+                        </div>
+                        <div>
+                            <label class="kt-label-font-color-4 kt-font-bolder">Sales Order (SO) Number</label>&nbsp;&nbsp;&nbsp;
+                            <span class="kt-label-font-color-3">1234567890</span>
+                        </div>
+                        <div class="kt-margin-t-10">
+                            <a href="#" class="btn btn-outline-primary" data-toggle="modal" data-target="#message_create__set_your_references">Set References</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 form-group">
+                        <label>Comments</label>
+                        <textarea type="textarea" class="form-control kt-margin-t-10" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="kt-portlet kt-portlet--height-fluid">
+                    <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                        <div class="kt-portlet__head-label">
+                            <h3 class="kt-portlet__head-title">
+                                Sodium Hydroxide Caustic Soda 99% NAOH
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="kt-portlet__body">
+                        <div class="kt-widget kt-widget--user-profile-2">
+                            <div class="kt-widget__body">
+                                <div class="kt-widget__item">
+                                    <div class="kt-widget__contact">
+                                        <span class="kt-widget__label">Material Number</span>
+                                        <span class="kt-widget__data">01234567890</span>
+                                    </div>
+                                </div>
+
+                                <div class="kt-widget__item">
+                                    Certificate of Analysis (COA)
+                                    <div class="kt-margin-t-10"></div>
+                                    <div class="kt-margin-l-20 kt-margin-b-5"><label class="kt-label-font-color-4 kt-font-bolder">Batch Number</label></div>
+                                    <div class="kt-margin-l-30"><i class="flaticon2-file-1"></i> <a href="#" target="_blank">1234567890</a></div>
+                                    <div class="kt-margin-l-30"><i class="flaticon2-file-1"></i> <a href="#" target="_blank">1234567890</a></div>
+                                    <div class="kt-margin-l-30"><i class="flaticon2-file-1"></i> <a href="#" target="_blank">1234567890</a></div>
+                                </div>
+
+                                <div class="kt-widget__item">
+                                    <div><a href="#"><i class="flaticon2-file-1"></i> Safety Datasheet (SDS)</a></div>
+                                    <div><a href="#"><i class="flaticon2-file-1"></i> Technical Datasheet (TDS)</a></div>
+                                </div>
+                            </div>
+                            <div class="kt-widget__footer">
+                                <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Edit</a>
+                            </div>
+                        </div>             
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="kt-portlet">
+                    <div class="kt-portlet__body">
+                        <a href="#" class="btn btn-outline-primary" data-toggle="modal" data-target="#message_create__attach_document">Attach Documents</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="message_create__select_recipients" tabindex="-1" role="dialog" aria-labelledby="message_create__selectRecipients" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="message_create__selectRecipients">Recipients</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-lg-11 form-group">
+                                <label for="message_create__email" class="form-control-label">Email</label>
+                                <div class="kt-spinner kt-spinner--sm kt-spinner--success kt-spinner--right kt-spinner--input">
+								    <input type="text" class="form-control" id="message_create__email" placeholder="Leave blank to show selected">
+								</div>
+                                <a href="#" class="kt-margin-t-5" style="float: right;">Create New Contact With This Email</a>
+                                <!--<span class="form-text text-muted">Enter a valid email to create new contact.</span>-->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <!-- If no search string specified, then show only selected contacts -->
+                                <!-- <label>Search Results</label> -->
+                                <label>Selected</label>
+                                <a href="#" style="float: right;">Clear Results & See Selected</a>
+                                <table class="table kt-margin-t-10">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label class="kt-checkbox">
+                                                    <input type="checkbox"> alan.turing@enigma.uk
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="kt-checkbox">
+                                                    <input type="checkbox"> paul.graham@ycombinator.com
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="kt-checkbox">
+                                                    <input type="checkbox"> uzumaki.naruto@konoha.jp
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="kt-checkbox">
+                                                    <input type="checkbox"> alan.turing@enigma.uk
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="kt-checkbox">
+                                                    <input type="checkbox"> paul.graham@ycombinator.com
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="kt-checkbox">
+                                                    <input type="checkbox"> uzumaki.naruto@konoha.jp
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label class="kt-checkbox">
+                                                    <input type="checkbox"> uzumaki.naruto@konoha.jp
+                                                    <span></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="kt-pagination kt-pagination--brand">
+                                    <ul class="kt-pagination__links">
+                                        <li class="kt-pagination__link--next">
+                                            <a href="#"><i class="fa fa-angle-left kt-font-brand"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#">...</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">31</a>
+                                        </li>
+                                        <li class="kt-pagination__link--active">
+                                            <a href="#">32</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">34</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">...</a>
+                                        </li>
+                                        <li class="kt-pagination__link--prev">
+                                            <a href="#"><i class="fa fa-angle-right kt-font-brand"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="kt-pagination__toolbar">
+                                        <span class="pagination__desc">
+                                            25 Results
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Select Recipients</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="message_create__set_recipient_references" tabindex="-1" role="dialog" aria-labelledby="message_create__setRecipientReferences" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="message_create__setRecipientReferences">Recipient's References</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <label>Purchase Order (PO) Number</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="col kt-align-left">
+                        <button type="button" class="btn btn-outline-danger">Clear</button>
+                    </div>
+                    <div class="col kt-align-right">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Set References</button>
+                        <!--<button type="button" class="btn btn-primary">Update References</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="message_create__set_your_references" tabindex="-1" role="dialog" aria-labelledby="message_create__setYourReferences" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="message_create__setYourReferences">Your References</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <label>Sales Order (SO) Number</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <label>Delivery Order (DO) Number</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="col kt-align-left">
+                        <button type="button" class="btn btn-outline-danger">Clear</button>
+                    </div>
+                    <div class="col kt-align-right">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Set References</button>
+                        <!--<button type="button" class="btn btn-primary">Update References</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="message_create__attach_document" tabindex="-1" role="dialog" aria-labelledby="message_create__attachDocument" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="message_create__attachDocument">Documents</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-lg-6 form-group">
+                                <label>Material Name</label>
+                                <select class="form-control kt-selectpicker" data-size="10" data-live-search="true">
+                                    <option value="AF">Sodium Hydroxide Caustic Soda 99% NAOH</option>
+                                    <option value="AF">Sodium Hydroxide Caustic Soda 99% NAOH</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label>Material Number</label>
+                                <select class="form-control kt-selectpicker" data-size="10" data-live-search="true">
+                                    <option value="AF">1234567890</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <label>Documents</label>
+                                <select class="form-control kt-selectpicker" data-size="10" data-live-search="true" multiple>
+                                    <optgroup label="Latest Version">
+										<option title="SDS" value="AF">Safety Datasheet (SDS)</option>
+                                        <option title="TDS" value="AF">Technical Datasheet (TDS)</option>
+									</optgroup>
+                                    <optgroup label="Certificate of Analysis (COA)">
+										<option data-tokens="ketchup 01234567890" title="COA - 01234567890" value="AF">Batch Number: 01234567890</option>
+                                        <option title="COA - 01234567890" value="AF">Batch Number: 01234567890</option>
+									</optgroup>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="col kt-align-left">
+                        <button type="button" class="btn btn-outline-danger">Delete</button>
+                    </div>
+                    <div class="col kt-align-right">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Attach Documents</button>
+                        <!--<button type="button" class="btn btn-primary">Update Documents</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

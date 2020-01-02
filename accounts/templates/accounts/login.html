@@ -1,0 +1,90 @@
+{% extends 'extendables/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+    Login to Everybase
+{% endblock %}
+
+{% block content %}
+    <div class="kt-container  kt-grid__item kt-grid__item--fluid">
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="kt-portlet">
+                        <div class="kt-portlet__head kt-portlet__head--noborder">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title">
+                                    Login to Everybase
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-secondary">
+                                        {% if message.message == 'LOGIN_FAILED' %}
+                                            <div class="alert-icon"><i class="flaticon-warning kt-font-brand"></i></div>
+                                        {% endif %}
+                                        <div class="alert-text">
+                                            {% if message.message == 'LOGIN_FAILED' %}
+                                                Your username and password didn't match. Please try again. If you need
+                                                help accessing your account, please contact <a href="#">Everybase support</a>.
+                                            {% elif message.message == 'IS_DOCUMENT_LINK' %}
+                                                Please log in to see your documents. If you have been forwarded this link and
+                                                require access to the documents, please contact <a href="#">Everybase support</a>.
+                                            {% elif message.message == 'LOGGED_OUT' %}
+                                                You have successfully logged out.
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <div class="row">
+                                <div class="col-lg-2"></div>
+                                <div class="form-group col-lg-8">
+                                    <label>Email</label>
+                                    {{ form.email|add_class:"form-control"|add_error_class:"is-invalid"|attr:"name:email" }}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback">{{ form.email.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-lg-2"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2"></div>
+                                    <div class="form-group col-lg-8">
+                                    <label>Password</label>
+                                    {{ form.password|add_class:"form-control"|add_error_class:"is-invalid" }}
+                                    {% if form.password.errors %}
+                                        <div class="invalid-feedback">{{ form.password.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__foot">
+                            <div class="row">
+                                <div class="col-lg-2"></div>
+                                <div class="kt-form__actions col-lg-6">
+                                    <button type="submit" class="btn btn-primary col-lg-4">Login</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-8"></div>
+                                <div class="col-lg-4 kt-margin-t-10">
+                                    <a href="{% url 'reset_password' %}{% if next %}?next={{ form.next.value }}{% endif %}">Forgot Password?</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#">Register</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form.next }}
+                </form>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+    </div>
+{% endblock %}

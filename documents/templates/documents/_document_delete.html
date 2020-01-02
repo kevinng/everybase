@@ -1,0 +1,49 @@
+{% extends 'extendables/base.html' %}
+
+{% block title %}
+    Delete Document?
+{% endblock %}
+
+{% block subtitle %}
+    Delete Document?
+{% endblock %}
+
+{% block toolbar %}
+    <a href="#" class="btn btn-warning">No, Cancel</a>
+    <a href="#" class="btn btn-danger">Yes, Delete Document</a>
+{% endblock %}
+
+{% block content %}
+    <div class="kt-container kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Document Type</label>
+                        <h5>COA</h5>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Date & Time Created</label>
+                        <h5>12 Dec 2019 8:46 AM</h5>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Created By</label>
+                        <h5>kevin.ng@kiyoko.jp</h5>
+                    </div>
+                </div>
+                <div class="kt-separator kt-separator--portlet-fit"></div>
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Material Number</label>
+                        <h5>1234567890</h5>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Batch Number</label>
+                        <h5>1234567890</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="document-pdf"></div>
+    </div>
+{% endblock %}

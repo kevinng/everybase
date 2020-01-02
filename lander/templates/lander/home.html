@@ -1,0 +1,350 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+    
+    <head>
+        {% include 'partials/_favicon.html' %}
+		{% include 'partials/_google_analytics.html' %}
+
+        <meta charset="utf-8">
+        <title>Everybase</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{% static 'lander/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all">
+        <link href="{% static 'lander/css/iconsmind.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'lander/css/bootstrap.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'lander/css/stack-interface.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'lander/css/theme.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{% static 'lander/css/custom.css' %}" rel="stylesheet" type="text/css" media="all" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:200,300,400,400i,500,600,700" rel="stylesheet" />
+    </head>
+
+    <body>
+
+        <!-- Navigation container -->
+        <div class="nav-container">
+            <!-- Navigation bar for smaller screens -->
+            <div class="bar bar--sm visible-xs">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-3">
+                            <a href="/"><img alt="Everybase" src="{% static 'lander/img/everybase-logo.png' %}"></a>
+                        </div>
+                        <div class="col-9 text-right">
+                            <a class="btn btn--sm btn--primary type--uppercase" href="/login"><span class="btn__text">Login</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Navigation bar for smaller screens -->
+
+            <!-- Navigation bar for larger screens -->
+            <div class="bar bar-1 hidden-xs">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-3">
+                            <a href="/"><img alt="Everybase" src="{% static 'lander/img/everybase-logo.png' %}"></a>
+                        </div>
+                        <div class="col-lg-10 col-md-9 text-right">
+                            <a class="btn btn--sm btn--primary type--uppercase" href="/login"><span class="btn__text">Login</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Navigation bar for larger screens -->
+        </div>
+        <!-- END: Navigation container -->
+
+        <!-- Main container -->
+        <div class="main-container">
+
+            <!-- Header A -->
+            <section class="cover text-center height-50">
+                <div class="container pos-vertical-center">
+                    <div class="row">
+                        <div class="col-md-11 col-lg-8">
+                            <span class="h2"><span class="color--primary">Everybase</span> lets you send COA and other documents automatically.</span>
+                            <div class="modal-instance block">
+                                <div class="video-play-icon video-play-icon--sm bg--primary modal-trigger"></div> <span><b>Learn More</b>&nbsp; &nbsp;26 Seconds (Video Coming Soon)</span>
+                                <div class="modal-container">
+                                    <div class="modal-content bg-dark" data-width="60%" data-height="60%"><iframe data-src="https://www.youtube.com/embed/6p45ooZOOPo?autoplay=1" allowfullscreen="allowfullscreen"></iframe></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Header A -->
+
+            <!-- Header B -->
+            <section class="cover text-center height-50">
+                <div class="container pos-vertical-center">
+                    <div class="row">
+                        <div class="col-md-11 col-lg-8">
+                            <span class="h2"><span class="color--primary">Everybase</span>&nbsp;lets you send COA, SDS and other documents automatically.</span>
+                            <div class="modal-instance block">
+                                <div class="video-play-icon video-play-icon--sm bg--primary modal-trigger"></div> <span><strong>Learn More</strong>&nbsp;&nbsp;&nbsp;26 Seconds&nbsp;(Video Coming Soon)</span>
+                                <div class="modal-container">
+                                    <div class="modal-content bg-dark" data-width="60%" data-height="60%"><iframe data-src="https://www.youtube.com/embed/6p45ooZOOPo?autoplay=1" allowfullscreen="allowfullscreen"></iframe></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Header B -->
+
+            <!-- Contact me -->
+            <section class="text-center bg--secondary">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <h2>Have questions? Let us help.</h2>
+                    </div>
+                    <form class="row justify-content-center"
+                        action="https://everybase.us4.list-manage.com/subscribe/post?u=22373f2ae1188e14ef199af8a&amp;id=5e9fb4652a"
+                        method="post"
+                        data-success="Thank you for leaving your contact. We'll get back to you as soon as we can."
+                        data-error="Please provide your name, email address, phone number and agree to the terms.">
+
+                        <div class="col-lg-3 col-md-6"> <input class="validate-required" type="text" name="FNAME" placeholder="Your Name"> </div>
+                        <div class="col-lg-3 col-md-6"> <input class="validate-required validate-email" type="email" name="EMAIL" placeholder="Your Work Email"> </div>
+                        <div class="col-lg-3 col-md-6"> <input class="validate-required" type="tel" name="MMERGE2" placeholder="Your Work Phone"> </div>
+                        <div class="col-lg-3 col-md-6"> <button type="submit" class="btn btn--primary">Contact&nbsp;Me</button> </div>
+                        <div style="position: absolute; left: -5000px;" aria-hidden="true"> <input type="text" name="b_22373f2ae1188e14ef199af8a_5e9fb4652a" tabindex="-1" value=""> </div>
+                    </form>
+                </div>
+            </section>
+            <!-- END: Contact me -->
+
+            <!-- What does Everybase do? -->
+            <section class="switchable feature-large bg--primary">
+                <div class="container">
+                    <div class="row justify-content-between">
+                        <div class="col-md-6 col-lg-5">
+                            <div class="switchable__text">
+                                <h2> What does Everybase do?</h2>
+                                <p>Many companies forward supply chain documents in a predictable and process-driven manner.</p>
+                                <p>For example, a chemical distributor receives COA and SDS from its suppliers and sends them to its customer on delivery.</p>
+                                <p>Everybase lets you associate material/batch codes to documents.</p>
+                                <p>Its API lets your ERP trigger the right documents to send to your customers.</p>
+                                <p>And your customers access their documents via a self-service portal.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="boxed boxed--lg boxed--border">
+                                <div class="feature feature-2"> <i class="icon color--primary icon-Arrow-Cross"></i>
+                                    <div class="feature__body">
+                                        <h5>API-Driven</h5>
+                                        <p>Everybase fits nicely into your processes. You can perform most actions via the API.</p>
+                                    </div>
+                                </div>
+                                <div class="feature feature-2"> <i class="icon color--primary icon-Navigation-LeftWindow"></i>
+                                    <div class="feature__body">
+                                        <h5>Web-Based Console</h5>
+                                        <p>We provide a web-based console to make it easier for your staff to upload documents and for your customers to access documents they've received.</p>
+                                    </div>
+                                </div>
+                                <div class="feature feature-2"> <i class="icon color--primary icon-Cloud"></i>
+                                    <div class="feature__body">
+                                        <h5>Software-as-a-Service</h5>
+                                        <p> No hardware to manage. Fewer IT personnel needed. Quicker deployment. Easy to scale.</p>
+                                    </div>
+                                </div>
+                                <div class="feature feature-2"> <i class="icon icon-Life-Jacket color--primary"></i>
+                                    <div class="feature__body">
+                                        <h5>Fanatical Support</h5>
+                                        <p> We're here for you every step of the way - from integrating Everybase to your ERP to ensuring your customers get their documents.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END: What does Everybase do? -->
+
+            <!-- Managing and Sending Documents -->
+            <section class="feature-large switchable switchable--switch">
+                <div class="container">
+                    <div class="row justify-content-between">
+                        <div class="col-lg-6 col-md-6">
+                            <img alt="Managing Documents" class="border--round box-shadow-wide" src="{% static 'lander/img/looking-browsing-document.gif' %}">
+                        </div>
+                        <div class="col-lg-5 col-md-6">
+                            <div class="heading-block">
+                                <h2>Managing and Sending Documents</h2>
+                            </div>
+                            <div class="text-block">
+                                <h5>No Wrangling with Filenames</h5>
+                                <p>Many companies use shared drives to manage documents. Filenames often include details such as material code - so co-workers can look them up. Everybase lets you link details such as material code with files directly.</p>
+                            </div>
+                            <div class="text-block">
+                                <h5>Send Documents With or Without Humans</h5>
+                                <p>You may send documents from Everybase without writing emails and attaching files. Alternatively, your systems may call Everybase's API to send it for you.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Managing and Sending Documents -->
+
+            <!-- Receiving Documents -->
+            <section class="feature-large switchable">
+                <div class="container">
+                    <div class="row justify-content-between">
+                        <div class="col-lg-6 col-md-6">
+                            <img alt="Checking &quot;Document Received&quot; Email" class="border--round box-shadow-wide" src="{% static 'lander/img/checking-document-received-email.gif' %}">
+                        </div>
+                        <div class="col-lg-5 col-md-6">
+                            <div class="heading-block">
+                                <h2>Receiving Documents</h2>
+                            </div>
+                            <div class="text-block">
+                                <h5>Focused Email Message</h5>
+                                <p>Document recipients receive emails with document links. You decide the documents that go into a message. For example, a message may be associated with a set of DO/SO/PO references, with the list of documents for the products in the delivery order under it.</p>
+                            </div>
+                            <div class="text-block">
+                                <h5>We Handle the Tech</h5>
+                                <p> Email display is responsive and optimized for most clients. We work with you to handle deliverability issues. No large emails that are bloated with attachments. Secured links ensure only intended recipients have access to the documents.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Receiving Documents -->
+
+            <!-- Access Documents -->
+            <section class="feature-large switchable switchable--switch">
+                <div class="container">
+                    <div class="row justify-content-between">
+                        <div class="col-lg-6 col-md-6">
+                            <img alt="Accessing Documents" class="border--round box-shadow-wide" src="{% static 'lander/img/browsing-messages.gif' %}">
+                        </div>
+                        <div class="col-lg-5 col-md-6">
+                            <div class="heading-block">
+                                <h2>Accessing Documents</h2>
+                            </div>
+                            <div class="text-block">
+                                <h5>Personal Inbox</h5>
+                                <p> Each user has a personal inbox with the documents they've received, so you won't have to resend documents.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Access Documents -->
+
+            <!-- Case Study, Header -->
+            <section class="text-center bg--secondary">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-10 col-lg-8">
+                            <h2>Case Study - Chemical Distributor</h2>
+                            <p class="lead"> A chemical distributor accompanies deliveries with documents such as COA, SDS, TDS. Everybase lets you send these documents automatically when you issue a delivery order.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Case Study, Header -->
+
+            <!-- Case Study, Body -->
+            <section class="switchable space--xs bg--secondary">
+                <div class="container">
+                    <div class="row justify-content-between">
+                        <div class="col-md-6 text-center"> <img alt="Example Use Case - Chemical Distributor" class="border--round box-shadow-wide" src="{% static 'lander/img/example_use_case.png' %}"> <span>Example Use Case - Chemical Distributor</span></div>
+                        <div class="col-md-6 col-lg-5">
+                            <ol class="process-3">
+                                <li class="process_item">
+                                    <div class="process__number"><span>1</span></div>
+                                    <div class="process__body">
+                                        <h4><b>You</b>: Issue DO via Your ERP System</h4>
+                                        <p>Your ERP system calls Everybase's secured web API when a delivery order is successfully issued. In this call is a list of material and batch codes for the products specified in the delivery order.</p>
+                                    </div>
+                                </li>
+                                <li class="process_item">
+                                    <div class="process__number"><span>2</span></div>
+                                    <div class="process__body">
+                                        <h4><b>Everybase</b>: Send Secured Document Links via Email</h4>
+                                        <p>Everybase sends your customer an email with links to the documents plus essential references, including your DO/SO codes and the customer's PO code.</p>
+                                    </div>
+                                </li>
+                                <li class="process_item">
+                                    <div class="process__number"><span>3</span></div>
+                                    <div class="process__body">
+                                        <h4><b>Your Customer</b>: Access Documents via Self-Service Portal</h4>
+                                        <p>Only intended recipients may access the documents through the secured links.</p>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Case Study, Body -->
+            
+            <!-- Contact Me -->
+            <section class="text-center bg--primary">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <h2>Still not sure if Everybase works for you? Let us help.</h2>
+                    </div>
+                    <form class="row justify-content-center"
+                        action="https://everybase.us4.list-manage.com/subscribe/post?u=22373f2ae1188e14ef199af8a&amp;id=5e9fb4652a"
+                        method="post"
+                        data-success="Thank you for leaving your contact. We'll get back to you as soon as we can."
+                        data-error="Please provide your name, email address and phone number.">
+
+                        <div class="col-lg-3 col-md-6"> <input class="validate-required" type="text" name="NAME" placeholder="Your Name"> </div>
+                        <div class="col-lg-3 col-md-6"> <input class="validate-required validate-email" type="email" name="EMAIL" placeholder="Your Work Email"> </div>
+                        <div class="col-lg-3 col-md-6"> <input class="validate-required" type="tel" name="MMERGE2" placeholder="Your Work Phone"> </div>
+                        <div class="col-lg-3 col-md-6"> <button type="submit" class="btn btn--primary">Contact Me</button> </div>
+                        <div style="position: absolute; left: -5000px;" aria-hidden="true"> <input type="text" name="b_22373f2ae1188e14ef199af8a_5e9fb4652a" tabindex="-1" value=""> </div>
+                    </form>
+                </div>
+            </section>
+            <!-- END: Contact Me -->
+            
+            <!-- Keep in Touch -->
+            <section class="text-center bg--secondary">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-10 col-lg-8">
+                            <h2>Keep in Touch</h2>
+                            <p class="lead"><a href="mailto:friend@everybase.co">friend@everybase.co</a></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Keep in Touch -->
+
+            <!-- Footer -->
+            <footer class="text-center-xs space--xs">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <ul class="list-inline">
+                                <li>
+                                    <a href="/login"><span class="h6 type--uppercase">Login</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <span class="type--fine-print">© <span class="update-year">2020</span>&nbsp;Everybase Pte Ltd</span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- END: Footer -->
+
+        </div>
+        <!-- END: Main container -->
+
+
+        <script src="{% static 'lander/js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'lander/js/parallax.js' %}"></script>
+        <script src="{% static 'lander/js/smooth-scroll.min.js' %}"></script>
+        <script src="{% static 'lander/js/scripts.js' %}"></script>
+    </body>
+</html>

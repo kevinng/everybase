@@ -1,0 +1,1 @@
+celery -A everybase worker -l info

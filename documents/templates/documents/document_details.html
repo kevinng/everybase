@@ -1,0 +1,59 @@
+{% extends 'extendables/base.html' %}
+
+{% block title %}
+    Document
+{% endblock %}
+
+{% block subtitle %}
+    Document
+{% endblock %}
+
+{% block toolbar %}
+    <a href="#" class="btn btn-outline-secondary"><i class="flaticon2-left-arrow-1"></i>Message</a>
+    <a href="#" class="btn btn-outline-secondary"><i class="flaticon2-left-arrow-1"></i>Documents</a>
+    <a href="#" class="btn btn-primary"><i class="flaticon-interface-3"></i>Save</a>
+    <div class="dropdown dropdown-inline">
+        <button type="button" class="btn btn-label-primary btn-icon btn-sm btn-icon-md btn-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="flaticon-more-1"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="#"><i class="la la-pencil-square"></i>Edit</a>
+            <a class="dropdown-item" href="#"><i class="la la-trash"></i>Delete</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="kt-container kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Document Type</label>
+                        <h5>Certificate of Analysis (COA)</h5>
+                    </div>
+                    <div class="col-lg-5 form-group">
+                        <label>Material Name</label>
+                        <h5>Sodium Hydroxide Caustic Soda 99% NAOH</h5>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Material Number</label>
+                        <h5>1234567890</h5>
+                    </div>
+                </div>
+                <div class="kt-separator kt-separator--portlet-fit"></div>
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Batch Number</label>
+                        <h5>1234567890</h5>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Created</label>
+                        <h5>16 December 2019 8:45 AM</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="document-pdf"></div>
+    </div>
+{% endblock %}

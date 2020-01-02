@@ -1,0 +1,61 @@
+{% extends 'extendables/base.html' %}
+
+{% block title %}
+    Create Document
+{% endblock %}
+
+{% block subtitle %}
+    Create Document
+{% endblock %}
+
+{% block toolbar %}
+    <a href="#" class="btn btn-warning">Cancel</a>
+    <button type="submit" href="#" class="btn btn-success">Create Document</button>
+{% endblock %}
+
+{% block content %}
+    <div class="kt-container kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Document Type</label>
+                        <select class="form-control kt-selectpicker" data-size="7" data-live-search="true">
+                            <option value="AF">COA</option>
+                            <option value="AX">MSDS</option>
+                            <option value="AL">TDS</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="kt-separator kt-separator--portlet-fit"></div>
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Material Number</label>
+                        <input type="text" class="form-control" value="123457890" />
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Batch Number</label>
+                        <input type="text" class="form-control" value="123457890" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="row">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-6 form-group">
+                        <label>Document File</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose document file</label>
+                        </div>
+                        <span class="form-text text-muted">Don't worry if the filepath begins with 'C:\fakepath'. This is a browser security feature.</span>
+                    </div>
+                    <div class="col-lg-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

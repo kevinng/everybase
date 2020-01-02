@@ -1,0 +1,46 @@
+{% extends 'extendables/base.html' %}
+
+{% block title %}
+    Email Template
+{% endblock %}
+
+{% block subtitle %}
+    Email Template
+{% endblock %}
+
+{% block toolbar %}
+    <a href="#" class="btn btn-secondary">Reset</a>
+    <button type="submit" href="#" class="btn btn-success">Apply Changes</button>
+{% endblock %}
+
+{% block content %}
+    <div class="kt-container kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Email Template Name</label>
+                        <input type="text" class="form-control" value="COA on Delivery" />
+                    </div>
+                </div>
+                <div class="kt-separator kt-separator--portlet-fit"></div>
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Sender Name</label>
+                        <input type="text" class="form-control" value="Warehouse" />
+                    </div>
+                </div>
+                <div class="kt-separator kt-separator--portlet-fit"></div>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label>Subject Template</label>
+                        <input type="text" class="form-control" value="Documents for DO [[ api.do_number ]]" />
+                    </div>
+                </div>
+                <span class="form-text text-muted">
+                    Use [[ api.field_name ]] to merge API-supplied fields into text
+                </span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

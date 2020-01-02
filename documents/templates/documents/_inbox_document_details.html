@@ -1,0 +1,67 @@
+{% extends 'extendables/base.html' %}
+
+{% block title %}
+    Document
+{% endblock %}
+
+{% block subtitle %}
+    Document
+{% endblock %}
+
+{% block toolbar %}
+    <a href="#" class="btn btn-outline-secondary"><i class="flaticon2-left-arrow-1"></i>Message</a>
+{% endblock %}
+
+{% block content %}
+    <div class="kt-container kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Organizaton Name</label>
+                        <h5>Thomsom Chemicals Corp</h5>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Sender Name</label>
+                        <h5>Warehouse</h5>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Sender Email</label>
+                        <h5>1234567890</h5>
+                    </div>
+                </div>
+                <div class="kt-separator kt-separator--portlet-fit"></div>
+                <div class="row">
+                    <div class="col-lg-6 form-group">
+                        <label>The documents in this message corresponds to</label>
+                        <div class="kt-margin-10"></div>
+                        <div>
+                            <label class="kt-label-font-color-4 kt-font-bolder">DO Number:</label>&nbsp;&nbsp;&nbsp;
+                            <span class="kt-label-font-color-3">1234567890</span>
+                        </div>
+                        <div>
+                            <label class="kt-label-font-color-4 kt-font-bolder">DO Number:</label>&nbsp;&nbsp;&nbsp;
+                            <span class="kt-label-font-color-3">1234567890</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="kt-separator kt-separator--portlet-fit"></div>
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label>Document Type</label>
+                        <h5>Certificate of Analysis (COA)</h5>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Material Number</label>
+                        <h5>1234567890</h5>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Batch Number</label>
+                        <h5>1234567890</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="document-pdf"></div>
+    </div>
+{% endblock %}

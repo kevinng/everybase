@@ -1,0 +1,792 @@
+{% extends 'extendables/base.html' %}
+
+{% block title %}
+    Documents
+{% endblock %}
+
+{% block subtitle %}
+    Documents
+{% endblock %}
+
+{% block toolbar %}
+    <a href="#" class="btn btn-primary"><i class="flaticon2-plus"></i>Create Document</a>
+{% endblock %}
+
+{% block content %}
+    <div class="kt-container  kt-grid__item kt-grid__item--fluid">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="kt-portlet">
+                    <div class="kt-portlet__body">
+                        <button type="button" class="btn btn-primary kt-margin-b-20"><i class="flaticon-refresh"></i>Refresh</button>
+                        <div class="kt-separator kt-separator--border"></div>
+                        <div class="form-group">
+                            <label>Document Type</label>
+                            <select class="form-control kt-selectpicker" data-size="7" data-live-search="true">
+                                <option value="coa">Certificate of Analysis (COA)</option>
+                                <option value="coa">Safety Datasheet (SDS)</option>
+                                <option value="coa">Technical Datasheet (COA)</option>
+                            </select>
+                        </div>
+                        <div class="kt-separator kt-separator--border"></div>
+                        <div class="form-group">
+                            <label>Material Name</label>
+                            <input type="text" class="form-control" placeholder="Leave blank to show all">
+                        </div>
+                        <div class="form-group">
+                            <label>Material Number</label>
+                            <input type="search" class="form-control" placeholder="Leave blank to show all">
+                        </div>
+                        <div class="form-group">
+                            <label>Batch Number</label>
+                            <input type="search" class="form-control" placeholder="Leave blank to show all">
+                        </div>
+
+                        <div class="kt-separator kt-separator--border-dashed"></div>
+                        <div class="row kt-margin-b-20">
+                            <h6>Created Date</h6>
+                        </div>
+                        <div class="form-group">
+                            <label>Start</label>
+                            <div class="input-group date">
+                                <input type="text" class="form-control" value="05/20/2017" readonly id="kt_datepicker_3" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="la la-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>End</label>
+                            <div class="input-group date">
+                                <input type="text" class="form-control" readonly id="kt_datepicker_3" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="la la-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="kt-portlet kt-portlet--height-fluid">                            
+                            <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Sodium Hydroxide Caustic Soda 99% NAOH
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body">
+                                <div class="kt-widget kt-widget--user-profile-2">
+                                
+                                    <div class="kt-widget__body">
+                                        <div class="kt-widget__item">
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Material Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Batch Number</span>
+                                                <span class="kt-widget__data">01234567890</span>
+                                            </div>
+                                            <div class="kt-widget__contact">
+                                                <span class="kt-widget__label">Created</span>
+                                                <span class="kt-widget__data">16 Dec 19 8:45 AM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="kt-widget__footer">
+                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="kt-portlet">
+                            <div class="kt-portlet__body">
+                                <div class="kt-pagination kt-pagination--brand">
+                                    <ul class="kt-pagination__links">
+                                        <li class="kt-pagination__link--first">
+                                            <a href="#"><i class="fa fa-angle-double-left kt-font-brand"></i></a>
+                                        </li>
+                                        <li class="kt-pagination__link--next">
+                                            <a href="#"><i class="fa fa-angle-left kt-font-brand"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#">...</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">29</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">30</a>
+                                        </li>
+                                        <li class="kt-pagination__link--active">
+                                            <a href="#">31</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">32</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">33</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">34</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">...</a>
+                                        </li>
+                                        <li class="kt-pagination__link--prev">
+                                            <a href="#"><i class="fa fa-angle-right kt-font-brand"></i></a>
+                                        </li>
+                                        <li class="kt-pagination__link--last">
+                                            <a href="#"><i class="fa fa-angle-double-right kt-font-brand"></i></a>
+                                        </li>
+                                    </ul>
+                                    <div class="kt-pagination__toolbar">
+                                        <span class="pagination__desc">
+                                            250 Results
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
