@@ -1,5 +1,3 @@
-let user_type = findGetParameter('t')
-
 let setGAUserType = (function() {
 
     function findGetParameter(parameterName) {
@@ -26,3 +24,5 @@ let setGAUserType = (function() {
 
     return setGAUserType;
 })();
+
+setGAUserType.setGAUserType();
