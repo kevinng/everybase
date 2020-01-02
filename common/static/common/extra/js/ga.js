@@ -1,1 +1,1 @@
-findGetParameter('t');
+console.log(findGetParameter('t'));
