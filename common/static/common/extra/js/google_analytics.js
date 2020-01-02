@@ -18,6 +18,7 @@ let setGAUserType = (function() {
             // This is an internal user
             var dimensionValue = 'Internal User';
             ga('set', 'dimension1', dimensionValue);
+            console.log(dimensionValue);
         }
     };
 
