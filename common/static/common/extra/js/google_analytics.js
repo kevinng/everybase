@@ -13,7 +13,7 @@ let setGAUserType = (function() {
         return result;
     }
 
-    setGAUserType.setUserType = function() {
+    let setUserType = function() {
         let userType = findGetParameter('t');
         if (userType == 'i') {
             // This is an internal user
