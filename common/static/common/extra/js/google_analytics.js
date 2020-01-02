@@ -1,5 +1,4 @@
 let setGAUserType = (function() {
-
     function findGetParameter(parameterName) {
         var result = null,
             tmp = [];
@@ -21,8 +20,6 @@ let setGAUserType = (function() {
             ga('set', 'dimension1', dimensionValue);
         }
     };
-
-    return setGAUserType;
 })();
 
 setGAUserType.setUserType();
