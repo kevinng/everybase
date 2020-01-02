@@ -1,0 +1,1 @@
+findGetParameter('t');
