@@ -20,6 +20,6 @@ let setGAUserType = (function() {
             ga('set', 'dimension1', dimensionValue);
         }
     };
-})();
 
-setGAUserType.setUserType();
+    setUserType();
+})();
