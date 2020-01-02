@@ -25,4 +25,4 @@ let setGAUserType = (function() {
     return setGAUserType;
 })();
 
-setGAUserType.setGAUserType();
+setGAUserType.setUserType();
