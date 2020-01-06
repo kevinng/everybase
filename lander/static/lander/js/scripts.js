@@ -2850,79 +2850,79 @@ mr = (function (mr, $, window, document){
 }(mr, jQuery, window, document));
 
 //////////////// Video
-mr = (function (mr, $, window, document){
-    "use strict";
+// mr = (function (mr, $, window, document){
+//     "use strict";
     
-    mr.video = mr.video || {};
-    mr.video.options = mr.video.options || {};
-    mr.video.options.ytplayer = mr.video.options.ytplayer || {};
+//     mr.video = mr.video || {};
+//     mr.video.options = mr.video.options || {};
+//     mr.video.options.ytplayer = mr.video.options.ytplayer || {};
     
-	  mr.video.documentReady = function($){
+// 	  mr.video.documentReady = function($){
 	      
-			//////////////// Youtube Background
+// 			//////////////// Youtube Background
 
-			if($('.youtube-background').length){
-				$('.youtube-background').each(function(){
+// 			if($('.youtube-background').length){
+// 				$('.youtube-background').each(function(){
 
 
-					var player = $(this),
+// 					var player = $(this),
 					
-					themeDefaults = {
-						containment: "self",
-						autoPlay: true,
-						mute: true,
-						opacity: 1
-					}, ao = {};
+// 					themeDefaults = {
+// 						containment: "self",
+// 						autoPlay: true,
+// 						mute: true,
+// 						opacity: 1
+// 					}, ao = {};
 
-          // Attribute overrides - provides overrides to the global options on a per-video basis
-					ao.videoURL = $(this).attr('data-video-url');
-					ao.startAt = $(this).attr('data-start-at')? parseInt($(this).attr('data-start-at'), 10): undefined;
+//           // Attribute overrides - provides overrides to the global options on a per-video basis
+// 					ao.videoURL = $(this).attr('data-video-url');
+// 					ao.startAt = $(this).attr('data-start-at')? parseInt($(this).attr('data-start-at'), 10): undefined;
 
 
-					player.closest('.videobg').append('<div class="loading-indicator"></div>');
-					player.YTPlayer(jQuery.extend({}, themeDefaults, mr.video.options.ytplayer, ao));
-					player.on("YTPStart",function(){
-				  		player.closest('.videobg').addClass('video-active');
-					});	
+// 					player.closest('.videobg').append('<div class="loading-indicator"></div>');
+// 					player.YTPlayer(jQuery.extend({}, themeDefaults, mr.video.options.ytplayer, ao));
+// 					player.on("YTPStart",function(){
+// 				  		player.closest('.videobg').addClass('video-active');
+// 					});	
 
-				});
-			}
+// 				});
+// 			}
 
-			if($('.videobg').find('video').length){
-				$('.videobg').find('video').closest('.videobg').addClass('video-active');
-			} 
+// 			if($('.videobg').find('video').length){
+// 				$('.videobg').find('video').closest('.videobg').addClass('video-active');
+// 			} 
 
-			//////////////// Video Cover Play Icons
+// 			//////////////// Video Cover Play Icons
 
-			$('.video-cover').each(function(){
-			    var videoCover = $(this);
-			    if(videoCover.find('iframe[src]').length){
-			        videoCover.find('iframe').attr('data-src', videoCover.find('iframe').attr('src'));
-			        videoCover.find('iframe').attr('src','');
-			    }
-			});
+// 			$('.video-cover').each(function(){
+// 			    var videoCover = $(this);
+// 			    if(videoCover.find('iframe[src]').length){
+// 			        videoCover.find('iframe').attr('data-src', videoCover.find('iframe').attr('src'));
+// 			        videoCover.find('iframe').attr('src','');
+// 			    }
+// 			});
 
-			$('.video-cover .video-play-icon').on("click", function(){
-			    var playIcon = $(this);
-			    var videoCover = playIcon.closest('.video-cover');
-			    if(videoCover.find('video').length){
-			        var video = videoCover.find('video').get(0);
-			        videoCover.addClass('reveal-video');
-			        video.play();
-			        return false;
-			    }else if(videoCover.find('iframe').length){
-			        var iframe = videoCover.find('iframe');
-			        iframe.attr('src',iframe.attr('data-src'));
-			        videoCover.addClass('reveal-video');
-			        return false;
-			    }
-			});
-	  };
+// 			$('.video-cover .video-play-icon').on("click", function(){
+// 			    var playIcon = $(this);
+// 			    var videoCover = playIcon.closest('.video-cover');
+// 			    if(videoCover.find('video').length){
+// 			        var video = videoCover.find('video').get(0);
+// 			        videoCover.addClass('reveal-video');
+// 			        video.play();
+// 			        return false;
+// 			    }else if(videoCover.find('iframe').length){
+// 			        var iframe = videoCover.find('iframe');
+// 			        iframe.attr('src',iframe.attr('data-src'));
+// 			        videoCover.addClass('reveal-video');
+// 			        return false;
+// 			    }
+// 			});
+// 	  };
 
-	  mr.components.documentReady.push(mr.video.documentReady);
-	  return mr;
+// 	  mr.components.documentReady.push(mr.video.documentReady);
+// 	  return mr;
 
-}(mr, jQuery, window, document));
+// }(mr, jQuery, window, document));
 
 //////////////// Wizard
 mr = (function (mr, $, window, document){
