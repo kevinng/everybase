@@ -2894,13 +2894,15 @@ mr = (function (mr, $, window, document){
 
 			//////////////// Video Cover Play Icons
 
-			$('.video-cover').each(function(){
-			    var videoCover = $(this);
-			    if(videoCover.find('iframe[src]').length){
-			        videoCover.find('iframe').attr('data-src', videoCover.find('iframe').attr('src'));
-			        videoCover.find('iframe').attr('src','');
-			    }
-			});
+            // Disable URL switching for YouTube tracking to work properly
+            // Note: we won't be able to have the video play automatically after play button is clicked
+			// $('.video-cover').each(function(){
+			//     var videoCover = $(this);
+			//     if(videoCover.find('iframe[src]').length){
+			//         videoCover.find('iframe').attr('data-src', videoCover.find('iframe').attr('src'));
+			//         videoCover.find('iframe').attr('src','');
+			//     }
+			// });
 
 			$('.video-cover .video-play-icon').on("click", function(){
 			    var playIcon = $(this);
@@ -2911,8 +2913,10 @@ mr = (function (mr, $, window, document){
 			        video.play();
 			        return false;
 			    }else if(videoCover.find('iframe').length){
-			        var iframe = videoCover.find('iframe');
-			        iframe.attr('src',iframe.attr('data-src'));
+                    // Disable URL switching for YouTube tracking to work properly
+                    // Note: we won't be able to have the video play automatically after play button is clicked
+			        // var iframe = videoCover.find('iframe');
+			        // iframe.attr('src',iframe.attr('data-src'));
 			        videoCover.addClass('reveal-video');
 			        return false;
 			    }
