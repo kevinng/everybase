@@ -503,25 +503,25 @@ mr = (function (mr, $, window, document){
 
 
 //////////////// Backgrounds
-// mr = (function (mr, $, window, document){
-//     "use strict";
+mr = (function (mr, $, window, document){
+    "use strict";
     
-//     mr.backgrounds = mr.backgrounds || {};
+    mr.backgrounds = mr.backgrounds || {};
     
-//     mr.backgrounds.documentReady = function($){
+    mr.backgrounds.documentReady = function($){
         
-//         //////////////// Append .background-image-holder <img>'s as CSS backgrounds
+        //////////////// Append .background-image-holder <img>'s as CSS backgrounds
 
-// 	    $('.background-image-holder').each(function() {
-// 	        var imgSrc = $(this).children('img').attr('src');
-// 	        $(this).css('background', 'url("' + imgSrc + '")').css('background-position', 'initial').css('opacity','1');
-// 	    });
-//     };
+	    $('.background-image-holder').each(function() {
+	        var imgSrc = $(this).children('img').attr('src');
+	        $(this).css('background', 'url("' + imgSrc + '")').css('background-position', 'initial').css('opacity','1');
+	    });
+    };
 
-//     mr.components.documentReady.push(mr.backgrounds.documentReady);
-//     return mr;
+    mr.components.documentReady.push(mr.backgrounds.documentReady);
+    return mr;
 
-// }(mr, jQuery, window, document));
+}(mr, jQuery, window, document));
 
 //////////////// Bars
 mr = (function (mr, $, window, document){
@@ -2279,40 +2279,40 @@ mr = (function (mr, $, window, document){
 }(mr, jQuery, window, document));
 
 //////////////// Parallax
-// mr = (function (mr, $, window, document){
-//     "use strict";
+mr = (function (mr, $, window, document){
+    "use strict";
     
-//     mr.parallax = mr.parallax || {};
+    mr.parallax = mr.parallax || {};
 
-//     mr.parallax.documentReady = function($){
+    mr.parallax.documentReady = function($){
         
-//         var $window      = $(window); 
-//         var windowWidth  = $window.width();
-//         var windowHeight = $window.height();
-//         var navHeight    = $('nav').outerHeight(true);
+        var $window      = $(window); 
+        var windowWidth  = $window.width();
+        var windowHeight = $window.height();
+        var navHeight    = $('nav').outerHeight(true);
 
-//         if (windowWidth > 768) {
-//             var parallaxHero = $('.parallax:nth-of-type(1)'),
-//                 parallaxHeroImage = $('.parallax:nth-of-type(1) .background-image-holder');
+        if (windowWidth > 768) {
+            var parallaxHero = $('.parallax:nth-of-type(1)'),
+                parallaxHeroImage = $('.parallax:nth-of-type(1) .background-image-holder');
 
-//             parallaxHeroImage.css('top', -(navHeight));
-//             if(parallaxHero.outerHeight(true) === windowHeight){
-//                 parallaxHeroImage.css('height', windowHeight + navHeight);
-//             }
-//         }
-//     };     
+            parallaxHeroImage.css('top', -(navHeight));
+            if(parallaxHero.outerHeight(true) === windowHeight){
+                parallaxHeroImage.css('height', windowHeight + navHeight);
+            }
+        }
+    };     
     
-//     mr.parallax.update = function(){
-//         if(typeof mr_parallax !== typeof undefined){
-//             mr_parallax.profileParallaxElements();
-//             mr_parallax.mr_parallaxBackground();
-//         }
-//     };
+    mr.parallax.update = function(){
+        if(typeof mr_parallax !== typeof undefined){
+            mr_parallax.profileParallaxElements();
+            mr_parallax.mr_parallaxBackground();
+        }
+    };
 
-//     mr.components.documentReady.push(mr.parallax.documentReady);
-//     return mr;
+    mr.components.documentReady.push(mr.parallax.documentReady);
+    return mr;
 
-// }(mr, jQuery, window, document));
+}(mr, jQuery, window, document));
 
 //////////////// Progress Horizontal (bars)
 mr = (function (mr, $, window, document){
@@ -2861,63 +2861,58 @@ mr = (function (mr, $, window, document){
 	      
 			//////////////// Youtube Background
 
-			// if($('.youtube-background').length){
-			// 	$('.youtube-background').each(function(){
+			if($('.youtube-background').length){
+				$('.youtube-background').each(function(){
 
-			// 		var player = $(this),
+
+					var player = $(this),
 					
-			// 		themeDefaults = {
-			// 			containment: "self",
-			// 			autoPlay: true,
-			// 			mute: true,
-			// 			opacity: 1
-			// 		}, ao = {};
+					themeDefaults = {
+						containment: "self",
+						autoPlay: true,
+						mute: true,
+						opacity: 1
+					}, ao = {};
 
-            //      // Attribute overrides - provides overrides to the global options on a per-video basis
-			// 		ao.videoURL = $(this).attr('data-video-url');
-			// 		ao.startAt = $(this).attr('data-start-at')? parseInt($(this).attr('data-start-at'), 10): undefined;
+          // Attribute overrides - provides overrides to the global options on a per-video basis
+					ao.videoURL = $(this).attr('data-video-url');
+					ao.startAt = $(this).attr('data-start-at')? parseInt($(this).attr('data-start-at'), 10): undefined;
 
-			// 		player.closest('.videobg').append('<div class="loading-indicator"></div>');
-			// 		player.YTPlayer(jQuery.extend({}, themeDefaults, mr.video.options.ytplayer, ao));
-			// 		player.on("YTPStart",function(){
-			// 	  		player.closest('.videobg').addClass('video-active');
-			// 		});	
 
-			// 	});
-			// }
+					player.closest('.videobg').append('<div class="loading-indicator"></div>');
+					player.YTPlayer(jQuery.extend({}, themeDefaults, mr.video.options.ytplayer, ao));
+					player.on("YTPStart",function(){
+				  		player.closest('.videobg').addClass('video-active');
+					});	
 
-			// if($('.videobg').find('video').length){
-			// 	$('.videobg').find('video').closest('.videobg').addClass('video-active');
-			// } 
+				});
+			}
+
+			if($('.videobg').find('video').length){
+				$('.videobg').find('video').closest('.videobg').addClass('video-active');
+			} 
 
 			//////////////// Video Cover Play Icons
 
-            // Disable URL switching for YouTube tracking to work properly
-            // Note: we won't be able to have the video play automatically after play button is clicked
-			// $('.video-cover').each(function(){
-			//     var videoCover = $(this);
-			//     if(videoCover.find('iframe[src]').length){
-			//         videoCover.find('iframe').attr('data-src', videoCover.find('iframe').attr('src'));
-			//         videoCover.find('iframe').attr('src','');
-			//     }
-			// });
+			$('.video-cover').each(function(){
+			    var videoCover = $(this);
+			    if(videoCover.find('iframe[src]').length){
+			        videoCover.find('iframe').attr('data-src', videoCover.find('iframe').attr('src'));
+			        videoCover.find('iframe').attr('src','');
+			    }
+			});
 
 			$('.video-cover .video-play-icon').on("click", function(){
-                console.log('hehe');
 			    var playIcon = $(this);
 			    var videoCover = playIcon.closest('.video-cover');
-			    if (videoCover.find('video').length) {
+			    if(videoCover.find('video').length){
 			        var video = videoCover.find('video').get(0);
 			        videoCover.addClass('reveal-video');
-                    video.play();
-                    console.log('lala');
+			        video.play();
 			        return false;
-			    } else if(videoCover.find('iframe').length) {
-                    // Disable URL switching for YouTube tracking to work properly
-                    // Note: we won't be able to have the video play automatically after play button is clicked
-			        // var iframe = videoCover.find('iframe');
-                    // iframe.attr('src',iframe.attr('data-src'));
-                    console.log('hello world');
+			    }else if(videoCover.find('iframe').length){
+			        var iframe = videoCover.find('iframe');
+			        iframe.attr('src',iframe.attr('data-src'));
 			        videoCover.addClass('reveal-video');
 			        return false;
 			    }
