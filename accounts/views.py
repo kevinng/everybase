@@ -135,7 +135,7 @@ def reset_password(request):
                     send_email.delay(
                         render_to_string(et_path('password_reset_subject.txt')),
                         render_to_string(et_path('password_reset.txt'), et_context),
-                        'kevin@everybase.co', # Need to change this to no-reply@everybase.co when the domain is verified
+                        'support@everybase.co',
                         [user.email],
                         html_message=render_to_string(et_path('password_reset.html'), et_context)
                     )
@@ -179,7 +179,6 @@ def set_password(request, code=None):
                         return HttpResponseRedirect(next)
                     
                     return HttpResponseRedirect(_default_login_redirection_url)
-                    
                 
                 # Login failed - direct user to login page
                 return HttpResponseRedirect(reverse('login'))
@@ -207,6 +206,11 @@ def set_password(request, code=None):
         form = SetPasswordForm(initial=initial)
 
     return render(request, 'accounts/set_password.html', {'form': form})
+
+def register(request):
+    # Send verification email
+
+    return render(request, 'accounts/register_email_sent.html')
 
 def r(request, file_to_render):
     template = loader.get_template('accounts/%s' % file_to_render)

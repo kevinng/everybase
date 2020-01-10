@@ -21,13 +21,13 @@
                 <div class="row">
                     <div class="col-lg-12 form-group">
                         <label>Recipients</label>
-                        <a href="#">
+                        {% comment %} <a href="#">
                             <h5>warehouse@thomsom-chem.co.uk</h5>
                             <div>and 5 others</div>
-                        </a>
+                        </a> {% endcomment %}
                         <div class="kt-margin-t-10">
                             <!-- don't need this if recipients are set-->
-                            <!--<a href="#" class="btn btn-outline-primary" data-toggle="modal" data-target="#message_create__select_recipients">Select Recipients</a>-->
+                            <a href="#" class="btn btn-outline-primary" data-toggle="modal" data-target="#message_create__select_recipients">Set Recipients</a>
                         </div>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
-                <div class="modal-body">
+                {% comment %} <div class="modal-body">
                     <form>
                         <div class="row">
                             <div class="col-lg-11 form-group">
@@ -238,10 +238,37 @@
                             </div>
                         </div>
                     </form>
+                </div> {% endcomment %}
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <label for="message_create__email" class="form-control-label">Emails</label>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <div class="typeahead">
+								    <input type="text" class="form-control" id="kt_typeahead_1" dir="ltr" placeholder="Recipient email address">
+                                </div>
+                                <a href="#" style="float: right;">Remove</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
+                                <div class="typeahead">
+								    <input type="text" class="form-control" id="kt_typeahead_1" dir="ltr" placeholder="Recipient email address">
+                                </div>
+                                <a href="#" style="float: right;">Remove</a>
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Select Recipients</button>
+                    <button type="button" class="btn btn-primary">Set Recipients</button>
                 </div>
             </div>
         </div>
