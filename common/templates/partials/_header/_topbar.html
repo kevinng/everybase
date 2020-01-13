@@ -2,10 +2,10 @@
 
 <div class="kt-header__topbar kt-grid__item">
 	{% if user.is_authenticated %}
-		<div class="kt-grid__item kt-grid__item--fluid">
-			<div id="kt_header_menu" class="kt-header-menu kt-header-menu-mobile ">
-				<ul class="kt-menu__nav ">
-					<li class="kt-menu__item {% if location == 'inbox' %} kt-menu__item--here{% endif %}"><a href="#" class="kt-menu__link"><i class="kt-menu__link-icon flaticon2-mail"></i> <span class="kt-menu__link-text">Inbox</span>&nbsp;&nbsp;<span class="kt-badge kt-badge--danger kt-badge--rounded">5</span></a></li>
+		<div class="kt-header-menu-wrapper kt-grid__item kt-grid__item--fluid" style="flex-direction: row-reverse;">
+			<div id="kt_header_menu" class="kt-header-menu kt-header-menu-mobile">
+				<ul class="kt-menu__nav">
+					<li class="kt-menu__item{% if location == 'inbox' %} kt-menu__item--here{% endif %}"><a href="{% url 'inbox' %}" class="kt-menu__link"><i class="kt-menu__link-icon flaticon2-mail"></i> <span class="kt-menu__link-text">Inbox</span>&nbsp;&nbsp;<span class="kt-badge kt-badge--danger kt-badge--rounded">5</span></a></li>
 					<li class="kt-menu__item kt-margin-l-10"><a href="mailto:support@everybase.co" target="_window" class="kt-menu__link"><i class="kt-menu__link-icon flaticon2-help"></i> <span class="kt-menu__link-text">Support</span></a></li>
 				</ul>
 			</div>
