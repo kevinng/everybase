@@ -32,16 +32,16 @@
                                         <div class="alert-text">
                                             {% if message.message == 'LOGIN_FAILED' %}
                                                 Your username and password didn't match. If you need help,
-                                                contact <a href="mailto:support@everybase.co">Everybase support</a>.
+                                                contact <a href="mailto:support@everybase.co" target="_window">Everybase support</a>.
                                             {% elif message.message == 'IS_DOCUMENT_LINK' %}
                                             {% comment %} Not implemented {% endcomment %}
                                                 Please log in to see your documents. If you need help, 
-                                                contact <a href="mailto:support@everybase.co">Everybase support</a>.
+                                                contact <a href="mailto:support@everybase.co" target="_window">Everybase support</a>.
                                             {% elif message.message == 'LOGGED_OUT' %}
                                                 You have successfully logged out.
                                             {% elif message.message == 'YOU_EXIST' %}
                                                 You already have an account with us. Please log in below. If you need
-                                                help, contact <a href="mailto:support@everybase.co">Everybase support</a>.
+                                                help, contact <a href="mailto:support@everybase.co" target="_window">Everybase support</a>.
                                             {% endif %}
                                         </div>
                                     </div>
