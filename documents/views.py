@@ -1,6 +1,5 @@
-from django.http import HttpResponse
-from django.template import loader
+from django.template.response import TemplateResponse
 
 def r(request, file_to_render):
-    template = loader.get_template('documents/%s' % file_to_render)
-    return HttpResponse(template.render({}, request))
+    template_name = 'documents/%s' % file_to_render
+    return TemplateResponse(request, template_name, {})

@@ -1,7 +1,8 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 
 from django.template import loader
 from django.template.loader import render_to_string
+from django.template.response import TemplateResponse
 
 from django.shortcuts import render
 from django.urls import reverse
@@ -276,5 +277,5 @@ def register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 def r(request, file_to_render):
-    template = loader.get_template('accounts/%s' % file_to_render)
-    return HttpResponse(template.render({}, request))
+    template_name = 'accounts/%s' % file_to_render
+    return TemplateResponse(request, template_name, {'location': 'sent'})
