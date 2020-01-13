@@ -9,6 +9,12 @@ class ResetPasswordForm(forms.Form):
     email = forms.EmailField(required=True)
     next = forms.CharField(required=False, widget=forms.HiddenInput())
 
+class RegistrationForm(forms.Form):
+    email = forms.EmailField(required=True)
+    role = forms.CharField(required=True, max_length=100)
+    password = forms.CharField(required=True, widget=forms.PasswordInput())
+    next = forms.CharField(required=False, widget=forms.HiddenInput())
+
 class SetPasswordForm(forms.Form):
     password = forms.CharField(required=True, widget=forms.PasswordInput())
     confirm_password = forms.CharField(required=True, widget=forms.PasswordInput())
@@ -24,3 +30,4 @@ class SetPasswordForm(forms.Form):
             self.add_error(None, 'Passwords do not match.')
         
         return cd
+

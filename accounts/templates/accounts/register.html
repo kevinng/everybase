@@ -1,7 +1,9 @@
 {% extends 'extendables/base.html' %}
 
+{% load widget_tweaks %}
+
 {% block title %}
-    Register New Everybase Account
+    Register Account
 {% endblock %}
 
 {% block content %}
@@ -31,16 +33,28 @@
                             </div>
                         </div>
                         <div class="kt-portlet__body">
-                            <div class="alert alert-secondary" role="alert">
-                                <div class="alert-text">
-                                    Please create an account to access your documents. If you need help - contact <a href="mailto:support@everybase.co">Everybase support</a>.
-                                </div>
-                            </div>
+
+                            {% comment %} Not tested {% endcomment %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {% if message.message == 'SHOWING_DOCUMENTS' %}
+                                        <div class="alert alert-secondary" role="alert">
+                                            <div class="alert-text">
+                                                Please create an account to access your documents. If you need help - contact <a href="mailto:support@everybase.co">Everybase support</a>.
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
                             <div class="row">
                                 <div class="col-lg-2"></div>
                                 <div class="form-group col-lg-8">
                                     <label>Email</label>
-                                    <input type="text" class="form-control" placeholder="Your Work Email Address" />
+                                    {{ form.email|add_class:"form-control"|add_error_class:"is-invalid"|attr:"placeholder:Your Work Email" }}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback">{{ form.email.errors }}</div>
+                                    {% endif %}
                                 </div>
                                 <div class="col-lg-2"></div>
                             </div>
@@ -48,7 +62,10 @@
                                 <div class="col-lg-2"></div>
                                 <div class="form-group col-lg-8">
                                     <label>Role</label>
-                                    <input type="text" class="form-control" placeholder="E.g. Supply Chain Executive" />
+                                    {{ form.role|add_class:"form-control"|add_error_class:"is-invalid"|attr:"placeholder:E.g. Supply Chain Executive" }}
+                                    {% if form.role.errors %}
+                                        <div class="invalid-feedback">{{ form.role.errors }}</div>
+                                    {% endif %}
                                 </div>
                                 <div class="col-lg-2"></div>
                             </div>
@@ -56,7 +73,10 @@
                                 <div class="col-lg-2"></div>
                                 <div class="form-group col-lg-8">
                                     <label>Password</label>
-                                    <input type="password" class="form-control" placeholder="Account Password" />
+                                    {{ form.password|add_class:"form-control"|add_error_class:"is-invalid"|attr:"placeholder:E.g. Account Password" }}
+                                    {% if form.password.errors %}
+                                        <div class="invalid-feedback">{{ form.password.errors }}</div>
+                                    {% endif %}
                                 </div>
                                 <div class="col-lg-2"></div>
                             </div>
@@ -70,6 +90,7 @@
                             </div>
                         </div>
                     </div>
+                    {{ form.next }}
                 </form>
             </div>
             <div class="col-lg-3"></div>

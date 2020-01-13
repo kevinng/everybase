@@ -31,13 +31,16 @@
                                         {% endif %}
                                         <div class="alert-text">
                                             {% if message.message == 'LOGIN_FAILED' %}
-                                                Your username and password didn't match. Please try again. If you need
-                                                help accessing your account, please contact <a href="#">Everybase support</a>.
+                                                Your username and password didn't match. If you need help,
+                                                contact <a href="mailto:support@everybase.co">Everybase support</a>.
                                             {% elif message.message == 'IS_DOCUMENT_LINK' %}
-                                                Please log in to see your documents. If you have been forwarded this link and
-                                                require access to the documents, please contact <a href="#">Everybase support</a>.
+                                                Please log in to see your documents. If you need help, 
+                                                contact <a href="mailto:support@everybase.co">Everybase support</a>.
                                             {% elif message.message == 'LOGGED_OUT' %}
                                                 You have successfully logged out.
+                                            {% elif message.message == 'YOU_EXIST' %}
+                                                You already have an account with us. Please log in below. If you need
+                                                help, contact <a href="mailto:support@everybase.co">Everybase support</a>.
                                             {% endif %}
                                         </div>
                                     </div>
