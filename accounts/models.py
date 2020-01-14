@@ -5,10 +5,6 @@ import uuid, datetime
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    role = models.CharField(max_length=100)
-    verified_email = models.BooleanField(default=False)
-    accepted_terms = models.BooleanField(default=False)
-    active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     deleted = models.DateTimeField(null=True)
