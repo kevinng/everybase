@@ -278,4 +278,4 @@ def register(request):
 
 def r(request, file_to_render):
     template_name = 'accounts/%s' % file_to_render
-    return TemplateResponse(request, template_name, {'location': 'sent'})
+    return TemplateResponse(request, template_name, {})
