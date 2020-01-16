@@ -23,3 +23,6 @@ class Batch(models.Model):
 
     material = models.ForeignKey(Material,
         models.CASCADE, related_name='batches')
+
+    class Meta:
+        verbose_name_plural = 'Batches'

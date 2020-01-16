@@ -10,6 +10,9 @@ class Organization(models.Model):
     updated = models.DateTimeField(auto_now=True)
     deleted = models.DateTimeField(blank=True, null=True, default=None)
 
+    def __str__(self):
+        return self.name
+    
 class Account(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -33,12 +36,20 @@ class AccountOrganization(models.Model):
     account = models.ForeignKey(Account, models.CASCADE)
     organization = models.ForeignKey(Organization, models.CASCADE)
 
+    class Meta:
+        verbose_name = 'Account-Organization'
+        verbose_name_plural = 'Account-Organizations'
+
+    def __str__(self):
+        return '%s, %s, %s' % (self.account, self.organization, self.role)
+
 class EmailVerificationCode(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
-    verified = models.DateTimeField(blank=True, null=True, default=None)
-    ip_address = models.GenericIPAddressField(
+    verified = models.DateTimeField(
+        blank=True, null=True, default=None)
+    ip_address = models.GenericIPAddressField('IP Address',
         blank=True, null=True, default=None)
 
     class Meta:
@@ -53,6 +64,10 @@ class EmailVerificationCode(models.Model):
     def is_old_enough(self):
         return timezone.now() - datetime.timedelta(minutes=5) > self.created
 
+    class Meta:
+        verbose_name = 'Email Verification Code'
+        verbose_name_plural = 'Email Verification Codes'
+
 class PasswordResetCode(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -63,6 +78,8 @@ class PasswordResetCode(models.Model):
 
     class Meta:
         ordering = ["created"]
+        verbose_name = 'Password Reset Code'
+        verbose_name_plural = 'Password Reset Codes'
 
     def is_expired(self):
         return timezone.now() - datetime.timedelta(hours=24) > self.created
@@ -73,6 +90,9 @@ class PasswordResetCode(models.Model):
     def is_old_enough(self):
         return timezone.now() - datetime.timedelta(minutes=5) > self.created
 
+    def __str__(self):
+        return self.account.user.email
+    
 class OrganizationInvitationCode(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -89,6 +109,8 @@ class OrganizationInvitationCode(models.Model):
 
     class Meta:
         ordering = ["created"]
+        verbose_name = 'Organization Invitation Code'
+        verbose_name_plural = 'Organization Invitation Codes'
 
     def is_expired(self):
         return timezone.now() - datetime.timedelta(hours=24) > self.created
