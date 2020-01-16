@@ -5,7 +5,7 @@
 			{% if user.is_authenticated %}
 				<li class="kt-menu__item{% if location == 'documents' %} kt-menu__item--here{% endif %}"><a href="{% url 'documents' %}" class="kt-menu__link"><span class="kt-menu__link-text">Documents</span></a></li>
 				<li class="kt-menu__item{% if location == 'sent' %} kt-menu__item--here{% endif %}"><a href="{% url 'sent' %}" class="kt-menu__link"><span class="kt-menu__link-text">Sent</span></a></li>
-				<li class="kt-menu__item{% if location == 'materials' %} kt-menu__item--here{% endif %}"><a href="{% url 'materials' %}" class="kt-menu__link"><span class="kt-menu__link-text">Materials</span></a></li>
+				<li class="kt-menu__item{% if location == 'materials' %} kt-menu__item--here{% endif %}"><a href="{% url 'materials:list' %}" class="kt-menu__link"><span class="kt-menu__link-text">Materials</span></a></li>
 				<li class="kt-menu__item{% if location == 'colleagues' %} kt-menu__item--here{% endif %}"><a href="{% url 'colleagues' %}" class="kt-menu__link"><span class="kt-menu__link-text">Colleagues</span></a></li>
 			{% endif %}
 		</ul>
