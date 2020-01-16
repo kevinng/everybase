@@ -1,11 +1,11 @@
 {% extends 'extendables/base.html' %}
 
 {% block title %}
-    {{ material.name }} ({{ material.code }})
+    Material Details - {{ material.name }} ({{ material.code }})
 {% endblock %}
 
 {% block subtitle %}
-    {{ material.name }} ({{ material.code }})
+    Material Details
 {% endblock %}
 
 {% block toolbar %}
@@ -16,7 +16,7 @@
         </button>
         <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="{% url 'materials:edit' material.id %}"><i class="la la-pencil-square"></i>Edit</a>
-            <a class="dropdown-item" href="#"><i class="la la-trash"></i>Delete</a>
+            <a class="dropdown-item" href="{% url 'materials:delete' material.id %}"><i class="la la-trash"></i>Delete</a>
         </div>
     </div>
 {% endblock %}
