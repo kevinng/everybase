@@ -9,6 +9,9 @@ from accounts.models import Account
 from materials.models import Material
 from .forms import MaterialForm
 
+class MaterialDetailView(generic.DetailView):
+    model = Material
+
 class MaterialListView(generic.ListView):
     model = Material
     paginate_by = 36

@@ -1,15 +1,15 @@
 {% extends 'extendables/base.html' %}
 
 {% block title %}
-    Material
+    {{ material.name }} ({{ material.code }})
 {% endblock %}
 
 {% block subtitle %}
-    Material
+    {{ material.name }} ({{ material.code }})
 {% endblock %}
 
 {% block toolbar %}
-    <a href="#" class="btn btn-outline-secondary"><i class="flaticon2-left-arrow-1"></i>Materials</a>
+    <a href="{% url 'materials:list' %}" class="btn btn-outline-secondary"><i class="flaticon2-left-arrow-1"></i>Materials</a>
     <div class="dropdown dropdown-inline">
         <button type="button" class="btn btn-label-primary btn-icon btn-sm btn-icon-md btn-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="flaticon-more-1"></i>
@@ -28,11 +28,11 @@
                 <div class="row">
                     <div class="col-lg-5 form-group">
                         <label>Material Name</label>
-                        <h5>Sodium Hydroxide Caustic Soda 99% NAOH</h5>
+                        <h5>{{ material.name }}</h5>
                     </div>
                     <div class="col-lg-3 form-group">
-                        <label>Material Number</label>
-                        <h5>1234567890</h5>
+                        <label>Material Code</label>
+                        <h5>{{ material.code }}</h5>
                     </div>
                 </div>
                 <div class="kt-separator kt-separator--portlet-fit"></div>
