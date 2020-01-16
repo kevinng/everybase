@@ -4,13 +4,18 @@
     Delete Material?
 {% endblock %}
 
+{% block content_header %}
+    <form method="post" action="{% url 'materials:delete' material.id %}">
+        {% csrf_token %}
+{% endblock %}
+
 {% block subtitle %}
     Delete Material?
 {% endblock %}
 
 {% block toolbar %}
-    <a href="#" class="btn btn-warning">No, Cancel</a>
-    <a href="#" class="btn btn-danger">Yes, Delete Material</a>
+    <a href="{% url 'materials:details' material.id %}" class="btn btn-warning">No, Cancel</a>
+    <button type="submit" class="btn btn-danger">Yes, Delete Material</button>
 {% endblock %}
 
 {% block content %}
@@ -20,11 +25,11 @@
                 <div class="row">
                     <div class="col-lg-5 form-group">
                         <label>Material Name</label>
-                        <h5>Sodium Hydroxide Caustic Soda 99% NAOH</h5>
+                        <h5>{{ material.name }}</h5>
                     </div>
                     <div class="col-lg-3 form-group">
-                        <label>Material Number</label>
-                        <h5>1234567890</h5>
+                        <label>Material Code</label>
+                        <h5>{{ material.code }}</h5>
                     </div>
                 </div>
                 <div class="kt-separator kt-separator--portlet-fit"></div>
@@ -37,4 +42,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block content_footer %}
+    </form>
 {% endblock %}

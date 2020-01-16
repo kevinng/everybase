@@ -1,9 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 
 from django.template.response import TemplateResponse
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from accounts.models import Account
@@ -37,6 +38,11 @@ class MaterialListView(LoginRequiredMixin, generic.ListView):
 
         return materials
 
+class MaterialDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Material
+    success_url = reverse_lazy('materials:list')
+
+@login_required
 def material_create(request):
     if request.method == 'POST':
         account = Account.objects.get(pk=request.user)

@@ -8,5 +8,6 @@ urlpatterns = [
   path('details/<uuid:pk>', views.MaterialDetailView.as_view(), name='details'),
   path('edit/<uuid:pk>', views.MaterialEditView.as_view(), name='edit'),
   path('create/', views.material_create, name='create'),
+  path('delete/<uuid:pk>', views.MaterialDeleteView.as_view(), name='delete'),
   path('r/<str:file_to_render>', views.r)
 ]
