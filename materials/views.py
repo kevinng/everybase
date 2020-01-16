@@ -30,10 +30,10 @@ class MaterialListView(LoginRequiredMixin, generic.ListView):
 
         materials = Material.objects.order_by('-name')
         if code != None and code != '':
-            materials = materials.filter(code__contains=code)
+            materials = materials.filter(code__icontains=code)
         
         if name != None and name != '':
-            materials = materials.filter(name__contains=name)
+            materials = materials.filter(name__icontains=name)
 
         return materials
 
