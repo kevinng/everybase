@@ -65,7 +65,7 @@
                                 <div class="kt-portlet__head kt-portlet__head--noborder kt-margin-t-5">
                                     <div class="kt-portlet__head-label">
                                         <h3 class="kt-portlet__head-title">
-                                            {{ material.name }}
+                                            <a href="{% url 'materials:details' material.id %}">{{ material.name }}</a>
                                         </h3>
                                     </div>
                                 </div>
@@ -78,9 +78,12 @@
                                                     <span class="kt-widget__data">{{ material.code }}</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="kt-widget__footer">
-                                            <a href="{% url 'materials:details' material.id %}" class="btn btn-outline-secondary btn-lg">Details</a>
+                                            <div class="kt-widget__item">
+                                                <div class="kt-widget__contact">
+                                                    <span class="kt-widget__label"># Documents</span>
+                                                    <span class="kt-widget__data"><a href="">25</a></span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>             
                                 </div>
