@@ -52,7 +52,7 @@
                                 <div class="col-lg-2"></div>
                                 <div class="form-group col-lg-8">
                                     <label>Email</label>
-                                    {{ form.email|add_class:"form-control"|add_error_class:"is-invalid"|attr:"name:email" }}
+                                    {{ form.email|add_class:"form-control"|add_error_class:"is-invalid" }}
                                     {% if form.email.errors %}
                                         <div class="invalid-feedback">{{ form.email.errors }}</div>
                                     {% endif %}
