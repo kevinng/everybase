@@ -14,6 +14,9 @@ class Material(models.Model):
     organization = models.ForeignKey(Organization,
         models.CASCADE, related_name='materials')
 
+    def __str__(self):
+        return self.name + ' (' + self.code + ')'
+
 class Batch(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code = models.CharField(max_length=100)
