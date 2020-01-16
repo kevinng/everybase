@@ -1,0 +1,50 @@
+{% extends 'extendables/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+    Edit Material - {{ material.name }} ({{ material.code }})
+{% endblock %}
+
+{% block content_header %}
+    <form method="post" action="{% url 'materials:edit' material.id %}">
+        {% csrf_token %}
+{% endblock %}
+
+{% block subtitle %}
+    Edit Material - {{ material.name }} ({{ material.code }})
+{% endblock %}
+
+{% block toolbar %}
+    <a href="{% url 'materials:details' material.id %}" class="btn btn-warning">Cancel</a>
+    <button type="submit" href="#" class="btn btn-success">Apply Changes</button>
+{% endblock %}
+
+{% block content %}
+    <div class="kt-container kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="row">
+                    <div class="col-lg-5 form-group">
+                        <label>Material Name</label>
+                        {{ form.name|add_class:"form-control"|add_error_class:"is-invalid" }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Material Code</label>
+                        {{ form.code|add_class:"form-control"|add_error_class:"is-invalid" }}
+                        {% if form.code.errors %}
+                            <div class="invalid-feedback">{{ form.code.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_footer %}
+    </form>
+{% endblock %}

@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 
 from django.template.response import TemplateResponse
@@ -9,10 +10,17 @@ from accounts.models import Account
 from materials.models import Material
 from .forms import MaterialForm
 
-class MaterialDetailView(generic.DetailView):
+class MaterialEditView(LoginRequiredMixin, generic.UpdateView):
+    model = Material
+    fields = ['name', 'code']
+
+    def get_success_url(self):
+        return reverse('materials:details', kwargs={'pk': self.object.id})
+
+class MaterialDetailView(LoginRequiredMixin, generic.DetailView):
     model = Material
 
-class MaterialListView(generic.ListView):
+class MaterialListView(LoginRequiredMixin, generic.ListView):
     model = Material
     paginate_by = 36
 
