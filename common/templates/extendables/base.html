@@ -9,7 +9,6 @@
 		{% include 'partials/_analytics/gtm_head.html' %}
 		{% include 'partials/_favicon.html' %}
 
-		<base href="">
 		<meta charset="utf-8" />
 		<title>{% block title %}{% endblock %}</title>
 		<meta name="description" content="Latest updates and statistic charts">
@@ -22,11 +21,11 @@
     <!-- end::Head -->
 
 	<!-- begin::Body -->
-	<body class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header--minimize-menu kt-header-mobile--fixed kt-subheader--enabled kt-subheader--transparent kt-aside--enabled kt-aside--left kt-aside--fixed kt-page--loading">
-		{% include 'partials/_analytics/gtm_body.html' %}
+	<body class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header--minimize-menu
+		kt-header-mobile--fixed kt-subheader--enabled kt-subheader--transparent kt-aside--enabled kt-aside--left kt-aside--fixed kt-page--loading">
 
-        <!-- begin::Page -->
-        
+        <!-- begin:: Page -->
+		{% include 'partials/_analytics/gtm_body.html' %}
 		{% include 'partials/_header/base-mobile.html' %}
 
         <div class="kt-grid kt-grid--hor kt-grid--root">
@@ -37,6 +36,8 @@
 
                     <div class="kt-body kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-grid--stretch" id="kt_body">
                         <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+
+							{% block content_header %}{% endblock %}
 
 							<!-- begin:: Content Head -->
 							<div class="kt-subheader kt-grid__item" id="kt_subheader">
@@ -57,6 +58,8 @@
 							<!-- begin: Content Body -->
 							{% block content %}{% endblock %}
 							<!-- end: Content Body -->
+
+							{% block content_footer %}{% endblock %}
                         </div>
                     </div>
 
@@ -64,9 +67,8 @@
                 </div>
             </div>
         </div>
-        <!-- end::Page -->
-
         {% include 'partials/_scrolltop.html' %}
+        <!-- end:: Page -->
 
         <!-- begin::Global Config(global config for global JS sciprts) -->
         <script>
