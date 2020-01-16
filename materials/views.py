@@ -3,13 +3,28 @@ from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views import generic
 
 from accounts.models import Account
 from materials.models import Material
 from .forms import MaterialForm
 
-def material_list(request):
-    return render(request, 'materials/material_list.html')
+class MaterialListView(generic.ListView):
+    model = Material
+    paginate_by = 36
+
+    def get_queryset(self):
+        code = self.request.GET.get('code', None)
+        name = self.request.GET.get('name', None)
+
+        materials = Material.objects.order_by('-name')
+        if code != None and code != '':
+            materials = materials.filter(code__contains=code)
+        
+        if name != None and name != '':
+            materials = materials.filter(name__contains=name)
+
+        return materials
 
 def material_create(request):
     if request.method == 'POST':
