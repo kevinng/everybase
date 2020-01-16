@@ -37,7 +37,7 @@ class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(null=True)
+    deleted = models.DateTimeField(blank=True, null=True, default=None)
     s3_bucket_region = models.CharField(max_length=20)
     s3_bucket_name = models.CharField(max_length=63)
     s3_bucket_arn = models.CharField(max_length=2024)

@@ -8,12 +8,12 @@ class Organization(models.Model):
     name = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(null=True)
+    deleted = models.DateTimeField(blank=True, null=True, default=None)
 
 class Account(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(null=True)
+    deleted = models.DateTimeField(blank=True, null=True, default=None)
 
     user = models.OneToOneField(User, models.CASCADE, primary_key=True)
     active_organization = models.ForeignKey(Organization, models.CASCADE,
@@ -28,7 +28,7 @@ class AccountOrganization(models.Model):
     role = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(null=True)
+    deleted = models.DateTimeField(blank=True, null=True, default=None)
 
     account = models.ForeignKey(Account, models.CASCADE)
     organization = models.ForeignKey(Organization, models.CASCADE)
