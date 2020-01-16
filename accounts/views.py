@@ -279,3 +279,32 @@ def register(request):
 def r(request, file_to_render):
     template_name = 'accounts/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
+
+
+
+
+    # Send verification email
+
+    # Email template base URL maker
+    # et_path = lambda template: 'accounts/email/' + template
+
+    # Prepare context
+    # full_reset_url = 'https://everybase.co' + \
+    #     reverse('set_password', args={new_code.id})
+    # et_context = {
+    #     'verify_url': 'everybase.co', # replace with url
+    #     'email': 'kevin@everybase.co' # replace with user.email
+    # }
+
+    # Set next URL, if it exists
+    # next = form.cleaned_data.get('next', None)
+    # if next is not None and next != '':
+        # et_context['next'] = next
+
+    # send_email.delay(
+    #     render_to_string(et_path('verify_email_subject.txt')),
+    #     render_to_string(et_path('verify_email.txt'), et_context),
+    #     'support@everybase.co',
+    #     ['kevin@everybase.co'], # switch to user's email
+    #     html_message=render_to_string(et_path('verify_email.html'), et_context)
+    # )
