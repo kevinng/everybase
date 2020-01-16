@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'common.apps.CommonConfig',
     'accounts.apps.AccountsConfig',
     'documents.apps.DocumentsConfig',
+    'materials.apps.MaterialsConfig',
+    'communications.apps.CommunicationsConfig',
     'lander.apps.LanderConfig',
     'django.contrib.admin',
     'django.contrib.auth',
