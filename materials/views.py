@@ -7,7 +7,6 @@ from django.views.generic import (
 
 from accounts.models import Account
 from materials.models import Material
-from .forms import MaterialForm
 
 class MaterialEditView(LoginRequiredMixin, UpdateView):
     model = Material
