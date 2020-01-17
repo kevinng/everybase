@@ -14,9 +14,7 @@ from .forms import MaterialForm
 class MaterialEditView(LoginRequiredMixin, generic.UpdateView):
     model = Material
     fields = ['name', 'code']
-
-    def get_success_url(self):
-        return reverse('materials:details', kwargs={'pk': self.object.id})
+    template_name = 'materials/material_edit.html'
 
 class MaterialDetailView(LoginRequiredMixin, generic.DetailView):
     model = Material
@@ -42,28 +40,15 @@ class MaterialDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Material
     success_url = reverse_lazy('materials:list')
 
-@login_required
-def material_create(request):
-    if request.method == 'POST':
-        account = Account.objects.get(pk=request.user)
-        if account.active_organization == None:
-            # Material created must tie to active organization.
-            return render(request, 'errors/access_denied.html')
+class MaterialCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Material
+    fields = ['name', 'code']
+    template_name = 'materials/material_create.html'
 
-        form = MaterialForm(request.POST)
-        if form.is_valid():
-
-            Material(
-                name=form.cleaned_data['name'],
-                code=form.cleaned_data['code'],
-                organization=account.active_organization
-            ).save()
-
-            return HttpResponseRedirect(reverse('materials:list'))
-    else:
-        form = MaterialForm()
-
-    return render(request, 'materials/material_create.html', {'form': form})
+    def form_valid(self, form):
+        account = Account.objects.get(pk=self.request.user)
+        form.instance.organization = account.active_organization
+        return super().form_valid(form)
 
 def r(request, file_to_render):
     template_name = 'materials/%s' % file_to_render

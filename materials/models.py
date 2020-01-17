@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.db import models
 import uuid
 
@@ -13,6 +14,9 @@ class Material(models.Model):
 
     organization = models.ForeignKey(Organization,
         models.CASCADE, related_name='materials')
+
+    def get_absolute_url(self):
+        return reverse('materials:details', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.name + ' (' + self.code + ')'
