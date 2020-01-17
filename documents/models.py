@@ -24,7 +24,7 @@ class Document(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(null=True)
+    deleted = models.DateTimeField(blank=True, null=True, default=None)
 
     creator = models.ForeignKey(Account,
         models.CASCADE, related_name='created_documents')
@@ -39,17 +39,17 @@ class Document(models.Model):
 
 class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    presigned_url_issued = models.DateTimeField(auto_now_add=True)
+    file_uploaded = models.DateTimeField(blank=True, null=True, default=None)
     deleted = models.DateTimeField(blank=True, null=True, default=None)
-    s3_bucket_region = models.CharField(max_length=20)
-    s3_bucket_name = models.CharField(max_length=63)
-    s3_bucket_arn = models.CharField(max_length=2024)
-    s3_object_key = models.CharField(max_length=1024)
-    s3_object_content_length = models.IntegerField()
-    s3_object_e_tag = models.CharField(max_length=1024)
-    s3_object_content_type = models.CharField(max_length=30)
-    s3_object_last_modified = models.DateTimeField()
+    presigned_url = models.URLField()
+    expires_in = models.IntegerField()
+    bucket_name = models.CharField(max_length=63)
+    object_key = models.CharField(max_length=1024)
+    object_content_length = models.IntegerField(blank=True, null=True, default=None)
+    object_e_tag = models.CharField(blank=True, null=True, default=None, max_length=1024)
+    object_content_type = models.CharField(blank=True, null=True, default=None, max_length=30)
+    object_last_modified = models.DateTimeField(blank=True, null=True, default=None)
 
     document = models.ForeignKey(Document,
         models.CASCADE, related_name='files')
