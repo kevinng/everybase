@@ -51,6 +51,9 @@ class File(models.Model):
     object_content_type = models.CharField(blank=True, null=True, default=None, max_length=30)
     object_last_modified = models.DateTimeField(blank=True, null=True, default=None)
 
+    uploader = models.ForeignKey(Document,
+        blank=True, null=True, default=None,
+        models.CASCADE, related_name='files_uploaded')
     document = models.ForeignKey(Document,
         models.CASCADE, related_name='files')
 
