@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -187,3 +188,24 @@ if DEBUG == False:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LOGIN_URL = '/login'
+
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.us-east-1.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+# Static and public media use of S3 not enabled
+
+# AWS_STATIC_LOCATION = 'static'
+# STATICFILES_STORAGE = 'everybase.storage_backends.StaticStorage'
+# STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_STATIC_LOCATION)
+
+# AWS_PUBLIC_MEDIA_LOCATION = 'media/public'
+# DEFAULT_FILE_STORAGE = 'everybase.storage_backends.PublicMediaStorage'
+
+AWS_PRIVATE_MEDIA_LOCATION = 'media/private'
+PRIVATE_FILE_STORAGE = 'everybase.storage_backends.PrivateMediaStorage'
