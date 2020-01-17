@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from decouple import config
 import django_heroku
 import dj_database_url
 from django.contrib.messages import constants as messages
@@ -26,8 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '5me-lk6^&#&iy#asw5hnevv1qs+78w1)ds*68_txtnh#_vbfsl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ['DJANGO_DEBUG'] == 'True' else False
-
+DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -86,15 +86,15 @@ WSGI_APPLICATION = 'everybase.wsgi.application'
 
 DATABASES = {}
 if 'DATABASE_URL' in os.environ:
-    DATABASES['default'] = dj_database_url.parse(os.environ['DATABASE_URL'])
+    DATABASES['default'] = dj_database_url.parse(config('DATABASE_URL'))
 else:
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['PSQL_NAME'],
-        'USER': os.environ['PSQL_USER'],
-        'PASSWORD': os.environ['PSQL_PASSWORD'],
-        'HOST': os.environ['PSQL_HOST'],
-        'PORT': os.environ['PSQL_PORT'],
+        'NAME': config('PSQL_NAME'),
+        'USER': config('PSQL_USER'),
+        'PASSWORD': config('PSQL_PASSWORD'),
+        'HOST': config('PSQL_HOST'),
+        'PORT': config('PSQL_PORT')
     }
 
 # Password validation
@@ -162,22 +162,22 @@ MESSAGE_TAGS = {
 
 
 if 'REDIS_URL' in os.environ:
-    CELERY_BROKER_URL = os.environ['REDIS_URL']
+    CELERY_BROKER_URL = os.config('REDIS_URL')
 else:
     CELERY_BROKER_URL = 'redis://%s:%s' % (
-        os.environ['REDIS_HOST'],
-        os.environ['REDIS_PORT'])
+        config('REDIS_HOST'),
+        config('REDIS_PORT')
+    )
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
-
-EMAIL_HOST = os.environ['EMAIL_HOST']
-EMAIL_PORT = os.environ['EMAIL_PORT']
-EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
-EMAIL_USE_TLS = True if os.environ['EMAIL_USE_TLS'] == 'True' else False
-EMAIL_USE_SSL = True if os.environ['EMAIL_USE_SSL'] == 'True' else False
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
 
 if DEBUG == False:
     # Force HTTPS only
