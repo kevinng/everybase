@@ -55,6 +55,7 @@ class File(models.Model):
         blank=True, null=True, default=None,
         models.CASCADE, related_name='files_uploaded')
     document = models.ForeignKey(Document,
+        blank=True, null=True, default=None,
         models.CASCADE, related_name='files')
 
 class DocumentMaterial(models.Model):
