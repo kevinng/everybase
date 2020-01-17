@@ -2,21 +2,22 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.response import TemplateResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views.generic import (
+    UpdateView, DetailView, ListView, DeleteView, CreateView)
 
 from accounts.models import Account
 from materials.models import Material
 from .forms import MaterialForm
 
-class MaterialEditView(LoginRequiredMixin, generic.UpdateView):
+class MaterialEditView(LoginRequiredMixin, UpdateView):
     model = Material
     fields = ['name', 'code']
     template_name = 'materials/material_edit.html'
 
-class MaterialDetailView(LoginRequiredMixin, generic.DetailView):
+class MaterialDetailView(LoginRequiredMixin, DetailView):
     model = Material
 
-class MaterialListView(LoginRequiredMixin, generic.ListView):
+class MaterialListView(LoginRequiredMixin, ListView):
     model = Material
     paginate_by = 36
 
@@ -33,11 +34,11 @@ class MaterialListView(LoginRequiredMixin, generic.ListView):
 
         return materials
 
-class MaterialDeleteView(LoginRequiredMixin, generic.DeleteView):
+class MaterialDeleteView(LoginRequiredMixin, DeleteView):
     model = Material
     success_url = reverse_lazy('materials:list')
 
-class MaterialCreateView(LoginRequiredMixin, generic.CreateView):
+class MaterialCreateView(LoginRequiredMixin, CreateView):
     model = Material
     fields = ['name', 'code']
     template_name = 'materials/material_create.html'
