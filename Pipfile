@@ -17,6 +17,7 @@ redis = "*"
 django-decouple = "*"
 boto3 = "*"
 djangorestframework = "*"
+httpie = "*"
 
 [requires]
 python_version = "3.7"
