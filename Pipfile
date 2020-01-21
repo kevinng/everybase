@@ -16,8 +16,8 @@ celery = "*"
 redis = "*"
 django-decouple = "*"
 boto3 = "*"
-djangorestframework = "*"
 httpie = "*"
+djangorestframework = "*"
 
 [requires]
 python_version = "3.7"
