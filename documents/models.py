@@ -1,10 +1,9 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 import uuid
 
 from accounts.models import Account, Organization
 from materials.models import Material, Batch
-
-from everybase.storage_backends import PrivateMediaStorage
 
 class DocumentType(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -39,38 +38,63 @@ class Document(models.Model):
     materials = models.ManyToManyField(Material,
         through='DocumentMaterial', related_name='documents')
 
+class CreateFilePresignedURL(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    issued = models.DateTimeField(auto_now_add=True)
+    lifespan = models.IntegerField()
+    response = JSONField()
+    filetype = models.CharField(max_length=100)
+    s3_bucket_name = models.CharField(max_length=63)
+    s3_object_key = models.CharField(max_length=1024)
+
+    requester = models.ForeignKey(Account,
+        models.CASCADE,
+        related_name='requested_create_file_presigned_urls')
+
+    def __str__(self):
+        return self.issued.strftime("%d %B %Y, %H:%M:%S %z")
+
+    class Meta:
+        verbose_name = 'Create-File-Presigned-URL'
+        verbose_name_plural = 'Create-File-Presigned-URLs'
+
 class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uploaded = models.DateTimeField(auto_now_add=True)
+    deleted = models.DateTimeField(blank=True, null=True, default=None)
+    s3_bucket_name = models.CharField(max_length=63)
+    s3_object_key = models.CharField(max_length=1024)
+    s3_object_content_length = models.IntegerField(blank=True, null=True, default=None)
+    s3_object_e_tag = models.CharField(blank=True, null=True, default=None, max_length=1024)
+    s3_object_content_type = models.CharField(blank=True, null=True, default=None, max_length=30)
+    s3_object_last_modified = models.DateTimeField(blank=True, null=True, default=None)
 
-    # Data set when pre-signed URL is issued - 1st pass
-    presigned_url_issued = models.DateTimeField(auto_now_add=True)
-    presigned_url = models.URLField()
-    expires_in = models.IntegerField()
-    bucket_name = models.CharField(max_length=63)
-    object_key = models.CharField(max_length=1024)
-
-    # Data set when file is uploaded using pre-signed URL - 2nd pass
-    file_uploaded = models.FileField(
-        blank=True, null=True, default=None,
-        storage=PrivateMediaStorage())
-    uploaded = models.DateTimeField(blank=True, null=True, default=None)
-    object_content_length = models.IntegerField(blank=True, null=True, default=None)
-    object_e_tag = models.CharField(blank=True, null=True, default=None, max_length=1024)
-    object_content_type = models.CharField(blank=True, null=True, default=None, max_length=30)
-    object_last_modified = models.DateTimeField(blank=True, null=True, default=None)
-    uploader = models.ForeignKey(Document,
-        models.CASCADE,
-        blank=True, null=True, default=None,
-        related_name='files_uploaded')
-
-    # Data set when the document is created - 3rd pass
     document = models.ForeignKey(Document,
         models.CASCADE,
         blank=True, null=True, default=None,
         related_name='files')
+    uploader = models.ForeignKey(Account,
+        models.CASCADE,
+        related_name='files_uploaded')
+    create_presigned_url = models.OneToOneField(CreateFilePresignedURL,
+        models.CASCADE,
+        related_name='file')
 
-    # Other fields
-    deleted = models.DateTimeField(blank=True, null=True, default=None)
+class ReadFilePresignedURL(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    issued = models.DateTimeField(auto_now_add=True)
+    lifespan = models.IntegerField()
+
+    requester = models.ForeignKey(Account,
+        models.CASCADE,
+        related_name='requested_read_file_presigned_urls')
+    file = models.ForeignKey(File,
+        models.CASCADE,
+        related_name='read_presigned_urls')
+
+    class Meta:
+        verbose_name = 'Read-File-Presigned-URL'
+        verbose_name_plural = 'Read-File-Presigned-URLs'
 
 class DocumentMaterial(models.Model):
     document = models.ForeignKey(Document, models.CASCADE)
