@@ -1,5 +1,7 @@
 {% extends 'extendables/base.html' %}
 
+{% load static %}
+
 {% block title %}
     Create Document
 {% endblock %}
@@ -20,39 +22,38 @@
                 <div class="row">
                     <div class="col-lg-3 form-group">
                         <label>Document Type</label>
-                        <select class="form-control kt-selectpicker" data-size="7" data-live-search="true">
-                            <option value="AF">Certificate of Analysis (COA)</option>
-                            <option value="AX">Safety Datasheet (SDS)</option>
-                            <option value="AL">Technical Datasheet (TDS)</option>
+                        <select id="document_create__document_type" class="form-control kt-selectpicker" data-size="7" data-live-search="true">
+                            {% for choice in form.document_type %}
+                                {{ choice }}
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="col-lg-4 form-group">
                         <label>Material Name</label>
-                        <select class="form-control kt-selectpicker" data-size="7" data-live-search="true">
-                            <option value="AF">Sodium Hydroxide Caustic Soda 99% NAOH</option>
-                            <option value="AF">Sodium Hydroxide Caustic Soda 99% NAOH</option>
-                            <option value="AF">Sodium Hydroxide Caustic Soda 99% NAOH</option>
+                        <select id="document_create__material_name" class="form-control kt-selectpicker" data-size="7" data-live-search="true">
+                            {% for material in materials %}
+                                <option value="{{ material.id }}">{{ material.name }}</option>
+                            {% endfor %}
                         </select>
-                        <div class="kt-margin-t-10" style="float: right;">
-                            <a href="#" data-toggle="modal" data-target="#document_save__create_new_material">Create New Material</a>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Material Code</label>
+                        <select id="document_create__material_code" class="form-control kt-selectpicker" data-size="7" data-live-search="true">
+                            {% for material in materials %}
+                                <option value="{{ material.id }}">{{ material.code }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <span id='document_create__batch_code' class="kt-hidden">
+                    <div class="kt-separator kt-separator--portlet-fit"></div>
+                    <div class="row">
+                        <div class="col-lg-3 form-group">
+                            <label>Batch Code</label>
+                            <input type="text" class="form-control" />
                         </div>
                     </div>
-                    <div class="col-lg-3 form-group">
-                        <label>Material Number</label>
-                        <select class="form-control kt-selectpicker" data-size="7" data-live-search="true">
-                            <option value="AF">1234567890</option>
-                            <option value="AF">1234567890</option>
-                            <option value="AF">1234567890</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="kt-separator kt-separator--portlet-fit"></div>
-                <div class="row">
-                    <div class="col-lg-3 form-group">
-                        <label>Batch Number</label>
-                        <input type="text" class="form-control" value="123457890" />
-                    </div>
-                </div>
+                </span>
             </div>
         </div>
 
@@ -73,4 +74,144 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block page_level_scripts %}
+    <script src="{% static 'common/assets/js/pages/crud/forms/widgets/select2.js' %}" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        // Initialize select picker
+		var document_create__selectpicker = function () {
+			var init_selectpicker = function () {
+				$('.kt-selectpicker').selectpicker();
+			}
+
+			return {
+				run: function () {
+					init_selectpicker(); 
+				}
+			};
+		}();
+
+        // Hide/show batch code field
+        var document_create__hide_show_batch_code = function () {
+
+            var document_types = [
+                {% for document_type in document_types %}
+                    {
+                        id: '{{ document_type.id }}',
+                        name: '{{ document_type.name }}',
+                        acronym: '{{ document_type.acronym }}',
+                        level: '{{ document_type.level }}'
+                    }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ];
+
+            var hide_show = function () {
+                var selected_dt_id = $('#document_create__document_type')
+                    .children("option:selected")
+                    .val();
+                var dt = document_types.filter(t => t['id'] == selected_dt_id)[0];
+                var element = $('#document_create__batch_code');
+                if (dt.level == 'batch') {
+                    element.removeClass('kt-hidden');
+                } else if (dt.level == 'material') {
+                    element.addClass('kt-hidden');
+                }
+            }
+
+            var hide_show_on_change = function () {
+                $('#document_create__document_type').change(function () {
+                    hide_show();
+                });
+            }
+
+            return {
+                run: function () {
+                    hide_show();
+                },
+                run_on_change: function () {
+                    hide_show_on_change();
+                }
+            }
+        }();
+
+        // Select the right material code on selected material name, vice versa
+        var document_create__select_material = function () {
+            
+            var materials = [
+                {% for material in materials %}
+                    {
+                        id: '{{ material.id }}',
+                        name: '{{ material.name }}',
+                        code: '{{ material.code }}'
+                    }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ];
+
+            // We're triggering change on 'code' when 'name' changes and vice
+            // versa. This variable prevents both elements from calling each
+            // other in an infinite loop.
+            var stop = false;
+
+            var select_code = function () {
+                if (stop == true) { 
+                    stop = false;
+                    return;
+                }
+
+                var selected_m_id = $('#document_create__material_name')
+                    .children("option:selected")
+                    .val();
+                var m = materials.filter(m => m['id'] == selected_m_id)[0];
+                $('#document_create__material_code').val(m.id);
+                stop = true
+                $('#document_create__material_code').trigger('change');
+            }
+
+            var select_name = function () {
+                if (stop == true) { 
+                    stop = false;
+                    return;
+                }
+
+                var selected_m_id = $('#document_create__material_code')
+                    .children("option:selected")
+                    .val();
+                var m = materials.filter(m => m['id'] == selected_m_id)[0];
+                $('#document_create__material_name').val(m.id);
+                stop = true
+                $('#document_create__material_name').trigger('change');
+            }
+
+            var select_on_change = function () {
+                $('#document_create__material_name').change(function () {
+                    select_code();
+                });
+
+                $('#document_create__material_code').change(function () {
+                    select_name();
+                });
+            }
+
+            return {
+                run: function () {
+                    select_code();
+                    stop = false;
+                },
+                run_on_change: function () {
+                    select_on_change();
+                }
+            }
+        }();
+
+        // Call all functions on document ready
+        jQuery(document).ready(function () {
+			document_create__selectpicker.run();
+            document_create__hide_show_batch_code.run(); // Run once on load
+            document_create__hide_show_batch_code.run_on_change();
+            document_create__select_material.run();
+            document_create__select_material.run_on_change();
+		});
+    </script>
 {% endblock %}

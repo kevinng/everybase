@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block toolbar %}
-    <a href="#" class="btn btn-primary"><i class="flaticon2-plus"></i>Create Document</a>
+    <a href="{% url 'documents:create' %}" class="btn btn-primary"><i class="flaticon2-plus"></i>Create Document</a>
 {% endblock %}
 
 {% block content %}
@@ -103,7 +103,7 @@
                                         </div>
                                     </div>
                                     <div class="kt-widget__footer">
-                                        <a href="#" target="_blank" class="btn btn-outline-secondary btn-lg">Details</a>
+                                        <a href="" class="btn btn-outline-secondary btn-lg">Certificate of Analysis (COA)</a>
                                     </div>
                                 </div>             
                             </div>
