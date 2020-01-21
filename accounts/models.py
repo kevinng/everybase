@@ -14,6 +14,7 @@ class Organization(models.Model):
         return self.name
     
 class Account(models.Model):
+    id = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     deleted = models.DateTimeField(blank=True, null=True, default=None)
