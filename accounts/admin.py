@@ -4,9 +4,9 @@ from .models import (Account, Organization, AccountOrganization,
     EmailVerificationCode, PasswordResetCode, OrganizationInvitationCode)
 
 class AccountAdmin(admin.ModelAdmin):
-    readonly_fields = ('created', 'updated')
+    readonly_fields = ('id', 'created', 'updated')
     fieldsets = [
-        (None, {'fields': ['user', 'active_organization']}),
+        (None, {'fields': ['id', 'user', 'active_organization']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
     ]
 
