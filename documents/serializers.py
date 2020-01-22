@@ -10,14 +10,14 @@ from everybase.settings import (
     AWS_REGION_NAME, AWS_ACCESS_KEY_ID, AWS_STORAGE_BUCKET_NAME,
     AWS_SECRET_ACCESS_KEY, AWS_PRESIGNED_URL_EXPIRES_IN)
 
-class ReadTempFileSerializer(serializers.Serializer):
-    temp_file_id = serializers.UUIDField(write_only=True)
+class ReadFileSerializer(serializers.Serializer):
+    file_id = serializers.UUIDField(write_only=True)
     issued = serializers.DateTimeField(read_only=True)
     lifespan = serializers.IntegerField(read_only=True)
     url = serializers.URLField(read_only=True)
 
     def create(self, validated_data):
-        temp_file = File.objects.get(pk=validated_data['temp_file_id'])
+        file = File.objects.get(pk=validated_data['file_id'])
         s3 = boto3.client('s3',
             region_name=AWS_REGION_NAME,
             aws_access_key_id=AWS_ACCESS_KEY_ID,
@@ -28,7 +28,7 @@ class ReadTempFileSerializer(serializers.Serializer):
             'get_object',
             Params={
                 'Bucket': AWS_STORAGE_BUCKET_NAME,
-                'Key': temp_file.s3_object_key
+                'Key': file.s3_object_key
             },
             ExpiresIn=AWS_PRESIGNED_URL_EXPIRES_IN
         )

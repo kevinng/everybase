@@ -17,7 +17,7 @@ class DocumentForm(forms.Form):
         empty_label=None)
     batch_code = forms.CharField(max_length=100, required=False)
     material_id = forms.CharField(required=True, widget=forms.HiddenInput())
-    temp_file_id = forms.CharField(required=True, widget=forms.HiddenInput())
+    file_id = forms.CharField(required=True, widget=forms.HiddenInput())
 
     def clean(self):
         cd = super(DocumentForm, self).clean()
