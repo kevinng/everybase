@@ -6,7 +6,7 @@ from documents.models import Document
 
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    sent = models.DateTimeField(blank=True, null=True)
+    sent = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     comments = models.TextField()
     
@@ -27,4 +27,4 @@ class Recipient(models.Model):
     organization = models.ForeignKey(Organization,
         models.CASCADE, related_name='recipients')
     account = models.ForeignKey(Account, models.CASCADE,
-        blank=True, null=True, default=None, related_name='recipients')
+        null=True, default=None, related_name='recipients')

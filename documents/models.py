@@ -26,7 +26,7 @@ class Document(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(blank=True, null=True, default=None)
+    deleted = models.DateTimeField(null=True, default=None)
 
     creator = models.ForeignKey(Account,
         models.CASCADE, related_name='created_documents')
@@ -36,7 +36,7 @@ class Document(models.Model):
         models.CASCADE, related_name='documents')
     batch = models.ForeignKey(Batch,
         models.CASCADE,
-        blank=True, null=True, default=None,
+        null=True, default=None,
         related_name='documents')
     material = models.ForeignKey(Material,
         models.CASCADE,
@@ -50,8 +50,8 @@ class Document(models.Model):
 
 class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    saved = models.DateTimeField(blank=True, null=True, default=None)
-    deleted = models.DateTimeField(blank=True, null=True, default=None)
+    saved = models.DateTimeField(null=True, default=None)
+    deleted = models.DateTimeField(null=True, default=None)
     presigned_url_issued = models.DateTimeField(auto_now_add=True)
     presigned_url_lifespan = models.IntegerField()
     presigned_url_response = JSONField()
@@ -61,7 +61,7 @@ class File(models.Model):
 
     document = models.ForeignKey(Document,
         models.CASCADE,
-        blank=True, null=True, default=None,
+        null=True, default=None,
         related_name='files')
     creator = models.ForeignKey(Account,
         models.CASCADE,

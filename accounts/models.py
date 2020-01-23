@@ -8,7 +8,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(blank=True, null=True, default=None)
+    deleted = models.DateTimeField(null=True, default=None)
 
     def __str__(self):
         return self.name
@@ -17,11 +17,11 @@ class Account(models.Model):
     id = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(blank=True, null=True, default=None)
+    deleted = models.DateTimeField(null=True, default=None)
 
     user = models.OneToOneField(User, models.CASCADE, primary_key=True)
     active_organization = models.ForeignKey(Organization, models.CASCADE,
-        blank=True, null=True, default=None, related_name='active_accounts')
+        null=True, default=None, related_name='active_accounts')
     organizations = models.ManyToManyField(Organization,
         through='AccountOrganization', related_name='accounts')
     
@@ -32,7 +32,7 @@ class AccountOrganization(models.Model):
     role = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    deleted = models.DateTimeField(blank=True, null=True, default=None)
+    deleted = models.DateTimeField(null=True, default=None)
 
     account = models.ForeignKey(Account, models.CASCADE)
     organization = models.ForeignKey(Organization, models.CASCADE)
@@ -49,9 +49,9 @@ class EmailVerificationCode(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     email = models.EmailField()
     verified = models.DateTimeField(
-        blank=True, null=True, default=None)
+        null=True, default=None)
     ip_address = models.GenericIPAddressField('IP Address',
-        blank=True, null=True, default=None)
+        null=True, default=None)
 
     class Meta:
         ordering = ["created"]
@@ -101,7 +101,7 @@ class OrganizationInvitationCode(models.Model):
     used = models.BooleanField(default=False)
 
     recipient = models.ForeignKey(Account, models.CASCADE,
-        blank=True, null=True, default=None,
+        null=True, default=None,
         related_name='received_organization_invitation_codes')
     requestor = models.ForeignKey(Account, models.CASCADE,
         related_name='created_organization_invitation_codes')
