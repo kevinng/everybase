@@ -5,7 +5,7 @@
 {% load widget_tweaks %}
 
 {% block title %}
-    Edit Document
+    Edit Document - {{ document.material.name }}{% if document.batch %} , Batch: {{ document.batch.code }}{% endif %}
 {% endblock %}
 
 {% block content_header %}
@@ -23,20 +23,6 @@
 {% endblock %}
 
 {% block content %}
-mmmm
-{% if form.errors %}
-<div id="form-error">
-	<p>The operation could not be performed because one or more error(s) occurred.<br />Please resubmit the form after making the following changes:</p>
-	<ul>
-	{% for field in form %}
-	<li>{{ field.errors|striptags }}</li>
-	{% endfor %}
-	</ul>
-</div>
-{% endif %}
-xxx
-
-
     <div class="kt-container kt-grid__item kt-grid__item--fluid">
         <div class="kt-portlet kt-portlet--mobile">
             <div class="kt-portlet__body">
