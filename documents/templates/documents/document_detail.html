@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-    Document - {{ document.material.name }}{% if document.batch %} , Batch: {{ document.batch.code }}{% endif %}
+    Document Details - {{ document.material.name }}{% if document.batch %} , Batch: {{ document.batch.code }}{% endif %}
 {% endblock %}
 
 {% block subtitle %}
@@ -22,7 +22,7 @@
         </button>
         <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="{% url 'documents:edit' document.id %}"><i class="la la-pencil-square"></i>Edit</a>
-            <a class="dropdown-item" href="#"><i class="la la-trash"></i>Delete</a>
+            <a class="dropdown-item" href="{% url 'documents:delete' document.id %}"><i class="la la-trash"></i>Delete</a>
         </div>
     </div>
 {% endblock %}
