@@ -87,10 +87,8 @@ def get_document_view(pk, request, template):
 class DocumentDetailView(LoginRequiredMixin, DetailView):
     model = Document
 
-    def get_context_data(self, **kwargs):
-        context = super(DocumentDetailView, self).get_context_data(**kwargs)
-        context['file'] = get_object_or_404(File, document=self.object)
-        return context
+    def get(self, request, pk):
+        return get_document_view(pk, request, 'documents/document_detail.html')
 
 class DocumentDeleteView(LoginRequiredMixin, View):
 

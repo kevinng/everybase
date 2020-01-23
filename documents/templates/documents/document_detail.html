@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load widget_tweaks %}
+
 {% block title %}
     Document Details - {{ document.material.name }}{% if document.batch %} , Batch: {{ document.batch.code }}{% endif %}
 {% endblock %}
@@ -61,8 +63,10 @@
             </div>
         </div>
 
-        <input id='document__file_id' type='hidden' value='{{ file.id }}'>
         <div id="document__document_file"></div>
+
+        {{ form.file_id|attr:"id:document__file_id" }}
+        {{ form.material_id|attr:"id:document__material_id" }}
     </div>
 {% endblock %}
 
