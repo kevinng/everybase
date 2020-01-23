@@ -9,6 +9,7 @@ urlpatterns = [
   path('create', views.DocumentCreateView.as_view(), name='create'),
   path('details/<uuid:pk>', views.DocumentDetailView.as_view(), name='details'),
   path('edit/<uuid:pk>', views.DocumentEditView.as_view(), name='edit'),
+  path('delete/<uuid:pk>', views.DocumentDeleteView.as_view(), name='delete'),
   path('%s/temp_file' % api_prefix, views.TempFileView.as_view(), name='temp_file'),
   path('%s/read_file' % api_prefix, views.ReadFileView.as_view(), name='read_file'),
 

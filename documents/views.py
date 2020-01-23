@@ -54,7 +54,7 @@ class DocumentDetailView(LoginRequiredMixin, DetailView):
         context['file'] = get_object_or_404(File, document=self.object)
         return context
 
-def default_create_edit_document_view(request, form, template, additional_context={}):
+def document_view(request, form, template, additional_context={}):
     # For rendering non-form document name/code fields
     account = Account.objects.get(pk=request.user)
     materials = Material.objects.filter(
@@ -73,24 +73,45 @@ def default_create_edit_document_view(request, form, template, additional_contex
     context.update(additional_context)
     return render(request, template, context)
 
+def get_document(pk):
+
+    document = get_object_or_404(Document, pk=pk)
+
+    initial = {
+        'document_type': document.document_type,
+        'material_id': document.material.id,
+        'file_id': document.files.all()[0].id
+    }
+
+    if document.batch != None and document.batch != '':
+        initial['batch_code'] = document.batch.code
+
+    form = DocumentForm(initial=initial)
+    context = {'document': document}
+
+    return (form, context)
+
+class DocumentDeleteView(LoginRequiredMixin, View):
+
+    def get(self, request, pk):
+        (form, context) = get_document(pk)
+
+        return document_view(
+            request, form, 'documents/document_delete.html',
+            additional_context=context)
+
+    def post(self, request, pk):
+        document = get_object_or_404(Document, pk=pk)
+        document.deleted = datetime.now()
+        document.save()
+        return HttpResponseRedirect(reverse('documents:list'))
+
 class DocumentEditView(LoginRequiredMixin, View):
 
     def get(self, request, pk):
-        document = get_object_or_404(Document, pk=pk)
+        (form, context) = get_document(pk)
 
-        initial = {
-            'document_type': document.document_type,
-            'material_id': document.material.id,
-            'file_id': document.files.all()[0].id
-        }
-
-        if document.batch != None and document.batch != '':
-            initial['batch_code'] = document.batch.code
-
-        form = DocumentForm(initial=initial)
-        context = {'document': document}
-
-        return default_create_edit_document_view(
+        return document_view(
             request, form, 'documents/document_edit.html',
             additional_context=context)
     
@@ -128,13 +149,13 @@ class DocumentEditView(LoginRequiredMixin, View):
             return HttpResponseRedirect(
                 reverse('documents:details', kwargs={'pk': document.id}))
         
-        return default_create_edit_document_view(request, form, 'documents/document_edit.html')
+        return document_view(request, form, 'documents/document_edit.html')
 
 class DocumentCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
         form = DocumentForm()
-        return default_create_edit_document_view(request, form, 'documents/document_create.html')
+        return document_view(request, form, 'documents/document_create.html')
 
     def post(self, request):
         form = DocumentForm(request.POST)
@@ -174,7 +195,7 @@ class DocumentCreateView(LoginRequiredMixin, View):
             return HttpResponseRedirect(
                 reverse('documents:details', kwargs={'pk': document.id}))
         
-        return default_create_edit_document_view(request, form, 'documents/document_create.html')
+        return document_view(request, form, 'documents/document_create.html')
 
 def documents(request):
     template_name = 'documents/document_list.html'
