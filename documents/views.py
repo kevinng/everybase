@@ -6,7 +6,7 @@ from django.template.response import TemplateResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView
 from django.views import View
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 
 from rest_framework.authentication import SessionAuthentication
@@ -46,14 +46,6 @@ class TempFileView(
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-class DocumentDetailView(LoginRequiredMixin, DetailView):
-    model = Document
-
-    def get_context_data(self, **kwargs):
-        context = super(DocumentDetailView, self).get_context_data(**kwargs)
-        context['file'] = get_object_or_404(File, document=self.object)
-        return context
-
 def document_view(request, form, template, additional_context={}):
     # For rendering non-form document name/code fields
     account = Account.objects.get(pk=request.user)
@@ -73,9 +65,10 @@ def document_view(request, form, template, additional_context={}):
     context.update(additional_context)
     return render(request, template, context)
 
-def get_document(pk):
-
+def get_document_view(pk, request, template):
     document = get_object_or_404(Document, pk=pk)
+    if document.deleted != None:
+        raise Http404("Document does not exist.")
 
     initial = {
         'document_type': document.document_type,
@@ -83,22 +76,26 @@ def get_document(pk):
         'file_id': document.files.all()[0].id
     }
 
-    if document.batch != None and document.batch != '':
+    if document.batch != None:
         initial['batch_code'] = document.batch.code
 
     form = DocumentForm(initial=initial)
     context = {'document': document}
 
-    return (form, context)
+    return document_view(request, form, template, additional_context=context)
+
+class DocumentDetailView(LoginRequiredMixin, DetailView):
+    model = Document
+
+    def get_context_data(self, **kwargs):
+        context = super(DocumentDetailView, self).get_context_data(**kwargs)
+        context['file'] = get_object_or_404(File, document=self.object)
+        return context
 
 class DocumentDeleteView(LoginRequiredMixin, View):
 
     def get(self, request, pk):
-        (form, context) = get_document(pk)
-
-        return document_view(
-            request, form, 'documents/document_delete.html',
-            additional_context=context)
+        return get_document_view(pk, request, 'documents/document_delete.html')
 
     def post(self, request, pk):
         document = get_object_or_404(Document, pk=pk)
@@ -109,11 +106,7 @@ class DocumentDeleteView(LoginRequiredMixin, View):
 class DocumentEditView(LoginRequiredMixin, View):
 
     def get(self, request, pk):
-        (form, context) = get_document(pk)
-
-        return document_view(
-            request, form, 'documents/document_edit.html',
-            additional_context=context)
+        return get_document_view(pk, request, 'documents/document_edit.html')
     
     def post(self, request, pk):
         form = DocumentForm(request.POST)
