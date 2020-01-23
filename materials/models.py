@@ -33,3 +33,8 @@ class Batch(models.Model):
 
     class Meta:
         verbose_name_plural = 'Batches'
+        unique_together = [['material', 'code']]
+    
+    def __str__(self):
+        return 'ID: %s, Material: %s (%s), Batch: %s' % (str(self.id)[:4], self.material.name, self.material.code, self.code)
+    

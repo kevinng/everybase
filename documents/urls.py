@@ -8,6 +8,7 @@ urlpatterns = [
   path('', views.documents, name='list'),
   path('create', views.DocumentCreateView.as_view(), name='create'),
   path('details/<uuid:pk>', views.DocumentDetailView.as_view(), name='details'),
+  path('edit/<uuid:pk>', views.DocumentEditView.as_view(), name='edit'),
   path('%s/temp_file' % api_prefix, views.TempFileView.as_view(), name='temp_file'),
   path('%s/read_file' % api_prefix, views.ReadFileView.as_view(), name='read_file'),
 
@@ -19,4 +20,5 @@ urlpatterns = [
   path('materials/', views.materials, name='materials'),
   path('colleagues/', views.colleagues, name='colleagues'),
   path('r/<str:file_to_render>', views.r),
+  path('r/js/<str:file_to_render>', views.rj),
 ]

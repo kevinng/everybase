@@ -15,6 +15,7 @@ class DocumentType(models.Model):
     ], default='material')
 
     def __str__(self):
+        # User-facing text
         return self.name + ' (' + self.acronym + ')'
 
     class Meta:

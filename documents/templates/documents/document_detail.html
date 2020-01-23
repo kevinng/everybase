@@ -21,7 +21,7 @@
             <i class="flaticon-more-1"></i>
         </button>
         <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="#"><i class="la la-pencil-square"></i>Edit</a>
+            <a class="dropdown-item" href="{% url 'documents:edit' document.id %}"><i class="la la-pencil-square"></i>Edit</a>
             <a class="dropdown-item" href="#"><i class="la la-trash"></i>Delete</a>
         </div>
     </div>
@@ -34,7 +34,7 @@
                 <div class="row">
                     <div class="col-lg-3 form-group">
                         <label>Document Type</label>
-                        <h5>{{ document.document_type.name }} ({{ document.document_type.acronym }})</h5>
+                        <h5>{{ document.document_type }}</h5>
                     </div>
                     <div class="col-lg-5 form-group">
                         <label>Material Name</label>
@@ -60,46 +60,13 @@
                 </div>
             </div>
         </div>
-        <div id="document_detail__document_file"></div>
+
+        <input id='document__file_id' type='hidden' value='{{ file.id }}'>
+        <div id="document__document_file"></div>
     </div>
 {% endblock %}
 
 {% block page_level_scripts %}
 <script src="{% static 'common/assets/plugins/pdfobject/pdfobject.min.js' %}" type="text/javascript"></script>
-<script>
-
-    var document_details__display_file = function () {
-
-        var render_file = function (url) {
-            var options = {
-                height: "1200px"
-            };
-            PDFObject.embed(url, "#document_detail__document_file", options);
-        }
-
-        var read_file_presigned_url = function (file_id) {
-            $.ajax({
-                type: 'POST',
-                headers: { "X-CSRFToken": '{{ csrf_token }}' },
-                url: '{% url 'documents:read_file' %}',
-                data: {'file_id': file_id},
-                dataType: 'json',
-                success: function (response) {
-                    render_file(response.url);
-                }
-            });
-        }
-        
-        return {
-            run: function () {
-                read_file_presigned_url('{{ file.id }}');
-            }
-        }
-    }();
-
-    jQuery(document).ready(function () {
-        document_details__display_file.run();
-    });
-
-</script>
+{% include 'documents/js/document.js' %}
 {% endblock %}

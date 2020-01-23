@@ -4,7 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.template.response import TemplateResponse
 from django.shortcuts import render, get_object_or_404
-from django.views import generic, View
+from django.views.generic import DetailView
+from django.views import View
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
@@ -45,7 +46,7 @@ class TempFileView(
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-class DocumentDetailView(LoginRequiredMixin, generic.DetailView):
+class DocumentDetailView(LoginRequiredMixin, DetailView):
     model = Document
 
     def get_context_data(self, **kwargs):
@@ -53,27 +54,87 @@ class DocumentDetailView(LoginRequiredMixin, generic.DetailView):
         context['file'] = get_object_or_404(File, document=self.object)
         return context
 
+def default_create_edit_document_view(request, form, template, additional_context={}):
+    # For rendering non-form document name/code fields
+    account = Account.objects.get(pk=request.user)
+    materials = Material.objects.filter(
+        organization=account.active_organization
+    ).order_by('code')
+
+    # For populating JS document types array
+    document_types = DocumentType.objects.all()
+
+    context = {
+        'form': form,
+        'materials': materials,
+        'document_types': document_types
+    }
+    
+    context.update(additional_context)
+    return render(request, template, context)
+
+class DocumentEditView(LoginRequiredMixin, View):
+
+    def get(self, request, pk):
+        document = get_object_or_404(Document, pk=pk)
+
+        initial = {
+            'document_type': document.document_type,
+            'material_id': document.material.id,
+            'file_id': document.files.all()[0].id
+        }
+
+        if document.batch != None and document.batch != '':
+            initial['batch_code'] = document.batch.code
+
+        form = DocumentForm(initial=initial)
+        context = {'document': document}
+
+        return default_create_edit_document_view(
+            request, form, 'documents/document_edit.html',
+            additional_context=context)
+    
+    def post(self, request, pk):
+        form = DocumentForm(request.POST)
+        if form.is_valid():
+            document_type = form.cleaned_data['document_type']
+            material = get_object_or_404(Material, pk=form.cleaned_data['material_id'])
+
+            document = Document.objects.get(pk=pk)
+            document.material = material
+            document.document_type = document_type
+
+            this_batch = document.batch
+
+            if document_type.level == 'batch':
+                batch_code = form.cleaned_data['batch_code']
+                batches = Batch.objects\
+                    .filter(material=material)\
+                    .filter(code=batch_code)
+
+                # If the batch we need exists, assign it. Otherwise, create it.
+                if batches.exists() and this_batch.id != batches[0].id:
+                    document.batch = batches[0]
+                else:
+                    new_batch = Batch(
+                        code=batch_code,
+                        material=material
+                    )
+                    document.batch = new_batch
+                    new_batch.save()
+
+            document.save()
+            
+            return HttpResponseRedirect(
+                reverse('documents:details', kwargs={'pk': document.id}))
+        
+        return default_create_edit_document_view(request, form, 'documents/document_edit.html')
+
 class DocumentCreateView(LoginRequiredMixin, View):
-
-    def default_view(self, request, form):
-        # For rendering non-form document name/code fields
-        account = Account.objects.get(pk=self.request.user)
-        materials = Material.objects.filter(
-            organization=account.active_organization
-        ).order_by('code')
-
-        # For populating JS document types array
-        document_types = DocumentType.objects.all()
-
-        return render(request, 'documents/document_create.html', {
-            'form': form,
-            'materials': materials,
-            'document_types': document_types
-        })
 
     def get(self, request):
         form = DocumentForm()
-        return self.default_view(request, form)
+        return default_create_edit_document_view(request, form, 'documents/document_create.html')
 
     def post(self, request):
         form = DocumentForm(request.POST)
@@ -81,6 +142,7 @@ class DocumentCreateView(LoginRequiredMixin, View):
             account = get_object_or_404(Account, pk=self.request.user)
             material = get_object_or_404(Material, pk=form.cleaned_data['material_id'])
             document_type = form.cleaned_data['document_type']
+            batch_code = form.cleaned_data['batch_code']
 
             document = Document()
             document.creator = account
@@ -93,20 +155,26 @@ class DocumentCreateView(LoginRequiredMixin, View):
             file.saved = datetime.now()
 
             if document_type.level == 'batch':
-                batch = Batch(code=form.cleaned_data['batch_code'])
-                batch.material = material
-                document.batch = batch
-                batch.save()
+                batches = Batch.objects\
+                    .filter(material=material)\
+                    .filter(code=batch_code)
+
+                # If the batch we need exists, assign it. Otherwise, create it.
+                if batches.exists():
+                    document.batch = batches[0]
+                else:
+                    batch = Batch(code=batch_code)
+                    batch.material = material
+                    document.batch = batch
+                    batch.save()
 
             document.save()
             file.save()
 
-            print('hello world')
-
             return HttpResponseRedirect(
                 reverse('documents:details', kwargs={'pk': document.id}))
         
-        return self.default_view(request, form)
+        return default_create_edit_document_view(request, form, 'documents/document_create.html')
 
 def documents(request):
     template_name = 'documents/document_list.html'
@@ -130,4 +198,8 @@ def colleagues(request):
 
 def r(request, file_to_render):
     template_name = 'documents/%s' % file_to_render
+    return TemplateResponse(request, template_name, {})
+
+def rj(request, file_to_render):
+    template_name = 'documents/js/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
