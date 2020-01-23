@@ -43,9 +43,18 @@ class Document(models.Model):
         related_name='documents')
 
     def __str__(self):
-        string = 'Created: %s, Material: %s' % (self.created, self.material.name)
+        string = 'ID: %s, Created: %s, Material: %s' % (
+            str(self.id)[:4],
+            self.created.strftime("%b %d %Y %H:%M:%S"),
+            self.material.name
+        )
+
         if self.batch != None:
             string += ', Batch: ' + self.batch.code
+
+        if self.deleted != None:
+            string += ' [Deleted]'
+
         return string
 
 class File(models.Model):
