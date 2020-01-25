@@ -1,20 +1,15 @@
 from datetime import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.template.response import TemplateResponse
+from django.template.response import TemplateResponse # Remove
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import DetailView
 from django.views import View
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 
-from rest_framework.authentication import SessionAuthentication
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework import views
-from rest_framework.response import Response
 
 from .forms import DocumentForm
 from .models import (
@@ -56,6 +51,12 @@ def document_view(request, form, template, additional_context={}):
     # For populating JS document types array
     document_types = DocumentType.objects.all()
 
+    if form == None:
+        form = DocumentForm(initial={
+            'document_type': document_types[0],
+            'material_id': materials[0].id
+        })
+
     context = {
         'form': form,
         'materials': materials,
@@ -84,9 +85,7 @@ def get_document_view(pk, request, template):
 
     return document_view(request, form, template, additional_context=context)
 
-class DocumentDetailView(LoginRequiredMixin, DetailView):
-    model = Document
-
+class DocumentDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         return get_document_view(pk, request, 'documents/document_detail.html')
 
@@ -145,8 +144,7 @@ class DocumentEditView(LoginRequiredMixin, View):
 class DocumentCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
-        form = DocumentForm()
-        return document_view(request, form, 'documents/document_create.html')
+        return document_view(request, None, 'documents/document_create.html')
 
     def post(self, request):
         form = DocumentForm(request.POST)

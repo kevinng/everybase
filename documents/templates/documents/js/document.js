@@ -150,9 +150,110 @@
             }
         }
 
+        var trigger_on_change = function () {
+            $('#document__file_id').change(function () {
+                trigger_once()
+            })
+        }
+
         return {
             run: function () {
                 trigger_once();
+            },
+            run_on_change: function () {
+                trigger_on_change();
+            }
+        }
+    }();
+
+    var document__upload_file = function () {
+
+        var upload_file = function (temp_file, file) {
+            var res = temp_file.presigned_url_response;
+            var post_data = new FormData();
+            for (key in res.fields) {
+                post_data.append(key, res.fields[key]);
+            }
+            post_data.append('file', file);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', res.url);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200 || xhr.status === 204) {
+                        // Hide error messages - if any
+                        $('#document__document_file_input').removeClass('is-invalid');
+                        $('#document__document_file_input_error_pdf_only').addClass('kt-hidden');
+                        $('#document__document_file_input_error_cannot_upload').addClass('kt-hidden');
+                        
+                        $('#document__file_id')
+                            .val(temp_file.id)
+                            .trigger('change');
+                    } else {
+                        // Show error messages
+                        $('#document__document_file_input').addClass('is-invalid');
+                        $('#document__document_file_input_error_cannot_upload').removeClass('kt-hidden');
+                    }
+
+                    // Unlock portlet
+                    KTApp.unblock('#document__file_input_portlet');
+
+                    // Enable button
+                    $('#document__create_document_button')
+                        .attr("disabled", false);
+                }
+            };
+
+            // Block portlet
+            KTApp.block('#document__file_input_portlet', {
+                type: 'v2',
+                state: 'primary',
+                message: 'Uploading...'
+            });
+
+            // Disable submit button
+            $('#document__create_document_button')
+                .attr("disabled", true);
+
+            xhr.send(post_data);
+        }
+
+        var create_file_presigned_url = function (file) {
+            $.ajax({
+                type: 'POST',
+                headers: { "X-CSRFToken": '{{ csrf_token }}' },
+                url: '{% url 'documents:temp_file' %}',
+                data: {
+                    'filetype': file.type
+                },
+                dataType: 'json',
+                success: function (temp_file) {
+                    upload_file(temp_file, file);
+                }
+            });
+        }
+
+        var trigger_on_change = function () {
+            var file_input = $('#document__document_file_input')
+            file_input.change(function () {
+                var file = file_input.prop('files')[0];
+
+                if (file.type != 'application/pdf') {
+                    $('#document__document_file_input').addClass('is-invalid');
+                    $('#document__document_file_input_error_pdf_only').removeClass('kt-hidden');
+                    return;
+                } else {
+                    $('#document__document_file_input').removeClass('is-invalid');
+                    $('#document__document_file_input_error_pdf_only').addClass('kt-hidden');
+                }
+
+                create_file_presigned_url(file);
+            });
+        }
+
+        return {
+            run_on_change: function () {
+                trigger_on_change();
             }
         }
     }();
@@ -162,8 +263,10 @@
         document__selectpicker.run();
         document__hide_show_batch_code.run(); // Run once on load
         document__hide_show_batch_code.run_on_change();
-        document__select_material.init();
         document__select_material.run_on_change();
+        document__select_material.init();
         document__refresh_file.run();
+        document__refresh_file.run_on_change();
+        document__upload_file.run_on_change();
     });
 </script>
