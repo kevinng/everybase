@@ -3,7 +3,7 @@ from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.response import TemplateResponse # Remove
 from django.shortcuts import render, get_object_or_404
-from django.views import View
+from django.views import View, generic
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 
@@ -185,6 +185,54 @@ class DocumentCreateView(LoginRequiredMixin, View):
                 reverse('documents:details', kwargs={'pk': document.id}))
         
         return document_view(request, form, 'documents/document_create.html')
+
+class DocumentListView(LoginRequiredMixin, generic.ListView):
+    model = Document
+    paginate_by = 36
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['document_types'] = DocumentType.objects.all().order_by('-name')
+        return context
+
+    def get_queryset(self):
+        material_name = self.request.GET.get('material_name', None)
+        material_code = self.request.GET.get('material_code', None)
+        batch_code = self.request.GET.get('batch_code', None)
+        created_start_date = self.request.GET.get('created_start_date', None)
+        created_end_date = self.request.GET.get('created_end_date', None)
+
+        documents = Document.objects.order_by('-created')
+
+        if material_name != None and material_name != '':
+            documents = documents.filter(material__name__icontains=material_name)
+        
+        if material_code != None and material_code != '':
+            documents = documents.filter(material__code__icontains=material_code)
+
+        if batch_code != None and batch_code != '':
+            documents = documents.filter(batch__code__icontains=batch_code)
+
+        if created_start_date != None and created_start_date != '':
+            (month, day, year) = map(lambda x: int(x), created_start_date.split('/'))
+            start_date = datetime(year, month, day)
+        else:
+            start_date = None
+
+        if created_end_date != None and created_end_date != '':
+            (month, day, year) = map(lambda x: int(x), created_end_date.split('/'))
+            end_date = datetime(year, month, day)
+        else:
+            end_date = None
+        
+        if start_date != None and end_date != None:
+            documents = Document.objects.filter(created__range=(start_date, end_date))
+        elif start_date != None and end_date == None:
+            documents = Document.objects.filter(created__gt=start_date)
+        elif start_date == None and end_date != None:
+            documents = Document.objects.filter(created__lt=end_date)
+        
+        return documents
 
 def documents(request):
     template_name = 'documents/document_list.html'

@@ -5,7 +5,7 @@ from . import views
 app_name = 'documents'
 api_prefix = 'api'
 urlpatterns = [
-  path('', views.documents, name='list'),
+  path('', views.DocumentListView.as_view(), name='list'),
   path('create', views.DocumentCreateView.as_view(), name='create'),
   path('details/<uuid:pk>', views.DocumentDetailView.as_view(), name='details'),
   path('edit/<uuid:pk>', views.DocumentEditView.as_view(), name='edit'),
