@@ -36,11 +36,12 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'common.apps.CommonConfig',
-    'accounts.apps.AccountsConfig',
-    'documents.apps.DocumentsConfig',
-    'materials.apps.MaterialsConfig',
-    'communications.apps.CommunicationsConfig',
-    'lander.apps.LanderConfig',
+    # 'accounts.apps.AccountsConfig',
+    # 'documents.apps.DocumentsConfig',
+    # 'materials.apps.MaterialsConfig',
+    # 'communications.apps.CommunicationsConfig',
+    'leads.apps.LeadsConfig',
+    # 'lander.apps.LanderConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
