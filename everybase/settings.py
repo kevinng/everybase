@@ -164,7 +164,7 @@ MESSAGE_TAGS = {
 
 
 if 'REDIS_URL' in os.environ:
-    CELERY_BROKER_URL = os.config('REDIS_URL')
+    CELERY_BROKER_URL = config('REDIS_URL')
 else:
     CELERY_BROKER_URL = 'redis://%s:%s' % (
         config('REDIS_HOST'),
