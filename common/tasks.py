@@ -14,6 +14,8 @@ def send_email(
     Returns:
     Boolean: True if successful
     """
+
+    print('Sending email...')
     
     return send_mail(
         subject,
