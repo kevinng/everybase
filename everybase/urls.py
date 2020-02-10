@@ -23,6 +23,6 @@ urlpatterns = [
     # path('documents/', include('documents.urls')),
     # path('materials/', include('materials.urls')),
     path('', include('leads.urls')),
-    path('33fce0de-4bb0-11ea-b77f-2e728ce88125/', admin.site.urls),
+    path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
     # path('api-auth/', include('rest_framework.urls'))
 ]
