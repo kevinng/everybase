@@ -26,6 +26,15 @@ class Lead(models.Model):
     ))
     i_am_interested_to_buy = models.TextField(
         blank=True, null=True, default=None)
+
+    def __str__(self):
+        """Primarily used in administration console."""
+        return '%s, %s, %s, %s' % (
+            self.name,
+            self.email,
+            self.chat_app,
+            self.i_want_to
+        )
     
 class LeadModelForm(forms.ModelForm):
 
