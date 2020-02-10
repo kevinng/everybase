@@ -15,14 +15,10 @@ def send_email(
     Boolean: True if successful
     """
     
-    success = send_mail(
+    return send_mail(
         subject,
         message,
         from_email,
         recipient_list,
         html_message=html_message
     ) == 1
-
-    print('Email sent: %s' + str(success))
-
-    return success
