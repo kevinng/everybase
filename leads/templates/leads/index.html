@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post" action="{% url 'leads:capture' %}">
+    <form id="leads__lead_form" method="post" action="{% url 'leads:capture' %}">
         {% csrf_token %}
         <div class="kt-container kt-grid__item kt-grid__item--fluid">
             <div class="row">
