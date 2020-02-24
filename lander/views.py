@@ -7,5 +7,8 @@ def r(request, file_to_render):
     template = loader.get_template('lander/%s' % file_to_render)
     return HttpResponse(template.render({}, request))
 
-def home(request):
-    return render(request, 'lander/home.html')
+def document_management(request):
+    return render(request, 'lander/document_management.html')
+
+def slow_moving_stock(request):
+    return render(request, 'lander/slow_moving_stock.html')
