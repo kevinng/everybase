@@ -22,6 +22,7 @@ urlpatterns = [
     # path('', include('accounts.urls')),
     # path('documents/', include('documents.urls')),
     # path('materials/', include('materials.urls')),
+    path('products/', include('products.urls')),
     path('', include('lander.urls')),
     path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
     # path('api-auth/', include('rest_framework.urls'))
