@@ -15,6 +15,7 @@ from decouple import config
 import django_heroku
 import dj_database_url
 from django.contrib.messages import constants as messages
+from django.conf.locale.en import formats as en_formats
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5me-lk6^&#&iy#asw5hnevv1qs+78w1)ds*68_txtnh#_vbfsl'
+SECRET_KEY = config('DJANGO_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     # 'communications.apps.CommunicationsConfig',
     # 'leads.apps.LeadsConfig',
     'lander.apps.LanderConfig',
+    'products.apps.ProductsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -199,3 +201,6 @@ AWS_PRESIGNED_URL_EXPIRES_IN = config('AWS_PRESIGNED_URL_EXPIRES_IN')
 
 # List of persons to notify when someone signs up as a lead
 LEAD_SIGN_UP_NOTIFICATION_LIST = ['kevin@everybase.co']
+
+# Django administration default datetime format
+en_formats.DATETIME_FORMAT = 'd M Y H:i:s'
