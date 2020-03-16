@@ -31,7 +31,7 @@ class Product(models.Model):
         models.CASCADE, related_name='products')
 
     def __str__(self):
-        return self.full_name + ', ' + str(self.quantity) + ' ' + self.uom.acronym + ', Id: ' + str(self.id)
+        return self.company.name + ', ' + self.full_name + ', ' + str(self.quantity) + ' ' + self.uom.acronym + ', Id: ' + str(self.id)
 
 class Agent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
