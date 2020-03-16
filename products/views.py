@@ -69,7 +69,7 @@ def products(request, products_list_id):
             render_to_string(et_path('enquiry_subject.txt')),
             render_to_string(et_path('enquiry.html'), et_context),
             'friend@everybase.co', # From email
-            [products_list.agent.email, lead.email], # Recipients list
+            [products_list.agent.email, lead.email, 'friend@everybase.co'], # Recipients list
             html_message=render_to_string(et_path('enquiry.html'), et_context)
         )
 
