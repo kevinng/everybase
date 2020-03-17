@@ -1,3 +1,5 @@
+Enquiry Id: {{ products_interest_list.id }}
+
 Thank you for enquiring about the following goods:
 
 {% if products_interest_list %}

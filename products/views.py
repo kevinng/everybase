@@ -66,7 +66,7 @@ def products(request, products_list_id):
             'products_interest_list': products_interest_list
         }
         send_email.delay(
-            render_to_string(et_path('enquiry_subject.txt')),
+            render_to_string(et_path('enquiry_subject.txt'), et_context),
             render_to_string(et_path('enquiry.html'), et_context),
             'friend@everybase.co', # From email
             [products_list.agent.email, lead.email, 'friend@everybase.co'], # Recipients list
