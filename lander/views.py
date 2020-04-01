@@ -12,3 +12,6 @@ def document_management(request):
 
 def slow_moving_stock(request):
     return render(request, 'lander/slow_moving_stock.html')
+
+def ex_stock(request):
+    return render(request, 'lander/ex_stock.html')
