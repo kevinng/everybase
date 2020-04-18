@@ -18,6 +18,8 @@ django-decouple = "*"
 boto3 = "*"
 httpie = "*"
 djangorestframework = "*"
+django-extensions = "*"
+json-lines = "*"
 
 [requires]
 python_version = "3.7"
