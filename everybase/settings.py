@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     # 'materials.apps.MaterialsConfig',
     # 'communications.apps.CommunicationsConfig',
     # 'leads.apps.LeadsConfig',
+    'django_extensions',
+    'leads.apps.LeadsConfig',
     'lander.apps.LanderConfig',
     'products.apps.ProductsConfig',
     'django.contrib.admin',
