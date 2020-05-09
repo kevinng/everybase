@@ -6,7 +6,7 @@ class CloakedLinkAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Details', {'fields': ['page_title', 'description', 'url']}),
+        ('Details', {'fields': ['page_title', 'description', 'url', 'redirect']}),
     ]
 
 admin.site.register(CloakedLink, CloakedLinkAdmin)
