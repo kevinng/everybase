@@ -3,9 +3,7 @@ from .models import CloakedLink
 from django.template.response import TemplateResponse
 
 def iframe(request, key):
-    context = {
-        'cloaked_link': CloakedLink.objects.get(pk=key)
-    }
+    context = { 'cloaked_link': CloakedLink.objects.get(pk=key) }
     return render(request, 'cloaker/iframe.html', context)
 
 def r(request, file_to_render):

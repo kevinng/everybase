@@ -6,4 +6,4 @@ class CloakedLink(models.Model):
     url = models.URLField()
 
     def __str__(self):
-        return self.page_title
+        return str(self.id) + ' - ' + self.page_title

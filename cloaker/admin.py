@@ -2,4 +2,11 @@ from django.contrib import admin
 
 from .models import CloakedLink
 
-admin.site.register(CloakedLink)
+class CloakedLinkAdmin(admin.ModelAdmin):
+    readonly_fields = ('id',)
+    fieldsets = [
+        (None, {'fields': ['id']}),
+        ('Details', {'fields': ['page_title', 'description', 'url']}),
+    ]
+
+admin.site.register(CloakedLink, CloakedLinkAdmin)
