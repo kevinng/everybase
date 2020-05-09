@@ -1,0 +1,16 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+    <head>
+        {% include 'partials/_analytics/gtm_head.html' %}
+        {% include 'partials/_favicon.html' %}
+        <meta charset="utf-8">
+        <title>{{ cloaked_link.title }}</title>
+    </head>
+    <body>
+        <embed src="{{ cloaked_link.url }}" width="100%" style="height: -webkit-fill-available">
+    </body>
+</html>
+
+{% comment %} https://docs.google.com/document/d/e/2PACX-1vRRVen759ntsUsYDf5Elt2yU94cgELXUEy1cFB_EgfYnF4uaImpcVC4jdPfEOghUktt6hVSXKjW8YZL/pub?embedded=true {% endcomment %}

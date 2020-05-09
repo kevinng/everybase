@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'common.apps.CommonConfig',
+    'cloaker.apps.CloakerConfig',
     # 'accounts.apps.AccountsConfig',
     # 'documents.apps.DocumentsConfig',
     # 'materials.apps.MaterialsConfig',
