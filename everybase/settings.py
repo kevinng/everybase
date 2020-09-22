@@ -37,16 +37,20 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'common.apps.CommonConfig',
+    'files.apps.FilesConfig',
+
+    'lander.apps.LanderConfig',
     'cloaker.apps.CloakerConfig',
+
     # 'accounts.apps.AccountsConfig',
     # 'documents.apps.DocumentsConfig',
     # 'materials.apps.MaterialsConfig',
     # 'communications.apps.CommunicationsConfig',
     # 'leads.apps.LeadsConfig',
+    # 'leads.apps.LeadsConfig',
+    # 'products.apps.ProductsConfig',
+
     'django_extensions',
-    'leads.apps.LeadsConfig',
-    'lander.apps.LanderConfig',
-    'products.apps.ProductsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
