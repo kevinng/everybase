@@ -37,7 +37,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'common.apps.CommonConfig',
+    'relationships.apps.RelationshipsConfig',
+    'communication.apps.CommunicationConfig',
     'files.apps.FilesConfig',
+    'leads.apps.LeadsConfig',
 
     'lander.apps.LanderConfig',
     'cloaker.apps.CloakerConfig',
