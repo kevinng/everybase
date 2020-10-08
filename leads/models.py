@@ -54,7 +54,9 @@ class Lead(models.Model):
     company = fk('relationships.Company', '%(class)s_leads')
     contact_type = fk('ContactType', '%(class)s_leads')
     contact_type_details_md = models.TextField(
-        'Contact type details in Markdown')
+        'Contact type details in Markdown',
+        null=True,
+        blank=True)
 
     class Meta:
         abstract = True
