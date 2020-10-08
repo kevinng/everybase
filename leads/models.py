@@ -30,9 +30,9 @@ m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
     )
 
 class ExpirableInvalidable(models.Model):
-    expired = models.DateTimeField(null=True, default=None)
-    invalidated = models.DateTimeField(null=True, default=None)
-    invalidated_reason_md = models.TextField()
+    expired = models.DateTimeField(null=True, blank=True, default=None)
+    invalidated = models.DateTimeField(null=True, blank=True, default=None)
+    invalidated_reason_md = models.TextField(null=True, blank=True, default=None)
 
     class Meta:
         abstract = True
