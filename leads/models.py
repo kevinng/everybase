@@ -155,7 +155,9 @@ class UOMRelationship(models.Model):
 # --- Start: Main models ---
 
 class Supply(Standard, Lead, ExpirableInvalidable):
-    pass
+    class Meta:
+        verbose_name = 'Supply'
+        verbose_name_plural = 'Supplies'
 
 class Demand(Standard, Lead, ExpirableInvalidable):
     pass
