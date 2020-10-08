@@ -4,7 +4,7 @@ from common.models import Choice, Standard, ParentChildrenChoice
 # --- Start: Abstract ---
 
 # Helper function to declare foreign key relationships.
-fk = lambda klass, name, verbose_name=verbose_name: models.ForeignKey(
+fk = lambda klass, name, verbose_name=None: models.ForeignKey(
         klass,
         on_delete=models.PROTECT,
         related_name=name,
@@ -44,7 +44,7 @@ class Lead(models.Model):
     category = fk('LeadCategory', '%(class)s_leads')
     display_name = models.CharField(max_length=100)
 
-    base_uom = fk('UnitOfMeasure', '%(class)s_leads')
+    base_uom = fk('UnitOfMeasure', '%(class)s_leads', 'Base UOM')
 
     details_md = models.TextField('Details in Markdown',
         null=True, blank=True)
