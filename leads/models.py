@@ -4,20 +4,22 @@ from common.models import Choice, Standard, ParentChildrenChoice
 # --- Start: Abstract ---
 
 # Helper function to declare foreign key relationships.
-fk = lambda klass, name: models.ForeignKey(
+fk = lambda klass, name, verbose_name=verbose_name: models.ForeignKey(
         klass,
         on_delete=models.PROTECT,
         related_name=name,
-        related_query_name=name
+        related_query_name=name,
+        verbose_name=verbose_name
     )
 
 fkx = lambda klass: models.ForeignKey(klass, on_delete=models.PROTECT)
 
 # Helper function to declare many-to-many relationships.
-m2m = lambda klass, name: models.ManyToManyField(
+m2m = lambda klass, name, blank=True: models.ManyToManyField(
         klass,
         related_name=name,
-        related_query_name=name
+        related_query_name=name,
+        blank=blank
     )
 
 # Helper function to declare many-to-many through relationships.
@@ -42,10 +44,11 @@ class Lead(models.Model):
     category = fk('LeadCategory', '%(class)s_leads')
     display_name = models.CharField(max_length=100)
 
-    base_uom = fk('UnitOfMeasure', '%(class)s_leads') # Change name
+    base_uom = fk('UnitOfMeasure', '%(class)s_leads')
 
-    details_md = models.TextField('Details in Markdown')
-    files = m2m('files.File', '%(class)s_leads') # Make nullable
+    details_md = models.TextField('Details in Markdown',
+        null=True, blank=True)
+    files = m2m('files.File', '%(class)s_leads')
 
     contact = fk('relationships.Person', '%(class)s_leads')
     company = fk('relationships.Company', '%(class)s_leads')
