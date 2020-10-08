@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib import admin
 
 # --- Start: Abstract ---
 
@@ -26,11 +27,20 @@ class Choice(models.Model):
     Abstract model for a choice model.
     """
     name = models.CharField(max_length=100)
-    details_md = models.TextField('Details in Markdown')
+    details_md = models.TextField('Details in Markdown',
+        null=True,
+        blank=True)
 
-    programmatic_key = models.CharField(max_length=100)
+    programmatic_key = models.CharField(max_length=100,
+        null=True,
+        blank=True)
     programmatic_details_md = models.TextField(
-        'Programmatic details in Markdown')
+        'Programmatic details in Markdown',
+        null=True,
+        blank=True)
+
+    def __str__(self):
+        return '%d, %s' % (self.id, self.name)
 
     class Meta:
         abstract = True
