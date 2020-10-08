@@ -141,7 +141,7 @@ class UOMRelationship(models.Model):
     child = fk('UnitOfMeasure', 'parent_uom_relationship')
     parent = fk('UnitOfMeasure', 'child_uom_relationship')
     multiple = models.FloatField()
-    details_md = models.TextField()
+    details_md = models.TextField(null=True, blank=True)
     
     def __str__(self):
         return '[Child: %s / Parent: %s] (%d)' % (self.child, self.parent, self.id)
