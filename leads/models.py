@@ -121,7 +121,8 @@ class MatchMethod(Choice):
     pass
 
 class MatchStatus(Choice):
-    pass
+    class Meta:
+        verbose_name_plural = 'Match statuses'
 
 class QuoteStatus(Choice):
     pass
