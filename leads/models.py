@@ -163,7 +163,7 @@ class SupplyQuote(Standard, Quote, ExpirableInvalidable):
         'supply_quotes'
     )
 
-class ProductCapability(Standard):
+class ProductionCapability(Standard):
     supply_quote = fk('SupplyQuote', 'production_capabilities')
 
     start = models.DateTimeField(null=True, default=None)
