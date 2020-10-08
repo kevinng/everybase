@@ -32,7 +32,8 @@ m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
 class ExpirableInvalidable(models.Model):
     expired = models.DateTimeField(null=True, blank=True, default=None)
     invalidated = models.DateTimeField(null=True, blank=True, default=None)
-    invalidated_reason_md = models.TextField(null=True, blank=True, default=None)
+    invalidated_reason_md = models.TextField('Invalidated reason in Markdown',
+        null=True, blank=True, default=None)
 
     class Meta:
         abstract = True
@@ -41,15 +42,16 @@ class Lead(models.Model):
     category = fk('LeadCategory', '%(class)s_leads')
     display_name = models.CharField(max_length=100)
 
-    base_uom = fk('UnitOfMeasure', '%(class)s_leads')
+    base_uom = fk('UnitOfMeasure', '%(class)s_leads') # Change name
 
-    details_md = models.TextField()
-    files = m2m('files.File', '%(class)s_leads')
+    details_md = models.TextField('Details in Markdown')
+    files = m2m('files.File', '%(class)s_leads') # Make nullable
 
     contact = fk('relationships.Person', '%(class)s_leads')
     company = fk('relationships.Company', '%(class)s_leads')
     contact_type = fk('ContactType', '%(class)s_leads')
-    contact_type_details_md = models.TextField()
+    contact_type_details_md = models.TextField(
+        'Contact type details in Markdown')
 
     class Meta:
         abstract = True
