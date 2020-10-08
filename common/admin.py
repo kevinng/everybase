@@ -2,10 +2,21 @@ from django.contrib import admin
 
 class ChoiceAdmin(admin.ModelAdmin):
     """
-    Choice admin definition to be inherited by child Choice models.
+    Choice admin definition to be inherited by Choice models.
     """
     readonly_fields = ('id',)
     fieldsets = [
         (None, {'fields': ['id', 'name', 'details_md']}),
+        ('Developer', {'fields': ['programmatic_key', 'programmatic_details_md']}),
+    ]
+
+class ParentChildrenChoice(admin.ModelAdmin):
+    """
+    Parent-children admin definition to be inherited by Choice models.
+    """
+    readonly_fields = ('id',)
+    fieldsets = [
+        (None, {'fields': ['id', 'name', 'details_md']}),
+        ('Relationship', {'fields': ['parent']}),
         ('Developer', {'fields': ['programmatic_key', 'programmatic_details_md']}),
     ]
