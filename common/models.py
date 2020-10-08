@@ -4,11 +4,13 @@ from django.contrib import admin
 # --- Start: Abstract ---
 
 # Helper function to declare foreign key relationships.
-fk = lambda klass, name: models.ForeignKey(
+fk_null = lambda klass, name: models.ForeignKey(
     klass,
     on_delete=models.PROTECT,
     related_name=name,
-    related_query_name=name
+    related_query_name=name,
+    null=True,
+    blank=True
 )
 
 class Standard(models.Model):
@@ -46,7 +48,7 @@ class Choice(models.Model):
         abstract = True
 
 class ParentChildrenChoice(Choice):
-    parent = fk('self', 'children')
+    parent = fk_null('self', 'children')
 
 # --- End: Abstract ---
 
