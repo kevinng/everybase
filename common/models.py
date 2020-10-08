@@ -26,10 +26,11 @@ class Choice(models.Model):
     Abstract model for a choice model.
     """
     name = models.CharField(max_length=100)
-    details_md = models.TextField()
+    details_md = models.TextField('Details in Markdown')
 
     programmatic_key = models.CharField(max_length=100)
-    programmatic_details_md = models.TextField()
+    programmatic_details_md = models.TextField(
+        'Programmatic details in Markdown')
 
     class Meta:
         abstract = True
