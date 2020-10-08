@@ -114,7 +114,8 @@ class ContactType(Choice):
     pass
 
 class LeadCategory(ParentChildrenChoice):
-    pass
+    class Meta:
+        verbose_name_plural = 'Lead categories'
 
 class MatchMethod(Choice):
     pass
