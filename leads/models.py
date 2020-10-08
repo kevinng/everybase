@@ -104,7 +104,8 @@ class Incoterm(Choice):
     pass
 
 class Currency(Choice):
-    pass
+    class Meta:
+        verbose_name_plural = 'Currencies'
 
 class PaymentMode(Choice):
     pass
