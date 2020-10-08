@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Incoterm
+from common.admin import ChoiceAdmin
 
-# Register your models here.
+admin.site.register(Incoterm, ChoiceAdmin)
