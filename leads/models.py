@@ -144,8 +144,8 @@ class UOMRelationship(models.Model):
     details_md = models.TextField(null=True, blank=True)
 
     class Meta:
-        verbose_name = 'UOM Relationship'
-        verbose_name_plural = 'UOM Relationships'
+        verbose_name = 'UOM relationship'
+        verbose_name_plural = 'UOM relationships'
     
     def __str__(self):
         return '[Child: %s / Parent: %s] (%d)' % (self.child, self.parent, self.id)
