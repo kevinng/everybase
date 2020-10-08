@@ -125,7 +125,8 @@ class MatchStatus(Choice):
         verbose_name_plural = 'Match statuses'
 
 class QuoteStatus(Choice):
-    pass
+    class Meta:
+        verbose_name_plural = 'Quote statuses'
 
 class UnitOfMeasure(Choice):
     category = fk('LeadCategory', 'unit_of_measures')
