@@ -142,6 +142,9 @@ class UOMRelationship(models.Model):
     parent = fk('UnitOfMeasure', 'child_uom_relationship')
     multiple = models.FloatField()
     details_md = models.TextField()
+    
+    def __str__(self):
+        return '[Child: %s / Parent: %s] (%d)' % (self.child, self.parent, self.id)
 
 # --- End: Choice Models ---
 
