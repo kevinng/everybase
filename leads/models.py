@@ -4,12 +4,14 @@ from common.models import Choice, Standard, ParentChildrenChoice
 # --- Start: Abstract ---
 
 # Helper function to declare foreign key relationships.
-fk = lambda klass, name, verbose_name=None: models.ForeignKey(
+fk = lambda klass, name, verbose_name=None, null=False: models.ForeignKey(
         klass,
         on_delete=models.PROTECT,
         related_name=name,
         related_query_name=name,
-        verbose_name=verbose_name
+        verbose_name=verbose_name,
+        null=null,
+        blank=null
     )
 
 fkx = lambda klass: models.ForeignKey(klass, on_delete=models.PROTECT)
@@ -50,9 +52,9 @@ class Lead(models.Model):
         null=True, blank=True)
     files = m2m('files.File', '%(class)s_leads')
 
-    contact = fk('relationships.Person', '%(class)s_leads')
-    company = fk('relationships.Company', '%(class)s_leads')
-    contact_type = fk('ContactType', '%(class)s_leads')
+    contact = fk('relationships.Person', '%(class)s_leads', null=True)
+    company = fk('relationships.Company', '%(class)s_leads', null=True)
+    contact_type = fk('ContactType', '%(class)s_leads', null=True)
     contact_type_details_md = models.TextField(
         'Contact type details in Markdown',
         null=True,
