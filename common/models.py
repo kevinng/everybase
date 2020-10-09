@@ -42,7 +42,7 @@ class Choice(models.Model):
         blank=True)
 
     def __str__(self):
-        return '%d, %s' % (self.id, self.name)
+        return '%s (%d)' % (self.name, self.id)
 
     class Meta:
         abstract = True
