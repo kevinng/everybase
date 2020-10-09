@@ -90,20 +90,20 @@ class Quote(models.Model):
     details_md = models.TextField('Details in Markdown')
     status = fk('QuoteStatus', '%(class)s_items')
 
-    incoterm = fk('Incoterm', '%(class)s_items')
-    incoterm_country = fk('common.Country', '%(class)s_items')
-    incoterm_location = models.CharField(max_length=100)
-    currency = fk('Currency', '%(class)s_items')
-    price = models.FloatField()
-    price_details_md = models.TextField()
+    incoterm = fk('Incoterm', '%(class)s_items', null=True)
+    incoterm_country = fk('common.Country', '%(class)s_items', null=True)
+    incoterm_location = models.CharField(max_length=100, null=True, blank=True)
+    currency = fk('Currency', '%(class)s_items', null=True)
+    price = models.FloatField(null=True, blank=True)
+    price_details_md = models.TextField(null=True, blank=True)
 
-    deposit_percent = models.FloatField()
+    deposit_percent = models.FloatField(null=True, blank=True)
     
     deposit_paymodes = m2m('PaymentMode', '%(class)s_deposit_paymodes')
     remainder_paymodes = m2m('PaymentMode', '%(class)s_remainder_paymodes')
 
-    payterms_details_md = models.TextField()
-    delivery_details_md = models.TextField()
+    payterms_details_md = models.TextField(null=True, blank=True)
+    delivery_details_md = models.TextField(null=True, blank=True)
 
     class Meta:
         abstract = True
