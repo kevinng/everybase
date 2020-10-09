@@ -60,6 +60,9 @@ class Lead(models.Model):
         null=True,
         blank=True)
 
+    def __str__(self):
+        return '[%s, %s] (%d)' % (self.category, self.display_name, self.id)
+
     class Meta:
         abstract = True
 
