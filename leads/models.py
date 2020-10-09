@@ -211,7 +211,11 @@ class ProductionCapability(Standard):
     capacity_quantity = ff()
     capacity_seconds = ff()
 
-    details_md = tf()
+    details_md = tf('Details in markdown', null=True)
+
+    class Meta:
+        verbose_name = 'Production capability'
+        verbose_name_plural = 'Production capabilities'
 
 class DemandQuote(Standard, Quote, ExpirableInvalidable):
     demand = fk('Demand', 'quotes')
