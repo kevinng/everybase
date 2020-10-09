@@ -87,7 +87,7 @@ class Commission(models.Model):
         abstract = True
 
 class Quote(models.Model):
-    details_md = models.TextField()
+    details_md = models.TextField('Details in Markdown')
     status = fk('QuoteStatus', '%(class)s_items')
 
     incoterm = fk('Incoterm', '%(class)s_items')
