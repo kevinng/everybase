@@ -33,6 +33,18 @@ m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
         related_query_name=name
     )
 
+# Helper function to declare text fields.
+tf = lambda verbose_name=None, null=False: models.TextField(
+    verbose_name=verbose_name, null=null, blank=null)
+
+# Helper function to declare char fields.
+cf = lambda verbose_name=None, null=False: models.CharField(
+    verbose_name=verbose_name, max_length=100, null=null, blank=null)
+
+# Helper function to declare float fields.
+ff = lambda verbose_name=None, null=False: models.FloatField(
+    verbose_name=verbose_name, null=null, blank=null)
+
 class ExpirableInvalidable(models.Model):
     expired = models.DateTimeField(null=True, blank=True, default=None)
     invalidated = models.DateTimeField(null=True, blank=True, default=None)
@@ -87,23 +99,23 @@ class Commission(models.Model):
         abstract = True
 
 class Quote(models.Model):
-    details_md = models.TextField('Details in Markdown')
+    details_md = tf('Details in Markdown')
     status = fk('QuoteStatus', '%(class)s_items')
 
     incoterm = fk('Incoterm', '%(class)s_items', null=True)
     incoterm_country = fk('common.Country', '%(class)s_items', null=True)
-    incoterm_location = models.CharField(max_length=100, null=True, blank=True)
+    incoterm_location = cf(null=True)
     currency = fk('Currency', '%(class)s_items', null=True)
-    price = models.FloatField(null=True, blank=True)
-    price_details_md = models.TextField(null=True, blank=True)
+    price = ff(null=True)
+    price_details_md = tf('Price details in Markdown', True)
 
-    deposit_percent = models.FloatField(null=True, blank=True)
+    deposit_percent = ff(null=True)
     
     deposit_paymodes = m2m('PaymentMode', '%(class)s_deposit_paymodes')
     remainder_paymodes = m2m('PaymentMode', '%(class)s_remainder_paymodes')
 
-    payterms_details_md = models.TextField(null=True, blank=True)
-    delivery_details_md = models.TextField(null=True, blank=True)
+    payterms_details_md = tf('Payment terms details in Markdown', True)
+    delivery_details_md = tf('Delivery details in Markdown', True)
 
     class Meta:
         abstract = True
