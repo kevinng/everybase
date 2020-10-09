@@ -1,9 +1,9 @@
 from django.db import models
 from common.models import Choice, Standard, ParentChildrenChoice
 
-# --- Start: Abstract ---
+# --- Start: Helper lambda for model field declarations ---
 
-# Helper function to declare foreign key relationships.
+# Foreign key
 fk = lambda klass, name, verbose_name=None, null=False: models.ForeignKey(
         klass,
         on_delete=models.PROTECT,
@@ -14,9 +14,10 @@ fk = lambda klass, name, verbose_name=None, null=False: models.ForeignKey(
         blank=null
     )
 
+# Foreign key simplified
 fkx = lambda klass: models.ForeignKey(klass, on_delete=models.PROTECT)
 
-# Helper function to declare many-to-many relationships.
+# Many-to-many
 m2m = lambda klass, name, blank=False: models.ManyToManyField(
         klass,
         related_name=name,
@@ -24,7 +25,7 @@ m2m = lambda klass, name, blank=False: models.ManyToManyField(
         blank=blank
     )
 
-# Helper function to declare many-to-many through relationships.
+# Many-to-many through
 m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
         klass,
         through=thru,
@@ -33,20 +34,25 @@ m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
         related_query_name=name
     )
 
-# Helper function to declare text fields.
+# Text
 tf = lambda verbose_name=None, null=False: models.TextField(
     verbose_name=verbose_name, null=null, blank=null)
 
-# Helper function to declare char fields.
+# Char
 cf = lambda verbose_name=None, null=False: models.CharField(
     verbose_name=verbose_name, max_length=100, null=null, blank=null)
 
-# Helper function to declare float fields.
+# Float
 ff = lambda verbose_name=None, null=False: models.FloatField(
     verbose_name=verbose_name, null=null, blank=null)
 
+# Datetime
 dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
     null=null, blank=null, default=default)
+
+# --- End: Helper lambda for model field declarations ---
+
+# --- Start: Abstract ---
 
 class ExpirableInvalidable(models.Model):
     expired = dtf(null=True)
