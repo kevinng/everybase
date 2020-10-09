@@ -56,21 +56,17 @@ class ExpirableInvalidable(models.Model):
 
 class Lead(models.Model):
     category = fk('LeadCategory', '%(class)s_leads')
-    display_name = models.CharField(max_length=100)
+    display_name = cf()
 
     base_uom = fk('UnitOfMeasure', '%(class)s_leads', 'Base UOM')
 
-    details_md = models.TextField('Details in Markdown',
-        null=True, blank=True)
+    details_md = tf('Details in Markdown',True)
     files = m2m('files.File', '%(class)s_leads')
 
     contact = fk('relationships.Person', '%(class)s_leads', null=True)
     company = fk('relationships.Company', '%(class)s_leads', null=True)
     contact_type = fk('ContactType', '%(class)s_leads', null=True)
-    contact_type_details_md = models.TextField(
-        'Contact type details in Markdown',
-        null=True,
-        blank=True)
+    contact_type_details_md = tf('Contact type details in Markdown', True)
 
     def __str__(self):
         return '[%s, %s] (%d)' % (self.category, self.display_name, self.id)
@@ -164,8 +160,8 @@ class UnitOfMeasure(Choice):
 class UOMRelationship(models.Model):
     child = fk('UnitOfMeasure', 'parent_uom_relationship')
     parent = fk('UnitOfMeasure', 'child_uom_relationship')
-    multiple = models.FloatField()
-    details_md = models.TextField(null=True, blank=True)
+    multiple = ff()
+    details_md = tf(null=True)
 
     class Meta:
         verbose_name = 'UOM relationship'
@@ -189,7 +185,7 @@ class Demand(Standard, Lead, ExpirableInvalidable):
 class SupplyQuote(Standard, Quote, ExpirableInvalidable):
     supply = fk('Supply', 'quotes')
 
-    packing_details_md = models.TextField()
+    packing_details_md = tf('Packing details in Markdown', True)
 
     downstreams = m2m('self', 'upstreams')
 
@@ -206,27 +202,27 @@ class ProductionCapability(Standard):
     start = models.DateTimeField(null=True, default=None)
     end = models.DateTimeField(null=True, default=None)
 
-    capacity_quantity = models.FloatField()
-    capacity_seconds = models.FloatField()
+    capacity_quantity = ff()
+    capacity_seconds = ff()
 
-    details_md = models.TextField()
+    details_md = tf()
 
 class DemandQuote(Standard, Quote, ExpirableInvalidable):
     demand = fk('Demand', 'quotes')
 
-    details_as_received_md = models.TextField()
+    details_as_received_md = tf()
     positive_origin_countries = m2m(
         'common.Country', 'positive_origin_of_demand_quotes')
     negative_origin_countries = m2m(
         'common.Country', 'negative_origin_of_demand_quotes')
-    negative_details_md = models.TextField()
+    negative_details_md = tf()
 
 class Trench(models.Model):
-    quantity = models.FloatField()
-    after_deposit_seconds = models.FloatField()
+    quantity = ff()
+    after_deposit_seconds = ff()
     paymode = fk('PaymentMode', 'trenches')
     payment_before_release = models.BooleanField()
-    details_md = models.TextField()
+    details_md = tf()
 
     # At least one of the following must be set.
     supply_quote = fk('SupplyQuote', 'trenches')
@@ -238,7 +234,7 @@ class Match(Standard):
 
     status = fk('MatchStatus', 'matches')
     method = fk('MatchMethod', 'matches')
-    details_md = models.TextField()
+    details_md = tf()
 
 class SupplyCommission(Standard, Commission, ExpirableInvalidable):
     quotes = m2m('SupplyQuote', 'commissions')
