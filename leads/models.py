@@ -17,7 +17,7 @@ fk = lambda klass, name, verbose_name=None, null=False: models.ForeignKey(
 fkx = lambda klass: models.ForeignKey(klass, on_delete=models.PROTECT)
 
 # Helper function to declare many-to-many relationships.
-m2m = lambda klass, name, blank=True: models.ManyToManyField(
+m2m = lambda klass, name, blank=False: models.ManyToManyField(
         klass,
         related_name=name,
         related_query_name=name,
@@ -61,7 +61,7 @@ class Lead(models.Model):
     base_uom = fk('UnitOfMeasure', '%(class)s_leads', 'Base UOM')
 
     details_md = tf('Details in Markdown',True)
-    files = m2m('files.File', '%(class)s_leads')
+    files = m2m('files.File', '%(class)s_leads', True)
 
     contact = fk('relationships.Person', '%(class)s_leads', null=True)
     company = fk('relationships.Company', '%(class)s_leads', null=True)
@@ -107,8 +107,8 @@ class Quote(models.Model):
 
     deposit_percent = ff(null=True)
     
-    deposit_paymodes = m2m('PaymentMode', '%(class)s_deposit_paymodes')
-    remainder_paymodes = m2m('PaymentMode', '%(class)s_remainder_paymodes')
+    deposit_paymodes = m2m('PaymentMode', '%(class)s_deposit_paymodes', True)
+    remainder_paymodes = m2m('PaymentMode', '%(class)s_remainder_paymodes', True)
 
     payterms_details_md = tf('Payment terms details in Markdown', True)
     delivery_details_md = tf('Delivery details in Markdown', True)
@@ -187,7 +187,7 @@ class SupplyQuote(Standard, Quote, ExpirableInvalidable):
 
     packing_details_md = tf('Packing details in Markdown', True)
 
-    downstreams = m2m('self', 'upstreams')
+    downstreams = m2m('self', 'upstreams', True)
 
     demand_quotes = m2mt(
         'DemandQuote',
@@ -212,9 +212,9 @@ class DemandQuote(Standard, Quote, ExpirableInvalidable):
 
     details_as_received_md = tf()
     positive_origin_countries = m2m(
-        'common.Country', 'positive_origin_of_demand_quotes')
+        'common.Country', 'positive_origin_of_demand_quotes', True)
     negative_origin_countries = m2m(
-        'common.Country', 'negative_origin_of_demand_quotes')
+        'common.Country', 'negative_origin_of_demand_quotes', True)
     negative_details_md = tf()
 
 class Trench(models.Model):
@@ -237,13 +237,13 @@ class Match(Standard):
     details_md = tf()
 
 class SupplyCommission(Standard, Commission, ExpirableInvalidable):
-    quotes = m2m('SupplyQuote', 'commissions')
+    quotes = m2m('SupplyQuote', 'commissions', True)
     supply = fk('Supply', 'commissions')
     person = fk('relationships.Person', 'supply_commissions')
     company = fk('relationships.Company', 'supply_commissions')
 
 class DemandCommission(Standard, Commission, ExpirableInvalidable):
-    quotes = m2m('DemandQuote', 'commissions')
+    quotes = m2m('DemandQuote', 'commissions', True)
     demand = fk('Demand', 'commissions')
     person = fk('relationships.Person', 'demand_commissions')
     company = fk('relationships.Company', 'demand_commissions')
