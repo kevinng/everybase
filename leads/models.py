@@ -4,7 +4,7 @@ from common.models import Choice, Standard, ParentChildrenChoice
 # --- Start: Helper lambda for model field declarations ---
 
 # Foreign key
-fk = lambda klass, name, verbose_name=None, null=False: models.ForeignKey(
+fk = lambda klass, name=None, verbose_name=None, null=False: models.ForeignKey(
         klass,
         on_delete=models.PROTECT,
         related_name=name,
@@ -13,9 +13,6 @@ fk = lambda klass, name, verbose_name=None, null=False: models.ForeignKey(
         null=null,
         blank=null
     )
-
-# Foreign key simplified
-fkx = lambda klass: models.ForeignKey(klass, on_delete=models.PROTECT)
 
 # Many-to-many
 m2m = lambda klass, name, blank=False: models.ManyToManyField(
