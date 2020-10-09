@@ -45,9 +45,12 @@ cf = lambda verbose_name=None, null=False: models.CharField(
 ff = lambda verbose_name=None, null=False: models.FloatField(
     verbose_name=verbose_name, null=null, blank=null)
 
+dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
+    null=null, blank=null, default=default)
+
 class ExpirableInvalidable(models.Model):
-    expired = models.DateTimeField(null=True, blank=True, default=None)
-    invalidated = models.DateTimeField(null=True, blank=True, default=None)
+    expired = dtf(null=True)
+    invalidated = dtf(null=True)
     invalidated_reason_md = models.TextField('Invalidated reason in Markdown',
         null=True, blank=True, default=None)
 
@@ -199,8 +202,8 @@ class SupplyQuote(Standard, Quote, ExpirableInvalidable):
 class ProductionCapability(Standard):
     supply_quote = fk('SupplyQuote', 'production_capabilities')
 
-    start = models.DateTimeField(null=True, default=None)
-    end = models.DateTimeField(null=True, default=None)
+    start = dtf(null=True)
+    end = dtf(null=True, default=None)
 
     capacity_quantity = ff()
     capacity_seconds = ff()
