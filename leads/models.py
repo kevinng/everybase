@@ -229,14 +229,14 @@ class DemandQuote(Standard, Quote, ExpirableInvalidable):
 
 class Trench(models.Model):
     quantity = ff()
-    after_deposit_seconds = ff()
-    paymode = fk('PaymentMode', 'trenches', 'Payment Mode')
-    payment_before_release = models.BooleanField()
-    details_md = tf('Details in Markdown')
+    after_deposit_seconds = ff('Seconds after deposit', True)
+    paymode = fk('PaymentMode', 'trenches', 'Payment Mode', True)
+    payment_before_release = models.BooleanField(default=True)
+    details_md = tf('Details in Markdown', True)
 
     # At least one of the following must be set.
-    supply_quote = fk('SupplyQuote', 'trenches')
-    demand_quote = fk('DemandQuote', 'trenches')
+    supply_quote = fk('SupplyQuote', 'trenches', 'Supply Quote', True)
+    demand_quote = fk('DemandQuote', 'trenches', 'Demand Quote', True)
 
     class Meta:
         verbose_name = 'Trench'
