@@ -91,8 +91,8 @@ class Commission(models.Model):
         ],
         default='ppu'
     )
-    mark_up_price_per_unit = models.FloatField()
-    mark_up_percentage = models.FloatField()
+    mark_up_price_per_unit = ff('Mark-up price per unit', True)
+    mark_up_percentage = ff('Mark-up percentage', True)
 
     # At least person or company must be specified.
     person = fk('relationships.Person', '%(class)s_items')
