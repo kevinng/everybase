@@ -256,9 +256,9 @@ class Match(Standard):
 
 class SupplyCommission(Standard, Commission, ExpirableInvalidable):
     quotes = m2m('SupplyQuote', 'commissions', True)
-    supply = fk('Supply', 'commissions')
-    person = fk('relationships.Person', 'supply_commissions')
-    company = fk('relationships.Company', 'supply_commissions')
+    supply = fk('Supply', 'commissions', null=True)
+    person = fk('relationships.Person', 'supply_commissions', null=True)
+    company = fk('relationships.Company', 'supply_commissions', null=True)
 
 class DemandCommission(Standard, Commission, ExpirableInvalidable):
     quotes = m2m('DemandQuote', 'commissions', True)
