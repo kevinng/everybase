@@ -81,7 +81,7 @@ class Lead(models.Model):
         abstract = True
 
 class Commission(models.Model):
-    details_md = models.TextField()
+    details_md = tf('Details in Markdown', True)
     mark_up_type = models.CharField(
         max_length=3,
         choices=[
