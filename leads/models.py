@@ -238,6 +238,10 @@ class Trench(models.Model):
     supply_quote = fk('SupplyQuote', 'trenches')
     demand_quote = fk('DemandQuote', 'trenches')
 
+    class Meta:
+        verbose_name = 'Trench'
+        verbose_name_plural = 'Trenches'
+
 class Match(Standard):
     demand_quote = fk('DemandQuote', 'matches')
     supply_quote = fk('SupplyQuote', 'matches')
