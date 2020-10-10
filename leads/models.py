@@ -103,7 +103,6 @@ class Commission(models.Model):
 
 class Quote(models.Model):
     details_md = tf('Details in Markdown')
-    status = fk('QuoteStatus', '%(class)s_items')
 
     incoterm = fk('Incoterm', '%(class)s_items', null=True)
     incoterm_country = fk('common.Country', '%(class)s_items', null=True)
@@ -151,9 +150,13 @@ class MatchStatus(Choice):
     class Meta:
         verbose_name_plural = 'Match statuses'
 
-class QuoteStatus(Choice):
+class SupplyQuoteStatus(Choice):
     class Meta:
-        verbose_name_plural = 'Quote statuses'
+        verbose_name_plural = 'Supply quote statuses'
+
+class DemandQuoteStatus(Choice):
+    class Meta:
+        verbose_name_plural = 'Demand quote statuses'
 
 class UnitOfMeasure(Choice):
     category = fk('LeadCategory', 'unit_of_measures')
@@ -192,6 +195,7 @@ class Demand(Standard, Lead, ExpirableInvalidable):
 class SupplyQuote(Standard, Quote, ExpirableInvalidable):
     supply = fk('Supply', 'quotes')
 
+    status = fk('SupplyQuoteStatus', 'quotes')
     packing_details_md = tf('Packing details in Markdown', True)
 
     downstreams = m2m('self', 'upstreams', True)
@@ -220,6 +224,8 @@ class ProductionCapability(Standard):
 
 class DemandQuote(Standard, Quote, ExpirableInvalidable):
     demand = fk('Demand', 'quotes')
+
+    status = fk('DemandQuoteStatus', 'quotes')
 
     details_as_received_md = tf('Details as received in Markdown')
     positive_origin_countries = m2m(
