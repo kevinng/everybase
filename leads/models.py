@@ -232,7 +232,7 @@ class Trench(models.Model):
     after_deposit_seconds = ff()
     paymode = fk('PaymentMode', 'trenches')
     payment_before_release = models.BooleanField()
-    details_md = tf()
+    details_md = tf('Details in Markdown')
 
     # At least one of the following must be set.
     supply_quote = fk('SupplyQuote', 'trenches')
