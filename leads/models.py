@@ -246,9 +246,13 @@ class Match(Standard):
     demand_quote = fk('DemandQuote', 'matches')
     supply_quote = fk('SupplyQuote', 'matches')
 
-    status = fk('MatchStatus', 'matches')
-    method = fk('MatchMethod', 'matches')
-    details_md = tf()
+    status = fk('MatchStatus', 'matches', null=True)
+    method = fk('MatchMethod', 'matches', null=True)
+    details_md = tf('Details in Markdown', True)
+
+    class Meta:
+        verbose_name = 'Match'
+        verbose_name_plural = 'Matches'
 
 class SupplyCommission(Standard, Commission, ExpirableInvalidable):
     quotes = m2m('SupplyQuote', 'commissions', True)
