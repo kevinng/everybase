@@ -83,6 +83,7 @@ class Lead(models.Model):
 class Commission(models.Model):
     details_md = tf('Details in Markdown', True)
     mark_up_type = models.CharField(
+        'Mark-up type',
         max_length=3,
         choices=[
             ('ppu', 'Price Per Unit'),
