@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
     MatchMethod, MatchStatus, QuoteStatus, UnitOfMeasure, UOMRelationship,
     Supply, Demand, SupplyQuote, DemandQuote, ProductionCapability, Trench,
-    Match, SupplyCommission)
+    Match, SupplyCommission, DemandCommission)
 from common.admin import ChoiceAdmin, ParentChildrenChoice
 
 class UOMRelationshipChildInline(admin.StackedInline):
@@ -45,3 +45,4 @@ admin.site.register(ProductionCapability)
 admin.site.register(Trench)
 admin.site.register(Match)
 admin.site.register(SupplyCommission)
+admin.site.register(DemandCommission)
