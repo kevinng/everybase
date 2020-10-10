@@ -230,7 +230,7 @@ class DemandQuote(Standard, Quote, ExpirableInvalidable):
 class Trench(models.Model):
     quantity = ff()
     after_deposit_seconds = ff()
-    paymode = fk('PaymentMode', 'trenches')
+    paymode = fk('PaymentMode', 'trenches', 'Payment Mode')
     payment_before_release = models.BooleanField()
     details_md = tf('Details in Markdown')
 
