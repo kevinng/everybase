@@ -124,9 +124,10 @@ class PersonPhoneNumberType(Choice):
     pass
 
 class PersonPhoneNumber(Relationship):
-    rtype = rfk('PersonPhoneNumberType')
-    person = rfk('Person')
-    phone_number = rfk('PhoneNumber')
+    rtype = fk('PersonPhoneNumberType', 'person_phonenumber_relationships',
+        'Person-phone-number relationship type')
+    person = fk('Person')
+    phone_number = fk('PhoneNumber')
 
 class PersonEmailType(Choice):
     pass
