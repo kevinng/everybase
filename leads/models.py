@@ -65,7 +65,7 @@ class Lead(models.Model):
 
     base_uom = fk('UnitOfMeasure', '%(class)s_leads', 'Base UOM')
 
-    details_md = tf('Details in Markdown',True)
+    details_md = tf('Details in Markdown', True)
     files = m2m('files.File', '%(class)s_leads', True)
 
     contact = fk('relationships.Person', '%(class)s_leads', null=True)
