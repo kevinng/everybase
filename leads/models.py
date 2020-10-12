@@ -54,8 +54,7 @@ dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
 class ExpirableInvalidable(models.Model):
     expired = dtf(null=True)
     invalidated = dtf(null=True)
-    invalidated_reason_md = models.TextField('Invalidated reason in Markdown',
-        null=True, blank=True, default=None)
+    invalidated_reason_md = tf('Invalidated reason in Markdown')
 
     class Meta:
         abstract = True
