@@ -106,9 +106,10 @@ class PersonCompanyType(Choice):
     pass
 
 class PersonCompany(Relationship):
-    rtype = rfk('PersonLinkType')
-    person = rfk('Person')
-    company = rfk('Company')
+    rtype = fk('PersonCompanyType', 'person_company_relationships',
+        'Person-company relationship type')
+    person = fk('Person', 'persons')
+    company = fk('Company', 'companies')
 
 class PersonAddressType(Choice):
     pass
