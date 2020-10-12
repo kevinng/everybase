@@ -51,13 +51,13 @@ dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
 
 # --- Start: Abstract ---
 
-# # Helper function to declare foreign key relationships in relationship classes.
-# rfk = lambda klass: models.ForeignKey(
-#         klass,
-#         on_delete=models.PROTECT,
-#         related_name='%(class)s_items',
-#         related_query_name='%(class)s_items'
-#     )
+# Helper function to declare foreign key relationships in relationship classes.
+rfk = lambda klass: models.ForeignKey(
+        klass,
+        on_delete=models.PROTECT,
+        related_name='%(class)s_items',
+        related_query_name='%(class)s_items'
+    )
 
 # # Helper function to declare foreign key relationships.
 # fk = lambda klass, name: models.ForeignKey(
@@ -97,9 +97,10 @@ class PersonLinkType(Choice):
     pass
 
 class PersonLink(Relationship):
-    rtype = rfk('PersonLinkType')
-    person = rfk('Person')
-    link = rfk('Link')
+    rtype = fk('PersonLinkType', 'person_link_relationships',
+        'Person-link relationship type')
+    person = fk('Person', 'person_link_relationships')
+    link = fk('Link', 'person_link_relationships')
 
 class PersonCompanyType(Choice):
     pass
