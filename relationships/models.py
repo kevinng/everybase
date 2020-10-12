@@ -125,7 +125,7 @@ class PersonPhoneNumberType(Choice):
 
 class PersonPhoneNumber(Relationship):
     rtype = fk('PersonPhoneNumberType', 'person_phonenumber_relationships',
-        'Person-phone-number relationship type')
+        'Person-phonenumber relationship type')
     person = fk('Person', 'person_phonenumber_relationships')
     phone_number = fk('PhoneNumber', 'person_phonenumber_relationships')
 
