@@ -1,32 +1,28 @@
 from django.db import models
 from common.models import Standard, Choice
 
-# --- Start: Abstract ---
+# --- Start: Helper lambda for model field declarations ---
 
-# Helper function to declare foreign key relationships in relationship classes.
-rfk = lambda klass: models.ForeignKey(
-        klass,
-        on_delete=models.PROTECT,
-        related_name='%(class)s_items',
-        related_query_name='%(class)s_items'
-    )
-
-# Helper function to declare foreign key relationships.
-fk = lambda klass, name: models.ForeignKey(
+# Foreign key
+fk = lambda klass, name=None, verbose_name=None, null=False: models.ForeignKey(
         klass,
         on_delete=models.PROTECT,
         related_name=name,
-        related_query_name=name
+        related_query_name=name,
+        verbose_name=verbose_name,
+        null=null,
+        blank=null
     )
 
-# Helper function to declare many-to-many relationships.
-m2m = lambda klass, name: models.ManyToManyField(
+# Many-to-many
+m2m = lambda klass, name, blank=False: models.ManyToManyField(
         klass,
         related_name=name,
-        related_query_name=name
+        related_query_name=name,
+        blank=blank
     )
 
-# Helper function to declare many-to-many through relationships.
+# Many-to-many through
 m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
         klass,
         through=thru,
@@ -35,8 +31,60 @@ m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
         related_query_name=name
     )
 
+# Text
+tf = lambda verbose_name=None, null=False: models.TextField(
+    verbose_name=verbose_name, null=null, blank=null)
+
+# Char
+cf = lambda verbose_name=None, null=False: models.CharField(
+    verbose_name=verbose_name, max_length=100, null=null, blank=null)
+
+# Float
+ff = lambda verbose_name=None, null=False: models.FloatField(
+    verbose_name=verbose_name, null=null, blank=null)
+
+# Datetime
+dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
+    null=null, blank=null, default=default)
+
+# --- End: Helper lambda for model field declarations ---
+
+# --- Start: Abstract ---
+
+# # Helper function to declare foreign key relationships in relationship classes.
+# rfk = lambda klass: models.ForeignKey(
+#         klass,
+#         on_delete=models.PROTECT,
+#         related_name='%(class)s_items',
+#         related_query_name='%(class)s_items'
+#     )
+
+# # Helper function to declare foreign key relationships.
+# fk = lambda klass, name: models.ForeignKey(
+#         klass,
+#         on_delete=models.PROTECT,
+#         related_name=name,
+#         related_query_name=name
+#     )
+
+# # Helper function to declare many-to-many relationships.
+# m2m = lambda klass, name: models.ManyToManyField(
+#         klass,
+#         related_name=name,
+#         related_query_name=name
+#     )
+
+# # Helper function to declare many-to-many through relationships.
+# m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
+#         klass,
+#         through=thru,
+#         through_fields=(f1, f2),
+#         related_name=name,
+#         related_query_name=name
+#     )
+
 class Relationship(models.Model):
-    details_md = models.TextField()
+    details_md = tf('Details in Markdown')
 
     class Meta:
         abstract = True
