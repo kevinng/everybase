@@ -115,9 +115,10 @@ class PersonAddressType(Choice):
     pass
 
 class PersonAddress(Relationship):
-    rtype = rfk('PersonAddressType')
-    person = rfk('Person')
-    address = rfk('Address')
+    rtype = fk('PersonAddressType', 'person_address_relationships',
+        'Person-address relationship type')
+    person = fk('Person', 'person_address_relationships')
+    address = fk('Address', 'person_address_relationships')
 
 class PersonPhoneNumberType(Choice):
     pass
