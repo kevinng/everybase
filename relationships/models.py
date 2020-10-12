@@ -133,9 +133,10 @@ class PersonEmailType(Choice):
     pass
 
 class PersonEmail(Relationship):
-    rtype = rfk('PersonEmailType')
-    person = rfk('Person')
-    email = rfk('Email')
+    rtype = fk('PersonEmailType', 'person_email_relationships',
+        'Person-email relationship type')
+    person = fk('Person', 'person_email_relationships')
+    email = fk('Email', 'person_email_relationships')
 
 # --- End: Person Relationships ---
 
