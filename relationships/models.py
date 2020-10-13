@@ -52,12 +52,12 @@ dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
 # --- Start: Abstract ---
 
 # Helper function to declare foreign key relationships in relationship classes.
-rfk = lambda klass: models.ForeignKey(
-        klass,
-        on_delete=models.PROTECT,
-        related_name='%(class)s_items',
-        related_query_name='%(class)s_items'
-    )
+# rfk = lambda klass: models.ForeignKey(
+#         klass,
+#         on_delete=models.PROTECT,
+#         related_name='%(class)s_items',
+#         related_query_name='%(class)s_items'
+#     )
 
 # # Helper function to declare foreign key relationships.
 # fk = lambda klass, name: models.ForeignKey(
@@ -183,11 +183,11 @@ class CompanyEmail(Relationship):
 # --- Start: Entities ---
 
 class Person(Standard):
-    given_name = models.CharField(max_length=100)
-    family_name = models.CharField(max_length=100)
+    given_name = cf()
+    family_name = cf()
     country = fk('common.Country', 'persons')
     state = fk('common.State', 'persons')
-    notes_md = models.TextField()
+    notes_md = tf('Notes in Markdown', True)
 
     companies = m2mt(
         'Company',
@@ -225,8 +225,8 @@ class Person(Standard):
     )
 
 class Company(Standard):
-    company_name = models.CharField(max_length=100)
-    notes_md = models.TextField()
+    company_name = cf()
+    notes_md = tf('Notes in Markdown')
 
     emails = m2mt(
         'Email',
