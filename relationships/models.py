@@ -297,13 +297,13 @@ class AddressType(Choice):
     pass
 
 class Address(Standard):
-    types = m2m('AddressType', 'addresses')
+    types = m2m('AddressType', 'addresses', True)
     address_1 = cf()
-    address_2 = cf()
-    address_3 = cf()
-    country = fk('common.Country', 'addresses')
-    state = fk('common.State', 'addresses')
-    postal_code = cf()
+    address_2 = cf(null=True)
+    address_3 = cf(null=True)
+    country = fk('common.Country', 'addresses', null=True)
+    state = fk('common.State', 'addresses', null=True)
+    postal_code = cf(null=True)
 
     class Meta:
         verbose_name = 'Address'
