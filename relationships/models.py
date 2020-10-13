@@ -284,7 +284,7 @@ class PhoneNumberType(Choice):
 
 class PhoneNumber(Standard):
     types = m2m('PhoneNumber', 'phone_numbers')
-    country_code = models.CharField(max_length=100)
-    national_number = models.CharField(max_length=100)
+    country_code = cf()
+    national_number = cf()
 
 # --- End: Entities ---
