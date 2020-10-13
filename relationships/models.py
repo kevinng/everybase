@@ -51,38 +51,6 @@ dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
 
 # --- Start: Abstract ---
 
-# Helper function to declare foreign key relationships in relationship classes.
-# rfk = lambda klass: models.ForeignKey(
-#         klass,
-#         on_delete=models.PROTECT,
-#         related_name='%(class)s_items',
-#         related_query_name='%(class)s_items'
-#     )
-
-# # Helper function to declare foreign key relationships.
-# fk = lambda klass, name: models.ForeignKey(
-#         klass,
-#         on_delete=models.PROTECT,
-#         related_name=name,
-#         related_query_name=name
-#     )
-
-# # Helper function to declare many-to-many relationships.
-# m2m = lambda klass, name: models.ManyToManyField(
-#         klass,
-#         related_name=name,
-#         related_query_name=name
-#     )
-
-# # Helper function to declare many-to-many through relationships.
-# m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
-#         klass,
-#         through=thru,
-#         through_fields=(f1, f2),
-#         related_name=name,
-#         related_query_name=name
-#     )
-
 class Relationship(models.Model):
     details_md = tf('Details in Markdown')
 
