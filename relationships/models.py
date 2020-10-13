@@ -146,9 +146,10 @@ class CompanyLinkType(Choice):
     pass
 
 class CompanyLink(Relationship):
-    rtype = rfk('CompanyLinkType')
-    company = rfk('Company')
-    link = rfk('Link')
+    rtype = fk('CompanyLinkType', 'company_link_relationships',
+        'Company-link relationship type')
+    company = fk('Company', 'company_link_relationships')
+    link = fk('Link', 'company_link_relationships')
 
 class CompanyAddressType(Choice):
     pass
