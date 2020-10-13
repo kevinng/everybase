@@ -264,7 +264,7 @@ class LinkType(Choice):
 
 class Link(Standard):
     types = m2m('LinkType', 'links')
-    last_visited_okay = models.DateTimeField(null=True, default=None)
+    last_visited_okay = dtf()
     link = models.URLField()
 
 class AddressType(Choice):
