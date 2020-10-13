@@ -155,9 +155,10 @@ class CompanyAddressType(Choice):
     pass
 
 class CompanyAddress(Relationship):
-    rtype = rfk('CompanyAddressType')
-    company = rfk('Company')
-    address = rfk('Address')
+    rtype = fk('CompanyAddressType', 'company_address_relationships',
+        'Company-address relationship type')
+    company = fk('Company', 'company_address_relationships')
+    address = fk('Address', 'company_address_relationships')
 
 class CompanyPhoneNumberType(Choice):
     pass
