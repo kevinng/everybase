@@ -248,7 +248,7 @@ class Person(Standard):
 
 class Company(Standard):
     company_name = cf()
-    notes_md = tf('Notes in Markdown')
+    notes_md = tf('Notes in Markdown', True)
 
     emails = m2mt(
         'Email',
@@ -289,8 +289,8 @@ class LinkType(Choice):
     pass
 
 class Link(Standard):
-    types = m2m('LinkType', 'links')
-    last_visited_okay = dtf()
+    types = m2m('LinkType', 'links', True)
+    last_visited_okay = dtf(null=True)
     link = models.URLField()
 
 class AddressType(Choice):
@@ -313,7 +313,7 @@ class PhoneNumberType(Choice):
     pass
 
 class PhoneNumber(Standard):
-    types = m2m('PhoneNumber', 'phone_numbers')
+    types = m2m('PhoneNumber', 'phone_numbers', True)
     country_code = cf()
     national_number = cf()
 
