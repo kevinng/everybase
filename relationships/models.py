@@ -173,9 +173,10 @@ class CompanyEmailType(Choice):
     pass
 
 class CompanyEmail(Relationship):
-    rtype = rfk('CompanyEmailType')
-    company = rfk('Company')
-    email = rfk('Email')
+    rtype = fk('CompanyEmailType', 'company_email_relationships',
+        'Company-email relationship type')
+    company = fk('Company', 'company_email_relationships')
+    email = fk('Email', 'company_email_relationships')
 
 # --- End: Company Relationships ---
 
