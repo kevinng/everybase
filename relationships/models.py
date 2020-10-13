@@ -272,12 +272,12 @@ class AddressType(Choice):
 
 class Address(Standard):
     types = m2m('AddressType', 'addresses')
-    address_1 = models.CharField(max_length=100)
-    address_2 = models.CharField(max_length=100)
-    address_3 = models.CharField(max_length=100)
+    address_1 = cf()
+    address_2 = cf()
+    address_3 = cf()
     country = fk('common.Country', 'addresses')
     state = fk('common.State', 'addresses')
-    postal_code = models.CharField(max_length=100)
+    postal_code = cf()
 
 class PhoneNumberType(Choice):
     pass
