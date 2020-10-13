@@ -206,10 +206,10 @@ class CompanyEmail(Relationship):
 
 class Person(Standard):
     given_name = cf()
-    family_name = cf()
-    country = fk('common.Country', 'persons')
-    state = fk('common.State', 'persons')
-    notes_md = tf('Notes in Markdown', True)
+    family_name = cf(null=True)
+    country = fk('common.Country', 'persons', null=True)
+    state = fk('common.State', 'persons', null=True)
+    notes_md = tf('Notes in Markdown', null=True)
 
     companies = m2mt(
         'Company',
