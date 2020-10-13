@@ -62,7 +62,9 @@ class Relationship(models.Model):
 # --- Start: Person Relationships ---
 
 class PersonLinkType(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Person-link type'
+        verbose_name_plural = 'Person-link types'
 
 class PersonLink(Relationship):
     rtype = fk('PersonLinkType', 'person_link_relationships',
@@ -70,8 +72,14 @@ class PersonLink(Relationship):
     person = fk('Person', 'person_link_relationships')
     link = fk('Link', 'person_link_relationships')
 
+    class Meta:
+        verbose_name = 'Person-link'
+        verbose_name_plural = 'Person-links'
+
 class PersonCompanyType(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Person-company type'
+        verbose_name_plural = 'Person-company types'
 
 class PersonCompany(Relationship):
     rtype = fk('PersonCompanyType', 'person_company_relationships',
@@ -79,8 +87,14 @@ class PersonCompany(Relationship):
     person = fk('Person', 'persons')
     company = fk('Company', 'companies')
 
+    class Meta:
+        verbose_name = 'Person-company'
+        verbose_name_plural = 'Person-companies'
+
 class PersonAddressType(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Person-address type'
+        verbose_name_plural = 'Person-address types'
 
 class PersonAddress(Relationship):
     rtype = fk('PersonAddressType', 'person_address_relationships',
@@ -88,8 +102,14 @@ class PersonAddress(Relationship):
     person = fk('Person', 'person_address_relationships')
     address = fk('Address', 'person_address_relationships')
 
+    class Meta:
+        verbose_name = 'Person-address'
+        verbose_name_plural = 'Person-addresses'
+
 class PersonPhoneNumberType(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Person-phonenumber type'
+        verbose_name_plural = 'Person-phonenumber types'
 
 class PersonPhoneNumber(Relationship):
     rtype = fk('PersonPhoneNumberType', 'person_phonenumber_relationships',
@@ -97,8 +117,14 @@ class PersonPhoneNumber(Relationship):
     person = fk('Person', 'person_phonenumber_relationships')
     phone_number = fk('PhoneNumber', 'person_phonenumber_relationships')
 
+    class Meta:
+        verbose_name = 'Person-phonenumber'
+        verbose_name_plural = 'Person-phonenumbers'
+
 class PersonEmailType(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Person-email type'
+        verbose_name_plural = 'Person-email types'
 
 class PersonEmail(Relationship):
     rtype = fk('PersonEmailType', 'person_email_relationships',
@@ -106,12 +132,18 @@ class PersonEmail(Relationship):
     person = fk('Person', 'person_email_relationships')
     email = fk('Email', 'person_email_relationships')
 
+    class Meta:
+        verbose_name = 'Person-email'
+        verbose_name_plural = 'Person-emails'
+
 # --- End: Person Relationships ---
 
 # --- Start: Company Relationships ---
 
 class CompanyLinkType(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Company-link type'
+        verbose_name_plural = 'Company-link types'
 
 class CompanyLink(Relationship):
     rtype = fk('CompanyLinkType', 'company_link_relationships',
@@ -119,8 +151,14 @@ class CompanyLink(Relationship):
     company = fk('Company', 'company_link_relationships')
     link = fk('Link', 'company_link_relationships')
 
+    class Meta:
+        verbose_name = 'Company-link'
+        verbose_name_plural = 'Company-links'
+
 class CompanyAddressType(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Company-address type'
+        verbose_name_plural = 'Company-address types'
 
 class CompanyAddress(Relationship):
     rtype = fk('CompanyAddressType', 'company_address_relationships',
@@ -128,8 +166,14 @@ class CompanyAddress(Relationship):
     company = fk('Company', 'company_address_relationships')
     address = fk('Address', 'company_address_relationships')
 
+    class Meta:
+        verbose_name = 'Company-address'
+        verbose_name_plural = 'Company-addresses'
+
 class CompanyPhoneNumberType(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Company-phonenumber types'
+        verbose_name_plural = 'Company-phonenumber types'
 
 class CompanyPhoneNumber(Relationship):
     rtype = fk('CompanyPhoneNumberType', 'company_phonenumber_relationships',
@@ -137,14 +181,24 @@ class CompanyPhoneNumber(Relationship):
     company = fk('Company', 'company_phonenumber_relationships')
     phone_number = fk('PhoneNumber', 'company_phonenumber_relationships')
 
+    class Meta:
+        verbose_name = 'Company-phonenumber'
+        verbose_name_plural = 'Company-phonenumbers'
+
 class CompanyEmailType(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Company-email type'
+        verbose_name_plural = 'Company-email types'
 
 class CompanyEmail(Relationship):
     rtype = fk('CompanyEmailType', 'company_email_relationships',
         'Company-email relationship type')
     company = fk('Company', 'company_email_relationships')
     email = fk('Email', 'company_email_relationships')
+
+    class Meta:
+        verbose_name = 'Company-email'
+        verbose_name_plural = 'Company-emails'
 
 # --- End: Company Relationships ---
 
@@ -224,6 +278,10 @@ class Company(Standard):
         'companies'
     )
 
+    class Meta:
+        verbose_name = 'Company'
+        verbose_name_plural = 'Companies'
+
 class Email(Standard):
     email = models.EmailField()
 
@@ -246,6 +304,10 @@ class Address(Standard):
     country = fk('common.Country', 'addresses')
     state = fk('common.State', 'addresses')
     postal_code = cf()
+
+    class Meta:
+        verbose_name = 'Address'
+        verbose_name_plural = 'Addresses'
 
 class PhoneNumberType(Choice):
     pass
