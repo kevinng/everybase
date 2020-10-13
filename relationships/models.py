@@ -164,9 +164,10 @@ class CompanyPhoneNumberType(Choice):
     pass
 
 class CompanyPhoneNumber(Relationship):
-    rtype = rfk('CompanyPhoneNumberType')
-    company = rfk('Company')
-    phone_number = rfk('PhoneNumber')
+    rtype = fk('CompanyPhoneNumberType', 'company_phonenumber_relationships',
+        'Company-phonenumber relationship type')
+    company = fk('Company', 'company_phonenumber_relationships')
+    phone_number = fk('PhoneNumber', 'company_phonenumber_relationships')
 
 class CompanyEmailType(Choice):
     pass
