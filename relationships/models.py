@@ -5,31 +5,31 @@ from common.models import Standard, Choice
 
 # Foreign key
 fk = lambda klass, name=None, verbose_name=None, null=False: models.ForeignKey(
-        klass,
-        on_delete=models.PROTECT,
-        related_name=name,
-        related_query_name=name,
-        verbose_name=verbose_name,
-        null=null,
-        blank=null
-    )
+    klass,
+    on_delete=models.PROTECT,
+    related_name=name,
+    related_query_name=name,
+    verbose_name=verbose_name,
+    null=null,
+    blank=null
+)
 
 # Many-to-many
 m2m = lambda klass, name, blank=False: models.ManyToManyField(
-        klass,
-        related_name=name,
-        related_query_name=name,
-        blank=blank
-    )
+    klass,
+    related_name=name,
+    related_query_name=name,
+    blank=blank
+)
 
 # Many-to-many through
 m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
-        klass,
-        through=thru,
-        through_fields=(f1, f2),
-        related_name=name,
-        related_query_name=name
-    )
+    klass,
+    through=thru,
+    through_fields=(f1, f2),
+    related_name=name,
+    related_query_name=name
+)
 
 # Text
 tf = lambda verbose_name=None, null=False: models.TextField(
