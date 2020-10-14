@@ -178,13 +178,12 @@ class DemandQuote(Standard, Quote, ExpirableInvalidable):
     demand = fk('Demand', 'quotes')
 
     status = fk('DemandQuoteStatus', 'quotes')
-
-    details_as_received_md = tf('Details as received in Markdown')
+    details_as_received_md = tf('Details as received in Markdown', null=True)
     positive_origin_countries = m2m(
         'common.Country', 'positive_origin_of_demand_quotes', True)
     negative_origin_countries = m2m(
         'common.Country', 'negative_origin_of_demand_quotes', True)
-    negative_details_md = tf(null=True)
+    negative_details_md = tf('Negative details in Markdown', null=True)
 
 class Trench(models.Model):
     quantity = ff()
