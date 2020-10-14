@@ -20,7 +20,7 @@ class GmassCampaignResult(Standard):
     gmass_compaign = fk('GmassCampaign', 'results')
 
 class GmassCampaign(Standard):
-    campaign_id = cf(null=True)
+    campaign_id = cf()
     sent = dtf(null=True)
     subject = cf(null=True)
     spreadsheet = cf(null=True)
@@ -37,19 +37,19 @@ class ChemicalClusterOfSingaporeResult(Standard):
     address = cf(null=False)
 
     company = fk('relationships.Company',
-        'chemical_cluster_of_singapore_results')
+        'chemical_cluster_of_singapore_results', null=True)
     
     email = fk('relationships.Email',
-        'chemical_cluster_of_singapore_results')
+        'chemical_cluster_of_singapore_results', null=True)
 
     phone_numbers = fk('relationships.PhoneNumber',
-        'chemical_cluster_of_singapore_results')
+        'chemical_cluster_of_singapore_results', null=True)
 
     link = fk('relationships.Link',
-        'chemical_cluster_of_singapore_results')
+        'chemical_cluster_of_singapore_results', null=True)
 
     address = fk('relationships.Address',
-        'chemical_cluster_of_singapore_results')
+        'chemical_cluster_of_singapore_results', null=True)
 
 class Fibre2FashionResult(Standard):
     sourced = dtf(null=True)
@@ -62,8 +62,8 @@ class Fibre2FashionResult(Standard):
     lead_type = cf(null=False)
     description = cf(null=False)
 
-    links = m2m('relationships.Link', 'fibre2fashion_results')
-    emails = m2m('relationships.Email', 'fibre2fashion_results')
+    links = m2m('relationships.Link', 'fibre2fashion_results', True)
+    emails = m2m('relationships.Email', 'fibre2fashion_results', True)
 
 class ZeroBounceResult(Standard):
     status = cf(null=False)
@@ -79,7 +79,7 @@ class ZeroBounceResult(Standard):
     smtp_provider = cf(null=False)
     did_you_mean = cf(null=False)
 
-    email = fk('relationships.Email', 'zero_bounce_results')
+    email = fk('relationships.Email', 'zero_bounce_results', True)
 
 class DataSource(Choice):
     emails = m2mt(
