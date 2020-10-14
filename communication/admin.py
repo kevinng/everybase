@@ -37,7 +37,6 @@ class ConversationChatAdmin(admin.ModelAdmin):
             'description': 'Base conversation'
         })
     ]
-    
 
 @admin.register(ConversationChatStatus)
 class ConversationChatStatusAdmin(admin.ModelAdmin):
