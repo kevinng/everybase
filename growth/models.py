@@ -73,104 +73,70 @@ class GmassCampaign(Standard):
     spreadsheet = cf(null=True)
 
 class ChemicalClusterOfSingaporeResult(Standard):
-    sourced = models.DateTimeField(null=True, default=None)
+    sourced = dtf(null=True)
     
-    company_name = models.CharField(max_length=100)
-    telephone = models.CharField(max_length=100)
-    fax = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
-    website = models.CharField(max_length=100)
-    source_link = models.CharField(max_length=100)
-    address = models.CharField(max_length=100)
+    company_name = cf(null=False)
+    telephone = cf(null=False)
+    fax = cf(null=False)
+    email = cf(null=False)
+    website = cf(null=False)
+    source_link = cf(null=False)
+    address = cf(null=False)
 
-    company = models.ForeignKey(
-        'relationships.Company',
-        on_delete=models.PROTECT,
-        related_name='chemical_cluster_of_singapore_results',
-        related_query_name='chemical_cluster_of_singapore_results'
-    )
+    company = fk('relationships.Company',
+        'chemical_cluster_of_singapore_results')
     
-    email = models.ForeignKey(
-        'relationships.Email',
-        on_delete=models.PROTECT,
-        related_name='chemical_cluster_of_singapore_results',
-        related_query_name='chemical_cluster_of_singapore_results'
-    )
+    email = fk('relationships.Email',
+        'chemical_cluster_of_singapore_results')
 
-    phone_numbers = models.ManyToManyField(
-        'relationships.PhoneNumber',
-        related_name='chemical_cluster_of_singapore_results',
-        related_query_name='chemical_cluster_of_singapore_results'
-    )
+    phone_numbers = fk('relationships.PhoneNumber',
+        'chemical_cluster_of_singapore_results')
 
-    link = models.ForeignKey(
-        'relationships.Link',
-        on_delete=models.PROTECT,
-        related_name='chemical_cluster_of_singapore_results',
-        related_query_name='chemical_cluster_of_singapore_results'
-    )
+    link = fk('relationships.Link',
+        'chemical_cluster_of_singapore_results')
 
-    address = models.ForeignKey(
-        'relationships.Address',
-        on_delete=models.PROTECT,
-        related_name='chemical_cluster_of_singapore_results',
-        related_query_name='chemical_cluster_of_singapore_results'
-    )
+    address = fk('relationships.Address',
+        'chemical_cluster_of_singapore_results')
 
 class Fibre2FashionResult(Standard):
-    sourced = models.DateTimeField(null=True, default=None)
+    sourced = dtf(null=True)
 
-    source_link = models.CharField(max_length=100)
-    category = models.CharField(max_length=100)
-    sub_category = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
-    email_domain = models.CharField(max_length=100)
-    lead_type = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
+    source_link = cf(null=False)
+    category = cf(null=False)
+    sub_category = cf(null=False)
+    email = cf(null=False)
+    email_domain = cf(null=False)
+    lead_type = cf(null=False)
+    description = cf(null=False)
 
-    links = models.ManyToManyField(
-        'relationships.Link',
-        related_name='fibre2fashion_results',
-        related_query_name='fibre2fashion_results'
-    )
-
-    emails = models.ManyToManyField(
-        'relationships.Email',
-        related_name='fibre2fashion_results',
-        related_query_name='fibre2fashion_results'
-    )
+    links = m2m('relationships.Link', 'fibre2fashion_results')
+    emails = m2m('relationships.Email', 'fibre2fashion_results')
 
 class ZeroBounceResult(Standard):
-    status = models.CharField(max_length=100)
-    sub_status = models.CharField(max_length=100)
-    account = models.CharField(max_length=100)
-    domain = models.CharField(max_length=100)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    gender = models.CharField(max_length=100)
-    free_email = models.CharField(max_length=100)
-    mx_found = models.CharField(max_length=100)
-    mx_record = models.CharField(max_length=100)
-    smtp_provider = models.CharField(max_length=100)
-    did_you_mean = models.CharField(max_length=100)
+    status = cf(null=False)
+    sub_status = cf(null=False)
+    account = cf(null=False)
+    domain = cf(null=False)
+    first_name = cf(null=False)
+    last_name = cf(null=False)
+    gender = cf(null=False)
+    free_email = cf(null=False)
+    mx_found = cf(null=False)
+    mx_record = cf(null=False)
+    smtp_provider = cf(null=False)
+    did_you_mean = cf(null=False)
 
-    email = models.ForeignKey(
-        'relationships.Email',
-        on_delete=models.PROTECT,
-        related_name='zero_bounce_results',
-        related_query_name='zero_bounce_results'
-    )
+    email = fk('relationships.Email', 'zero_bounce_results')
 
 class DataSource(Choice):
-    emails = models.ManyToManyField(
+    emails = m2mt(
         'relationships.Email',
-        through='SourcedEmail',
-        through_fields=('email', 'source'),
-        related_name='data_sources',
-        related_query_name='data_sources'
+        'SourcedEmail',
+        'email', 'source',
+        'data_sources'
     )
 
 class SourcedEmail(Standard):
-    sourced = models.DateTimeField(null=True, default=None)
-    source = models.ForeignKey('DataSource', on_delete=models.PROTECT)
-    email = models.ForeignKey('relationships.Email', on_delete=models.PROTECT)
+    sourced = dtf(null=True)
+    source = fk('DataSource')
+    email = fk('relationships.Email')
