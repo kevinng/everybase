@@ -20,7 +20,13 @@ class UOMRelationshipParentInline(admin.StackedInline):
 class UnitOfMeasureAdmin(ChoiceAdmin):
     fieldsets = [
         (None, {'fields': ['id', 'name', 'details_md', 'category']}),
-        ('Developer', {'fields': ['programmatic_key', 'programmatic_details_md']}),
+        ('Developer', {
+                'fields': [
+                    'programmatic_key', 
+                    'programmatic_details_md'
+                ]
+            }
+        ),
     ]
     inlines = [
         UOMRelationshipChildInline,
