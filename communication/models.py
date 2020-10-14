@@ -49,6 +49,19 @@ class Conversation(Standard):
 
     issue = fk('Issue', 'conversations')
 
+    def __str__(self):
+
+        if self.agenda_md is None or len(self.agenda_md) > 0:
+            agenda_top = self.agenda_md[0:15]
+        else:
+            agenda_top = 'No Agenda'
+
+        id_str = self.id
+        if self.front_conversation_id != None:
+            id_str = id_str + ', Front: ' + self.front_conversation_id[0:4]
+
+        return '%s (%s)' % (agenda_top, id_str)
+
 class ConversationChannel(Choice):
     pass
 
