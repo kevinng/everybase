@@ -41,7 +41,7 @@ class Conversation(Standard):
 
     front_conversation_id = cf('Front conversation ID', null=True)
 
-    # At least one of the following channels must be set.
+    # One and only one of the following conversations must be set.
     emails = fk('ConversationEmail', 'conversations', null=True)
     chats = fk('ConversationChat', 'conversations', null=True)
     voices = fk('ConversationVoice', 'conversations', null=True)
