@@ -6,7 +6,7 @@ from relationships.models import Email, PhoneNumber
 # --- Start: Issue classes ---
 
 class Issue(Standard):
-    scheduled = dtf()
+    scheduled = dtf(null=True)
     description_md = tf('Description in Markdown', null=True)
     outcome_md = tf('Outcome in Markdown', null=True)
 
