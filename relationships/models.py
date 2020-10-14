@@ -242,8 +242,9 @@ class LinkType(Choice):
     pass
 
 class Link(Standard):
-    types = m2m('LinkType', 'links', True)
     last_visited_okay = dtf(null=True)
+    
+    types = m2m('LinkType', 'links', True)
     link = models.URLField()
 
 class AddressType(Choice):
