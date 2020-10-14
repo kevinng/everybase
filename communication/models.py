@@ -45,7 +45,7 @@ class Conversation(Standard):
     voices = fk('ConversationVoice', 'conversations', null=True)
     videos = fk('ConversationVideo', 'conversations', null=True)
 
-    issue = fk('Issue', 'conversations', null=True)
+    issue = fk('Issue', 'conversations')
 
 class ConversationChannel(Choice):
     pass
