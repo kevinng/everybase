@@ -50,26 +50,6 @@ dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
 
 # --- End: Helper lambda for model field declarations ---
 
-
-# # --- Start: Abstract ---
-
-# # Helper function to declare foreign key relationships.
-# fk = lambda klass, name: models.ForeignKey(
-#         klass,
-#         on_delete=models.PROTECT,
-#         related_name=name,
-#         related_query_name=name
-#     )
-
-# # Helper function to declare many-to-many relationships.
-# m2m = lambda klass, name: models.ManyToManyField(
-#         klass,
-#         related_name=name,
-#         related_query_name=name
-#     )
-
-# # --- End: Abstract ---
-
 # --- Start: Issue classes ---
 
 class Issue(Standard):
