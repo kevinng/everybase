@@ -89,10 +89,14 @@ class Choice(models.Model):
 class ParentChildrenChoice(Choice):
     parent = fk('self', 'children', null=True)
 
-# --- End: Abstract ---
+# --- End: Abstract models ---
+
+# --- Start: Common models ---
 
 class Country(Choice):
     pass
 
 class State(Choice):
     pass
+
+# --- End: Common models ---
