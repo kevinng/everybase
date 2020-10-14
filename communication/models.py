@@ -2,42 +2,91 @@ from django.db import models
 from common.models import Standard, Choice, ParentChildrenChoice
 from relationships.models import Email, PhoneNumber
 
-# --- Start: Abstract ---
+# --- Start: Helper lambda for model field declarations ---
 
-# Helper function to declare foreign key relationships.
-fk = lambda klass, name: models.ForeignKey(
-        klass,
-        on_delete=models.PROTECT,
-        related_name=name,
-        related_query_name=name
-    )
+# Foreign key
+fk = lambda klass, name=None, verbose_name=None, null=False: models.ForeignKey(
+    klass,
+    on_delete=models.PROTECT,
+    related_name=name,
+    related_query_name=name,
+    verbose_name=verbose_name,
+    null=null,
+    blank=null
+)
 
-# Helper function to declare many-to-many relationships.
-m2m = lambda klass, name: models.ManyToManyField(
-        klass,
-        related_name=name,
-        related_query_name=name
-    )
+# Many-to-many
+m2m = lambda klass, name, blank=False: models.ManyToManyField(
+    klass,
+    related_name=name,
+    related_query_name=name,
+    blank=blank
+)
 
-# --- End: Abstract ---
+# Many-to-many through
+m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
+    klass,
+    through=thru,
+    through_fields=(f1, f2),
+    related_name=name,
+    related_query_name=name
+)
+
+# Text
+tf = lambda verbose_name=None, null=False: models.TextField(
+    verbose_name=verbose_name, null=null, blank=null)
+
+# Char
+cf = lambda verbose_name=None, null=False: models.CharField(
+    verbose_name=verbose_name, max_length=100, null=null, blank=null)
+
+# Float
+ff = lambda verbose_name=None, null=False: models.FloatField(
+    verbose_name=verbose_name, null=null, blank=null)
+
+# Datetime
+dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
+    null=null, blank=null, default=default)
+
+# --- End: Helper lambda for model field declarations ---
+
+
+# # --- Start: Abstract ---
+
+# # Helper function to declare foreign key relationships.
+# fk = lambda klass, name: models.ForeignKey(
+#         klass,
+#         on_delete=models.PROTECT,
+#         related_name=name,
+#         related_query_name=name
+#     )
+
+# # Helper function to declare many-to-many relationships.
+# m2m = lambda klass, name: models.ManyToManyField(
+#         klass,
+#         related_name=name,
+#         related_query_name=name
+#     )
+
+# # --- End: Abstract ---
 
 # --- Start: Issue classes ---
 
 class Issue(Standard):
-    scheduled = models.DateTimeField(null=True, default=None)
-    description_md = models.TextField()
-    outcome_md = models.TextField()
+    scheduled = dtf()
+    description_md = tf('Description in Markdown', null=True)
+    outcome_md = tf('Outcome in Markdown', null=True)
 
-    tags = m2m('IssueTag', 'issues')
+    tags = m2m('IssueTag', 'issues', blank=True)
     status = fk('IssueStatus', 'issues')
 
     # At least one of the following source must be set.
-    supply = fk('leads.Supply', 'issues')
-    demand = fk('leads.Demand', 'issues')
-    supply_quote = fk('leads.SupplyQuote', 'issues')
-    match = fk('leads.Match', 'issues')
-    supply_commission = fk('leads.SupplyCommission', 'issues')
-    demand_commission = fk('leads.DemandCommission', 'issues')
+    supply = fk('leads.Supply', 'issues', null=True)
+    demand = fk('leads.Demand', 'issues', null=True)
+    supply_quote = fk('leads.SupplyQuote', 'issues', null=True)
+    match = fk('leads.Match', 'issues', null=True)
+    supply_commission = fk('leads.SupplyCommission', 'issues', null=True)
+    demand_commission = fk('leads.DemandCommission', 'issues', null=True)
 
 class IssueTag(ParentChildrenChoice):
     pass
@@ -52,18 +101,18 @@ class IssueStatus(ParentChildrenChoice):
 class Conversation(Standard):
     channel = fk('ConversationChannel', 'conversations')
 
-    agenda_md = models.TextField()
-    minutes_md = models.TextField()
+    agenda_md = tf('Agenda in Markdown', null=True)
+    minutes_md = tf('Minutes in Markdown', null=True)
 
-    front_conversation_id = models.CharField(max_length=100)
+    front_conversation_id = cf('Front conversation ID', null=True)
 
     # At least one of the following channels must be set.
-    emails = fk('ConversationEmail', 'conversations')
-    chats = fk('ConversationChat', 'conversations')
-    voices = fk('ConversationVoice', 'conversations')
-    videos = fk('ConversationVideo', 'conversations')
+    emails = fk('ConversationEmail', 'conversations', null=True)
+    chats = fk('ConversationChat', 'conversations', null=True)
+    voices = fk('ConversationVoice', 'conversations', null=True)
+    videos = fk('ConversationVideo', 'conversations', null=True)
 
-    issue = fk('Issue', 'conversations')
+    issue = fk('Issue', 'conversations', null=True)
 
 class ConversationChannel(Choice):
     pass
