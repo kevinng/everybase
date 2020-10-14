@@ -12,8 +12,9 @@ class ConversationAdmin(admin.ModelAdmin):
 @admin.register(ConversationChat)
 class ConversationChatAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = ['id', 'created', 'updated', 'status', 'their_number',
-        'conversation']
+    list_display = ['id', 'created', 'updated', 'status', 'our_number',
+        'their_number', 'conversation']
+    list_editable = ['status', 'our_number', 'their_number', 'conversation'] 
     list_filter = ['status']
     list_per_page = 1000
     search_fields = ['their_number', 'our_number', 'conversation']
@@ -36,6 +37,7 @@ class ConversationChatAdmin(admin.ModelAdmin):
             'description': 'Base conversation'
         })
     ]
+    
 
 @admin.register(ConversationChatStatus)
 class ConversationChatStatusAdmin(admin.ModelAdmin):
