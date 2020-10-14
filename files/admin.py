@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import FileTag, File
 
-# Register your models here.
+admin.site.register(FileTag)
+admin.site.register(File)
