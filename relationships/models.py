@@ -256,7 +256,7 @@ class Address(Standard):
     address_1 = cf()
     address_2 = cf(null=True)
     address_3 = cf(null=True)
-    country = fk('common.Country', 'addresses', null=True)
+    country = fk('common.Country', 'addresses')
     state = fk('common.State', 'addresses', null=True)
     postal_code = cf(null=True)
 
