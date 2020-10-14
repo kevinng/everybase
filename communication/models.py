@@ -25,7 +25,9 @@ class IssueTag(ParentChildrenChoice):
     pass
 
 class IssueStatus(ParentChildrenChoice):
-    pass
+    class Meta:
+        verbose_name = 'Issue status'
+        verbose_name_plural = 'Issue statuses'
 
 # --- End: Issue classes ---
 
@@ -57,7 +59,9 @@ class ConversationEmail(Standard):
     conversation = fk('Conversation', 'conversation_emails')
 
 class ConversationEmailStatus(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Conversation email status'
+        verbose_name_plural = 'Conversation email statuses'
 
 class ConversationChat(Standard):
     status = fk('ConversationChatStatus', 'conversation_chats')
@@ -66,7 +70,9 @@ class ConversationChat(Standard):
     conversation = fk('Conversation', 'conversation_chats')
 
 class ConversationChatStatus(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Conversation chat status'
+        verbose_name_plural = 'Conversation chat statuses'
 
 class ConversationVoice(Standard):
     status = fk('ConversationVoiceStatus', 'conversation_voices')
@@ -75,7 +81,9 @@ class ConversationVoice(Standard):
     conversation = fk('Conversation', 'conversation_voices')
 
 class ConversationVoiceStatus(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Conversation voice status'
+        verbose_name_plural = 'Conversation voice statuses'
 
 class ConversationVideo(models.Model):
     status = fk('ConversationVideoStatus', 'conversation_videos')
@@ -84,6 +92,8 @@ class ConversationVideo(models.Model):
     conversation = fk('Conversation', 'conversation_videos')
 
 class ConversationVideoStatus(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Conversation video status'
+        verbose_name_plural = 'Conversation video statuses'
 
 # --- End: Conversation classes ---
