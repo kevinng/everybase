@@ -21,9 +21,9 @@ class Lead(models.Model):
     details_md = tf('Details in Markdown', True)
     files = m2m('files.File', '%(class)s_leads', True)
 
-    contact = fk('relationships.Person', '%(class)s_leads', null=True)
+    contact = fk('relationships.Person', '%(class)s_leads')
     company = fk('relationships.Company', '%(class)s_leads', null=True)
-    contact_type = fk('ContactType', '%(class)s_leads', null=True)
+    contact_type = fk('ContactType', '%(class)s_leads')
     contact_type_details_md = tf('Contact type details in Markdown', True)
 
     def __str__(self):
