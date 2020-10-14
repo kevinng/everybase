@@ -67,10 +67,10 @@ class GmassCampaignResult(Standard):
     gmass_compaign = fk('GmassCampaign', 'results')
 
 class GmassCampaign(Standard):
-    campaign_id = models.CharField(max_length=100)
-    sent = models.DateTimeField(null=True, default=None)
-    subject = models.CharField(max_length=100)
-    spreadsheet = models.CharField(max_length=100)
+    campaign_id = cf(null=True)
+    sent = dtf(null=True)
+    subject = cf(null=True)
+    spreadsheet = cf(null=True)
 
 class ChemicalClusterOfSingaporeResult(Standard):
     sourced = models.DateTimeField(null=True, default=None)
