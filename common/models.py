@@ -31,6 +31,10 @@ m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
     related_query_name=name
 )
 
+# Integer
+pintf = lambda verbose_name=None, null=False: models.PositiveIntegerField(
+    verbose_name=verbose_name, null=null, blank=null)
+
 # Text
 tf = lambda verbose_name=None, null=False: models.TextField(
     verbose_name=verbose_name, null=null, blank=null)

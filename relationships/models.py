@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import fk, m2m, m2mt, tf, cf, ff, dtf
+from common.models import fk, m2m, m2mt, tf, cf, ff, dtf, pintf
 from common.models import Standard, Choice
 
 # --- Start: Abstract classes ---
@@ -269,7 +269,11 @@ class PhoneNumberType(Choice):
 
 class PhoneNumber(Standard):
     types = m2m('PhoneNumber', 'phone_numbers', True)
-    country_code = cf()
-    national_number = cf()
+    country_code = pintf()
+    national_number = pintf()
+
+    def __str__(self):
+        return '+%s %s (%d)' % (self.country_code, self.national_number,
+            self.id)
 
 # --- End: Entities ---
