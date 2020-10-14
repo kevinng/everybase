@@ -68,8 +68,10 @@ class ConversationChat(Standard):
     Details for a conversation whose channel is chat.
     """
     status = fk('ConversationChatStatus', 'conversation_chats')
-    their_number = fk('relationships.PhoneNumber', 'conversation_chat_their_numbers')
-    our_number = fk('relationships.PhoneNumber', 'conversation_chat_our_numbers')
+    their_number = fk('relationships.PhoneNumber',
+        'conversation_chat_their_numbers')
+    our_number = fk('relationships.PhoneNumber',
+        'conversation_chat_our_numbers')
     conversation = fk('Conversation', 'conversation_chats')
 
 class ConversationChatStatus(Choice):
