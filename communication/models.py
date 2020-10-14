@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import fk, m2m, m2mt, tf, cf, ff, dtf
+from common.models import fk, m2m, tf, cf, dtf
 from common.models import Standard, Choice, ParentChildrenChoice
 from relationships.models import Email, PhoneNumber
 

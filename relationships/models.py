@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import fk, m2m, m2mt, tf, cf, ff, dtf, pintf
+from common.models import fk, m2m, m2mt, tf, cf, dtf, pintf
 from common.models import Standard, Choice
 
 # --- Start: Abstract classes ---
