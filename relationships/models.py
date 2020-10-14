@@ -201,6 +201,7 @@ class Person(Standard):
 
 class Company(Standard):
     company_name = cf()
+    company_name_wo_postfix = cf()
     notes_md = tf('Notes in Markdown', True)
 
     emails = m2mt(
@@ -243,7 +244,7 @@ class LinkType(Choice):
 
 class Link(Standard):
     last_visited_okay = dtf(null=True)
-    
+
     types = m2m('LinkType', 'links', True)
     link = models.URLField()
 
