@@ -158,7 +158,7 @@ class CompanyEmail(Relationship):
 # --- Start: Entities ---
 
 class Person(Standard):
-    given_name = cf()
+    given_name = cf(null=True)
     family_name = cf(null=True)
     country = fk('common.Country', 'persons', null=True)
     state = fk('common.State', 'persons', null=True)
