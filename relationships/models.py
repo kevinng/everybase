@@ -4,7 +4,7 @@ from common.models import Standard, Choice
 
 # --- Start: Abstract classes ---
 
-class Relationship(models.Model):
+class Relationship(Standard):
     details_md = tf('Details in Markdown')
 
     class Meta:
