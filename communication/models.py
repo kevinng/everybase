@@ -64,9 +64,12 @@ class ConversationEmailStatus(Choice):
         verbose_name_plural = 'Conversation email statuses'
 
 class ConversationChat(Standard):
+    """
+    Details for a conversation whose channel is chat.
+    """
     status = fk('ConversationChatStatus', 'conversation_chats')
-    to_number = fk('relationships.PhoneNumber', 'conversation_chat_tos')
-    from_number = fk('relationships.PhoneNumber', 'conversation_chat_froms')
+    their_number = fk('relationships.PhoneNumber', 'conversation_chat_their_numbers')
+    our_number = fk('relationships.PhoneNumber', 'conversation_chat_our_numbers')
     conversation = fk('Conversation', 'conversation_chats')
 
 class ConversationChatStatus(Choice):
