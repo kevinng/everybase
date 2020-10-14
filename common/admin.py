@@ -1,14 +1,12 @@
 from django.contrib import admin
 
-class StandardAdmin(admin.ModelAdmin):
-    """
-    Admin interface to be inherited by child of Standard model.
-    """
-    readonly_fields = ('id',)
-    fieldsets = [
-        (None, {'fields': ['id', 'created']}),
-        ('Timestamps', {'fields': ['updated', 'deleted']})
-    ]
+# Fields for standard models
+
+standard_readonly_fields = ('id', 'created', 'updated')
+standard_fieldsets = [
+    (None, {'fields': ['id']}),
+    ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
+]
 
 class ChoiceAdmin(admin.ModelAdmin):
     """
