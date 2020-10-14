@@ -47,8 +47,8 @@ class Commission(models.Model):
     mark_up_percentage = ff('Mark-up percentage', True)
 
     # At least person or company must be specified.
-    person = fk('relationships.Person', '%(class)s_items')
-    company = fk('relationships.Company', '%(class)s_items')
+    person = fk('relationships.Person', '%(class)s_items', null=True)
+    company = fk('relationships.Company', '%(class)s_items', null=True)
 
     class Meta:
         abstract = True
