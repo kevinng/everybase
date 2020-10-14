@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'communication.apps.CommunicationConfig',
     'files.apps.FilesConfig',
     'leads.apps.LeadsConfig',
+    'growth.apps.GrowthConfig',
 
     'lander.apps.LanderConfig',
     'cloaker.apps.CloakerConfig',
