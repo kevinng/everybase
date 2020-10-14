@@ -132,11 +132,11 @@ class DataSource(Choice):
     emails = m2mt(
         'relationships.Email',
         'SourcedEmail',
-        'email', 'source',
+        'source', 'email',
         'data_sources'
     )
 
 class SourcedEmail(Standard):
     sourced = dtf(null=True)
-    source = fk('DataSource')
-    email = fk('relationships.Email')
+    source = fk('DataSource', 'sourced_emails')
+    email = fk('relationships.Email', 'sourced_emails')
