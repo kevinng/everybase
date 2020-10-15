@@ -18,7 +18,7 @@ class ConversationChatAdmin(admin.ModelAdmin):
     list_editable = ['status', 'our_number', 'their_number', 'conversation'] 
     list_filter = ['status']
     list_per_page = 1000
-    search_fields = ['their_number', 'our_number', 'conversation']
+    search_fields = ['id', 'their_number', 'our_number', 'conversation']
     ordering = ['-created', '-updated']
     show_full_result_count = True
     
