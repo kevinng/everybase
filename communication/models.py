@@ -52,7 +52,10 @@ class Conversation(Standard):
     def __str__(self):
 
         if self.agenda_md is None or len(self.agenda_md) > 0:
-            agenda_top = self.agenda_md[0:15] + '...'
+            agenda_top = self.agenda_md[0:15]
+
+            if len(self.agenda_md) > 15:
+                agenda_top = agenda_top + '...'
         else:
             agenda_top = 'No Agenda'
 

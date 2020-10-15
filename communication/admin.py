@@ -42,10 +42,20 @@ class ConversationChatAdmin(admin.ModelAdmin):
 class ConversationChatStatusAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
+@admin.register(ConversationChannel)
+class ConversationChannelAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = ['id', 'details_in_markdown', 'programmatic_key']
+    search_fields = ['id', 'details_md', 'programmatic_key',
+        'programmatic_details_md']
+
+    def details_in_markdown(self, obj):
+        return obj.details_md[0:15] + '...'
+    details_in_markdown.empty_value_display = 'No Details'
+
 admin.site.register(Issue)
 admin.site.register(IssueTag)
 admin.site.register(IssueStatus)
-admin.site.register(ConversationChannel)
 admin.site.register(ConversationEmail)
 admin.site.register(ConversationEmailStatus)
 admin.site.register(ConversationVoice)
