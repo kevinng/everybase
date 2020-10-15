@@ -18,16 +18,17 @@ choice_fieldsets = [
         'programmatic_key',
         'programmatic_details_md']}),
 ]
-choice_search_fields = ['id', 'details_md', 'programmatic_key',
-    'programmatic_details_md']
+choice_list_display = ['id', 'details_in_markdown', 'programmatic_key',
+        'programmatic_details_in_markdown']
+choice_list_editable = ['programmatic_key']
 
 class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = ['id', 'details_in_markdown', 'programmatic_key',
-        'programmatic_details_in_markdown']
-    list_editable = ['programmatic_key']
+    list_display = choice_list_display
+    list_editable = choice_list_editable
     list_per_page = 1000
-    search_fields = choice_search_fields
+    search_fields = ['id', 'details_md', 'programmatic_key',
+        'programmatic_details_md']
     ordering = ['id']
     show_full_result_count = True
 
@@ -43,6 +44,8 @@ class ChoiceAdmin(admin.ModelAdmin):
         return short_text(obj.programmatic_details_md)
 
 class ParentChildrenChoiceAdmin(ChoiceAdmin):
+    list_display = choice_list_display + ['parent']
+    list_editable = choice_list_editable + ['parent']
     fieldsets = choice_fieldsets + [
         ('Relationship', {'fields': ['parent']})
     ]
