@@ -1,6 +1,6 @@
 from django.contrib import admin
 from common.admin import (standard_readonly_fields, standard_fieldsets,
-    ChoiceAdmin, ParentChildrenChoiceAdmin)
+    ChoiceAdmin, ParentChildrenChoiceAdmin, short_text)
 from .models import (Issue, IssueTag, IssueStatus, Conversation,
     ConversationChannel, ConversationEmail, ConversationEmailStatus,
     ConversationChat, ConversationChatStatus, ConversationVoice,
@@ -50,6 +50,18 @@ class ParentChildrenChoiceAdmin(ParentChildrenChoiceAdmin):
 
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = ['id', 'status', 'description_in_markdown',
+        'outcome_in_markdown', 'source_type', 'tags_preview']
+    list_editable = ['status']
+    list_per_page = 1000
+    list_filter = ['status', 'tags']
+    search_fields = ['id', 'description_in_markdown', 'outcome_in_markdown']
+    ordering = ['-created', '-updated']
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
     readonly_fields = standard_readonly_fields
     fieldsets = standard_fieldsets + [
         ('Schedule', {
@@ -71,6 +83,34 @@ class IssueAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
         'match', 'supply_commission', 'demand_commission']
+
+    def description_in_markdown(self, obj):
+        return short_text(obj.description_md)
+
+    def outcome_in_markdown(self, obj):
+        return short_text(obj.outcome_md)
+
+    def source_type(self, obj):
+        if obj.supply is not None:
+            return 'Supply'
+        elif obj.demand is not None:
+            return 'Demand'
+        elif obj.supply_quote is not None:
+            return 'Supply Quote'
+        elif obj.match is not None:
+            return 'Match'
+        elif obj.supply_commission is not None:
+            return 'Supply Commission'
+        elif obj.demand_commission is not None:
+            return 'Demand Commission'
+        
+        return '-'
+    
+    def tags_preview(self, obj):
+        return ', '.join([t.name for t in obj.tags.all()])
+
+    
+
 
 
 admin.site.register(ConversationEmail)
