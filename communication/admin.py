@@ -1,5 +1,5 @@
 from django.contrib import admin
-from common.admin import (standard_fieldsets, standard_readonly_fields,
+from common.admin import (standard_readonly_fields, standard_fieldsets,
     ChoiceAdmin, ParentChildrenChoiceAdmin)
 from .models import (Issue, IssueTag, IssueStatus, Conversation,
     ConversationChannel, ConversationEmail, ConversationEmailStatus,
@@ -44,12 +44,35 @@ class ConversationChatAdmin(admin.ModelAdmin):
 class ChoiceAdmin(ChoiceAdmin):
     pass
 
-# @admin.register(IssueStatus, IssueTag)
-@admin.register(IssueTag)
+@admin.register(IssueStatus, IssueTag)
 class ParentChildrenChoiceAdmin(ParentChildrenChoiceAdmin):
     pass
 
-admin.site.register(Issue)
+@admin.register(Issue)
+class IssueAdmin(admin.ModelAdmin):
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Schedule', {
+            'fields': ['scheduled'],
+            'description': 'Time scheduled to begin working on this issue'
+        }),
+        ('Notes', {
+            'fields': ['description_md', 'outcome_md'],
+            'description': 'Notes on this issue'
+        }),
+        ('Meta-Data', {
+            'fields': ['status', 'tags']
+        }),
+        ('Source', {
+            'fields': ['supply', 'demand', 'supply_quote', 'match',
+                'supply_commission', 'demand_commission'],
+            'description': 'Source of this issue - one of these must be set'
+        })
+    ]
+    autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
+        'match', 'supply_commission', 'demand_commission']
+
+
 admin.site.register(ConversationEmail)
 admin.site.register(ConversationVoice)
 admin.site.register(ConversationVideo)

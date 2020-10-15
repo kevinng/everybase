@@ -33,6 +33,24 @@ class UnitOfMeasureAdmin(ChoiceAdmin):
         UOMRelationshipParentInline
     ]
 
+class SupplyAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
+class DemandAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
+class SupplyQuoteAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
+class MatchAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
+class SupplyCommissionAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
+class DemandCommissionAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
 admin.site.register(Incoterm, ChoiceAdmin)
 admin.site.register(Currency, ChoiceAdmin)
 admin.site.register(PaymentMode, ChoiceAdmin)
@@ -44,12 +62,12 @@ admin.site.register(SupplyQuoteStatus, ChoiceAdmin)
 admin.site.register(DemandQuoteStatus, ChoiceAdmin)
 admin.site.register(UnitOfMeasure, UnitOfMeasureAdmin)
 admin.site.register(UOMRelationship)
-admin.site.register(Supply)
-admin.site.register(Demand)
-admin.site.register(SupplyQuote)
+admin.site.register(Supply, SupplyAdmin)
+admin.site.register(Demand, DemandAdmin)
+admin.site.register(SupplyQuote, SupplyQuoteAdmin)
 admin.site.register(DemandQuote)
 admin.site.register(ProductionCapability)
 admin.site.register(Trench)
-admin.site.register(Match)
-admin.site.register(SupplyCommission)
-admin.site.register(DemandCommission)
+admin.site.register(Match, MatchAdmin)
+admin.site.register(SupplyCommission, SupplyCommissionAdmin)
+admin.site.register(DemandCommission, DemandCommissionAdmin)
