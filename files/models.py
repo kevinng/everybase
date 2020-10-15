@@ -1,9 +1,9 @@
 from django.db import models
 from common.models import fk, tf
-from common.models import Standard, ParentChildrenChoice
+from common.models import Standard, Choice
 
-class FileTag(ParentChildrenChoice):
-    pass
+class FileTag(Choice):
+    parent = fk('self', 'children', null=True)
 
 class File(Standard):
     source_person = fk('relationships.Person', 'files', null=True)

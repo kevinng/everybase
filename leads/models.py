@@ -1,6 +1,6 @@
 from django.db import models
 from common.models import fk, m2m, m2mt, tf, cf, ff, dtf
-from common.models import Choice, Standard, ParentChildrenChoice
+from common.models import Choice, Standard
 
 # --- Start: Abstract models ---
 
@@ -91,7 +91,8 @@ class PaymentMode(Choice):
 class ContactType(Choice):
     pass
 
-class LeadCategory(ParentChildrenChoice):
+class LeadCategory(Choice):
+    parent = fk('self', 'children', null=True)
     class Meta:
         verbose_name_plural = 'Lead categories'
 

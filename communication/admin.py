@@ -1,6 +1,6 @@
 from django.contrib import admin
 from common.admin import (standard_fieldsets, standard_readonly_fields,
-    ChoiceAdmin)
+    ChoiceAdmin, ParentChildrenChoiceAdmin)
 from .models import (Issue, IssueTag, IssueStatus, Conversation,
     ConversationChannel, ConversationEmail, ConversationEmailStatus,
     ConversationChat, ConversationChatStatus, ConversationVoice,
@@ -39,20 +39,17 @@ class ConversationChatAdmin(admin.ModelAdmin):
         })
     ]
 
-@admin.register(ConversationChatStatus)
-class ConversationChatStatusAdmin(admin.ModelAdmin):
-    search_fields = ['id']
-
-@admin.register(ConversationChannel)
+@admin.register(ConversationChannel, ConversationChatStatus,
+    ConversationEmailStatus, ConversationVideoStatus, ConversationVoiceStatus)
 class ChoiceAdmin(ChoiceAdmin):
     pass
 
+# @admin.register(IssueStatus, IssueTag)
+@admin.register(IssueTag)
+class ParentChildrenChoiceAdmin(ParentChildrenChoiceAdmin):
+    pass
+
 admin.site.register(Issue)
-admin.site.register(IssueTag)
-admin.site.register(IssueStatus)
 admin.site.register(ConversationEmail)
-admin.site.register(ConversationEmailStatus)
 admin.site.register(ConversationVoice)
-admin.site.register(ConversationVoiceStatus)
 admin.site.register(ConversationVideo)
-admin.site.register(ConversationVideoStatus)

@@ -105,8 +105,8 @@ class Choice(models.Model):
     class Meta:
         abstract = True
 
-class ParentChildrenChoice(Choice):
-    parent = fk('self', 'children', null=True)
+# class ParentChildrenChoice(Choice):
+#     parent = fk('self', 'children', null=True)
 
 # --- End: Abstract models ---
 

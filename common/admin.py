@@ -18,6 +18,8 @@ choice_fieldsets = [
         'programmatic_key',
         'programmatic_details_md']}),
 ]
+choice_search_fields = ['id', 'details_md', 'programmatic_key',
+    'programmatic_details_md']
 
 class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
@@ -25,8 +27,7 @@ class ChoiceAdmin(admin.ModelAdmin):
         'programmatic_details_in_markdown']
     list_editable = ['programmatic_key']
     list_per_page = 1000
-    search_fields = ['id', 'details_md', 'programmatic_key',
-        'programmatic_details_md']
+    search_fields = choice_search_fields
     ordering = ['id']
     show_full_result_count = True
 
@@ -41,15 +42,8 @@ class ChoiceAdmin(admin.ModelAdmin):
     def programmatic_details_in_markdown(self, obj):
         return short_text(obj.programmatic_details_md)
 
-class ParentChildrenChoice(admin.ModelAdmin):
-    """
-    Admin interface to be inherited by child of Choice model.
-    """
-    readonly_fields = ('id',)
-    fieldsets = [
-        (None, {'fields': ['id', 'name', 'details_md']}),
-        ('Relationship', {'fields': ['parent']}),
-        ('Developer', {'fields': [
-                'programmatic_key',
-                'programmatic_details_md']}),
+class ParentChildrenChoiceAdmin(ChoiceAdmin):
+    fieldsets = choice_fieldsets + [
+        ('Relationship', {'fields': ['parent']})
     ]
+    autocomplete_fields = ['parent']

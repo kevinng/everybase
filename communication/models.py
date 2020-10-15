@@ -1,6 +1,6 @@
 from django.db import models
 from common.models import fk, m2m, tf, cf, dtf
-from common.models import Standard, Choice, ParentChildrenChoice
+from common.models import Standard, Choice
 from relationships.models import Email, PhoneNumber
 
 # --- Start: Issue classes ---
@@ -21,10 +21,11 @@ class Issue(Standard):
     supply_commission = fk('leads.SupplyCommission', 'issues', null=True)
     demand_commission = fk('leads.DemandCommission', 'issues', null=True)
 
-class IssueTag(ParentChildrenChoice):
-    pass
+class IssueTag(Choice):
+    parent = fk('self', 'children', null=True)
 
-class IssueStatus(ParentChildrenChoice):
+class IssueStatus(Choice):
+    parent = fk('self', 'children', null=True)
     class Meta:
         verbose_name = 'Issue status'
         verbose_name_plural = 'Issue statuses'
