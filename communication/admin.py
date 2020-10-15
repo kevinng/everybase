@@ -1,4 +1,5 @@
 from django.contrib import admin
+from common.models import short_text
 from common.admin import standard_fieldsets, standard_readonly_fields
 from .models import (Issue, IssueTag, IssueStatus, Conversation,
     ConversationChannel, ConversationEmail, ConversationEmailStatus,
@@ -45,13 +46,22 @@ class ConversationChatStatusAdmin(admin.ModelAdmin):
 @admin.register(ConversationChannel)
 class ConversationChannelAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = ['id', 'details_in_markdown', 'programmatic_key']
+    list_display = ['id', 'details_in_markdown', 'programmatic_key',
+        'programmatic_details_in_markdown']
+    list_editable = ['programmatic_key']
+    list_per_page = 1000
     search_fields = ['id', 'details_md', 'programmatic_key',
         'programmatic_details_md']
+    ordering = ['id']
+    show_full_result_count = True
 
     def details_in_markdown(self, obj):
-        return obj.details_md[0:15] + '...'
-    details_in_markdown.empty_value_display = 'No Details'
+        return short_text(obj.details_md)
+
+    def programmatic_details_in_markdown(self, obj):
+        return short_text(obj.programmatic_details_md)
+
+
 
 admin.site.register(Issue)
 admin.site.register(IssueTag)

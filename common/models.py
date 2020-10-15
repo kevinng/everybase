@@ -61,6 +61,21 @@ dtf_now = lambda verbose_name=None, null=False, auto_now=True: models.\
 
 # --- End: Helper lambda for model field declarations ---
 
+# --- Start: Helper functions ---
+
+def short_text(text, top_length=20):
+    if text is None or len(text) == 0:
+        return '-'
+
+    details_top = text[0:top_length]
+
+    if len(text) > top_length:
+        details_top = details_top + '...'
+
+    return details_top
+
+# --- End: Helper functions ---
+
 # --- Start: Abstract models ---
 
 class Standard(models.Model):
