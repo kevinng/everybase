@@ -58,7 +58,7 @@ class Conversation(Standard):
             if len(self.agenda_md) > top_len:
                 agenda_top = agenda_top + '...'
         else:
-            agenda_top = 'No Agenda'
+            agenda_top = ''
 
         id_str = self.id
         if self.front_conversation_id != None:
