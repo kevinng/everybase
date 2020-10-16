@@ -17,7 +17,7 @@ class GmassCampaignResult(Standard):
     gmail_response = cf(null=True)
 
     email = fk('relationships.Email', 'gmass_campaign_results')
-    gmass_compaign = fk('GmassCampaign', 'results')
+    gmass_campaign = fk('GmassCampaign', 'results')
 
 class GmassCampaign(Standard):
     campaign_id = cf()
