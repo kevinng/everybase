@@ -28,13 +28,13 @@ class GmassCampaign(Standard):
 class ChemicalClusterOfSingaporeResult(Standard):
     sourced = dtf(null=True)
     
-    company_name = cf(null=False)
-    telephone = cf(null=False)
-    fax = cf(null=False)
-    email = cf(null=False)
-    website = cf(null=False)
-    source_link = cf(null=False)
-    address = cf(null=False)
+    company_name = cf(null=True)
+    telephone = cf(null=True)
+    fax = cf(null=True)
+    email = cf(null=True)
+    website = cf(null=True)
+    source_link = cf(null=True)
+    address = cf(null=True)
 
     company = fk('relationships.Company',
         'chemical_cluster_of_singapore_results', null=True)
