@@ -92,7 +92,7 @@ class ZeroBounceResult(Standard):
     smtp_provider = cf(null=True)
     did_you_mean = cf(null=True)
 
-    email = fk('relationships.Email', 'zero_bounce_results', True)
+    email = fk('relationships.Email', 'zero_bounce_results', null=True)
 
     class Meta:
         verbose_name = 'ZeroBounce result'
