@@ -6,7 +6,6 @@ from common.admin import (standard_list_display, standard_list_filter,
     standard_ordering, standard_readonly_fields, standard_fieldsets,
     standard_list_editable)
 
-admin.site.register(Fibre2FashionResult)
 admin.site.register(ZeroBounceResult)
 admin.site.register(DataSource)
 admin.site.register(SourcedEmail)
@@ -96,3 +95,34 @@ class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['company', 'email', 'phone_numbers', 'link',
         'address']
+
+@admin.register(Fibre2FashionResult)
+class Fibre2FashionResultAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display + ['sourced', 'source_link',
+        'category', 'sub_category', 'email', 'email_domain', 'lead_type',
+        'description']
+    list_editable = standard_list_editable + ['sourced', 'source_link',
+        'category', 'sub_category', 'email', 'email_domain', 'lead_type',
+        'description']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['sourced']
+    search_fields = ['id', 'source_link', 'category', 'sub_category', 'email',
+        'email_domain', 'lead_type', 'description']
+    ordering = ['sourced'] + standard_ordering
+    show_full_result_count = True
+    
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Source', {'fields': ['sourced', 'source_link']}),
+        ('Result details', {
+            'fields': ['category', 'sub_category', 'email', 'email_domain',
+                'lead_type', 'description']
+        }),
+        ('Model references', {
+            'fields': ['links', 'emails']
+        })
+    ]
+    autocomplete_fields = ['links', 'emails']
