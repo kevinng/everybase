@@ -27,13 +27,13 @@ class GmassCampaign(Standard):
 
 class ChemicalClusterOfSingaporeResult(Standard):
     sourced = dtf(null=True)
-    source_link = cf(null=True)
+    source_link = models.URLField(blank=True, null=True)
     
     company_name = cf(null=True)
     telephone = cf(null=True)
     fax = cf(null=True)
     email_str = cf(null=True)
-    website = cf(null=True)
+    website = models.URLField(blank=True, null=True)
     address_str = cf(null=True)
 
     company = fk('relationships.Company',
