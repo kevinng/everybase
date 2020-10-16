@@ -8,6 +8,7 @@ standard_fieldsets = [
     (None, {'fields': ['id']}),
     ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
 ]
+standard_ordering = ['-created', '-updated']
 
 # Fields for choice models
 
