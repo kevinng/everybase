@@ -99,7 +99,7 @@ class ConversationEmailAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['status', 'their_email', 'our_email', 'conversation']
 
-@admin.register(ConversationVoice)
+@admin.register(ConversationVoice, ConversationVideo)
 class ConversationVoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['status', 'our_number',
@@ -128,11 +128,6 @@ class ConversationVoiceAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['status', 'their_number', 'our_number',
         'conversation']
-
-@admin.register(ConversationVideo)
-class ConversationVideoAdmin(admin.ModelAdmin):
-    search_fields = ['id']
-    ordering = standard_ordering
 
 @admin.register(ConversationChannel, ConversationChatStatus,
     ConversationEmailStatus, ConversationVideoStatus, ConversationVoiceStatus)
