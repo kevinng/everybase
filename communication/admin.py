@@ -72,7 +72,7 @@ class ConversationVoiceAdmin(admin.ModelAdmin):
 @admin.register(ConversationVideo)
 class ConversationVideoAdmin(admin.ModelAdmin):
     search_fields = ['id']
-    # ordering = standard_ordering
+    ordering = standard_ordering
 
 @admin.register(ConversationChannel, ConversationChatStatus,
     ConversationEmailStatus, ConversationVideoStatus, ConversationVoiceStatus)
