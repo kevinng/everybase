@@ -8,8 +8,17 @@ from .models import (Issue, IssueTag, IssueStatus, Conversation,
 
 @admin.register(Conversation)
 class ConversationAdmin(admin.ModelAdmin):
-    search_fields = ['id']
+    # List page settings
+    list_display = ['id', 'channel', 'agenda_md', 'minutes_md',
+        'front_conversation_id', 'issue']
+    list_editable = ['agenda_md', 'channel', 'minutes_md',
+        'front_conversation_id', 'issue']
+    list_filter = ['channel']
+    search_fields = ['id', 'agenda_md', 'minutes_md', 'front_conversation_id',
+        'issue']
+    list_per_page = 1000
     ordering = standard_ordering
+    show_full_result_count = True
 
     # Details page settings
     save_on_top = True
