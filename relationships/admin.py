@@ -12,6 +12,9 @@ class PhoneNumberAdmin(admin.ModelAdmin):
 class EmailAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
+class PersonAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
 admin.site.register(PersonLinkType)
 admin.site.register(PersonLink)
 admin.site.register(PersonCompanyType)
@@ -29,7 +32,7 @@ admin.site.register(CompanyPhoneNumberType)
 admin.site.register(CompanyPhoneNumber)
 admin.site.register(CompanyEmailType)
 admin.site.register(CompanyEmail)
-admin.site.register(Person)
+admin.site.register(Person, PersonAdmin)
 admin.site.register(Company)
 admin.site.register(Email, EmailAdmin)
 admin.site.register(LinkType)
