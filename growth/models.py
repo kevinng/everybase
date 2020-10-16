@@ -51,6 +51,10 @@ class ChemicalClusterOfSingaporeResult(Standard):
     address = fk('relationships.Address',
         'chemical_cluster_of_singapore_results', null=True)
 
+    class Meta:
+        verbose_name = 'ChemicalClusterOfSingapore result'
+        verbose_name_plural = 'ChemicalClusterOfSingapore results'
+
 class Fibre2FashionResult(Standard):
     sourced = dtf(null=True)
 
