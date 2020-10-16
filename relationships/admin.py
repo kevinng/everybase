@@ -18,6 +18,12 @@ class EmailAdmin(admin.ModelAdmin):
 class PersonAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
+class LinkAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
+class AddressAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
 admin.site.register(PersonLinkType)
 admin.site.register(PersonLink)
 admin.site.register(PersonCompanyType)
@@ -39,8 +45,8 @@ admin.site.register(Person, PersonAdmin)
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Email, EmailAdmin)
 admin.site.register(LinkType)
-admin.site.register(Link)
+admin.site.register(Link, LinkAdmin)
 admin.site.register(AddressType)
-admin.site.register(Address)
+admin.site.register(Address, AddressAdmin)
 admin.site.register(PhoneNumberType)
 admin.site.register(PhoneNumber, PhoneNumberAdmin)
