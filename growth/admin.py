@@ -147,14 +147,15 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
     # Details page settings
     save_on_top = True
     readonly_fields = standard_readonly_fields
-    # fieldsets = standard_fieldsets + [
-    #     ('Source', {'fields': ['sourced', 'source_link']}),
-    #     ('Result details', {
-    #         'fields': ['category', 'sub_category', 'email', 'email_domain',
-    #             'lead_type', 'description']
-    #     }),
-    #     ('Model references', {
-    #         'fields': ['links', 'emails']
-    #     })
-    # ]
-    # autocomplete_fields = ['links', 'emails']
+    fieldsets = standard_fieldsets + [
+        ('Result details', {
+            'fields': ['email_address', 'status',
+            'sub_status', 'account', 'domain', 'first_name', 'last_name',
+            'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
+            'did_you_mean']
+        }),
+        ('Model references', {
+            'fields': ['email']
+        })
+    ]
+    autocomplete_fields = ['email']
