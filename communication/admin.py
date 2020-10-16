@@ -95,12 +95,12 @@ class ParentChildrenChoiceAdmin(ParentChildrenChoiceAdmin):
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = ['id', 'status', 'description_in_markdown',
-        'outcome_in_markdown', 'source_type', 'tags_string']
-    list_editable = ['status']
+    list_display = ['id', 'status', 'scheduled', 'source_type', 'tags_string',
+        'description_md', 'outcome_md']
+    list_editable = ['status', 'scheduled', 'description_md', 'outcome_md']
     list_per_page = 1000
     list_filter = ['status', 'tags']
-    search_fields = ['id', 'description_in_markdown', 'outcome_in_markdown']
+    search_fields = ['id', 'description_md', 'outcome_md']
     ordering = standard_ordering
     show_full_result_count = True
 
@@ -128,12 +128,6 @@ class IssueAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
         'match', 'supply_commission', 'demand_commission']
-
-    def description_in_markdown(self, obj):
-        return short_text(obj.description_md)
-
-    def outcome_in_markdown(self, obj):
-        return short_text(obj.outcome_md)
 
     def source_type(self, obj):
         if obj.supply is not None:
