@@ -20,6 +20,9 @@ class GmassCampaignResult(Standard):
     email = fk('relationships.Email', 'gmass_campaign_results')
     gmass_campaign = fk('GmassCampaign', 'results')
 
+    def __str__(self):
+        return '%s (%d)' % (self.email_address, self.id)
+
 class GmassCampaign(Standard):
     campaign_id = cf()
     sent = dtf(null=True)
