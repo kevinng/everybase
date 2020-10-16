@@ -52,7 +52,7 @@ class ParentChildrenChoiceAdmin(ParentChildrenChoiceAdmin):
 class IssueAdmin(admin.ModelAdmin):
     # List page settings
     list_display = ['id', 'status', 'description_in_markdown',
-        'outcome_in_markdown', 'source_type', 'tags_preview']
+        'outcome_in_markdown', 'source_type', 'tags_string']
     list_editable = ['status']
     list_per_page = 1000
     list_filter = ['status', 'tags']
@@ -106,10 +106,10 @@ class IssueAdmin(admin.ModelAdmin):
         
         return '-'
     
-    def tags_preview(self, obj):
+    def tags_string(self, obj):
         return ', '.join([t.name for t in obj.tags.all()])
 
-    
+
 
 
 
