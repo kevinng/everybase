@@ -6,7 +6,6 @@ from common.admin import (standard_list_display, standard_list_filter,
     standard_ordering, standard_readonly_fields, standard_fieldsets,
     standard_list_editable)
 
-admin.site.register(GmassCampaign)
 admin.site.register(Fibre2FashionResult)
 admin.site.register(ZeroBounceResult)
 admin.site.register(DataSource)
@@ -66,15 +65,16 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
     # Details page settings
     save_on_top = True
     readonly_fields = standard_readonly_fields
-    # fieldsets = standard_fieldsets + [
-    #     ('Source', {'fields': ['sourced', 'source_link']}),
-    #     ('Result details', {
-    #         'fields': ['company_name', 'telephone', 'fax', 'email_str', 'website',
-    #             'address_str']
-    #     }),
-    #     ('Model references', {
-    #         'fields': ['company', 'email', 'phone_numbers', 'link', 'address']
-    #     })
-    # ]
-    # autocomplete_fields = ['company', 'email', 'phone_numbers', 'link',
-    #     'address']
+    fieldsets = standard_fieldsets + [
+        ('Result details', {'fields': ['email_address', 'first_name',
+            'last_name', 'name_1', 'opens', 'clicks', 'replied', 'unsubscribed',
+            'bounced', 'blocked', 'over_gmail_limit', 'bounce_reason',
+            'gmail_response']
+        }),
+        ('Model references', {'fields': ['email', 'gmass_campaign']})
+    ]
+    autocomplete_fields = ['email', 'gmass_campaign']
+
+@admin.register(GmassCampaign)
+class GmassCampaign(admin.ModelAdmin):
+    search_fields = ['id']
