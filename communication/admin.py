@@ -100,7 +100,7 @@ class ConversationEmailAdmin(admin.ModelAdmin):
     autocomplete_fields = ['status', 'their_email', 'our_email', 'conversation']
 
 @admin.register(ConversationVoice, ConversationVideo)
-class ConversationVoiceAdmin(admin.ModelAdmin):
+class ConversationVoiceAndVideoAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['status', 'our_number',
         'their_number', 'conversation']
