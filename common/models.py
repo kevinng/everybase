@@ -59,6 +59,16 @@ dtf_now = lambda verbose_name=None, null=False, auto_now=True: models.\
     DateTimeField(verbose_name=verbose_name, null=null, blank=null,
     auto_now=auto_now)
 
+# URL
+
+url = lambda verbose_name=None, null=False: models.URLField(
+    verbose_name=verbose_name, null=null, blank=null)
+
+# Email
+
+email = lambda verbose_name=None, null=False: models.EmailField(
+    verbose_name=verbose_name, null=null, blank=null)
+
 # --- End: Helper lambda for model field declarations ---
 
 # --- Start: Helper functions ---
