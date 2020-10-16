@@ -6,7 +6,6 @@ from common.admin import (standard_list_display, standard_list_filter,
     standard_ordering, standard_readonly_fields, standard_fieldsets,
     standard_list_editable)
 
-admin.site.register(ZeroBounceResult)
 admin.site.register(DataSource)
 admin.site.register(SourcedEmail)
 
@@ -126,3 +125,36 @@ class Fibre2FashionResultAdmin(admin.ModelAdmin):
         })
     ]
     autocomplete_fields = ['links', 'emails']
+
+@admin.register(ZeroBounceResult)
+class ZeroBounceResultAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display + ['email_address', 'status',
+        'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
+        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
+    list_editable = standard_list_editable + ['email_address', 'status',
+        'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
+        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['status', 'sub_status', 'gender',
+        'free_email', 'mx_found']
+    search_fields = ['id', 'email_address', 'status', 'sub_status', 'account',
+        'domain', 'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
+        'mx_record', 'smtp_provider', 'did_you_mean']
+    ordering = ['email_address']
+    show_full_result_count = True
+    
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    # fieldsets = standard_fieldsets + [
+    #     ('Source', {'fields': ['sourced', 'source_link']}),
+    #     ('Result details', {
+    #         'fields': ['category', 'sub_category', 'email', 'email_domain',
+    #             'lead_type', 'description']
+    #     }),
+    #     ('Model references', {
+    #         'fields': ['links', 'emails']
+    #     })
+    # ]
+    # autocomplete_fields = ['links', 'emails']
