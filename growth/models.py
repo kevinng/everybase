@@ -78,19 +78,19 @@ class Fibre2FashionResult(Standard):
         verbose_name_plural = 'Fibre2Fashion results'
 
 class ZeroBounceResult(Standard):
-    email_address = email(null=False)
-    status = cf(null=False)
-    sub_status = cf(null=False)
-    account = cf(null=False)
-    domain = cf(null=False)
-    first_name = cf(null=False)
-    last_name = cf(null=False)
-    gender = cf(null=False)
-    free_email = cf(null=False)
-    mx_found = cf(null=False)
-    mx_record = cf(null=False)
-    smtp_provider = cf(null=False)
-    did_you_mean = cf(null=False)
+    email_address = email(null=True)
+    status = cf(null=True)
+    sub_status = cf(null=True)
+    account = cf(null=True)
+    domain = cf(null=True)
+    first_name = cf(null=True)
+    last_name = cf(null=True)
+    gender = cf(null=True)
+    free_email = cf(null=True)
+    mx_found = cf(null=True)
+    mx_record = cf(null=True)
+    smtp_provider = cf(null=True)
+    did_you_mean = cf(null=True)
 
     email = fk('relationships.Email', 'zero_bounce_results', True)
 
