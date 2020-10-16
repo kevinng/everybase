@@ -120,9 +120,11 @@ class ParentChildrenChoiceAdmin(ParentChildrenChoiceAdmin):
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = ['id', 'status', 'scheduled', 'source_type', 'tags_string',
+    list_display = ['id', 'created', 'updated', 'deleted', 'status',
+        'scheduled', 'source_type', 'tags_string', 'description_md',
+        'outcome_md']
+    list_editable = ['deleted', 'status', 'scheduled',
         'description_md', 'outcome_md']
-    list_editable = ['status', 'scheduled', 'description_md', 'outcome_md']
     list_per_page = 1000
     list_filter = ['status', 'tags']
     search_fields = ['id', 'description_md', 'outcome_md']
