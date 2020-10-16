@@ -70,8 +70,32 @@ class ConversationChatAdmin(admin.ModelAdmin):
 
 @admin.register(ConversationEmail)
 class ConversationEmailAdmin(admin.ModelAdmin):
-    search_fields = ['id']
+    # List page settings
+    list_display = ['id', 'created', 'updated', 'deleted', 'status',
+        'our_email', 'their_email', 'conversation']
+    list_editable = ['status', 'deleted', 'our_email', 'their_email',
+        'conversation']
+    list_per_page = 1000
+    list_filter = ['status']
+    search_fields = ['id', 'our_email', 'their_email', 'conversation']
     ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Basic Details', {'fields': ['status']}),
+        ('Emails', {
+            'fields': ['their_email', 'our_email'],
+            'description': 'Emails involved in this conversation'
+        }),
+        ('Conversation', {
+            'fields': ['conversation'],
+            'description': 'Base conversation'
+        })
+    ]
+    autocomplete_fields = ['status', 'their_email', 'our_email', 'conversation']
 
 @admin.register(ConversationVoice)
 class ConversationVoiceAdmin(admin.ModelAdmin):

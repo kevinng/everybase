@@ -9,6 +9,9 @@ from .models import (PersonLinkType, PersonLink, PersonCompanyType,
 class PhoneNumberAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
+class EmailAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+
 admin.site.register(PersonLinkType)
 admin.site.register(PersonLink)
 admin.site.register(PersonCompanyType)
@@ -28,7 +31,7 @@ admin.site.register(CompanyEmailType)
 admin.site.register(CompanyEmail)
 admin.site.register(Person)
 admin.site.register(Company)
-admin.site.register(Email)
+admin.site.register(Email, EmailAdmin)
 admin.site.register(LinkType)
 admin.site.register(Link)
 admin.site.register(AddressType)
