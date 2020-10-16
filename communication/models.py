@@ -115,8 +115,10 @@ class ConversationVoiceStatus(Choice):
 
 class ConversationVideo(Standard):
     status = fk('ConversationVideoStatus', 'conversation_videos')
-    to_number = fk('relationships.PhoneNumber', 'conversation_video_tos')
-    from_number = fk('relationships.PhoneNumber', 'conversation_video_froms')
+    their_number = fk('relationships.PhoneNumber',
+        'conversation_video_their_numbers')
+    our_number = fk('relationships.PhoneNumber',
+        'conversation_video_our_numbers')
     conversation = fk('Conversation', 'conversation_videos')
 
 class ConversationVideoStatus(Choice):
