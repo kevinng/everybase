@@ -1,6 +1,7 @@
 from django.contrib import admin
 from common.admin import (standard_readonly_fields, standard_fieldsets,
-    ChoiceAdmin, ParentChildrenChoiceAdmin, short_text, standard_ordering)
+    ChoiceAdmin, ParentChildrenChoiceAdmin, short_text, standard_ordering,
+    standard_list_filter)
 from .models import (Issue, IssueTag, IssueStatus, Conversation,
     ConversationChannel, ConversationEmail, ConversationEmailStatus,
     ConversationChat, ConversationChatStatus, ConversationVoice,
@@ -13,7 +14,7 @@ class ConversationAdmin(admin.ModelAdmin):
         'agenda_md', 'minutes_md', 'front_conversation_id', 'issue']
     list_editable = ['deleted', 'agenda_md', 'channel',
         'minutes_md', 'front_conversation_id', 'issue']
-    list_filter = ['channel']
+    list_filter = standard_list_filter + ['channel']
     search_fields = ['id', 'agenda_md', 'minutes_md', 'front_conversation_id',
         'issue']
     list_per_page = 1000
@@ -47,7 +48,7 @@ class ConversationChatAdmin(admin.ModelAdmin):
     list_editable = ['status', 'deleted', 'our_number', 'their_number',
         'conversation'] 
     list_per_page = 1000
-    list_filter = ['status']
+    list_filter = standard_list_filter + ['status']
     search_fields = ['id', 'their_number', 'our_number', 'conversation']
     ordering = standard_ordering
     show_full_result_count = True
@@ -77,7 +78,7 @@ class ConversationEmailAdmin(admin.ModelAdmin):
     list_editable = ['status', 'deleted', 'our_email', 'their_email',
         'conversation']
     list_per_page = 1000
-    list_filter = ['status']
+    list_filter = standard_list_filter + ['status']
     search_fields = ['id', 'our_email', 'their_email', 'conversation']
     ordering = standard_ordering
     show_full_result_count = True
@@ -126,7 +127,7 @@ class IssueAdmin(admin.ModelAdmin):
     list_editable = ['deleted', 'status', 'scheduled',
         'description_md', 'outcome_md']
     list_per_page = 1000
-    list_filter = ['status', 'tags']
+    list_filter = standard_list_filter + ['status', 'tags']
     search_fields = ['id', 'description_md', 'outcome_md']
     ordering = standard_ordering
     show_full_result_count = True
