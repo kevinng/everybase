@@ -65,6 +65,10 @@ class Fibre2FashionResult(Standard):
     links = m2m('relationships.Link', 'fibre2fashion_results', True)
     emails = m2m('relationships.Email', 'fibre2fashion_results', True)
 
+    class Meta:
+        verbose_name = 'Fibre2Fashion result'
+        verbose_name_plural = 'Fibre2Fashion results'
+
 class ZeroBounceResult(Standard):
     status = cf(null=False)
     sub_status = cf(null=False)
