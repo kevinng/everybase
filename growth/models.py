@@ -85,6 +85,10 @@ class ZeroBounceResult(Standard):
 
     email = fk('relationships.Email', 'zero_bounce_results', True)
 
+    class Meta:
+        verbose_name = 'ZeroBounce result'
+        verbose_name_plural = 'ZeroBounce results'
+
 class DataSource(Choice):
     emails = m2mt(
         'relationships.Email',
