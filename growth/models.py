@@ -3,6 +3,7 @@ from common.models import fk, m2m, m2mt, tf, cf, ff, dtf
 from common.models import Standard, Choice
 
 class GmassCampaignResult(Standard):
+    email_address = models.EmailField(blank=True, null=True)
     first_name = cf(null=True)
     last_name = cf(null=True)
     name_1 = cf('Name_1', null=True)
