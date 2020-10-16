@@ -78,6 +78,7 @@ class Fibre2FashionResult(Standard):
         verbose_name_plural = 'Fibre2Fashion results'
 
 class ZeroBounceResult(Standard):
+    email_address = email(null=False)
     status = cf(null=False)
     sub_status = cf(null=False)
     account = cf(null=False)
