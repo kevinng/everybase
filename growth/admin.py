@@ -77,4 +77,22 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
 
 @admin.register(GmassCampaign)
 class GmassCampaign(admin.ModelAdmin):
-    search_fields = ['id']
+    # List page settings
+    list_display = standard_list_display + ['campaign_id', 'sent', 'subject',
+        'spreadsheet']
+    list_editable = standard_list_editable + ['campaign_id', 'sent', 'subject',
+        'spreadsheet']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['sent']
+    search_fields = ['id', 'campaign_id', 'sent', 'subject', 'spreadsheet']
+    ordering = standard_ordering
+    show_full_result_count = True
+    
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Result details', {'fields': ['campaign_id', 'sent', 'subject',
+            'spreadsheet']
+        })
+    ]
