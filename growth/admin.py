@@ -6,7 +6,6 @@ from common.admin import (standard_list_display, standard_list_filter,
     standard_ordering, standard_readonly_fields, standard_fieldsets,
     standard_list_editable)
 
-admin.site.register(GmassCampaignResult)
 admin.site.register(GmassCampaign)
 admin.site.register(Fibre2FashionResult)
 admin.site.register(ZeroBounceResult)
@@ -24,7 +23,7 @@ class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
     list_filter = standard_list_filter + ['sourced']
     search_fields = ['id', 'company_name', 'telephone', 'fax', 'website',
         'source_link']
-    ordering = standard_ordering
+    ordering = ['sourced'] + standard_ordering
     show_full_result_count = True
     
     # Details page settings
@@ -42,3 +41,40 @@ class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['company', 'email', 'phone_numbers', 'link',
         'address']
+
+@admin.register(GmassCampaignResult)
+class GmassCampaignResultAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display + ['first_name',
+        'last_name', 'name_1', 'opens', 'clicks', 'replied', 'unsubscribed',
+        'bounced', 'blocked', 'over_gmail_limit', 'bounce_reason',
+        'gmail_response', 'email', 'gmass_campaign']
+    list_editable = standard_list_editable + ['first_name', 'last_name',
+        'name_1', 'opens', 'clicks', 'replied', 'unsubscribed', 'bounced',
+        'blocked', 'over_gmail_limit', 'bounce_reason', 'gmail_response',
+        'email', 'gmass_campaign']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['replied', 'unsubscribed', 'bounced',
+        'blocked', 'over_gmail_limit']
+    search_fields = ['id', 'first_name', 'last_name', 'name_1',
+        'opens', 'clicks', 'replied', 'unsubscribed', 'bounced', 'blocked',
+        'over_gmail_limit', 'bounce_reason', 'gmail_response', 'email',
+        'gmass_campaign']
+    ordering = standard_ordering
+    show_full_result_count = True
+    
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    # fieldsets = standard_fieldsets + [
+    #     ('Source', {'fields': ['sourced', 'source_link']}),
+    #     ('Result details', {
+    #         'fields': ['company_name', 'telephone', 'fax', 'email_str', 'website',
+    #             'address_str']
+    #     }),
+    #     ('Model references', {
+    #         'fields': ['company', 'email', 'phone_numbers', 'link', 'address']
+    #     })
+    # ]
+    # autocomplete_fields = ['company', 'email', 'phone_numbers', 'link',
+    #     'address']
