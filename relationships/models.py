@@ -251,6 +251,9 @@ class Link(Standard):
     types = m2m('LinkType', 'links', True)
     link = models.URLField()
 
+    def __str__(self):
+        return '%s (%d)' % (self.link, self.id)
+
 class AddressType(Choice):
     pass
 
