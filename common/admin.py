@@ -3,7 +3,8 @@ from common.models import short_text
 
 # Fields for standard models
 
-standard_readonly_fields = ('id', 'created', 'updated')
+standard_list_display = ['id', 'created', 'updated', 'deleted']
+standard_readonly_fields = ['id', 'created', 'updated']
 standard_fieldsets = [
     (None, {'fields': ['id']}),
     ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
