@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import fk, m2m, tf, cf, dtf
+from common.models import fk, m2m, tf, cf, dtf, short_text
 from common.models import Standard, Choice
 from relationships.models import Email, PhoneNumber
 
@@ -20,6 +20,9 @@ class Issue(Standard):
     match = fk('leads.Match', 'issues', null=True)
     supply_commission = fk('leads.SupplyCommission', 'issues', null=True)
     demand_commission = fk('leads.DemandCommission', 'issues', null=True)
+
+    def __str__(self):
+        return '%s (%d)' % (short_text(self.description_md), self.id)
 
 class IssueTag(Choice):
     parent = fk('self', 'children', null=True)
