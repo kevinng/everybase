@@ -75,8 +75,8 @@ class ConversationChannel(Choice):
 
 class ConversationEmail(Standard):
     status = fk('ConversationEmailStatus', 'conversation_emails')
-    to_email = fk('relationships.Email', 'conversation_email_tos')
-    from_email = fk('relationships.Email', 'conversation_email_froms')
+    their_email = fk('relationships.Email', 'conversation_email_theirs')
+    our_email = fk('relationships.Email', 'conversation_email_ours')
     conversation = fk('Conversation', 'conversation_emails')
 
 class ConversationEmailStatus(Choice):
