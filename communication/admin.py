@@ -36,16 +36,14 @@ class ConversationChatAdmin(admin.ModelAdmin):
     list_display = ['id', 'created', 'updated', 'status', 'our_number',
         'their_number', 'conversation']
     list_editable = ['status', 'our_number', 'their_number', 'conversation'] 
-    list_filter = ['status']
     list_per_page = 1000
+    list_filter = ['status']
     search_fields = ['id', 'their_number', 'our_number', 'conversation']
     ordering = standard_ordering
     show_full_result_count = True
     
     # Details page settings
     save_on_top = True
-    autocomplete_fields = ['status', 'their_number', 'our_number',
-        'conversation']
     readonly_fields = standard_readonly_fields
     fieldsets = standard_fieldsets + [
         ('Basic Details', {'fields': ['status']}),
@@ -58,6 +56,8 @@ class ConversationChatAdmin(admin.ModelAdmin):
             'description': 'Base conversation'
         })
     ]
+    autocomplete_fields = ['status', 'their_number', 'our_number',
+        'conversation']
 
 @admin.register(ConversationEmail)
 class ConversationEmailAdmin(admin.ModelAdmin):
