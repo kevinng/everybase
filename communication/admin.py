@@ -9,10 +9,10 @@ from .models import (Issue, IssueTag, IssueStatus, Conversation,
 @admin.register(Conversation)
 class ConversationAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = ['id', 'channel', 'agenda_md', 'minutes_md',
-        'front_conversation_id', 'issue']
-    list_editable = ['agenda_md', 'channel', 'minutes_md',
-        'front_conversation_id', 'issue']
+    list_display = ['id', 'created', 'updated', 'deleted', 'channel',
+        'agenda_md', 'minutes_md', 'front_conversation_id', 'issue']
+    list_editable = ['deleted', 'agenda_md', 'channel',
+        'minutes_md', 'front_conversation_id', 'issue']
     list_filter = ['channel']
     search_fields = ['id', 'agenda_md', 'minutes_md', 'front_conversation_id',
         'issue']
