@@ -11,6 +11,7 @@ standard_fieldsets = [
 ]
 standard_ordering = ['-created', '-updated']
 standard_list_filter = ['updated', 'deleted']
+standard_list_editable = ['deleted']
 
 # Fields for choice models
 

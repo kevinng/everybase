@@ -1,7 +1,7 @@
 from django.contrib import admin
 from common.admin import (standard_readonly_fields, standard_fieldsets,
     ChoiceAdmin, ParentChildrenChoiceAdmin, short_text, standard_ordering,
-    standard_list_filter, standard_list_display)
+    standard_list_filter, standard_list_display, standard_list_editable)
 from .models import (Issue, IssueTag, IssueStatus, Conversation,
     ConversationChannel, ConversationEmail, ConversationEmailStatus,
     ConversationChat, ConversationChatStatus, ConversationVoice,
@@ -12,7 +12,7 @@ class ConversationAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['channel', 'agenda_md',
         'minutes_md', 'front_conversation_id', 'issue']
-    list_editable = ['deleted', 'agenda_md', 'channel',
+    list_editable = standard_list_editable + ['agenda_md', 'channel',
         'minutes_md', 'front_conversation_id', 'issue']
     list_filter = standard_list_filter + ['channel']
     search_fields = ['id', 'agenda_md', 'minutes_md', 'front_conversation_id',
@@ -45,8 +45,8 @@ class ConversationChatAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['status', 'our_number',
         'their_number', 'conversation']
-    list_editable = ['status', 'deleted', 'our_number', 'their_number',
-        'conversation'] 
+    list_editable = standard_list_editable + ['status', 'our_number',
+        'their_number', 'conversation'] 
     list_per_page = 1000
     list_filter = standard_list_filter + ['status']
     search_fields = ['id', 'their_number', 'our_number', 'conversation']
@@ -75,8 +75,8 @@ class ConversationEmailAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['status', 'our_email',
         'their_email', 'conversation']
-    list_editable = ['status', 'deleted', 'our_email', 'their_email',
-        'conversation']
+    list_editable = standard_list_editable + ['status', 'our_email',
+        'their_email', 'conversation']
     list_per_page = 1000
     list_filter = standard_list_filter + ['status']
     search_fields = ['id', 'our_email', 'their_email', 'conversation']
@@ -104,8 +104,8 @@ class ConversationVoiceAndVideoAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['status', 'our_number',
         'their_number', 'conversation']
-    list_editable = ['status', 'deleted', 'our_number', 'their_number',
-        'conversation'] 
+    list_editable = standard_list_editable + ['status', 'our_number',
+        'their_number', 'conversation'] 
     list_per_page = 1000
     list_filter = standard_list_filter + ['status']
     search_fields = ['id', 'their_number', 'our_number', 'conversation']
@@ -143,7 +143,7 @@ class IssueAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['status', 'scheduled',
         'source_type', 'tags_string', 'description_md', 'outcome_md']
-    list_editable = ['deleted', 'status', 'scheduled',
+    list_editable = standard_list_editable + ['status', 'scheduled',
         'description_md', 'outcome_md']
     list_per_page = 1000
     list_filter = standard_list_filter + ['status', 'tags']
