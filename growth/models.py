@@ -87,10 +87,10 @@ class ZeroBounceResult(Standard):
     last_name = cf(null=True)
     gender = cf(null=True)
     free_email = cf(null=True)
-    mx_found = cf(null=True)
-    mx_record = cf(null=True)
-    smtp_provider = cf(null=True)
-    did_you_mean = cf(null=True)
+    mx_found = cf('MX found', null=True)
+    mx_record = cf('MX record', null=True)
+    smtp_provider = cf('SMTP provider', null=True)
+    did_you_mean = cf('Did you mean?', null=True)
 
     email = fk('relationships.Email', 'zero_bounce_results', null=True)
 
