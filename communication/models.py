@@ -108,7 +108,7 @@ class ConversationVoiceStatus(Choice):
         verbose_name = 'Conversation voice status'
         verbose_name_plural = 'Conversation voice statuses'
 
-class ConversationVideo(models.Model):
+class ConversationVideo(Standard):
     status = fk('ConversationVideoStatus', 'conversation_videos')
     to_number = fk('relationships.PhoneNumber', 'conversation_video_tos')
     from_number = fk('relationships.PhoneNumber', 'conversation_video_froms')
