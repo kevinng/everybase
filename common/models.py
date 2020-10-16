@@ -63,9 +63,9 @@ dtf_now = lambda verbose_name=None, null=False, auto_now=True: models.\
 
 # --- Start: Helper functions ---
 
-def short_text(text, top_length=20):
+def short_text(text, top_length=20, blank='-'):
     if text is None or len(text) == 0:
-        return '-'
+        return blank
 
     details_top = text[0:top_length]
 
@@ -104,9 +104,6 @@ class Choice(models.Model):
 
     class Meta:
         abstract = True
-
-# class ParentChildrenChoice(Choice):
-#     parent = fk('self', 'children', null=True)
 
 # --- End: Abstract models ---
 
