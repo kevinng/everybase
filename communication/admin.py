@@ -102,7 +102,34 @@ class ConversationEmailAdmin(admin.ModelAdmin):
 @admin.register(ConversationVoice)
 class ConversationVoiceAdmin(admin.ModelAdmin):
     search_fields = ['id']
-    ordering = standard_ordering
+    pass
+    # # List page settings
+    # list_display = standard_list_display + ['status', 'our_number',
+    #     'their_number', 'conversation']
+    # list_editable = ['status', 'deleted', 'our_number', 'their_number',
+    #     'conversation'] 
+    # list_per_page = 1000
+    # list_filter = standard_list_filter + ['status']
+    # search_fields = ['id', 'their_number', 'our_number', 'conversation']
+    # ordering = standard_ordering
+    # show_full_result_count = True
+
+    # # Details page settings
+    # save_on_top = True
+    # readonly_fields = standard_readonly_fields
+    # fieldsets = standard_fieldsets + [
+    #     ('Basic Details', {'fields': ['status']}),
+    #     ('Phone Numbers', {
+    #         'fields': ['their_number', 'our_number'],
+    #         'description': 'Phone numbers involved in this chat conversation'
+    #     }),
+    #     ('Conversation', {
+    #         'fields': ['conversation'],
+    #         'description': 'Base conversation'
+    #     })
+    # ]
+    # autocomplete_fields = ['status', 'their_number', 'our_number',
+    #     'conversation']
 
 @admin.register(ConversationVideo)
 class ConversationVideoAdmin(admin.ModelAdmin):

@@ -102,8 +102,10 @@ class ConversationChatStatus(Choice):
 
 class ConversationVoice(Standard):
     status = fk('ConversationVoiceStatus', 'conversation_voices')
-    to_number = fk('relationships.PhoneNumber', 'conversation_voice_tos')
-    from_number = fk('relationships.PhoneNumber', 'conversation_voice_froms')
+    their_number = fk('relationships.PhoneNumber',
+        'conversation_voice_their_numbers')
+    our_number = fk('relationships.PhoneNumber',
+        'conversation_voice_our_numbers')
     conversation = fk('Conversation', 'conversation_voices')
 
 class ConversationVoiceStatus(Choice):
