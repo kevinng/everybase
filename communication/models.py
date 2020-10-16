@@ -64,7 +64,7 @@ class Conversation(Standard):
         else:
             agenda_top = ''
 
-        id_str = self.id
+        id_str = str(self.id)
         if self.front_conversation_id != None:
             id_str = id_str + ', Front: ' + self.front_conversation_id[0:4]
 
