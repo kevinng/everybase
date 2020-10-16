@@ -8,38 +8,36 @@ from common.admin import (standard_list_display, standard_list_filter,
 
 admin.site.register(GmassCampaignResult)
 admin.site.register(GmassCampaign)
-admin.site.register(ChemicalClusterOfSingaporeResult)
 admin.site.register(Fibre2FashionResult)
 admin.site.register(ZeroBounceResult)
 admin.site.register(DataSource)
 admin.site.register(SourcedEmail)
 
-
-class ConversationChatAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = standard_list_display + ['status', 'our_number',
-        'their_number', 'conversation']
-    list_editable = standard_list_editable + ['status', 'our_number',
-        'their_number', 'conversation'] 
-    list_per_page = 1000
-    list_filter = standard_list_filter + ['status']
-    search_fields = ['id', 'their_number', 'our_number', 'conversation']
-    ordering = standard_ordering
-    show_full_result_count = True
+# @admin.register(ChemicalClusterOfSingaporeResult)
+# class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
+#     # List page settings
+#     list_display = standard_list_display + ['sourced', 'company_name',
+#         'telephone', 'fax', 'website', 'source_link']
+#     list_editable = standard_list_editable
+#     list_per_page = 1000
+#     list_filter = standard_list_filter + ['sourced']
+#     search_fields = ['id', 'company_name', 'telephone', 'fax', 'website',
+#         'source_link']
+#     ordering = standard_ordering
+#     show_full_result_count = True
     
-    # Details page settings
-    save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Basic Details', {'fields': ['status']}),
-        ('Phone Numbers', {
-            'fields': ['their_number', 'our_number'],
-            'description': 'Phone numbers involved in this chat conversation'
-        }),
-        ('Conversation', {
-            'fields': ['conversation'],
-            'description': 'Base conversation'
-        })
-    ]
-    autocomplete_fields = ['status', 'their_number', 'our_number',
-        'conversation']
+#     # Details page settings
+#     save_on_top = True
+#     readonly_fields = standard_readonly_fields
+#     fieldsets = standard_fieldsets + [
+#         ('Source', {'fields': ['sourced', 'source_link']}),
+#         ('Result details', {
+#             'fields': ['company_name', 'telephone', 'fax', 'email', 'website',
+#                 'address']
+#         }),
+#         ('Model references', {
+#             'fields': ['company', 'email', 'phone_numbers', 'link', 'address']
+#         })
+#     ]
+#     autocomplete_fields = ['company', 'email', 'phone_numbers', 'link',
+#         'address']

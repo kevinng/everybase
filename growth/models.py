@@ -34,7 +34,7 @@ class ChemicalClusterOfSingaporeResult(Standard):
     fax = cf(null=True)
     email = cf(null=True)
     website = cf(null=True)
-    address = cf(null=True)
+    address_str = cf(null=True)
 
     company = fk('relationships.Company',
         'chemical_cluster_of_singapore_results', null=True)
