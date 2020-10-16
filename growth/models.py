@@ -32,7 +32,7 @@ class ChemicalClusterOfSingaporeResult(Standard):
     company_name = cf(null=True)
     telephone = cf(null=True)
     fax = cf(null=True)
-    email = cf(null=True)
+    email_str = cf(null=True)
     website = cf(null=True)
     address_str = cf(null=True)
 
