@@ -122,7 +122,8 @@ class IssueAdmin(admin.ModelAdmin):
         ('Source', {
             'fields': ['supply', 'demand', 'supply_quote', 'match',
                 'supply_commission', 'demand_commission'],
-            'description': 'Source of this issue - one of these must be set'
+            'description': 'Source of this issue - at least one of these must \
+                be set'
         })
     ]
     autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
