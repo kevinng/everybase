@@ -1,9 +1,9 @@
 from django.db import models
-from common.models import fk, m2m, m2mt, tf, cf, ff, dtf
+from common.models import fk, m2m, m2mt, tf, cf, ff, dtf, url, email
 from common.models import Standard, Choice
 
 class GmassCampaignResult(Standard):
-    email_address = models.EmailField(blank=True, null=True)
+    email_address = email(null=True)
     first_name = cf(null=True)
     last_name = cf(null=True)
     name_1 = cf('Name_1', null=True)
@@ -31,13 +31,13 @@ class GmassCampaign(Standard):
 
 class ChemicalClusterOfSingaporeResult(Standard):
     sourced = dtf(null=True)
-    source_link = models.URLField(blank=True, null=True)
+    source_link = url(null=True)
     
     company_name = cf(null=True)
     telephone = cf(null=True)
     fax = cf(null=True)
     email_str = cf(null=True)
-    website = models.URLField(blank=True, null=True)
+    website = url(null=True)
     address_str = cf(null=True)
 
     company = fk('relationships.Company',
@@ -62,10 +62,10 @@ class ChemicalClusterOfSingaporeResult(Standard):
 class Fibre2FashionResult(Standard):
     sourced = dtf(null=True)
 
-    source_link = cf(null=False)
+    source_link = url(null=False)
     category = cf(null=False)
     sub_category = cf(null=False)
-    email = cf(null=False)
+    email = email(null=False)
     email_domain = cf(null=False)
     lead_type = cf(null=False)
     description = cf(null=False)
