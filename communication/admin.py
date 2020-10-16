@@ -1,6 +1,6 @@
 from django.contrib import admin
 from common.admin import (standard_readonly_fields, standard_fieldsets,
-    ChoiceAdmin, ParentChildrenChoiceAdmin, short_text)
+    ChoiceAdmin, ParentChildrenChoiceAdmin, short_text, standard_ordering)
 from .models import (Issue, IssueTag, IssueStatus, Conversation,
     ConversationChannel, ConversationEmail, ConversationEmailStatus,
     ConversationChat, ConversationChatStatus, ConversationVoice,
@@ -9,6 +9,26 @@ from .models import (Issue, IssueTag, IssueStatus, Conversation,
 @admin.register(Conversation)
 class ConversationAdmin(admin.ModelAdmin):
     search_fields = ['id']
+    ordering = standard_ordering
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Channel', {
+            'fields': ['channel']
+        }),
+        (None, {
+            'fields': ['emails', 'chats', 'voices', 'videos'],
+            'description': 'One of the following channels must be set'
+        }),
+        ('Details', {
+            'fields': ['front_conversation_id', 'agenda_md', 'minutes_md',
+                'issue']
+        })
+    ]
+    autocomplete_fields = ['channel', 'emails', 'chats', 'voices', 'videos',
+        'issue']
 
 @admin.register(ConversationChat)
 class ConversationChatAdmin(admin.ModelAdmin):
@@ -19,7 +39,7 @@ class ConversationChatAdmin(admin.ModelAdmin):
     list_filter = ['status']
     list_per_page = 1000
     search_fields = ['id', 'their_number', 'our_number', 'conversation']
-    ordering = ['-created', '-updated']
+    ordering = standard_ordering
     show_full_result_count = True
     
     # Details page settings
@@ -39,6 +59,21 @@ class ConversationChatAdmin(admin.ModelAdmin):
         })
     ]
 
+@admin.register(ConversationEmail)
+class ConversationEmailAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+    ordering = standard_ordering
+
+@admin.register(ConversationVoice)
+class ConversationVoiceAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+    ordering = standard_ordering
+
+@admin.register(ConversationVideo)
+class ConversationVideoAdmin(admin.ModelAdmin):
+    search_fields = ['id']
+    # ordering = standard_ordering
+
 @admin.register(ConversationChannel, ConversationChatStatus,
     ConversationEmailStatus, ConversationVideoStatus, ConversationVoiceStatus)
 class ChoiceAdmin(ChoiceAdmin):
@@ -57,7 +92,7 @@ class IssueAdmin(admin.ModelAdmin):
     list_per_page = 1000
     list_filter = ['status', 'tags']
     search_fields = ['id', 'description_in_markdown', 'outcome_in_markdown']
-    ordering = ['-created', '-updated']
+    ordering = standard_ordering
     show_full_result_count = True
 
     # Details page settings
@@ -108,11 +143,3 @@ class IssueAdmin(admin.ModelAdmin):
     
     def tags_string(self, obj):
         return ', '.join([t.name for t in obj.tags.all()])
-
-
-
-
-
-admin.site.register(ConversationEmail)
-admin.site.register(ConversationVoice)
-admin.site.register(ConversationVideo)
