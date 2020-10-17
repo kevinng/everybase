@@ -54,7 +54,7 @@ class DemandCommissionAdmin(admin.ModelAdmin):
 admin.site.register(Incoterm, ChoiceAdmin)
 admin.site.register(Currency, ChoiceAdmin)
 admin.site.register(PaymentMode, ChoiceAdmin)
-admin.site.register(ContactType, ChoiceAdmin)
+# admin.site.register(ContactType, ChoiceAdmin)
 # admin.site.register(LeadCategory, ParentChildrenChoice) # Should be ParentChildrenChoiceAdmin
 admin.site.register(MatchMethod, ChoiceAdmin)
 admin.site.register(MatchStatus, ChoiceAdmin)
@@ -71,3 +71,8 @@ admin.site.register(Trench)
 admin.site.register(Match, MatchAdmin)
 admin.site.register(SupplyCommission, SupplyCommissionAdmin)
 admin.site.register(DemandCommission, DemandCommissionAdmin)
+
+
+@admin.register(ContactType)
+class ChoiceAdmin(ChoiceAdmin):
+    pass
