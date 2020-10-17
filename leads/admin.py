@@ -3,7 +3,8 @@ from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
     MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus,
     UnitOfMeasure, UOMRelationship, Supply, Demand, SupplyQuote, DemandQuote,
     ProductionCapability, Trench, Match, SupplyCommission, DemandCommission)
-from common.admin import ChoiceAdmin
+from common.admin import (ChoiceAdmin, choice_fieldsets, choice_list_display,
+    choice_list_editable)
 
 class UOMRelationshipChildInline(admin.StackedInline):
     model = UOMRelationship
@@ -51,12 +52,6 @@ class SupplyCommissionAdmin(admin.ModelAdmin):
 class DemandCommissionAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
-admin.site.register(Incoterm, ChoiceAdmin)
-admin.site.register(PaymentMode, ChoiceAdmin)
-# admin.site.register(LeadCategory, ParentChildrenChoice) # Should be ParentChildrenChoiceAdmin
-admin.site.register(MatchMethod, ChoiceAdmin)
-admin.site.register(MatchStatus, ChoiceAdmin)
-admin.site.register(SupplyQuoteStatus, ChoiceAdmin)
 admin.site.register(UnitOfMeasure, UnitOfMeasureAdmin)
 admin.site.register(UOMRelationship)
 admin.site.register(Supply, SupplyAdmin)
@@ -70,6 +65,16 @@ admin.site.register(SupplyCommission, SupplyCommissionAdmin)
 admin.site.register(DemandCommission, DemandCommissionAdmin)
 
 
-@admin.register(ContactType, Currency, DemandQuoteStatus)
+@admin.register(ContactType, Currency, DemandQuoteStatus, Incoterm,
+    MatchMethod, MatchStatus, PaymentMode, SupplyQuoteStatus)
 class ChoiceAdmin(ChoiceAdmin):
     pass
+
+@admin.register(LeadCategory)
+class LeadCategoryAdmin(ChoiceAdmin):
+    list_display = choice_list_display + ['parent']
+    list_editable = choice_list_editable + ['parent']
+    fieldsets = choice_fieldsets + [
+        ('Model references', {'fields': ['parent']})
+    ]
+    autocomplete_fields = ['parent']
