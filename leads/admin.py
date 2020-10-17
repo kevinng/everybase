@@ -52,14 +52,11 @@ class DemandCommissionAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
 admin.site.register(Incoterm, ChoiceAdmin)
-# admin.site.register(Currency, ChoiceAdmin)
 admin.site.register(PaymentMode, ChoiceAdmin)
-# admin.site.register(ContactType, ChoiceAdmin)
 # admin.site.register(LeadCategory, ParentChildrenChoice) # Should be ParentChildrenChoiceAdmin
 admin.site.register(MatchMethod, ChoiceAdmin)
 admin.site.register(MatchStatus, ChoiceAdmin)
 admin.site.register(SupplyQuoteStatus, ChoiceAdmin)
-admin.site.register(DemandQuoteStatus, ChoiceAdmin)
 admin.site.register(UnitOfMeasure, UnitOfMeasureAdmin)
 admin.site.register(UOMRelationship)
 admin.site.register(Supply, SupplyAdmin)
@@ -73,6 +70,6 @@ admin.site.register(SupplyCommission, SupplyCommissionAdmin)
 admin.site.register(DemandCommission, DemandCommissionAdmin)
 
 
-@admin.register(ContactType, Currency)
+@admin.register(ContactType, Currency, DemandQuoteStatus)
 class ChoiceAdmin(ChoiceAdmin):
     pass
