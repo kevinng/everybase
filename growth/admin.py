@@ -7,8 +7,6 @@ from common.admin import (standard_list_display, standard_list_filter,
     standard_list_editable, ChoiceAdmin, choice_fieldsets, choice_list_display,
     choice_list_editable, choice_readonly_fields)
 
-admin.site.register(SourcedEmail)
-
 @admin.register(GmassCampaignResult)
 class GmassCampaignResultAdmin(admin.ModelAdmin):
     # List page settings
@@ -163,3 +161,22 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
 @admin.register(DataSource)
 class DataSourceAdmin(ChoiceAdmin):
     pass
+
+@admin.register(SourcedEmail)
+class SourcedEmailAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display + ['sourced', 'source', 'email']
+    list_editable = standard_list_editable + ['sourced', 'source', 'email']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['sourced']
+    search_fields = ['source', 'email']
+    ordering = ['email']
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Details', {'fields': ['sourced', 'source', 'email']})
+    ]
+    autocomplete_fields = ['source', 'email']
