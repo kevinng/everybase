@@ -131,7 +131,8 @@ class UOMRelationship(models.Model):
         verbose_name_plural = 'UOM relationships'
     
     def __str__(self):
-        return '[Child: %s / Parent: %s] (%d)' % (self.child, self.parent, self.id)
+        return '[Child: %s / Parent: %s] (%d)' % (self.child, self.parent,
+            self.id)
 
 # --- End: Choice Models ---
 
