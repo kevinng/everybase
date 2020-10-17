@@ -20,16 +20,43 @@ class UOMRelationshipParentInline(admin.StackedInline):
     verbose_name = 'Child UOM Relationship'
     verbose_name_plurals = 'Child UOM Relationships'
 
+@admin.register(UnitOfMeasure)
 class UnitOfMeasureAdmin(ChoiceAdmin):
-    fieldsets = [
-        (None, {'fields': ['id', 'name', 'details_md', 'category']}),
-        ('Developer', {'fields': ['programmatic_key',
-            'programmatic_details_md']})
-    ]
+    # List page settings
+    list_display = choice_list_display + ['category']
+    list_editable = choice_list_editable + ['category']
+    list_filter = ['category']
+    search_fields = ['id', 'category', 'parents']
+
+    # Details page settings
+    fieldsets = choice_fieldsets + [
+        ('Model references', {'fields': ['category']})]
+    autocomplete_fields = ['category']
     inlines = [
         UOMRelationshipChildInline,
         UOMRelationshipParentInline
     ]
+
+@admin.register(UOMRelationship)
+class UOMRelationshipAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = ['id', 'child', 'parent', 'multiple', 'details_md']
+    list_editable = ['child', 'parent', 'multiple', 'details_md']
+    list_per_page = 1000
+    list_filter = ['child', 'parent']
+    search_fields = ['id', 'child', 'parent', 'details_md']
+    ordering = ['id']
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = ['id']
+    fieldsets = [
+        (None, {'fields': ['id']}),
+        ('Details', {'fields': ['child', 'parent', 'multiple',
+            'details_md']})
+    ]
+    autocomplete_fields = ['child', 'parent']
 
 class SupplyAdmin(admin.ModelAdmin):
     search_fields = ['id']
@@ -46,10 +73,6 @@ class MatchAdmin(admin.ModelAdmin):
 class SupplyCommissionAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
-
-
-admin.site.register(UnitOfMeasure, UnitOfMeasureAdmin)
-admin.site.register(UOMRelationship)
 admin.site.register(Supply, SupplyAdmin)
 admin.site.register(Demand, DemandAdmin)
 admin.site.register(SupplyQuote, SupplyQuoteAdmin)
