@@ -1,5 +1,5 @@
 from django.contrib import admin
-from common.models import short_text
+from common.models import short_text, Country, State
 
 # Fields for standard models
 
@@ -27,6 +27,7 @@ choice_list_display = ['id', 'details_md', 'programmatic_key',
 choice_list_editable = ['details_md', 'programmatic_key',
     'programmatic_details_md']
 
+@admin.register(Country, State)
 class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = choice_list_display

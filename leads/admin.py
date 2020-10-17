@@ -23,13 +23,8 @@ class UOMRelationshipParentInline(admin.StackedInline):
 class UnitOfMeasureAdmin(ChoiceAdmin):
     fieldsets = [
         (None, {'fields': ['id', 'name', 'details_md', 'category']}),
-        ('Developer', {
-                'fields': [
-                    'programmatic_key', 
-                    'programmatic_details_md'
-                ]
-            }
-        ),
+        ('Developer', {'fields': ['programmatic_key',
+            'programmatic_details_md']})
     ]
     inlines = [
         UOMRelationshipChildInline,
@@ -100,7 +95,29 @@ class DemandCommissionAdmin(admin.ModelAdmin):
 
 @admin.register(DemandQuote)
 class DemandQuoteAdmin(admin.ModelAdmin):
-    search_fields = ['id']
+    # List page settings
+    list_display = standard_list_display + ['demand', 'status',
+        'details_as_received_md', 'negative_details_md']
+    list_editable = standard_list_editable + ['demand', 'status',
+        'details_as_received_md', 'negative_details_md']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['demand', 'status']
+    search_fields = ['id', 'demand', 'status', 'details_as_received_md',
+        'negative_details_md', 'positive_origin_countries',
+        'negative_origin_countries']
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Details', {'fields': ['demand', 'status', 'details_as_received_md',
+            'positive_origin_countries', 'negative_origin_countries',
+            'negative_details_md']})
+    ]
+    autocomplete_fields = ['demand', 'status', 'positive_origin_countries',
+        'negative_origin_countries']
 
 
 
