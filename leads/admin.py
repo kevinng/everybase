@@ -52,7 +52,7 @@ class DemandCommissionAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
 admin.site.register(Incoterm, ChoiceAdmin)
-admin.site.register(Currency, ChoiceAdmin)
+# admin.site.register(Currency, ChoiceAdmin)
 admin.site.register(PaymentMode, ChoiceAdmin)
 # admin.site.register(ContactType, ChoiceAdmin)
 # admin.site.register(LeadCategory, ParentChildrenChoice) # Should be ParentChildrenChoiceAdmin
@@ -73,6 +73,6 @@ admin.site.register(SupplyCommission, SupplyCommissionAdmin)
 admin.site.register(DemandCommission, DemandCommissionAdmin)
 
 
-@admin.register(ContactType)
+@admin.register(ContactType, Currency)
 class ChoiceAdmin(ChoiceAdmin):
     pass
