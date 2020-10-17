@@ -75,11 +75,10 @@ class SupplyCommissionAdmin(admin.ModelAdmin):
 
 admin.site.register(Supply, SupplyAdmin)
 admin.site.register(Demand, DemandAdmin)
-admin.site.register(SupplyQuote, SupplyQuoteAdmin)
+
 admin.site.register(ProductionCapability)
 admin.site.register(Trench)
 admin.site.register(Match, MatchAdmin)
-admin.site.register(SupplyCommission, SupplyCommissionAdmin)
 
 
 @admin.register(ContactType, Currency, DemandQuoteStatus, Incoterm,
@@ -142,7 +141,47 @@ class DemandQuoteAdmin(admin.ModelAdmin):
     autocomplete_fields = ['demand', 'status', 'positive_origin_countries',
         'negative_origin_countries']
 
+@admin.register(SupplyCommission)
+class SupplyCommissionAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display + ['supply', 'person', 'company']
+    list_editable = standard_list_editable + ['supply', 'person', 'company']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['supply', 'person', 'company']
+    search_fields = ['id', 'supply', 'person', 'company']
+    ordering = standard_ordering
+    show_full_result_count = True
 
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Model references', {'fields': ['quotes', 'supply', 'person',
+            'company']})
+    ]
+    autocomplete_fields = ['quotes', 'supply', 'person', 'company']
+
+@admin.register(SupplyQuote)
+class SupplyQuoteAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display + ['supply', 'status',
+        'packing_details_md']
+    list_editable = standard_list_editable + ['supply', 'status',
+        'packing_details_md']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['status']
+    search_fields = ['id', 'supply', 'status', 'packing_details_md']
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Details', {'fields': ['supply', 'status', 'packing_details_md',
+            'downstreams']})
+    ]
+    autocomplete_fields = ['supply', 'status', 'downstreams']
 
 
 
