@@ -22,9 +22,10 @@ choice_fieldsets = [
         'programmatic_key',
         'programmatic_details_md']}),
 ]
-choice_list_display = ['id', 'details_in_markdown', 'programmatic_key',
-        'programmatic_details_in_markdown']
-choice_list_editable = ['programmatic_key']
+choice_list_display = ['id', 'details_md', 'programmatic_key',
+    'programmatic_details_md']
+choice_list_editable = ['details_md', 'programmatic_key',
+    'programmatic_details_md']
 
 class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
@@ -40,12 +41,6 @@ class ChoiceAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = choice_readonly_fields
     fieldsets = choice_fieldsets
-
-    def details_in_markdown(self, obj):
-        return short_text(obj.details_md)
-
-    def programmatic_details_in_markdown(self, obj):
-        return short_text(obj.programmatic_details_md)
 
 class ParentChildrenChoiceAdmin(ChoiceAdmin):
     list_display = choice_list_display + ['parent']
