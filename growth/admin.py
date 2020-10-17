@@ -4,9 +4,9 @@ from .models import (GmassCampaignResult, GmassCampaign,
     DataSource, SourcedEmail)
 from common.admin import (standard_list_display, standard_list_filter,
     standard_ordering, standard_readonly_fields, standard_fieldsets,
-    standard_list_editable)
+    standard_list_editable, ChoiceAdmin, choice_fieldsets, choice_list_display,
+    choice_list_editable, choice_readonly_fields)
 
-admin.site.register(DataSource)
 admin.site.register(SourcedEmail)
 
 @admin.register(GmassCampaignResult)
@@ -159,3 +159,7 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
         })
     ]
     autocomplete_fields = ['email']
+
+@admin.register(DataSource)
+class DataSourceAdmin(ChoiceAdmin):
+    pass
