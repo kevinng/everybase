@@ -76,7 +76,6 @@ class SupplyCommissionAdmin(admin.ModelAdmin):
 admin.site.register(Supply, SupplyAdmin)
 admin.site.register(Demand, DemandAdmin)
 
-admin.site.register(ProductionCapability)
 admin.site.register(Trench)
 admin.site.register(Match, MatchAdmin)
 
@@ -182,6 +181,21 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
             'downstreams']})
     ]
     autocomplete_fields = ['supply', 'status', 'downstreams']
+
+@admin.register(ProductionCapability)
+class ProductionCapabilityAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Details', {'fields': ['supply_quote', 'details_md']}),
+        ('Period', {'fields': ['start', 'end']}),
+        ('Capacity', {'fields': ['capacity_quantity', 'capacity_seconds']})
+    ]
+    autocomplete_fields = ['supply_quote']
 
 
 
