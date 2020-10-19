@@ -76,7 +76,6 @@ class SupplyCommissionAdmin(admin.ModelAdmin):
 admin.site.register(Supply, SupplyAdmin)
 admin.site.register(Demand, DemandAdmin)
 
-admin.site.register(Trench)
 admin.site.register(Match, MatchAdmin)
 
 
@@ -185,7 +184,15 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
 @admin.register(ProductionCapability)
 class ProductionCapabilityAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display
+    list_display = standard_list_display + ['supply_quote', 'details_md',
+        'start', 'end', 'capacity_quantity', 'capacity_seconds']
+    list_editable = standard_list_editable + ['supply_quote', 'details_md',
+        'start', 'end', 'capacity_quantity', 'capacity_seconds']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['start', 'end']
+    search_fields = ['id', 'supply_quote', 'details_md']
+    ordering = standard_ordering
+    show_full_result_count = True
 
     # Details page settings
     save_on_top = True
@@ -197,7 +204,12 @@ class ProductionCapabilityAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['supply_quote']
 
+@admin.register(Trench)
+class TrenchAdmin(admin.ModelAdmin):
+    # List page settings
+    pass
 
+    # Details page settings
 
 # class ZeroBounceResultAdmin(admin.ModelAdmin):
 #     # List page settings
