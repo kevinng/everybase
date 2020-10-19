@@ -61,8 +61,23 @@ class CompanyAdmin(admin.ModelAdmin):
             'notes_md']})
     ]
 
+@admin.register(PhoneNumber)
 class PhoneNumberAdmin(admin.ModelAdmin):
-    search_fields = ['id']
+    # List page settings
+    list_display = standard_list_display + ['country_code', 'national_number']
+    list_editable = standard_list_editable + ['country_code', 'national_number']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['country_code']
+    search_fields = ['id', 'country_code', 'national_number']
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Phone number', {'fields': ['country_code', 'national_number']})
+    ]
 
 class EmailAdmin(admin.ModelAdmin):
     search_fields = ['id']
@@ -84,4 +99,3 @@ admin.site.register(CompanyEmail)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Email, EmailAdmin)
 admin.site.register(Link, LinkAdmin)
-admin.site.register(PhoneNumber, PhoneNumberAdmin)

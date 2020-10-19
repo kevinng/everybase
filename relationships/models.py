@@ -285,7 +285,6 @@ class PhoneNumber(Standard):
     national_number = pintf()
 
     def __str__(self):
-        return '+%s %s (%d)' % (self.country_code, self.national_number,
-            self.id)
+        return f'(+{self.country_code} {self.national_number} [{self.id}])'
 
 # --- End: Entities ---
