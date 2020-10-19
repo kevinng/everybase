@@ -112,19 +112,49 @@ class SupplyAdmin(admin.ModelAdmin):
     fieldsets = standard_fieldsets + expirable_invalidable_fieldsets + \
         lead_fieldsets
     autocomplete_fields = lead_autocomplete_fields
-    
 
+@admin.register(Demand)
 class DemandAdmin(admin.ModelAdmin):
     search_fields = ['id']
+    list_display = standard_list_display + expirable_invalidable_list_display \
+        + lead_list_display
+    list_editable = standard_list_editable + \
+        expirable_invalidable_list_editable + lead_list_editable
+    list_per_page = 1000
+    list_filter = standard_list_filter + expirable_invalidable_filter + \
+        lead_filter
+    search_fields = ['id'] + expirable_search_fields + lead_search_fields
+    show_full_result_count = True
 
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + expirable_invalidable_fieldsets + \
+        lead_fieldsets
+    autocomplete_fields = lead_autocomplete_fields
+
+@admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    search_fields = ['id']
+    # List page settings
+    list_display = standard_list_display + ['demand_quote', 'supply_quote',
+        'status', 'method', 'details_md']
+    list_editable = standard_list_editable + ['demand_quote', 'supply_quote',
+        'status', 'method', 'details_md']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['status', 'method']
+    search_fields = ['id', 'demand_quote', 'supply_quote', 'method',
+        'details_md']
+    ordering = standard_ordering
+    show_full_result_count = True
 
-
-admin.site.register(Demand, DemandAdmin)
-
-admin.site.register(Match, MatchAdmin)
-
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Match details', {'fields': ['demand_quote', 'supply_quote', 'status',
+            'method', 'details_md']})
+    ]
+    autocomplete_fields = ['demand_quote', 'supply_quote', 'status', 'method']
 
 @admin.register(ContactType, Currency, DemandQuoteStatus, Incoterm,
     MatchMethod, MatchStatus, PaymentMode, SupplyQuoteStatus)
