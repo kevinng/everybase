@@ -110,7 +110,7 @@ class Choice(models.Model):
     programmatic_details_md = tf('Programmatic details in Markdown', null=True)
 
     def __str__(self):
-        return '%s (%d)' % (self.name, self.id)
+        return '(%s [%d])' % (self.name, self.id)
 
     class Meta:
         abstract = True
