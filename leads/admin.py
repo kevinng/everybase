@@ -64,13 +64,7 @@ class SupplyAdmin(admin.ModelAdmin):
 class DemandAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
-class SupplyQuoteAdmin(admin.ModelAdmin):
-    search_fields = ['id']
-
 class MatchAdmin(admin.ModelAdmin):
-    search_fields = ['id']
-
-class SupplyCommissionAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
 admin.site.register(Supply, SupplyAdmin)
