@@ -120,8 +120,23 @@ class PersonAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['country', 'state']
 
+@admin.register(Link)
 class LinkAdmin(admin.ModelAdmin):
-    search_fields = ['id']
+    # List page settings
+    list_display = standard_list_display + ['last_visited_okay', 'link']
+    list_editable = standard_list_editable + ['last_visited_okay', 'link']
+    list_per_page = 1000
+    list_filter = standard_list_filter
+    search_fields = ['id', 'link']
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Details', {'fields': ['last_visited_okay', 'link']})
+    ]
 
 admin.site.register(PersonLink)
 admin.site.register(PersonAddress)
@@ -131,4 +146,3 @@ admin.site.register(CompanyLink)
 admin.site.register(CompanyAddress)
 admin.site.register(CompanyPhoneNumber)
 admin.site.register(CompanyEmail)
-admin.site.register(Link, LinkAdmin)

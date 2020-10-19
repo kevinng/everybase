@@ -259,7 +259,7 @@ class Link(Standard):
     link = models.URLField()
 
     def __str__(self):
-        return '%s (%d)' % (self.link, self.id)
+        return f'({self.link} [{self.id}])'
 
 class AddressType(Choice):
     pass
