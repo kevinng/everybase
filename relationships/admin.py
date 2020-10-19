@@ -97,8 +97,28 @@ class EmailAdmin(admin.ModelAdmin):
         ('Details', {'fields': ['email']})
     ]
 
+@admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    search_fields = ['id']
+    # List page settings
+    list_display = standard_list_display + ['given_name', 'family_name',
+        'country', 'state', 'notes_md']
+    list_editable = standard_list_editable + ['given_name', 'family_name',
+        'country', 'state', 'notes_md']
+    list_per_page = 1000
+    list_filter = standard_list_filter
+    search_fields = ['id', 'given_name', 'family_name', 'country', 'state',
+        'notes_md']
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Details', {'fields': ['given_name', 'family_name', 'country', 'state',
+            'notes_md']})
+    ]
+    autocomplete_fields = ['country', 'state']
 
 class LinkAdmin(admin.ModelAdmin):
     search_fields = ['id']
@@ -111,5 +131,4 @@ admin.site.register(CompanyLink)
 admin.site.register(CompanyAddress)
 admin.site.register(CompanyPhoneNumber)
 admin.site.register(CompanyEmail)
-admin.site.register(Person, PersonAdmin)
 admin.site.register(Link, LinkAdmin)

@@ -199,6 +199,10 @@ class Person(Standard):
         'persons'
     )
 
+    def __str__(self):
+        return f'({self.given_name}, {self.family_name}, {self.country} \
+            [{self.id}])'
+
 class Company(Standard):
     company_name = cf()
     company_name_wo_postfix = cf()
