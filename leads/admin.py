@@ -58,8 +58,61 @@ class UOMRelationshipAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['child', 'parent']
 
+expirable_invalidable_list_display = ['expired', 'invalidated',
+    'invalidated_reason_md']
+
+expirable_invalidable_list_editable = ['expired', 'invalidated',
+    'invalidated_reason_md']
+
+expirable_invalidable_fieldsets = [
+    ('Expirable/Invalidable details', {'fields': ['expired', 'invalidated',
+        'invalidated_reason_md']})
+]
+
+expirable_invalidable_filter = ['expired', 'invalidated']
+
+expirable_search_fields = ['invalidated_reason_md']
+
+lead_list_display = ['category', 'display_name', 'base_uom', 'details_md',
+    'contact', 'company', 'contact_type', 'contact_type_details_md']
+
+lead_list_editable = ['category', 'display_name', 'base_uom', 'details_md',
+    'contact', 'company', 'contact_type', 'contact_type_details_md']
+
+lead_fieldsets = [
+    ('Lead details', {'fields': ['category', 'display_name', 'base_uom',
+        'details_md', 'files', 'contact', 'company', 'contact_type',
+        'contact_type_details_md']})
+]
+
+lead_filter = ['category', 'base_uom', 'contact_type']
+
+lead_autocomplete_fields = ['category', 'base_uom', 'files', 'contact',
+    'company', 'contact_type']
+
+lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
+    'company', 'contact_type', 'contact_type_details_md']
+
+@admin.register(Supply)
 class SupplyAdmin(admin.ModelAdmin):
     search_fields = ['id']
+    list_display = standard_list_display + expirable_invalidable_list_display \
+        + lead_list_display
+    list_editable = standard_list_editable + \
+        expirable_invalidable_list_editable + lead_list_editable
+    list_per_page = 1000
+    list_filter = standard_list_filter + expirable_invalidable_filter + \
+        lead_filter
+    search_fields = ['id'] + expirable_search_fields + lead_search_fields
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + expirable_invalidable_fieldsets + \
+        lead_fieldsets
+    autocomplete_fields = lead_autocomplete_fields
+    
 
 class DemandAdmin(admin.ModelAdmin):
     search_fields = ['id']
@@ -67,7 +120,7 @@ class DemandAdmin(admin.ModelAdmin):
 class MatchAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
-admin.site.register(Supply, SupplyAdmin)
+
 admin.site.register(Demand, DemandAdmin)
 
 admin.site.register(Match, MatchAdmin)
