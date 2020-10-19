@@ -207,9 +207,29 @@ class ProductionCapabilityAdmin(admin.ModelAdmin):
 @admin.register(Trench)
 class TrenchAdmin(admin.ModelAdmin):
     # List page settings
-    pass
+    list_display = ['id', 'supply_quote', 'demand_quote', 'quantity',
+        'after_deposit_seconds', 'paymode', 'payment_before_release',
+        'details_md']
+    list_editable = ['supply_quote', 'demand_quote', 'quantity',
+        'after_deposit_seconds', 'paymode', 'payment_before_release',
+        'details_md']
+    list_per_page = 1000
+    list_filter = ['paymode', 'payment_before_release']
+    search_fields = ['id', 'supply_quote', 'demand_quote', 'details_md']
+    ordering = ['-id']
+    show_full_result_count = True
 
     # Details page settings
+    save_on_top = True
+    fieldsets = [
+        ('Quote', {
+            'fields': ['supply_quote', 'demand_quote'],
+            'description': 'One of these quote must be set'}),
+        ('Details', {
+            'fields': ['quantity', 'after_deposit_seconds', 'paymode',
+                'payment_before_release', 'details_md']})
+    ]
+    autocomplete_fields = ['supply_quote', 'demand_quote', 'paymode']
 
 # class ZeroBounceResultAdmin(admin.ModelAdmin):
 #     # List page settings
