@@ -8,6 +8,63 @@ from common.admin import (ChoiceAdmin, choice_fieldsets, choice_list_display,
     standard_list_filter, standard_ordering, standard_fieldsets,
     standard_readonly_fields)
 
+# --- Start: Abstract configurations ---
+
+# Expirable/Invalidable
+
+expirable_invalidable_list_display = ['expired', 'invalidated',
+    'invalidated_reason_md']
+
+expirable_invalidable_list_editable = ['expired', 'invalidated',
+    'invalidated_reason_md']
+
+expirable_invalidable_fieldsets = [
+    ('Expirable/Invalidable details', {'fields': ['expired', 'invalidated',
+        'invalidated_reason_md']})
+]
+
+expirable_invalidable_filter = ['expired', 'invalidated']
+
+expirable_search_fields = ['invalidated_reason_md']
+
+# Lead
+
+lead_list_display = ['category', 'display_name', 'base_uom', 'details_md',
+    'contact', 'company', 'contact_type', 'contact_type_details_md']
+
+lead_list_editable = ['category', 'display_name', 'base_uom', 'details_md',
+    'contact', 'company', 'contact_type', 'contact_type_details_md']
+
+lead_fieldsets = [
+    ('Lead details', {'fields': ['category', 'display_name', 'base_uom',
+        'details_md', 'files', 'contact', 'company', 'contact_type',
+        'contact_type_details_md']})
+]
+
+lead_filter = ['category', 'base_uom', 'contact_type']
+
+lead_autocomplete_fields = ['category', 'base_uom', 'files', 'contact',
+    'company', 'contact_type']
+
+lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
+    'company', 'contact_type', 'contact_type_details_md']
+
+# --- End: Abstract configurations ---
+
+@admin.register(ContactType, Currency, DemandQuoteStatus, Incoterm,
+    MatchMethod, MatchStatus, PaymentMode, SupplyQuoteStatus)
+class ChoiceAdmin(ChoiceAdmin):
+    pass
+
+@admin.register(LeadCategory)
+class LeadCategoryAdmin(ChoiceAdmin):
+    list_display = choice_list_display + ['parent']
+    list_editable = choice_list_editable + ['parent']
+    fieldsets = choice_fieldsets + [
+        ('Model references', {'fields': ['parent']})
+    ]
+    autocomplete_fields = ['parent']
+
 class UOMRelationshipChildInline(admin.StackedInline):
     model = UOMRelationship
     fk_name = 'child'
@@ -58,41 +115,6 @@ class UOMRelationshipAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['child', 'parent']
 
-expirable_invalidable_list_display = ['expired', 'invalidated',
-    'invalidated_reason_md']
-
-expirable_invalidable_list_editable = ['expired', 'invalidated',
-    'invalidated_reason_md']
-
-expirable_invalidable_fieldsets = [
-    ('Expirable/Invalidable details', {'fields': ['expired', 'invalidated',
-        'invalidated_reason_md']})
-]
-
-expirable_invalidable_filter = ['expired', 'invalidated']
-
-expirable_search_fields = ['invalidated_reason_md']
-
-lead_list_display = ['category', 'display_name', 'base_uom', 'details_md',
-    'contact', 'company', 'contact_type', 'contact_type_details_md']
-
-lead_list_editable = ['category', 'display_name', 'base_uom', 'details_md',
-    'contact', 'company', 'contact_type', 'contact_type_details_md']
-
-lead_fieldsets = [
-    ('Lead details', {'fields': ['category', 'display_name', 'base_uom',
-        'details_md', 'files', 'contact', 'company', 'contact_type',
-        'contact_type_details_md']})
-]
-
-lead_filter = ['category', 'base_uom', 'contact_type']
-
-lead_autocomplete_fields = ['category', 'base_uom', 'files', 'contact',
-    'company', 'contact_type']
-
-lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
-    'company', 'contact_type', 'contact_type_details_md']
-
 @admin.register(Supply)
 class SupplyAdmin(admin.ModelAdmin):
     search_fields = ['id']
@@ -132,43 +154,6 @@ class DemandAdmin(admin.ModelAdmin):
     fieldsets = standard_fieldsets + expirable_invalidable_fieldsets + \
         lead_fieldsets
     autocomplete_fields = lead_autocomplete_fields
-
-@admin.register(Match)
-class MatchAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = standard_list_display + ['demand_quote', 'supply_quote',
-        'status', 'method', 'details_md']
-    list_editable = standard_list_editable + ['demand_quote', 'supply_quote',
-        'status', 'method', 'details_md']
-    list_per_page = 1000
-    list_filter = standard_list_filter + ['status', 'method']
-    search_fields = ['id', 'demand_quote', 'supply_quote', 'method',
-        'details_md']
-    ordering = standard_ordering
-    show_full_result_count = True
-
-    # Details page settings
-    save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Match details', {'fields': ['demand_quote', 'supply_quote', 'status',
-            'method', 'details_md']})
-    ]
-    autocomplete_fields = ['demand_quote', 'supply_quote', 'status', 'method']
-
-@admin.register(ContactType, Currency, DemandQuoteStatus, Incoterm,
-    MatchMethod, MatchStatus, PaymentMode, SupplyQuoteStatus)
-class ChoiceAdmin(ChoiceAdmin):
-    pass
-
-@admin.register(LeadCategory)
-class LeadCategoryAdmin(ChoiceAdmin):
-    list_display = choice_list_display + ['parent']
-    list_editable = choice_list_editable + ['parent']
-    fieldsets = choice_fieldsets + [
-        ('Model references', {'fields': ['parent']})
-    ]
-    autocomplete_fields = ['parent']
 
 @admin.register(DemandCommission)
 class DemandCommissionAdmin(admin.ModelAdmin):
@@ -258,6 +243,29 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['supply', 'status', 'downstreams']
 
+@admin.register(Match)
+class MatchAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display + ['demand_quote', 'supply_quote',
+        'status', 'method', 'details_md']
+    list_editable = standard_list_editable + ['demand_quote', 'supply_quote',
+        'status', 'method', 'details_md']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['status', 'method']
+    search_fields = ['id', 'demand_quote', 'supply_quote', 'method',
+        'details_md']
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Match details', {'fields': ['demand_quote', 'supply_quote', 'status',
+            'method', 'details_md']})
+    ]
+    autocomplete_fields = ['demand_quote', 'supply_quote', 'status', 'method']
+
 @admin.register(ProductionCapability)
 class ProductionCapabilityAdmin(admin.ModelAdmin):
     # List page settings
@@ -307,35 +315,3 @@ class TrenchAdmin(admin.ModelAdmin):
                 'payment_before_release', 'details_md']})
     ]
     autocomplete_fields = ['supply_quote', 'demand_quote', 'paymode']
-
-# class ZeroBounceResultAdmin(admin.ModelAdmin):
-#     # List page settings
-#     list_display = standard_list_display + ['email_address', 'status',
-#         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
-#         'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
-#     list_editable = standard_list_editable + ['email_address', 'status',
-#         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
-#         'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
-#     
-#     list_filter = standard_list_filter + ['status', 'sub_status', 'gender',
-#         'free_email', 'mx_found']
-#     search_fields = ['id', 'email_address', 'status', 'sub_status', 'account',
-#         'domain', 'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
-#         'mx_record', 'smtp_provider', 'did_you_mean']
-#     ordering = ['email_address']
-#     show_full_result_count = True
-    
-#     # Details page settings
-
-#     fieldsets = standard_fieldsets + [
-#         ('Result details', {
-#             'fields': ['email_address', 'status',
-#             'sub_status', 'account', 'domain', 'first_name', 'last_name',
-#             'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
-#             'did_you_mean']
-#         }),
-#         ('Model references', {
-#             'fields': ['email']
-#         })
-#     ]
-#     autocomplete_fields = ['email']
