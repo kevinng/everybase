@@ -243,7 +243,7 @@ class Email(Standard):
     email = models.EmailField()
 
     def __str__(self):
-        return '%s (%d)' % (self.email, self.id)
+        return f'({self.email} [{self.id}])'
 
 class LinkType(Choice):
     pass

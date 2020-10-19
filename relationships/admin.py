@@ -79,8 +79,23 @@ class PhoneNumberAdmin(admin.ModelAdmin):
         ('Phone number', {'fields': ['country_code', 'national_number']})
     ]
 
+@admin.register(Email)
 class EmailAdmin(admin.ModelAdmin):
-    search_fields = ['id']
+    # List page settings
+    list_display = standard_list_display + ['email']
+    list_editable = standard_list_editable + ['email']
+    list_per_page = 1000
+    list_filter = standard_list_filter
+    search_fields = ['id', 'email']
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        ('Details', {'fields': ['email']})
+    ]
 
 class PersonAdmin(admin.ModelAdmin):
     search_fields = ['id']
@@ -97,5 +112,4 @@ admin.site.register(CompanyAddress)
 admin.site.register(CompanyPhoneNumber)
 admin.site.register(CompanyEmail)
 admin.site.register(Person, PersonAdmin)
-admin.site.register(Email, EmailAdmin)
 admin.site.register(Link, LinkAdmin)
