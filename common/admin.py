@@ -22,9 +22,9 @@ choice_fieldsets = [
         'programmatic_key',
         'programmatic_details_md']}),
 ]
-choice_list_display = ['id', 'details_md', 'programmatic_key',
+choice_list_display = ['id', 'name', 'details_md', 'programmatic_key',
     'programmatic_details_md']
-choice_list_editable = ['details_md', 'programmatic_key',
+choice_list_editable = ['name', 'details_md', 'programmatic_key',
     'programmatic_details_md']
 
 @admin.register(Country, State)
