@@ -185,8 +185,36 @@ class PersonLinkAdmin(RelationshipAdmin):
     ]
     autocomplete_fields = ['rtype', 'person', 'company']
 
-admin.site.register(PersonAddress)
-admin.site.register(PersonPhoneNumber)
+@admin.register(PersonAddress)
+class PersonAddressAdmin(RelationshipAdmin):
+    # List page settings
+    list_display = relationship_list_display + ['rtype', 'person', 'address']
+    list_editable = relationship_list_editable + ['rtype', 'person', 'address']
+    search_fields = relationship_list_search_fields + ['rtype', 'person',
+        'address']
+
+    # Details page settings
+    fieldsets = relationship_fieldsets + [
+        ('Model references', {'fields': ['rtype', 'person', 'address']})
+    ]
+    autocomplete_fields = ['rtype', 'person', 'address']
+
+@admin.register(PersonPhoneNumber)
+class PersonPhoneNumberAdmin(RelationshipAdmin):
+    # List page settings
+    list_display = relationship_list_display + ['rtype', 'person',
+        'phone_number']
+    list_editable = relationship_list_editable + ['rtype', 'person',
+        'phone_number']
+    search_fields = relationship_list_search_fields + ['rtype', 'person',
+        'phone_number']
+
+    # Details page settings
+    fieldsets = relationship_fieldsets + [
+        ('Model references', {'fields': ['rtype', 'person', 'phone_number']})
+    ]
+    autocomplete_fields = ['rtype', 'person', 'phone_number']
+
 admin.site.register(PersonEmail)
 admin.site.register(CompanyLink)
 admin.site.register(CompanyAddress)
