@@ -123,6 +123,9 @@ class CompanyLink(Relationship):
         verbose_name = 'Company-link'
         verbose_name_plural = 'Company-links'
 
+    def __str__(self):
+        return f'({self.rtype}, {self.company}, {self.link} [{self.id}])'
+
 class CompanyAddressType(Choice):
     class Meta:
         verbose_name = 'Company-address type'
