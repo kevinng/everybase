@@ -138,7 +138,41 @@ class LinkAdmin(admin.ModelAdmin):
         ('Details', {'fields': ['last_visited_okay', 'link']})
     ]
 
-admin.site.register(PersonLink)
+relationship_list_display = standard_list_display + ['details_md']
+relationship_list_editable = standard_list_editable + ['details_md']
+relationship_list_search_fields = ['id', 'details_md']
+relationship_fieldsets = standard_fieldsets + [
+    ('Details', {'fields': ['details_md']})
+]
+
+class RelationshipAdmin(admin.ModelAdmin):
+    # List page settings
+    list_per_page = 1000
+    list_filter = standard_list_filter
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = relationship_fieldsets
+
+@admin.register(PersonLink)
+class PersonLinkAdmin(RelationshipAdmin):
+    # List page settings
+    list_display = relationship_list_display + ['rtype', 'person', 'link']
+    list_editable = relationship_list_editable + ['rtype', 'person', 'link']
+    search_fields = relationship_list_search_fields + ['rtype', 'person',
+        'link']
+
+    # Details page settings
+    fieldsets = relationship_fieldsets + [
+        ('Model references', {'fields': ['rtype', 'person', 'link']})
+    ]
+    autocomplete_fields = ['rtype', 'person', 'link']
+
+
+# admin.site.register(PersonLink)
 admin.site.register(PersonAddress)
 admin.site.register(PersonPhoneNumber)
 admin.site.register(PersonEmail)

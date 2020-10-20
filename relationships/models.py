@@ -28,6 +28,9 @@ class PersonLink(Relationship):
     class Meta:
         verbose_name = 'Person-link'
         verbose_name_plural = 'Person-links'
+    
+    def __str__(self):
+        return f'({self.rtype}, {self.person}, {self.link} [{self.id}])'
 
 class PersonCompanyType(Choice):
     class Meta:
