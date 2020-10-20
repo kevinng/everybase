@@ -1,6 +1,6 @@
 from django.db import models
 from common.models import fk, m2m, m2mt, tf, cf, ff, dtf, url, email
-from common.models import Standard, Choice
+from common.models import Standard, Choice, short_text
 
 class GmassCampaignResult(Standard):
     email_address = email(null=True)
@@ -21,13 +21,16 @@ class GmassCampaignResult(Standard):
     gmass_campaign = fk('GmassCampaign', 'results')
 
     def __str__(self):
-        return '%s (%d)' % (self.email_address, self.id)
+        return f'({self.email_address} [{self.id}])'
 
 class GmassCampaign(Standard):
     campaign_id = cf()
     sent = dtf(null=True)
     subject = cf(null=True)
     spreadsheet = cf(null=True)
+
+    def __str__(self):
+        return f'({self.campaign_id}, {self.sent} [{self.id}])'
 
 class ChemicalClusterOfSingaporeResult(Standard):
     sourced = dtf(null=True)
@@ -59,6 +62,9 @@ class ChemicalClusterOfSingaporeResult(Standard):
         verbose_name = 'ChemicalClusterOfSingapore result'
         verbose_name_plural = 'ChemicalClusterOfSingapore results'
 
+    def __str__(self):
+        return f'({self.company_name}, {self.sourced} [{self.id}])'
+
 class Fibre2FashionResult(Standard):
     sourced = dtf(null=True)
 
@@ -76,6 +82,10 @@ class Fibre2FashionResult(Standard):
     class Meta:
         verbose_name = 'Fibre2Fashion result'
         verbose_name_plural = 'Fibre2Fashion results'
+
+    def __str__(self):
+        return f'({short_text(self.source_link, backward=True)}, \
+            {self.sourced} [{self.id}])'
 
 class ZeroBounceResult(Standard):
     email_address = email(null=True)
@@ -97,6 +107,9 @@ class ZeroBounceResult(Standard):
     class Meta:
         verbose_name = 'ZeroBounce result'
         verbose_name_plural = 'ZeroBounce results'
+    
+    def __str__(self):
+        return f'({self.email_address} [{self.id}])'
 
 class DataSource(Choice):
     emails = m2mt(
@@ -110,3 +123,6 @@ class SourcedEmail(Standard):
     sourced = dtf(null=True)
     source = fk('DataSource', 'sourced_emails')
     email = fk('relationships.Email', 'sourced_emails')
+
+    def __str__(self):
+        return f'({self.email_address} [{self.id}])'

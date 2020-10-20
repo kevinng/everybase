@@ -73,14 +73,19 @@ email = lambda verbose_name=None, null=False: models.EmailField(
 
 # --- Start: Helper functions ---
 
-def short_text(text, top_length=20, blank='-'):
+def short_text(text, top_length=20, blank='-', backward=False):
     if text is None or len(text) == 0:
         return blank
 
-    details_top = text[0:top_length]
+    if backward == False:
+        details_top = text[0:top_length]
+    else:
+        details_top = text[-top_length:]
 
-    if len(text) > top_length:
+    if len(text) > top_length and backward == False:
         details_top = details_top + '...'
+    else:
+        details_top = '...' + details_top
 
     return details_top
 

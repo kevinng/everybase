@@ -22,7 +22,7 @@ class Issue(Standard):
     demand_commission = fk('leads.DemandCommission', 'issues', null=True)
 
     def __str__(self):
-        return '%s (%d)' % (short_text(self.description_md), self.id)
+        return f'({short_text(self.description_md)} [{self.id}])'
 
 class IssueTag(Choice):
     parent = fk('self', 'children', null=True)
@@ -54,21 +54,7 @@ class Conversation(Standard):
     issue = fk('Issue', 'conversations')
 
     def __str__(self):
-
-        if self.agenda_md is None or len(self.agenda_md) > 0:
-            top_len = 20
-            agenda_top = self.agenda_md[0:top_len]
-
-            if len(self.agenda_md) > top_len:
-                agenda_top = agenda_top + '...'
-        else:
-            agenda_top = ''
-
-        id_str = str(self.id)
-        if self.front_conversation_id != None:
-            id_str = id_str + ', Front: ' + self.front_conversation_id[0:4]
-
-        return '%s (%s)' % (agenda_top, id_str)
+        return f'({short_text(self.agenda_md)} [{self.id}])'
 
 class ConversationChannel(Choice):
     pass
@@ -80,6 +66,9 @@ class ConversationEmail(Standard):
     our_email = fk('relationships.Email',
         'conversation_email_our_emails')
     conversation = fk('Conversation', 'conversation_emails')
+
+    def __str__(self):
+        return f'({self.their_email}, {self.our_email} [{self.id}])'
 
 class ConversationEmailStatus(Choice):
     class Meta:
@@ -97,6 +86,9 @@ class ConversationChat(Standard):
         'conversation_chat_our_numbers')
     conversation = fk('Conversation', 'conversation_chats')
 
+    def __str__(self):
+        return f'({self.their_number}, {self.our_number} [{self.id}])'
+
 class ConversationChatStatus(Choice):
     class Meta:
         verbose_name = 'Conversation chat status'
@@ -110,6 +102,9 @@ class ConversationVoice(Standard):
         'conversation_voice_our_numbers')
     conversation = fk('Conversation', 'conversation_voices')
 
+    def __str__(self):
+        return f'({self.their_number}, {self.our_number} [{self.id}])'
+
 class ConversationVoiceStatus(Choice):
     class Meta:
         verbose_name = 'Conversation voice status'
@@ -122,6 +117,9 @@ class ConversationVideo(Standard):
     our_number = fk('relationships.PhoneNumber',
         'conversation_video_our_numbers')
     conversation = fk('Conversation', 'conversation_videos')
+
+    def __str__(self):
+        return f'({self.their_number}, {self.our_number} [{self.id}])'
 
 class ConversationVideoStatus(Choice):
     class Meta:
