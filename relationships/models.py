@@ -160,7 +160,8 @@ class CompanyPhoneNumber(Relationship):
         verbose_name_plural = 'Company-phonenumbers'
 
     def __str__(self):
-        return f'({self.rtype}, {self.company}, {self.phone_number} [{self.id}])'
+        return f'({self.rtype}, {self.company}, {self.phone_number} \
+            [{self.id}])'
 
 class CompanyEmailType(Choice):
     class Meta:
