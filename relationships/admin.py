@@ -231,7 +231,6 @@ class PersonEmailAdmin(RelationshipAdmin):
     ]
     autocomplete_fields = ['rtype', 'person', 'email']
 
-admin.site.register(PersonEmail)
 admin.site.register(CompanyLink)
 admin.site.register(CompanyAddress)
 admin.site.register(CompanyPhoneNumber)
