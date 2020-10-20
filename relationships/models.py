@@ -141,6 +141,9 @@ class CompanyAddress(Relationship):
         verbose_name = 'Company-address'
         verbose_name_plural = 'Company-addresses'
 
+    def __str__(self):
+        return f'({self.rtype}, {self.company}, {self.address} [{self.id}])'
+
 class CompanyPhoneNumberType(Choice):
     class Meta:
         verbose_name = 'Company-phonenumber types'
