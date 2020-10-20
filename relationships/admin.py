@@ -275,5 +275,16 @@ class CompanyPhoneNumberAdmin(RelationshipAdmin):
     ]
     autocomplete_fields = ['rtype', 'company', 'phone_number']
 
+@admin.register(CompanyEmail)
+class CompanyEmailAdmin(RelationshipAdmin):
+    # List page settings
+    list_display = relationship_list_display + ['rtype', 'company', 'email']
+    list_editable = relationship_list_editable + ['rtype', 'company', 'email']
+    search_fields = relationship_list_search_fields + ['rtype', 'company',
+        'email']
 
-admin.site.register(CompanyEmail)
+    # Details page settings
+    fieldsets = relationship_fieldsets + [
+        ('Model references', {'fields': ['rtype', 'company', 'email']})
+    ]
+    autocomplete_fields = ['rtype', 'company', 'email']

@@ -178,6 +178,9 @@ class CompanyEmail(Relationship):
         verbose_name = 'Company-email'
         verbose_name_plural = 'Company-emails'
 
+    def __str__(self):
+        return f'({self.rtype}, {self.company}, {self.email} [{self.id}])'
+
 # --- End: Company Relationships ---
 
 # --- Start: Entities ---
