@@ -47,6 +47,9 @@ class PersonCompany(Relationship):
         verbose_name = 'Person-company'
         verbose_name_plural = 'Person-companies'
 
+    def __str__(self):
+        return f'({self.rtype}, {self.person}, {self.company} [{self.id}])'
+
 class PersonAddressType(Choice):
     class Meta:
         verbose_name = 'Person-address type'

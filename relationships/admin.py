@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import (PersonLinkType, PersonLink, PersonCompanyType,
-    PersonAddressType, PersonAddress, PersonPhoneNumberType, PersonPhoneNumber,
-    PersonEmailType, PersonEmail, CompanyLinkType, CompanyLink,
-    CompanyAddressType, CompanyAddress, CompanyPhoneNumberType,
+from .models import (PersonLinkType, PersonLink, PersonCompany,
+    PersonCompanyType, PersonAddressType, PersonAddress, PersonPhoneNumberType,
+    PersonPhoneNumber, PersonEmailType, PersonEmail, CompanyLinkType,
+    CompanyLink, CompanyAddressType, CompanyAddress, CompanyPhoneNumberType,
     CompanyPhoneNumber, CompanyEmailType, CompanyEmail, Person, Company, Email,
     LinkType, Link, AddressType, Address, PhoneNumberType, PhoneNumber)
 from common.admin import (ChoiceAdmin, standard_list_display,
@@ -171,8 +171,20 @@ class PersonLinkAdmin(RelationshipAdmin):
     ]
     autocomplete_fields = ['rtype', 'person', 'link']
 
+@admin.register(PersonCompany)
+class PersonLinkAdmin(RelationshipAdmin):
+    # List page settings
+    list_display = relationship_list_display + ['rtype', 'person', 'company']
+    list_editable = relationship_list_editable + ['rtype', 'person', 'company']
+    search_fields = relationship_list_search_fields + ['rtype', 'person',
+        'company']
 
-# admin.site.register(PersonLink)
+    # Details page settings
+    fieldsets = relationship_fieldsets + [
+        ('Model references', {'fields': ['rtype', 'person', 'company']})
+    ]
+    autocomplete_fields = ['rtype', 'person', 'company']
+
 admin.site.register(PersonAddress)
 admin.site.register(PersonPhoneNumber)
 admin.site.register(PersonEmail)
