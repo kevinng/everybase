@@ -125,7 +125,9 @@ class Choice(models.Model):
 # --- Start: Common models ---
 
 class Country(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Country'
+        verbose_name_plural = 'Countries'
 
 class State(Choice):
     pass
