@@ -1,6 +1,6 @@
 from django.db import models
 from common.models import fk, m2m, m2mt, tf, cf, ff, dtf
-from common.models import Choice, Standard
+from common.models import Choice, Standard, short_text
 
 # --- Start: Abstract models ---
 
@@ -27,7 +27,7 @@ class Lead(models.Model):
     contact_type_details_md = tf('Contact type details in Markdown', True)
 
     def __str__(self):
-        return '[%s, %s] (%d)' % (self.category, self.display_name, self.id)
+        return f'({short_text(self.details_md)} [{self.id}])'
 
     class Meta:
         abstract = True
@@ -46,12 +46,11 @@ class Commission(models.Model):
     mark_up_price_per_unit = ff('Mark-up price per unit', True)
     mark_up_percentage = ff('Mark-up percentage', True)
 
-    # At least person or company must be specified.
-    person = fk('relationships.Person', '%(class)s_items', null=True)
-    company = fk('relationships.Company', '%(class)s_items', null=True)
-
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return f'({short_text(self.details_md)} [{self.id}])'
 
 class Quote(models.Model):
     details_md = tf('Details in Markdown')
@@ -73,6 +72,9 @@ class Quote(models.Model):
 
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return f'({short_text(self.details_md)} [{self.id}])'
 
 # --- End: Abstract models ---
 
@@ -131,8 +133,7 @@ class UOMRelationship(models.Model):
         verbose_name_plural = 'UOM relationships'
     
     def __str__(self):
-        return '[Child: %s / Parent: %s] (%d)' % (self.child, self.parent,
-            self.id)
+        return f'(Child: {self.child}, parent: {self.parent} [{self.id}])'
 
 # --- End: Choice Models ---
 
@@ -176,6 +177,9 @@ class ProductionCapability(Standard):
         verbose_name = 'Production capability'
         verbose_name_plural = 'Production capabilities'
 
+    def __str__(self):
+        return f'({short_text(self.details_md)} [{self.id}])'
+
 class DemandQuote(Standard, Quote, ExpirableInvalidable):
     demand = fk('Demand', 'quotes')
 
@@ -202,6 +206,9 @@ class Trench(models.Model):
         verbose_name = 'Trench'
         verbose_name_plural = 'Trenches'
 
+    def __str__(self):
+        return f'({short_text(self.details_md)} [{self.id}])'
+
 class Match(Standard):
     demand_quote = fk('DemandQuote', 'matches')
     supply_quote = fk('SupplyQuote', 'matches')
@@ -214,16 +221,23 @@ class Match(Standard):
         verbose_name = 'Match'
         verbose_name_plural = 'Matches'
 
+    def __str__(self):
+        return f'({short_text(self.details_md)} [{self.id}])'
+
 class SupplyCommission(Standard, Commission, ExpirableInvalidable):
     quotes = m2m('SupplyQuote', 'commissions', True)
     supply = fk('Supply', 'commissions', null=True)
+
+    # One of following must be set
     person = fk('relationships.Person', 'supply_commissions', null=True)
     company = fk('relationships.Company', 'supply_commissions', null=True)
 
 class DemandCommission(Standard, Commission, ExpirableInvalidable):
     quotes = m2m('DemandQuote', 'commissions', True)
-    demand = fk('Demand', 'commissions')
-    person = fk('relationships.Person', 'demand_commissions')
-    company = fk('relationships.Company', 'demand_commissions')
+    demand = fk('Demand', 'commissions', null=True)
+
+    # One of following must be set
+    person = fk('relationships.Person', 'demand_commissions', null=True)
+    company = fk('relationships.Company', 'demand_commissions', null=True)
 
 # --- End: Main models ---
