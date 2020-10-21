@@ -28,7 +28,6 @@ class IssueTag(Choice):
     parent = fk('self', 'children', null=True)
 
 class IssueStatus(Choice):
-    parent = fk('self', 'children', null=True)
     class Meta:
         verbose_name = 'Issue status'
         verbose_name_plural = 'Issue statuses'
