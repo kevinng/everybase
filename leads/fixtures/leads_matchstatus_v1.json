@@ -1,0 +1,52 @@
+[
+{
+    "model": "leads.matchstatus",
+    "pk": 1,
+    "fields": {
+        "name": "Matching",
+        "details_md": "",
+        "programmatic_key": "matching",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "leads.matchstatus",
+    "pk": 2,
+    "fields": {
+        "name": "Matched",
+        "details_md": "",
+        "programmatic_key": "matched",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "leads.matchstatus",
+    "pk": 3,
+    "fields": {
+        "name": "Validating",
+        "details_md": "",
+        "programmatic_key": "validating",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "leads.matchstatus",
+    "pk": 4,
+    "fields": {
+        "name": "Validated - Relevant",
+        "details_md": "",
+        "programmatic_key": "validated_relevant",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "leads.matchstatus",
+    "pk": 5,
+    "fields": {
+        "name": "Validated - Irrelevant",
+        "details_md": "",
+        "programmatic_key": "validated_irrelevant",
+        "programmatic_details_md": ""
+    }
+}
+]
