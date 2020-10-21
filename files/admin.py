@@ -2,10 +2,10 @@ from django.contrib import admin
 from .models import FileTag, File
 from common.admin import (standard_list_display, standard_list_filter,
     standard_ordering, standard_readonly_fields, standard_fieldsets,
-    standard_list_editable, ChoiceAdmin)
+    standard_list_editable, ParentChildrenChoiceAdmin)
 
 @admin.register(FileTag)
-class FileTagAdmin(ChoiceAdmin):
+class FileTagAdmin(ParentChildrenChoiceAdmin):
     pass
 
 @admin.register(File)
