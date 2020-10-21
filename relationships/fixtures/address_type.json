@@ -1,0 +1,22 @@
+[
+{
+    "model": "relationships.addresstype",
+    "pk": 1,
+    "fields": {
+        "name": "Headquarters",
+        "details_md": "",
+        "programmatic_key": "headquarters",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "relationships.addresstype",
+    "pk": 2,
+    "fields": {
+        "name": "Factory",
+        "details_md": "",
+        "programmatic_key": "factory",
+        "programmatic_details_md": ""
+    }
+}
+]
