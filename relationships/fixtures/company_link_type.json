@@ -3,9 +3,19 @@
     "model": "relationships.companylinktype",
     "pk": 1,
     "fields": {
-        "name": "Corporate",
-        "details_md": "Corporate site",
-        "programmatic_key": "corporate",
+        "name": "Corporate Site",
+        "details_md": "",
+        "programmatic_key": "corporate_site",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "relationships.companylinktype",
+    "pk": 2,
+    "fields": {
+        "name": "Data Source",
+        "details_md": "URL where data for this company is sourced.",
+        "programmatic_key": "data_source",
         "programmatic_details_md": ""
     }
 }
