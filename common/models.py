@@ -84,7 +84,7 @@ def short_text(text, top_length=20, blank='-', backward=False):
 
     if len(text) > top_length and backward == False:
         details_top = details_top + '...'
-    else:
+    elif len(text) > top_length and backward == True:
         details_top = '...' + details_top
 
     return details_top
