@@ -277,13 +277,8 @@ class Email(Standard):
     def __str__(self):
         return f'({self.email} [{self.id}])'
 
-class LinkType(Choice):
-    pass
-
 class Link(Standard):
     last_visited_okay = dtf(null=True)
-
-    types = m2m('LinkType', 'links', True)
     link = models.URLField()
 
     def __str__(self):
