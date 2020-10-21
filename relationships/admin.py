@@ -4,15 +4,14 @@ from .models import (PersonLinkType, PersonLink, PersonCompany,
     PersonPhoneNumber, PersonEmailType, PersonEmail, CompanyLinkType,
     CompanyLink, CompanyAddressType, CompanyAddress, CompanyPhoneNumberType,
     CompanyPhoneNumber, CompanyEmailType, CompanyEmail, Person, Company, Email,
-    LinkType, Link, AddressType, Address, PhoneNumberType, PhoneNumber)
+    LinkType, Link, Address, PhoneNumberType, PhoneNumber)
 from common.admin import (ChoiceAdmin, standard_list_display,
     standard_list_editable, standard_list_filter, standard_ordering,
     standard_readonly_fields, standard_fieldsets)
 
 @admin.register(PersonLinkType, PersonCompanyType, PersonAddressType,
     PersonPhoneNumberType, PersonEmailType, CompanyLinkType, CompanyAddressType,
-    CompanyPhoneNumberType, CompanyEmailType, LinkType, AddressType,
-    PhoneNumberType)
+    CompanyPhoneNumberType, CompanyEmailType, LinkType, PhoneNumberType)
 class ChoiceAdmin(ChoiceAdmin):
     pass
 

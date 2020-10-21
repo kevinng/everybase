@@ -289,11 +289,7 @@ class Link(Standard):
     def __str__(self):
         return f'({self.link} [{self.id}])'
 
-class AddressType(Choice):
-    pass
-
 class Address(Standard):
-    types = m2m('AddressType', 'addresses', True)
     address_1 = cf()
     address_2 = cf(null=True)
     address_3 = cf(null=True)
