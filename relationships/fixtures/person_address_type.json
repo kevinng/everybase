@@ -1,0 +1,12 @@
+[
+{
+    "model": "relationships.personaddresstype",
+    "pk": 1,
+    "fields": {
+        "name": "Works At",
+        "details_md": "Where this person reports for work regularly.",
+        "programmatic_key": "works_at",
+        "programmatic_details_md": ""
+    }
+}
+]
