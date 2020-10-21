@@ -1,6 +1,6 @@
 [
 {
-    "model": "communication.conversationemailstatus",
+    "model": "communication.conversationvideostatus",
     "pk": 1,
     "fields": {
         "name": "To Initiate If Required",
@@ -10,7 +10,7 @@
     }
 },
 {
-    "model": "communication.conversationemailstatus",
+    "model": "communication.conversationvideostatus",
     "pk": 2,
     "fields": {
         "name": "Awaiting Response",
@@ -20,27 +20,27 @@
     }
 },
 {
-    "model": "communication.conversationemailstatus",
+    "model": "communication.conversationvideostatus",
     "pk": 3,
     "fields": {
-        "name": "Unable to Deliver - Fatal",
+        "name": "Unable to Connect - Fatal",
         "details_md": "",
-        "programmatic_key": "unable_to_deliver_fatal",
+        "programmatic_key": "unable_to_connect_fatal",
         "programmatic_details_md": ""
     }
 },
 {
-    "model": "communication.conversationemailstatus",
+    "model": "communication.conversationvideostatus",
     "pk": 4,
     "fields": {
-        "name": "Unable to Deliver - Non-Fatal",
+        "name": "Unable to Connect - Non-Fatal",
         "details_md": "",
-        "programmatic_key": "unable_to_deliver_non_fatal",
+        "programmatic_key": "unable_to_connect_non_fatal",
         "programmatic_details_md": ""
     }
 },
 {
-    "model": "communication.conversationemailstatus",
+    "model": "communication.conversationvideostatus",
     "pk": 5,
     "fields": {
         "name": "Unintended Recipient",
