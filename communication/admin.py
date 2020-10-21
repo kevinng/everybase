@@ -130,12 +130,11 @@ class ConversationVoiceAndVideoAdmin(admin.ModelAdmin):
         'conversation']
 
 @admin.register(ConversationChannel, ConversationChatStatus,
-    ConversationEmailStatus, ConversationVideoStatus, ConversationVoiceStatus,
-    IssueStatus)
+    ConversationEmailStatus, ConversationVideoStatus, ConversationVoiceStatus)
 class ChoiceAdmin(ChoiceAdmin):
     pass
 
-@admin.register(IssueTag)
+@admin.register(IssueStatus, IssueTag)
 class ParentChildrenChoiceAdmin(ParentChildrenChoiceAdmin):
     pass
 
