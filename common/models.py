@@ -125,6 +125,7 @@ class Choice(models.Model):
 # --- Start: Common models ---
 
 class Country(Choice):
+    cc_tld = cf('CC TLD', null=True)
     class Meta:
         verbose_name = 'Country'
         verbose_name_plural = 'Countries'

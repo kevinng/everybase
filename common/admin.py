@@ -22,26 +22,33 @@ choice_fieldsets = [
         'programmatic_key',
         'programmatic_details_md']}),
 ]
-choice_list_display = ['id', 'name', 'details_md', 'programmatic_key',
+choice_list_display = ['id', 'name', 'programmatic_key', 'short_details_md',
+    'short_programmatic_details_md']
+choice_list_editable = ['name', 'programmatic_key']
+choice_search_fields = ['id', 'name', 'programmatic_key', 'details_md',
     'programmatic_details_md']
-choice_list_editable = ['name', 'details_md', 'programmatic_key',
-    'programmatic_details_md']
+choice_ordering = ['id']
 
-@admin.register(Country, State)
+@admin.register(State)
 class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = choice_list_display
     list_editable = choice_list_editable
     list_per_page = 1000
-    search_fields = ['id', 'details_md', 'programmatic_key',
-        'programmatic_details_md']
-    ordering = ['id']
+    search_fields = choice_search_fields
+    ordering = choice_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
     readonly_fields = choice_readonly_fields
     fieldsets = choice_fieldsets
+
+    def short_details_md(self, obj):
+        return short_text(obj.details_md)
+
+    def short_programmatic_details_md(self, obj):
+        return short_text(obj.programmatic_details_md)
 
 class ParentChildrenChoiceAdmin(ChoiceAdmin):
     list_display = choice_list_display + ['parent']
@@ -50,3 +57,12 @@ class ParentChildrenChoiceAdmin(ChoiceAdmin):
         ('Relationship', {'fields': ['parent']})
     ]
     autocomplete_fields = ['parent']
+
+@admin.register(Country)
+class CountryAdmin(ChoiceAdmin):
+    list_display = choice_list_display + ['cc_tld']
+    list_editable = choice_list_editable + ['cc_tld']
+    search_fields = choice_search_fields + ['cc_tld']
+    fieldsets = choice_fieldsets + [
+        ('Other details', {'fields': ['cc_tld']})
+    ]
