@@ -1,6 +1,6 @@
 [
 {
-    "model": "relationships.addresstype",
+    "model": "relationships.companyaddresstype",
     "pk": 1,
     "fields": {
         "name": "Headquarters",
@@ -10,7 +10,7 @@
     }
 },
 {
-    "model": "relationships.addresstype",
+    "model": "relationships.companyaddresstype",
     "pk": 2,
     "fields": {
         "name": "Factory",
