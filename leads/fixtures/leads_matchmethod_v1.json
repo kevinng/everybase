@@ -1,0 +1,12 @@
+[
+{
+    "model": "leads.matchmethod",
+    "pk": 1,
+    "fields": {
+        "name": "Manual",
+        "details_md": "",
+        "programmatic_key": "manual",
+        "programmatic_details_md": ""
+    }
+}
+]
