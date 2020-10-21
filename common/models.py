@@ -130,6 +130,6 @@ class Country(Choice):
         verbose_name_plural = 'Countries'
 
 class State(Choice):
-    pass
+    country = fk('Country', 'states')
 
 # --- End: Common models ---
