@@ -1,0 +1,22 @@
+[
+{
+    "model": "relationships.companyemailtype",
+    "pk": 1,
+    "fields": {
+        "name": "Non-Personal",
+        "details_md": "",
+        "programmatic_key": "non_personal",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "relationships.companyemailtype",
+    "pk": 2,
+    "fields": {
+        "name": "Personal",
+        "details_md": "",
+        "programmatic_key": "personal",
+        "programmatic_details_md": ""
+    }
+}
+]
