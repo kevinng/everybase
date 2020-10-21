@@ -1,0 +1,2741 @@
+[
+{
+    "model": "common.country",
+    "pk": 499,
+    "fields": {
+        "name": "Andorra",
+        "details_md": null,
+        "programmatic_key": "AD",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ad"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 500,
+    "fields": {
+        "name": "United Arab Emirates",
+        "details_md": null,
+        "programmatic_key": "AE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ae"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 501,
+    "fields": {
+        "name": "Afghanistan",
+        "details_md": null,
+        "programmatic_key": "AF",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".af"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 502,
+    "fields": {
+        "name": "Antigua and Barbuda",
+        "details_md": null,
+        "programmatic_key": "AG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ag"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 503,
+    "fields": {
+        "name": "Anguilla",
+        "details_md": null,
+        "programmatic_key": "AI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ai"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 504,
+    "fields": {
+        "name": "Albania",
+        "details_md": null,
+        "programmatic_key": "AL",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".al"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 505,
+    "fields": {
+        "name": "Armenia",
+        "details_md": null,
+        "programmatic_key": "AM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".am"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 506,
+    "fields": {
+        "name": "Angola",
+        "details_md": null,
+        "programmatic_key": "AO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ao"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 507,
+    "fields": {
+        "name": "Antarctica",
+        "details_md": null,
+        "programmatic_key": "AQ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".aq"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 508,
+    "fields": {
+        "name": "Argentina",
+        "details_md": null,
+        "programmatic_key": "AR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ar"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 509,
+    "fields": {
+        "name": "American Samoa",
+        "details_md": null,
+        "programmatic_key": "AS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".as"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 510,
+    "fields": {
+        "name": "Austria",
+        "details_md": null,
+        "programmatic_key": "AT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".at"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 511,
+    "fields": {
+        "name": "Australia",
+        "details_md": null,
+        "programmatic_key": "AU",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".au"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 512,
+    "fields": {
+        "name": "Aruba",
+        "details_md": null,
+        "programmatic_key": "AW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".aw"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 513,
+    "fields": {
+        "name": "\u00c5land Islands",
+        "details_md": null,
+        "programmatic_key": "AX",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ax"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 514,
+    "fields": {
+        "name": "Azerbaijan",
+        "details_md": null,
+        "programmatic_key": "AZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".az"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 515,
+    "fields": {
+        "name": "Bosnia and Herzegovina",
+        "details_md": null,
+        "programmatic_key": "BA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ba"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 516,
+    "fields": {
+        "name": "Barbados",
+        "details_md": null,
+        "programmatic_key": "BB",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bb"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 517,
+    "fields": {
+        "name": "Bangladesh",
+        "details_md": null,
+        "programmatic_key": "BD",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bd"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 518,
+    "fields": {
+        "name": "Belgium",
+        "details_md": null,
+        "programmatic_key": "BE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".be"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 519,
+    "fields": {
+        "name": "Burkina Faso",
+        "details_md": null,
+        "programmatic_key": "BF",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bf"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 520,
+    "fields": {
+        "name": "Bulgaria",
+        "details_md": null,
+        "programmatic_key": "BG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 521,
+    "fields": {
+        "name": "Bahrain",
+        "details_md": null,
+        "programmatic_key": "BH",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bh"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 522,
+    "fields": {
+        "name": "Burundi",
+        "details_md": null,
+        "programmatic_key": "BI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bi"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 523,
+    "fields": {
+        "name": "Benin",
+        "details_md": null,
+        "programmatic_key": "BJ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bj"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 524,
+    "fields": {
+        "name": "Saint Barth\u00e9lemy",
+        "details_md": null,
+        "programmatic_key": "BL",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bl"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 525,
+    "fields": {
+        "name": "Bermuda",
+        "details_md": null,
+        "programmatic_key": "BM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 526,
+    "fields": {
+        "name": "Brunei Darussalam",
+        "details_md": null,
+        "programmatic_key": "BN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 527,
+    "fields": {
+        "name": "Bolivia (Plurinational State of)",
+        "details_md": null,
+        "programmatic_key": "BO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bo"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 528,
+    "fields": {
+        "name": "Bonaire, Sint Eustatius and Saba",
+        "details_md": null,
+        "programmatic_key": "BQ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bq"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 529,
+    "fields": {
+        "name": "Brazil",
+        "details_md": null,
+        "programmatic_key": "BR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".br"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 530,
+    "fields": {
+        "name": "Bahamas",
+        "details_md": null,
+        "programmatic_key": "BS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bs"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 531,
+    "fields": {
+        "name": "Bhutan",
+        "details_md": null,
+        "programmatic_key": "BT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bt"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 532,
+    "fields": {
+        "name": "Bouvet Island",
+        "details_md": null,
+        "programmatic_key": "BV",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bv"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 533,
+    "fields": {
+        "name": "Botswana",
+        "details_md": null,
+        "programmatic_key": "BW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bw"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 534,
+    "fields": {
+        "name": "Belarus",
+        "details_md": null,
+        "programmatic_key": "BY",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".by"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 535,
+    "fields": {
+        "name": "Belize",
+        "details_md": null,
+        "programmatic_key": "BZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".bz"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 536,
+    "fields": {
+        "name": "Canada",
+        "details_md": null,
+        "programmatic_key": "CA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ca"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 537,
+    "fields": {
+        "name": "Cocos (Keeling) Islands",
+        "details_md": null,
+        "programmatic_key": "CC",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cc"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 538,
+    "fields": {
+        "name": "Congo, Democratic Republic of the",
+        "details_md": null,
+        "programmatic_key": "CD",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cd"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 539,
+    "fields": {
+        "name": "Central African Republic",
+        "details_md": null,
+        "programmatic_key": "CF",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cf"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 540,
+    "fields": {
+        "name": "Congo",
+        "details_md": null,
+        "programmatic_key": "CG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 541,
+    "fields": {
+        "name": "Switzerland",
+        "details_md": null,
+        "programmatic_key": "CH",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ch"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 542,
+    "fields": {
+        "name": "C\u00f4te d'Ivoire",
+        "details_md": null,
+        "programmatic_key": "CI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ci"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 543,
+    "fields": {
+        "name": "Cook Islands",
+        "details_md": null,
+        "programmatic_key": "CK",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ck"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 544,
+    "fields": {
+        "name": "Chile",
+        "details_md": null,
+        "programmatic_key": "CL",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cl"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 545,
+    "fields": {
+        "name": "Cameroon",
+        "details_md": null,
+        "programmatic_key": "CM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 546,
+    "fields": {
+        "name": "China",
+        "details_md": null,
+        "programmatic_key": "CN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 547,
+    "fields": {
+        "name": "Colombia",
+        "details_md": null,
+        "programmatic_key": "CO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".co"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 548,
+    "fields": {
+        "name": "Costa Rica",
+        "details_md": null,
+        "programmatic_key": "CR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 549,
+    "fields": {
+        "name": "Cuba",
+        "details_md": null,
+        "programmatic_key": "CU",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cu"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 550,
+    "fields": {
+        "name": "Cabo Verde",
+        "details_md": null,
+        "programmatic_key": "CV",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cv"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 551,
+    "fields": {
+        "name": "Cura\u00e7ao",
+        "details_md": null,
+        "programmatic_key": "CW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cw"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 552,
+    "fields": {
+        "name": "Christmas Island",
+        "details_md": null,
+        "programmatic_key": "CX",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cx"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 553,
+    "fields": {
+        "name": "Cyprus",
+        "details_md": null,
+        "programmatic_key": "CY",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cy"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 554,
+    "fields": {
+        "name": "Czechia",
+        "details_md": null,
+        "programmatic_key": "CZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".cz"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 555,
+    "fields": {
+        "name": "Germany",
+        "details_md": null,
+        "programmatic_key": "DE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".de"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 556,
+    "fields": {
+        "name": "Djibouti",
+        "details_md": null,
+        "programmatic_key": "DJ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".dj"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 557,
+    "fields": {
+        "name": "Denmark",
+        "details_md": null,
+        "programmatic_key": "DK",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".dk"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 558,
+    "fields": {
+        "name": "Dominica",
+        "details_md": null,
+        "programmatic_key": "DM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".dm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 559,
+    "fields": {
+        "name": "Dominican Republic",
+        "details_md": null,
+        "programmatic_key": "DO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".do"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 560,
+    "fields": {
+        "name": "Algeria",
+        "details_md": null,
+        "programmatic_key": "DZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".dz"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 561,
+    "fields": {
+        "name": "Ecuador",
+        "details_md": null,
+        "programmatic_key": "EC",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ec"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 562,
+    "fields": {
+        "name": "Estonia",
+        "details_md": null,
+        "programmatic_key": "EE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ee"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 563,
+    "fields": {
+        "name": "Egypt",
+        "details_md": null,
+        "programmatic_key": "EG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".eg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 564,
+    "fields": {
+        "name": "Western Sahara",
+        "details_md": null,
+        "programmatic_key": "EH",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ""
+    }
+},
+{
+    "model": "common.country",
+    "pk": 565,
+    "fields": {
+        "name": "Eritrea",
+        "details_md": null,
+        "programmatic_key": "ER",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".er"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 566,
+    "fields": {
+        "name": "Spain",
+        "details_md": null,
+        "programmatic_key": "ES",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".es"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 567,
+    "fields": {
+        "name": "Ethiopia",
+        "details_md": null,
+        "programmatic_key": "ET",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".et"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 568,
+    "fields": {
+        "name": "Finland",
+        "details_md": null,
+        "programmatic_key": "FI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".fi"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 569,
+    "fields": {
+        "name": "Fiji",
+        "details_md": null,
+        "programmatic_key": "FJ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".fj"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 570,
+    "fields": {
+        "name": "Falkland Islands (Malvinas)",
+        "details_md": null,
+        "programmatic_key": "FK",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".fk"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 571,
+    "fields": {
+        "name": "Micronesia (Federated States of)",
+        "details_md": null,
+        "programmatic_key": "FM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".fm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 572,
+    "fields": {
+        "name": "Faroe Islands",
+        "details_md": null,
+        "programmatic_key": "FO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".fo"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 573,
+    "fields": {
+        "name": "France",
+        "details_md": null,
+        "programmatic_key": "FR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".fr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 574,
+    "fields": {
+        "name": "Gabon",
+        "details_md": null,
+        "programmatic_key": "GA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ga"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 575,
+    "fields": {
+        "name": "United Kingdom of Great Britain and Northern Ireland",
+        "details_md": null,
+        "programmatic_key": "GB",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gb"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 576,
+    "fields": {
+        "name": "Grenada",
+        "details_md": null,
+        "programmatic_key": "GD",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gd"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 577,
+    "fields": {
+        "name": "Georgia",
+        "details_md": null,
+        "programmatic_key": "GE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ge"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 578,
+    "fields": {
+        "name": "French Guiana",
+        "details_md": null,
+        "programmatic_key": "GF",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gf"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 579,
+    "fields": {
+        "name": "Guernsey",
+        "details_md": null,
+        "programmatic_key": "GG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 580,
+    "fields": {
+        "name": "Ghana",
+        "details_md": null,
+        "programmatic_key": "GH",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gh"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 581,
+    "fields": {
+        "name": "Gibraltar",
+        "details_md": null,
+        "programmatic_key": "GI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gi"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 582,
+    "fields": {
+        "name": "Greenland",
+        "details_md": null,
+        "programmatic_key": "GL",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gl"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 583,
+    "fields": {
+        "name": "Gambia",
+        "details_md": null,
+        "programmatic_key": "GM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 584,
+    "fields": {
+        "name": "Guinea",
+        "details_md": null,
+        "programmatic_key": "GN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 585,
+    "fields": {
+        "name": "Guadeloupe",
+        "details_md": null,
+        "programmatic_key": "GP",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gp"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 586,
+    "fields": {
+        "name": "Equatorial Guinea",
+        "details_md": null,
+        "programmatic_key": "GQ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gq"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 587,
+    "fields": {
+        "name": "Greece",
+        "details_md": null,
+        "programmatic_key": "GR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 588,
+    "fields": {
+        "name": "South Georgia and the South Sandwich Islands",
+        "details_md": null,
+        "programmatic_key": "GS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gs"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 589,
+    "fields": {
+        "name": "Guatemala",
+        "details_md": null,
+        "programmatic_key": "GT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gt"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 590,
+    "fields": {
+        "name": "Guam",
+        "details_md": null,
+        "programmatic_key": "GU",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gu"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 591,
+    "fields": {
+        "name": "Guinea-Bissau",
+        "details_md": null,
+        "programmatic_key": "GW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gw"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 592,
+    "fields": {
+        "name": "Guyana",
+        "details_md": null,
+        "programmatic_key": "GY",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".gy"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 593,
+    "fields": {
+        "name": "Hong Kong",
+        "details_md": null,
+        "programmatic_key": "HK",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".hk"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 594,
+    "fields": {
+        "name": "Heard Island and McDonald Islands",
+        "details_md": null,
+        "programmatic_key": "HM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".hm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 595,
+    "fields": {
+        "name": "Honduras",
+        "details_md": null,
+        "programmatic_key": "HN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".hn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 596,
+    "fields": {
+        "name": "Croatia",
+        "details_md": null,
+        "programmatic_key": "HR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".hr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 597,
+    "fields": {
+        "name": "Haiti",
+        "details_md": null,
+        "programmatic_key": "HT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ht"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 598,
+    "fields": {
+        "name": "Hungary",
+        "details_md": null,
+        "programmatic_key": "HU",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".hu"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 599,
+    "fields": {
+        "name": "Indonesia",
+        "details_md": null,
+        "programmatic_key": "ID",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".id"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 600,
+    "fields": {
+        "name": "Ireland",
+        "details_md": null,
+        "programmatic_key": "IE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ie"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 601,
+    "fields": {
+        "name": "Israel",
+        "details_md": null,
+        "programmatic_key": "IL",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".il"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 602,
+    "fields": {
+        "name": "Isle of Man",
+        "details_md": null,
+        "programmatic_key": "IM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".im"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 603,
+    "fields": {
+        "name": "India",
+        "details_md": null,
+        "programmatic_key": "IN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".in"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 604,
+    "fields": {
+        "name": "British Indian Ocean Territory",
+        "details_md": null,
+        "programmatic_key": "IO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".io"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 605,
+    "fields": {
+        "name": "Iraq",
+        "details_md": null,
+        "programmatic_key": "IQ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".iq"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 606,
+    "fields": {
+        "name": "Iran (Islamic Republic of)",
+        "details_md": null,
+        "programmatic_key": "IR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ir"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 607,
+    "fields": {
+        "name": "Iceland",
+        "details_md": null,
+        "programmatic_key": "IS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".is"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 608,
+    "fields": {
+        "name": "Italy",
+        "details_md": null,
+        "programmatic_key": "IT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".it"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 609,
+    "fields": {
+        "name": "Jersey",
+        "details_md": null,
+        "programmatic_key": "JE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".je"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 610,
+    "fields": {
+        "name": "Jamaica",
+        "details_md": null,
+        "programmatic_key": "JM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".jm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 611,
+    "fields": {
+        "name": "Jordan",
+        "details_md": null,
+        "programmatic_key": "JO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".jo"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 612,
+    "fields": {
+        "name": "Japan",
+        "details_md": null,
+        "programmatic_key": "JP",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".jp"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 613,
+    "fields": {
+        "name": "Kenya",
+        "details_md": null,
+        "programmatic_key": "KE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ke"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 614,
+    "fields": {
+        "name": "Kyrgyzstan",
+        "details_md": null,
+        "programmatic_key": "KG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".kg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 615,
+    "fields": {
+        "name": "Cambodia",
+        "details_md": null,
+        "programmatic_key": "KH",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".kh"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 616,
+    "fields": {
+        "name": "Kiribati",
+        "details_md": null,
+        "programmatic_key": "KI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ki"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 617,
+    "fields": {
+        "name": "Comoros",
+        "details_md": null,
+        "programmatic_key": "KM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".km"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 618,
+    "fields": {
+        "name": "Saint Kitts and Nevis",
+        "details_md": null,
+        "programmatic_key": "KN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".kn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 619,
+    "fields": {
+        "name": "Korea (Democratic People's Republic of)",
+        "details_md": null,
+        "programmatic_key": "KP",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".kp"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 620,
+    "fields": {
+        "name": "Korea, Republic of",
+        "details_md": null,
+        "programmatic_key": "KR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".kr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 621,
+    "fields": {
+        "name": "Kuwait",
+        "details_md": null,
+        "programmatic_key": "KW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".kw"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 622,
+    "fields": {
+        "name": "Cayman Islands",
+        "details_md": null,
+        "programmatic_key": "KY",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ky"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 623,
+    "fields": {
+        "name": "Kazakhstan",
+        "details_md": null,
+        "programmatic_key": "KZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".kz"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 624,
+    "fields": {
+        "name": "Lao People's Democratic Republic",
+        "details_md": null,
+        "programmatic_key": "LA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".la"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 625,
+    "fields": {
+        "name": "Lebanon",
+        "details_md": null,
+        "programmatic_key": "LB",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".lb"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 626,
+    "fields": {
+        "name": "Saint Lucia",
+        "details_md": null,
+        "programmatic_key": "LC",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".lc"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 627,
+    "fields": {
+        "name": "Liechtenstein",
+        "details_md": null,
+        "programmatic_key": "LI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".li"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 628,
+    "fields": {
+        "name": "Sri Lanka",
+        "details_md": null,
+        "programmatic_key": "LK",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".lk"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 629,
+    "fields": {
+        "name": "Liberia",
+        "details_md": null,
+        "programmatic_key": "LR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".lr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 630,
+    "fields": {
+        "name": "Lesotho",
+        "details_md": null,
+        "programmatic_key": "LS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ls"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 631,
+    "fields": {
+        "name": "Lithuania",
+        "details_md": null,
+        "programmatic_key": "LT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".lt"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 632,
+    "fields": {
+        "name": "Luxembourg",
+        "details_md": null,
+        "programmatic_key": "LU",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".lu"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 633,
+    "fields": {
+        "name": "Latvia",
+        "details_md": null,
+        "programmatic_key": "LV",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".lv"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 634,
+    "fields": {
+        "name": "Libya",
+        "details_md": null,
+        "programmatic_key": "LY",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ly"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 635,
+    "fields": {
+        "name": "Morocco",
+        "details_md": null,
+        "programmatic_key": "MA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ma"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 636,
+    "fields": {
+        "name": "Monaco",
+        "details_md": null,
+        "programmatic_key": "MC",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mc"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 637,
+    "fields": {
+        "name": "Moldova, Republic of",
+        "details_md": null,
+        "programmatic_key": "MD",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".md"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 638,
+    "fields": {
+        "name": "Montenegro",
+        "details_md": null,
+        "programmatic_key": "ME",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".me"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 639,
+    "fields": {
+        "name": "Saint Martin (French part)",
+        "details_md": null,
+        "programmatic_key": "MF",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mf"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 640,
+    "fields": {
+        "name": "Madagascar",
+        "details_md": null,
+        "programmatic_key": "MG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 641,
+    "fields": {
+        "name": "Marshall Islands",
+        "details_md": null,
+        "programmatic_key": "MH",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mh"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 642,
+    "fields": {
+        "name": "North Macedonia",
+        "details_md": null,
+        "programmatic_key": "MK",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mk"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 643,
+    "fields": {
+        "name": "Mali",
+        "details_md": null,
+        "programmatic_key": "ML",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ml"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 644,
+    "fields": {
+        "name": "Myanmar",
+        "details_md": null,
+        "programmatic_key": "MM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 645,
+    "fields": {
+        "name": "Mongolia",
+        "details_md": null,
+        "programmatic_key": "MN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 646,
+    "fields": {
+        "name": "Macao",
+        "details_md": null,
+        "programmatic_key": "MO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mo"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 647,
+    "fields": {
+        "name": "Northern Mariana Islands",
+        "details_md": null,
+        "programmatic_key": "MP",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mp"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 648,
+    "fields": {
+        "name": "Martinique",
+        "details_md": null,
+        "programmatic_key": "MQ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mq"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 649,
+    "fields": {
+        "name": "Mauritania",
+        "details_md": null,
+        "programmatic_key": "MR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 650,
+    "fields": {
+        "name": "Montserrat",
+        "details_md": null,
+        "programmatic_key": "MS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ms"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 651,
+    "fields": {
+        "name": "Malta",
+        "details_md": null,
+        "programmatic_key": "MT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mt"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 652,
+    "fields": {
+        "name": "Mauritius",
+        "details_md": null,
+        "programmatic_key": "MU",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mu"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 653,
+    "fields": {
+        "name": "Maldives",
+        "details_md": null,
+        "programmatic_key": "MV",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mv"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 654,
+    "fields": {
+        "name": "Malawi",
+        "details_md": null,
+        "programmatic_key": "MW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mw"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 655,
+    "fields": {
+        "name": "Mexico",
+        "details_md": null,
+        "programmatic_key": "MX",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mx"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 656,
+    "fields": {
+        "name": "Malaysia",
+        "details_md": null,
+        "programmatic_key": "MY",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".my"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 657,
+    "fields": {
+        "name": "Mozambique",
+        "details_md": null,
+        "programmatic_key": "MZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".mz"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 658,
+    "fields": {
+        "name": "Namibia",
+        "details_md": null,
+        "programmatic_key": "NA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".na"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 659,
+    "fields": {
+        "name": "New Caledonia",
+        "details_md": null,
+        "programmatic_key": "NC",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".nc"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 660,
+    "fields": {
+        "name": "Niger",
+        "details_md": null,
+        "programmatic_key": "NE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ne"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 661,
+    "fields": {
+        "name": "Norfolk Island",
+        "details_md": null,
+        "programmatic_key": "NF",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".nf"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 662,
+    "fields": {
+        "name": "Nigeria",
+        "details_md": null,
+        "programmatic_key": "NG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ng"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 663,
+    "fields": {
+        "name": "Nicaragua",
+        "details_md": null,
+        "programmatic_key": "NI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ni"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 664,
+    "fields": {
+        "name": "Netherlands",
+        "details_md": null,
+        "programmatic_key": "NL",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".nl"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 665,
+    "fields": {
+        "name": "Norway",
+        "details_md": null,
+        "programmatic_key": "NO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".no"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 666,
+    "fields": {
+        "name": "Nepal",
+        "details_md": null,
+        "programmatic_key": "NP",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".np"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 667,
+    "fields": {
+        "name": "Nauru",
+        "details_md": null,
+        "programmatic_key": "NR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".nr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 668,
+    "fields": {
+        "name": "Niue",
+        "details_md": null,
+        "programmatic_key": "NU",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".nu"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 669,
+    "fields": {
+        "name": "New Zealand",
+        "details_md": null,
+        "programmatic_key": "NZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".nz"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 670,
+    "fields": {
+        "name": "Oman",
+        "details_md": null,
+        "programmatic_key": "OM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".om"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 671,
+    "fields": {
+        "name": "Panama",
+        "details_md": null,
+        "programmatic_key": "PA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pa"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 672,
+    "fields": {
+        "name": "Peru",
+        "details_md": null,
+        "programmatic_key": "PE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pe"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 673,
+    "fields": {
+        "name": "French Polynesia",
+        "details_md": null,
+        "programmatic_key": "PF",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pf"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 674,
+    "fields": {
+        "name": "Papua New Guinea",
+        "details_md": null,
+        "programmatic_key": "PG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 675,
+    "fields": {
+        "name": "Philippines",
+        "details_md": null,
+        "programmatic_key": "PH",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ph"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 676,
+    "fields": {
+        "name": "Pakistan",
+        "details_md": null,
+        "programmatic_key": "PK",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pk"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 677,
+    "fields": {
+        "name": "Poland",
+        "details_md": null,
+        "programmatic_key": "PL",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pl"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 678,
+    "fields": {
+        "name": "Saint Pierre and Miquelon",
+        "details_md": null,
+        "programmatic_key": "PM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 679,
+    "fields": {
+        "name": "Pitcairn",
+        "details_md": null,
+        "programmatic_key": "PN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 680,
+    "fields": {
+        "name": "Puerto Rico",
+        "details_md": null,
+        "programmatic_key": "PR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 681,
+    "fields": {
+        "name": "Palestine, State of",
+        "details_md": null,
+        "programmatic_key": "PS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ps"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 682,
+    "fields": {
+        "name": "Portugal",
+        "details_md": null,
+        "programmatic_key": "PT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pt"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 683,
+    "fields": {
+        "name": "Palau",
+        "details_md": null,
+        "programmatic_key": "PW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".pw"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 684,
+    "fields": {
+        "name": "Paraguay",
+        "details_md": null,
+        "programmatic_key": "PY",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".py"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 685,
+    "fields": {
+        "name": "Qatar",
+        "details_md": null,
+        "programmatic_key": "QA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".qa"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 686,
+    "fields": {
+        "name": "R\u00e9union",
+        "details_md": null,
+        "programmatic_key": "RE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".re"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 687,
+    "fields": {
+        "name": "Romania",
+        "details_md": null,
+        "programmatic_key": "RO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ro"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 688,
+    "fields": {
+        "name": "Serbia",
+        "details_md": null,
+        "programmatic_key": "RS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".rs"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 689,
+    "fields": {
+        "name": "Russian Federation",
+        "details_md": null,
+        "programmatic_key": "RU",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ru"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 690,
+    "fields": {
+        "name": "Rwanda",
+        "details_md": null,
+        "programmatic_key": "RW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".rw"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 691,
+    "fields": {
+        "name": "Saudi Arabia",
+        "details_md": null,
+        "programmatic_key": "SA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sa"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 692,
+    "fields": {
+        "name": "Solomon Islands",
+        "details_md": null,
+        "programmatic_key": "SB",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sb"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 693,
+    "fields": {
+        "name": "Seychelles",
+        "details_md": null,
+        "programmatic_key": "SC",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sc"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 694,
+    "fields": {
+        "name": "Sudan",
+        "details_md": null,
+        "programmatic_key": "SD",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sd"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 695,
+    "fields": {
+        "name": "Sweden",
+        "details_md": null,
+        "programmatic_key": "SE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".se"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 696,
+    "fields": {
+        "name": "Singapore",
+        "details_md": null,
+        "programmatic_key": "SG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 697,
+    "fields": {
+        "name": "Saint Helena, Ascension and Tristan da Cunha",
+        "details_md": null,
+        "programmatic_key": "SH",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sh"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 698,
+    "fields": {
+        "name": "Slovenia",
+        "details_md": null,
+        "programmatic_key": "SI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".si"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 699,
+    "fields": {
+        "name": "Svalbard and Jan Mayen",
+        "details_md": null,
+        "programmatic_key": "SJ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sj"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 700,
+    "fields": {
+        "name": "Slovakia",
+        "details_md": null,
+        "programmatic_key": "SK",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sk"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 701,
+    "fields": {
+        "name": "Sierra Leone",
+        "details_md": null,
+        "programmatic_key": "SL",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sl"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 702,
+    "fields": {
+        "name": "San Marino",
+        "details_md": null,
+        "programmatic_key": "SM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 703,
+    "fields": {
+        "name": "Senegal",
+        "details_md": null,
+        "programmatic_key": "SN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 704,
+    "fields": {
+        "name": "Somalia",
+        "details_md": null,
+        "programmatic_key": "SO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".so"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 705,
+    "fields": {
+        "name": "Suriname",
+        "details_md": null,
+        "programmatic_key": "SR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 706,
+    "fields": {
+        "name": "South Sudan",
+        "details_md": null,
+        "programmatic_key": "SS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ss"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 707,
+    "fields": {
+        "name": "Sao Tome and Principe",
+        "details_md": null,
+        "programmatic_key": "ST",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".st"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 708,
+    "fields": {
+        "name": "El Salvador",
+        "details_md": null,
+        "programmatic_key": "SV",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sv"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 709,
+    "fields": {
+        "name": "Sint Maarten (Dutch part)",
+        "details_md": null,
+        "programmatic_key": "SX",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sx"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 710,
+    "fields": {
+        "name": "Syrian Arab Republic",
+        "details_md": null,
+        "programmatic_key": "SY",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sy"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 711,
+    "fields": {
+        "name": "Eswatini",
+        "details_md": null,
+        "programmatic_key": "SZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".sz"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 712,
+    "fields": {
+        "name": "Turks and Caicos Islands",
+        "details_md": null,
+        "programmatic_key": "TC",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tc"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 713,
+    "fields": {
+        "name": "Chad",
+        "details_md": null,
+        "programmatic_key": "TD",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".td"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 714,
+    "fields": {
+        "name": "French Southern Territories",
+        "details_md": null,
+        "programmatic_key": "TF",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tf"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 715,
+    "fields": {
+        "name": "Togo",
+        "details_md": null,
+        "programmatic_key": "TG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 716,
+    "fields": {
+        "name": "Thailand",
+        "details_md": null,
+        "programmatic_key": "TH",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".th"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 717,
+    "fields": {
+        "name": "Tajikistan",
+        "details_md": null,
+        "programmatic_key": "TJ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tj"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 718,
+    "fields": {
+        "name": "Tokelau",
+        "details_md": null,
+        "programmatic_key": "TK",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tk"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 719,
+    "fields": {
+        "name": "Timor-Leste",
+        "details_md": null,
+        "programmatic_key": "TL",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tl"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 720,
+    "fields": {
+        "name": "Turkmenistan",
+        "details_md": null,
+        "programmatic_key": "TM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 721,
+    "fields": {
+        "name": "Tunisia",
+        "details_md": null,
+        "programmatic_key": "TN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 722,
+    "fields": {
+        "name": "Tonga",
+        "details_md": null,
+        "programmatic_key": "TO",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".to"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 723,
+    "fields": {
+        "name": "Turkey",
+        "details_md": null,
+        "programmatic_key": "TR",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tr"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 724,
+    "fields": {
+        "name": "Trinidad and Tobago",
+        "details_md": null,
+        "programmatic_key": "TT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tt"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 725,
+    "fields": {
+        "name": "Tuvalu",
+        "details_md": null,
+        "programmatic_key": "TV",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tv"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 726,
+    "fields": {
+        "name": "Taiwan, Province of China",
+        "details_md": null,
+        "programmatic_key": "TW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tw"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 727,
+    "fields": {
+        "name": "Tanzania, United Republic of",
+        "details_md": null,
+        "programmatic_key": "TZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".tz"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 728,
+    "fields": {
+        "name": "Ukraine",
+        "details_md": null,
+        "programmatic_key": "UA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ua"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 729,
+    "fields": {
+        "name": "Uganda",
+        "details_md": null,
+        "programmatic_key": "UG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ug"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 730,
+    "fields": {
+        "name": "United States Minor Outlying Islands",
+        "details_md": null,
+        "programmatic_key": "UM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ""
+    }
+},
+{
+    "model": "common.country",
+    "pk": 731,
+    "fields": {
+        "name": "United States of America",
+        "details_md": null,
+        "programmatic_key": "US",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".us"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 732,
+    "fields": {
+        "name": "Uruguay",
+        "details_md": null,
+        "programmatic_key": "UY",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".uy"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 733,
+    "fields": {
+        "name": "Uzbekistan",
+        "details_md": null,
+        "programmatic_key": "UZ",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".uz"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 734,
+    "fields": {
+        "name": "Holy See",
+        "details_md": null,
+        "programmatic_key": "VA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".va"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 735,
+    "fields": {
+        "name": "Saint Vincent and the Grenadines",
+        "details_md": null,
+        "programmatic_key": "VC",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".vc"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 736,
+    "fields": {
+        "name": "Venezuela (Bolivarian Republic of)",
+        "details_md": null,
+        "programmatic_key": "VE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ve"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 737,
+    "fields": {
+        "name": "Virgin Islands (British)",
+        "details_md": null,
+        "programmatic_key": "VG",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".vg"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 738,
+    "fields": {
+        "name": "Virgin Islands (U.S.)",
+        "details_md": null,
+        "programmatic_key": "VI",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".vi"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 739,
+    "fields": {
+        "name": "Viet Nam",
+        "details_md": null,
+        "programmatic_key": "VN",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".vn"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 740,
+    "fields": {
+        "name": "Vanuatu",
+        "details_md": null,
+        "programmatic_key": "VU",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".vu"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 741,
+    "fields": {
+        "name": "Wallis and Futuna",
+        "details_md": null,
+        "programmatic_key": "WF",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".wf"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 742,
+    "fields": {
+        "name": "Samoa",
+        "details_md": null,
+        "programmatic_key": "WS",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ws"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 743,
+    "fields": {
+        "name": "Yemen",
+        "details_md": null,
+        "programmatic_key": "YE",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".ye"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 744,
+    "fields": {
+        "name": "Mayotte",
+        "details_md": null,
+        "programmatic_key": "YT",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".yt"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 745,
+    "fields": {
+        "name": "South Africa",
+        "details_md": null,
+        "programmatic_key": "ZA",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".za"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 746,
+    "fields": {
+        "name": "Zambia",
+        "details_md": null,
+        "programmatic_key": "ZM",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".zm"
+    }
+},
+{
+    "model": "common.country",
+    "pk": 747,
+    "fields": {
+        "name": "Zimbabwe",
+        "details_md": null,
+        "programmatic_key": "ZW",
+        "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
+        "cc_tld": ".zw"
+    }
+}
+]
