@@ -1,0 +1,12 @@
+[
+{
+    "model": "relationships.companylinktype",
+    "pk": 1,
+    "fields": {
+        "name": "Corporate",
+        "details_md": "Corporate site",
+        "programmatic_key": "corporate",
+        "programmatic_details_md": ""
+    }
+}
+]
