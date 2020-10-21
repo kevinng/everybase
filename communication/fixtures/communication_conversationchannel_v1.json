@@ -1,0 +1,102 @@
+[
+{
+    "model": "communication.conversationchannel",
+    "pk": 1,
+    "fields": {
+        "name": "Skype Voice",
+        "details_md": "",
+        "programmatic_key": "skype_voice",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationchannel",
+    "pk": 2,
+    "fields": {
+        "name": "Skype Video",
+        "details_md": "",
+        "programmatic_key": "skype_video",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationchannel",
+    "pk": 3,
+    "fields": {
+        "name": "Skype Chat",
+        "details_md": "",
+        "programmatic_key": "skype_chat",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationchannel",
+    "pk": 4,
+    "fields": {
+        "name": "WhatsApp Voice",
+        "details_md": "",
+        "programmatic_key": "whatsapp_voice",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationchannel",
+    "pk": 5,
+    "fields": {
+        "name": "WhatsApp Video",
+        "details_md": "",
+        "programmatic_key": "whatsapp_video",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationchannel",
+    "pk": 6,
+    "fields": {
+        "name": "WhatsApp Chat",
+        "details_md": "",
+        "programmatic_key": "whatsapp_chat",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationchannel",
+    "pk": 7,
+    "fields": {
+        "name": "WeChat Voice",
+        "details_md": "",
+        "programmatic_key": "wechat_voice",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationchannel",
+    "pk": 8,
+    "fields": {
+        "name": "WeChat Video",
+        "details_md": "",
+        "programmatic_key": "wechat_video",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationchannel",
+    "pk": 9,
+    "fields": {
+        "name": "WeChat Chat",
+        "details_md": "",
+        "programmatic_key": "wechat_chat",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationchannel",
+    "pk": 10,
+    "fields": {
+        "name": "Email",
+        "details_md": "",
+        "programmatic_key": "email",
+        "programmatic_details_md": ""
+    }
+}
+]
