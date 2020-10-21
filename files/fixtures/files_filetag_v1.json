@@ -1,0 +1,68 @@
+[
+{
+    "model": "files.filetag",
+    "pk": 1,
+    "fields": {
+        "name": "Photo - Product",
+        "details_md": "",
+        "programmatic_key": "photo_product",
+        "programmatic_details_md": "",
+        "parent": null
+    }
+},
+{
+    "model": "files.filetag",
+    "pk": 2,
+    "fields": {
+        "name": "Video - Proof of Access",
+        "details_md": "Video used to 'proof access' to product (whether this approach works is another issue). Usually taken with sender name and date visible in the video.",
+        "programmatic_key": "video_proof_of_access",
+        "programmatic_details_md": "",
+        "parent": 3
+    }
+},
+{
+    "model": "files.filetag",
+    "pk": 3,
+    "fields": {
+        "name": "Media",
+        "details_md": "",
+        "programmatic_key": null,
+        "programmatic_details_md": "",
+        "parent": 3
+    }
+},
+{
+    "model": "files.filetag",
+    "pk": 4,
+    "fields": {
+        "name": "Video - Product",
+        "details_md": "Video of the product. Often used if the video of the product is not a 'proof of access'.",
+        "programmatic_key": "video_product",
+        "programmatic_details_md": "",
+        "parent": 3
+    }
+},
+{
+    "model": "files.filetag",
+    "pk": 5,
+    "fields": {
+        "name": "Certification",
+        "details_md": "",
+        "programmatic_key": null,
+        "programmatic_details_md": "",
+        "parent": null
+    }
+},
+{
+    "model": "files.filetag",
+    "pk": 6,
+    "fields": {
+        "name": "Price List",
+        "details_md": "",
+        "programmatic_key": "price_list",
+        "programmatic_details_md": "",
+        "parent": null
+    }
+}
+]
