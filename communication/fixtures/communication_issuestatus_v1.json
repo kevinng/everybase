@@ -6,7 +6,8 @@
         "name": "Scheduled to Resolve",
         "details_md": "",
         "programmatic_key": "scheduled_to_resolve",
-        "programmatic_details_md": ""
+        "programmatic_details_md": "",
+        "parent": 5
     }
 },
 {
@@ -16,7 +17,8 @@
         "name": "Resolving",
         "details_md": "",
         "programmatic_key": "resolving",
-        "programmatic_details_md": ""
+        "programmatic_details_md": "",
+        "parent": 5
     }
 },
 {
@@ -26,7 +28,8 @@
         "name": "Closed - Resolved",
         "details_md": "",
         "programmatic_key": "closed_resolved",
-        "programmatic_details_md": ""
+        "programmatic_details_md": "",
+        "parent": 5
     }
 },
 {
@@ -36,7 +39,19 @@
         "name": "Closed - Unresolved",
         "details_md": "",
         "programmatic_key": "closed_unresolved",
-        "programmatic_details_md": ""
+        "programmatic_details_md": "",
+        "parent": 5
+    }
+},
+{
+    "model": "communication.issuestatus",
+    "pk": 5,
+    "fields": {
+        "name": "General",
+        "details_md": "",
+        "programmatic_key": null,
+        "programmatic_details_md": "",
+        "parent": null
     }
 }
 ]
