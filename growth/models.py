@@ -17,8 +17,10 @@ class GmassCampaignResult(Standard):
     bounce_reason = tf(null=True)
     gmail_response = cf(null=True)
 
-    email = fk('relationships.Email', 'gmass_campaign_results')
-    gmass_campaign = fk('GmassCampaign', 'results')
+    email = fk('relationships.Email',
+        'gmass_campaign_results', null=True)
+    gmass_campaign = fk('GmassCampaign',
+        'results', null=True)
 
     def __str__(self):
         return f'({self.email_address} [{self.id}])'
