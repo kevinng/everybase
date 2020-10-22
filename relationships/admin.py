@@ -122,8 +122,8 @@ class PersonAdmin(admin.ModelAdmin):
 @admin.register(Link)
 class LinkAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['last_visited_okay', 'link']
-    list_editable = standard_list_editable + ['last_visited_okay', 'link']
+    list_display = standard_list_display + ['verified', 'link']
+    list_editable = standard_list_editable + ['verified', 'link']
     list_per_page = 1000
     list_filter = standard_list_filter
     search_fields = ['id', 'link']
@@ -134,7 +134,7 @@ class LinkAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = standard_readonly_fields
     fieldsets = standard_fieldsets + [
-        ('Details', {'fields': ['last_visited_okay', 'link']})
+        ('Details', {'fields': ['verified', 'link']})
     ]
 
 relationship_list_display = standard_list_display + ['details_md']

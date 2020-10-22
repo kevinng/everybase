@@ -278,7 +278,7 @@ class Email(Standard):
         return f'({self.email} [{self.id}])'
 
 class Link(Standard):
-    last_visited_okay = dtf(null=True)
+    verified = dtf(null=True)
     link = models.URLField()
 
     def __str__(self):
