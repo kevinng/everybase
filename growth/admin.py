@@ -10,18 +10,18 @@ from common.admin import (standard_list_display, standard_list_filter,
 @admin.register(GmassCampaignResult)
 class GmassCampaignResultAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['first_name',
+    list_display = standard_list_display + ['email_address', 'first_name',
         'last_name', 'name_1', 'opens', 'clicks', 'replied', 'unsubscribed',
         'bounced', 'blocked', 'over_gmail_limit', 'bounce_reason',
         'gmail_response', 'email', 'gmass_campaign']
-    list_editable = standard_list_editable + ['first_name', 'last_name',
-        'name_1', 'opens', 'clicks', 'replied', 'unsubscribed', 'bounced',
-        'blocked', 'over_gmail_limit', 'bounce_reason', 'gmail_response',
-        'email', 'gmass_campaign']
+    list_editable = standard_list_editable + ['email_address', 'first_name',
+        'last_name', 'name_1', 'opens', 'clicks', 'replied', 'unsubscribed',
+        'bounced', 'blocked', 'over_gmail_limit', 'bounce_reason',
+        'gmail_response', 'email', 'gmass_campaign']
     list_per_page = 1000
     list_filter = standard_list_filter + ['replied', 'unsubscribed', 'bounced',
         'blocked', 'over_gmail_limit']
-    search_fields = ['id', 'first_name', 'last_name', 'name_1',
+    search_fields = ['id', 'email_address', 'first_name', 'last_name', 'name_1',
         'opens', 'clicks', 'replied', 'unsubscribed', 'bounced', 'blocked',
         'over_gmail_limit', 'bounce_reason', 'gmail_response', 'email',
         'gmass_campaign']
