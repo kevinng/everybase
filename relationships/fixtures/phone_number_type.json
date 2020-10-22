@@ -1,0 +1,52 @@
+[
+{
+    "model": "relationships.phonenumbertype",
+    "pk": 1,
+    "fields": {
+        "name": "WhatsApp",
+        "details_md": "",
+        "programmatic_key": "whatsapp",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "relationships.phonenumbertype",
+    "pk": 2,
+    "fields": {
+        "name": "WeChat",
+        "details_md": "",
+        "programmatic_key": "wechat",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "relationships.phonenumbertype",
+    "pk": 3,
+    "fields": {
+        "name": "Telegram",
+        "details_md": "",
+        "programmatic_key": "telegram",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "relationships.phonenumbertype",
+    "pk": 4,
+    "fields": {
+        "name": "Landline",
+        "details_md": "",
+        "programmatic_key": "landline",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "relationships.phonenumbertype",
+    "pk": 5,
+    "fields": {
+        "name": "Mobile",
+        "details_md": "",
+        "programmatic_key": "mobile",
+        "programmatic_details_md": ""
+    }
+}
+]
