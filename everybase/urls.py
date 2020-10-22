@@ -23,6 +23,7 @@ urlpatterns = [
     # path('documents/', include('documents.urls')),
     # path('materials/', include('materials.urls')),
     # path('products/', include('products.urls')),
+    path('growth/', include('growth.urls')),
     path('i/', include('cloaker.urls')),
     path('', include('lander.urls')),
     path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
