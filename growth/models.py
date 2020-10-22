@@ -1,6 +1,6 @@
 from django.db import models
-from common.models import fk, m2m, m2mt, tf, cf, ff, dtf, url, email
-from common.models import Standard, Choice, short_text
+from common.models import (fk, m2m, m2mt, tf, cf, ff, dtf, url, email, Standard,
+    Choice, short_text)
 
 class GmassCampaignResult(Standard):
     email_address = email(null=True)

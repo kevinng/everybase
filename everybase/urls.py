@@ -23,9 +23,18 @@ urlpatterns = [
     # path('documents/', include('documents.urls')),
     # path('materials/', include('materials.urls')),
     # path('products/', include('products.urls')),
+
     path('growth/', include('growth.urls')),
+
+    # Cloaked links
     path('i/', include('cloaker.urls')),
+
+    # Landing page
     path('', include('lander.urls')),
+
+    # Django admin, with ofuscated URL
     path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
-    # path('api-auth/', include('rest_framework.urls'))
+
+    # Django Rest Framework login
+    path('api-auth/', include('rest_framework.urls'))
 ]
