@@ -1,0 +1,22 @@
+[
+{
+    "model": "relationships.personlinktype",
+    "pk": 1,
+    "fields": {
+        "name": "Data Source",
+        "details_md": "URL where data for this person is sourced.",
+        "programmatic_key": "data_source",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "relationships.personlinktype",
+    "pk": 2,
+    "fields": {
+        "name": "Given By",
+        "details_md": "URL is given by this person.",
+        "programmatic_key": "given_by",
+        "programmatic_details_md": ""
+    }
+}
+]
