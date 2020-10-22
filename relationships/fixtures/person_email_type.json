@@ -1,0 +1,22 @@
+[
+{
+    "model": "relationships.personemailtype",
+    "pk": 1,
+    "fields": {
+        "name": "Non-Personal",
+        "details_md": "This person has access to this non-personal email",
+        "programmatic_key": "personal",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "relationships.personemailtype",
+    "pk": 2,
+    "fields": {
+        "name": "Personal",
+        "details_md": "This email is this person's personal email",
+        "programmatic_key": "personal",
+        "programmatic_details_md": ""
+    }
+}
+]
