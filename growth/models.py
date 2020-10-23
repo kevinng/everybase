@@ -297,4 +297,26 @@ class ChemicalBookResult(Standard):
         verbose_name = 'Chemical Book Result'
         verbose_name_plural = 'Chemical Book Results'
 
+class LookChemResult(Standard):
+    coy_name = cf(null=True)
+    contact_person = cf(null=True)
+    street_address = cf(null=True)
+    city = cf(null=True)
+    province_state = cf(null=True)
+    country_region = cf(null=True)
+    zip_code = cf(null=True)
+    business_type = cf(null=True)
+    tel = cf(null=True)
+    mobile = cf(null=True)
+    email = cf(null=True)
+    website = cf(null=True)
+    qq = cf(null=True)
+
+    # companies
+    # persons
+    # addresses
+    # phone_numbers
+    # emails
+    # links
+
 # --- End: Growth models ---
