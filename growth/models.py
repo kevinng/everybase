@@ -457,10 +457,10 @@ class ZeroBounceResult(Standard):
     last_name = cf(null=True)
     gender = cf(null=True)
     free_email = cf(null=True)
-    mx_found = cf('MX found', null=True)
-    mx_record = cf('MX record', null=True)
-    smtp_provider = cf('SMTP provider', null=True)
-    did_you_mean = cf('Did you mean?', null=True)
+    mx_found = cf(null=True)
+    mx_record = cf(null=True)
+    smtp_provider = cf(null=True)
+    did_you_mean = cf(null=True)
 
     email = fk('relationships.Email', 'zero_bounce_results', null=True)
 
@@ -476,8 +476,7 @@ class DataSource(Choice):
         'relationships.Email',
         'SourcedEmail',
         'source', 'email',
-        'data_sources'
-    )
+        'data_sources')
 
 class SourcedEmail(Standard):
     sourced = dtf(null=True)
@@ -488,13 +487,13 @@ class SourcedEmail(Standard):
         return f'({self.email_address} [{self.id}])'
 
 class ChemicalBookResult(Standard):
-    source_url = cf('Source URL', null=True)
-    coy_name = cf('Company name', null=True)
-    coy_internal_href = cf('Details page URL', null=True)
-    coy_tel = cf('Company telephone', null=True)
-    coy_email = cf('Company email', null=True)
-    coy_href = cf('Company website', null=True)
-    coy_nat = cf('Country', null=True)
+    source_url = cf(null=True)
+    coy_name = cf(null=True)
+    coy_internal_href = cf(null=True)
+    coy_tel = cf(null=True)
+    coy_email = cf(null=True)
+    coy_href = cf(null=True)
+    coy_nat = cf(null=True)
 
     links = m2mt(
         'relationships.Link',
