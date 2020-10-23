@@ -603,11 +603,11 @@ class WorldOfChemicalsResult(Standard):
     coy_alt_email_3 = cf(null=True)
     coy_website = cf(null=True)
 
-    # links = m2mt(
-    #     'relationships.Link',
-    #     'WorldOfChemicalsResultLink',
-    #     'world_of_chemicals_result', 'link',
-    #     'world_of_chemcials_results')
+    links = m2mt(
+        'relationships.Link',
+        'WorldOfChemicalsResultLink',
+        'world_of_chemicals_result', 'link',
+        'world_of_chemcials_results')
 
 
 
