@@ -269,10 +269,10 @@ class WorldOfChemicalsResultLink(Relationship):
         return f'({self.rtype}, {self.world_of_chemicals_result}, {self.link} \
             [{self.id}])'
 
-# class WorldOfChemicalsResultCompanyType(Choice):
-#     class Meta:
-#         verbose_name = 'WorldOfChemicalsResult-Company Type'
-#         verbose_name_plural = 'WorldOfChemicalsResult-Company Types'
+class WorldOfChemicalsResultCompanyType(Choice):
+    class Meta:
+        verbose_name = 'WorldOfChemicalsResult-Company Type'
+        verbose_name_plural = 'WorldOfChemicalsResult-Company Types'
 
 # class WorldOfChemicalResultCompany(Relationship):
 #     rtype = fk('WorldOfChemicalsResultCompanyType',
