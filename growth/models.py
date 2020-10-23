@@ -281,13 +281,13 @@ class ChemicalBookResult(Standard):
         'chemical_book_result', 'phone_number',
         'chemical_book_results')
 
-    email = m2mt(
+    emails = m2mt(
         'relationships.Email',
         'ChemicalBookResultEmail',
         'chemical_book_result', 'email',
         'chemical_book_results')
 
-    country = m2mt(
+    countries = m2mt(
         'common.Country',
         'ChemicalBookResultCountry',
         'chemical_book_result', 'country',
