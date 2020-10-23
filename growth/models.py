@@ -122,6 +122,132 @@ class ChemicalBookResultCountry(Relationship):
         return f'({self.rtype}, {self.chemical_book_result}, \
             {self.country} [{self.id}])'
 
+class LookChemResultCompanyType(Choice):
+    class Meta:
+        verbose_name = 'LookChemResult-Company Type'
+        verbose_name_plural = 'LookChemResult-Company Types'
+
+class LookChemResultCompany(Relationship):
+    rtype = fk('LookChemResultCompanyType',
+        'lookchemresult_company_relationships',
+        'LookChemResult-Company Type')
+    lookchem_result = fk('LookChemResult',
+        'lookchemresult_company_relationships')
+    company = fk('relationships.Company',
+        'lookchemresult_company_relationships')
+        
+    class Meta:
+        verbose_name = 'LookChemResult-Company Relationship'
+        verbose_name_plural = 'LookChemResult-Company Relationships'
+
+    def __str__(self):
+        return f'({self.rtype}, {self.lookchem_result}, {self.company} \
+            [{self.id}])'
+
+class LookChemResultPersonType(Choice):
+    class Meta:
+        verbose_name = 'LookChemResult-Person Type'
+        verbose_name_plural = 'LookChemResult-Person Types'
+
+class LookChemResultPerson(Relationship):
+    rtype = fk('LookChemResultPersonType',
+        'lookchemresult_person_relationships',
+        'LookChemResult-Person Type')
+    lookchem_result = fk('LookChemResult',
+        'lookchemresult_person_relationships')
+    person = fk('relationships.Person',
+        'lookchemresult_person_relationships')
+        
+    class Meta:
+        verbose_name = 'LookChemResult-Person Relationship'
+        verbose_name_plural = 'LookChemResult-Person Relationships'
+
+    def __str__(self):
+        return f'({self.rtype}, {self.lookchem_result}, {self.person} \
+            [{self.id}])'
+
+class LookChemResultAddressType(Choice):
+    class Meta:
+        verbose_name = 'LookChemResult-Address Type'
+        verbose_name_plural = 'LookChemResult-Address Types'
+
+class LookChemResultAddress(Relationship):
+    rtype = fk('LookChemResultAddressType',
+        'lookchemresult_address_relationships',
+        'LookChemResult-Address Type')
+    lookchem_result = fk('LookChemResult',
+        'lookchemresult_address_relationships')
+    address = fk('relationships.Address',
+        'lookchemresult_address_relationships')
+        
+    class Meta:
+        verbose_name = 'LookChemResult-Address Relationship'
+        verbose_name_plural = 'LookChemResult-Address Relationships'
+
+    def __str__(self):
+        return f'({self.rtype}, {self.lookchem_result}, {self.address} \
+            [{self.id}])'
+
+class LookChemResultPhoneNumberType(Choice):
+    class Meta:
+        verbose_name = 'LookChemResult-PhoneNumber Type'
+        verbose_name_plural = 'LookChemResult-PhoneNumber Types'
+
+class LookChemResultPhoneNumber(Relationship):
+    rtype = fk('LookChemResultPhoneNumberType',
+        'lookchemresult_phonenumber_relationships',
+        'LookChemResult-PhoneNumber Type')
+    lookchem_result = fk('LookChemResult',
+        'lookchemresult_phonenumber_relationships')
+    phone_number = fk('relationships.PhoneNumber',
+        'lookchemresult_phonenumber_relationships')
+        
+    class Meta:
+        verbose_name = 'LookChemResult-PhoneNumber Relationship'
+        verbose_name_plural = 'LookChemResult-PhoneNumber Relationships'
+
+    def __str__(self):
+        return f'({self.rtype}, {self.lookchem_result}, {self.phone_number} \
+            [{self.id}])'
+
+class LookChemResultEmailType(Choice):
+    class Meta:
+        verbose_name = 'LookChemResult-Email Type'
+        verbose_name_plural = 'LookChemResult-Email Types'
+
+class LookChemResultEmail(Relationship):
+    rtype = fk('LookChemResultEmailType', 'lookchemresult_email_relationships',
+        'LookChemResult-Email Type')
+    lookchem_result = fk('LookChemResult', 'lookchemresult_email_relationships')
+    email = fk('relationships.Email', 'lookchemresult_email_relationships')
+        
+    class Meta:
+        verbose_name = 'LookChemResult-Email Relationship'
+        verbose_name_plural = 'LookChemResult-Email Relationships'
+
+    def __str__(self):
+        return f'({self.rtype}, {self.lookchem_result}, {self.email} \
+            [{self.id}])'
+
+class LookChemResultLinkType(Choice):
+    class Meta:
+        verbose_name = 'LookChemResult-Link Type'
+        verbose_name_plural = 'LookChemResult-Link Types'
+
+class LookChemResultLink(Relationship):
+    rtype = fk('LookChemResultEmailType', 'lookchemresult_link_relationships',
+        'LookChemResult-Link Type')
+    lookchem_result = fk('LookChemResult', 'lookchemresult_link_relationships')
+    link = fk('relationships.Link', 'lookchemresult_link_relationships')
+        
+    class Meta:
+        verbose_name = 'LookChemResult-Link Relationship'
+        verbose_name_plural = 'LookChemResult-Link Relationships'
+
+    def __str__(self):
+        return f'({self.rtype}, {self.lookchem_result}, {self.link} \
+            [{self.id}])'
+
 # --- End: Relationships ---
 
 # --- Start: Growth models ---
@@ -312,11 +438,40 @@ class LookChemResult(Standard):
     website = cf(null=True)
     qq = cf(null=True)
 
-    # companies
-    # persons
-    # addresses
-    # phone_numbers
-    # emails
-    # links
+    companies = m2mt(
+        'relationships.Company',
+        'LookChemResultCompany',
+        'lookchem_result', 'company',
+        'lookchem_results')
+    
+    persons = m2mt(
+        'relationships.Person',
+        'LookChemResultPerson',
+        'lookchem_result', 'person',
+        'lookchem_results')
+
+    addresses = m2mt(
+        'relationships.Address',
+        'LookChemResultAddress',
+        'lookchem_result', 'address',
+        'lookchem_results')
+
+    phone_numbers = m2mt(
+        'relationships.PhoneNumber',
+        'LookChemResultPhoneNumber',
+        'lookchem_result', 'phone_number',
+        'lookchem_results')
+
+    emails = m2mt(
+        'relationships.Email',
+        'LookChemResultEmail',
+        'lookchem_result', 'email',
+        'lookchem_results')
+
+    links = m2mt(
+        'relationships.Link',
+        'LookChemResultLink',
+        'lookchem_result', 'link',
+        'lookchem_results')
 
 # --- End: Growth models ---
