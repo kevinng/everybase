@@ -248,6 +248,114 @@ class LookChemResultLink(Relationship):
         return f'({self.rtype}, {self.lookchem_result}, {self.link} \
             [{self.id}])'
 
+class WorldOfChemicalsResultLinkType(Choice):
+    class Meta:
+        verbose_name = 'WorldOfChemicalsResult-Link Type'
+        verbose_name_plural = 'WorldOfChemicalsResult-Link Types'
+
+class WorldOfChemicalsResultLink(Relationship):
+    rtype = fk('WorldOfChemicalsResultLinkType',
+        'worldofchemicalsresult_link_relationships',
+        'WorldOfChemicalsResult-Link Type')
+    world_of_chemicals_result = fk('WorldOfChemicalsResult',
+        'worldofchemicalsresult_link_relationships')
+    link = fk('relationships.Link', 'worldofchemicalsresult_relationships')
+        
+    class Meta:
+        verbose_name = 'WorldOfChemicalsResult-Link Relationship'
+        verbose_name_plural = 'WorldOfChemicalsResult-Link Relationships'
+
+    def __str__(self):
+        return f'({self.rtype}, {self.world_of_chemicals_result}, {self.link} \
+            [{self.id}])'
+
+# class WorldOfChemicalsResultCompanyType(Choice):
+#     class Meta:
+#         verbose_name = 'WorldOfChemicalsResult-Company Type'
+#         verbose_name_plural = 'WorldOfChemicalsResult-Company Types'
+
+# class WorldOfChemicalResultCompany(Relationship):
+#     rtype = fk('WorldOfChemicalsResultCompanyType',
+#         'worldofchemicalsresult_company_relationships',
+#         'WorldOfChemicalsResult-Company Type')
+#     world_of_chemicals_result = fk('WorldOfChemicalsResult',
+#         'worldofchemicalsresult_company_relationships')
+#     company = fk('relationships.Company',
+#         'worldofchemicalsresult_relationships')
+        
+#     class Meta:
+#         verbose_name = 'WorldOfChemicalsResult-Company Relationship'
+#         verbose_name_plural = 'WorldOfChemicalsResult-Company Relationships'
+
+#     def __str__(self):
+#         return f'({self.rtype}, {self.world_of_chemicals_result}, \
+#             {self.company} [{self.id}])'
+
+# class WorldOfChemicalsResultAddressType(Choice):
+#     class Meta:
+#         verbose_name = 'WorldOfChemicalsResult-Address Type'
+#         verbose_name_plural = 'WorldOfChemicalsResult-Address Types'
+
+# class WorldOfChemicalResultAddress(Relationship):
+#     rtype = fk('WorldOfChemicalsResultAddressType',
+#         'worldofchemicalsresult_address_relationships',
+#         'WorldOfChemicalsResult-Address Type')
+#     world_of_chemicals_result = fk('WorldOfChemicalsResult',
+#         'worldofchemicalsresult_address_relationships')
+#     address = fk('relationships.Address',
+#         'worldofchemicalsresult_relationships')
+        
+#     class Meta:
+#         verbose_name = 'WorldOfChemicalsResult-Address Relationship'
+#         verbose_name_plural = 'WorldOfChemicalsResult-Address Relationships'
+
+#     def __str__(self):
+#         return f'({self.rtype}, {self.world_of_chemicals_result}, \
+#             {self.address} [{self.id}])'
+
+# class WorldOfChemicalsResultPhoneNumberType(Choice):
+#     class Meta:
+#         verbose_name = 'WorldOfChemicalsResult-PhoneNumber Type'
+#         verbose_name_plural = 'WorldOfChemicalsResult-PhoneNumber Types'
+
+# class WorldOfChemicalResultPhoneNumber(Relationship):
+#     rtype = fk('WorldOfChemicalsResultPhoneNumberType',
+#         'worldofchemicalsresult_phonenumber_relationships',
+#         'WorldOfChemicalsResult-PhoneNumber Type')
+#     world_of_chemicals_result = fk('WorldOfChemicalsResult',
+#         'worldofchemicalsresult_phonenumber_relationships')
+#     phone_number = fk('relationships.PhoneNumber',
+#         'worldofchemicalsresult_relationships')
+        
+#     class Meta:
+#         verbose_name = 'WorldOfChemicalsResult-PhoneNumber Relationship'
+#         verbose_name_plural = 'WorldOfChemicalsResult-PhoneNumber Relationships'
+
+#     def __str__(self):
+#         return f'({self.rtype}, {self.world_of_chemicals_result}, \
+#             {self.phone_number} [{self.id}])'
+
+# class WorldOfChemicalsResultEmailType(Choice):
+#     class Meta:
+#         verbose_name = 'WorldOfChemicalsResult-Email Type'
+#         verbose_name_plural = 'WorldOfChemicalsResult-Email Types'
+
+# class WorldOfChemicalResultEmail(Relationship):
+#     rtype = fk('WorldOfChemicalsResultEmailType',
+#         'worldofchemicalsresult_email_relationships',
+#         'WorldOfChemicalsResult-Email Type')
+#     world_of_chemicals_result = fk('WorldOfChemicalsResult',
+#         'worldofchemicalsresult_email_relationships')
+#     email = fk('relationships.Email', 'worldofchemicalsresult_relationships')
+        
+#     class Meta:
+#         verbose_name = 'WorldOfChemicalsResult-Email Relationship'
+#         verbose_name_plural = 'WorldOfChemicalsResult-Email Relationships'
+
+#     def __str__(self):
+#         return f'({self.rtype}, {self.world_of_chemicals_result}, \
+#             {self.email} [{self.id}])'
+
 # --- End: Relationships ---
 
 # --- Start: Growth models ---
@@ -495,7 +603,15 @@ class WorldOfChemicalsResult(Standard):
     coy_alt_email_3 = cf(null=True)
     coy_website = cf(null=True)
 
-    # links
+    # links = m2mt(
+    #     'relationships.Link',
+    #     'WorldOfChemicalsResultLink',
+    #     'world_of_chemicals_result', 'link',
+    #     'world_of_chemcials_results')
+
+
+
+
     # companies
     # addresses
     # phone_numbers
