@@ -372,7 +372,7 @@ class GmassCampaignResult(Standard):
     bounced = cf(null=True)
     blocked = cf(null=True)
     over_gmail_limit = cf(null=True)
-    bounce_reason = tf()
+    bounce_reason = tf(null=True)
     gmail_response = cf(null=True)
 
     email = fk('relationships.Email',
@@ -586,7 +586,7 @@ class WorldOfChemicalsResult(Standard):
     source_url = cf(null=True)
     coy_id = cf(null=True)
     coy_name = cf(null=True)
-    coy_about_html = tf()
+    coy_about_html = tf(null=True)
     coy_pri_contact = cf(null=True)
     coy_addr_1 = cf(null=True)
     coy_addr_2 = cf(null=True)
