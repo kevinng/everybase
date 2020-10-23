@@ -19,21 +19,21 @@ class ChemicalBookResultLinkType(Choice):
         verbose_name = 'ChemicalBookResult-Link Type'
         verbose_name_plural = 'ChemicalBookResult-Link Types'
 
-# class ChemicalBookResultLink(Relationship):
-#     rtype = fk('ChemicalBookResultLinkType',
-#         'chemicalbookresult_link_relationships',
-#         'ChemicalBookResult-Link Type')
-#     chemical_book_result = fk('ChemicalBookResult',
-#         'chemicalbookresult_link_relationships')
-#     link = fk('relationships.Link', 'chemicalbookresult_link_relationships')
+class ChemicalBookResultLink(Relationship):
+    rtype = fk('ChemicalBookResultLinkType',
+        'chemicalbookresult_link_relationships',
+        'ChemicalBookResult-Link Type')
+    chemical_book_result = fk('ChemicalBookResult',
+        'chemicalbookresult_link_relationships')
+    link = fk('relationships.Link', 'chemicalbookresult_link_relationships')
 
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-Link Relationship'
-#         verbose_name_plural = 'ChemicalBookResult-Link Relationships'
+    class Meta:
+        verbose_name = 'ChemicalBookResult-Link Relationship'
+        verbose_name_plural = 'ChemicalBookResult-Link Relationships'
 
-#     def __str__(self):
-#         return f'({self.rtype}, {self.chemical_book_result}, {self.link} \
-#             [{self.id}])'
+    def __str__(self):
+        return f'({self.rtype}, {self.chemical_book_result}, {self.link} \
+            [{self.id}])'
 
 # class ChemicalBookResultCompanyType(Choice):
 #     class Meta:
@@ -262,11 +262,12 @@ class ChemicalBookResult(Standard):
     coy_href = cf('Company website', null=True)
     coy_nat = cf('Country', null=True)
 
-    # links = m2mt(
-    #     'relationships.Link',
-    #     'ChemicalBookResultLink',
-    #     'chemical_book_result', 'link',
-    #     'chemical_book_results')
+    links = m2mt(
+        'relationships.Link',
+        'ChemicalBookResultLink',
+        'chemical_book_result', 'link',
+        'chemical_book_results'
+    )
 
     # companies = m2mt(
     #     'relationships.Company',
