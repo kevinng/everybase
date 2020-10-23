@@ -1,84 +1,11 @@
 from django.db import models
-# from common.models import (fk, m2m, m2mt, tf, cf, ff, dtf, url, email, Standard,
-#     Choice, short_text)
-
-from common.models import Standard, Choice, short_text
-
-# --- Start: Helper lambda for model field declarations ---
-
-# Foreign key
-fk = lambda klass, name=None, verbose_name=None, null=False: models.ForeignKey(
-    klass,
-    on_delete=models.PROTECT,
-    related_name=name,
-    related_query_name=name,
-    verbose_name=verbose_name,
-    null=null,
-    blank=null
-)
-
-# Many-to-many
-m2m = lambda klass, name, blank=False: models.ManyToManyField(
-    klass,
-    related_name=name,
-    related_query_name=name,
-    blank=blank
-)
-
-# Many-to-many through
-m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
-    klass,
-    through=thru,
-    through_fields=(f1, f2),
-    related_name=name,
-    related_query_name=name
-)
-
-# Integer
-pintf = lambda verbose_name=None, null=False: models.PositiveIntegerField(
-    verbose_name=verbose_name, null=null, blank=null)
-
-# Text
-tf = lambda verbose_name=None, required=False: models.TextField(
-    verbose_name=verbose_name, null=(not required), blank=(not required))
-
-# Char
-cf = lambda verbose_name=None, null=False: models.CharField(
-    verbose_name=verbose_name, max_length=100, null=null, blank=null)
-
-# Float
-ff = lambda verbose_name=None, null=False: models.FloatField(
-    verbose_name=verbose_name, null=null, blank=null)
-
-# Datetime
-dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
-    verbose_name=verbose_name, null=null, blank=null, default=default)
-
-dtf_now_add = lambda verbose_name=None, null=False, auto_now_add=True: models.\
-    DateTimeField(verbose_name=verbose_name, null=null, blank=null,
-    auto_now_add=auto_now_add)
-
-dtf_now = lambda verbose_name=None, null=False, auto_now=True: models.\
-    DateTimeField(verbose_name=verbose_name, null=null, blank=null,
-    auto_now=auto_now)
-
-# URL
-
-url = lambda verbose_name=None, null=False: models.URLField(
-    verbose_name=verbose_name, null=null, blank=null)
-
-# Email
-
-email = lambda verbose_name=None, null=False: models.EmailField(
-    verbose_name=verbose_name, null=null, blank=null)
-
-# --- End: Helper lambda for model field declarations ---
-
+from common.models import (fk, m2m, m2mt, tf, cf, ff, dtf, url, email, Standard,
+    Choice, short_text)
 
 # --- Start: Abstract classes ---
 
 class Relationship(Standard):
-    details_md = tf('Details in Markdown')
+    details_md = tf('Details in Markdown', True)
 
     class Meta:
         abstract = True
@@ -445,7 +372,7 @@ class GmassCampaignResult(Standard):
     bounced = cf(null=True)
     blocked = cf(null=True)
     over_gmail_limit = cf(null=True)
-    bounce_reason = tf()
+    bounce_reason = tf(null=True)
     gmail_response = cf(null=True)
 
     email = fk('relationships.Email',
@@ -659,7 +586,7 @@ class WorldOfChemicalsResult(Standard):
     source_url = cf(null=True)
     coy_id = cf(null=True)
     coy_name = cf(null=True)
-    coy_about_html = tf()
+    coy_about_html = tf(null=True)
     coy_pri_contact = cf(null=True)
     coy_addr_1 = cf(null=True)
     coy_addr_2 = cf(null=True)
