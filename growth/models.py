@@ -14,10 +14,10 @@ class Relationship(Standard):
 
 # --- Start: Relationships ---
 
-# class ChemicalBookResultLinkType(Choice):
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-Link Type'
-#         verbose_name_plural = 'ChemicalBookResult-Link Types'
+class ChemicalBookResultLinkType(Choice):
+    class Meta:
+        verbose_name = 'ChemicalBookResult-Link Type'
+        verbose_name_plural = 'ChemicalBookResult-Link Types'
 
 # class ChemicalBookResultLink(Relationship):
 #     rtype = fk('ChemicalBookResultLinkType',
@@ -294,6 +294,6 @@ class ChemicalBookResult(Standard):
 
     class Meta:
         verbose_name = 'Chemical Book Result'
-        verbose_names = 'Chemical Book Results'
+        verbose_name_plural = 'Chemical Book Results'
 
 # --- End: Growth models ---
