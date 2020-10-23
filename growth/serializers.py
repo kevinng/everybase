@@ -44,7 +44,7 @@ class ZeroBounceResultSerializer(serializers.ModelSerializer):
 class DataSourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataSource
-        fields = ['id'] + standard_fieldnames + ['emails']
+        fields = ['id'] + choice_fieldnames + ['emails']
 
 class SourcedEmailSerializer(serializers.ModelSerializer):
     class Meta:

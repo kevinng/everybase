@@ -2,6 +2,130 @@ from django.db import models
 from common.models import (fk, m2m, m2mt, tf, cf, ff, dtf, url, email, Standard,
     Choice, short_text)
 
+# --- Start: Abstract classes ---
+
+class Relationship(Standard):
+    details_md = tf('Details in Markdown')
+
+    class Meta:
+        abstract = True
+
+# --- End: Abstract classes ---
+
+# --- Start: Relationships ---
+
+# class ChemicalBookResultLinkType(Choice):
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-Link Type'
+#         verbose_name_plural = 'ChemicalBookResult-Link Types'
+
+# class ChemicalBookResultLink(Relationship):
+#     rtype = fk('ChemicalBookResultLinkType',
+#         'chemicalbookresult_link_relationships',
+#         'ChemicalBookResult-Link Type')
+#     chemical_book_result = fk('ChemicalBookResult',
+#         'chemicalbookresult_link_relationships')
+#     link = fk('relationships.Link', 'chemicalbookresult_link_relationships')
+
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-Link Relationship'
+#         verbose_name_plural = 'ChemicalBookResult-Link Relationships'
+
+#     def __str__(self):
+#         return f'({self.rtype}, {self.chemical_book_result}, {self.link} \
+#             [{self.id}])'
+
+# class ChemicalBookResultCompanyType(Choice):
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-Company Type'
+#         verbose_name_plural = 'ChemicalBookResult-Company Types'
+
+# class ChemicalBookResultCompany(Relationship):
+#     rtype = fk('ChemicalBookResultCompanyType',
+#         'chemicalbookresult_company_relationships',
+#         'ChemicalBookResult-Company Type')
+#     chemical_book_result = fk('ChemicalBookResult',
+#         'chemicalbookresult_company_relationships')
+#     company = fk('relationships.Company',
+#         'chemicalbookresult_company_relationships')
+
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-Company Relationship'
+#         verbose_name_plural = 'ChemicalBookResult-Company Relationships'
+
+#     def __str__(self):
+#         return f'({self.rtype}, {self.chemical_book_result}, {self.company} \
+#             [{self.id}])'
+
+# class ChemicalBookResultPhoneNumberType(Choice):
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-PhoneNumber Type'
+#         verbose_name_plural = 'ChemicalBookResult-PhoneNumber Types'
+
+# class ChemicalBookResultPhoneNumber(Relationship):
+#     rtype = fk('ChemicalBookResultPhoneNumberType',
+#         'chemicalbookresult_phonenumber_relationships',
+#         'ChemicalBookResult-PhoneNumber Type')
+#     chemical_book_result = fk('ChemicalBookResult',
+#         'chemicalbookresult_phonenumber_relationships')
+#     phone_number = fk('relationships.PhoneNumber',
+#         'chemicalbookresult_phonenumber_relationships')
+
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-PhoneNumber Relationship'
+#         verbose_name_plural = 'ChemicalBookResult-PhoneNumber Relationships'
+
+#     def __str__(self):
+#         return f'({self.rtype}, {self.chemical_book_result}, \
+#             {self.phone_number} [{self.id}])'
+
+# class ChemicalBookResultEmailType(Choice):
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-Email Type'
+#         verbose_name_plural = 'ChemicalBookResult-Email Types'
+
+# class ChemicalBookResultEmail(Relationship):
+#     rtype = fk('ChemicalBookResultEmailType',
+#         'chemicalbookresult_email_relationships',
+#         'ChemicalBookResult-Email Type')
+#     chemical_book_result = fk('ChemicalBookResult',
+#         'chemicalbookresult_email_relationships')
+#     email = fk('relationships.Email', 'chemicalbookresult_email_relationships')
+
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-Email Relationship'
+#         verbose_name_plural = 'ChemicalBookResult-Email Relationships'
+
+#     def __str__(self):
+#         return f'({self.rtype}, {self.chemical_book_result}, \
+#             {self.email} [{self.id}])'
+
+# class ChemicalBookResultCountryType(Choice):
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-Country Type'
+#         verbose_name_plural = 'ChemicalBookResult-Country Types'
+
+# class ChemicalBookResultCountry(Relationship):
+#     rtype = fk('ChemicalBookResultCountryType',
+#         'chemicalbookresult_country_relationships',
+#         'ChemicalBookResult-Country Type')
+#     chemical_book_result = fk('ChemicalBookResult',
+#         'chemicalbookresult_country_relationships')
+#     country = fk('relationships.Country',
+#         'chemicalbookresult_country_relationships')
+
+#     class Meta:
+#         verbose_name = 'ChemicalBookResult-Country Relationship'
+#         verbose_name_plural = 'ChemicalBookResult-Country Relationships'
+
+#     def __str__(self):
+#         return f'({self.rtype}, {self.chemical_book_result}, \
+#             {self.email} [{self.id}])'
+
+# --- End: Relationships ---
+
+# --- Start: Growth models ---
+
 class GmassCampaignResult(Standard):
     email_address = email(null=True)
     first_name = cf(null=True)
@@ -128,3 +252,48 @@ class SourcedEmail(Standard):
 
     def __str__(self):
         return f'({self.email_address} [{self.id}])'
+
+class ChemicalBookResult(Standard):
+    source_url = cf('Source URL', null=True)
+    coy_name = cf('Company name', null=True)
+    coy_internal_href = cf('Details page URL', null=True)
+    coy_tel = cf('Company telephone', null=True)
+    coy_email = cf('Company email', null=True)
+    coy_href = cf('Company website', null=True)
+    coy_nat = cf('Country', null=True)
+
+    # links = m2mt(
+    #     'relationships.Link',
+    #     'ChemicalBookResultLink',
+    #     'chemical_book_result', 'link',
+    #     'chemical_book_results')
+
+    # companies = m2mt(
+    #     'relationships.Company',
+    #     'ChemicalBookResultCompany',
+    #     'chemical_book_result', 'company',
+    #     'chemical_book_results')
+
+    # phone_numbers = m2mt(
+    #     'relationships.PhoneNumber',
+    #     'ChemicalBookResultPhoneNumber',
+    #     'chemical_book_result', 'phone_number',
+    #     'chemical_book_results')
+
+    # email = m2mt(
+    #     'relationships.Email',
+    #     'ChemicalBookResultEmail',
+    #     'chemical_book_result', 'email',
+    #     'chemical_book_results')
+
+    # country = m2mt(
+    #     'relationships.Country',
+    #     'ChemicalBookResultCountry',
+    #     'chemical_book_result', 'country',
+    #     'chemical_book_results')
+
+    class Meta:
+        verbose_name = 'Chemical Book Result'
+        verbose_names = 'Chemical Book Results'
+
+# --- End: Growth models ---
