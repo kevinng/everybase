@@ -35,92 +35,92 @@ class ChemicalBookResultLink(Relationship):
         return f'({self.rtype}, {self.chemical_book_result}, {self.link} \
             [{self.id}])'
 
-# class ChemicalBookResultCompanyType(Choice):
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-Company Type'
-#         verbose_name_plural = 'ChemicalBookResult-Company Types'
+class ChemicalBookResultCompanyType(Choice):
+    class Meta:
+        verbose_name = 'ChemicalBookResult-Company Type'
+        verbose_name_plural = 'ChemicalBookResult-Company Types'
 
-# class ChemicalBookResultCompany(Relationship):
-#     rtype = fk('ChemicalBookResultCompanyType',
-#         'chemicalbookresult_company_relationships',
-#         'ChemicalBookResult-Company Type')
-#     chemical_book_result = fk('ChemicalBookResult',
-#         'chemicalbookresult_company_relationships')
-#     company = fk('relationships.Company',
-#         'chemicalbookresult_company_relationships')
+class ChemicalBookResultCompany(Relationship):
+    rtype = fk('ChemicalBookResultCompanyType',
+        'chemicalbookresult_company_relationships',
+        'ChemicalBookResult-Company Type')
+    chemical_book_result = fk('ChemicalBookResult',
+        'chemicalbookresult_company_relationships')
+    company = fk('relationships.Company',
+        'chemicalbookresult_company_relationships')
 
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-Company Relationship'
-#         verbose_name_plural = 'ChemicalBookResult-Company Relationships'
+    class Meta:
+        verbose_name = 'ChemicalBookResult-Company Relationship'
+        verbose_name_plural = 'ChemicalBookResult-Company Relationships'
 
-#     def __str__(self):
-#         return f'({self.rtype}, {self.chemical_book_result}, {self.company} \
-#             [{self.id}])'
+    def __str__(self):
+        return f'({self.rtype}, {self.chemical_book_result}, {self.company} \
+            [{self.id}])'
 
-# class ChemicalBookResultPhoneNumberType(Choice):
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-PhoneNumber Type'
-#         verbose_name_plural = 'ChemicalBookResult-PhoneNumber Types'
+class ChemicalBookResultPhoneNumberType(Choice):
+    class Meta:
+        verbose_name = 'ChemicalBookResult-PhoneNumber Type'
+        verbose_name_plural = 'ChemicalBookResult-PhoneNumber Types'
 
-# class ChemicalBookResultPhoneNumber(Relationship):
-#     rtype = fk('ChemicalBookResultPhoneNumberType',
-#         'chemicalbookresult_phonenumber_relationships',
-#         'ChemicalBookResult-PhoneNumber Type')
-#     chemical_book_result = fk('ChemicalBookResult',
-#         'chemicalbookresult_phonenumber_relationships')
-#     phone_number = fk('relationships.PhoneNumber',
-#         'chemicalbookresult_phonenumber_relationships')
+class ChemicalBookResultPhoneNumber(Relationship):
+    rtype = fk('ChemicalBookResultPhoneNumberType',
+        'chemicalbookresult_phonenumber_relationships',
+        'ChemicalBookResult-PhoneNumber Type')
+    chemical_book_result = fk('ChemicalBookResult',
+        'chemicalbookresult_phonenumber_relationships')
+    phone_number = fk('relationships.PhoneNumber',
+        'chemicalbookresult_phonenumber_relationships')
 
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-PhoneNumber Relationship'
-#         verbose_name_plural = 'ChemicalBookResult-PhoneNumber Relationships'
+    class Meta:
+        verbose_name = 'ChemicalBookResult-PhoneNumber Relationship'
+        verbose_name_plural = 'ChemicalBookResult-PhoneNumber Relationships'
 
-#     def __str__(self):
-#         return f'({self.rtype}, {self.chemical_book_result}, \
-#             {self.phone_number} [{self.id}])'
+    def __str__(self):
+        return f'({self.rtype}, {self.chemical_book_result}, \
+            {self.phone_number} [{self.id}])'
 
-# class ChemicalBookResultEmailType(Choice):
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-Email Type'
-#         verbose_name_plural = 'ChemicalBookResult-Email Types'
+class ChemicalBookResultEmailType(Choice):
+    class Meta:
+        verbose_name = 'ChemicalBookResult-Email Type'
+        verbose_name_plural = 'ChemicalBookResult-Email Types'
 
-# class ChemicalBookResultEmail(Relationship):
-#     rtype = fk('ChemicalBookResultEmailType',
-#         'chemicalbookresult_email_relationships',
-#         'ChemicalBookResult-Email Type')
-#     chemical_book_result = fk('ChemicalBookResult',
-#         'chemicalbookresult_email_relationships')
-#     email = fk('relationships.Email', 'chemicalbookresult_email_relationships')
+class ChemicalBookResultEmail(Relationship):
+    rtype = fk('ChemicalBookResultEmailType',
+        'chemicalbookresult_email_relationships',
+        'ChemicalBookResult-Email Type')
+    chemical_book_result = fk('ChemicalBookResult',
+        'chemicalbookresult_email_relationships')
+    email = fk('relationships.Email', 'chemicalbookresult_email_relationships')
 
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-Email Relationship'
-#         verbose_name_plural = 'ChemicalBookResult-Email Relationships'
+    class Meta:
+        verbose_name = 'ChemicalBookResult-Email Relationship'
+        verbose_name_plural = 'ChemicalBookResult-Email Relationships'
 
-#     def __str__(self):
-#         return f'({self.rtype}, {self.chemical_book_result}, \
-#             {self.email} [{self.id}])'
+    def __str__(self):
+        return f'({self.rtype}, {self.chemical_book_result}, \
+            {self.email} [{self.id}])'
 
-# class ChemicalBookResultCountryType(Choice):
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-Country Type'
-#         verbose_name_plural = 'ChemicalBookResult-Country Types'
+class ChemicalBookResultCountryType(Choice):
+    class Meta:
+        verbose_name = 'ChemicalBookResult-Country Type'
+        verbose_name_plural = 'ChemicalBookResult-Country Types'
 
-# class ChemicalBookResultCountry(Relationship):
-#     rtype = fk('ChemicalBookResultCountryType',
-#         'chemicalbookresult_country_relationships',
-#         'ChemicalBookResult-Country Type')
-#     chemical_book_result = fk('ChemicalBookResult',
-#         'chemicalbookresult_country_relationships')
-#     country = fk('relationships.Country',
-#         'chemicalbookresult_country_relationships')
+class ChemicalBookResultCountry(Relationship):
+    rtype = fk('ChemicalBookResultCountryType',
+        'chemicalbookresult_country_relationships',
+        'ChemicalBookResult-Country Type')
+    chemical_book_result = fk('ChemicalBookResult',
+        'chemicalbookresult_country_relationships')
+    country = fk('common.Country',
+        'chemicalbookresult_country_relationships')
 
-#     class Meta:
-#         verbose_name = 'ChemicalBookResult-Country Relationship'
-#         verbose_name_plural = 'ChemicalBookResult-Country Relationships'
+    class Meta:
+        verbose_name = 'ChemicalBookResult-Country Relationship'
+        verbose_name_plural = 'ChemicalBookResult-Country Relationships'
 
-#     def __str__(self):
-#         return f'({self.rtype}, {self.chemical_book_result}, \
-#             {self.email} [{self.id}])'
+    def __str__(self):
+        return f'({self.rtype}, {self.chemical_book_result}, \
+            {self.country} [{self.id}])'
 
 # --- End: Relationships ---
 
@@ -269,29 +269,29 @@ class ChemicalBookResult(Standard):
         'chemical_book_results'
     )
 
-    # companies = m2mt(
-    #     'relationships.Company',
-    #     'ChemicalBookResultCompany',
-    #     'chemical_book_result', 'company',
-    #     'chemical_book_results')
+    companies = m2mt(
+        'relationships.Company',
+        'ChemicalBookResultCompany',
+        'chemical_book_result', 'company',
+        'chemical_book_results')
 
-    # phone_numbers = m2mt(
-    #     'relationships.PhoneNumber',
-    #     'ChemicalBookResultPhoneNumber',
-    #     'chemical_book_result', 'phone_number',
-    #     'chemical_book_results')
+    phone_numbers = m2mt(
+        'relationships.PhoneNumber',
+        'ChemicalBookResultPhoneNumber',
+        'chemical_book_result', 'phone_number',
+        'chemical_book_results')
 
-    # email = m2mt(
-    #     'relationships.Email',
-    #     'ChemicalBookResultEmail',
-    #     'chemical_book_result', 'email',
-    #     'chemical_book_results')
+    email = m2mt(
+        'relationships.Email',
+        'ChemicalBookResultEmail',
+        'chemical_book_result', 'email',
+        'chemical_book_results')
 
-    # country = m2mt(
-    #     'relationships.Country',
-    #     'ChemicalBookResultCountry',
-    #     'chemical_book_result', 'country',
-    #     'chemical_book_results')
+    country = m2mt(
+        'common.Country',
+        'ChemicalBookResultCountry',
+        'chemical_book_result', 'country',
+        'chemical_book_results')
 
     class Meta:
         verbose_name = 'Chemical Book Result'
