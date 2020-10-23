@@ -474,4 +474,31 @@ class LookChemResult(Standard):
         'lookchem_result', 'link',
         'lookchem_results')
 
+class WorldOfChemicalsResult(Standard):
+    source_url = cf(null=True)
+    coy_id = cf(null=True)
+    coy_name = cf(null=True)
+    coy_about_html = tf(null=True)
+    coy_pri_contact = cf(null=True)
+    coy_addr_1 = cf(null=True)
+    coy_addr_2 = cf(null=True)
+    coy_city = cf(null=True)
+    coy_state = cf(null=True)
+    coy_country = cf(null=True)
+    coy_postal = cf(null=True)
+    coy_phone = cf(null=True)
+    coy_phone_2 = cf(null=True)
+    coy_email = cf(null=True)
+    coy_owner_email = cf(null=True)
+    coy_alt_email = cf(null=True)
+    coy_alt_email_2 = cf(null=True)
+    coy_alt_email_3 = cf(null=True)
+    coy_website = cf(null=True)
+
+    # links
+    # companies
+    # addresses
+    # phone_numbers
+    # emails
+
 # --- End: Growth models ---
