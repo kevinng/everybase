@@ -130,7 +130,7 @@ class GmassCampaignResult(Standard):
     email_address = email(null=True)
     first_name = cf(null=True)
     last_name = cf(null=True)
-    name_1 = cf('Name_1', null=True)
+    name_1 = cf(null=True)
     opens = cf(null=True)
     clicks = cf(null=True)
     replied = cf(null=True)
