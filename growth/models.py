@@ -542,8 +542,9 @@ class LookChemResult(Standard):
     tel = cf(null=True)
     mobile = cf(null=True)
     email = cf(null=True)
+    email_as_email = eml(null=True)
     website = cf(null=True)
-    website_url = url(null=True)
+    website_as_url = url(null=True)
     qq = cf(null=True)
 
     companies = m2mt(
