@@ -25,12 +25,13 @@ m2m = lambda klass, name, blank=False, index=True: models.ManyToManyField(
 )
 
 # Many-to-many through
-m2mt = lambda klass, thru, f1, f2, name: models.ManyToManyField(
+m2mt = lambda klass, thru, f1, f2, name, index=True: models.ManyToManyField(
     klass,
     through=thru,
     through_fields=(f1, f2),
     related_name=name,
-    related_query_name=name
+    related_query_name=name,
+    db_index=index
 )
 
 # Integer
@@ -50,16 +51,17 @@ ff = lambda verbose_name=None, null=False: models.FloatField(
     verbose_name=verbose_name, null=null, blank=null)
 
 # Datetime
-dtf = lambda verbose_name=None, null=False, default=None: models.DateTimeField(
-    verbose_name=verbose_name, null=null, blank=null, default=default)
+dtf = lambda verbose_name=None, null=False, default=None, index=True: models.DateTimeField(
+    verbose_name=verbose_name, null=null, blank=null, default=default,
+    db_index=index)
 
-dtf_now_add = lambda verbose_name=None, null=False, auto_now_add=True: models.\
+dtf_now_add = lambda verbose_name=None, null=False, auto_now_add=True, index=True: models.\
     DateTimeField(verbose_name=verbose_name, null=null, blank=null,
-    auto_now_add=auto_now_add)
+    auto_now_add=auto_now_add, db_index=index)
 
-dtf_now = lambda verbose_name=None, null=False, auto_now=True: models.\
+dtf_now = lambda verbose_name=None, null=False, auto_now=True, index=True: models.\
     DateTimeField(verbose_name=verbose_name, null=null, blank=null,
-    auto_now=auto_now)
+    auto_now=auto_now, db_index=index)
 
 # URL
 
