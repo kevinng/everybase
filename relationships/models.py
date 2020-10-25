@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import fk, m2m, m2mt, tf, cf, dtf, pintf
+from common.models import fk, m2m, m2mt, tf, cf, dtf, pintf, eml
 from common.models import Standard, Choice
 
 # --- Start: Abstract classes ---
@@ -272,7 +272,7 @@ class Company(Standard):
         return f'({self.company_name} [{self.id}])'
 
 class Email(Standard):
-    email = models.EmailField()
+    email = eml()
 
     def __str__(self):
         return f'({self.email} [{self.id}])'
