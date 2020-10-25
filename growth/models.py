@@ -361,7 +361,7 @@ class WorldOfChemicalsResultEmail(Relationship):
 # --- Start: Growth models ---
 
 class GmassCampaignResult(Standard):
-    email_address = eml(null=True)
+    email_address = cf(null=True)
     first_name = cf(null=True)
     last_name = cf(null=True)
     name_1 = cf(null=True)
@@ -394,13 +394,13 @@ class GmassCampaign(Standard):
 
 class ChemicalClusterOfSingaporeResult(Standard):
     sourced = dtf(null=True)
-    source_link = url(null=True)
+    source_link = cf(null=True)
     
     company_name = cf(null=True)
     telephone = cf(null=True)
     fax = cf(null=True)
     email_str = cf(null=True)
-    website = url(null=True)
+    website = cf(null=True)
     address_str = cf(null=True)
 
     company = fk('relationships.Company',
@@ -428,10 +428,10 @@ class ChemicalClusterOfSingaporeResult(Standard):
 class Fibre2FashionResult(Standard):
     sourced = dtf(null=True)
 
-    source_link = url(null=False)
+    source_link = cf(null=False)
     category = cf(null=False)
     sub_category = cf(null=False)
-    email = eml(null=False)
+    email = cf(null=False)
     email_domain = cf(null=False)
     lead_type = cf(null=False)
     description = cf(null=False)
@@ -448,7 +448,7 @@ class Fibre2FashionResult(Standard):
             {self.sourced} [{self.id}])'
 
 class ZeroBounceResult(Standard):
-    email_address = eml(null=True)
+    email_address = cf(null=True)
     status = cf(null=True)
     sub_status = cf(null=True)
     account = cf(null=True)
@@ -542,9 +542,7 @@ class LookChemResult(Standard):
     tel = cf(null=True)
     mobile = cf(null=True)
     email = cf(null=True)
-    email_as_email = eml(null=True)
     website = cf(null=True)
-    website_as_url = url(null=True)
     qq = cf(null=True)
 
     companies = m2mt(
