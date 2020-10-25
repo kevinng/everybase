@@ -66,7 +66,7 @@ url = lambda verbose_name=None, null=False: models.URLField(
 
 # Email
 
-email = lambda verbose_name=None, null=False: models.EmailField(
+eml = lambda verbose_name=None, null=False: models.EmailField(
     verbose_name=verbose_name, null=null, blank=null)
 
 # --- End: Helper lambda for model field declarations ---

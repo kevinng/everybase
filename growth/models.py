@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import (fk, m2m, m2mt, tf, cf, ff, dtf, url, email, Standard,
+from common.models import (fk, m2m, m2mt, tf, cf, ff, dtf, url, eml, Standard,
     Choice, short_text)
 
 # --- Start: Abstract classes ---
@@ -361,7 +361,7 @@ class WorldOfChemicalsResultEmail(Relationship):
 # --- Start: Growth models ---
 
 class GmassCampaignResult(Standard):
-    email_address = email(null=True)
+    email_address = eml(null=True)
     first_name = cf(null=True)
     last_name = cf(null=True)
     name_1 = cf(null=True)
@@ -431,7 +431,7 @@ class Fibre2FashionResult(Standard):
     source_link = url(null=False)
     category = cf(null=False)
     sub_category = cf(null=False)
-    email = email(null=False)
+    email = eml(null=False)
     email_domain = cf(null=False)
     lead_type = cf(null=False)
     description = cf(null=False)
@@ -448,7 +448,7 @@ class Fibre2FashionResult(Standard):
             {self.sourced} [{self.id}])'
 
 class ZeroBounceResult(Standard):
-    email_address = email(null=True)
+    email_address = eml(null=True)
     status = cf(null=True)
     sub_status = cf(null=True)
     account = cf(null=True)
@@ -543,6 +543,7 @@ class LookChemResult(Standard):
     mobile = cf(null=True)
     email = cf(null=True)
     website = cf(null=True)
+    website_url = url(null=True)
     qq = cf(null=True)
 
     companies = m2mt(
