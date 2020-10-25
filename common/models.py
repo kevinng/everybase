@@ -4,22 +4,24 @@ from django.contrib import admin
 # --- Start: Helper lambda for model field declarations ---
 
 # Foreign key
-fk = lambda klass, name=None, verbose_name=None, null=False: models.ForeignKey(
+fk = lambda klass, name=None, verbose_name=None, null=False, index=True: models.ForeignKey(
     klass,
     on_delete=models.PROTECT,
     related_name=name,
     related_query_name=name,
     verbose_name=verbose_name,
     null=null,
-    blank=null
+    blank=null,
+    db_index=index
 )
 
 # Many-to-many
-m2m = lambda klass, name, blank=False: models.ManyToManyField(
+m2m = lambda klass, name, blank=False, index=True: models.ManyToManyField(
     klass,
     related_name=name,
     related_query_name=name,
-    blank=blank
+    blank=blank,
+    db_index=index
 )
 
 # Many-to-many through
