@@ -16,8 +16,8 @@ class Relationship(Standard):
 
 class ChemicalBookResultLinkType(Choice):
     class Meta:
-        verbose_name = 'ChemicalBookResult-Link Type'
-        verbose_name_plural = 'ChemicalBookResult-Link Types'
+        verbose_name = 'ChemicalBookResult-Link type'
+        verbose_name_plural = 'ChemicalBookResult-Link types'
 
 class ChemicalBookResultLink(Relationship):
     rtype = fk('ChemicalBookResultLinkType',
@@ -28,8 +28,8 @@ class ChemicalBookResultLink(Relationship):
     link = fk('relationships.Link', 'chemicalbookresult_link_relationships')
 
     class Meta:
-        verbose_name = 'ChemicalBookResult-Link Relationship'
-        verbose_name_plural = 'ChemicalBookResult-Link Relationships'
+        verbose_name = 'ChemicalBookResult-Link relationship'
+        verbose_name_plural = 'ChemicalBookResult-Link relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.chemical_book_result}, {self.link} \
@@ -37,8 +37,8 @@ class ChemicalBookResultLink(Relationship):
 
 class ChemicalBookResultCompanyType(Choice):
     class Meta:
-        verbose_name = 'ChemicalBookResult-Company Type'
-        verbose_name_plural = 'ChemicalBookResult-Company Types'
+        verbose_name = 'ChemicalBookResult-Company type'
+        verbose_name_plural = 'ChemicalBookResult-Company types'
 
 class ChemicalBookResultCompany(Relationship):
     rtype = fk('ChemicalBookResultCompanyType',
@@ -50,8 +50,8 @@ class ChemicalBookResultCompany(Relationship):
         'chemicalbookresult_company_relationships')
 
     class Meta:
-        verbose_name = 'ChemicalBookResult-Company Relationship'
-        verbose_name_plural = 'ChemicalBookResult-Company Relationships'
+        verbose_name = 'ChemicalBookResult-Company relationship'
+        verbose_name_plural = 'ChemicalBookResult-Company relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.chemical_book_result}, {self.company} \
@@ -59,8 +59,8 @@ class ChemicalBookResultCompany(Relationship):
 
 class ChemicalBookResultPhoneNumberType(Choice):
     class Meta:
-        verbose_name = 'ChemicalBookResult-PhoneNumber Type'
-        verbose_name_plural = 'ChemicalBookResult-PhoneNumber Types'
+        verbose_name = 'ChemicalBookResult-PhoneNumber type'
+        verbose_name_plural = 'ChemicalBookResult-PhoneNumber types'
 
 class ChemicalBookResultPhoneNumber(Relationship):
     rtype = fk('ChemicalBookResultPhoneNumberType',
@@ -72,8 +72,8 @@ class ChemicalBookResultPhoneNumber(Relationship):
         'chemicalbookresult_phonenumber_relationships')
 
     class Meta:
-        verbose_name = 'ChemicalBookResult-PhoneNumber Relationship'
-        verbose_name_plural = 'ChemicalBookResult-PhoneNumber Relationships'
+        verbose_name = 'ChemicalBookResult-PhoneNumber relationship'
+        verbose_name_plural = 'ChemicalBookResult-PhoneNumber relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.chemical_book_result}, \
@@ -93,8 +93,8 @@ class ChemicalBookResultEmail(Relationship):
     email = fk('relationships.Email', 'chemicalbookresult_email_relationships')
 
     class Meta:
-        verbose_name = 'ChemicalBookResult-Email Relationship'
-        verbose_name_plural = 'ChemicalBookResult-Email Relationships'
+        verbose_name = 'ChemicalBookResult-Email relationship'
+        verbose_name_plural = 'ChemicalBookResult-Email relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.chemical_book_result}, \
@@ -102,8 +102,8 @@ class ChemicalBookResultEmail(Relationship):
 
 class ChemicalBookResultCountryType(Choice):
     class Meta:
-        verbose_name = 'ChemicalBookResult-Country Type'
-        verbose_name_plural = 'ChemicalBookResult-Country Types'
+        verbose_name = 'ChemicalBookResult-Country type'
+        verbose_name_plural = 'ChemicalBookResult-Country types'
 
 class ChemicalBookResultCountry(Relationship):
     rtype = fk('ChemicalBookResultCountryType',
@@ -115,8 +115,8 @@ class ChemicalBookResultCountry(Relationship):
         'chemicalbookresult_country_relationships')
 
     class Meta:
-        verbose_name = 'ChemicalBookResult-Country Relationship'
-        verbose_name_plural = 'ChemicalBookResult-Country Relationships'
+        verbose_name = 'ChemicalBookResult-Country relationship'
+        verbose_name_plural = 'ChemicalBookResult-Country relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.chemical_book_result}, \
@@ -124,8 +124,8 @@ class ChemicalBookResultCountry(Relationship):
 
 class LookChemResultCompanyType(Choice):
     class Meta:
-        verbose_name = 'LookChemResult-Company Type'
-        verbose_name_plural = 'LookChemResult-Company Types'
+        verbose_name = 'LookChemResult-Company type'
+        verbose_name_plural = 'LookChemResult-Company types'
 
 class LookChemResultCompany(Relationship):
     rtype = fk('LookChemResultCompanyType',
@@ -137,8 +137,8 @@ class LookChemResultCompany(Relationship):
         'lookchemresult_company_relationships')
         
     class Meta:
-        verbose_name = 'LookChemResult-Company Relationship'
-        verbose_name_plural = 'LookChemResult-Company Relationships'
+        verbose_name = 'LookChemResult-Company relationship'
+        verbose_name_plural = 'LookChemResult-Company relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.lookchem_result}, {self.company} \
@@ -146,8 +146,8 @@ class LookChemResultCompany(Relationship):
 
 class LookChemResultPersonType(Choice):
     class Meta:
-        verbose_name = 'LookChemResult-Person Type'
-        verbose_name_plural = 'LookChemResult-Person Types'
+        verbose_name = 'LookChemResult-Person type'
+        verbose_name_plural = 'LookChemResult-Person types'
 
 class LookChemResultPerson(Relationship):
     rtype = fk('LookChemResultPersonType',
@@ -159,8 +159,8 @@ class LookChemResultPerson(Relationship):
         'lookchemresult_person_relationships')
         
     class Meta:
-        verbose_name = 'LookChemResult-Person Relationship'
-        verbose_name_plural = 'LookChemResult-Person Relationships'
+        verbose_name = 'LookChemResult-Person relationship'
+        verbose_name_plural = 'LookChemResult-Person relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.lookchem_result}, {self.person} \
@@ -168,8 +168,8 @@ class LookChemResultPerson(Relationship):
 
 class LookChemResultAddressType(Choice):
     class Meta:
-        verbose_name = 'LookChemResult-Address Type'
-        verbose_name_plural = 'LookChemResult-Address Types'
+        verbose_name = 'LookChemResult-Address type'
+        verbose_name_plural = 'LookChemResult-Address types'
 
 class LookChemResultAddress(Relationship):
     rtype = fk('LookChemResultAddressType',
@@ -181,8 +181,8 @@ class LookChemResultAddress(Relationship):
         'lookchemresult_address_relationships')
         
     class Meta:
-        verbose_name = 'LookChemResult-Address Relationship'
-        verbose_name_plural = 'LookChemResult-Address Relationships'
+        verbose_name = 'LookChemResult-Address relationship'
+        verbose_name_plural = 'LookChemResult-Address relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.lookchem_result}, {self.address} \
@@ -190,8 +190,8 @@ class LookChemResultAddress(Relationship):
 
 class LookChemResultPhoneNumberType(Choice):
     class Meta:
-        verbose_name = 'LookChemResult-PhoneNumber Type'
-        verbose_name_plural = 'LookChemResult-PhoneNumber Types'
+        verbose_name = 'LookChemResult-PhoneNumber type'
+        verbose_name_plural = 'LookChemResult-PhoneNumber types'
 
 class LookChemResultPhoneNumber(Relationship):
     rtype = fk('LookChemResultPhoneNumberType',
@@ -203,8 +203,8 @@ class LookChemResultPhoneNumber(Relationship):
         'lookchemresult_phonenumber_relationships')
         
     class Meta:
-        verbose_name = 'LookChemResult-PhoneNumber Relationship'
-        verbose_name_plural = 'LookChemResult-PhoneNumber Relationships'
+        verbose_name = 'LookChemResult-PhoneNumber relationship'
+        verbose_name_plural = 'LookChemResult-PhoneNumber relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.lookchem_result}, {self.phone_number} \
@@ -212,8 +212,8 @@ class LookChemResultPhoneNumber(Relationship):
 
 class LookChemResultEmailType(Choice):
     class Meta:
-        verbose_name = 'LookChemResult-Email Type'
-        verbose_name_plural = 'LookChemResult-Email Types'
+        verbose_name = 'LookChemResult-Email type'
+        verbose_name_plural = 'LookChemResult-Email types'
 
 class LookChemResultEmail(Relationship):
     rtype = fk('LookChemResultEmailType', 'lookchemresult_email_relationships',
@@ -222,8 +222,8 @@ class LookChemResultEmail(Relationship):
     email = fk('relationships.Email', 'lookchemresult_email_relationships')
         
     class Meta:
-        verbose_name = 'LookChemResult-Email Relationship'
-        verbose_name_plural = 'LookChemResult-Email Relationships'
+        verbose_name = 'LookChemResult-Email relationship'
+        verbose_name_plural = 'LookChemResult-Email relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.lookchem_result}, {self.email} \
@@ -231,8 +231,8 @@ class LookChemResultEmail(Relationship):
 
 class LookChemResultLinkType(Choice):
     class Meta:
-        verbose_name = 'LookChemResult-Link Type'
-        verbose_name_plural = 'LookChemResult-Link Types'
+        verbose_name = 'LookChemResult-Link type'
+        verbose_name_plural = 'LookChemResult-Link types'
 
 class LookChemResultLink(Relationship):
     rtype = fk('LookChemResultEmailType', 'lookchemresult_link_relationships',
@@ -241,8 +241,8 @@ class LookChemResultLink(Relationship):
     link = fk('relationships.Link', 'lookchemresult_link_relationships')
         
     class Meta:
-        verbose_name = 'LookChemResult-Link Relationship'
-        verbose_name_plural = 'LookChemResult-Link Relationships'
+        verbose_name = 'LookChemResult-Link relationship'
+        verbose_name_plural = 'LookChemResult-Link relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.lookchem_result}, {self.link} \
@@ -250,8 +250,8 @@ class LookChemResultLink(Relationship):
 
 class WorldOfChemicalsResultLinkType(Choice):
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Link Type'
-        verbose_name_plural = 'WorldOfChemicalsResult-Link Types'
+        verbose_name = 'WorldOfChemicalsResult-Link type'
+        verbose_name_plural = 'WorldOfChemicalsResult-Link types'
 
 class WorldOfChemicalsResultLink(Relationship):
     rtype = fk('WorldOfChemicalsResultLinkType',
@@ -262,8 +262,8 @@ class WorldOfChemicalsResultLink(Relationship):
     link = fk('relationships.Link', 'worldofchemicalsresult_relationships')
         
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Link Relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-Link Relationships'
+        verbose_name = 'WorldOfChemicalsResult-Link relationship'
+        verbose_name_plural = 'WorldOfChemicalsResult-Link relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.world_of_chemicals_result}, {self.link} \
@@ -271,8 +271,8 @@ class WorldOfChemicalsResultLink(Relationship):
 
 class WorldOfChemicalsResultCompanyType(Choice):
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Company Type'
-        verbose_name_plural = 'WorldOfChemicalsResult-Company Types'
+        verbose_name = 'WorldOfChemicalsResult-Company type'
+        verbose_name_plural = 'WorldOfChemicalsResult-Company types'
 
 class WorldOfChemicalsResultCompany(Relationship):
     rtype = fk('WorldOfChemicalsResultCompanyType',
@@ -284,8 +284,8 @@ class WorldOfChemicalsResultCompany(Relationship):
         'worldofchemicalsresult_relationships')
         
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Company Relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-Company Relationships'
+        verbose_name = 'WorldOfChemicalsResult-Company relationship'
+        verbose_name_plural = 'WorldOfChemicalsResult-Company relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.world_of_chemicals_result}, \
@@ -293,8 +293,8 @@ class WorldOfChemicalsResultCompany(Relationship):
 
 class WorldOfChemicalsResultAddressType(Choice):
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Address Type'
-        verbose_name_plural = 'WorldOfChemicalsResult-Address Types'
+        verbose_name = 'WorldOfChemicalsResult-Address type'
+        verbose_name_plural = 'WorldOfChemicalsResult-Address types'
 
 class WorldOfChemicalsResultAddress(Relationship):
     rtype = fk('WorldOfChemicalsResultAddressType',
@@ -306,8 +306,8 @@ class WorldOfChemicalsResultAddress(Relationship):
         'worldofchemicalsresult_relationships')
         
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Address Relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-Address Relationships'
+        verbose_name = 'WorldOfChemicalsResult-Address relationship'
+        verbose_name_plural = 'WorldOfChemicalsResult-Address relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.world_of_chemicals_result}, \
@@ -315,8 +315,8 @@ class WorldOfChemicalsResultAddress(Relationship):
 
 class WorldOfChemicalsResultPhoneNumberType(Choice):
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-PhoneNumber Type'
-        verbose_name_plural = 'WorldOfChemicalsResult-PhoneNumber Types'
+        verbose_name = 'WorldOfChemicalsResult-PhoneNumber type'
+        verbose_name_plural = 'WorldOfChemicalsResult-PhoneNumber types'
 
 class WorldOfChemicalsResultPhoneNumber(Relationship):
     rtype = fk('WorldOfChemicalsResultPhoneNumberType',
@@ -328,8 +328,8 @@ class WorldOfChemicalsResultPhoneNumber(Relationship):
         'worldofchemicalsresult_relationships')
         
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-PhoneNumber Relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-PhoneNumber Relationships'
+        verbose_name = 'WorldOfChemicalsResult-PhoneNumber relationship'
+        verbose_name_plural = 'WorldOfChemicalsResult-PhoneNumber relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.world_of_chemicals_result}, \
@@ -337,8 +337,8 @@ class WorldOfChemicalsResultPhoneNumber(Relationship):
 
 class WorldOfChemicalsResultEmailType(Choice):
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Email Type'
-        verbose_name_plural = 'WorldOfChemicalsResult-Email Types'
+        verbose_name = 'WorldOfChemicalsResult-Email type'
+        verbose_name_plural = 'WorldOfChemicalsResult-Email types'
 
 class WorldOfChemicalsResultEmail(Relationship):
     rtype = fk('WorldOfChemicalsResultEmailType',
@@ -349,8 +349,8 @@ class WorldOfChemicalsResultEmail(Relationship):
     email = fk('relationships.Email', 'worldofchemicalsresult_relationships')
         
     class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Email Relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-Email Relationships'
+        verbose_name = 'WorldOfChemicalsResult-Email relationship'
+        verbose_name_plural = 'WorldOfChemicalsResult-Email relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.world_of_chemicals_result}, \
