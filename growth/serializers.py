@@ -2,7 +2,7 @@ from rest_framework import serializers
 from common.models import standard_fieldnames, choice_fieldnames
 from .models import (GmassCampaignResult, GmassCampaign,
     ChemicalClusterOfSingaporeResult, Fibre2FashionResult, ZeroBounceResult,
-    DataSource, SourcedEmail)
+    DataSource, SourcedEmail, ChemicalBookResult)
 
 class GmassCampaignResultSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,3 +50,10 @@ class SourcedEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = SourcedEmail
         fields = ['id'] + standard_fieldnames + ['sourced', 'source', 'email']
+
+class ChemicalBookResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChemicalBookResult
+        fields = ['id'] + standard_fieldnames + ['source_url', 'coy_name',
+            'coy_internal_href', 'coy_tel', 'coy_email', 'coy_href', 'coy_nat',
+            'links', 'companies', 'phone_numbers', 'countries']
