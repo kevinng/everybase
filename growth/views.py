@@ -1,10 +1,11 @@
 from .models import (GmassCampaignResult, GmassCampaign,
     ChemicalClusterOfSingaporeResult, Fibre2FashionResult, ZeroBounceResult,
-    DataSource, SourcedEmail, ChemicalBookResult)
+    DataSource, SourcedEmail, ChemicalBookResult, LookChemResult)
 from .serializers import (GmassCampaignResultSerializer,
     GmassCampaignSerializer, ChemicalClusterOfSingaporeResultSerializer,
     Fibre2FashionResultSerializer, ZeroBounceResultSerializer,
-    DataSourceSerializer, SourcedEmailSerializer, ChemicalBookResultSerializer)
+    DataSourceSerializer, SourcedEmailSerializer, ChemicalBookResultSerializer,
+    LookChemResultSerializer)
 from rest_framework import generics, permissions
 
 class GmassCampaignResultList(generics.ListCreateAPIView):
@@ -86,4 +87,14 @@ class ChemicalBookResultList(generics.ListCreateAPIView):
 class ChemicalBookResultDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChemicalBookResult.objects.all()
     serializer_class = ChemicalBookResultSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class LookChemResultList(generics.ListCreateAPIView):
+    queryset = LookChemResult.objects.all()
+    serializer_class = LookChemResultSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class LookChemResultDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = LookChemResult.objects.all()
+    serializer_class = LookChemResultSerializer
     permission_classes = [permissions.IsAuthenticated]
