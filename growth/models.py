@@ -530,6 +530,9 @@ class ChemicalBookResult(Standard):
         verbose_name = 'Chemical Book Result'
         verbose_name_plural = 'Chemical Book Results'
 
+    def __str__(self):
+        return f'({self.coy_name} [{self.id}])'
+
 class LookChemResult(Standard):
     coy_name = cf(null=True)
     contact_person = cf(null=True)
