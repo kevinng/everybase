@@ -584,6 +584,9 @@ class LookChemResult(Standard):
         'lookchem_result', 'link',
         'lookchem_results')
 
+    def __str__(self):
+        return f'({self.coy_name} [{self.id}])'
+
 class WorldOfChemicalsResult(Standard):
     source_url = cf(null=True)
     coy_id = cf(null=True)
