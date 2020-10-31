@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from common.models import standard_fieldnames, choice_fieldnames
-from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory)
+from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
+    MatchMethod)
 
 class IncotermSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,3 +27,8 @@ class LeadCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = LeadCategory
         fields = ['id'] + choice_fieldnames + ['parent']
+
+class MatchMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MatchMethod
+        fields = ['id'] + choice_fieldnames

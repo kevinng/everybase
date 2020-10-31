@@ -1,6 +1,8 @@
-from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory)
+from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
+    MatchMethod)
 from .serializers import (IncotermSerializer, CurrencySerializer,
-    PaymentModeSerializer, ContactTypeSerializer, LeadCategorySerializer)
+    PaymentModeSerializer, ContactTypeSerializer, LeadCategorySerializer,
+    MatchMethodSerializer)
 from rest_framework import generics, permissions
 
 class IncotermList(generics.ListCreateAPIView):
@@ -51,4 +53,14 @@ class LeadCategoryList(generics.ListCreateAPIView):
 class LeadCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = LeadCategory.objects.all()
     serializer_class = LeadCategorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class MatchMethodList(generics.ListCreateAPIView):
+    queryset = MatchMethod.objects.all()
+    serializer_class = MatchMethodSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class MatchMethodDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MatchMethod.objects.all()
+    serializer_class = MatchMethodSerializer
     permission_classes = [permissions.IsAuthenticated]
