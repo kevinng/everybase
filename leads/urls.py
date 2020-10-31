@@ -1,7 +1,8 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import (IncotermList, IncotermDetail, CurrencyList, CurrencyDetail,
-    PaymentModeList, PaymentModeDetail, ContactTypeList, ContactTypeDetail)
+    PaymentModeList, PaymentModeDetail, ContactTypeList, ContactTypeDetail,
+    LeadCategoryList, LeadCategoryDetail)
 
 urlpatterns = [
     path('incoterm/', IncotermList.as_view()),
@@ -12,5 +13,7 @@ urlpatterns = [
     path('payment_mode/<int:pk>/', PaymentModeDetail.as_view()),
     path('contact_type/', ContactTypeList.as_view()),
     path('contact_type/<int:pk>/', ContactTypeDetail.as_view()),
+    path('lead_category/', LeadCategoryList.as_view()),
+    path('lead_category/<int:pk>/', LeadCategoryDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
