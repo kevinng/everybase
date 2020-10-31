@@ -3,7 +3,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .views import (IncotermList, IncotermDetail, CurrencyList, CurrencyDetail,
     PaymentModeList, PaymentModeDetail, ContactTypeList, ContactTypeDetail,
     LeadCategoryList, LeadCategoryDetail, MatchMethodList, MatchMethodDetail,
-    MatchStatusList, MatchStatusDetail)
+    MatchStatusList, MatchStatusDetail, SupplyQuoteStatusList,
+    SupplyQuoteStatusDetail)
 
 urlpatterns = [
     path('incoterm/', IncotermList.as_view()),
@@ -20,5 +21,7 @@ urlpatterns = [
     path('match_method/<int:pk>/', MatchMethodDetail.as_view()),
     path('match_status/', MatchStatusList.as_view()),
     path('match_status/<int:pk>/', MatchStatusDetail.as_view()),
+    path('supply_quote_status/', SupplyQuoteStatusList.as_view()),
+    path('supply_quote_status/<int:pk>/', SupplyQuoteStatusDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
