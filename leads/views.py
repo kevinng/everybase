@@ -10,152 +10,223 @@ from .serializers import (IncotermSerializer, CurrencySerializer,
     SupplyQuoteSerializer, ProductionCapabilitySerializer)
 from rest_framework import generics, permissions
 
-class IncotermList(generics.ListCreateAPIView):
+class IncotermAPI():
     queryset = Incoterm.objects.all()
     serializer_class = IncotermSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class IncotermDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Incoterm.objects.all()
-    serializer_class = IncotermSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class IncotermList(
+    IncotermAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class CurrencyList(generics.ListCreateAPIView):
+class IncotermDetail(
+    IncotermAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class CurrencyAPI():
     queryset = Currency.objects.all()
     serializer_class = CurrencySerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class CurrencyDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Currency.objects.all()
-    serializer_class = CurrencySerializer
-    permission_classes = [permissions.IsAuthenticated]
+class CurrencyList(
+    CurrencyAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class PaymentModeList(generics.ListCreateAPIView):
+class CurrencyDetail(
+    CurrencyAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class PaymentModeAPI():
     queryset = PaymentMode.objects.all()
     serializer_class = PaymentModeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class PaymentModeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = PaymentMode.objects.all()
-    serializer_class = PaymentModeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class PaymentModeList(
+    PaymentModeAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class ContactTypeList(generics.ListCreateAPIView):
+class PaymentModeDetail(
+    PaymentModeAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class ContactTypeAPI():
     queryset = ContactType.objects.all()
     serializer_class = ContactTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class ContactTypeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ContactType.objects.all()
-    serializer_class = ContactTypeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class ContactTypeList(
+    ContactTypeAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class LeadCategoryList(generics.ListCreateAPIView):
+class ContactTypeDetail(
+    ContactTypeAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class LeadCategoryAPI():
     queryset = LeadCategory.objects.all()
     serializer_class = LeadCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class LeadCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = LeadCategory.objects.all()
-    serializer_class = LeadCategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+class LeadCategoryList(
+    LeadCategoryAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class MatchMethodList(generics.ListCreateAPIView):
+class LeadCategoryDetail(
+    LeadCategoryAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class MatchMethodAPI():
     queryset = MatchMethod.objects.all()
     serializer_class = MatchMethodSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class MatchMethodDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = MatchMethod.objects.all()
-    serializer_class = MatchMethodSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class MatchMethodList(
+    MatchMethodAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class MatchStatusList(generics.ListCreateAPIView):
+class MatchMethodDetail(
+    MatchMethodAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class MatchStatusAPI():
     queryset = MatchStatus.objects.all()
     serializer_class = MatchStatusSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class MatchStatusDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = MatchStatus.objects.all()
-    serializer_class = MatchStatusSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class MatchStatusList(MatchStatusAPI, generics.ListCreateAPIView):
+    pass
 
-class SupplyQuoteStatusList(generics.ListCreateAPIView):
+class MatchStatusDetail(MatchStatusAPI, generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class SupplyQuoteAPI():
     queryset = SupplyQuoteStatus.objects.all()
     serializer_class = SupplyQuoteStatusSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class SupplyQuoteStatusDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SupplyQuoteStatus.objects.all()
-    serializer_class = SupplyQuoteStatusSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class SupplyQuoteStatusList(
+    SupplyQuoteAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class DemandQuoteStatusList(generics.ListCreateAPIView):
+class SupplyQuoteStatusDetail(
+    SupplyQuoteAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class DemandQuoteStatusAPI():
     queryset = DemandQuoteStatus.objects.all()
     serializer_class = DemandQuoteStatusSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class DemandQuoteStatusDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DemandQuoteStatus.objects.all()
-    serializer_class = DemandQuoteStatusSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class DemandQuoteStatusList(
+    DemandQuoteStatusAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class UnitOfMeasureList(generics.ListCreateAPIView):
+class DemandQuoteStatusDetail(
+    DemandQuoteStatusAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class UnitOfMeasureAPI():
     queryset = UnitOfMeasure.objects.all()
     serializer_class = UnitOfMeasureSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class UnitOfMeasureDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = UnitOfMeasure.objects.all()
-    serializer_class = UnitOfMeasureSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class UnitOfMeasureList(
+    UnitOfMeasureAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class UOMRelationshipList(generics.ListCreateAPIView):
+class UnitOfMeasureDetail(
+    UnitOfMeasureAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class UOMRelationshipAPI():
     queryset = UOMRelationship.objects.all()
     serializer_class = UOMRelationshipSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class UOMRelationshipDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = UOMRelationship.objects.all()
-    serializer_class = UOMRelationshipSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class UOMRelationshipList(
+    UOMRelationshipAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class SupplyList(generics.ListCreateAPIView):
+class UOMRelationshipDetail(
+    UOMRelationshipAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class SupplyAPI():
     queryset = Supply.objects.all()
     serializer_class = SupplySerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class SupplyDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Supply.objects.all()
-    serializer_class = SupplySerializer
-    permission_classes = [permissions.IsAuthenticated]
+class SupplyList(
+    SupplyAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class DemandList(generics.ListCreateAPIView):
+class SupplyDetail(
+    SupplyAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class DemandAPI():
     queryset = Demand.objects.all()
     serializer_class = DemandSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class DemandDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Demand.objects.all()
-    serializer_class = DemandSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class DemandList(
+    DemandAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class SupplyQuoteList(generics.ListCreateAPIView):
+class DemandDetail(
+    DemandAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class SupplyQuoteAPI():
     queryset = SupplyQuote.objects.all()
     serializer_class = SupplyQuoteSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class SupplyQuoteDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SupplyQuote.objects.all()
-    serializer_class = SupplyQuoteSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class SupplyQuoteList(
+    SupplyQuoteAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class ProductionCapabilityList(generics.ListCreateAPIView):
+class SupplyQuoteDetail(
+    SupplyQuoteAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class ProductionCapabilityAPI():
     queryset = ProductionCapability.objects.all()
     serializer_class = ProductionCapabilitySerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class ProductionCapabilityDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ProductionCapability.objects.all()
-    serializer_class = ProductionCapabilitySerializer
-    permission_classes = [permissions.IsAuthenticated]
+class ProductionCapabilityList(
+    ProductionCapabilityAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ProductionCapabilityDetail(
+    ProductionCapabilityAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
