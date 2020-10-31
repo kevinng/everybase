@@ -1,11 +1,12 @@
 from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
     MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus,
-    UnitOfMeasure, UOMRelationship, Supply, Demand)
+    UnitOfMeasure, UOMRelationship, Supply, Demand, SupplyQuote)
 from .serializers import (IncotermSerializer, CurrencySerializer,
     PaymentModeSerializer, ContactTypeSerializer, LeadCategorySerializer,
     MatchMethodSerializer, MatchStatusSerializer, SupplyQuoteStatusSerializer,
     DemandQuoteStatusSerializer, UnitOfMeasureSerializer,
-    UOMRelationshipSerializer, SupplySerializer, DemandSerializer)
+    UOMRelationshipSerializer, SupplySerializer, DemandSerializer,
+    SupplyQuoteSerializer)
 from rest_framework import generics, permissions
 
 class IncotermList(generics.ListCreateAPIView):
@@ -136,4 +137,14 @@ class DemandList(generics.ListCreateAPIView):
 class DemandDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Demand.objects.all()
     serializer_class = DemandSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class SupplyQuoteList(generics.ListCreateAPIView):
+    queryset = SupplyQuote.objects.all()
+    serializer_class = SupplyQuoteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class SupplyQuoteDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SupplyQuote.objects.all()
+    serializer_class = SupplyQuoteSerializer
     permission_classes = [permissions.IsAuthenticated]
