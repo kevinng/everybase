@@ -1,14 +1,14 @@
 from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
     MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus,
     UnitOfMeasure, UOMRelationship, Supply, Demand, SupplyQuote,
-    ProductionCapability, DemandQuote, Trench)
+    ProductionCapability, DemandQuote, Trench, Match)
 from .serializers import (IncotermSerializer, CurrencySerializer,
     PaymentModeSerializer, ContactTypeSerializer, LeadCategorySerializer,
     MatchMethodSerializer, MatchStatusSerializer, SupplyQuoteStatusSerializer,
     DemandQuoteStatusSerializer, UnitOfMeasureSerializer,
     UOMRelationshipSerializer, SupplySerializer, DemandSerializer,
     SupplyQuoteSerializer, ProductionCapabilitySerializer,
-    DemandQuoteSerializer, TrenchSerializer)
+    DemandQuoteSerializer, TrenchSerializer, MatchSerializer)
 from rest_framework import generics, permissions
 
 class IncotermAPI():
@@ -259,5 +259,20 @@ class TrenchList(
 
 class TrenchDetail(
     TrenchAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class MatchAPI():
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class MatchList(
+    MatchAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class MatchDetail(
+    MatchAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass

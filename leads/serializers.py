@@ -101,3 +101,9 @@ class TrenchSerializer(serializers.ModelSerializer):
         fields = ['id', 'quantity', 'after_deposit_seconds', 'paymode',
             'payment_before_release', 'details_md', 'supply_quote',
             'demand_quote']
+
+class MatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Match
+        fields = ['id'] + standard_fieldnames + ['demand_quote', 'supply_quote',
+            'status', 'method', 'details_md']
