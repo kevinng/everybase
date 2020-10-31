@@ -4,6 +4,8 @@ from common.models import Choice, Standard, short_text
 
 # --- Start: Abstract models ---
 
+expirable_invalidable_fieldnames = ['expired', 'invalidated',
+    'invalidated_reason_md']
 class ExpirableInvalidable(models.Model):
     expired = dtf(null=True)
     invalidated = dtf(null=True)
@@ -12,6 +14,8 @@ class ExpirableInvalidable(models.Model):
     class Meta:
         abstract = True
 
+lead_fieldnames = ['category', 'display_name', 'base_uom', 'details_md',
+    'files', 'contact', 'company', 'contact_type', 'contact_type_details_md']
 class Lead(models.Model):
     category = fk('LeadCategory', '%(class)s_leads')
     display_name = cf()
@@ -32,6 +36,8 @@ class Lead(models.Model):
     class Meta:
         abstract = True
 
+commission_fieldnames = ['details_md', 'mark_up_type', 'mark_up_price_per_unit',
+    'mark_up_percentage']
 class Commission(models.Model):
     details_md = tf('Details in Markdown', True)
     mark_up_type = models.CharField(
@@ -52,6 +58,10 @@ class Commission(models.Model):
     def __str__(self):
         return f'({short_text(self.details_md)} [{self.id}])'
 
+quote_fieldnames = ['details_md', 'incoterm', 'incoterm_country',
+    'incoterm_location', 'currency', 'price', 'price_details_md',
+    'deposit_percent', 'deposit_paymodes', 'remainder_paymodes',
+    'payterms_details_md', 'delivery_details_md']
 class Quote(models.Model):
     details_md = tf('Details in Markdown')
 
