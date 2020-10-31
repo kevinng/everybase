@@ -20,6 +20,7 @@ httpie = "*"
 djangorestframework = "*"
 django-extensions = "*"
 json-lines = "*"
+django-filter = "*"
 
 [requires]
 python_version = "3.7"
