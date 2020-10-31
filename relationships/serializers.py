@@ -17,3 +17,11 @@ class PersonCompanyTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PersonCompanyType
         fields = ['id'] + choice_fieldnames
+
+class PersonCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PersonCompany
+        fields = ['id'] + relationship_fieldnames + ['rtype', 'person',
+            'company']
+
+        

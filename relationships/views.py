@@ -46,3 +46,18 @@ class PersonCompanyTypeDetail(
     PersonCompanyTypeAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class PersonCompanyAPI():
+    queryset = models.PersonCompany.objects.all()
+    serializer_class = serializers.PersonCompanySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PersonCompanyList(
+    PersonCompanyAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class PersonCompanyDetail(
+    PersonCompanyAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
