@@ -25,6 +25,7 @@ urlpatterns = [
     # path('products/', include('products.urls')),
 
     path('growth/', include('growth.urls')),
+    path('leads/', include('leads.urls')),
 
     # Cloaked links
     path('i/', include('cloaker.urls')),
