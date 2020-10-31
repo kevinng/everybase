@@ -14,3 +14,8 @@ class IncotermSerializer(serializers.ModelSerializer):
     class Meta:
         model = Incoterm
         fields = ['id'] + choice_fieldnames
+
+class CurrencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Incoterm
+        fields = ['id'] + choice_fieldnames
