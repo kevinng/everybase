@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from common.models import standard_fieldnames, choice_fieldnames
-from .models import (Incoterm, Currency, PaymentMode)
+from .models import (Incoterm, Currency, PaymentMode, ContactType)
 
 class IncotermSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,4 +15,9 @@ class CurrencySerializer(serializers.ModelSerializer):
 class PaymentModeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentMode
+        fields = ['id'] + choice_fieldnames
+
+class ContactTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactType
         fields = ['id'] + choice_fieldnames
