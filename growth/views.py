@@ -1,17 +1,10 @@
-from .models import (GmassCampaignResult, GmassCampaign,
-    ChemicalClusterOfSingaporeResult, Fibre2FashionResult, ZeroBounceResult,
-    DataSource, SourcedEmail, ChemicalBookResult, LookChemResult,
-    WorldOfChemicalsResult)
-from .serializers import (GmassCampaignResultSerializer,
-    GmassCampaignSerializer, ChemicalClusterOfSingaporeResultSerializer,
-    Fibre2FashionResultSerializer, ZeroBounceResultSerializer,
-    DataSourceSerializer, SourcedEmailSerializer, ChemicalBookResultSerializer,
-    LookChemResultSerializer, WorldOfChemicalResultSerializer)
+from . import models
+from . import serializers
 from rest_framework import generics, permissions
 
 class GmassCampaignResultAPI():
-    queryset = GmassCampaignResult.objects.all()
-    serializer_class = GmassCampaignResultSerializer
+    queryset = models.GmassCampaignResult.objects.all()
+    serializer_class = serializers.GmassCampaignResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class GmassCampaignResultList(
@@ -25,8 +18,8 @@ class GmassCampaignResultDetail(
     pass
 
 class GmassCampaignAPI():
-    queryset = GmassCampaign.objects.all()
-    serializer_class = GmassCampaignSerializer
+    queryset = models.GmassCampaign.objects.all()
+    serializer_class = serializers.GmassCampaignSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class GmassCampaignList(
@@ -40,8 +33,8 @@ class GmassCampaignDetail(
     pass
 
 class ChemicalClusterOfSingaporeResultAPI():
-    queryset = ChemicalClusterOfSingaporeResult.objects.all()
-    serializer_class = ChemicalClusterOfSingaporeResultSerializer
+    queryset = models.ChemicalClusterOfSingaporeResult.objects.all()
+    serializer_class = serializers.ChemicalClusterOfSingaporeResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class ChemicalClusterOfSingaporeResultList(
@@ -55,8 +48,8 @@ class ChemicalClusterOfSingaporeResultDetail(
     pass
 
 class Fibre2FashionResultAPI():
-    queryset = Fibre2FashionResult.objects.all()
-    serializer_class = Fibre2FashionResultSerializer
+    queryset = models.Fibre2FashionResult.objects.all()
+    serializer_class = serializers.Fibre2FashionResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class Fibre2FashionResultList(
@@ -70,8 +63,8 @@ class Fibre2FashionResultDetail(
     pass
 
 class ZeroBounceResultAPI():
-    queryset = ZeroBounceResult.objects.all()
-    serializer_class = ZeroBounceResultSerializer
+    queryset = models.ZeroBounceResult.objects.all()
+    serializer_class = serializers.ZeroBounceResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class ZeroBounceResultList(generics.ListCreateAPIView):
@@ -81,8 +74,8 @@ class ZeroBounceResultDetail(generics.RetrieveUpdateDestroyAPIView):
     pass
 
 class DataSourceAPI():
-    queryset = DataSource.objects.all()
-    serializer_class = DataSourceSerializer
+    queryset = models.DataSource.objects.all()
+    serializer_class = serializers.DataSourceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class DataSourceList(
@@ -96,8 +89,8 @@ class DataSourceDetail(
     pass
 
 class SourcedEmailAPI():
-    queryset = SourcedEmail.objects.all()
-    serializer_class = SourcedEmailSerializer
+    queryset = models.SourcedEmail.objects.all()
+    serializer_class = serializers.SourcedEmailSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class SourcedEmailList(
@@ -111,8 +104,8 @@ class SourcedEmailDetail(
     pass
 
 class ChemicalBookResultAPI():
-    queryset = ChemicalBookResult.objects.all()
-    serializer_class = ChemicalBookResultSerializer
+    queryset = models.ChemicalBookResult.objects.all()
+    serializer_class = serializers.ChemicalBookResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class ChemicalBookResultList(
@@ -126,8 +119,8 @@ class ChemicalBookResultDetail(
     pass
 
 class LookChemResultAPI():
-    queryset = LookChemResult.objects.all()
-    serializer_class = LookChemResultSerializer
+    queryset = models.LookChemResult.objects.all()
+    serializer_class = serializers.LookChemResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class LookChemResultList(
@@ -141,8 +134,8 @@ class LookChemResultDetail(
     pass
 
 class WorldOfChemicalResultAPI():
-    queryset = WorldOfChemicalsResult.objects.all()
-    serializer_class = WorldOfChemicalResultSerializer
+    queryset = models.WorldOfChemicalsResult.objects.all()
+    serializer_class = serializers.WorldOfChemicalResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class WorldOfChemicalResultList(
