@@ -5,7 +5,7 @@ from .models import (expirable_invalidable_fieldnames, lead_fieldnames,
 from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
     MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus,
     UnitOfMeasure, UOMRelationship, Supply, Demand, SupplyQuote,
-    ProductionCapability, DemandQuote, Trench, Match)
+    ProductionCapability, DemandQuote, Trench, Match, SupplyCommission)
 
 class IncotermSerializer(serializers.ModelSerializer):
     class Meta:
@@ -107,3 +107,10 @@ class MatchSerializer(serializers.ModelSerializer):
         model = Match
         fields = ['id'] + standard_fieldnames + ['demand_quote', 'supply_quote',
             'status', 'method', 'details_md']
+
+class SupplyCommissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SupplyCommission
+        fields = ['id'] + standard_fieldnames + commission_fieldnames + \
+            expirable_invalidable_fieldnames + ['quotes', 'supply', 'person',
+            'company']
