@@ -1,21 +1,10 @@
-from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
-    MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus,
-    UnitOfMeasure, UOMRelationship, Supply, Demand, SupplyQuote,
-    ProductionCapability, DemandQuote, Trench, Match, SupplyCommission,
-    DemandCommission)
-from .serializers import (IncotermSerializer, CurrencySerializer,
-    PaymentModeSerializer, ContactTypeSerializer, LeadCategorySerializer,
-    MatchMethodSerializer, MatchStatusSerializer, SupplyQuoteStatusSerializer,
-    DemandQuoteStatusSerializer, UnitOfMeasureSerializer,
-    UOMRelationshipSerializer, SupplySerializer, DemandSerializer,
-    SupplyQuoteSerializer, ProductionCapabilitySerializer,
-    DemandQuoteSerializer, TrenchSerializer, MatchSerializer,
-    SupplyCommissionSerializer, DemandCommissionSerializer)
+from . import models
+from . import serializers
 from rest_framework import generics, permissions
 
 class IncotermAPI():
-    queryset = Incoterm.objects.all()
-    serializer_class = IncotermSerializer
+    queryset = models.Incoterm.objects.all()
+    serializer_class = serializers.IncotermSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class IncotermList(
@@ -29,8 +18,8 @@ class IncotermDetail(
     pass
 
 class CurrencyAPI():
-    queryset = Currency.objects.all()
-    serializer_class = CurrencySerializer
+    queryset = models.Currency.objects.all()
+    serializer_class = serializers.CurrencySerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class CurrencyList(
@@ -44,8 +33,8 @@ class CurrencyDetail(
     pass
 
 class PaymentModeAPI():
-    queryset = PaymentMode.objects.all()
-    serializer_class = PaymentModeSerializer
+    queryset = models.PaymentMode.objects.all()
+    serializer_class = serializers.PaymentModeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class PaymentModeList(
@@ -59,8 +48,8 @@ class PaymentModeDetail(
     pass
 
 class ContactTypeAPI():
-    queryset = ContactType.objects.all()
-    serializer_class = ContactTypeSerializer
+    queryset = models.ContactType.objects.all()
+    serializer_class = serializers.ContactTypeSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class ContactTypeList(
@@ -74,8 +63,8 @@ class ContactTypeDetail(
     pass
 
 class LeadCategoryAPI():
-    queryset = LeadCategory.objects.all()
-    serializer_class = LeadCategorySerializer
+    queryset = models.LeadCategory.objects.all()
+    serializer_class = serializers.LeadCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class LeadCategoryList(
@@ -89,8 +78,8 @@ class LeadCategoryDetail(
     pass
 
 class MatchMethodAPI():
-    queryset = MatchMethod.objects.all()
-    serializer_class = MatchMethodSerializer
+    queryset = models.MatchMethod.objects.all()
+    serializer_class = serializers.MatchMethodSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class MatchMethodList(
@@ -104,8 +93,8 @@ class MatchMethodDetail(
     pass
 
 class MatchStatusAPI():
-    queryset = MatchStatus.objects.all()
-    serializer_class = MatchStatusSerializer
+    queryset = models.MatchStatus.objects.all()
+    serializer_class = serializers.MatchStatusSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class MatchStatusList(MatchStatusAPI, generics.ListCreateAPIView):
@@ -115,8 +104,8 @@ class MatchStatusDetail(MatchStatusAPI, generics.RetrieveUpdateDestroyAPIView):
     pass
 
 class SupplyQuoteAPI():
-    queryset = SupplyQuoteStatus.objects.all()
-    serializer_class = SupplyQuoteStatusSerializer
+    queryset = models.SupplyQuoteStatus.objects.all()
+    serializer_class = serializers.SupplyQuoteStatusSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class SupplyQuoteStatusList(
@@ -130,8 +119,8 @@ class SupplyQuoteStatusDetail(
     pass
 
 class DemandQuoteStatusAPI():
-    queryset = DemandQuoteStatus.objects.all()
-    serializer_class = DemandQuoteStatusSerializer
+    queryset = models.DemandQuoteStatus.objects.all()
+    serializer_class = serializers.DemandQuoteStatusSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class DemandQuoteStatusList(
@@ -145,8 +134,8 @@ class DemandQuoteStatusDetail(
     pass
 
 class UnitOfMeasureAPI():
-    queryset = UnitOfMeasure.objects.all()
-    serializer_class = UnitOfMeasureSerializer
+    queryset = models.UnitOfMeasure.objects.all()
+    serializer_class = serializers.UnitOfMeasureSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class UnitOfMeasureList(
@@ -160,8 +149,8 @@ class UnitOfMeasureDetail(
     pass
 
 class UOMRelationshipAPI():
-    queryset = UOMRelationship.objects.all()
-    serializer_class = UOMRelationshipSerializer
+    queryset = models.UOMRelationship.objects.all()
+    serializer_class = serializers.UOMRelationshipSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class UOMRelationshipList(
@@ -175,8 +164,8 @@ class UOMRelationshipDetail(
     pass
 
 class SupplyAPI():
-    queryset = Supply.objects.all()
-    serializer_class = SupplySerializer
+    queryset = models.Supply.objects.all()
+    serializer_class = serializers.SupplySerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class SupplyList(
@@ -190,8 +179,8 @@ class SupplyDetail(
     pass
 
 class DemandAPI():
-    queryset = Demand.objects.all()
-    serializer_class = DemandSerializer
+    queryset = models.Demand.objects.all()
+    serializer_class = serializers.DemandSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class DemandList(
@@ -205,8 +194,8 @@ class DemandDetail(
     pass
 
 class SupplyQuoteAPI():
-    queryset = SupplyQuote.objects.all()
-    serializer_class = SupplyQuoteSerializer
+    queryset = models.SupplyQuote.objects.all()
+    serializer_class = serializers.SupplyQuoteSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class SupplyQuoteList(
@@ -220,8 +209,8 @@ class SupplyQuoteDetail(
     pass
 
 class ProductionCapabilityAPI():
-    queryset = ProductionCapability.objects.all()
-    serializer_class = ProductionCapabilitySerializer
+    queryset = models.ProductionCapability.objects.all()
+    serializer_class = serializers.ProductionCapabilitySerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class ProductionCapabilityList(
@@ -235,8 +224,8 @@ class ProductionCapabilityDetail(
     pass
 
 class DemandQuoteAPI():
-    queryset = DemandQuote.objects.all()
-    serializer_class = DemandQuoteSerializer
+    queryset = models.DemandQuote.objects.all()
+    serializer_class = serializers.DemandQuoteSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class DemandQuoteList(
@@ -250,8 +239,8 @@ class DemandQuoteDetail(
     pass
 
 class TrenchAPI():
-    queryset = Trench.objects.all()
-    serializer_class = TrenchSerializer
+    queryset = models.Trench.objects.all()
+    serializer_class = serializers.TrenchSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class TrenchList(
@@ -265,8 +254,8 @@ class TrenchDetail(
     pass
 
 class MatchAPI():
-    queryset = Match.objects.all()
-    serializer_class = MatchSerializer
+    queryset = models.Match.objects.all()
+    serializer_class = serializers.MatchSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class MatchList(
@@ -280,8 +269,8 @@ class MatchDetail(
     pass
 
 class SupplyCommissionAPI():
-    queryset = SupplyCommission.objects.all()
-    serializer_class = SupplyCommissionSerializer
+    queryset = models.SupplyCommission.objects.all()
+    serializer_class = serializers.SupplyCommissionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class SupplyCommissionList(
@@ -295,8 +284,8 @@ class SupplyCommissionDetail(
     pass
 
 class DemandCommissionAPI():
-    queryset = DemandCommission.objects.all()
-    serializer_class = DemandCommissionSerializer
+    queryset = models.DemandCommission.objects.all()
+    serializer_class = serializers.DemandCommissionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class DemandCommissionList(
