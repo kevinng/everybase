@@ -31,3 +31,18 @@ class PersonLinkDetail(
     PersonLinkAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class PersonCompanyTypeAPI():
+    queryset = models.PersonCompanyType.objects.all()
+    serializer_class = serializers.PersonCompanyTypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PersonCompanyTypeList(
+    PersonCompanyTypeAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class PersonCompanyTypeDetail(
+    PersonCompanyTypeAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

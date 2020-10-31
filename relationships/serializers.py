@@ -12,3 +12,8 @@ class PersonLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PersonLink
         fields = ['id'] + relationship_fieldnames + ['rtype', 'person', 'link']
+
+class PersonCompanyTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PersonCompanyType
+        fields = ['id'] + choice_fieldnames
