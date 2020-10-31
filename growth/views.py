@@ -9,103 +9,148 @@ from .serializers import (GmassCampaignResultSerializer,
     LookChemResultSerializer, WorldOfChemicalResultSerializer)
 from rest_framework import generics, permissions
 
-class GmassCampaignResultList(generics.ListCreateAPIView):
+class GmassCampaignResultAPI():
     queryset = GmassCampaignResult.objects.all()
     serializer_class = GmassCampaignResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class GmassCampaignResultDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = GmassCampaignResult.objects.all()
-    serializer_class = GmassCampaignResultSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class GmassCampaignResultList(
+    GmassCampaignResultAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class GmassCampaignList(generics.ListCreateAPIView):
+class GmassCampaignResultDetail(
+    GmassCampaignResultAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class GmassCampaignAPI():
     queryset = GmassCampaign.objects.all()
     serializer_class = GmassCampaignSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class GmassCampaignDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = GmassCampaign.objects.all()
-    serializer_class = GmassCampaignSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class GmassCampaignList(
+    GmassCampaignAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class ChemicalClusterOfSingaporeResultList(generics.ListCreateAPIView):
+class GmassCampaignDetail(
+    GmassCampaignAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class ChemicalClusterOfSingaporeResultAPI():
     queryset = ChemicalClusterOfSingaporeResult.objects.all()
     serializer_class = ChemicalClusterOfSingaporeResultSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class ChemicalClusterOfSingaporeResultList(
+    ChemicalClusterOfSingaporeResultAPI,
+    generics.ListCreateAPIView):
+    pass
 
 class ChemicalClusterOfSingaporeResultDetail(
-        generics.RetrieveUpdateDestroyAPIView):
-    queryset = ChemicalClusterOfSingaporeResult.objects.all()
-    serializer_class = ChemicalClusterOfSingaporeResultSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    ChemicalClusterOfSingaporeResultAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
 
-class Fibre2FashionResultList(generics.ListCreateAPIView):
+class Fibre2FashionResultAPI():
     queryset = Fibre2FashionResult.objects.all()
     serializer_class = Fibre2FashionResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class Fibre2FashionResultDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Fibre2FashionResult.objects.all()
-    serializer_class = Fibre2FashionResultSerializer
+class Fibre2FashionResultList(
+    Fibre2FashionResultAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class Fibre2FashionResultDetail(
+    Fibre2FashionResultAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class ZeroBounceResultAPI():
+    queryset = ZeroBounceResult.objects.all()
+    serializer_class = ZeroBounceResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class ZeroBounceResultList(generics.ListCreateAPIView):
-    queryset = ZeroBounceResult.objects.all()
-    serializer_class = ZeroBounceResultSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    pass
 
 class ZeroBounceResultDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ZeroBounceResult.objects.all()
-    serializer_class = ZeroBounceResultSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    pass
 
-class DataSourceList(generics.ListCreateAPIView):
+class DataSourceAPI():
     queryset = DataSource.objects.all()
     serializer_class = DataSourceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class DataSourceDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DataSource.objects.all()
-    serializer_class = DataSourceSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class DataSourceList(
+    DataSourceAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class SourcedEmailList(generics.ListCreateAPIView):
+class DataSourceDetail(
+    DataSourceAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class SourcedEmailAPI():
     queryset = SourcedEmail.objects.all()
     serializer_class = SourcedEmailSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class SourcedEmailDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = SourcedEmail.objects.all()
-    serializer_class = SourcedEmailSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class SourcedEmailList(
+    SourcedEmailAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class ChemicalBookResultList(generics.ListCreateAPIView):
+class SourcedEmailDetail(
+    SourcedEmailAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class ChemicalBookResultAPI():
     queryset = ChemicalBookResult.objects.all()
     serializer_class = ChemicalBookResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class ChemicalBookResultDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ChemicalBookResult.objects.all()
-    serializer_class = ChemicalBookResultSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class ChemicalBookResultList(
+    ChemicalBookResultAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class LookChemResultList(generics.ListCreateAPIView):
+class ChemicalBookResultDetail(
+    ChemicalBookResultAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class LookChemResultAPI():
     queryset = LookChemResult.objects.all()
     serializer_class = LookChemResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class LookChemResultDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = LookChemResult.objects.all()
-    serializer_class = LookChemResultSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class LookChemResultList(
+    LookChemResultAPI,
+    generics.ListCreateAPIView):
+    pass
 
-class WorldOfChemicalResultList(generics.ListCreateAPIView):
+class LookChemResultDetail(
+    LookChemResultAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class WorldOfChemicalResultAPI():
     queryset = WorldOfChemicalsResult.objects.all()
     serializer_class = WorldOfChemicalResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class WorldOfChemicalResultDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = WorldOfChemicalsResult.objects.all()
-    serializer_class = WorldOfChemicalResultSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class WorldOfChemicalResultList(
+    WorldOfChemicalResultAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class WorldOfChemicalResultDetail(
+    WorldOfChemicalResultAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
