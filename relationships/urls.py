@@ -8,5 +8,10 @@ urlpatterns = [
         views.PersonLinkTypeList.as_view()),
     path('person_link_type/<int:pk>/',
         views.PersonLinkTypeDetail.as_view()),
+
+    path('person_link/',
+        views.PersonLinkList.as_view()),
+    path('person_link/<int:pk>/',
+        views.PersonLinkDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

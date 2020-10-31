@@ -16,3 +16,18 @@ class PersonLinkTypeDetail(
     PersonLinkTypeAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class PersonLinkAPI():
+    queryset = models.PersonLink.objects.all()
+    serializer_class = serializers.PersonLinkSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PersonLinkList(
+    PersonLinkAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class PersonLinkDetail(
+    PersonLinkAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
