@@ -2,7 +2,7 @@ from rest_framework import serializers
 from common.models import standard_fieldnames, choice_fieldnames
 from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
     MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus,
-    UnitOfMeasure)
+    UnitOfMeasure, UOMRelationship)
 
 class IncotermSerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,3 +53,8 @@ class UnitOfMeasureSerializer(serializers.ModelSerializer):
     class Meta:
         model = UnitOfMeasure
         fields = ['id'] + choice_fieldnames + ['category', 'parents']
+
+class UOMRelationshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UOMRelationship
+        fields = ['id', 'child', 'parent', 'multiple', 'details_md']
