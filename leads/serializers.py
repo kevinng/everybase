@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from common.models import standard_fieldnames, choice_fieldnames
 from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
-    MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus)
+    MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus,
+    UnitOfMeasure)
 
 class IncotermSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,3 +48,8 @@ class DemandQuoteStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = DemandQuoteStatus
         fields = ['id'] + choice_fieldnames
+
+class UnitOfMeasureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UnitOfMeasure
+        fields = ['id'] + choice_fieldnames + ['category', 'parents']
