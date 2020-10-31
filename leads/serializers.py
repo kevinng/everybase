@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from common.models import standard_fieldnames, choice_fieldnames
+from .models import (expirable_invalidable_fieldnames, lead_fieldnames,
+    commission_fieldnames, quote_fieldnames)
 from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
     MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus,
-    UnitOfMeasure, UOMRelationship)
+    UnitOfMeasure, UOMRelationship, Supply)
 
 class IncotermSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,3 +60,9 @@ class UOMRelationshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = UOMRelationship
         fields = ['id', 'child', 'parent', 'multiple', 'details_md']
+
+class SupplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Supply
+        fields = ['id'] + standard_fieldnames + lead_fieldnames + \
+            expirable_invalidable_fieldnames

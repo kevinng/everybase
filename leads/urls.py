@@ -6,7 +6,7 @@ from .views import (IncotermList, IncotermDetail, CurrencyList, CurrencyDetail,
     MatchStatusList, MatchStatusDetail, SupplyQuoteStatusList,
     SupplyQuoteStatusDetail, DemandQuoteStatusList, DemandQuoteStatusDetail,
     UnitOfMeasureList, UnitOfMeasureDetail, UOMRelationshipList,
-    UOMRelationshipDetail)
+    UOMRelationshipDetail, SupplyList, SupplyDetail)
 
 urlpatterns = [
     path('incoterm/', IncotermList.as_view()),
@@ -31,5 +31,7 @@ urlpatterns = [
     path('unit_of_measure/<int:pk>/', UnitOfMeasureDetail.as_view()),
     path('uom_relationship/', UOMRelationshipList.as_view()),
     path('uom_relationship/<int:pk>/', UOMRelationshipDetail.as_view()),
+    path('supply/', SupplyList.as_view()),
+    path('supply/<int:pk>/', SupplyDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
