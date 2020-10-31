@@ -28,3 +28,9 @@ class PersonAddressTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PersonAddressType
         fields = ['id'] + choice_fieldnames
+
+class PersonAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PersonAddress
+        fields = ['id'] + relationship_fieldnames + ['rtype', 'person',
+            'address']

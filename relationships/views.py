@@ -76,3 +76,18 @@ class PersonAddressTypeDetail(
     PersonAddressTypeAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class PersonAddressAPI():
+    queryset = models.PersonAddress.objects.all()
+    serializer_class = serializers.PersonAddressSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PersonAddressList(
+    PersonAddressAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class PersonAddressDetail(
+    PersonAddressAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
