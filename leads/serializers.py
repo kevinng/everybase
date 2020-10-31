@@ -5,7 +5,7 @@ from .models import (expirable_invalidable_fieldnames, lead_fieldnames,
 from .models import (Incoterm, Currency, PaymentMode, ContactType, LeadCategory,
     MatchMethod, MatchStatus, SupplyQuoteStatus, DemandQuoteStatus,
     UnitOfMeasure, UOMRelationship, Supply, Demand, SupplyQuote,
-    ProductionCapability, DemandQuote)
+    ProductionCapability, DemandQuote, Trench, Match)
 
 class IncotermSerializer(serializers.ModelSerializer):
     class Meta:
@@ -94,3 +94,10 @@ class DemandQuoteSerializer(serializers.ModelSerializer):
             expirable_invalidable_fieldnames + ['demand', 'status',
             'details_as_received_md', 'positive_origin_countries',
             'negative_origin_countries', 'negative_details_md']
+
+class TrenchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trench
+        fields = ['id', 'quantity', 'after_deposit_seconds', 'paymode',
+            'payment_before_release', 'details_md', 'supply_quote',
+            'demand_quote']
