@@ -7,7 +7,8 @@ from .views import (GmassCampaignResultList, GmassCampaignResultDetail,
     Fibre2FashionResultDetail, ZeroBounceResultList, ZeroBounceResultDetail,
     DataSourceList, DataSourceDetail, SourcedEmailList, SourcedEmailDetail,
     ChemicalBookResultList, ChemicalBookResultDetail, LookChemResultList,
-    LookChemResultDetail)
+    LookChemResultDetail, WorldOfChemicalResultList,
+    WorldOfChemicalResultDetail)
 
 urlpatterns = [
     path('gmass_campaign_result/', GmassCampaignResultList.as_view()),
@@ -31,6 +32,9 @@ urlpatterns = [
     path('chemical_book_result/', ChemicalBookResultList.as_view()),
     path('chemical_book_result/<int:pk>/', ChemicalBookResultDetail.as_view()),
     path('look_chem_result/', LookChemResultList.as_view()),
-    path('look_chem_result/<int:pk>/', LookChemResultDetail.as_view())
+    path('look_chem_result/<int:pk>/', LookChemResultDetail.as_view()),
+    path('world_of_chemicals_result/', WorldOfChemicalResultList.as_view()),
+    path('world_of_chemicals_result/<int:pk>/',
+        WorldOfChemicalResultDetail.as_view())
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

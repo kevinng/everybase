@@ -637,5 +637,8 @@ class WorldOfChemicalsResult(Standard):
         'WorldOfChemicalsResultEmail',
         'world_of_chemicals_result', 'email',
         'world_of_chemcials_results')
+    
+    def __str__(self):
+        return f'({self.coy_name} [{self.id}])'
 
 # --- End: Growth models ---
