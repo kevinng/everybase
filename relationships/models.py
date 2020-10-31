@@ -4,6 +4,7 @@ from common.models import Standard, Choice
 
 # --- Start: Abstract classes ---
 
+relationship_fieldnames = ['details_md']
 class Relationship(Standard):
     details_md = tf('Details in Markdown')
 
