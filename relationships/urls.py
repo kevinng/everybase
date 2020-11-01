@@ -38,5 +38,10 @@ urlpatterns = [
         views.PersonPhoneNumberTypeList.as_view()),
     path('person_phone_number_type/<int:pk>/',
         views.PersonPhoneNumberTypeDetail.as_view()),
+
+    path('person_phone_number/',
+        views.PersonPhoneNumberList.as_view()),
+    path('person_phone_number/<int:pk>/',
+        views.PersonPhoneNumberDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

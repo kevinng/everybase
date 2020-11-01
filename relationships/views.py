@@ -106,3 +106,18 @@ class PersonPhoneNumberTypeDetail(
     PersonPhoneNumberTypeAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class PersonPhoneNumberAPI():
+    queryset = models.PersonPhoneNumber.objects.all()
+    serializer_class = serializers.PersonPhoneNumberSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PersonPhoneNumberList(
+    PersonPhoneNumberAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class PersonPhoneNumberDetail(
+    PersonPhoneNumberAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
