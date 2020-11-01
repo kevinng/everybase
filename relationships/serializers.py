@@ -34,3 +34,8 @@ class PersonAddressSerializer(serializers.ModelSerializer):
         model = models.PersonAddress
         fields = ['id'] + relationship_fieldnames + ['rtype', 'person',
             'address']
+
+class PersonPhoneNumberTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PersonPhoneNumberType
+        fields = ['id'] + choice_fieldnames
