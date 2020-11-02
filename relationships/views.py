@@ -226,3 +226,18 @@ class CompanyPhoneNumberDetail(
     CompanyPhoneNumberAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class CompanyEmailTypeAPI():
+    queryset = models.CompanyEmailType.objects.all()
+    serializer_class = serializers.CompanyEmailTypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CompanyEmailTypeList(
+    CompanyEmailTypeAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class CompanyEmailTypeDetail(
+    CompanyEmailTypeAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
