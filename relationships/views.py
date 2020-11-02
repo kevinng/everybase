@@ -331,3 +331,18 @@ class AddressDetail(
     AddressAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class PhoneNumberTypeAPI():
+    queryset = models.PhoneNumberType.objects.all()
+    serializer_class = serializers.PhoneNumberTypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PhoneNumberTypeList(
+    PhoneNumberTypeAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class PhoneNumberTypeDetail(
+    PhoneNumberTypeAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

@@ -123,3 +123,8 @@ class AddressSerializer(serializers.ModelSerializer):
         model = models.Address
         fields = ['id'] + standard_fieldnames + ['address_1', 'address_2',
             'address_3', 'country', 'state', 'postal_code']
+
+class PhoneNumberTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PhoneNumberType
+        fields = ['id'] + choice_fieldnames
