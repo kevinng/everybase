@@ -55,3 +55,8 @@ class PersonEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PersonEmail
         fields = ['id'] + relationship_fieldnames + ['rtype', 'person', 'email']
+
+class CompanyLinkTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CompanyLinkType
+        fields = ['id'] + choice_fieldnames

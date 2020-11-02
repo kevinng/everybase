@@ -151,3 +151,18 @@ class PersonEmailDetail(
     PersonEmailAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class CompanyLinkTypeAPI():
+    queryset = models.CompanyLinkType.objects.all()
+    serializer_class = serializers.CompanyLinkTypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CompanyLinkTypeList(
+    CompanyLinkTypeAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class CompanyLinkTypeDetail(
+    CompanyLinkTypeAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
