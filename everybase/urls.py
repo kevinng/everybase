@@ -24,6 +24,7 @@ urlpatterns = [
     # path('materials/', include('materials.urls')),
     # path('products/', include('products.urls')),
 
+    path('communication/', include('communication.urls')),
     path('growth/', include('growth.urls')),
     path('leads/', include('leads.urls')),
     path('relationships/', include('relationships.urls')),
