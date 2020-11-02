@@ -36,3 +36,8 @@ class ConversationEmailSerializer(serializers.ModelSerializer):
         model = models.ConversationEmail
         fields = ['id'] + standard_fieldnames + ['status', 'their_email',
             'our_email', 'conversation']
+
+class ConversationEmailStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ConversationEmailStatus
+        fields = ['id'] + choice_fieldnames
