@@ -18,12 +18,7 @@ from django.urls import include, path
 from django.conf.urls import include
 
 urlpatterns = [
-    # path('', include('lander.urls')),
-    # path('', include('accounts.urls')),
-    # path('documents/', include('documents.urls')),
-    # path('materials/', include('materials.urls')),
-    # path('products/', include('products.urls')),
-
+    path('common/', include('common.urls')),
     path('communication/', include('communication.urls')),
     path('growth/', include('growth.urls')),
     path('leads/', include('leads.urls')),
