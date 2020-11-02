@@ -59,6 +59,11 @@ class ConversationVoiceSerializer(serializers.ModelSerializer):
         fields = ['id'] + standard_fieldnames + ['status', 'their_number',
             'our_number', 'conversation']
 
+class ConversationVoiceStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ConversationVoiceStatus
+        fields = ['id'] + choice_fieldnames
+
 class ConversationVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ConversationVideo

@@ -54,6 +54,11 @@ urlpatterns = [
     path('conversation_voice/<int:pk>/',
         views.ConversationVoiceDetail.as_view()),
 
+    path('conversation_voice_status/',
+        views.ConversationVoiceStatusList.as_view()),
+    path('conversation_voice_status/<int:pk>/',
+        views.ConversationVoiceStatusDetail.as_view()),
+
     path('conversation_video/',
         views.ConversationVideoList.as_view()),
     path('conversation_video/<int:pk>/',

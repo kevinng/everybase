@@ -152,6 +152,21 @@ class ConversationVoiceDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
+class ConversationVoiceStatusAPI():
+    queryset = models.ConversationVoiceStatus.objects.all()
+    serializer_class = serializers.ConversationVoiceStatusSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ConversationVoiceStatusList(
+    ConversationVoiceStatusAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ConversationVoiceStatusDetail(
+    ConversationVoiceStatusAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
 class ConversationVideoAPI():
     queryset = models.ConversationVideo.objects.all()
     serializer_class = serializers.ConversationVideoSerializer
