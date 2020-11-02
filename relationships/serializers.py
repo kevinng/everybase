@@ -107,3 +107,8 @@ class CompanySerializer(serializers.ModelSerializer):
         fields = ['id'] + standard_fieldnames + ['company_name',
             'company_name_wo_postfix', 'notes_md', 'emails', 'phone_numbers',
             'addresses', 'links']
+
+class EmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Company
+        fields = ['id'] + standard_fieldnames
