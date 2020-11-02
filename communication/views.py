@@ -46,3 +46,18 @@ class IssueStatusDetail(
     IssueStatusAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class ConversationAPI():
+    queryset = models.Conversation.objects.all()
+    serializer_class = serializers.ConversationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ConversationList(
+    ConversationAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ConversationDetail(
+    ConversationAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

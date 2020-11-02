@@ -18,3 +18,10 @@ class IssueStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.IssueStatus
         fields = ['id'] + choice_fieldnames + ['parent']
+
+class ConversationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Conversation
+        fields = ['id'] + standard_fieldnames + ['channel', 'agenda_md',
+            'minutes_md', 'front_conversation_id', 'emails', 'chats', 'voices',
+            'videos', 'issue']

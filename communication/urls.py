@@ -18,5 +18,10 @@ urlpatterns = [
         views.IssueStatusList.as_view()),
     path('issue_status/<int:pk>/',
         views.IssueStatusDetail.as_view()),
+
+    path('conversation/',
+        views.ConversationList.as_view()),
+    path('conversation/<int:pk>/',
+        views.ConversationDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
