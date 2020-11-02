@@ -92,4 +92,11 @@ class CompanyEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CompanyEmail
         fields = ['id'] + relationship_fieldnames + ['rtype', 'company',
-            'email']     
+            'email']
+
+class PersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Person
+        fields = ['id'] + standard_fieldnames + ['given_name', 'family_name',
+            'country', 'state', 'notes_md', 'companies', 'emails',
+            'phone_numbers', 'addresses', 'links']

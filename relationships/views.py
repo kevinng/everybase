@@ -256,3 +256,18 @@ class CompanyEmailDetail(
     CompanyEmailAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class PersonAPI():
+    queryset = models.Person.objects.all()
+    serializer_class = serializers.PersonSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PersonList(
+    PersonAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class PersonDetail(
+    PersonAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
