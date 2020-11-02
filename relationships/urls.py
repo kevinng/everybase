@@ -59,6 +59,11 @@ urlpatterns = [
     path('company_link_type/<int:pk>/',
         views.CompanyLinkTypeDetail.as_view()),
 
+    path('company_address_type/',
+        views.CompanyAddressTypeList.as_view()),
+    path('company_address_type/<int:pk>/',
+        views.CompanyAddressTypeDetail.as_view()),
+
     path('company_address/',
         views.CompanyAddressList.as_view()),
     path('company_address/<int:pk>/',

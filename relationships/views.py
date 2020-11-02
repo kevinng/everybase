@@ -167,6 +167,21 @@ class CompanyLinkTypeDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
+class CompanyAddressTypeAPI():
+    queryset = models.CompanyAddressType.objects.all()
+    serializer_class = serializers.CompanyAddressTypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CompanyAddressTypeList(
+    CompanyAddressTypeAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class CompanyAddressTypeDetail(
+    CompanyAddressTypeAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
 class CompanyAddressAPI():
     queryset = models.CompanyAddress.objects.all()
     serializer_class = serializers.CompanyAddressSerializer
