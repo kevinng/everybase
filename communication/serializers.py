@@ -8,3 +8,8 @@ class IssueSerializer(serializers.ModelSerializer):
         fields = ['id', 'scheduled', 'description_md', 'outcome_md', 'tags',
             'status', 'supply', 'demand', 'supply_quote', 'match',
             'supply_commission', 'demand_commission']
+
+class IssueTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.IssueTag
+        fields = ['id'] + choice_fieldnames + ['parent']

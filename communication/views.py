@@ -16,3 +16,18 @@ class IssueDetail(
     IssueAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class IssueTagAPI():
+    queryset = models.IssueTag.objects.all()
+    serializer_class = serializers.IssueTagSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class IssueTagList(
+    IssueTagAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class IssueTagDetail(
+    IssueTagAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
