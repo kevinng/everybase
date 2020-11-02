@@ -50,3 +50,8 @@ class PersonEmailTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PersonEmailType
         fields = ['id'] + choice_fieldnames
+
+class PersonEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PersonEmail
+        fields = ['id'] + relationship_fieldnames + ['rtype', 'person', 'email']

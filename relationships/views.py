@@ -136,3 +136,18 @@ class PersonEmailTypeDetail(
     PersonEmailTypeAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class PersonEmailAPI():
+    queryset = models.PersonEmail.objects.all()
+    serializer_class = serializers.PersonEmailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class PersonEmailList(
+    PersonEmailAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class PersonEmailDetail(
+    PersonEmailAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

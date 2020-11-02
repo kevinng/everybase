@@ -48,5 +48,10 @@ urlpatterns = [
         views.PersonEmailTypeList.as_view()),
     path('person_email_type/<int:pk>/',
         views.PersonEmailTypeDetail.as_view()),
+
+    path('person_email/',
+        views.PersonEmailTypeList.as_view()),
+    path('person_email/<int:pk>/',
+        views.PersonEmailTypeDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
