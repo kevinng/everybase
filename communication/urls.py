@@ -53,5 +53,10 @@ urlpatterns = [
         views.ConversationVoiceList.as_view()),
     path('conversation_voice/<int:pk>/',
         views.ConversationVoiceDetail.as_view()),
+
+    path('conversation_video/',
+        views.ConversationVideoList.as_view()),
+    path('conversation_video/<int:pk>/',
+        views.ConversationVideoDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -151,3 +151,18 @@ class ConversationVoiceDetail(
     ConversationVoiceAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class ConversationVideoAPI():
+    queryset = models.ConversationVideo.objects.all()
+    serializer_class = serializers.ConversationVideoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ConversationVideoList(
+    ConversationVideoAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ConversationVideoDetail(
+    ConversationVideoAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
