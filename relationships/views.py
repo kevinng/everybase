@@ -316,3 +316,18 @@ class LinkDetail(
     LinkAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class AddressAPI():
+    queryset = models.Address.objects.all()
+    serializer_class = serializers.AddressSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class AddressList(
+    AddressAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class AddressDetail(
+    AddressAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

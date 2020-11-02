@@ -117,3 +117,9 @@ class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Link
         fields = ['id'] + standard_fieldnames + ['verified', 'link']
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Address
+        fields = ['id'] + standard_fieldnames + ['address_1', 'address_2',
+            'address_3', 'country', 'state', 'postal_code']
