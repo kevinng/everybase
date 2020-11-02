@@ -121,3 +121,18 @@ class ConversationChatDetail(
     ConversationChatAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class ConversationChatStatusAPI():
+    queryset = models.ConversationChatStatus.objects.all()
+    serializer_class = serializers.ConversationChatStatusSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ConversationChatStatusList(
+    ConversationChatStatusAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ConversationChatStatusDetail(
+    ConversationChatStatusAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
