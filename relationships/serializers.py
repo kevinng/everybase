@@ -87,3 +87,9 @@ class CompanyEmailTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CompanyEmailType
         fields = ['id'] + choice_fieldnames
+
+class CompanyEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CompanyEmail
+        fields = ['id'] + relationship_fieldnames + ['rtype', 'company',
+            'email']     

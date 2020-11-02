@@ -241,3 +241,18 @@ class CompanyEmailTypeDetail(
     CompanyEmailTypeAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class CompanyEmailAPI():
+    queryset = models.CompanyEmail.objects.all()
+    serializer_class = serializers.CompanyEmailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CompanyEmailList(
+    CompanyEmailAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class CompanyEmailDetail(
+    CompanyEmailAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

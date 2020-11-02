@@ -83,5 +83,10 @@ urlpatterns = [
         views.CompanyEmailTypeList.as_view()),
     path('company_email_type/<int:pk>/',
         views.CompanyEmailTypeDetail.as_view()),
+
+    path('company_email/',
+        views.CompanyEmailList.as_view()),
+    path('company_email/<int:pk>/',
+        views.CompanyEmailDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
