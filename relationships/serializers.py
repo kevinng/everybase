@@ -76,3 +76,9 @@ class CompanyPhoneNumberTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CompanyPhoneNumberType
         fields = ['id'] + choice_fieldnames
+
+class CompanyPhoneNumberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CompanyPhoneNumber
+        fields = ['id'] + relationship_fieldnames + ['rtype', 'company',
+            'phone_number']

@@ -211,3 +211,18 @@ class CompanyPhoneNumberTypeDetail(
     CompanyPhoneNumberTypeAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class CompanyPhoneNumberAPI():
+    queryset = models.CompanyPhoneNumber.objects.all()
+    serializer_class = serializers.CompanyPhoneNumberSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CompanyPhoneNumberList(
+    CompanyPhoneNumberAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class CompanyPhoneNumberDetail(
+    CompanyPhoneNumberAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
