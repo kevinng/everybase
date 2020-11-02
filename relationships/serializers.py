@@ -128,3 +128,9 @@ class PhoneNumberTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PhoneNumberType
         fields = ['id'] + choice_fieldnames
+
+class PhoneNumberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PhoneNumber
+        fields = ['id'] + standard_fieldnames + ['types', 'country_code',
+            'national_number']
