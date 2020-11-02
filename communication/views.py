@@ -61,3 +61,18 @@ class ConversationDetail(
     ConversationAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class ConversationChannelAPI():
+    queryset = models.ConversationChannel.objects.all()
+    serializer_class = serializers.ConversationChannelSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ConversationChannelList(
+    ConversationChannelAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ConversationChannelDetail(
+    ConversationChannelAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

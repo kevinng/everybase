@@ -25,3 +25,8 @@ class ConversationSerializer(serializers.ModelSerializer):
         fields = ['id'] + standard_fieldnames + ['channel', 'agenda_md',
             'minutes_md', 'front_conversation_id', 'emails', 'chats', 'voices',
             'videos', 'issue']
+
+class ConversationChannelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ConversationChannel
+        fields = ['id'] + choice_fieldnames
