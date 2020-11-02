@@ -112,3 +112,8 @@ class EmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Email
         fields = ['id'] + standard_fieldnames + ['email']
+
+class LinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Link
+        fields = ['id'] + standard_fieldnames + ['verified', 'link']

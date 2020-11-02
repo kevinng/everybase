@@ -108,5 +108,10 @@ urlpatterns = [
         views.EmailList.as_view()),
     path('email/<int:pk>/',
         views.EmailDetail.as_view()),
+
+    path('link/',
+        views.LinkList.as_view()),
+    path('link/<int:pk>/',
+        views.LinkDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

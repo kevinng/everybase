@@ -301,3 +301,18 @@ class EmailDetail(
     EmailAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class LinkAPI():
+    queryset = models.Link.objects.all()
+    serializer_class = serializers.LinkSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class LinkList(
+    LinkAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class LinkDetail(
+    LinkAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
