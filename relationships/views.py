@@ -196,3 +196,18 @@ class CompanyAddressDetail(
     CompanyAddressAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class CompanyPhoneNumberTypeAPI():
+    queryset = models.CompanyPhoneNumberType.objects.all()
+    serializer_class = serializers.CompanyPhoneNumberTypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CompanyPhoneNumberTypeList(
+    CompanyPhoneNumberTypeAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class CompanyPhoneNumberTypeDetail(
+    CompanyPhoneNumberTypeAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

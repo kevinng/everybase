@@ -71,3 +71,8 @@ class CompanyAddressSerializer(serializers.ModelSerializer):
         model = models.CompanyAddress
         fields = ['id'] + relationship_fieldnames + ['rtype', 'company',
             'address']
+
+class CompanyPhoneNumberTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CompanyPhoneNumberType
+        fields = ['id'] + choice_fieldnames
