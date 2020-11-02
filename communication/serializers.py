@@ -13,3 +13,8 @@ class IssueTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.IssueTag
         fields = ['id'] + choice_fieldnames + ['parent']
+
+class IssueStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.IssueStatus
+        fields = ['id'] + choice_fieldnames + ['parent']
