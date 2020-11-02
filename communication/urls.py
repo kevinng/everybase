@@ -38,5 +38,10 @@ urlpatterns = [
         views.ConversationEmailStatusList.as_view()),
     path('conversation_email_status/<int:pk>/',
         views.ConversationEmailStatusDetail.as_view()),
+
+    path('conversation_chat/',
+        views.ConversationChatList.as_view()),
+    path('conversation_chat/<int:pk>/',
+        views.ConversationChatDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

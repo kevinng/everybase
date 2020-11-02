@@ -106,3 +106,18 @@ class ConversationEmailStatusDetail(
     ConversationEmailStatusAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class ConversationChatAPI():
+    queryset = models.ConversationChat.objects.all()
+    serializer_class = serializers.ConversationChatSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ConversationChatList(
+    ConversationChatAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ConversationChatDetail(
+    ConversationChatAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
