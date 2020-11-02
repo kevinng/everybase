@@ -58,5 +58,10 @@ urlpatterns = [
         views.CompanyLinkTypeList.as_view()),
     path('company_link_type/<int:pk>/',
         views.CompanyLinkTypeDetail.as_view()),
+
+    path('company_address/',
+        views.CompanyAddressList.as_view()),
+    path('company_address/<int:pk>/',
+        views.CompanyAddressDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

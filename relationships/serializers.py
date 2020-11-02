@@ -60,3 +60,9 @@ class CompanyLinkTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CompanyLinkType
         fields = ['id'] + choice_fieldnames
+
+class CompanyAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CompanyAddress
+        fields = ['id'] + relationship_fieldnames + ['rtype', 'company',
+            'address']
