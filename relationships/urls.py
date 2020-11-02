@@ -93,5 +93,15 @@ urlpatterns = [
         views.PersonList.as_view()),
     path('person/<int:pk>/',
         views.PersonDetail.as_view()),
+
+    path('company/',
+        views.CompanyList.as_view()),
+    path('company/<int:pk>/',
+        views.CompanyDetail.as_view()),
+
+    path('company/',
+        views.CompanyList.as_view()),
+    path('company/<int:pk>/',
+        views.CompanyDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

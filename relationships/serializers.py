@@ -100,3 +100,10 @@ class PersonSerializer(serializers.ModelSerializer):
         fields = ['id'] + standard_fieldnames + ['given_name', 'family_name',
             'country', 'state', 'notes_md', 'companies', 'emails',
             'phone_numbers', 'addresses', 'links']
+
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Company
+        fields = ['id'] + standard_fieldnames + ['company_name',
+            'company_name_wo_postfix', 'notes_md', 'emails', 'phone_numbers',
+            'addresses', 'links']
