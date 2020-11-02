@@ -30,3 +30,9 @@ class ConversationChannelSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ConversationChannel
         fields = ['id'] + choice_fieldnames
+
+class ConversationEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ConversationEmail
+        fields = ['id'] + standard_fieldnames + ['status', 'their_email',
+            'our_email', 'conversation']
