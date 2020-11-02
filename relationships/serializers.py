@@ -110,5 +110,5 @@ class CompanySerializer(serializers.ModelSerializer):
 
 class EmailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Company
-        fields = ['id'] + standard_fieldnames
+        model = models.Email
+        fields = ['id'] + standard_fieldnames + ['email']
