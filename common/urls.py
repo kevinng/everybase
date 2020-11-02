@@ -8,5 +8,10 @@ urlpatterns = [
         views.CountryList.as_view()),
     path('country/<int:pk>/',
         views.CountryDetail.as_view()),
+
+    path('state/',
+        views.StateList.as_view()),
+    path('state/<int:pk>/',
+        views.StateDetail.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

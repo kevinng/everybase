@@ -5,4 +5,9 @@ from . import models
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Country
-        fields = ['id'] + choice_fieldnames + ['cc_tld'] 
+        fields = ['id'] + choice_fieldnames + ['cc_tld']
+
+class StateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.State
+        fields = ['id'] + choice_fieldnames + ['country'] 
