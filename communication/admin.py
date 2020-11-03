@@ -1,178 +1,141 @@
 from django.contrib import admin
-from common.admin import (standard_readonly_fields, standard_fieldsets,
-    ChoiceAdmin, ParentChildrenChoiceAdmin, short_text, standard_ordering,
-    standard_list_filter, standard_list_display, standard_list_editable)
-from .models import (Issue, IssueTag, IssueStatus, Conversation,
-    ConversationChannel, ConversationEmail, ConversationEmailStatus,
-    ConversationChat, ConversationChatStatus, ConversationVoice,
-    ConversationVoiceStatus, ConversationVideo, ConversationVideoStatus)
+from . import models as mod
+from common import admin as comadm
 
-@admin.register(Conversation)
+@admin.register(mod.Conversation)
 class ConversationAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['channel', 'agenda_md',
+    list_display = comadm.standard_list_display + ['channel', 'agenda_md',
         'minutes_md', 'front_conversation_id', 'issue']
-    list_editable = standard_list_editable + ['agenda_md', 'channel',
+    list_editable = comadm.standard_list_editable + ['agenda_md', 'channel',
         'minutes_md', 'front_conversation_id', 'issue']
-    list_filter = standard_list_filter + ['channel']
+    list_filter = comadm.standard_list_filter + ['channel']
     search_fields = ['id', 'agenda_md', 'minutes_md', 'front_conversation_id',
         'issue']
     list_per_page = 1000
-    ordering = standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Channel', {
-            'fields': ['channel']
-        }),
-        (None, {
-            'fields': ['emails', 'chats', 'voices', 'videos'],
-            'description': 'One of the following channels must be set'
-        }),
-        ('Details', {
-            'fields': ['front_conversation_id', 'agenda_md', 'minutes_md',
-                'issue']
-        })
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['channel']}),
+        (None, {'fields': ['emails', 'chats', 'voices', 'videos'],
+            'description': 'One of the following channels must be set'}),
+        (None, {'fields': ['front_conversation_id', 'agenda_md', 'minutes_md',
+            'issue']})
     ]
     autocomplete_fields = ['channel', 'emails', 'chats', 'voices', 'videos',
         'issue']
 
-@admin.register(ConversationChat)
+@admin.register(mod.ConversationChat)
 class ConversationChatAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['status', 'our_number',
+    list_display = comadm.standard_list_display + ['status', 'our_number',
         'their_number', 'conversation']
-    list_editable = standard_list_editable + ['status', 'our_number',
+    list_editable = comadm.standard_list_editable + ['status', 'our_number',
         'their_number', 'conversation'] 
     list_per_page = 1000
-    list_filter = standard_list_filter + ['status']
+    list_filter = comadm.standard_list_filter + ['status']
     search_fields = ['id', 'their_number', 'our_number', 'conversation']
-    ordering = standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
     
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Basic Details', {'fields': ['status']}),
-        ('Phone Numbers', {
-            'fields': ['their_number', 'our_number'],
-            'description': 'Phone numbers involved in this chat conversation'
-        }),
-        ('Conversation', {
-            'fields': ['conversation'],
-            'description': 'Base conversation'
-        })
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['status', 'their_number', 'our_number',
+            'conversation']})]
     autocomplete_fields = ['status', 'their_number', 'our_number',
         'conversation']
 
-@admin.register(ConversationEmail)
+@admin.register(mod.ConversationEmail)
 class ConversationEmailAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['status', 'our_email',
+    list_display = comadm.standard_list_display + ['status', 'our_email',
         'their_email', 'conversation']
-    list_editable = standard_list_editable + ['status', 'our_email',
+    list_editable = comadm.standard_list_editable + ['status', 'our_email',
         'their_email', 'conversation']
     list_per_page = 1000
-    list_filter = standard_list_filter + ['status']
+    list_filter = comadm.standard_list_filter + ['status']
     search_fields = ['id', 'our_email', 'their_email', 'conversation']
-    ordering = standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Basic Details', {'fields': ['status']}),
-        ('Emails', {
-            'fields': ['their_email', 'our_email'],
-            'description': 'Emails involved in this conversation'
-        }),
-        ('Conversation', {
-            'fields': ['conversation'],
-            'description': 'Base conversation'
-        })
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['status']}),
+        (None, {'fields': ['their_email', 'our_email', 'conversation']})]
     autocomplete_fields = ['status', 'their_email', 'our_email', 'conversation']
 
-@admin.register(ConversationVoice, ConversationVideo)
+@admin.register(
+    mod.ConversationVoice,
+    mod.ConversationVideo)
 class ConversationVoiceAndVideoAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['status', 'our_number',
+    list_display = comadm.standard_list_display + ['status', 'our_number',
         'their_number', 'conversation']
-    list_editable = standard_list_editable + ['status', 'our_number',
+    list_editable = comadm.standard_list_editable + ['status', 'our_number',
         'their_number', 'conversation'] 
     list_per_page = 1000
-    list_filter = standard_list_filter + ['status']
+    list_filter = comadm.standard_list_filter + ['status']
     search_fields = ['id', 'their_number', 'our_number', 'conversation']
-    ordering = standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Basic Details', {'fields': ['status']}),
-        ('Phone Numbers', {
-            'fields': ['their_number', 'our_number'],
-            'description': 'Phone numbers involved in this chat conversation'
-        }),
-        ('Conversation', {
-            'fields': ['conversation'],
-            'description': 'Base conversation'
-        })
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['status']}),
+        (None, {'fields': ['their_number', 'our_number']}),
+        (None, {'fields': ['conversation']})]
     autocomplete_fields = ['status', 'their_number', 'our_number',
         'conversation']
 
-@admin.register(ConversationChannel, ConversationChatStatus,
-    ConversationEmailStatus, ConversationVideoStatus, ConversationVoiceStatus)
-class ChoiceAdmin(ChoiceAdmin):
+@admin.register(
+    mod.ConversationChannel,
+    mod.ConversationChatStatus,
+    mod.ConversationEmailStatus,
+    mod.ConversationVideoStatus,
+    mod.ConversationVoiceStatus)
+class ChoiceAdmin(comadm.ChoiceAdmin):
     pass
 
-@admin.register(IssueStatus, IssueTag)
-class ParentChildrenChoiceAdmin(ParentChildrenChoiceAdmin):
+@admin.register(
+    mod.IssueStatus,
+    mod.IssueTag)
+class ParentChildrenChoiceAdmin(comadm.ParentChildrenChoiceAdmin):
     pass
 
-@admin.register(Issue)
+@admin.register(mod.Issue)
 class IssueAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['status', 'scheduled',
+    list_display = comadm.standard_list_display + ['status', 'scheduled',
         'source_type', 'tags_string', 'description_md', 'outcome_md']
-    list_editable = standard_list_editable + ['status', 'scheduled',
+    list_editable = comadm.standard_list_editable + ['status', 'scheduled',
         'description_md', 'outcome_md']
     list_per_page = 1000
-    list_filter = standard_list_filter + ['status', 'tags']
+    list_filter = comadm.standard_list_filter + ['status', 'tags']
     search_fields = ['id', 'description_md', 'outcome_md']
-    ordering = standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Schedule', {
-            'fields': ['scheduled'],
-            'description': 'Time scheduled to begin working on this issue'
-        }),
-        ('Notes', {
-            'fields': ['description_md', 'outcome_md'],
-            'description': 'Notes on this issue'
-        }),
-        ('Meta-Data', {
-            'fields': ['status', 'tags']
-        }),
-        ('Source', {
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['scheduled', 'description_md', 'outcome_md',
+            'status', 'tags']}),
+        (None, {
             'fields': ['supply', 'demand', 'supply_quote', 'match',
                 'supply_commission', 'demand_commission'],
             'description': 'Source of this issue - at least one of these must \
-                be set'
-        })
-    ]
+                be set'})]
     autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
         'match', 'supply_commission', 'demand_commission']
 
