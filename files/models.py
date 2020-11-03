@@ -1,6 +1,6 @@
 from django.db import models
 from common.models import fk, uid, dtf, cf, pintf, tf, m2mt, m2m
-from common.models import Standard, Choice, short_text
+from common.models import Standard, Choice
 
 # --- Start: Abstract classes ---
 
