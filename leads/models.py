@@ -15,7 +15,7 @@ class ExpirableInvalidable(models.Model):
         abstract = True
 
 lead_fieldnames = ['category', 'display_name', 'base_uom', 'details_md',
-    'files', 'contact', 'company', 'contact_type', 'contact_type_details_md']
+    'contact', 'company', 'contact_type', 'contact_type_details_md']
 class Lead(models.Model):
     category = fk('LeadCategory', '%(class)s_leads')
     display_name = cf()
@@ -23,7 +23,6 @@ class Lead(models.Model):
     base_uom = fk('UnitOfMeasure', '%(class)s_leads', 'Base UOM')
 
     details_md = tf('Details in Markdown', True)
-    files = m2m('files.File', '%(class)s_leads', True)
 
     contact = fk('relationships.Person', '%(class)s_leads')
     company = fk('relationships.Company', '%(class)s_leads', null=True)

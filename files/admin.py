@@ -11,30 +11,31 @@ class FileTagAdmin(ParentChildrenChoiceAdmin):
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['s3_url', 'details_md',
-        'source_person', 'source_issue']
-    list_editable = standard_list_editable + ['s3_url', 'details_md',
-        'source_person', 'source_issue']
-    list_filter = standard_list_filter + ['source_person', 'source_issue']
-    search_fields = ['id', 's3_url', 'details_md', 'source_person',
-        'source_issue']
+    list_display = standard_list_display + ['uuid', 'upload_confirmed',
+        's3_bucket_name', 's3_object_key', 's3_object_content_length',
+        's3_object_e_tag', 's3_object_content_type', 's3_object_last_modified',
+        'details_md']
+    list_editable = standard_list_editable + ['upload_confirmed',
+        's3_bucket_name', 's3_object_key', 's3_object_content_length',
+        's3_object_e_tag', 's3_object_content_type', 's3_object_last_modified',
+        'details_md']
+    list_filter = standard_list_filter + ['upload_confirmed',
+        's3_object_last_modified']
+    search_fields = ['id', 'uuid', 's3_bucket_name', 's3_object_key',
+        's3_object_e_tag', 'tags']
     list_per_page = 1000
     ordering = standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
+    readonly_fields = standard_readonly_fields + ['uuid']
     fieldsets = standard_fieldsets + [
         ('Details', {
-            'fields': ['s3_url', 'details_md', 'tags']
-        }),
-        ('Source', {
-            'fields': ['source_person', 'source_issue']
-        }),
-        ('Anonymization', {
-            'fields': ['anonymization_source']
-        }),
+            'fields': ['s3_bucket_name', 's3_object_key',
+                's3_object_content_length', 's3_object_e_tag',
+                's3_object_content_type', 's3_object_last_modified',
+                'details_md', 'tags']
+        })
     ]
-    autocomplete_fields = ['tags', 'source_person', 'source_issue',
-        'anonymization_source']
+    autocomplete_fields = ['tags']

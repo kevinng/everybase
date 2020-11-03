@@ -43,8 +43,8 @@ lead_fieldsets = [
 
 lead_filter = ['category', 'base_uom', 'contact_type']
 
-lead_autocomplete_fields = ['category', 'base_uom', 'files', 'contact',
-    'company', 'contact_type']
+lead_autocomplete_fields = ['category', 'base_uom', 'contact', 'company',
+    'contact_type']
 
 lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
     'company', 'contact_type', 'contact_type_details_md']
