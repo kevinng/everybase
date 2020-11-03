@@ -45,8 +45,8 @@ class PersonCompany(Relationship):
     company = fk('Company', 'companies')
 
     class Meta:
-        verbose_name = 'Person-company'
-        verbose_name_plural = 'Person-companies'
+        verbose_name = 'Person-company relationship'
+        verbose_name_plural = 'Person-company relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.person}, {self.company} [{self.id}])'
@@ -63,8 +63,8 @@ class PersonAddress(Relationship):
     address = fk('Address', 'person_address_relationships')
 
     class Meta:
-        verbose_name = 'Person-address'
-        verbose_name_plural = 'Person-addresses'
+        verbose_name = 'Person-address relationship'
+        verbose_name_plural = 'Person-address relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.person}, {self.address} [{self.id}])'
@@ -81,8 +81,8 @@ class PersonPhoneNumber(Relationship):
     phone_number = fk('PhoneNumber', 'person_phonenumber_relationships')
 
     class Meta:
-        verbose_name = 'Person-phonenumber'
-        verbose_name_plural = 'Person-phonenumbers'
+        verbose_name = 'Person-phonenumber relationship'
+        verbose_name_plural = 'Person-phonenumber relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.person}, {self.phone_number} [{self.id}])'
@@ -99,8 +99,8 @@ class PersonEmail(Relationship):
     email = fk('Email', 'person_email_relationships')
 
     class Meta:
-        verbose_name = 'Person-email'
-        verbose_name_plural = 'Person-emails'
+        verbose_name = 'Person-email relationship'
+        verbose_name_plural = 'Person-email relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.person}, {self.email} [{self.id}])'
@@ -121,8 +121,8 @@ class CompanyLink(Relationship):
     link = fk('Link', 'company_link_relationships')
 
     class Meta:
-        verbose_name = 'Company-link'
-        verbose_name_plural = 'Company-links'
+        verbose_name = 'Company-link relationship'
+        verbose_name_plural = 'Company-link relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.company}, {self.link} [{self.id}])'
@@ -139,8 +139,8 @@ class CompanyAddress(Relationship):
     address = fk('Address', 'company_address_relationships')
 
     class Meta:
-        verbose_name = 'Company-address'
-        verbose_name_plural = 'Company-addresses'
+        verbose_name = 'Company-address relationship'
+        verbose_name_plural = 'Company-addresse relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.company}, {self.address} [{self.id}])'
@@ -157,8 +157,8 @@ class CompanyPhoneNumber(Relationship):
     phone_number = fk('PhoneNumber', 'company_phonenumber_relationships')
 
     class Meta:
-        verbose_name = 'Company-phonenumber'
-        verbose_name_plural = 'Company-phonenumbers'
+        verbose_name = 'Company-phonenumber relationship'
+        verbose_name_plural = 'Company-phonenumber relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.company}, {self.phone_number} \
@@ -176,8 +176,8 @@ class CompanyEmail(Relationship):
     email = fk('Email', 'company_email_relationships')
 
     class Meta:
-        verbose_name = 'Company-email'
-        verbose_name_plural = 'Company-emails'
+        verbose_name = 'Company-email relationship'
+        verbose_name_plural = 'Company-email relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.company}, {self.email} [{self.id}])'
