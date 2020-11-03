@@ -1,291 +1,265 @@
 from django.contrib import admin
-from .models import (PersonLinkType, PersonLink, PersonCompany,
-    PersonCompanyType, PersonAddressType, PersonAddress, PersonPhoneNumberType,
-    PersonPhoneNumber, PersonEmailType, PersonEmail, CompanyLinkType,
-    CompanyLink, CompanyAddressType, CompanyAddress, CompanyPhoneNumberType,
-    CompanyPhoneNumber, CompanyEmailType, CompanyEmail, Person, Company, Email,
-    Link, Address, PhoneNumberType, PhoneNumber)
-from common.admin import (ChoiceAdmin, standard_list_display,
-    standard_list_editable, standard_list_filter, standard_ordering,
-    standard_readonly_fields, standard_fieldsets)
 
+from . import models as mod
 from common import admin as comadm
 
-@admin.register(PersonLinkType, PersonCompanyType, PersonAddressType,
-    PersonPhoneNumberType, PersonEmailType, CompanyLinkType, CompanyAddressType,
-    CompanyPhoneNumberType, CompanyEmailType, PhoneNumberType)
-class ChoiceAdmin(ChoiceAdmin):
+@admin.register(
+    mod.PersonLinkType,
+    mod.PersonCompanyType,
+    mod.PersonAddressType,
+    mod.PersonPhoneNumberType,
+    mod.PersonEmailType,
+    mod.CompanyLinkType,
+    mod.CompanyAddressType,
+    mod.CompanyPhoneNumberType,
+    mod.CompanyEmailType,
+    mod.PhoneNumberType)
+class ChoiceAdmin(comadm.ChoiceAdmin):
     pass
 
-@admin.register(Address)
+_address_fields = ['address_1', 'address_2', 'address_3', 'country',
+    'state', 'postal_code']
+@admin.register(mod.Address)
 class AddressAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['address_1', 'address_2',
-        'address_3', 'country', 'state', 'postal_code']
-    list_editable = standard_list_editable + ['address_1', 'address_2',
-        'address_3', 'country', 'state', 'postal_code']
+    list_display = comadm.standard_list_display + _address_fields
+    list_editable = comadm.standard_list_editable + _address_fields
     list_per_page = 1000
-    list_filter = standard_list_filter + ['country', 'state']
-    search_fields = ['id', 'address_1', 'address_2', 'address_3', 'country',
-        'state', 'postal_code']
-    ordering = standard_ordering
+    list_filter = comadm.standard_list_filter + ['country', 'state']
+    search_fields = ['id'] + _address_fields
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Address', {'fields': ['address_1', 'address_2', 'address_3',
-            'country', 'state', 'postal_code']})
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
+        [(None, {'fields': _address_fields})]
     autocomplete_fields = ['country', 'state']
 
-@admin.register(Company)
+_company_fields = ['company_name', 'company_name_wo_postfix', 'notes_md']
+@admin.register(mod.Company)
 class CompanyAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['company_name',
-        'company_name_wo_postfix', 'notes_md']
-    list_editable = standard_list_editable + ['company_name',
-        'company_name_wo_postfix', 'notes_md']
+    list_display = comadm.standard_list_display + _company_fields
+    list_editable = comadm.standard_list_editable + _company_fields
     list_per_page = 1000
-    list_filter = standard_list_filter
-    search_fields = ['id', 'company_name', 'company_name_wo_postfix',
-        'notes_md']
-    ordering = standard_ordering
+    list_filter = comadm.standard_list_filter
+    search_fields = ['id'] + _company_fields
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Details', {'fields': ['company_name', 'company_name_wo_postfix',
-            'notes_md']})
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
+        [(None, {'fields': _company_fields})]
 
-@admin.register(PhoneNumber)
+_phone_number_fields = ['country_code', 'national_number']
+@admin.register(mod.PhoneNumber)
 class PhoneNumberAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['country_code', 'national_number']
-    list_editable = standard_list_editable + ['country_code', 'national_number']
+    list_display = comadm.standard_list_display + _phone_number_fields
+    list_editable = comadm.standard_list_editable + _phone_number_fields
     list_per_page = 1000
-    list_filter = standard_list_filter + ['country_code']
-    search_fields = ['id', 'country_code', 'national_number']
-    ordering = standard_ordering
+    list_filter = comadm.standard_list_filter + ['country_code']
+    search_fields = ['id'] + _phone_number_fields
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Phone number', {'fields': ['country_code', 'national_number']})
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
+        [(None, {'fields': _phone_number_fields})]
 
-@admin.register(Email)
+@admin.register(mod.Email)
 class EmailAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['email']
-    list_editable = standard_list_editable + ['email']
+    list_display = comadm.standard_list_display + ['email']
+    list_editable = comadm.standard_list_editable + ['email']
     list_per_page = 1000
-    list_filter = standard_list_filter
+    list_filter = comadm.standard_list_filter
     search_fields = ['id', 'email']
-    ordering = standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': ['email']})
     ]
 
-@admin.register(Person)
+_person_fields = ['given_name', 'family_name', 'country', 'state', 'notes_md']
+@admin.register(mod.Person)
 class PersonAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['given_name', 'family_name',
-        'country', 'state', 'notes_md']
-    list_editable = standard_list_editable + ['given_name', 'family_name',
-        'country', 'state', 'notes_md']
+    list_display = comadm.standard_list_display + _person_fields
+    list_editable = comadm.standard_list_editable + _person_fields
     list_per_page = 1000
-    list_filter = standard_list_filter
-    search_fields = ['id', 'given_name', 'family_name', 'country', 'state',
-        'notes_md']
-    ordering = standard_ordering
+    list_filter = comadm.standard_list_filter
+    search_fields = ['id'] + _person_fields
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Details', {'fields': ['given_name', 'family_name', 'country', 'state',
-            'notes_md']})
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
+        [(None, {'fields': _person_fields})]
     autocomplete_fields = ['country', 'state']
 
-@admin.register(Link)
+_link_fields = ['verified', 'link']
+@admin.register(mod.Link)
 class LinkAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['verified', 'link']
-    list_editable = standard_list_editable + ['verified', 'link']
+    list_display = comadm.standard_list_display + _link_fields
+    list_editable = comadm.standard_list_editable + _link_fields
     list_per_page = 1000
-    list_filter = standard_list_filter
+    list_filter = comadm.standard_list_filter
     search_fields = ['id', 'link']
-    ordering = standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Details', {'fields': ['verified', 'link']})
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
+        [(None, {'fields': _link_fields})]
 
-relationship_list_display = standard_list_display + ['details_md']
-relationship_list_editable = standard_list_editable + ['details_md']
-relationship_list_search_fields = ['id', 'details_md']
-relationship_fieldsets = standard_fieldsets + [
-    ('Details', {'fields': ['details_md']})
-]
+# --- Start: Relationships ---
+
+_rel_list_display = comadm.standard_list_display + ['details_md', 'rtype']
+_prel_list_display = _rel_list_display + ['person']
+_crel_list_display = _rel_list_display + ['company']
+
+_rel_list_editable = comadm.standard_list_editable + ['details_md', 'rtype']
+_prel_list_editable = _rel_list_editable + ['person']
+_crel_list_editable = _rel_list_editable + ['company']
+
+_rel_list_search_fields = ['id', 'details_md', 'rtype']
+_prel_list_search_fields = _rel_list_search_fields + ['person']
+_crel_list_search_fields = _rel_list_search_fields + ['company']
+
+_rel_fieldsets_fields = ['details_md', 'rtype']
+_prel_fieldsets = lambda field: comadm.standard_fieldsets + [
+    (None, {'fields': _rel_fieldsets_fields + ['person', field]})]
+_crel_fieldsets = lambda field: comadm.standard_fieldsets + [
+    (None, {'fields': _rel_fieldsets_fields + ['company', field]})]
+
+_rel_autocomplete_fields = ['rtype']
+_prel_autocomplete_fields = _rel_autocomplete_fields + ['person']
+_crel_autocomplete_fields = _rel_autocomplete_fields + ['company']
 
 class RelationshipAdmin(admin.ModelAdmin):
     # List page settings
     list_per_page = 1000
-    list_filter = standard_list_filter
-    ordering = standard_ordering
+    list_filter = comadm.standard_list_filter
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = relationship_fieldsets
+    readonly_fields = comadm.standard_readonly_fields
 
-@admin.register(PersonLink)
+@admin.register(mod.PersonLink)
 class PersonLinkAdmin(RelationshipAdmin):
     # List page settings
-    list_display = relationship_list_display + ['rtype', 'person', 'link']
-    list_editable = relationship_list_editable + ['rtype', 'person', 'link']
-    search_fields = relationship_list_search_fields + ['rtype', 'person',
-        'link']
+    list_display = _prel_list_display + ['link']
+    list_editable = _prel_list_editable + ['link']
+    search_fields = _prel_list_search_fields + ['link']
 
     # Details page settings
-    fieldsets = relationship_fieldsets + [
-        ('Model references', {'fields': ['rtype', 'person', 'link']})
-    ]
-    autocomplete_fields = ['rtype', 'person', 'link']
+    fieldsets = _prel_fieldsets('link')
+    autocomplete_fields = _prel_autocomplete_fields + ['link']
 
-@admin.register(PersonCompany)
-class PersonLinkAdmin(RelationshipAdmin):
+@admin.register(mod.PersonCompany)
+class PersonCompanyAdmin(RelationshipAdmin):
     # List page settings
-    list_display = relationship_list_display + ['rtype', 'person', 'company']
-    list_editable = relationship_list_editable + ['rtype', 'person', 'company']
-    search_fields = relationship_list_search_fields + ['rtype', 'person',
-        'company']
+    list_display = _prel_list_display + ['company']
+    list_editable = _prel_list_editable + ['company']
+    search_fields = _prel_list_search_fields + ['company']
 
     # Details page settings
-    fieldsets = relationship_fieldsets + [
-        ('Model references', {'fields': ['rtype', 'person', 'company']})
-    ]
-    autocomplete_fields = ['rtype', 'person', 'company']
+    fieldsets = _prel_fieldsets('company')
+    autocomplete_fields = _prel_autocomplete_fields + ['company']
 
-@admin.register(PersonAddress)
+@admin.register(mod.PersonAddress)
 class PersonAddressAdmin(RelationshipAdmin):
     # List page settings
-    list_display = relationship_list_display + ['rtype', 'person', 'address']
-    list_editable = relationship_list_editable + ['rtype', 'person', 'address']
-    search_fields = relationship_list_search_fields + ['rtype', 'person',
-        'address']
+    list_display = _prel_list_display + ['address']
+    list_editable = _prel_list_editable + ['address']
+    search_fields = _prel_list_search_fields + ['address']
 
     # Details page settings
-    fieldsets = relationship_fieldsets + [
-        ('Model references', {'fields': ['rtype', 'person', 'address']})
-    ]
-    autocomplete_fields = ['rtype', 'person', 'address']
+    fieldsets = _prel_fieldsets('address')
+    autocomplete_fields = _prel_autocomplete_fields + ['address']
 
-@admin.register(PersonPhoneNumber)
+@admin.register(mod.PersonPhoneNumber)
 class PersonPhoneNumberAdmin(RelationshipAdmin):
     # List page settings
-    list_display = relationship_list_display + ['rtype', 'person',
-        'phone_number']
-    list_editable = relationship_list_editable + ['rtype', 'person',
-        'phone_number']
-    search_fields = relationship_list_search_fields + ['rtype', 'person',
-        'phone_number']
+    list_display = _prel_list_display + ['phone_number']
+    list_editable = _prel_list_editable + ['phone_number']
+    search_fields = _prel_list_search_fields + ['phone_number']
 
     # Details page settings
-    fieldsets = relationship_fieldsets + [
-        ('Model references', {'fields': ['rtype', 'person', 'phone_number']})
-    ]
-    autocomplete_fields = ['rtype', 'person', 'phone_number']
+    fieldsets = _prel_fieldsets('phone_number')
+    autocomplete_fields = _prel_autocomplete_fields + ['phone_number']
 
-@admin.register(PersonEmail)
+@admin.register(mod.PersonEmail)
 class PersonEmailAdmin(RelationshipAdmin):
     # List page settings
-    list_display = relationship_list_display + ['rtype', 'person',
-        'email']
-    list_editable = relationship_list_editable + ['rtype', 'person',
-        'email']
-    search_fields = relationship_list_search_fields + ['rtype', 'person',
-        'email']
+    list_display = _prel_list_display + ['email']
+    list_editable = _prel_list_editable + ['email']
+    search_fields = _prel_list_search_fields + ['email']
 
     # Details page settings
-    fieldsets = relationship_fieldsets + [
-        ('Model references', {'fields': ['rtype', 'person', 'email']})
-    ]
-    autocomplete_fields = ['rtype', 'person', 'email']
+    fieldsets = _prel_fieldsets('email')
+    autocomplete_fields = _prel_autocomplete_fields + ['email']
 
-@admin.register(CompanyLink)
+@admin.register(mod.CompanyLink)
 class CompanyLinkAdmin(RelationshipAdmin):
     # List page settings
-    list_display = relationship_list_display + ['rtype', 'company', 'link']
-    list_editable = relationship_list_editable + ['rtype', 'company', 'link']
-    search_fields = relationship_list_search_fields + ['rtype', 'company',
-        'link']
+    list_display = _crel_list_display + ['link']
+    list_editable = _crel_list_editable + ['link']
+    search_fields = _crel_list_search_fields + ['link']
 
     # Details page settings
-    fieldsets = relationship_fieldsets + [
-        ('Model references', {'fields': ['rtype', 'company', 'link']})
-    ]
-    autocomplete_fields = ['rtype', 'company', 'link']
+    fieldsets = _crel_fieldsets('link')
+    autocomplete_fields = _crel_autocomplete_fields + ['link']
 
-@admin.register(CompanyAddress)
+@admin.register(mod.CompanyAddress)
 class CompanyAddressAdmin(RelationshipAdmin):
     # List page settings
-    list_display = relationship_list_display + ['rtype', 'company', 'address']
-    list_editable = relationship_list_editable + ['rtype', 'company', 'address']
-    search_fields = relationship_list_search_fields + ['rtype', 'company',
-        'address']
+    list_display = _crel_list_display + ['address']
+    list_editable = _crel_list_editable + ['address']
+    search_fields = _crel_list_search_fields + ['address']
 
     # Details page settings
-    fieldsets = relationship_fieldsets + [
-        ('Model references', {'fields': ['rtype', 'company', 'address']})
-    ]
-    autocomplete_fields = ['rtype', 'company', 'address']
+    fieldsets = _crel_fieldsets('address')
+    autocomplete_fields = _crel_autocomplete_fields + ['address']
 
-@admin.register(CompanyPhoneNumber)
+@admin.register(mod.CompanyPhoneNumber)
 class CompanyPhoneNumberAdmin(RelationshipAdmin):
     # List page settings
-    list_display = relationship_list_display + ['rtype', 'company',
-        'phone_number']
-    list_editable = relationship_list_editable + ['rtype', 'company',
-        'phone_number']
-    search_fields = relationship_list_search_fields + ['rtype', 'company',
-        'phone_number']
+    list_display = _crel_list_display + ['phone_number']
+    list_editable = _crel_list_editable + ['phone_number']
+    search_fields = _crel_list_search_fields + ['phone_number']
 
     # Details page settings
-    fieldsets = relationship_fieldsets + [
-        ('Model references', {'fields': ['rtype', 'company', 'phone_number']})
-    ]
-    autocomplete_fields = ['rtype', 'company', 'phone_number']
+    fieldsets = _crel_fieldsets('phone_number')
+    autocomplete_fields = _crel_autocomplete_fields + ['phone_number']
 
-@admin.register(CompanyEmail)
+@admin.register(mod.CompanyEmail)
 class CompanyEmailAdmin(RelationshipAdmin):
     # List page settings
-    list_display = relationship_list_display + ['rtype', 'company', 'email']
-    list_editable = relationship_list_editable + ['rtype', 'company', 'email']
-    search_fields = relationship_list_search_fields + ['rtype', 'company',
-        'email']
+    list_display = _crel_list_display + ['email']
+    list_editable = _crel_list_editable + ['email']
+    search_fields = _crel_list_search_fields + ['email']
 
     # Details page settings
-    fieldsets = relationship_fieldsets + [
-        ('Model references', {'fields': ['rtype', 'company', 'email']})
-    ]
-    autocomplete_fields = ['rtype', 'company', 'email']
+    fieldsets = _crel_fieldsets('email')
+    autocomplete_fields = _crel_autocomplete_fields + ['email']
+
+# --- End: Relationships ---
