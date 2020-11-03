@@ -73,7 +73,6 @@ class RelationshipAdmin(admin.ModelAdmin):
     # Details page settings
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
-    fieldsets = _rel_fieldsets
 
 @admin.register(mod.FileSupply)
 class FileSupplyAdmin(RelationshipAdmin):
