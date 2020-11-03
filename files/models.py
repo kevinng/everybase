@@ -107,33 +107,33 @@ class File(Standard):
 
     details_md = tf('Details in Markdown', True)
 
-    # supply_leads = m2mt(
-    #     'leads.Supply',
-    #     'FileSupply',
-    #     'file', 'supply',
-    #     'files'
-    # )
+    supplies = m2mt(
+        'leads.Supply',
+        'FileSupply',
+        'file', 'supply',
+        'files'
+    )
 
-    # demand_leads = m2mt(
-    #     'leads.DemandLead',
-    #     'FileDemandLead',
-    #     'file', 'demand_lead',
-    #     'files'
-    # )
+    demands = m2mt(
+        'leads.Demand',
+        'FileDemand',
+        'file', 'demand',
+        'files'
+    )
 
-    # issues = m2mt(
-    #     'communication.Issue',
-    #     'FileIssue',
-    #     'file', 'issue',
-    #     'files'
-    # )
+    issues = m2mt(
+        'communication.Issue',
+        'FileIssue',
+        'file', 'issue',
+        'files'
+    )
 
-    # persons = m2mt(
-    #     'relationships.Issue',
-    #     'FilePerson',
-    #     'file', 'person',
-    #     'files'
-    # )
+    persons = m2mt(
+        'relationships.Person',
+        'FilePerson',
+        'file', 'person',
+        'files'
+    )
 
     tags = m2m('FileTag', 'files', blank=True)
 
