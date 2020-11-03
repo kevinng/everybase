@@ -5,7 +5,8 @@ import uuid
 # --- Start: Helper lambda for model field declarations ---
 
 # Foreign key
-fk = lambda klass, name=None, verbose_name=None, null=False, index=True: models.ForeignKey(
+fk = lambda klass, name=None, verbose_name=None, null=False, index=True: \
+    models.ForeignKey(
     klass,
     on_delete=models.PROTECT,
     related_name=name,
@@ -103,6 +104,7 @@ def short_text(text, top_length=20, blank='-', backward=False):
 
 # --- Start: Abstract models ---
 
+standard_fieldnames = ['created', 'updated', 'deleted']
 class Standard(models.Model):
     """
     Abstract model with standard fields.
@@ -114,8 +116,8 @@ class Standard(models.Model):
     class Meta:
         abstract = True
 
-standard_fieldnames = ['created', 'updated', 'deleted']
-
+choice_fieldnames = ['name', 'details_md', 'programmatic_key',
+    'programmatic_details_md']
 class Choice(models.Model):
     """
     Abstract model for a choice model.
@@ -131,9 +133,6 @@ class Choice(models.Model):
 
     class Meta:
         abstract = True
-
-choice_fieldnames = ['name', 'details_md', 'programmatic_key',
-    'programmatic_details_md']
 
 # --- End: Abstract models ---
 
