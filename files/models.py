@@ -95,7 +95,8 @@ class FileTag(Choice):
     parent = fk('self', 'children', null=True)
 
 class File(Standard):
-    upload_confirmed = dtf()
+    upload_confirmed = dtf(null=True)
+    uuid = uid()
 
     s3_bucket_name = cf(max_length=63, null=True)
     s3_object_key = cf(max_length=1024, null=True)
@@ -137,7 +138,7 @@ class File(Standard):
     tags = m2m('FileTag', 'files', blank=True)
 
     def __str__(self):
-        return f'({self.uuid} [{self.id}])'
+        return f'({self.s3_bucket_name}, {self.s3_object_key} [{self.id}])'
 
     class Meta:
         unique_together = ('s3_bucket_name', 's3_object_key')
