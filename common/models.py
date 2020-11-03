@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib import admin
+import uuid
 
 # --- Start: Helper lambda for model field declarations ---
 
@@ -43,24 +44,24 @@ tf = lambda verbose_name=None, null=False: models.TextField(
     verbose_name=verbose_name, null=null, blank=null)
 
 # Char
-cf = lambda verbose_name=None, null=False: models.CharField(
-    verbose_name=verbose_name, max_length=100, null=null, blank=null)
+cf = lambda verbose_name=None, null=False, max_length=100: models.CharField(
+    verbose_name=verbose_name, max_length=max_length, null=null, blank=null)
 
 # Float
 ff = lambda verbose_name=None, null=False: models.FloatField(
     verbose_name=verbose_name, null=null, blank=null)
 
 # Datetime
-dtf = lambda verbose_name=None, null=False, default=None, index=True: models.DateTimeField(
-    verbose_name=verbose_name, null=null, blank=null, default=default,
-    db_index=index)
+dtf = lambda verbose_name=None, null=False, default=None, index=True: \
+    models.DateTimeField( verbose_name=verbose_name, null=null, blank=null, \
+    default=default, db_index=index)
 
-dtf_now_add = lambda verbose_name=None, null=False, auto_now_add=True, index=True: models.\
-    DateTimeField(verbose_name=verbose_name, null=null, blank=null,
-    auto_now_add=auto_now_add, db_index=index)
+dtf_now_add = lambda verbose_name=None, null=False, auto_now_add=True, \
+    index=True: models.DateTimeField(verbose_name=verbose_name, null=null, \
+    blank=null, auto_now_add=auto_now_add, db_index=index)
 
-dtf_now = lambda verbose_name=None, null=False, auto_now=True, index=True: models.\
-    DateTimeField(verbose_name=verbose_name, null=null, blank=null,
+dtf_now = lambda verbose_name=None, null=False, auto_now=True, index=True: \
+    models.DateTimeField(verbose_name=verbose_name, null=null, blank=null,
     auto_now=auto_now, db_index=index)
 
 # URL
@@ -72,6 +73,11 @@ url = lambda verbose_name=None, null=False: models.URLField(
 
 eml = lambda verbose_name=None, null=False: models.EmailField(
     verbose_name=verbose_name, null=null, blank=null)
+
+# UUID
+
+uid = lambda: models.UUIDField(unique=True, default=uuid.uuid4, editable=False,
+    db_index=True)
 
 # --- End: Helper lambda for model field declarations ---
 
