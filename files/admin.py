@@ -9,7 +9,7 @@ class FileTagAdmin(comadm.ParentChildrenChoiceAdmin):
 @admin.register(mod.File)
 class FileAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['uuid', 'upload_confirmed',
+    list_display = comadm.standard_list_display + ['upload_confirmed',
         's3_bucket_name', 's3_object_key', 's3_object_content_length',
         's3_object_e_tag', 's3_object_content_type', 's3_object_last_modified',
         'details_md']
@@ -19,7 +19,7 @@ class FileAdmin(admin.ModelAdmin):
         'details_md']
     list_filter = comadm.standard_list_filter + ['upload_confirmed',
         's3_object_last_modified']
-    search_fields = ['id', 'uuid', 's3_bucket_name', 's3_object_key',
+    search_fields = ['id', 's3_bucket_name', 's3_object_key',
         's3_object_e_tag', 'tags']
     list_per_page = 1000
     ordering = comadm.standard_ordering
@@ -27,7 +27,7 @@ class FileAdmin(admin.ModelAdmin):
 
     # Details page settings
     save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields + ['uuid']
+    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {
             'fields': ['s3_bucket_name', 's3_object_key',

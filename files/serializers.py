@@ -1,13 +1,8 @@
 import boto3
 from rest_framework import serializers
-
-# from everybase.settings import (
-#     AWS_REGION_NAME, AWS_ACCESS_KEY_ID, AWS_STORAGE_BUCKET_NAME,
-#     AWS_SECRET_ACCESS_KEY, AWS_PRESIGNED_URL_EXPIRES_IN)
-
 from everybase import settings
 
-class ReadFileSerializer(serializers.Serializer):
+class ReadOnlyPresignedURLSerializer(serializers.Serializer):
     """
     Serializer class used to get AWS S3 object read-only pre-signed URLs for the
     specified file via a HTTP POST request.

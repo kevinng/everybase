@@ -95,7 +95,6 @@ class FileTag(Choice):
     parent = fk('self', 'children', null=True)
 
 class File(Standard):
-    uuid = uid()
     upload_confirmed = dtf()
 
     s3_bucket_name = cf(max_length=63, null=True)
