@@ -1,140 +1,126 @@
 from django.contrib import admin
-from .models import (GmassCampaignResult, GmassCampaign,
-    ChemicalClusterOfSingaporeResult, Fibre2FashionResult, ZeroBounceResult,
-    DataSource, SourcedEmail)
-from common.admin import (standard_list_display, standard_list_filter,
-    standard_ordering, standard_readonly_fields, standard_fieldsets,
-    standard_list_editable, ChoiceAdmin, choice_fieldsets, choice_list_display,
-    choice_list_editable, choice_readonly_fields)
+from . import models as mod
+from common import admin as comadm
 
-@admin.register(GmassCampaignResult)
+@admin.register(mod.GmassCampaignResult)
 class GmassCampaignResultAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['email_address', 'first_name',
-        'last_name', 'name_1', 'opens', 'clicks', 'replied', 'unsubscribed',
-        'bounced', 'blocked', 'over_gmail_limit', 'bounce_reason',
-        'gmail_response', 'email', 'gmass_campaign']
-    list_editable = standard_list_editable + ['email_address', 'first_name',
-        'last_name', 'name_1', 'opens', 'clicks', 'replied', 'unsubscribed',
-        'bounced', 'blocked', 'over_gmail_limit', 'bounce_reason',
-        'gmail_response', 'email', 'gmass_campaign']
+    list_display = comadm.standard_list_display + ['email_address',
+        'first_name', 'last_name', 'name_1', 'opens', 'clicks', 'replied',
+        'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
+        'bounce_reason', 'gmail_response', 'email', 'gmass_campaign']
+    list_editable = comadm.standard_list_editable + ['email_address',
+        'first_name', 'last_name', 'name_1', 'opens', 'clicks', 'replied',
+        'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
+        'bounce_reason', 'gmail_response', 'email', 'gmass_campaign']
     list_per_page = 1000
-    list_filter = standard_list_filter + ['replied', 'unsubscribed', 'bounced',
-        'blocked', 'over_gmail_limit']
+    list_filter = comadm.standard_list_filter + ['replied', 'unsubscribed',
+        'bounced', 'blocked', 'over_gmail_limit']
     search_fields = ['id', 'email_address', 'first_name', 'last_name', 'name_1',
         'opens', 'clicks', 'replied', 'unsubscribed', 'bounced', 'blocked',
         'over_gmail_limit', 'bounce_reason', 'gmail_response', 'email',
         'gmass_campaign']
-    ordering = standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
     
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Result details', {'fields': ['email_address', 'first_name',
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['email_address', 'first_name',
             'last_name', 'name_1', 'opens', 'clicks', 'replied', 'unsubscribed',
             'bounced', 'blocked', 'over_gmail_limit', 'bounce_reason',
             'gmail_response']
         }),
-        ('Model references', {'fields': ['email', 'gmass_campaign']})
+        (None, {'fields': ['email', 'gmass_campaign']})
     ]
     autocomplete_fields = ['email', 'gmass_campaign']
 
-@admin.register(GmassCampaign)
+@admin.register(mod.GmassCampaign)
 class GmassCampaign(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['campaign_id', 'sent', 'subject',
-        'spreadsheet']
-    list_editable = standard_list_editable + ['campaign_id', 'sent', 'subject',
-        'spreadsheet']
+    list_display = comadm.standard_list_display + ['campaign_id', 'sent',
+        'subject', 'spreadsheet']
+    list_editable = comadm.standard_list_editable + ['campaign_id', 'sent',
+        'subject', 'spreadsheet']
     list_per_page = 1000
-    list_filter = standard_list_filter + ['sent']
+    list_filter = comadm.standard_list_filter + ['sent']
     search_fields = ['id', 'campaign_id', 'sent', 'subject', 'spreadsheet']
-    ordering = standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
     
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Result details', {'fields': ['campaign_id', 'sent', 'subject',
-            'spreadsheet']
-        })
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
+        [(None, {'fields': ['campaign_id', 'sent', 'subject', 'spreadsheet']})]
 
-@admin.register(ChemicalClusterOfSingaporeResult)
+@admin.register(mod.ChemicalClusterOfSingaporeResult)
 class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['sourced', 'company_name',
+    list_display = comadm.standard_list_display + ['sourced', 'company_name',
         'telephone', 'fax', 'website', 'source_link']
-    list_editable = standard_list_editable + ['sourced', 'company_name',
+    list_editable = comadm.standard_list_editable + ['sourced', 'company_name',
         'telephone', 'fax', 'website', 'source_link']
     list_per_page = 1000
-    list_filter = standard_list_filter + ['sourced']
+    list_filter = comadm.standard_list_filter + ['sourced']
     search_fields = ['id', 'company_name', 'telephone', 'fax', 'website',
         'source_link']
-    ordering = ['sourced'] + standard_ordering
+    ordering = ['sourced'] + comadm.standard_ordering
     show_full_result_count = True
     
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Source', {'fields': ['sourced', 'source_link']}),
-        ('Result details', {
-            'fields': ['company_name', 'telephone', 'fax', 'email_str', 'website',
-                'address_str']
-        }),
-        ('Model references', {
-            'fields': ['company', 'email', 'phone_numbers', 'link', 'address']
-        })
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['sourced', 'source_link']}),
+        (None, {'fields': ['company_name', 'telephone', 'fax', 'email_str',
+            'website', 'address_str']}),
+        (None, {'fields': ['company', 'email', 'phone_numbers', 'link',
+            'address']})
     ]
     autocomplete_fields = ['company', 'email', 'phone_numbers', 'link',
         'address']
 
-@admin.register(Fibre2FashionResult)
+@admin.register(mod.Fibre2FashionResult)
 class Fibre2FashionResultAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['sourced', 'source_link',
+    list_display = comadm.standard_list_display + ['sourced', 'source_link',
         'category', 'sub_category', 'email', 'email_domain', 'lead_type',
         'description']
-    list_editable = standard_list_editable + ['sourced', 'source_link',
+    list_editable = comadm.standard_list_editable + ['sourced', 'source_link',
         'category', 'sub_category', 'email', 'email_domain', 'lead_type',
         'description']
     list_per_page = 1000
-    list_filter = standard_list_filter + ['sourced']
+    list_filter = comadm.standard_list_filter + ['sourced']
     search_fields = ['id', 'source_link', 'category', 'sub_category', 'email',
         'email_domain', 'lead_type', 'description']
-    ordering = ['sourced'] + standard_ordering
+    ordering = ['sourced'] + comadm.standard_ordering
     show_full_result_count = True
     
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Source', {'fields': ['sourced', 'source_link']}),
-        ('Result details', {
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['sourced', 'source_link']}),
+        (None, {
             'fields': ['category', 'sub_category', 'email', 'email_domain',
-                'lead_type', 'description']
-        }),
-        ('Model references', {
-            'fields': ['links', 'emails']
-        })
+                'lead_type', 'description']}),
+        (None, {'fields': ['links', 'emails']})
     ]
     autocomplete_fields = ['links', 'emails']
 
-@admin.register(ZeroBounceResult)
+@admin.register(mod.ZeroBounceResult)
 class ZeroBounceResultAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['email_address', 'status',
+    list_display = comadm.standard_list_display + ['email_address', 'status',
         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
         'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
-    list_editable = standard_list_editable + ['email_address', 'status',
+    list_editable = comadm.standard_list_editable + ['email_address', 'status',
         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
         'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
     list_per_page = 1000
-    list_filter = standard_list_filter + ['status', 'sub_status', 'gender',
+    list_filter = comadm.standard_list_filter + ['status', 'sub_status', 'gender',
         'free_email', 'mx_found']
     search_fields = ['id', 'email_address', 'status', 'sub_status', 'account',
         'domain', 'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
@@ -144,39 +130,36 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
     
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Result details', {
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {
             'fields': ['email_address', 'status',
             'sub_status', 'account', 'domain', 'first_name', 'last_name',
             'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
-            'did_you_mean']
-        }),
-        ('Model references', {
-            'fields': ['email']
-        })
+            'did_you_mean']}),
+        (None, {'fields': ['email']})
     ]
     autocomplete_fields = ['email']
 
-@admin.register(DataSource)
-class DataSourceAdmin(ChoiceAdmin):
+@admin.register(mod.DataSource)
+class DataSourceAdmin(comadm.ChoiceAdmin):
     pass
 
-@admin.register(SourcedEmail)
+@admin.register(mod.SourcedEmail)
 class SourcedEmailAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['sourced', 'source', 'email']
-    list_editable = standard_list_editable + ['sourced', 'source', 'email']
+    list_display = comadm.standard_list_display + ['sourced', 'source', 'email']
+    list_editable = comadm.standard_list_editable + \
+        ['sourced', 'source', 'email']
     list_per_page = 1000
-    list_filter = standard_list_filter + ['sourced']
+    list_filter = comadm.standard_list_filter + ['sourced']
     search_fields = ['source', 'email']
     ordering = ['email']
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        ('Details', {'fields': ['sourced', 'source', 'email']})
-    ]
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': ['sourced', 'source', 'email']})]
     autocomplete_fields = ['source', 'email']
