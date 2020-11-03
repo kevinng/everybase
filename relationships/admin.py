@@ -9,6 +9,8 @@ from common.admin import (ChoiceAdmin, standard_list_display,
     standard_list_editable, standard_list_filter, standard_ordering,
     standard_readonly_fields, standard_fieldsets)
 
+from common import admin as comadm
+
 @admin.register(PersonLinkType, PersonCompanyType, PersonAddressType,
     PersonPhoneNumberType, PersonEmailType, CompanyLinkType, CompanyAddressType,
     CompanyPhoneNumberType, CompanyEmailType, PhoneNumberType)
