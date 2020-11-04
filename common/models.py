@@ -37,25 +37,27 @@ m2mt = lambda klass, thru, f1, f2, name, index=True: models.ManyToManyField(
 )
 
 # Integer
-pintf = lambda verbose_name=None, null=False: models.PositiveIntegerField(
-    verbose_name=verbose_name, null=null, blank=null)
+pintf = lambda verbose_name=None, null=False, db_index=False: models.\
+    PositiveIntegerField(verbose_name=verbose_name, null=null, blank=null,
+        db_index=db_index)
 
 # Text
 tf = lambda verbose_name=None, null=False: models.TextField(
     verbose_name=verbose_name, null=null, blank=null)
 
 # Char
-cf = lambda verbose_name=None, null=False, max_length=100: models.CharField(
-    verbose_name=verbose_name, max_length=max_length, null=null, blank=null)
+cf = lambda verbose_name=None, null=False, max_length=100, db_index=False: \
+    models.CharField(verbose_name=verbose_name, max_length=max_length,
+        null=null, blank=null, db_index=db_index)
 
 # Float
 ff = lambda verbose_name=None, null=False: models.FloatField(
     verbose_name=verbose_name, null=null, blank=null)
 
 # Datetime
-dtf = lambda verbose_name=None, null=False, default=None, index=True: \
+dtf = lambda verbose_name=None, null=False, default=None, db_index=True: \
     models.DateTimeField( verbose_name=verbose_name, null=null, blank=null, \
-    default=default, db_index=index)
+    default=default, db_index=db_index)
 
 dtf_now_add = lambda verbose_name=None, null=False, auto_now_add=True, \
     index=True: models.DateTimeField(verbose_name=verbose_name, null=null, \
