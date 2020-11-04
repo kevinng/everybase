@@ -68,7 +68,10 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
         """
         file = File(**validated_data)
         file.s3_bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-        file.s3_object_key = f'{str(datetime.now())} - {str(uuid.uuid4())}'
+
+        timestamp = str(datetime.now()).split('.')[0]
+        file.s3_object_key = f'{settings.AWS_S3_FILES_ROOT}/{timestamp}' + \
+            f' - {str(uuid.uuid4())}'
 
         try:
             s3 = boto3.client('s3',
@@ -92,6 +95,7 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
         file.save()
 
         return {
+            'file_id': file.id,
             'issued': issued,
             'lifespan': settings.AWS_PRESIGNED_URL_EXPIRES_IN,
             'response': response
