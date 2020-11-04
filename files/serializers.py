@@ -1,6 +1,11 @@
 import boto3
+from botocore.exceptions import ClientError
+from django.http import Http404
 from rest_framework import serializers
 from everybase import settings
+from .models import File
+from datetime import datetime
+import uuid
 
 class ReadOnlyPresignedURLSerializer(serializers.Serializer):
     """
@@ -8,17 +13,21 @@ class ReadOnlyPresignedURLSerializer(serializers.Serializer):
     specified file via a HTTP POST request.
     """
 
-    file_id = serializers.UUIDField(write_only=True)
+    file_id = serializers.IntegerField(write_only=True)
     issued = serializers.DateTimeField(read_only=True)
-    lifespan = serializers.IntegerField(read_only=True)
+    lifespan = serializers.FloatField(read_only=True)
     url = serializers.URLField(read_only=True)
 
     def create(self, validated_data):
         """
         HTTP POST request to get a read-only pre-signed URL for reading the
-        specified file.
+        specified file on AWS S3.
         """
-        file = File.objects.get(pk=validated_data['file_id'])
+        try:
+            file = File.objects.get(pk=validated_data['file_id'])
+        except File.DoesNotExist:
+            raise Http404
+
         s3 = boto3.client('s3',
             region_name=settings.AWS_REGION_NAME,
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
@@ -31,45 +40,35 @@ class ReadOnlyPresignedURLSerializer(serializers.Serializer):
                 'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
                 'Key': file.s3_object_key
             },
-            ExpiresIn=AWS_PRESIGNED_URL_EXPIRES_IN
+            ExpiresIn=settings.AWS_PRESIGNED_URL_EXPIRES_IN
         )
 
         return {
             'issued': issued,
-            'lifespan': AWS_PRESIGNED_URL_EXPIRES_IN,
+            'lifespan': settings.AWS_PRESIGNED_URL_EXPIRES_IN,
             'url': url
         }
 
-class TempFileSerializer(serializers.Serializer):
+class WriteOnlyPresignedURLSerializer(serializers.Serializer):
     """
-    Serializer class to (1) get pre-signed URL to upload (i.e. write) the file
-    via a HTTP POST request or (2) update file's filetype via a HTTP PUT
-    request.
+    Serializer class to get pre-signed URL to upload (i.e. write) the file via
+    a HTTP POST request.
     """
 
     # Details of the pre-signed URL to upload (i.e. write) the file.
-    file_id = serializers.UUIDField(read_only=True)
-    presigned_url_issued = serializers.DateTimeField(read_only=True)
-    presigned_url_lifespan = serializers.IntegerField(read_only=True)
-    presigned_url_response = serializers.JSONField(read_only=True)
-
-    # For updating file's filetype AFTER the file has been uploaded to S3 via
-    # the pre-signed URL obtained.
-    filetype = serializers.CharField(write_only=True)
+    file_id = serializers.IntegerField(read_only=True)
+    issued = serializers.DateTimeField(read_only=True)
+    lifespan = serializers.IntegerField(read_only=True)
+    response = serializers.JSONField(read_only=True)
 
     def create(self, validated_data):
         """
-
+        HTTP POST request to get a write-only pre-signed URL for uploading a
+        file to AWS S3.
         """
-        temp_file = File(**validated_data)
-        temp_file.presigned_url_lifespan = 3600
-        temp_file.s3_bucket_name = AWS_STORAGE_BUCKET_NAME
-    
-CHANGE THE OBJECT KEY NAME
-        temp_file.s3_object_key = 'media/private/documents/%s/%s' % \
-            (validated_data['creator'].id, temp_file.id)
-
-
+        file = File(**validated_data)
+        file.s3_bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+        file.s3_object_key = f'{str(datetime.now())} - {str(uuid.uuid4())}'
 
         try:
             s3 = boto3.client('s3',
@@ -77,30 +76,31 @@ CHANGE THE OBJECT KEY NAME
                 aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
             )
+            issued = datetime.now()
             response = s3.generate_presigned_post(
-                Bucket=temp_file.s3_bucket_name,
-                Key=temp_file.s3_object_key,
-                Fields = {
-                    'acl': 'private',
-                    'Content-Type': temp_file.filetype
-                },
-                Conditions = [
-                    {'acl': 'private'},
-                    {'Content-Type': temp_file.filetype}
-                ],
-                ExpiresIn=temp_file.presigned_url_lifespan
+                Bucket=file.s3_bucket_name,
+                Key=file.s3_object_key,
+                Fields = {'acl': 'private'},
+                Conditions = [{'acl': 'private'}],
+                ExpiresIn=int(settings.AWS_PRESIGNED_URL_EXPIRES_IN)
             )
 
-            temp_file.presigned_url_response = response
         except ClientError as e:
             logging.error(e)
             return None
 
-        temp_file.save()
-        return temp_file
+        file.save()
+
+        return {
+            'issued': issued,
+            'lifespan': settings.AWS_PRESIGNED_URL_EXPIRES_IN,
+            'response': response
+        }
     
-    def update(self, instance, validated_data):
-        # Only the filetype may be updated
-        instance.filetype = validated_data.get('filetype', instance.filetype)
-        instance.save()
-        return instance
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = ['id', 'upload_confirmed', 'uuid', 's3_bucket_name',
+            's3_object_key', 's3_object_content_length', 's3_object_e_tag',
+            's3_object_content_type', 's3_object_last_modified', 'details_md',
+            'supplies', 'demands', 'issues', 'persons', 'tags']
