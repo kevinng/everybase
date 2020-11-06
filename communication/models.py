@@ -6,7 +6,7 @@ from relationships.models import Email, PhoneNumber
 # --- Start: Issue classes ---
 
 class Issue(Standard):
-    scheduled = dtf(null=True)
+    scheduled = dtf(null=True, db_index=True)
     description_md = tf('Description in Markdown', null=True)
     outcome_md = tf('Outcome in Markdown', null=True)
 
@@ -43,7 +43,8 @@ class Conversation(Standard):
     agenda_md = tf('Agenda in Markdown', null=True)
     minutes_md = tf('Minutes in Markdown', null=True)
 
-    front_conversation_id = cf('Front conversation ID', null=True)
+    front_conversation_id = cf('Front conversation ID', null=True,
+        db_index=True)
 
     # One and only one of the following conversations must be set.
     emails = fk('ConversationEmail', 'conversations', null=True)
