@@ -140,7 +140,7 @@ class CompanyAddress(Relationship):
 
     class Meta:
         verbose_name = 'Company-address relationship'
-        verbose_name_plural = 'Company-addresse relationships'
+        verbose_name_plural = 'Company-address relationships'
 
     def __str__(self):
         return f'({self.rtype}, {self.company}, {self.address} [{self.id}])'
