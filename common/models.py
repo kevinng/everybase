@@ -60,12 +60,12 @@ dtf = lambda verbose_name=None, null=False, default=None, db_index=True: \
     default=default, db_index=db_index)
 
 dtf_now_add = lambda verbose_name=None, null=False, auto_now_add=True, \
-    index=True: models.DateTimeField(verbose_name=verbose_name, null=null, \
-    blank=null, auto_now_add=auto_now_add, db_index=index)
+    db_index=True: models.DateTimeField(verbose_name=verbose_name, null=null, \
+    blank=null, auto_now_add=auto_now_add, db_index=db_index)
 
-dtf_now = lambda verbose_name=None, null=False, auto_now=True, index=True: \
+dtf_now = lambda verbose_name=None, null=False, auto_now=True, db_index=True: \
     models.DateTimeField(verbose_name=verbose_name, null=null, blank=null,
-    auto_now=auto_now, db_index=index)
+    auto_now=auto_now, db_index=db_index)
 
 # URL
 
