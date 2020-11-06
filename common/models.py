@@ -5,7 +5,7 @@ import uuid
 # --- Start: Helper lambda for model field declarations ---
 
 # Foreign key
-fk = lambda klass, name=None, verbose_name=None, null=False, index=True: \
+fk = lambda klass, name=None, verbose_name=None, null=False, db_index=True: \
     models.ForeignKey(
     klass,
     on_delete=models.PROTECT,
@@ -14,26 +14,26 @@ fk = lambda klass, name=None, verbose_name=None, null=False, index=True: \
     verbose_name=verbose_name,
     null=null,
     blank=null,
-    db_index=index
+    db_index=db_index
 )
 
 # Many-to-many
-m2m = lambda klass, name, blank=False, index=True: models.ManyToManyField(
+m2m = lambda klass, name, blank=False, db_index=True: models.ManyToManyField(
     klass,
     related_name=name,
     related_query_name=name,
     blank=blank,
-    db_index=index
+    db_index=db_index
 )
 
 # Many-to-many through
-m2mt = lambda klass, thru, f1, f2, name, index=True: models.ManyToManyField(
+m2mt = lambda klass, thru, f1, f2, name, db_index=True: models.ManyToManyField(
     klass,
     through=thru,
     through_fields=(f1, f2),
     related_name=name,
     related_query_name=name,
-    db_index=index
+    db_index=db_index
 )
 
 # Integer
