@@ -9,7 +9,7 @@ expirable_invalidable_fieldnames = ['expired', 'invalidated',
 class ExpirableInvalidable(models.Model):
     expired = dtf(null=True)
     invalidated = dtf(null=True)
-    invalidated_reason_md = tf('Invalidated reason in Markdown', True)
+    invalidated_reason_md = tf('Invalidated reason in Markdown', null=True)
 
     class Meta:
         abstract = True
@@ -27,7 +27,7 @@ class Lead(models.Model):
     contact = fk('relationships.Person', '%(class)s_leads')
     company = fk('relationships.Company', '%(class)s_leads', null=True)
     contact_type = fk('ContactType', '%(class)s_leads')
-    contact_type_details_md = tf('Contact type details in Markdown', True)
+    contact_type_details_md = tf('Contact type details in Markdown', null=True)
 
     def __str__(self):
         return f'({short_text(self.details_md)} [{self.id}])'
@@ -38,7 +38,7 @@ class Lead(models.Model):
 commission_fieldnames = ['details_md', 'mark_up_type', 'mark_up_price_per_unit',
     'mark_up_percentage']
 class Commission(models.Model):
-    details_md = tf('Details in Markdown', True)
+    details_md = tf('Details in Markdown', null=True)
     mark_up_type = models.CharField(
         'Mark-up type',
         max_length=3,
@@ -48,8 +48,8 @@ class Commission(models.Model):
         ],
         default='ppu'
     )
-    mark_up_price_per_unit = ff('Mark-up price per unit', True)
-    mark_up_percentage = ff('Mark-up percentage', True)
+    mark_up_price_per_unit = ff('Mark-up price per unit', null=True)
+    mark_up_percentage = ff('Mark-up percentage', null=True)
 
     class Meta:
         abstract = True
@@ -69,15 +69,17 @@ class Quote(models.Model):
     incoterm_location = cf(null=True)
     currency = fk('Currency', '%(class)s_items', null=True)
     price = ff(null=True)
-    price_details_md = tf('Price details in Markdown', True)
+    price_details_md = tf('Price details in Markdown', null=True)
 
     deposit_percent = ff(null=True)
     
-    deposit_paymodes = m2m('PaymentMode', '%(class)s_deposit_paymodes', True)
-    remainder_paymodes = m2m('PaymentMode', '%(class)s_remainder_paymodes', True)
+    deposit_paymodes = m2m('PaymentMode', '%(class)s_deposit_paymodes',
+        blank=True)
+    remainder_paymodes = m2m('PaymentMode', '%(class)s_remainder_paymodes',
+        blank=True)
 
-    payterms_details_md = tf('Payment terms details in Markdown', True)
-    delivery_details_md = tf('Delivery details in Markdown', True)
+    payterms_details_md = tf('Payment terms details in Markdown', null=True)
+    delivery_details_md = tf('Delivery details in Markdown', null=True)
 
     class Meta:
         abstract = True
@@ -160,9 +162,9 @@ class SupplyQuote(Standard, Quote, ExpirableInvalidable):
     supply = fk('Supply', 'quotes')
 
     status = fk('SupplyQuoteStatus', 'quotes')
-    packing_details_md = tf('Packing details in Markdown', True)
+    packing_details_md = tf('Packing details in Markdown', null=True)
 
-    downstreams = m2m('self', 'upstreams', True)
+    downstreams = m2m('self', 'upstreams', blank=True)
 
     demand_quotes = m2mt(
         'DemandQuote',
@@ -195,21 +197,21 @@ class DemandQuote(Standard, Quote, ExpirableInvalidable):
     status = fk('DemandQuoteStatus', 'quotes')
     details_as_received_md = tf('Details as received in Markdown', null=True)
     positive_origin_countries = m2m(
-        'common.Country', 'positive_origin_of_demand_quotes', True)
+        'common.Country', 'positive_origin_of_demand_quotes', blank=True)
     negative_origin_countries = m2m(
-        'common.Country', 'negative_origin_of_demand_quotes', True)
+        'common.Country', 'negative_origin_of_demand_quotes', blank=True)
     negative_details_md = tf('Negative details in Markdown', null=True)
 
 class Trench(models.Model):
     quantity = ff()
-    after_deposit_seconds = ff('Seconds after deposit', True)
-    paymode = fk('PaymentMode', 'trenches', 'Payment Mode', True)
+    after_deposit_seconds = ff('Seconds after deposit', null=True)
+    paymode = fk('PaymentMode', 'trenches', 'Payment Mode', null=True)
     payment_before_release = models.BooleanField(default=True)
     details_md = tf('Details in Markdown', True)
 
     # At least one of the following must be set.
-    supply_quote = fk('SupplyQuote', 'trenches', 'Supply Quote', True)
-    demand_quote = fk('DemandQuote', 'trenches', 'Demand Quote', True)
+    supply_quote = fk('SupplyQuote', 'trenches', 'Supply Quote', null=True)
+    demand_quote = fk('DemandQuote', 'trenches', 'Demand Quote', null=True)
 
     class Meta:
         verbose_name = 'Trench'
@@ -224,7 +226,7 @@ class Match(Standard):
 
     status = fk('MatchStatus', 'matches', null=True)
     method = fk('MatchMethod', 'matches', null=True)
-    details_md = tf('Details in Markdown', True)
+    details_md = tf('Details in Markdown', null=True)
 
     class Meta:
         verbose_name = 'Match'
@@ -242,7 +244,7 @@ class SupplyCommission(Standard, Commission, ExpirableInvalidable):
     company = fk('relationships.Company', 'supply_commissions', null=True)
 
 class DemandCommission(Standard, Commission, ExpirableInvalidable):
-    quotes = m2m('DemandQuote', 'commissions', True)
+    quotes = m2m('DemandQuote', 'commissions', blank=True)
     demand = fk('Demand', 'commissions', null=True)
 
     # One of following must be set
