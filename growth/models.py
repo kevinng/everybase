@@ -361,19 +361,19 @@ class WorldOfChemicalsResultEmail(Relationship):
 # --- Start: Growth models ---
 
 class GmassCampaignResult(Standard):
-    email_address = cf(null=True, db_index=True)
-    first_name = cf(null=True, db_index=True)
-    last_name = cf(null=True, db_index=True)
-    name_1 = cf(null=True, db_index=True)
-    opens = pintf(null=True, db_index=True)
-    clicks = pintf(null=True, db_index=True)
-    replied = cf(null=True, db_index=True)
-    unsubscribed = cf(null=True, db_index=True)
-    bounced = cf(null=True, db_index=True)
-    blocked = cf(null=True, db_index=True)
-    over_gmail_limit = cf(null=True, db_index=True)
+    email_address = cf(null=True)
+    first_name = cf(null=True)
+    last_name = cf(null=True)
+    name_1 = cf(null=True)
+    opens = pintf(null=True)
+    clicks = pintf(null=True)
+    replied = cf(null=True)
+    unsubscribed = cf(null=True)
+    bounced = cf(null=True)
+    blocked = cf(null=True)
+    over_gmail_limit = cf(null=True)
     bounce_reason = tf(null=True)
-    gmail_response = cf(null=True, db_index=True)
+    gmail_response = cf(null=True)
 
     email = fk('relationships.Email', 'gmass_campaign_results', null=True)
     gmass_campaign = fk('GmassCampaign', 'results', null=True)
@@ -382,24 +382,24 @@ class GmassCampaignResult(Standard):
         return f'({self.email_address} [{self.id}])'
 
 class GmassCampaign(Standard):
-    sent = dtf(null=True, db_index=True)
-    campaign_id = cf(db_index=True)
-    subject = cf(null=True, db_index=True)
-    spreadsheet = cf(null=True, db_index=True)
+    sent = dtf(null=True)
+    campaign_id = cf()
+    subject = cf(null=True)
+    spreadsheet = cf(null=True)
 
     def __str__(self):
         return f'({self.campaign_id}, {self.sent} [{self.id}])'
 
 class ChemicalClusterOfSingaporeResult(Standard):
-    harvested = dtf(null=True, db_index=True)
-    source_link = cf(null=True, db_index=True)
+    harvested = dtf(null=True)
+    source_link = cf(null=True)
     
-    company_name = cf(null=True, db_index=True)
-    telephone = cf(null=True, db_index=True)
-    fax = cf(null=True, db_index=True)
-    email_str = cf(null=True, db_index=True)
-    website = cf(null=True, db_index=True)
-    address_str = cf(null=True)
+    company_name = cf(null=True)
+    telephone = cf(null=True)
+    fax = cf(null=True)
+    email_str = cf(null=True)
+    website = cf(null=True)
+    address_str = cf(null=True, db_index=False)
 
     company = fk('relationships.Company',
         'chemical_cluster_of_singapore_results', null=True)
@@ -424,15 +424,15 @@ class ChemicalClusterOfSingaporeResult(Standard):
         return f'({self.company_name}, {self.sourced} [{self.id}])'
 
 class Fibre2FashionResult(Standard):
-    harvested = dtf(null=True, db_index=True)
+    harvested = dtf(null=True)
 
-    source_link = cf(null=False, db_index=True)
-    category = cf(null=False, db_index=True)
-    sub_category = cf(null=False, db_index=True)
-    email = cf(null=False, db_index=True)
-    email_domain = cf(null=False, db_index=True)
-    lead_type = cf(null=False, db_index=True)
-    description = cf(null=False, db_index=True)
+    source_link = cf(null=True)
+    category = cf(null=True)
+    sub_category = cf(null=True)
+    email = cf(null=True)
+    email_domain = cf(null=True)
+    lead_type = cf(null=True)
+    description = cf(null=True)
 
     links = m2m('relationships.Link', 'fibre2fashion_results', True)
     emails = m2m('relationships.Email', 'fibre2fashion_results', True)
@@ -446,21 +446,21 @@ class Fibre2FashionResult(Standard):
             {self.sourced} [{self.id}])'
 
 class ZeroBounceResult(Standard):
-    generated = dtf(null=True, db_index=True)
+    generated = dtf(null=True)
 
-    email_address = cf(null=True, db_index=True)
-    status = cf(null=True, db_index=True)
-    sub_status = cf(null=True, db_index=True)
-    account = cf(null=True, db_index=True)
-    domain = cf(null=True, db_index=True)
-    first_name = cf(null=True, db_index=True)
-    last_name = cf(null=True, db_index=True)
-    gender = cf(null=True, db_index=True)
-    free_email = cf(null=True, db_index=True)
-    mx_found = cf(null=True, db_index=True)
-    mx_record = cf(null=True, db_index=True)
-    smtp_provider = cf(null=True, db_index=True)
-    did_you_mean = cf(null=True, db_index=True)
+    email_address = cf(null=True)
+    status = cf(null=True)
+    sub_status = cf(null=True)
+    account = cf(null=True)
+    domain = cf(null=True)
+    first_name = cf(null=True)
+    last_name = cf(null=True)
+    gender = cf(null=True)
+    free_email = cf(null=True)
+    mx_found = cf(null=True)
+    mx_record = cf(null=True)
+    smtp_provider = cf(null=True)
+    did_you_mean = cf(null=True)
 
     email = fk('relationships.Email', 'zero_bounce_results', null=True)
 
@@ -479,7 +479,7 @@ class DataSource(Choice):
         'data_sources')
 
 class SourcedEmail(Standard):
-    harvested = dtf(null=True, db_index=True)
+    harvested = dtf(null=True)
 
     source = fk('DataSource', 'sourced_emails')
     email = fk('relationships.Email', 'sourced_emails')
@@ -488,15 +488,15 @@ class SourcedEmail(Standard):
         return f'({self.email_address} [{self.id}])'
 
 class ChemicalBookResult(Standard):
-    harvested = dtf(null=True, db_index=True)
+    harvested = dtf(null=True)
 
-    source_url = cf(null=True, db_index=True)
-    coy_name = cf(null=True, db_index=True)
-    coy_internal_href = cf(null=True, db_index=True)
-    coy_tel = cf(null=True, db_index=True)
-    coy_email = cf(null=True, db_index=True)
-    coy_href = cf(null=True, db_index=True)
-    coy_nat = cf(null=True, db_index=True)
+    source_url = cf(null=True)
+    coy_name = cf(null=True)
+    coy_internal_href = cf(null=True)
+    coy_tel = cf(null=True)
+    coy_email = cf(null=True)
+    coy_href = cf(null=True)
+    coy_nat = cf(null=True)
 
     links = m2mt(
         'relationships.Link',
@@ -537,21 +537,21 @@ class ChemicalBookResult(Standard):
         return f'({self.coy_name} [{self.id}])'
 
 class LookChemResult(Standard):
-    harvested = dtf(null=True, db_index=True)
+    harvested = dtf(null=True)
 
-    coy_name = cf(null=True, db_index=True)
-    contact_person = cf(null=True, db_index=True)
-    street_address = cf(null=True)
-    city = cf(null=True, db_index=True)
-    province_state = cf(null=True, db_index=True)
-    country_region = cf(null=True, db_index=True)
-    zip_code = cf(null=True, db_index=True)
-    business_type = cf(null=True, db_index=True)
-    tel = cf(null=True, db_index=True)
-    mobile = cf(null=True, db_index=True)
-    email = cf(null=True, db_index=True)
-    website = cf(null=True, db_index=True)
-    qq = cf(null=True, db_index=True)
+    coy_name = cf(null=True)
+    contact_person = cf(null=True)
+    street_address = cf(null=True, db_index=False)
+    city = cf(null=True)
+    province_state = cf(null=True)
+    country_region = cf(null=True)
+    zip_code = cf(null=True)
+    business_type = cf(null=True)
+    tel = cf(null=True)
+    mobile = cf(null=True)
+    email = cf(null=True)
+    website = cf(null=True)
+    qq = cf(null=True)
 
     companies = m2mt(
         'relationships.Company',
@@ -593,27 +593,27 @@ class LookChemResult(Standard):
         return f'({self.coy_name} [{self.id}])'
 
 class WorldOfChemicalsResult(Standard):
-    harvested = dtf(null=True, db_index=True)
+    harvested = dtf(null=True)
 
-    source_url = cf(null=True, db_index=True)
-    coy_id = cf(null=True, db_index=True)
-    coy_name = cf(null=True, db_index=True)
+    source_url = cf(null=True)
+    coy_id = cf(null=True)
+    coy_name = cf(null=True)
     coy_about_html = tf(null=True)
-    coy_pri_contact = cf(null=True, db_index=True)
-    coy_addr_1 = cf(null=True, db_index=True)
-    coy_addr_2 = cf(null=True, db_index=True)
-    coy_city = cf(null=True, db_index=True)
-    coy_state = cf(null=True, db_index=True)
-    coy_country = cf(null=True, db_index=True)
-    coy_postal = cf(null=True, db_index=True)
-    coy_phone = cf(null=True, db_index=True)
-    coy_phone_2 = cf(null=True, db_index=True)
-    coy_email = cf(null=True, db_index=True)
-    coy_owner_email = cf(null=True, db_index=True)
-    coy_alt_email = cf(null=True, db_index=True)
-    coy_alt_email_2 = cf(null=True, db_index=True)
-    coy_alt_email_3 = cf(null=True, db_index=True)
-    coy_website = cf(null=True, db_index=True)
+    coy_pri_contact = cf(null=True)
+    coy_addr_1 = cf(null=True)
+    coy_addr_2 = cf(null=True)
+    coy_city = cf(null=True)
+    coy_state = cf(null=True)
+    coy_country = cf(null=True)
+    coy_postal = cf(null=True)
+    coy_phone = cf(null=True)
+    coy_phone_2 = cf(null=True)
+    coy_email = cf(null=True)
+    coy_owner_email = cf(null=True)
+    coy_alt_email = cf(null=True)
+    coy_alt_email_2 = cf(null=True)
+    coy_alt_email_3 = cf(null=True)
+    coy_website = cf(null=True)
 
     links = m2mt(
         'relationships.Link',
@@ -649,12 +649,12 @@ class WorldOfChemicalsResult(Standard):
         return f'({self.coy_name} [{self.id}])'
 
 class OKChemResult(Standard):
-    harvested = dtf(null=True, db_index=True)
+    harvested = dtf(null=True)
 
-    name = cf(null=True, db_index=True)
-    country = cf(null=True, db_index=True)
-    request = cf(null=True, db_index=True)
-    email = cf(null=True, db_index=True)
+    name = cf(null=True)
+    country = cf(null=True)
+    request = cf(null=True)
+    email = cf(null=True)
     
     class Meta:
         verbose_name = 'OKChem result'

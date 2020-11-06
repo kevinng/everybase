@@ -98,11 +98,11 @@ class File(Standard):
     upload_confirmed = dtf(null=True)
     uuid = uid()
 
-    s3_bucket_name = cf(max_length=63, null=True, db_index=True)
-    s3_object_key = cf(max_length=1024, null=True, db_index=True)
-    s3_object_content_length = pintf(null=True, db_index=True)
-    s3_object_e_tag = cf(null=True, db_index=True)
-    s3_object_content_type = cf(null=True, db_index=True)
+    s3_bucket_name = cf(max_length=63, null=True)
+    s3_object_key = cf(max_length=1024, null=True)
+    s3_object_content_length = pintf(null=True)
+    s3_object_e_tag = cf(null=True)
+    s3_object_content_type = cf(null=True)
     s3_object_last_modified = dtf(null=True)
 
     details_md = tf('Details in Markdown', True)

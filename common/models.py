@@ -37,7 +37,7 @@ m2mt = lambda klass, thru, f1, f2, name, index=True: models.ManyToManyField(
 )
 
 # Integer
-pintf = lambda verbose_name=None, null=False, db_index=False: models.\
+pintf = lambda verbose_name=None, null=False, db_index=True: models.\
     PositiveIntegerField(verbose_name=verbose_name, null=null, blank=null,
         db_index=db_index)
 
@@ -46,13 +46,13 @@ tf = lambda verbose_name=None, null=False: models.TextField(
     verbose_name=verbose_name, null=null, blank=null)
 
 # Char
-cf = lambda verbose_name=None, null=False, max_length=100, db_index=False: \
+cf = lambda verbose_name=None, null=False, max_length=100, db_index=True: \
     models.CharField(verbose_name=verbose_name, max_length=max_length,
         null=null, blank=null, db_index=db_index)
 
 # Float
-ff = lambda verbose_name=None, null=False: models.FloatField(
-    verbose_name=verbose_name, null=null, blank=null)
+ff = lambda verbose_name=None, null=False, db_index=True: models.FloatField(
+    verbose_name=verbose_name, null=null, blank=null, db_index=db_index)
 
 # Datetime
 dtf = lambda verbose_name=None, null=False, default=None, db_index=True: \
@@ -69,13 +69,13 @@ dtf_now = lambda verbose_name=None, null=False, auto_now=True, db_index=True: \
 
 # URL
 
-url = lambda verbose_name=None, null=False: models.URLField(
-    verbose_name=verbose_name, null=null, blank=null)
+url = lambda verbose_name=None, null=False, db_index=True: models.URLField(
+    verbose_name=verbose_name, null=null, blank=null, db_index=db_index)
 
 # Email
 
-eml = lambda verbose_name=None, null=False: models.EmailField(
-    verbose_name=verbose_name, null=null, blank=null)
+eml = lambda verbose_name=None, null=False, db_index=True: models.EmailField(
+    verbose_name=verbose_name, null=null, blank=null, db_index=db_index)
 
 # UUID
 
