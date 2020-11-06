@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import fk, m2m, m2mt, tf, cf, dtf, pintf, eml
+from common.models import fk, m2m, m2mt, tf, cf, dtf, pintf, eml, url
 from common.models import Standard, Choice
 
 # --- Start: Abstract classes ---
@@ -280,7 +280,7 @@ class Email(Standard):
 
 class Link(Standard):
     verified = dtf(null=True)
-    link = models.URLField()
+    link = url()
 
     def __str__(self):
         return f'({self.link} [{self.id}])'
