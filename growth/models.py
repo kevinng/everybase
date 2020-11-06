@@ -421,7 +421,7 @@ class ChemicalClusterOfSingaporeResult(Standard):
         verbose_name_plural = 'ChemicalClusterOfSingapore results'
 
     def __str__(self):
-        return f'({self.company_name}, {self.sourced} [{self.id}])'
+        return f'({self.company_name}, {self.harvested} [{self.id}])'
 
 class Fibre2FashionResult(Standard):
     harvested = dtf(null=True)
@@ -443,7 +443,7 @@ class Fibre2FashionResult(Standard):
 
     def __str__(self):
         return f'({short_text(self.source_link, backward=True)}, \
-            {self.sourced} [{self.id}])'
+            {self.harvested} [{self.id}])'
 
 class ZeroBounceResult(Standard):
     generated = dtf(null=True)
