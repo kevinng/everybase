@@ -236,7 +236,7 @@ class Match(Standard):
         return f'({short_text(self.details_md)} [{self.id}])'
 
 class SupplyCommission(Standard, Commission, ExpirableInvalidable):
-    quotes = m2m('SupplyQuote', 'commissions', True)
+    quotes = m2m('SupplyQuote', 'commissions', blank=True)
     supply = fk('Supply', 'commissions', null=True)
 
     # One of following must be set
