@@ -124,10 +124,10 @@ class Choice(models.Model):
     """
     Abstract model for a choice model.
     """
-    name = cf()
+    name = cf(db_index=True)
     details_md = tf('Details in Markdown', null=True)
 
-    programmatic_key = cf(null=True)
+    programmatic_key = cf(null=True, db_index=True)
     programmatic_details_md = tf('Programmatic details in Markdown', null=True)
 
     def __str__(self):
@@ -141,7 +141,7 @@ class Choice(models.Model):
 # --- Start: Common models ---
 
 class Country(Choice):
-    cc_tld = cf('CC TLD', null=True)
+    cc_tld = cf('CC TLD', null=True, db_index=True)
     class Meta:
         verbose_name = 'Country'
         verbose_name_plural = 'Countries'
