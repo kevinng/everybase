@@ -273,7 +273,12 @@ class Company(Standard):
         return f'({self.company_name} [{self.id}])'
 
 class Email(Standard):
-    email = eml()
+    email = models.EmailField(
+        unique=True,
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     def __str__(self):
         return f'({self.email} [{self.id}])'
