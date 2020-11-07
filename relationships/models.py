@@ -279,6 +279,15 @@ class Email(Standard):
         blank=False,
         db_index=True
     )
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='emails',
+        related_query_name='emails',
+        null=True,
+        blank=False,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
     def __str__(self):
         return f'({self.email} [{self.id}])'
