@@ -31,3 +31,18 @@ class StateDetail(
     StateAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class ImportJobAPI():
+    queryset = models.ImportJob.objects.all()
+    serializer_class = serializers.ImportJobSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ImportJobList(
+    ImportJobAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ImportJobDetail(
+    ImportJobAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

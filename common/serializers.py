@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from common.models import choice_fieldnames
+from common.models import choice_fieldnames, standard_fieldnames
 from . import models
 
 class CountrySerializer(serializers.ModelSerializer):
@@ -10,4 +10,10 @@ class CountrySerializer(serializers.ModelSerializer):
 class StateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.State
-        fields = ['id'] + choice_fieldnames + ['country'] 
+        fields = ['id'] + choice_fieldnames + ['country']
+
+class ImportJobSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ImportJob
+        fields = ['id'] + standard_fieldnames + ['started', 'ended', 'status']
+
