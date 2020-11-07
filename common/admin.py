@@ -1,5 +1,5 @@
 from django.contrib import admin
-from common.models import short_text, Country, State
+from common.models import short_text, Country, State, ImportJob
 
 # Fields for standard models
 
@@ -66,3 +66,18 @@ class CountryAdmin(ChoiceAdmin):
     fieldsets = choice_fieldsets + [
         ('Other details', {'fields': ['cc_tld']})
     ]
+
+@admin.register(ImportJob)
+class ImportJobAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display + ['started', 'ended', 'status']
+    list_editable = standard_list_editable + ['started', 'ended', 'status']
+    list_per_page = 1000
+    list_filter = standard_list_filter + ['started', 'ended', 'status']
+    search_fields = ['id', 'started', 'ended', 'status']
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    fieldsets = standard_fieldsets + [
+        (None, {'fields': ['started', 'ended', 'status']})]

@@ -150,3 +150,30 @@ class State(Choice):
     country = fk('Country', 'states')
 
 # --- End: Common models ---
+
+# --- Start: Other models ---
+
+class ImportJob(Standard):
+    started = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    ended = models.DateTimeField(
+        null=True,
+        blank=False,
+        db_index=True
+    )
+    status = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+        choices=[
+            ('Started', 'started'),
+            ('Succeeded', 'succeeded'),
+            ('Failed', 'failed')
+        ],
+        db_index=True
+    )
+
+# --- End: Other models ---

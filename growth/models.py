@@ -446,12 +446,13 @@ class Fibre2FashionResult(Standard):
             {self.harvested} [{self.id}])'
 
 class ZeroBounceResult(Standard):
-    batch_uuid = models.UUIDField(
-        verbose_name='Batch UUID',
-        unique=True,
-        editable=False,
-        null=False,
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='zero_bounce_results',
+        related_query_name='zero_bounce_results',
+        null=True,
         blank=False,
+        on_delete=models.PROTECT,
         db_index=True
     )
     generated = models.DateTimeField(
