@@ -67,10 +67,14 @@ class ZeroBounceResultAPI():
     serializer_class = serializers.ZeroBounceResultSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class ZeroBounceResultList(generics.ListCreateAPIView):
+class ZeroBounceResultList(
+    ZeroBounceResultAPI,
+    generics.ListCreateAPIView):
     pass
 
-class ZeroBounceResultDetail(generics.RetrieveUpdateDestroyAPIView):
+class ZeroBounceResultDetail(
+    ZeroBounceResultAPI,
+    generics.RetrieveUpdateDestroyAPIView):
     pass
 
 class DataSourceAPI():
