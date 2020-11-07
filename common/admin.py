@@ -74,10 +74,10 @@ class ImportJobAdmin(admin.ModelAdmin):
     list_editable = standard_list_editable + ['started', 'ended', 'status']
     list_per_page = 1000
     list_filter = standard_list_filter + ['started', 'ended', 'status']
-    search_fields = ['id', 'started', 'ended', 'status']
     ordering = standard_ordering
     show_full_result_count = True
 
     # Details page settings
+    readonly_fields = ['id', 'created', 'updated']
     fieldsets = standard_fieldsets + [
         (None, {'fields': ['started', 'ended', 'status']})]
