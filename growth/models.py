@@ -1,6 +1,6 @@
 from django.db import models
-from common.models import (fk, m2m, m2mt, tf, cf, dtf, pintf, Standard, Choice,
-    short_text)
+from common.models import (fk, m2m, m2mt, tf, cf, dtf, uid, eml, pintf, 
+    Standard, Choice, short_text)
 
 # --- Start: Abstract classes ---
 
@@ -446,23 +446,147 @@ class Fibre2FashionResult(Standard):
             {self.harvested} [{self.id}])'
 
 class ZeroBounceResult(Standard):
-    generated = dtf(null=True)
+    batch_uuid = models.UUIDField(
+        verbose_name='Batch UUID',
+        unique=True,
+        editable=False,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    generated = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
-    email_address = cf(null=True)
-    status = cf(null=True)
-    sub_status = cf(null=True)
-    account = cf(null=True)
-    domain = cf(null=True)
-    first_name = cf(null=True)
-    last_name = cf(null=True)
-    gender = cf(null=True)
-    free_email = cf(null=True)
-    mx_found = cf(null=True)
-    mx_record = cf(null=True)
-    smtp_provider = cf(null=True)
-    did_you_mean = cf(null=True)
+    email_address = models.EmailField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    status = models.CharField(
+        max_length=50,
+        null=False,
+        blank=False,
+        db_index=True,
+        choices=[
+            ('Valid', 'valid'),
+            ('Invalid', 'invalid'),
+            ('Catch-All', 'catch-all'),
+            ('Spamtrap', 'spamtrap'),
+            ('Abuse', 'abuse'),
+            ('Do Not Mail', 'do_not_mail'),
+            ('Unknown', 'unknown')
+        ]
+    )
+    sub_status = models.CharField(
+        max_length=50,
+        null=True,
+        blank=False,
+        db_index=True,
+        choices=[
+            ('Anti-Spam System', 'antispam_system'),
+            ('Does Not Accept Mail', 'does_not_accept_mail'),
+            ('Exception Occurred', 'exception_occurred'),
+            ('Failed SMTP Connection', 'failed_smtp_connection'),
+            ('Failed Syntax Check', 'failed_syntax_check'),
+            ('Forcible Disconnect', 'forcible_disconnect'),
+            ('Global Suppression', 'global_suppression'),
+            ('Greylisted', 'greylisted'),
+            ('Leading Period Removed', 'leading_period_removed'),
+            ('Mail Server Did Not Respond', 'mail_server_did_not_respond'),
+            ('Mail Server Temporary Error', 'mail_server_temporary_error'),
+            ('Mailbox Quota Exceeded', 'mailbox_quota_exceeded'),
+            ('Mailbox Not Found', 'mailbox_not_found'),
+            ('No DNS Entries', 'no_dns_entries'),
+            ('Possible Traps', 'possible_traps'),
+            ('Possible Typo', 'possible_typo'),
+            ('Role-Based', 'role_based'),
+            ('Timeout Exceeded', 'timeout_exceeded'),
+            ('Unroutable IP Address', 'unroutable_ip_address'),
+            ('Alias Address', 'alias_address'),
+            ('Role-Based Catch-All', 'role_based_catch_all'),
+            ('Disposable', 'disposable'),
+            ('Toxix', 'toxic')
+        ]
+    )
+    account = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    domain = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    first_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=False,
+        db_index=True
+    )
+    last_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=False,
+        db_index=True
+    )
+    gender = models.CharField(
+        max_length=100,
+        null=True,
+        blank=False,
+        db_index=True
+    )
+    free_email = models.BooleanField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    mx_found = models.BooleanField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    mx_record = models.CharField(
+        max_length=100,
+        null=True,
+        blank=False,
+        db_index=True
+    )
+    smtp_provider = models.CharField(
+        max_length=100,
+        null=True,
+        blank=False,
+        db_index=True
+    )
+    did_you_mean = models.EmailField(
+        null=True,
+        blank=False,
+        db_index=True
+    )
 
-    email = fk('relationships.Email', 'zero_bounce_results', null=True)
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='zero_bounce_result_emails',
+        related_query_name='zero_bounce_result_emails',
+        null=False,
+        blank=False,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    did_you_mean_email = models.ForeignKey(
+        'relationships.Email',
+        related_name='zero_bounce_result_did_you_mean_emails',
+        related_query_name='zero_bounce_result_did_you_mean_emails',
+        null=False,
+        blank=False,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'ZeroBounce result'
