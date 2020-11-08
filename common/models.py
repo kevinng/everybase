@@ -169,9 +169,9 @@ class ImportJob(Standard):
         null=False,
         blank=False,
         choices=[
-            ('Started', 'started'),
-            ('Succeeded', 'succeeded'),
-            ('Failed', 'failed')
+            ('started', 'Started'),
+            ('succeeded', 'Succeeded'),
+            ('failed', 'Failed')
         ],
         db_index=True
     )
