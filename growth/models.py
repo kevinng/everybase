@@ -472,13 +472,13 @@ class ZeroBounceResult(Standard):
         blank=False,
         db_index=True,
         choices=[
-            ('Valid', 'valid'),
-            ('Invalid', 'invalid'),
-            ('Catch-All', 'catch-all'),
-            ('Spamtrap', 'spamtrap'),
-            ('Abuse', 'abuse'),
-            ('Do Not Mail', 'do_not_mail'),
-            ('Unknown', 'unknown')
+            ('valid', 'Valid'),
+            ('invalid', 'Invalid'),
+            ('catch-all', 'Catch-All'),
+            ('spamtrap', 'Spamtrap'),
+            ('abuse', 'Abuse'),
+            ('do_not_mail', 'Do Not Mail'),
+            ('unknown', 'Unknown')
         ]
     )
     sub_status = models.CharField(
@@ -487,29 +487,29 @@ class ZeroBounceResult(Standard):
         blank=False,
         db_index=True,
         choices=[
-            ('Anti-Spam System', 'antispam_system'),
-            ('Does Not Accept Mail', 'does_not_accept_mail'),
-            ('Exception Occurred', 'exception_occurred'),
-            ('Failed SMTP Connection', 'failed_smtp_connection'),
-            ('Failed Syntax Check', 'failed_syntax_check'),
-            ('Forcible Disconnect', 'forcible_disconnect'),
-            ('Global Suppression', 'global_suppression'),
-            ('Greylisted', 'greylisted'),
-            ('Leading Period Removed', 'leading_period_removed'),
-            ('Mail Server Did Not Respond', 'mail_server_did_not_respond'),
-            ('Mail Server Temporary Error', 'mail_server_temporary_error'),
-            ('Mailbox Quota Exceeded', 'mailbox_quota_exceeded'),
-            ('Mailbox Not Found', 'mailbox_not_found'),
-            ('No DNS Entries', 'no_dns_entries'),
-            ('Possible Traps', 'possible_traps'),
-            ('Possible Typo', 'possible_typo'),
-            ('Role-Based', 'role_based'),
-            ('Timeout Exceeded', 'timeout_exceeded'),
-            ('Unroutable IP Address', 'unroutable_ip_address'),
-            ('Alias Address', 'alias_address'),
-            ('Role-Based Catch-All', 'role_based_catch_all'),
-            ('Disposable', 'disposable'),
-            ('Toxix', 'toxic')
+            ('antispam_system', 'Anti-Spam System'),
+            ('does_not_accept_mail', 'Does Not Accept Mail'),
+            ('exception_occurred', 'Exception Occurred'),
+            ('failed_smtp_connection', 'Failed SMTP Connection'),
+            ('failed_syntax_check', 'Failed Syntax Check'),
+            ('forcible_disconnect', 'Forcible Disconnect'),
+            ('global_suppression', 'Global Suppression'),
+            ('greylisted', 'Greylisted'),
+            ('leading_period_removed', 'Leading Period Removed'),
+            ('mail_server_did_not_respond', 'Mail Server Did Not Respond'),
+            ('mail_server_temporary_error', 'Mail Server Temporary Error'),
+            ('mailbox_quota_exceeded', 'Mailbox Quota Exceeded'),
+            ('mailbox_not_found', 'Mailbox Not Found'),
+            ('no_dns_entries', 'No DNS Entries'),
+            ('possible_traps', 'Possible Traps'),
+            ('possible_typo', 'Possible Typo'),
+            ('role_based', 'Role-Based'),
+            ('timeout_exceeded', 'Timeout Exceeded'),
+            ('unroutable_ip_address', 'Unroutable IP Address'),
+            ('alias_address', 'Alias Address'),
+            ('role_based_catch_all', 'Role-Based Catch-All'),
+            ('disposable', 'Disposable'),
+            ('toxic', 'Toxic')
         ]
     )
     account = models.CharField(
