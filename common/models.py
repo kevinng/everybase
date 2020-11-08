@@ -154,16 +154,6 @@ class State(Choice):
 # --- Start: Other models ---
 
 class ImportJob(Standard):
-    started = models.DateTimeField(
-        null=False,
-        blank=False,
-        db_index=True
-    )
-    ended = models.DateTimeField(
-        null=True,
-        blank=False,
-        db_index=True
-    )
     status = models.CharField(
         max_length=50,
         null=False,
