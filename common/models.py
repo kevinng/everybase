@@ -167,6 +167,6 @@ class ImportJob(Standard):
     )
 
     def __str__(self):
-        return f'({self.started}, {self.status} [{self.id}])'
+        return f'({self.created}, {self.status} [{self.id}])'
 
 # --- End: Other models ---
