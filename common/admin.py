@@ -70,15 +70,15 @@ class CountryAdmin(ChoiceAdmin):
 @admin.register(ImportJob)
 class ImportJobAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = standard_list_display + ['status']
-    list_editable = standard_list_editable + ['status']
+    list_display = standard_list_display + ['status', 'description']
+    list_editable = standard_list_editable + ['status', 'description']
     list_per_page = 1000
-    search_fields = ['id', 'status']
-    list_filter = standard_list_filter + ['status']
+    search_fields = ['id', 'status', 'description']
+    list_filter = standard_list_filter + ['status', 'description']
     ordering = standard_ordering
     show_full_result_count = True
 
     # Details page settings
     readonly_fields = ['id', 'created', 'updated']
     fieldsets = standard_fieldsets + [
-        (None, {'fields': ['status']})]
+        (None, {'fields': ['status', 'description']})]
