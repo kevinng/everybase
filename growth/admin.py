@@ -13,7 +13,7 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
         'first_name', 'last_name', 'name_1', 'opens', 'clicks', 'replied',
         'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
         'bounce_reason', 'gmail_response', 'email', 'gmass_campaign']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['replied', 'unsubscribed',
         'bounced', 'blocked', 'over_gmail_limit']
     search_fields = ['id', 'email_address', 'first_name', 'last_name', 'name_1',
@@ -43,7 +43,7 @@ class GmassCampaign(admin.ModelAdmin):
         'subject', 'spreadsheet']
     list_editable = comadm.standard_list_editable + ['sent', 'campaign_id',
         'subject', 'spreadsheet']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['sent']
     search_fields = ['id', 'sent', 'campaign_id', 'subject', 'spreadsheet']
     ordering = comadm.standard_ordering
@@ -64,7 +64,7 @@ class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + ['harvested', 'source_link',
         'company_name', 'telephone', 'fax', 'email_str', 'website',
         'address_str', 'company', 'email', 'phone_number', 'link', 'address']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested']
     search_fields = ['id', 'source_link', 'company_name', 'telephone', 'fax',
         'email_str', 'website', 'address_str', 'company', 'email',
@@ -93,7 +93,7 @@ class Fibre2FashionResultAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + ['harvested', 'source_link',
         'category', 'sub_category', 'email', 'email_domain', 'lead_type',
         'description']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested']
     search_fields = ['id', 'source_link', 'category', 'sub_category', 'email',
         'email_domain', 'lead_type', 'description']
@@ -158,7 +158,7 @@ class SourcedEmailAdmin(admin.ModelAdmin):
         'email']
     list_editable = comadm.standard_list_editable + ['harvested', 'source',
         'email']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested', 'source']
     search_fields = ['id', 'source', 'email']
     ordering = ['harvested']
@@ -180,7 +180,7 @@ class ChemicalBookAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
         'coy_name', 'coy_internal_href', 'coy_tel', 'coy_email', 'coy_href',
         'coy_nat']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested']
     search_fields = ['id', 'source_url', 'coy_name', 'coy_internal_href',
         'coy_tel', 'coy_email', 'coy_href', 'coy_nat']
@@ -206,7 +206,7 @@ class LookChemResultAdmin(admin.ModelAdmin):
         'contact_person', 'street_address', 'city', 'province_state',
         'country_region', 'zip_code', 'business_type', 'tel', 'mobile', 'email',
         'website', 'qq']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested', 'city',
         'province_state', 'country_region', 'business_type']
     search_fields = ['id', 'coy_name', 'contact_person', 'street_address',
@@ -238,7 +238,7 @@ class WorldOfChemicalsResultAdmin(admin.ModelAdmin):
         'coy_addr_2', 'coy_city', 'coy_state', 'coy_country', 'coy_postal',
         'coy_phone', 'coy_phone_2', 'coy_email', 'coy_owner_email',
         'coy_alt_email', 'coy_alt_email_2', 'coy_alt_email_3', 'coy_website']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested', 'coy_city',
         'coy_state', 'coy_country']
     search_fields = ['id', 'source_url', 'coy_id', 'coy_name', 'coy_about_html',
@@ -266,7 +266,7 @@ class OKChemResultAdmin(admin.ModelAdmin):
         'country', 'request', 'email']
     list_editable = comadm.standard_list_editable + ['harvested', 'name',
         'country', 'request', 'email']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested', 'country']
     search_fields = ['id', 'source', 'name', 'country', 'request', 'email']
     ordering = ['harvested']
