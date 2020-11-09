@@ -1,6 +1,7 @@
 from . import models
 from . import serializers
 from rest_framework import generics, permissions
+from django_filters.rest_framework import DjangoFilterBackend
 
 class PersonLinkTypeAPI():
     queryset = models.PersonLinkType.objects.all()
@@ -295,7 +296,8 @@ class EmailAPI():
 class EmailList(
     EmailAPI,
     generics.ListCreateAPIView):
-    pass
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['email']
 
 class EmailDetail(
     EmailAPI,

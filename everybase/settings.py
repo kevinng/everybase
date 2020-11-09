@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     # 'leads.apps.LeadsConfig',
     # 'products.apps.ProductsConfig',
 
+    'django_filters',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,7 +64,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'rest_framework',
-    'django_filters'
 ]
 
 MIDDLEWARE = [
