@@ -73,6 +73,7 @@ class ImportJobAdmin(admin.ModelAdmin):
     list_display = standard_list_display + ['status']
     list_editable = standard_list_editable + ['status']
     list_per_page = 1000
+    search_fields = ['id', 'status']
     list_filter = standard_list_filter + ['status']
     ordering = standard_ordering
     show_full_result_count = True

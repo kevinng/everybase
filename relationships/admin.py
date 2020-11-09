@@ -76,11 +76,11 @@ class PhoneNumberAdmin(admin.ModelAdmin):
 @admin.register(mod.Email)
 class EmailAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['email']
-    list_editable = comadm.standard_list_editable + ['email']
+    list_display = comadm.standard_list_display + ['email', 'import_job']
+    list_editable = comadm.standard_list_editable + ['email', 'import_job']
     list_per_page = 1000
     list_filter = comadm.standard_list_filter
-    search_fields = ['id', 'email']
+    search_fields = ['id', 'email', 'import_job']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -88,8 +88,9 @@ class EmailAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': ['email']})
+        (None, {'fields': ['email', 'import_job']})
     ]
+    autocomplete_fields = ['import_job']
 
 _person_fields = ['given_name', 'family_name', 'country', 'state', 'notes_md']
 @admin.register(mod.Person)
