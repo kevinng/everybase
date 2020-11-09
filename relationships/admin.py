@@ -24,7 +24,7 @@ class AddressAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _address_fields
     list_editable = comadm.standard_list_editable + _address_fields
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['country', 'state']
     search_fields = ['id'] + _address_fields
     ordering = comadm.standard_ordering
@@ -43,7 +43,7 @@ class CompanyAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _company_fields
     list_editable = comadm.standard_list_editable + _company_fields
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter
     search_fields = ['id'] + _company_fields
     ordering = comadm.standard_ordering
@@ -61,7 +61,7 @@ class PhoneNumberAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _phone_number_fields
     list_editable = comadm.standard_list_editable + _phone_number_fields
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['country_code']
     search_fields = ['id'] + _phone_number_fields
     ordering = comadm.standard_ordering
@@ -78,7 +78,7 @@ class EmailAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['email', 'import_job']
     list_editable = comadm.standard_list_editable + ['email', 'import_job']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job']
     search_fields = ['id', 'email', 'import_job']
     ordering = comadm.standard_ordering
@@ -97,7 +97,7 @@ class InvalidEmailAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['email', 'import_job']
     list_editable = comadm.standard_list_editable + ['email', 'import_job']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job']
     search_fields = ['id', 'email', 'import_job']
     ordering = comadm.standard_ordering
@@ -117,7 +117,7 @@ class PersonAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _person_fields
     list_editable = comadm.standard_list_editable + _person_fields
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter
     search_fields = ['id'] + _person_fields
     ordering = comadm.standard_ordering
@@ -136,7 +136,7 @@ class LinkAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _link_fields
     list_editable = comadm.standard_list_editable + _link_fields
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter
     search_fields = ['id', 'link']
     ordering = comadm.standard_ordering
@@ -174,7 +174,7 @@ _crel_autocomplete_fields = _rel_autocomplete_fields + ['company']
 
 class RelationshipAdmin(admin.ModelAdmin):
     # List page settings
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter
     ordering = comadm.standard_ordering
     show_full_result_count = True
