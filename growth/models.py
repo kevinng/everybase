@@ -583,7 +583,7 @@ class ZeroBounceResult(Standard):
         'relationships.Email',
         related_name='zero_bounce_result_did_you_mean_emails',
         related_query_name='zero_bounce_result_did_you_mean_emails',
-        null=False,
+        null=True,
         blank=False,
         on_delete=models.PROTECT,
         db_index=True

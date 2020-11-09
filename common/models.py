@@ -165,8 +165,13 @@ class ImportJob(Standard):
         ],
         db_index=True
     )
+    description = models.TextField(
+        null=False,
+        blank=False
+    )
 
     def __str__(self):
-        return f'({self.created}, {self.status} [{self.id}])'
+        return f'({self.created}, {short_text(self.description)}, {self.status}\
+            [{self.id}])'
 
 # --- End: Other models ---
