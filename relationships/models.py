@@ -292,6 +292,27 @@ class Email(Standard):
     def __str__(self):
         return f'({self.email} [{self.id}])'
 
+class InvalidEmail(Standard):
+    email = models.CharField(
+        max_length=100,
+        unique=True,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='invalid_emails',
+        related_query_name='invalid_emails',
+        null=True,
+        blank=False,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def __str__(self):
+        return f'({self.email} [{self.id}])'
+
 class Link(Standard):
     verified = dtf(null=True)
     link = url()

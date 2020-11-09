@@ -574,7 +574,16 @@ class ZeroBounceResult(Standard):
         'relationships.Email',
         related_name='zero_bounce_result_emails',
         related_query_name='zero_bounce_result_emails',
-        null=False,
+        null=True,
+        blank=False,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='zero_bounce_result_invalid_emails',
+        related_query_name='zero_bounce_result_invalid_emails',
+        null=True,
         blank=False,
         on_delete=models.PROTECT,
         db_index=True
