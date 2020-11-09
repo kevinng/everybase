@@ -15,5 +15,4 @@ class StateSerializer(serializers.ModelSerializer):
 class ImportJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ImportJob
-        fields = ['id'] + standard_fieldnames + ['started', 'ended', 'status']
-
+        fields = ['id'] + standard_fieldnames + ['status']
