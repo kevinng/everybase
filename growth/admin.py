@@ -113,21 +113,23 @@ class Fibre2FashionResultAdmin(admin.ModelAdmin):
 @admin.register(mod.ZeroBounceResult)
 class ZeroBounceResultAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['email_address', 'status',
-        'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
-        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean',
-        'email', 'invalid_email', 'did_you_mean_email']
-    list_editable = comadm.standard_list_editable + ['email_address', 'status',
-        'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
-        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean',
-        'email', 'invalid_email', 'did_you_mean_email']
-    list_per_page = 1000
-    list_filter = comadm.standard_list_filter + ['status', 'sub_status',
-        'gender', 'free_email', 'mx_found']
-    search_fields = ['id', 'email_address', 'status', 'sub_status', 'account',
-        'domain', 'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
+    list_display = comadm.standard_list_display + ['import_job', 'generated',
+        'email_address', 'status', 'sub_status', 'account', 'domain',
+        'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
         'mx_record', 'smtp_provider', 'did_you_mean', 'email', 'invalid_email',
         'did_you_mean_email']
+    list_editable = comadm.standard_list_editable + ['import_job', 'generated',
+        'email_address', 'status', 'sub_status', 'account', 'domain',
+        'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
+        'mx_record', 'smtp_provider', 'did_you_mean', 'email', 'invalid_email',
+        'did_you_mean_email']
+    list_per_page = 1000
+    list_filter = comadm.standard_list_filter + ['generated', 'status',
+        'sub_status', 'gender', 'free_email', 'mx_found']
+    search_fields = ['id', 'import_job', 'email_address', 'status',
+        'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
+        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean',
+        'email', 'invalid_email', 'did_you_mean_email']
     ordering = ['email_address']
     show_full_result_count = True
     
@@ -136,13 +138,14 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         (None, {
-            'fields': ['email_address', 'status',
+            'fields': ['import_job', 'generated', 'email_address', 'status',
             'sub_status', 'account', 'domain', 'first_name', 'last_name',
             'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
             'did_you_mean']}),
         (None, {'fields': ['email', 'invalid_email', 'did_you_mean_email']})
     ]
-    autocomplete_fields = ['email', 'invalid_email', 'did_you_mean_email']
+    autocomplete_fields = ['import_job', 'email', 'invalid_email',
+        'did_you_mean_email']
 
 @admin.register(mod.DataSource)
 class DataSourceAdmin(comadm.ChoiceAdmin):

@@ -34,10 +34,11 @@ class Fibre2FashionResultSerializer(serializers.ModelSerializer):
 class ZeroBounceResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ZeroBounceResult
-        fields = ['id'] + standard_fieldnames + ['email_address', 'status',
-            'sub_status', 'account', 'domain', 'first_name', 'last_name',
-            'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
-            'did_you_mean', 'email', 'invalid_email', 'did_you_mean_email']
+        fields = ['id'] + standard_fieldnames + ['import_job', 'generated',
+            'email_address', 'status', 'sub_status', 'account', 'domain',
+            'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
+            'mx_record', 'smtp_provider', 'did_you_mean', 'email',
+            'invalid_email', 'did_you_mean_email']
 
 class DataSourceSerializer(serializers.ModelSerializer):
     class Meta:
