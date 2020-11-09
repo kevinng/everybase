@@ -123,7 +123,7 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
         'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
         'mx_record', 'smtp_provider', 'did_you_mean', 'email', 'invalid_email',
         'did_you_mean_email']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['generated', 'status',
         'sub_status', 'gender', 'free_email', 'mx_found']
     search_fields = ['id', 'import_job', 'email_address', 'status',
