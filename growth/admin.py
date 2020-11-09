@@ -114,23 +114,23 @@ class Fibre2FashionResultAdmin(admin.ModelAdmin):
 class ZeroBounceResultAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['import_job', 'generated',
-        'email_address', 'status', 'sub_status', 'account', 'domain',
+        'email_str', 'status', 'sub_status', 'account', 'domain',
         'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
         'mx_record', 'smtp_provider', 'did_you_mean', 'email', 'invalid_email',
         'did_you_mean_email']
     list_editable = comadm.standard_list_editable + ['import_job', 'generated',
-        'email_address', 'status', 'sub_status', 'account', 'domain',
+        'email_str', 'status', 'sub_status', 'account', 'domain',
         'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
         'mx_record', 'smtp_provider', 'did_you_mean', 'email', 'invalid_email',
         'did_you_mean_email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['generated', 'status',
         'sub_status', 'gender', 'free_email', 'mx_found']
-    search_fields = ['id', 'import_job', 'email_address', 'status',
+    search_fields = ['id', 'import_job__description', 'email_str', 'status',
         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
         'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean',
-        'email', 'invalid_email', 'did_you_mean_email']
-    ordering = ['email_address']
+        'email__email', 'invalid_email__email', 'did_you_mean_email__email']
+    ordering = ['email_str']
     show_full_result_count = True
     
     # Details page settings
@@ -138,7 +138,7 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         (None, {
-            'fields': ['import_job', 'generated', 'email_address', 'status',
+            'fields': ['import_job', 'generated', 'email_str', 'status',
             'sub_status', 'account', 'domain', 'first_name', 'last_name',
             'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
             'did_you_mean']}),
