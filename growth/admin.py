@@ -115,16 +115,19 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['email_address', 'status',
         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
-        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
+        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean',
+        'email', 'invalid_email', 'did_you_mean_email']
     list_editable = comadm.standard_list_editable + ['email_address', 'status',
         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
-        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
+        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean',
+        'email', 'invalid_email', 'did_you_mean_email']
     list_per_page = 1000
     list_filter = comadm.standard_list_filter + ['status', 'sub_status',
         'gender', 'free_email', 'mx_found']
     search_fields = ['id', 'email_address', 'status', 'sub_status', 'account',
         'domain', 'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
-        'mx_record', 'smtp_provider', 'did_you_mean']
+        'mx_record', 'smtp_provider', 'did_you_mean', 'email', 'invalid_email',
+        'did_you_mean_email']
     ordering = ['email_address']
     show_full_result_count = True
     
@@ -137,9 +140,9 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
             'sub_status', 'account', 'domain', 'first_name', 'last_name',
             'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
             'did_you_mean']}),
-        (None, {'fields': ['email']})
+        (None, {'fields': ['email', 'invalid_email', 'did_you_mean_email']})
     ]
-    autocomplete_fields = ['email']
+    autocomplete_fields = ['email', 'invalid_email', 'did_you_mean_email']
 
 @admin.register(mod.DataSource)
 class DataSourceAdmin(comadm.ChoiceAdmin):
