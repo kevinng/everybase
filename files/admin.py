@@ -21,7 +21,7 @@ class FileAdmin(admin.ModelAdmin):
         's3_object_last_modified']
     search_fields = ['id', 's3_bucket_name', 's3_object_key',
         's3_object_e_tag', 'tags']
-    list_per_page = 1000
+    list_per_page = 50
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -65,7 +65,7 @@ class RelationshipAdmin(admin.ModelAdmin):
     Abstract admin definition class for file relationships.
     """
     # List page settings
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter
     ordering = comadm.standard_ordering
     show_full_result_count = True
