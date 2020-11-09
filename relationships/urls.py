@@ -109,6 +109,11 @@ urlpatterns = [
     path('email/<int:pk>/',
         views.EmailDetail.as_view()),
 
+    path('invalid_email/',
+        views.InvalidEmailList.as_view()),
+    path('invalid_email/<int:pk>/',
+        views.InvalidEmailDetail.as_view()),
+
     path('link/',
         views.LinkList.as_view()),
     path('link/<int:pk>/',

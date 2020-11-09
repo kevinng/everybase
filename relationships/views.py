@@ -304,6 +304,22 @@ class EmailDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
+class InvalidEmailAPI():
+    queryset = models.InvalidEmail.objects.all()
+    serializer_class = serializers.InvalidEmailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class InvalidEmailList(
+    InvalidEmailAPI,
+    generics.ListCreateAPIView):
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['email']
+
+class InvalidEmailDetail(
+    InvalidEmailAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
 class LinkAPI():
     queryset = models.Link.objects.all()
     serializer_class = serializers.LinkSerializer

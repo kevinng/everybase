@@ -113,6 +113,11 @@ class EmailSerializer(serializers.ModelSerializer):
         model = models.Email
         fields = ['id'] + standard_fieldnames + ['email', 'import_job']
 
+class InvalidEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.InvalidEmail
+        fields = ['id'] + standard_fieldnames + ['email', 'import_job']
+
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Link
