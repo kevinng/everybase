@@ -34,7 +34,7 @@ class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = choice_list_display
     list_editable = choice_list_editable
-    list_per_page = 1000
+    list_per_page = 50
     search_fields = choice_search_fields
     ordering = choice_ordering
     show_full_result_count = True
@@ -72,7 +72,7 @@ class ImportJobAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['status', 'description']
     list_editable = standard_list_editable + ['status', 'description']
-    list_per_page = 1000
+    list_per_page = 50
     search_fields = ['id', 'status', 'description']
     list_filter = standard_list_filter + ['status', 'description']
     ordering = standard_ordering
