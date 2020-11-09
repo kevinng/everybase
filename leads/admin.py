@@ -79,7 +79,7 @@ class UOMRelationshipAdmin(admin.ModelAdmin):
     # List page settings
     list_display = ['id', 'child', 'parent', 'multiple', 'details_md']
     list_editable = ['child', 'parent', 'multiple', 'details_md']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = ['child', 'parent']
     search_fields = ['id', 'child', 'parent', 'details_md']
     ordering = ['id']
@@ -103,7 +103,7 @@ class SupplyAdmin(admin.ModelAdmin):
     list_editable = commod.standard_list_editable + \
         _expirable_invalidable_fields + \
         _lead_fields
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = commod.standard_list_filter + \
         _expirable_invalidable_filter + \
         _lead_filter
@@ -127,7 +127,7 @@ class DemandAdmin(admin.ModelAdmin):
     list_editable = commod.standard_list_editable + \
         _expirable_invalidable_fields + \
         _lead_fields
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = commod.standard_list_filter + \
         _expirable_invalidable_filter + \
         _lead_filter
@@ -149,7 +149,7 @@ class DemandCommissionAdmin(admin.ModelAdmin):
         ['demand', 'person', 'company']
     list_editable = commod.standard_list_editable + \
         ['demand', 'person', 'company']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = commod.standard_list_filter + ['demand', 'person', 'company']
     search_fields = ['id', 'demand', 'person', 'company']
     ordering = commod.standard_ordering
@@ -167,7 +167,7 @@ class DemandQuoteAdmin(admin.ModelAdmin):
         'details_as_received_md', 'negative_details_md']
     list_editable = commod.standard_list_editable + ['demand', 'status',
         'details_as_received_md', 'negative_details_md']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = commod.standard_list_filter + ['demand', 'status']
     search_fields = ['id', 'positive_origin_countries',
         'negative_origin_countries'] + ['demand', 'status',
@@ -191,7 +191,7 @@ class SupplyCommissionAdmin(admin.ModelAdmin):
         ['supply', 'person', 'company']
     list_editable = commod.standard_list_editable + \
         ['supply', 'person', 'company']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = commod.standard_list_filter + ['supply', 'person', 'company']
     search_fields = ['id', 'supply', 'person', 'company']
     ordering = commod.standard_ordering
@@ -209,7 +209,7 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
         'packing_details_md']
     list_editable = commod.standard_list_editable + ['supply', 'status',
         'packing_details_md']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = commod.standard_list_filter + ['status']
     search_fields = ['id'] + ['supply', 'status', 'packing_details_md']
     ordering = commod.standard_ordering
@@ -228,7 +228,7 @@ class MatchAdmin(admin.ModelAdmin):
         ['demand_quote', 'supply_quote', 'status', 'method', 'details_md']
     list_editable = commod.standard_list_editable + \
         ['demand_quote', 'supply_quote', 'status', 'method', 'details_md']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = commod.standard_list_filter + ['status', 'method']
     search_fields = ['id', 'demand_quote', 'supply_quote', 'status', 'method',
         'details_md']
@@ -248,7 +248,7 @@ class ProductionCapabilityAdmin(admin.ModelAdmin):
         'details_md', 'start', 'end', 'capacity_quantity', 'capacity_seconds']
     list_editable = commod.standard_list_editable + ['supply_quote', \
         'details_md', 'start', 'end', 'capacity_quantity', 'capacity_seconds']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = commod.standard_list_filter + ['start', 'end']
     search_fields = ['id', 'supply_quote', 'details_md']
     ordering = commod.standard_ordering
@@ -269,7 +269,7 @@ class TrenchAdmin(admin.ModelAdmin):
     list_editable = ['supply_quote', 'demand_quote', 'quantity',
         'after_deposit_seconds', 'paymode', 'payment_before_release',
         'details_md']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = ['paymode', 'payment_before_release']
     search_fields = ['id', 'supply_quote', 'demand_quote', 'details_md']
     ordering = ['-id']
