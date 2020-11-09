@@ -12,7 +12,7 @@ class ConversationAdmin(admin.ModelAdmin):
     list_filter = comadm.standard_list_filter + ['channel']
     search_fields = ['id', 'agenda_md', 'minutes_md', 'front_conversation_id',
         'issue']
-    list_per_page = 1000
+    list_per_page = 50
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -36,7 +36,7 @@ class ConversationChatAdmin(admin.ModelAdmin):
         'their_number', 'conversation']
     list_editable = comadm.standard_list_editable + ['status', 'our_number',
         'their_number', 'conversation'] 
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['status']
     search_fields = ['id', 'their_number', 'our_number', 'conversation']
     ordering = comadm.standard_ordering
@@ -58,7 +58,7 @@ class ConversationEmailAdmin(admin.ModelAdmin):
         'their_email', 'conversation']
     list_editable = comadm.standard_list_editable + ['status', 'our_email',
         'their_email', 'conversation']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['status']
     search_fields = ['id', 'our_email', 'their_email', 'conversation']
     ordering = comadm.standard_ordering
@@ -81,7 +81,7 @@ class ConversationVoiceAndVideoAdmin(admin.ModelAdmin):
         'their_number', 'conversation']
     list_editable = comadm.standard_list_editable + ['status', 'our_number',
         'their_number', 'conversation'] 
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['status']
     search_fields = ['id', 'their_number', 'our_number', 'conversation']
     ordering = comadm.standard_ordering
@@ -119,7 +119,7 @@ class IssueAdmin(admin.ModelAdmin):
         'source_type', 'tags_string', 'description_md', 'outcome_md']
     list_editable = comadm.standard_list_editable + ['status', 'scheduled',
         'description_md', 'outcome_md']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['status', 'tags']
     search_fields = ['id', 'description_md', 'outcome_md']
     ordering = comadm.standard_ordering
