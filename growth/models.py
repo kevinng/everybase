@@ -461,7 +461,8 @@ class ZeroBounceResult(Standard):
         db_index=True
     )
 
-    email_str = models.EmailField(
+    email_str = models.CharField(
+        max_length=100,
         null=False,
         blank=False,
         db_index=True
