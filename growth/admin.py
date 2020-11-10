@@ -176,8 +176,7 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
             'fields': ['import_job', 'generated', 'email_str', 'status',
             'sub_status', 'account', 'domain', 'first_name', 'last_name',
             'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
-            'did_you_mean']}),
-        (None, {'fields': ['email', 'invalid_email', 'did_you_mean_email']})
+            'did_you_mean', 'email', 'invalid_email', 'did_you_mean_email']})
     ]
     autocomplete_fields = ['import_job', 'email', 'invalid_email',
         'did_you_mean_email']

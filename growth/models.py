@@ -672,7 +672,7 @@ class ZeroBounceResult(Standard):
             ('mailbox_quota_exceeded', 'Mailbox Quota Exceeded'),
             ('mailbox_not_found', 'Mailbox Not Found'),
             ('no_dns_entries', 'No DNS Entries'),
-            ('possible_traps', 'Possible Traps'),
+            ('possible_trap', 'Possible Trap'),
             ('possible_typo', 'Possible Typo'),
             ('role_based', 'Role-Based'),
             ('timeout_exceeded', 'Timeout Exceeded'),
