@@ -284,7 +284,7 @@ class Email(Standard):
         related_name='emails',
         related_query_name='emails',
         null=True,
-        blank=False,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -305,7 +305,7 @@ class InvalidEmail(Standard):
         related_name='invalid_emails',
         related_query_name='invalid_emails',
         null=True,
-        blank=False,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )

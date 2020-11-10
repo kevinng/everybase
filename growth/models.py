@@ -451,7 +451,7 @@ class ZeroBounceResult(Standard):
         related_name='zero_bounce_results',
         related_query_name='zero_bounce_results',
         null=True,
-        blank=False,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -485,7 +485,7 @@ class ZeroBounceResult(Standard):
     sub_status = models.CharField(
         max_length=50,
         null=True,
-        blank=False,
+        blank=True,
         db_index=True,
         choices=[
             ('antispam_system', 'Anti-Spam System'),
@@ -528,19 +528,19 @@ class ZeroBounceResult(Standard):
     first_name = models.CharField(
         max_length=100,
         null=True,
-        blank=False,
+        blank=True,
         db_index=True
     )
     last_name = models.CharField(
         max_length=100,
         null=True,
-        blank=False,
+        blank=True,
         db_index=True
     )
     gender = models.CharField(
         max_length=100,
         null=True,
-        blank=False,
+        blank=True,
         db_index=True
     )
     free_email = models.BooleanField(
@@ -556,18 +556,18 @@ class ZeroBounceResult(Standard):
     mx_record = models.CharField(
         max_length=100,
         null=True,
-        blank=False,
+        blank=True,
         db_index=True
     )
     smtp_provider = models.CharField(
         max_length=100,
         null=True,
-        blank=False,
+        blank=True,
         db_index=True
     )
     did_you_mean = models.EmailField(
         null=True,
-        blank=False,
+        blank=True,
         db_index=True
     )
 
@@ -576,7 +576,7 @@ class ZeroBounceResult(Standard):
         related_name='zero_bounce_result_emails',
         related_query_name='zero_bounce_result_emails',
         null=True,
-        blank=False,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -585,7 +585,7 @@ class ZeroBounceResult(Standard):
         related_name='zero_bounce_result_invalid_emails',
         related_query_name='zero_bounce_result_invalid_emails',
         null=True,
-        blank=False,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -594,7 +594,7 @@ class ZeroBounceResult(Standard):
         related_name='zero_bounce_result_did_you_mean_emails',
         related_query_name='zero_bounce_result_did_you_mean_emails',
         null=True,
-        blank=False,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
