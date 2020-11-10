@@ -774,7 +774,7 @@ class ZeroBounceResult(Standard):
         verbose_name_plural = 'ZeroBounce results'
     
     def __str__(self):
-        return f'({self.email_address} [{self.id}])'
+        return f'({self.email_str} [{self.id}])'
 
 class DataSource(Choice):
     emails = m2mt(
