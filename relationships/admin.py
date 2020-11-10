@@ -99,7 +99,7 @@ class InvalidEmailAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + ['email', 'import_job']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job']
-    search_fields = ['id', 'email', 'import_job']
+    search_fields = ['id', 'email', 'import_job__description']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
