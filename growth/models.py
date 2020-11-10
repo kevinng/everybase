@@ -685,14 +685,14 @@ class ZeroBounceResult(Standard):
     )
     account = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     domain = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     first_name = models.CharField(
