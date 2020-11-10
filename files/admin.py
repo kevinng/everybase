@@ -20,7 +20,8 @@ class FileAdmin(admin.ModelAdmin):
     list_filter = comadm.standard_list_filter + ['upload_confirmed',
         's3_object_last_modified']
     search_fields = ['id', 's3_bucket_name', 's3_object_key',
-        's3_object_e_tag', 'tags']
+        's3_object_e_tag', 'tags__name', 'tags__details_md',
+        'tags__programmatic_key', 'tags__programmatic_details_md']
     list_per_page = 50
     ordering = comadm.standard_ordering
     show_full_result_count = True
