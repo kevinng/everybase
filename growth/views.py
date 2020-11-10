@@ -47,20 +47,35 @@ class ChemicalClusterOfSingaporeResultDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
-# class Fibre2FashionResultAPI():
-#     queryset = models.Fibre2FashionResult.objects.all()
-#     serializer_class = serializers.Fibre2FashionResultSerializer
-#     permission_classes = [permissions.IsAuthenticated]
+class Fibre2FashionBuyingOfferAPI():
+    queryset = models.Fibre2FashionBuyingOffer.objects.all()
+    serializer_class = serializers.Fibre2FashionBuyingOfferSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-# class Fibre2FashionResultList(
-#     Fibre2FashionResultAPI,
-#     generics.ListCreateAPIView):
-#     pass
+class Fibre2FashionBuyingOfferList(
+    Fibre2FashionBuyingOfferAPI,
+    generics.ListCreateAPIView):
+    pass
 
-# class Fibre2FashionResultDetail(
-#     Fibre2FashionResultAPI,
-#     generics.RetrieveUpdateDestroyAPIView):
-#     pass
+class Fibre2FashionBuyingOfferDetail(
+    Fibre2FashionBuyingOfferAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class Fibre2FashionSellingOfferAPI():
+    queryset = models.Fibre2FashionSellingOffer.objects.all()
+    serializer_class = serializers.Fibre2FashionSellingOfferSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class Fibre2FashionSellingOfferList(
+    Fibre2FashionSellingOfferAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class Fibre2FashionSellingOfferDetail(
+    Fibre2FashionSellingOfferAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
 
 class ZeroBounceResultAPI():
     queryset = models.ZeroBounceResult.objects.all()
