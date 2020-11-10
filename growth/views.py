@@ -47,20 +47,20 @@ class ChemicalClusterOfSingaporeResultDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
-class Fibre2FashionResultAPI():
-    queryset = models.Fibre2FashionResult.objects.all()
-    serializer_class = serializers.Fibre2FashionResultSerializer
-    permission_classes = [permissions.IsAuthenticated]
+# class Fibre2FashionResultAPI():
+#     queryset = models.Fibre2FashionResult.objects.all()
+#     serializer_class = serializers.Fibre2FashionResultSerializer
+#     permission_classes = [permissions.IsAuthenticated]
 
-class Fibre2FashionResultList(
-    Fibre2FashionResultAPI,
-    generics.ListCreateAPIView):
-    pass
+# class Fibre2FashionResultList(
+#     Fibre2FashionResultAPI,
+#     generics.ListCreateAPIView):
+#     pass
 
-class Fibre2FashionResultDetail(
-    Fibre2FashionResultAPI,
-    generics.RetrieveUpdateDestroyAPIView):
-    pass
+# class Fibre2FashionResultDetail(
+#     Fibre2FashionResultAPI,
+#     generics.RetrieveUpdateDestroyAPIView):
+#     pass
 
 class ZeroBounceResultAPI():
     queryset = models.ZeroBounceResult.objects.all()

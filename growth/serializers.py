@@ -24,12 +24,12 @@ class ChemicalClusterOfSingaporeResultSerializer(serializers.ModelSerializer):
             'address_str', 'company', 'email', 'phone_numbers', 'link',
             'address']
 
-class Fibre2FashionResultSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Fibre2FashionResult
-        fields = ['id'] + standard_fieldnames + ['sourced', 'source_link',
-            'category', 'sub_category', 'email', 'email_domain', 'lead_type',
-            'description', 'links', 'emails']
+# class Fibre2FashionResultSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.Fibre2FashionResult
+#         fields = ['id'] + standard_fieldnames + ['sourced', 'source_link',
+#             'category', 'sub_category', 'email', 'email_domain', 'lead_type',
+#             'description', 'links', 'emails']
 
 class ZeroBounceResultSerializer(serializers.ModelSerializer):
     class Meta:

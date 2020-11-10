@@ -19,10 +19,10 @@ urlpatterns = [
     path('chemical_cluster_of_singapore_result/<int:pk>/',
         views.ChemicalClusterOfSingaporeResultDetail.as_view()),
 
-    path('fibre_2_fashion_result/',
-        views.Fibre2FashionResultList.as_view()),
-    path('fibre_2_fashion_result/<int:pk>/',
-        views.Fibre2FashionResultDetail.as_view()),
+    # path('fibre_2_fashion_result/',
+    #     views.Fibre2FashionResultList.as_view()),
+    # path('fibre_2_fashion_result/<int:pk>/',
+    #     views.Fibre2FashionResultDetail.as_view()),
 
     path('zero_bounce_result/',
         views.ZeroBounceResultList.as_view()),

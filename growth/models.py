@@ -423,27 +423,98 @@ class ChemicalClusterOfSingaporeResult(Standard):
     def __str__(self):
         return f'({self.company_name}, {self.harvested} [{self.id}])'
 
-class Fibre2FashionResult(Standard):
-    harvested = dtf(null=True)
+class Fibre2FashionBuyingOffer(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='fibre2fashion_buying_offers',
+        related_query_name='fibre2fashion_buying_offers',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    harvested = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
-    source_link = cf(null=True)
-    category = cf(null=True)
-    sub_category = cf(null=True)
-    email = cf(null=True)
-    email_domain = cf(null=True)
-    lead_type = cf(null=True)
-    description = cf(null=True)
+    source_link = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    category = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    sub_category = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    title = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False
+    )
+    reference_no = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    description = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False
+    )
+    email_str = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company_name = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    product_info_html = models.TextField(
+        null=False,
+        blank=False
+    )
 
-    links = m2m('relationships.Link', 'fibre2fashion_results', True)
-    emails = m2m('relationships.Email', 'fibre2fashion_results', True)
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='fibre2fashion_buying_offer_emails',
+        related_query_name='fibre2fashion_buying_offer_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='fibre2fashion_buying_offer_invalid_emails',
+        related_query_name='fibre2fashion_buying_offer_invalid_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
     class Meta:
-        verbose_name = 'Fibre2Fashion result'
-        verbose_name_plural = 'Fibre2Fashion results'
+        verbose_name = 'Fibre2Fashion buying offer'
+        verbose_name_plural = 'Fibre2Fashion buying offers'
 
     def __str__(self):
-        return f'({short_text(self.source_link, backward=True)}, \
-            {self.harvested} [{self.id}])'
+        return f'({short_text(self.title)}, {self.email_str} [{self.id}])'
 
 class ZeroBounceResult(Standard):
     import_job = models.ForeignKey(

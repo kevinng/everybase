@@ -84,31 +84,31 @@ class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
     autocomplete_fields = ['company', 'email', 'phone_number', 'link',
         'address']
 
-@admin.register(mod.Fibre2FashionResult)
-class Fibre2FashionResultAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + ['harvested', 'source_link',
-        'category', 'sub_category', 'email', 'email_domain', 'lead_type',
-        'description']
-    list_editable = comadm.standard_list_editable + ['harvested', 'source_link',
-        'category', 'sub_category', 'email', 'email_domain', 'lead_type',
-        'description']
-    list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested']
-    search_fields = ['id', 'source_link', 'category', 'sub_category', 'email',
-        'email_domain', 'lead_type', 'description']
-    ordering = ['harvested'] + comadm.standard_ordering
-    show_full_result_count = True
+# @admin.register(mod.Fibre2FashionResult)
+# class Fibre2FashionResultAdmin(admin.ModelAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + ['harvested', 'source_link',
+#         'category', 'sub_category', 'email', 'email_domain', 'lead_type',
+#         'description']
+#     list_editable = comadm.standard_list_editable + ['harvested', 'source_link',
+#         'category', 'sub_category', 'email', 'email_domain', 'lead_type',
+#         'description']
+#     list_per_page = 50
+#     list_filter = comadm.standard_list_filter + ['harvested']
+#     search_fields = ['id', 'source_link', 'category', 'sub_category', 'email',
+#         'email_domain', 'lead_type', 'description']
+#     ordering = ['harvested'] + comadm.standard_ordering
+#     show_full_result_count = True
     
-    # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['harvested', 'source_link', 'category',
-            'sub_category', 'email', 'email_domain', 'lead_type',
-            'description']}),
-        (None, {'fields': ['links', 'emails']})]
-    autocomplete_fields = ['links', 'emails']
+#     # Details page settings
+#     save_on_top = True
+#     readonly_fields = comadm.standard_readonly_fields
+#     fieldsets = comadm.standard_fieldsets + [
+#         (None, {'fields': ['harvested', 'source_link', 'category',
+#             'sub_category', 'email', 'email_domain', 'lead_type',
+#             'description']}),
+#         (None, {'fields': ['links', 'emails']})]
+#     autocomplete_fields = ['links', 'emails']
 
 @admin.register(mod.ZeroBounceResult)
 class ZeroBounceResultAdmin(admin.ModelAdmin):
