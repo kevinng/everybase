@@ -89,19 +89,18 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
         'source_link', 'category', 'sub_category', 'title', 'reference_no',
-        'description', 'email_str', 'company_name', 'product_info_html',
-        'email', 'invalid_email']
+        'description', 'email_str', 'product_info_html', 'email',
+        'invalid_email']
     list_editable = comadm.standard_list_editable + ['import_job', 'harvested',
         'source_link', 'category', 'sub_category', 'title', 'reference_no',
-        'description', 'email_str', 'company_name', 'product_info_html',
-        'email', 'invalid_email']
+        'description', 'email_str', 'product_info_html', 'email',
+        'invalid_email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
         'category', 'sub_category']
     search_fields = ['id', 'import_job__description', 'source_link', 'category',
         'sub_category', 'title', 'reference_no', 'description', 'email_str',
-        'company_name', 'product_info_html', 'email__email',
-        'invalid_email__email']
+        'product_info_html', 'email__email', 'invalid_email__email']
     ordering = ['harvested'] + comadm.standard_ordering
     show_full_result_count = True
     
@@ -111,7 +110,7 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': ['import_job', 'harvested', 'source_link', 'category',
             'sub_category', 'reference_no', 'description', 'email_str',
-            'company_name', 'product_info_html', 'email', 'invalid_email']})]
+            'product_info_html', 'email', 'invalid_email']})]
     autocomplete_fields = ['import_job', 'email', 'invalid_email']
 
 @admin.register(mod.Fibre2FashionSellingOffer)

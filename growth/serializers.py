@@ -29,8 +29,8 @@ class Fibre2FashionBuyingOfferSerializer(serializers.ModelSerializer):
         model = models.Fibre2FashionBuyingOffer
         fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
             'source_link', 'category', 'sub_category', 'title', 'reference_no',
-            'description', 'email_str', 'company_name', 'product_info_html',
-            'email', 'invalid_email']
+            'description', 'email_str', 'product_info_html', 'email',
+            'invalid_email']
 
 class Fibre2FashionSellingOfferSerializer(serializers.ModelSerializer):
     class Meta:
