@@ -469,8 +469,7 @@ class Fibre2FashionBuyingOffer(Standard):
         blank=False,
         db_index=True
     )
-    description = models.CharField(
-        max_length=300,
+    description = models.TextField(
         null=True,
         blank=True
     )
@@ -557,8 +556,7 @@ class Fibre2FashionSellingOffer(Standard):
         blank=False,
         db_index=True
     )
-    description = models.CharField(
-        max_length=300,
+    description = models.TextField(
         null=True,
         blank=True
     )
