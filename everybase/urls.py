@@ -25,9 +25,6 @@ urlpatterns = [
     path('leads/', include('leads.urls')),
     path('relationships/', include('relationships.urls')),
 
-    # Cloaked links
-    path('i/', include('cloaker.urls')),
-
     # Landing page
     path('', include('lander.urls')),
 

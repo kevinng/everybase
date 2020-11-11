@@ -42,18 +42,7 @@ INSTALLED_APPS = [
     'files.apps.FilesConfig',
     'leads.apps.LeadsConfig',
     'growth.apps.GrowthConfig',
-
     'lander.apps.LanderConfig',
-    'cloaker.apps.CloakerConfig',
-
-    # 'accounts.apps.AccountsConfig',
-    # 'documents.apps.DocumentsConfig',
-    # 'materials.apps.MaterialsConfig',
-    # 'communications.apps.CommunicationsConfig',
-    # 'leads.apps.LeadsConfig',
-    # 'leads.apps.LeadsConfig',
-    # 'products.apps.ProductsConfig',
-
     'django_filters',
     'django_extensions',
     'django.contrib.admin',
