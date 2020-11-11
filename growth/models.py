@@ -471,8 +471,8 @@ class Fibre2FashionBuyingOffer(Standard):
     )
     description = models.CharField(
         max_length=300,
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
     email_str = models.CharField(
         max_length=100,
@@ -559,8 +559,8 @@ class Fibre2FashionSellingOffer(Standard):
     )
     description = models.CharField(
         max_length=300,
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
     email_str = models.CharField(
         max_length=100,
