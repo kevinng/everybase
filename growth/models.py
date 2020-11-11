@@ -431,8 +431,7 @@ class Fibre2FashionBuyingOffer(Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
-        db_index=True,
-        editable=False
+        db_index=True
     )
     harvested = models.DateTimeField(
         null=False,
@@ -518,8 +517,7 @@ class Fibre2FashionSellingOffer(Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
-        db_index=True,
-        editable=False
+        db_index=True
     )
     harvested = models.DateTimeField(
         null=False,
@@ -572,8 +570,7 @@ class Fibre2FashionSellingOffer(Standard):
         blank=False,
         db_index=True
     )
-    company_address = models.CharField(
-        max_length=300,
+    company_address = models.TextField(
         null=False,
         blank=False,
         db_index=True
@@ -617,8 +614,7 @@ class ZeroBounceResult(Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
-        db_index=True,
-        editable=False
+        db_index=True
     )
     generated = models.DateTimeField(
         null=False,
@@ -788,53 +784,89 @@ class SourcedEmail(Standard):
         return f'({self.email_address} [{self.id}])'
 
 class ChemicalBookResult(Standard):
-    harvested = dtf(null=True)
-
-    source_url = cf(null=True)
-    coy_name = cf(null=True)
-    coy_internal_href = cf(null=True)
-    coy_tel = cf(null=True)
-    coy_email = cf(null=True)
-    coy_href = cf(null=True)
-    coy_nat = cf(null=True)
-
-    links = m2mt(
-        'relationships.Link',
-        'ChemicalBookResultLink',
-        'chemical_book_result', 'link',
-        'chemical_book_results'
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='chemical_book_results',
+        related_query_name='chemical_book_results',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    harvested = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
     )
 
-    companies = m2mt(
-        'relationships.Company',
-        'ChemicalBookResultCompany',
-        'chemical_book_result', 'company',
-        'chemical_book_results')
+    source_url = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company_name = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    internal_url = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    telephone = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    email_str = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    corporate_site_url = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    nationality = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
-    phone_numbers = m2mt(
-        'relationships.PhoneNumber',
-        'ChemicalBookResultPhoneNumber',
-        'chemical_book_result', 'phone_number',
-        'chemical_book_results')
-
-    emails = m2mt(
+    email = models.ForeignKey(
         'relationships.Email',
-        'ChemicalBookResultEmail',
-        'chemical_book_result', 'email',
-        'chemical_book_results')
-
-    countries = m2mt(
-        'common.Country',
-        'ChemicalBookResultCountry',
-        'chemical_book_result', 'country',
-        'chemical_book_results')
+        related_name='chemical_book_result_emails',
+        related_query_name='chemical_book_result_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='chemical_book_result_invalid_emails',
+        related_query_name='chemical_book_result_invalid_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Chemical Book Result'
         verbose_name_plural = 'Chemical Book Results'
 
     def __str__(self):
-        return f'({self.coy_name} [{self.id}])'
+        return f'({self.company_name} [{self.id}])'
 
 class LookChemResult(Standard):
     harvested = dtf(null=True)

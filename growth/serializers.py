@@ -62,9 +62,10 @@ class SourcedEmailSerializer(serializers.ModelSerializer):
 class ChemicalBookResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ChemicalBookResult
-        fields = ['id'] + standard_fieldnames + ['source_url', 'coy_name',
-            'coy_internal_href', 'coy_tel', 'coy_email', 'coy_href', 'coy_nat',
-            'links', 'companies', 'phone_numbers', 'countries']
+        fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
+            'source_url', 'company_name', 'internal_url', 'telephone',
+            'email_str', 'corporate_site_url', 'nationality', 'email',
+            'invalid_email']
 
 class LookChemResultSerializer(serializers.ModelSerializer):
     class Meta:

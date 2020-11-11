@@ -106,12 +106,12 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
     
     # Details page settings
     save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields + ['import_job']
+    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['harvested', 'source_link', 'category',
+        (None, {'fields': ['import_job', 'harvested', 'source_link', 'category',
             'sub_category', 'reference_no', 'description', 'email_str',
             'product_info_html', 'email', 'invalid_email']})]
-    autocomplete_fields = ['email', 'invalid_email']
+    autocomplete_fields = ['import_job', 'email', 'invalid_email']
 
 @admin.register(mod.Fibre2FashionSellingOffer)
 class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
@@ -136,13 +136,13 @@ class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
     
     # Details page settings
     save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields + ['import_job']
+    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['harvested', 'source_link', 'category',
+        (None, {'fields': ['import_job', 'harvested', 'source_link', 'category',
             'sub_category', 'reference_no', 'description', 'email_str',
             'company_name', 'company_address', 'product_info_html', 'email',
             'invalid_email']})]
-    autocomplete_fields = ['email', 'invalid_email']
+    autocomplete_fields = ['import_job', 'email', 'invalid_email']
 
 @admin.register(mod.ZeroBounceResult)
 class ZeroBounceResultAdmin(admin.ModelAdmin):
@@ -169,15 +169,15 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
     
     # Details page settings
     save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields + ['import_job']
+    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         (None, {
-            'fields': ['generated', 'email_str', 'status',
+            'fields': ['import_job', 'generated', 'email_str', 'status',
             'sub_status', 'account', 'domain', 'first_name', 'last_name',
             'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
             'did_you_mean', 'email', 'invalid_email', 'did_you_mean_email']})
     ]
-    autocomplete_fields = ['email', 'invalid_email',
+    autocomplete_fields = ['import_job', 'email', 'invalid_email',
         'did_you_mean_email']
 
 @admin.register(mod.DataSource)
@@ -207,16 +207,17 @@ class SourcedEmailAdmin(admin.ModelAdmin):
 @admin.register(mod.ChemicalBookResult)
 class ChemicalBookAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['harvested', 'source_url',
-        'coy_name', 'coy_internal_href', 'coy_tel', 'coy_email', 'coy_href',
-        'coy_nat']
-    list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
-        'coy_name', 'coy_internal_href', 'coy_tel', 'coy_email', 'coy_href',
-        'coy_nat']
+    list_display = comadm.standard_list_display + ['import_job', 'harvested',
+        'source_url', 'company_name', 'internal_url', 'telephone', 'email_str',
+        'corporate_site_url', 'nationality', 'email', 'invalid_email']
+    list_editable = comadm.standard_list_editable + ['import_job', 'harvested',
+        'source_url', 'company_name', 'internal_url', 'telephone', 'email_str',
+        'corporate_site_url', 'nationality', 'email', 'invalid_email']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested']
-    search_fields = ['id', 'source_url', 'coy_name', 'coy_internal_href',
-        'coy_tel', 'coy_email', 'coy_href', 'coy_nat']
+    list_filter = comadm.standard_list_filter + ['import_job', 'harvested']
+    search_fields = ['id', 'source_url', 'company_name', 'internal_url',
+        'telephone', 'email', 'corporate_site_url', 'nationality',
+        'email__email', 'invalid_email__email']
     ordering = ['harvested']
     show_full_result_count = True
 
@@ -224,9 +225,10 @@ class ChemicalBookAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields + ['id']
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': ['harvested', 'source_url', 'coy_name',
-            'coy_internal_href', 'coy_tel', 'coy_email', 'coy_href', 'coy_nat'
-        ]})]
+        [(None, {'fields': ['import_job', 'harvested',
+            'source_url', 'company_name', 'internal_url', 'telephone',
+            'email_str', 'corporate_site_url', 'nationality', 'email',
+            'invalid_email']})]
 
 @admin.register(mod.LookChemResult)
 class LookChemResultAdmin(admin.ModelAdmin):
