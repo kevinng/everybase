@@ -431,7 +431,8 @@ class Fibre2FashionBuyingOffer(Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
-        db_index=True
+        db_index=True,
+        editable=False
     )
     harvested = models.DateTimeField(
         null=False,
@@ -518,7 +519,8 @@ class Fibre2FashionSellingOffer(Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
-        db_index=True
+        db_index=True,
+        editable=False
     )
     harvested = models.DateTimeField(
         null=False,
@@ -617,7 +619,8 @@ class ZeroBounceResult(Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
-        db_index=True
+        db_index=True,
+        editable=False
     )
     generated = models.DateTimeField(
         null=False,

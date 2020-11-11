@@ -91,7 +91,7 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
         'source_link', 'category', 'sub_category', 'title', 'reference_no',
         'description', 'email_str', 'product_info_html', 'email',
         'invalid_email']
-    list_editable = comadm.standard_list_editable + ['import_job', 'harvested',
+    list_editable = comadm.standard_list_editable + ['harvested',
         'source_link', 'category', 'sub_category', 'title', 'reference_no',
         'description', 'email_str', 'product_info_html', 'email',
         'invalid_email']
@@ -106,12 +106,12 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
     
     # Details page settings
     save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
+    readonly_fields = comadm.standard_readonly_fields + ['import_job']
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['import_job', 'harvested', 'source_link', 'category',
+        (None, {'fields': ['harvested', 'source_link', 'category',
             'sub_category', 'reference_no', 'description', 'email_str',
             'product_info_html', 'email', 'invalid_email']})]
-    autocomplete_fields = ['import_job', 'email', 'invalid_email']
+    autocomplete_fields = ['email', 'invalid_email']
 
 @admin.register(mod.Fibre2FashionSellingOffer)
 class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
@@ -120,7 +120,7 @@ class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
         'source_link', 'category', 'sub_category', 'title', 'reference_no',
         'description', 'email_str', 'company_name', 'company_address',
         'product_info_html', 'email', 'invalid_email']
-    list_editable = comadm.standard_list_editable + ['import_job', 'harvested',
+    list_editable = comadm.standard_list_editable + ['harvested',
         'source_link', 'category', 'sub_category', 'title', 'reference_no',
         'description', 'email_str', 'company_name', 'company_address',
         'product_info_html', 'email', 'invalid_email']
@@ -136,13 +136,13 @@ class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
     
     # Details page settings
     save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
+    readonly_fields = comadm.standard_readonly_fields + ['import_job']
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['import_job', 'harvested', 'source_link', 'category',
+        (None, {'fields': ['harvested', 'source_link', 'category',
             'sub_category', 'reference_no', 'description', 'email_str',
             'company_name', 'company_address', 'product_info_html', 'email',
             'invalid_email']})]
-    autocomplete_fields = ['import_job', 'email', 'invalid_email']
+    autocomplete_fields = ['email', 'invalid_email']
 
 @admin.register(mod.ZeroBounceResult)
 class ZeroBounceResultAdmin(admin.ModelAdmin):
@@ -152,7 +152,7 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
         'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
         'mx_record', 'smtp_provider', 'did_you_mean', 'email', 'invalid_email',
         'did_you_mean_email']
-    list_editable = comadm.standard_list_editable + ['import_job', 'generated',
+    list_editable = comadm.standard_list_editable + ['generated',
         'email_str', 'status', 'sub_status', 'account', 'domain',
         'first_name', 'last_name', 'gender', 'free_email', 'mx_found',
         'mx_record', 'smtp_provider', 'did_you_mean', 'email', 'invalid_email',
@@ -169,15 +169,15 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
     
     # Details page settings
     save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
+    readonly_fields = comadm.standard_readonly_fields + ['import_job']
     fieldsets = comadm.standard_fieldsets + [
         (None, {
-            'fields': ['import_job', 'generated', 'email_str', 'status',
+            'fields': ['generated', 'email_str', 'status',
             'sub_status', 'account', 'domain', 'first_name', 'last_name',
             'gender', 'free_email', 'mx_found', 'mx_record', 'smtp_provider',
             'did_you_mean', 'email', 'invalid_email', 'did_you_mean_email']})
     ]
-    autocomplete_fields = ['import_job', 'email', 'invalid_email',
+    autocomplete_fields = ['email', 'invalid_email',
         'did_you_mean_email']
 
 @admin.register(mod.DataSource)
