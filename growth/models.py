@@ -447,25 +447,25 @@ class Fibre2FashionBuyingOffer(Standard):
     )
     category = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     sub_category = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     title = models.CharField(
         max_length=300,
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
     reference_no = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     description = models.TextField(
@@ -474,13 +474,13 @@ class Fibre2FashionBuyingOffer(Standard):
     )
     email_str = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     product_info_html = models.TextField(
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
 
     email = models.ForeignKey(
@@ -533,25 +533,25 @@ class Fibre2FashionSellingOffer(Standard):
     )
     category = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     sub_category = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     title = models.CharField(
         max_length=300,
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
     reference_no = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     description = models.TextField(
@@ -560,24 +560,24 @@ class Fibre2FashionSellingOffer(Standard):
     )
     email_str = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     company_name = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     company_address = models.TextField(
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     product_info_html = models.TextField(
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
 
     email = models.ForeignKey(
@@ -807,38 +807,38 @@ class ChemicalBookResult(Standard):
     )
     company_name = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     internal_url = models.CharField(
         max_length=300,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     telephone = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     email_str = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     corporate_site_url = models.CharField(
         max_length=300,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     nationality = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
 

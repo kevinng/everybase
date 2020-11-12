@@ -210,14 +210,15 @@ class ChemicalBookAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
         'source_url', 'company_name', 'internal_url', 'telephone', 'email_str',
         'corporate_site_url', 'nationality', 'email', 'invalid_email']
-    list_editable = comadm.standard_list_editable + ['import_job', 'harvested',
-        'source_url', 'company_name', 'internal_url', 'telephone', 'email_str',
+    list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
+        'company_name', 'internal_url', 'telephone', 'email_str',
         'corporate_site_url', 'nationality', 'email', 'invalid_email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested']
-    search_fields = ['id', 'source_url', 'company_name', 'internal_url',
-        'telephone', 'email', 'corporate_site_url', 'nationality',
-        'email__email', 'invalid_email__email']
+    search_fields = ['id', 'import_job__description', 'source_url',
+        'company_name', 'internal_url', 'telephone', 'email',
+        'corporate_site_url', 'nationality', 'email__email',
+        'invalid_email__email']
     ordering = ['harvested']
     show_full_result_count = True
 
@@ -229,6 +230,7 @@ class ChemicalBookAdmin(admin.ModelAdmin):
             'source_url', 'company_name', 'internal_url', 'telephone',
             'email_str', 'corporate_site_url', 'nationality', 'email',
             'invalid_email']})]
+    autocomplete_fields = ['import_job', 'email', 'invalid_email']
 
 @admin.register(mod.LookChemResult)
 class LookChemResultAdmin(admin.ModelAdmin):
