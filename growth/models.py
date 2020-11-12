@@ -806,7 +806,7 @@ class ChemicalBookResult(Standard):
         db_index=True
     )
     company_name = models.CharField(
-        max_length=100,
+        max_length=500,
         null=True,
         blank=True,
         db_index=True
