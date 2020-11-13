@@ -238,17 +238,18 @@ class LookChemResultAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + ['id', 'harvested',
         'coy_name', 'contact_person', 'street_address', 'city',
         'province_state', 'country_region', 'zip_code', 'business_type', 'tel',
-        'mobile', 'email', 'website', 'qq']
+        'mobile', 'email_str', 'website', 'qq', 'email', 'invalid_email']
     list_editable = comadm.standard_list_editable + ['harvested', 'coy_name',
         'contact_person', 'street_address', 'city', 'province_state',
-        'country_region', 'zip_code', 'business_type', 'tel', 'mobile', 'email',
-        'website', 'qq']
+        'country_region', 'zip_code', 'business_type', 'tel', 'mobile',
+        'email_str', 'website', 'qq', 'email', 'invalid_email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested', 'city',
         'province_state', 'country_region', 'business_type']
     search_fields = ['id', 'coy_name', 'contact_person', 'street_address',
         'city', 'province_state', 'country_region', 'zip_code', 'business_type',
-        'tel', 'mobile', 'email', 'website', 'qq']
+        'tel', 'mobile', 'email', 'website', 'qq', 'email__email',
+        'invalid_email__email']
     ordering = ['harvested']
     show_full_result_count = True
 
@@ -258,8 +259,9 @@ class LookChemResultAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['harvested', 'coy_name',
             'contact_person', 'street_address', 'city', 'province_state',
-            'country_region', 'zip_code', 'business_type', 'tel', 'mobile', 'email',
-            'website', 'qq']})]
+            'country_region', 'zip_code', 'business_type', 'tel', 'mobile',
+            'email_str', 'website', 'qq', 'email', 'invalid_email']})]
+    autocomplete_fields = ['email', 'invalid_email']
 
 @admin.register(mod.WorldOfChemicalsResult)
 class WorldOfChemicalsResultAdmin(admin.ModelAdmin):

@@ -122,132 +122,6 @@ class ChemicalBookResultCountry(Relationship):
         return f'({self.rtype}, {self.chemical_book_result}, \
             {self.country} [{self.id}])'
 
-class LookChemResultCompanyType(Choice):
-    class Meta:
-        verbose_name = 'LookChemResult-Company type'
-        verbose_name_plural = 'LookChemResult-Company types'
-
-class LookChemResultCompany(Relationship):
-    rtype = fk('LookChemResultCompanyType',
-        'lookchemresult_company_relationships',
-        'LookChemResult-Company Type')
-    lookchem_result = fk('LookChemResult',
-        'lookchemresult_company_relationships')
-    company = fk('relationships.Company',
-        'lookchemresult_company_relationships')
-        
-    class Meta:
-        verbose_name = 'LookChemResult-Company relationship'
-        verbose_name_plural = 'LookChemResult-Company relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.lookchem_result}, {self.company} \
-            [{self.id}])'
-
-class LookChemResultPersonType(Choice):
-    class Meta:
-        verbose_name = 'LookChemResult-Person type'
-        verbose_name_plural = 'LookChemResult-Person types'
-
-class LookChemResultPerson(Relationship):
-    rtype = fk('LookChemResultPersonType',
-        'lookchemresult_person_relationships',
-        'LookChemResult-Person Type')
-    lookchem_result = fk('LookChemResult',
-        'lookchemresult_person_relationships')
-    person = fk('relationships.Person',
-        'lookchemresult_person_relationships')
-        
-    class Meta:
-        verbose_name = 'LookChemResult-Person relationship'
-        verbose_name_plural = 'LookChemResult-Person relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.lookchem_result}, {self.person} \
-            [{self.id}])'
-
-class LookChemResultAddressType(Choice):
-    class Meta:
-        verbose_name = 'LookChemResult-Address type'
-        verbose_name_plural = 'LookChemResult-Address types'
-
-class LookChemResultAddress(Relationship):
-    rtype = fk('LookChemResultAddressType',
-        'lookchemresult_address_relationships',
-        'LookChemResult-Address Type')
-    lookchem_result = fk('LookChemResult',
-        'lookchemresult_address_relationships')
-    address = fk('relationships.Address',
-        'lookchemresult_address_relationships')
-        
-    class Meta:
-        verbose_name = 'LookChemResult-Address relationship'
-        verbose_name_plural = 'LookChemResult-Address relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.lookchem_result}, {self.address} \
-            [{self.id}])'
-
-class LookChemResultPhoneNumberType(Choice):
-    class Meta:
-        verbose_name = 'LookChemResult-PhoneNumber type'
-        verbose_name_plural = 'LookChemResult-PhoneNumber types'
-
-class LookChemResultPhoneNumber(Relationship):
-    rtype = fk('LookChemResultPhoneNumberType',
-        'lookchemresult_phonenumber_relationships',
-        'LookChemResult-PhoneNumber Type')
-    lookchem_result = fk('LookChemResult',
-        'lookchemresult_phonenumber_relationships')
-    phone_number = fk('relationships.PhoneNumber',
-        'lookchemresult_phonenumber_relationships')
-        
-    class Meta:
-        verbose_name = 'LookChemResult-PhoneNumber relationship'
-        verbose_name_plural = 'LookChemResult-PhoneNumber relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.lookchem_result}, {self.phone_number} \
-            [{self.id}])'
-
-class LookChemResultEmailType(Choice):
-    class Meta:
-        verbose_name = 'LookChemResult-Email type'
-        verbose_name_plural = 'LookChemResult-Email types'
-
-class LookChemResultEmail(Relationship):
-    rtype = fk('LookChemResultEmailType', 'lookchemresult_email_relationships',
-        'LookChemResult-Email Type')
-    lookchem_result = fk('LookChemResult', 'lookchemresult_email_relationships')
-    email = fk('relationships.Email', 'lookchemresult_email_relationships')
-        
-    class Meta:
-        verbose_name = 'LookChemResult-Email relationship'
-        verbose_name_plural = 'LookChemResult-Email relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.lookchem_result}, {self.email} \
-            [{self.id}])'
-
-class LookChemResultLinkType(Choice):
-    class Meta:
-        verbose_name = 'LookChemResult-Link type'
-        verbose_name_plural = 'LookChemResult-Link types'
-
-class LookChemResultLink(Relationship):
-    rtype = fk('LookChemResultEmailType', 'lookchemresult_link_relationships',
-        'LookChemResult-Link Type')
-    lookchem_result = fk('LookChemResult', 'lookchemresult_link_relationships')
-    link = fk('relationships.Link', 'lookchemresult_link_relationships')
-        
-    class Meta:
-        verbose_name = 'LookChemResult-Link relationship'
-        verbose_name_plural = 'LookChemResult-Link relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.lookchem_result}, {self.link} \
-            [{self.id}])'
-
 class WorldOfChemicalsResultLinkType(Choice):
     class Meta:
         verbose_name = 'WorldOfChemicalsResult-Link type'
@@ -869,57 +743,120 @@ class ChemicalBookResult(Standard):
         return f'({self.company_name} [{self.id}])'
 
 class LookChemResult(Standard):
-    harvested = dtf(null=True)
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='look_chem_results',
+        related_query_name='look_chem_results',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    harvested = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
-    coy_name = cf(null=True)
-    contact_person = cf(null=True)
-    street_address = cf(null=True, db_index=False)
-    city = cf(null=True)
-    province_state = cf(null=True)
-    country_region = cf(null=True)
-    zip_code = cf(null=True)
-    business_type = cf(null=True)
-    tel = cf(null=True)
-    mobile = cf(null=True)
-    email = cf(null=True)
-    website = cf(null=True)
-    qq = cf(null=True)
+    coy_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    contact_person = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    street_address = models.TextField(
+        null=True,
+        blank=True
+    )
+    city = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    province_state = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country_region = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    zip_code = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    business_type = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    tel = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    mobile = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    email_str = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    website = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    qq = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
-    companies = m2mt(
-        'relationships.Company',
-        'LookChemResultCompany',
-        'lookchem_result', 'company',
-        'lookchem_results')
-    
-    persons = m2mt(
-        'relationships.Person',
-        'LookChemResultPerson',
-        'lookchem_result', 'person',
-        'lookchem_results')
-
-    addresses = m2mt(
-        'relationships.Address',
-        'LookChemResultAddress',
-        'lookchem_result', 'address',
-        'lookchem_results')
-
-    phone_numbers = m2mt(
-        'relationships.PhoneNumber',
-        'LookChemResultPhoneNumber',
-        'lookchem_result', 'phone_number',
-        'lookchem_results')
-
-    emails = m2mt(
+    email = models.ForeignKey(
         'relationships.Email',
-        'LookChemResultEmail',
-        'lookchem_result', 'email',
-        'lookchem_results')
+        related_name='look_chem_result_emails',
+        related_query_name='look_chem_result_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='look_chem_result_invalid_emails',
+        related_query_name='look_chem_result_invalid_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
-    links = m2mt(
-        'relationships.Link',
-        'LookChemResultLink',
-        'lookchem_result', 'link',
-        'lookchem_results')
+    class Meta:
+        verbose_name = 'LookChem Result'
+        verbose_name_plural = 'LookChem Results'
 
     def __str__(self):
         return f'({self.coy_name} [{self.id}])'
