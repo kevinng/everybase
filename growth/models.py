@@ -2,130 +2,6 @@ from django.db import models
 from common.models import (fk, m2m, m2mt, tf, cf, dtf, uid, eml, pintf, 
     Standard, Choice, short_text)
 
-# --- Start: Abstract classes ---
-
-class Relationship(Standard):
-    details_md = tf('Details in Markdown', True)
-
-    class Meta:
-        abstract = True
-
-# --- End: Abstract classes ---
-
-# --- Start: Relationships ---
-
-class WorldOfChemicalsResultLinkType(Choice):
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Link type'
-        verbose_name_plural = 'WorldOfChemicalsResult-Link types'
-
-class WorldOfChemicalsResultLink(Relationship):
-    rtype = fk('WorldOfChemicalsResultLinkType',
-        'worldofchemicalsresult_link_relationships',
-        'WorldOfChemicalsResult-Link Type')
-    world_of_chemicals_result = fk('WorldOfChemicalsResult',
-        'worldofchemicalsresult_link_relationships')
-    link = fk('relationships.Link', 'worldofchemicalsresult_relationships')
-        
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Link relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-Link relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.world_of_chemicals_result}, {self.link} \
-            [{self.id}])'
-
-class WorldOfChemicalsResultCompanyType(Choice):
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Company type'
-        verbose_name_plural = 'WorldOfChemicalsResult-Company types'
-
-class WorldOfChemicalsResultCompany(Relationship):
-    rtype = fk('WorldOfChemicalsResultCompanyType',
-        'worldofchemicalsresult_company_relationships',
-        'WorldOfChemicalsResult-Company Type')
-    world_of_chemicals_result = fk('WorldOfChemicalsResult',
-        'worldofchemicalsresult_company_relationships')
-    company = fk('relationships.Company',
-        'worldofchemicalsresult_relationships')
-        
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Company relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-Company relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.world_of_chemicals_result}, \
-            {self.company} [{self.id}])'
-
-class WorldOfChemicalsResultAddressType(Choice):
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Address type'
-        verbose_name_plural = 'WorldOfChemicalsResult-Address types'
-
-class WorldOfChemicalsResultAddress(Relationship):
-    rtype = fk('WorldOfChemicalsResultAddressType',
-        'worldofchemicalsresult_address_relationships',
-        'WorldOfChemicalsResult-Address Type')
-    world_of_chemicals_result = fk('WorldOfChemicalsResult',
-        'worldofchemicalsresult_address_relationships')
-    address = fk('relationships.Address',
-        'worldofchemicalsresult_relationships')
-        
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Address relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-Address relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.world_of_chemicals_result}, \
-            {self.address} [{self.id}])'
-
-class WorldOfChemicalsResultPhoneNumberType(Choice):
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-PhoneNumber type'
-        verbose_name_plural = 'WorldOfChemicalsResult-PhoneNumber types'
-
-class WorldOfChemicalsResultPhoneNumber(Relationship):
-    rtype = fk('WorldOfChemicalsResultPhoneNumberType',
-        'worldofchemicalsresult_phonenumber_relationships',
-        'WorldOfChemicalsResult-PhoneNumber Type')
-    world_of_chemicals_result = fk('WorldOfChemicalsResult',
-        'worldofchemicalsresult_phonenumber_relationships')
-    phone_number = fk('relationships.PhoneNumber',
-        'worldofchemicalsresult_relationships')
-        
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-PhoneNumber relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-PhoneNumber relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.world_of_chemicals_result}, \
-            {self.phone_number} [{self.id}])'
-
-class WorldOfChemicalsResultEmailType(Choice):
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Email type'
-        verbose_name_plural = 'WorldOfChemicalsResult-Email types'
-
-class WorldOfChemicalsResultEmail(Relationship):
-    rtype = fk('WorldOfChemicalsResultEmailType',
-        'worldofchemicalsresult_email_relationships',
-        'WorldOfChemicalsResult-Email Type')
-    world_of_chemicals_result = fk('WorldOfChemicalsResult',
-        'worldofchemicalsresult_email_relationships')
-    email = fk('relationships.Email', 'worldofchemicalsresult_relationships')
-        
-    class Meta:
-        verbose_name = 'WorldOfChemicalsResult-Email relationship'
-        verbose_name_plural = 'WorldOfChemicalsResult-Email relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.world_of_chemicals_result}, \
-            {self.email} [{self.id}])'
-
-# --- End: Relationships ---
-
-# --- Start: Growth models ---
-
 class GmassCampaignResult(Standard):
     email_address = cf(null=True)
     first_name = cf(null=True)
@@ -753,63 +629,237 @@ class LookChemSupplier(Standard):
     def __str__(self):
         return f'({self.coy_name} [{self.id}])'
 
-class WorldOfChemicalsResult(Standard):
-    harvested = dtf(null=True)
+class WorldOfChemicalsSupplier(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='world_of_chemicals_supplier_results',
+        related_query_name='world_of_chemicals_supplier_results',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    harvested = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
-    source_url = cf(null=True)
-    coy_id = cf(null=True)
-    coy_name = cf(null=True)
-    coy_about_html = tf(null=True)
-    coy_pri_contact = cf(null=True)
-    coy_addr_1 = cf(null=True)
-    coy_addr_2 = cf(null=True)
-    coy_city = cf(null=True)
-    coy_state = cf(null=True)
-    coy_country = cf(null=True)
-    coy_postal = cf(null=True)
-    coy_phone = cf(null=True)
-    coy_phone_2 = cf(null=True)
-    coy_email = cf(null=True)
-    coy_owner_email = cf(null=True)
-    coy_alt_email = cf(null=True)
-    coy_alt_email_2 = cf(null=True)
-    coy_alt_email_3 = cf(null=True)
-    coy_website = cf(null=True)
+    source_url = models.CharField(
+        max_length=300,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_id = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_about_html = models.TextField(
+        null=True,
+        blank=True
+    )
+    coy_pri_contact = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_addr_1 = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True
+    )
+    coy_addr_2 = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True
+    )
+    coy_city = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_state = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_country = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_postal = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_phone = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_phone_2 = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_email = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_owner_email = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_alt_email = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_alt_email_2 = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_alt_email_3 = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    coy_website = models.CharField(
+        max_length=300,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
-    links = m2mt(
-        'relationships.Link',
-        'WorldOfChemicalsResultLink',
-        'world_of_chemicals_result', 'link',
-        'world_of_chemcials_results')
-
-    companies = m2mt(
-        'relationships.Company',
-        'WorldOfChemicalsResultCompany',
-        'world_of_chemicals_result', 'company',
-        'world_of_chemcials_results')
-
-    addresses = m2mt(
-        'relationships.Address',
-        'WorldOfChemicalsResultAddress',
-        'world_of_chemicals_result', 'address',
-        'world_of_chemcials_results')
-
-    phone_numbers = m2mt(
-        'relationships.PhoneNumber',
-        'WorldOfChemicalsResultPhoneNumber',
-        'world_of_chemicals_result', 'phone_number',
-        'world_of_chemcials_results')
-
-    emails = m2mt(
+    email = models.ForeignKey(
         'relationships.Email',
-        'WorldOfChemicalsResultEmail',
-        'world_of_chemicals_result', 'email',
-        'world_of_chemcials_results')
+        related_name='world_of_chemicals_supplier_emails',
+        related_query_name='world_of_chemicals_supplier_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    owner_email = models.ForeignKey(
+        'relationships.Email',
+        related_name='world_of_chemicals_supplier_owner_emails',
+        related_query_name='world_of_chemicals_supplier_owner_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    alt_email = models.ForeignKey(
+        'relationships.Email',
+        related_name='world_of_chemicals_supplier_alt_emails',
+        related_query_name='world_of_chemicals_supplier_alt_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    alt_email_2 = models.ForeignKey(
+        'relationships.Email',
+        related_name='world_of_chemicals_supplier_alt_email_2s',
+        related_query_name='world_of_chemicals_supplier_alt_email_2s',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    alt_email_3 = models.ForeignKey(
+        'relationships.Email',
+        related_name='world_of_chemicals_supplier_alt_email_3s',
+        related_query_name='world_of_chemicals_supplier_alt_email_3s',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='world_of_chemicals_supplier_invalid_emails',
+        related_query_name='world_of_chemicals_supplier_invalid_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_owner_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='world_of_chemicals_supplier_invalid_owner_emails',
+        related_query_name='world_of_chemicals_supplier_invalid_owner_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_alt_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='world_of_chemicals_supplier_invalid_alt_emails',
+        related_query_name='world_of_chemicals_supplier_invalid_alt_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_alt_email_2 = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='world_of_chemicals_supplier_invalid_alt_email_2s',
+        related_query_name='world_of_chemicals_supplier_invalid_alt_email_2s',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_alt_email_3 = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='world_of_chemicals_supplier_invalid_alt_email_3s',
+        related_query_name='world_of_chemicals_supplier_invalid_alt_email_3s',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     
     def __str__(self):
         return f'({self.coy_name} [{self.id}])'
 
 class OKChemResult(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='ok_chem_results',
+        related_query_name='ok_chem_results',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     harvested = dtf(null=True)
 
     name = cf(null=True)
@@ -823,5 +873,3 @@ class OKChemResult(Standard):
     
     def __str__(self):
         return f'({self.email} [{self.id}])'
-
-# --- End: Growth models ---

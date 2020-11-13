@@ -216,9 +216,8 @@ class ChemicalBookSupplierAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested']
     search_fields = ['id', 'import_job__description', 'source_url',
-        'company_name', 'internal_url', 'telephone', 'email',
-        'corporate_site_url', 'nationality', 'email__email',
-        'invalid_email__email']
+        'company_name', 'internal_url', 'telephone', 'email_str',
+        'corporate_site_url', 'nationality']
     ordering = ['harvested']
     show_full_result_count = True
 
@@ -248,8 +247,7 @@ class LookChemSupplierAdmin(admin.ModelAdmin):
         'province_state', 'country_region', 'business_type']
     search_fields = ['id', 'coy_name', 'contact_person', 'street_address',
         'city', 'province_state', 'country_region', 'zip_code', 'business_type',
-        'tel', 'mobile', 'email', 'website', 'qq', 'email__email',
-        'invalid_email__email']
+        'tel', 'mobile', 'email', 'website', 'qq']
     ordering = ['harvested']
     show_full_result_count = True
 
@@ -263,20 +261,25 @@ class LookChemSupplierAdmin(admin.ModelAdmin):
             'email_str', 'website', 'qq', 'email', 'invalid_email']})]
     autocomplete_fields = ['email', 'invalid_email']
 
-@admin.register(mod.WorldOfChemicalsResult)
-class WorldOfChemicalsResultAdmin(admin.ModelAdmin):
+@admin.register(mod.WorldOfChemicalsSupplier)
+class WorldOfChemicalsSupplierAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['id', 'harvested',
-        'source_url', 'coy_id', 'coy_name', 'coy_about_html', 'coy_pri_contact',
-        'coy_addr_1', 'coy_addr_2', 'coy_city', 'coy_state', 'coy_country',
-        'coy_postal', 'coy_phone', 'coy_phone_2', 'coy_email',
+    list_display = comadm.standard_list_display + ['id', 'import_job',
+        'harvested', 'source_url', 'coy_id', 'coy_name', 'coy_about_html',
+        'coy_pri_contact', 'coy_addr_1', 'coy_addr_2', 'coy_city', 'coy_state',
+        'coy_country', 'coy_postal', 'coy_phone', 'coy_phone_2', 'coy_email',
         'coy_owner_email', 'coy_alt_email', 'coy_alt_email_2',
-        'coy_alt_email_3', 'coy_website']
+        'coy_alt_email_3', 'coy_website', 'email', 'owner_email', 'alt_email',
+        'alt_email_2', 'alt_email_3', 'invalid_email', 'invalid_owner_email',
+        'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
     list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
         'coy_id', 'coy_name', 'coy_about_html', 'coy_pri_contact', 'coy_addr_1',
         'coy_addr_2', 'coy_city', 'coy_state', 'coy_country', 'coy_postal',
         'coy_phone', 'coy_phone_2', 'coy_email', 'coy_owner_email',
-        'coy_alt_email', 'coy_alt_email_2', 'coy_alt_email_3', 'coy_website']
+        'coy_alt_email', 'coy_alt_email_2', 'coy_alt_email_3', 'coy_website',
+        'email', 'owner_email', 'alt_email', 'alt_email_2', 'alt_email_3',
+        'invalid_email', 'invalid_owner_email', 'invalid_alt_email',
+        'invalid_alt_email_2', 'invalid_alt_email_3']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested', 'coy_city',
         'coy_state', 'coy_country']
@@ -296,7 +299,13 @@ class WorldOfChemicalsResultAdmin(admin.ModelAdmin):
             'coy_about_html', 'coy_pri_contact', 'coy_addr_1', 'coy_addr_2',
             'coy_city', 'coy_state', 'coy_country', 'coy_postal', 'coy_phone',
             'coy_phone_2', 'coy_email', 'coy_owner_email', 'coy_alt_email',
-            'coy_alt_email_2', 'coy_alt_email_3', 'coy_website']})]
+            'coy_alt_email_2', 'coy_alt_email_3', 'coy_website', 'email',
+            'owner_email', 'alt_email', 'alt_email_2', 'alt_email_3',
+            'invalid_email', 'invalid_owner_email', 'invalid_alt_email',
+            'invalid_alt_email_2', 'invalid_alt_email_3']})]
+    autocomplete_fields = ['email', 'owner_email', 'alt_email', 'alt_email_2',
+        'alt_email_3', 'invalid_email', 'invalid_owner_email',
+        'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
 
 @admin.register(mod.OKChemResult)
 class OKChemResultAdmin(admin.ModelAdmin):

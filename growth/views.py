@@ -152,17 +152,17 @@ class LookChemSupplierDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
-class WorldOfChemicalResultAPI():
-    queryset = models.WorldOfChemicalsResult.objects.all()
-    serializer_class = serializers.WorldOfChemicalResultSerializer
+class WorldOfChemicalsSupplierAPI():
+    queryset = models.WorldOfChemicalsSupplier.objects.all()
+    serializer_class = serializers.WorldOfChemicalSupplierSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class WorldOfChemicalResultList(
-    WorldOfChemicalResultAPI,
+class WorldOfChemicalsSupplierList(
+    WorldOfChemicalsSupplierAPI,
     generics.ListCreateAPIView):
     pass
 
-class WorldOfChemicalResultDetail(
-    WorldOfChemicalResultAPI,
+class WorldOfChemicalsSupplierDetail(
+    WorldOfChemicalsSupplierAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
