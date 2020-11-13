@@ -204,8 +204,8 @@ class SourcedEmailAdmin(admin.ModelAdmin):
         [(None, {'fields': ['harvested', 'source', 'email']})]
     autocomplete_fields = ['source', 'email']
 
-@admin.register(mod.ChemicalBookResult)
-class ChemicalBookAdmin(admin.ModelAdmin):
+@admin.register(mod.ChemicalBookSupplier)
+class ChemicalBookSupplierAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
         'source_url', 'company_name', 'internal_url', 'telephone', 'email_str',
@@ -232,8 +232,8 @@ class ChemicalBookAdmin(admin.ModelAdmin):
             'invalid_email']})]
     autocomplete_fields = ['import_job', 'email', 'invalid_email']
 
-@admin.register(mod.LookChemResult)
-class LookChemResultAdmin(admin.ModelAdmin):
+@admin.register(mod.LookChemSupplier)
+class LookChemSupplierAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['id', 'harvested',
         'coy_name', 'contact_person', 'street_address', 'city',

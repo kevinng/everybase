@@ -14,114 +14,6 @@ class Relationship(Standard):
 
 # --- Start: Relationships ---
 
-class ChemicalBookResultLinkType(Choice):
-    class Meta:
-        verbose_name = 'ChemicalBookResult-Link type'
-        verbose_name_plural = 'ChemicalBookResult-Link types'
-
-class ChemicalBookResultLink(Relationship):
-    rtype = fk('ChemicalBookResultLinkType',
-        'chemicalbookresult_link_relationships',
-        'ChemicalBookResult-Link Type')
-    chemical_book_result = fk('ChemicalBookResult',
-        'chemicalbookresult_link_relationships')
-    link = fk('relationships.Link', 'chemicalbookresult_link_relationships')
-
-    class Meta:
-        verbose_name = 'ChemicalBookResult-Link relationship'
-        verbose_name_plural = 'ChemicalBookResult-Link relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.chemical_book_result}, {self.link} \
-            [{self.id}])'
-
-class ChemicalBookResultCompanyType(Choice):
-    class Meta:
-        verbose_name = 'ChemicalBookResult-Company type'
-        verbose_name_plural = 'ChemicalBookResult-Company types'
-
-class ChemicalBookResultCompany(Relationship):
-    rtype = fk('ChemicalBookResultCompanyType',
-        'chemicalbookresult_company_relationships',
-        'ChemicalBookResult-Company Type')
-    chemical_book_result = fk('ChemicalBookResult',
-        'chemicalbookresult_company_relationships')
-    company = fk('relationships.Company',
-        'chemicalbookresult_company_relationships')
-
-    class Meta:
-        verbose_name = 'ChemicalBookResult-Company relationship'
-        verbose_name_plural = 'ChemicalBookResult-Company relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.chemical_book_result}, {self.company} \
-            [{self.id}])'
-
-class ChemicalBookResultPhoneNumberType(Choice):
-    class Meta:
-        verbose_name = 'ChemicalBookResult-PhoneNumber type'
-        verbose_name_plural = 'ChemicalBookResult-PhoneNumber types'
-
-class ChemicalBookResultPhoneNumber(Relationship):
-    rtype = fk('ChemicalBookResultPhoneNumberType',
-        'chemicalbookresult_phonenumber_relationships',
-        'ChemicalBookResult-PhoneNumber Type')
-    chemical_book_result = fk('ChemicalBookResult',
-        'chemicalbookresult_phonenumber_relationships')
-    phone_number = fk('relationships.PhoneNumber',
-        'chemicalbookresult_phonenumber_relationships')
-
-    class Meta:
-        verbose_name = 'ChemicalBookResult-PhoneNumber relationship'
-        verbose_name_plural = 'ChemicalBookResult-PhoneNumber relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.chemical_book_result}, \
-            {self.phone_number} [{self.id}])'
-
-class ChemicalBookResultEmailType(Choice):
-    class Meta:
-        verbose_name = 'ChemicalBookResult-Email Type'
-        verbose_name_plural = 'ChemicalBookResult-Email Types'
-
-class ChemicalBookResultEmail(Relationship):
-    rtype = fk('ChemicalBookResultEmailType',
-        'chemicalbookresult_email_relationships',
-        'ChemicalBookResult-Email Type')
-    chemical_book_result = fk('ChemicalBookResult',
-        'chemicalbookresult_email_relationships')
-    email = fk('relationships.Email', 'chemicalbookresult_email_relationships')
-
-    class Meta:
-        verbose_name = 'ChemicalBookResult-Email relationship'
-        verbose_name_plural = 'ChemicalBookResult-Email relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.chemical_book_result}, \
-            {self.email} [{self.id}])'
-
-class ChemicalBookResultCountryType(Choice):
-    class Meta:
-        verbose_name = 'ChemicalBookResult-Country type'
-        verbose_name_plural = 'ChemicalBookResult-Country types'
-
-class ChemicalBookResultCountry(Relationship):
-    rtype = fk('ChemicalBookResultCountryType',
-        'chemicalbookresult_country_relationships',
-        'ChemicalBookResult-Country Type')
-    chemical_book_result = fk('ChemicalBookResult',
-        'chemicalbookresult_country_relationships')
-    country = fk('common.Country',
-        'chemicalbookresult_country_relationships')
-
-    class Meta:
-        verbose_name = 'ChemicalBookResult-Country relationship'
-        verbose_name_plural = 'ChemicalBookResult-Country relationships'
-
-    def __str__(self):
-        return f'({self.rtype}, {self.chemical_book_result}, \
-            {self.country} [{self.id}])'
-
 class WorldOfChemicalsResultLinkType(Choice):
     class Meta:
         verbose_name = 'WorldOfChemicalsResult-Link type'
@@ -657,7 +549,7 @@ class SourcedEmail(Standard):
     def __str__(self):
         return f'({self.email_address} [{self.id}])'
 
-class ChemicalBookResult(Standard):
+class ChemicalBookSupplier(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
         related_name='chemical_book_results',
@@ -742,7 +634,7 @@ class ChemicalBookResult(Standard):
     def __str__(self):
         return f'({self.company_name} [{self.id}])'
 
-class LookChemResult(Standard):
+class LookChemSupplier(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
         related_name='look_chem_results',
@@ -855,8 +747,8 @@ class LookChemResult(Standard):
     )
 
     class Meta:
-        verbose_name = 'LookChem Result'
-        verbose_name_plural = 'LookChem Results'
+        verbose_name = 'LookChem supplier'
+        verbose_name_plural = 'LookChem suppliers'
 
     def __str__(self):
         return f'({self.coy_name} [{self.id}])'

@@ -44,15 +44,15 @@ urlpatterns = [
     path('sourced_email/<int:pk>/',
         views.SourcedEmailDetail.as_view()),
 
-    path('chemical_book_result/',
-        views.ChemicalBookResultList.as_view()),
-    path('chemical_book_result/<int:pk>/',
-        views.ChemicalBookResultDetail.as_view()),
+    path('chemical_book_supplier/',
+        views.ChemicalBookSupplierList.as_view()),
+    path('chemical_book_supplier/<int:pk>/',
+        views.ChemicalBookSupplierDetail.as_view()),
 
-    path('look_chem_result/',
-        views.LookChemResultList.as_view()),
-    path('look_chem_result/<int:pk>/',
-        views.LookChemResultDetail.as_view()),
+    path('look_chem_supplier/',
+        views.LookChemSupplierList.as_view()),
+    path('look_chem_supplier/<int:pk>/',
+        views.LookChemSupplierDetail.as_view()),
 
     path('world_of_chemicals_result/',
         views.WorldOfChemicalResultList.as_view()),

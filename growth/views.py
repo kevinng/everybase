@@ -122,33 +122,33 @@ class SourcedEmailDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
-class ChemicalBookResultAPI():
-    queryset = models.ChemicalBookResult.objects.all()
-    serializer_class = serializers.ChemicalBookResultSerializer
+class ChemicalBookSupplierAPI():
+    queryset = models.ChemicalBookSupplier.objects.all()
+    serializer_class = serializers.ChemicalBookSupplierSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class ChemicalBookResultList(
-    ChemicalBookResultAPI,
+class ChemicalBookSupplierList(
+    ChemicalBookSupplierAPI,
     generics.ListCreateAPIView):
     pass
 
-class ChemicalBookResultDetail(
-    ChemicalBookResultAPI,
+class ChemicalBookSupplierDetail(
+    ChemicalBookSupplierAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
-class LookChemResultAPI():
-    queryset = models.LookChemResult.objects.all()
-    serializer_class = serializers.LookChemResultSerializer
+class LookChemSupplierAPI():
+    queryset = models.LookChemSupplier.objects.all()
+    serializer_class = serializers.LookChemSupplierSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class LookChemResultList(
-    LookChemResultAPI,
+class LookChemSupplierList(
+    LookChemSupplierAPI,
     generics.ListCreateAPIView):
     pass
 
-class LookChemResultDetail(
-    LookChemResultAPI,
+class LookChemSupplierDetail(
+    LookChemSupplierAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
