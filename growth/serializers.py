@@ -86,3 +86,9 @@ class WorldOfChemicalSupplierSerializer(serializers.ModelSerializer):
             'owner_email', 'alt_email', 'alt_email_2', 'alt_email_3',
             'invalid_email', 'invalid_owner_email', 'invalid_alt_email',
             'invalid_alt_email_2', 'invalid_alt_email_3']
+
+class OKChemBuyingRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.OKChemBuyingRequest
+        fields = ['id'] + standard_fieldnames + ['harvested', 'name', 'country',
+            'request', 'email']

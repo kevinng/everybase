@@ -166,3 +166,18 @@ class WorldOfChemicalsSupplierDetail(
     WorldOfChemicalsSupplierAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class OKChemBuyingRequestAPI():
+    queryset = models.OKChemBuyingRequest.objects.all()
+    serializer_class = serializers.OKChemBuyingRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class OKChemBuyingRequestList(
+    OKChemBuyingRequestAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class OKChemBuyingRequestDetail(
+    OKChemBuyingRequestAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass

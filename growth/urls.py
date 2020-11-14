@@ -57,6 +57,11 @@ urlpatterns = [
     path('world_of_chemicals_supplier/',
         views.WorldOfChemicalsSupplierList.as_view()),
     path('world_of_chemicals_supplier/<int:pk>/',
-        views.WorldOfChemicalsSupplierDetail.as_view())
+        views.WorldOfChemicalsSupplierDetail.as_view()),
+
+    path('ok_chem_buying_request/',
+        views.OKChemBuyingRequestList.as_view()),
+    path('ok_chem_buying_request/<int:pk>/',
+        views.OKChemBuyingRequestDetail.as_view())
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
