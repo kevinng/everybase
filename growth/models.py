@@ -848,11 +848,11 @@ class WorldOfChemicalsSupplier(Standard):
     def __str__(self):
         return f'({self.coy_name} [{self.id}])'
 
-class OKChemResult(Standard):
+class OKChemBuyingRequest(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
-        related_name='ok_chem_suppliers',
-        related_query_name='ok_chem_supplier',
+        related_name='ok_chem_buying_requests',
+        related_query_name='ok_chem_buying_requests',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
@@ -881,7 +881,12 @@ class OKChemResult(Standard):
         blank=True,
         db_index=True
     )
-    email = cf(null=True)
+    email = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     
     class Meta:
         verbose_name = 'OKChem buying request'

@@ -307,15 +307,16 @@ class WorldOfChemicalsSupplierAdmin(admin.ModelAdmin):
         'alt_email_3', 'invalid_email', 'invalid_owner_email',
         'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
 
-@admin.register(mod.OKChemResult)
-class OKChemResultAdmin(admin.ModelAdmin):
+@admin.register(mod.OKChemBuyingRequest)
+class OKChemBuyingRequestAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['id', 'harvested', 'name',
-        'country', 'request', 'email']
+    list_display = comadm.standard_list_display + ['id', 'import_job',
+        'harvested', 'name', 'country', 'request', 'email']
     list_editable = comadm.standard_list_editable + ['harvested', 'name',
         'country', 'request', 'email']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested', 'country']
+    list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
+        'country']
     search_fields = ['id', 'source', 'name', 'country', 'request', 'email']
     ordering = ['harvested']
     show_full_result_count = True
