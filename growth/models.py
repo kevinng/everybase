@@ -426,8 +426,8 @@ class SourcedEmail(Standard):
 class ChemicalBookSupplier(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
-        related_name='chemical_book_results',
-        related_query_name='chemical_book_results',
+        related_name='chemical_book_suppliers',
+        related_query_name='chemical_book_suppliers',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
@@ -484,8 +484,8 @@ class ChemicalBookSupplier(Standard):
 
     email = models.ForeignKey(
         'relationships.Email',
-        related_name='chemical_book_result_emails',
-        related_query_name='chemical_book_result_emails',
+        related_name='chemical_book_supplier_emails',
+        related_query_name='chemical_book_supplier_emails',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
@@ -493,8 +493,8 @@ class ChemicalBookSupplier(Standard):
     )
     invalid_email = models.ForeignKey(
         'relationships.InvalidEmail',
-        related_name='chemical_book_result_invalid_emails',
-        related_query_name='chemical_book_result_invalid_emails',
+        related_name='chemical_book_supplier_invalid_emails',
+        related_query_name='chemical_book_supplier_invalid_emails',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
@@ -502,8 +502,8 @@ class ChemicalBookSupplier(Standard):
     )
 
     class Meta:
-        verbose_name = 'Chemical Book Result'
-        verbose_name_plural = 'Chemical Book Results'
+        verbose_name = 'Chemical Book supplier'
+        verbose_name_plural = 'Chemical Book suppliers'
 
     def __str__(self):
         return f'({self.company_name} [{self.id}])'
@@ -511,8 +511,8 @@ class ChemicalBookSupplier(Standard):
 class LookChemSupplier(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
-        related_name='look_chem_results',
-        related_query_name='look_chem_results',
+        related_name='look_chem_suppliers',
+        related_query_name='look_chem_suppliers',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
@@ -630,8 +630,8 @@ class LookChemSupplier(Standard):
 class WorldOfChemicalsSupplier(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
-        related_name='world_of_chemicals_supplier_results',
-        related_query_name='world_of_chemicals_supplier_results',
+        related_name='world_of_chemicals_suppliers',
+        related_query_name='world_of_chemicals_suppliers',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
@@ -849,16 +849,43 @@ class WorldOfChemicalsSupplier(Standard):
         return f'({self.coy_name} [{self.id}])'
 
 class OKChemResult(Standard):
-    harvested = dtf(null=True)
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='ok_chem_suppliers',
+        related_query_name='ok_chem_supplier',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    harvested = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
-    name = cf(null=True)
-    country = cf(null=True)
-    request = cf(null=True)
+    name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    request = models.TextField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     email = cf(null=True)
     
     class Meta:
-        verbose_name = 'OKChem result'
-        verbose_name_plural = 'OKChem results'
+        verbose_name = 'OKChem buying request'
+        verbose_name_plural = 'OKChem buying requests'
     
     def __str__(self):
         return f'({self.email} [{self.id}])'
