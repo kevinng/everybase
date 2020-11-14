@@ -99,8 +99,7 @@ class Fibre2FashionBuyingOffer(Standard):
         blank=True,
         db_index=True
     )
-    title = models.CharField(
-        max_length=300,
+    title = models.TextField(
         null=True,
         blank=True
     )
@@ -185,8 +184,7 @@ class Fibre2FashionSellingOffer(Standard):
         blank=True,
         db_index=True
     )
-    title = models.CharField(
-        max_length=300,
+    title = models.TextField(
         null=True,
         blank=True
     )
@@ -851,15 +849,6 @@ class WorldOfChemicalsSupplier(Standard):
         return f'({self.coy_name} [{self.id}])'
 
 class OKChemResult(Standard):
-    import_job = models.ForeignKey(
-        'common.ImportJob',
-        related_name='ok_chem_results',
-        related_query_name='ok_chem_results',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
     harvested = dtf(null=True)
 
     name = cf(null=True)
