@@ -47,6 +47,36 @@ class ChemicalClusterOfSingaporeCompanyDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
+class ChemicalClusterOfSingaporeProductAPI():
+    queryset = models.ChemicalClusterOfSingaporeProduct.objects.all()
+    serializer_class = serializers.ChemicalClusterOfSingaporeProductSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ChemicalClusterOfSingaporeProductList(
+    ChemicalClusterOfSingaporeProductAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ChemicalClusterOfSingaporeProductDetail(
+    ChemicalClusterOfSingaporeProductAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+class ChemicalClusterOfSingaporeServiceAPI():
+    queryset = models.ChemicalClusterOfSingaporeService.objects.all()
+    serializer_class = serializers.ChemicalClusterOfSingaporeServiceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class ChemicalClusterOfSingaporeServiceList(
+    ChemicalClusterOfSingaporeServiceAPI,
+    generics.ListCreateAPIView):
+    pass
+
+class ChemicalClusterOfSingaporeServiceDetail(
+    ChemicalClusterOfSingaporeServiceAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
+
 class Fibre2FashionBuyingOfferAPI():
     queryset = models.Fibre2FashionBuyingOffer.objects.all()
     serializer_class = serializers.Fibre2FashionBuyingOfferSerializer

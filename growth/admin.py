@@ -90,6 +90,52 @@ class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
     autocomplete_fields = ['import_job', 'email', 'invalid_email',
         'executive_email', 'invalid_executive_email']
 
+@admin.register(mod.ChemicalClusterOfSingaporeProduct)
+class ChemicalClusterOfSingaporeProductAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + ['import_job', 'harvested',
+        'source_url', 'company_name', 'product']
+    list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
+        'company_name', 'product']
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter + ['harvested']
+    search_fields = ['id', 'import_job', 'source_url', 'company_name',
+        'product']
+    ordering = ['harvested'] + comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields + ['id']
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['import_job', 'harvested', 'source_url',
+            'company_name', 'product']})
+    ]
+    autocomplete_fields = ['import_job']
+
+@admin.register(mod.ChemicalClusterOfSingaporeService)
+class ChemicalClusterOfSingaporeServiceAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + ['import_job', 'harvested',
+        'source_url', 'company_name', 'service']
+    list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
+        'company_name', 'service']
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter + ['harvested']
+    search_fields = ['id', 'import_job', 'source_url', 'company_name',
+        'service']
+    ordering = ['harvested'] + comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields + ['id']
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['import_job', 'harvested', 'source_url',
+            'company_name', 'service']})
+    ]
+    autocomplete_fields = ['import_job']
+
 @admin.register(mod.Fibre2FashionBuyingOffer)
 class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
     # List page settings

@@ -25,6 +25,18 @@ class ChemicalClusterOfSingaporeCompanySerializer(serializers.ModelSerializer):
             'executive_telephone', 'executive_email_str', 'email',
             'invalid_email', 'executive_email', 'invalid_executive_email']
 
+class ChemicalClusterOfSingaporeProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ChemicalClusterOfSingaporeCompany
+        fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
+            'source_url', 'company_name', 'product']
+
+class ChemicalClusterOfSingaporeServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ChemicalClusterOfSingaporeCompany
+        fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
+            'source_url', 'company_name', 'service']
+
 class Fibre2FashionBuyingOfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Fibre2FashionBuyingOffer

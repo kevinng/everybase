@@ -19,6 +19,16 @@ urlpatterns = [
     path('chemical_cluster_of_singapore_company/<int:pk>/',
         views.ChemicalClusterOfSingaporeCompanyDetail.as_view()),
 
+    path('chemical_cluster_of_singapore_product/',
+        views.ChemicalClusterOfSingaporeProductList.as_view()),
+    path('chemical_cluster_of_singapore_product/<int:pk>/',
+        views.ChemicalClusterOfSingaporeProductDetail.as_view()),
+
+    path('chemical_cluster_of_singapore_service/',
+        views.ChemicalClusterOfSingaporeServiceList.as_view()),
+    path('chemical_cluster_of_singapore_service/<int:pk>/',
+        views.ChemicalClusterOfSingaporeServiceDetail.as_view()),
+
     path('fibre2fashion_buying_offer/',
         views.Fibre2FashionBuyingOfferList.as_view()),
     path('fibre2fashion_buying_offer/<int:pk>/',

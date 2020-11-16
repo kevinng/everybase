@@ -163,6 +163,76 @@ class ChemicalClusterOfSingaporeCompany(Standard):
     def __str__(self):
         return f'({self.company_name}, {self.harvested} [{self.id}])'
 
+class ChemicalClusterOfSingaporeProduct(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='chemical_cluster_of_singapore_products',
+        related_query_name='chemical_cluster_of_singapore_products',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    harvested = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
+    source_url = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    product = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+class ChemicalClusterOfSingaporeService(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='chemical_cluster_of_singapore_services',
+        related_query_name='chemical_cluster_of_singapore_services',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    harvested = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
+    source_url = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    service = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
 class Fibre2FashionBuyingOffer(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
