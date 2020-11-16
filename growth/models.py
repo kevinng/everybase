@@ -898,7 +898,7 @@ class LookChemSupplier(Standard):
         verbose_name_plural = 'LookChem suppliers'
 
     def __str__(self):
-        return f'({self.coy_name} [{self.id}])'
+        return f'({self.company_name} [{self.id}])'
 
 class WorldOfChemicalsSupplier(Standard):
     import_job = models.ForeignKey(
