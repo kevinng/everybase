@@ -84,10 +84,11 @@ class ChemicalBookSupplierSerializer(serializers.ModelSerializer):
 class LookChemSupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.LookChemSupplier
-        fields = ['id'] + standard_fieldnames + ['company_name',
-            'contact_person', 'street_address', 'city', 'province_state',
-            'country_region', 'zip_code', 'business_type', 'tel', 'mobile',
-            'email_str', 'website', 'qq', 'email', 'invalid_email']
+        fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
+            'company_name', 'contact_person', 'street_address', 'city',
+            'province_state', 'country_region', 'zip_code', 'business_type',
+            'tel', 'mobile', 'email_str', 'website', 'qq', 'email',
+            'invalid_email']
 
 class WorldOfChemicalSupplierSerializer(serializers.ModelSerializer):
     class Meta:

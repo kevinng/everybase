@@ -155,8 +155,8 @@ class ChemicalClusterOfSingaporeCompany(Standard):
 
     source_url = models.CharField(
         max_length=300,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     company_name = models.CharField(
@@ -286,8 +286,8 @@ class ChemicalClusterOfSingaporeProduct(Standard):
 
     source_url = models.CharField(
         max_length=300,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     company_name = models.CharField(
@@ -321,8 +321,8 @@ class ChemicalClusterOfSingaporeService(Standard):
 
     source_url = models.CharField(
         max_length=300,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     company_name = models.CharField(
@@ -356,8 +356,8 @@ class Fibre2FashionBuyingOffer(Standard):
 
     source_url = models.CharField(
         max_length=300,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     category = models.CharField(
@@ -441,8 +441,8 @@ class Fibre2FashionSellingOffer(Standard):
 
     source_url = models.CharField(
         max_length=300,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     category = models.CharField(
@@ -714,8 +714,8 @@ class ChemicalBookSupplier(Standard):
 
     source_url = models.CharField(
         max_length=300,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     company_name = models.CharField(
