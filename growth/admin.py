@@ -233,30 +233,6 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
     autocomplete_fields = ['import_job', 'email', 'invalid_email',
         'did_you_mean_email']
 
-@admin.register(mod.DataSource)
-class DataSourceAdmin(comadm.ChoiceAdmin):
-    pass
-
-@admin.register(mod.SourcedEmail)
-class SourcedEmailAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + ['harvested', 'source',
-        'email']
-    list_editable = comadm.standard_list_editable + ['harvested', 'source',
-        'email']
-    list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested', 'source']
-    search_fields = ['id', 'source', 'email']
-    ordering = ['harvested']
-    show_full_result_count = True
-
-    # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields + ['id']
-    fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': ['harvested', 'source', 'email']})]
-    autocomplete_fields = ['source', 'email']
-
 @admin.register(mod.ChemicalBookSupplier)
 class ChemicalBookSupplierAdmin(admin.ModelAdmin):
     # List page settings

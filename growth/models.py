@@ -1,6 +1,5 @@
 from django.db import models
-from common.models import (fk, m2m, m2mt, tf, cf, dtf, uid, eml, pintf, 
-    Standard, Choice, short_text)
+from common.models import Standard, Choice, short_text
 
 class GmassCampaignResult(Standard):
     email_address = models.CharField(
@@ -679,22 +678,6 @@ class ZeroBounceResult(Standard):
     
     def __str__(self):
         return f'({self.email_str} [{self.id}])'
-
-class DataSource(Choice):
-    emails = m2mt(
-        'relationships.Email',
-        'SourcedEmail',
-        'source', 'email',
-        'data_sources')
-
-class SourcedEmail(Standard):
-    harvested = dtf(null=True)
-
-    source = fk('DataSource', 'sourced_emails')
-    email = fk('relationships.Email', 'sourced_emails')
-
-    def __str__(self):
-        return f'({self.email_address} [{self.id}])'
 
 class ChemicalBookSupplier(Standard):
     import_job = models.ForeignKey(

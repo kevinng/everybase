@@ -63,16 +63,6 @@ class ZeroBounceResultSerializer(serializers.ModelSerializer):
             'mx_record', 'smtp_provider', 'did_you_mean', 'email',
             'invalid_email', 'did_you_mean_email']
 
-class DataSourceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.DataSource
-        fields = ['id'] + choice_fieldnames + ['emails']
-
-class SourcedEmailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.SourcedEmail
-        fields = ['id'] + standard_fieldnames + ['sourced', 'source', 'email']
-
 class ChemicalBookSupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ChemicalBookSupplier

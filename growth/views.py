@@ -122,36 +122,6 @@ class ZeroBounceResultDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
-class DataSourceAPI():
-    queryset = models.DataSource.objects.all()
-    serializer_class = serializers.DataSourceSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class DataSourceList(
-    DataSourceAPI,
-    generics.ListCreateAPIView):
-    pass
-
-class DataSourceDetail(
-    DataSourceAPI,
-    generics.RetrieveUpdateDestroyAPIView):
-    pass
-
-class SourcedEmailAPI():
-    queryset = models.SourcedEmail.objects.all()
-    serializer_class = serializers.SourcedEmailSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class SourcedEmailList(
-    SourcedEmailAPI,
-    generics.ListCreateAPIView):
-    pass
-
-class SourcedEmailDetail(
-    SourcedEmailAPI,
-    generics.RetrieveUpdateDestroyAPIView):
-    pass
-
 class ChemicalBookSupplierAPI():
     queryset = models.ChemicalBookSupplier.objects.all()
     serializer_class = serializers.ChemicalBookSupplierSerializer
