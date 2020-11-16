@@ -8,18 +8,20 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + ['email_address',
         'first_name', 'last_name', 'name_1', 'opens', 'clicks', 'replied',
         'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
-        'bounce_reason', 'gmail_response', 'email', 'gmass_campaign']
+        'bounce_reason', 'gmail_response', 'email', 'invalid_email',
+        'gmass_campaign']
     list_editable = comadm.standard_list_editable + ['email_address',
         'first_name', 'last_name', 'name_1', 'opens', 'clicks', 'replied',
         'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
-        'bounce_reason', 'gmail_response', 'email', 'gmass_campaign']
+        'bounce_reason', 'gmail_response', 'email', 'invalid_email',
+        'gmass_campaign']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['replied', 'unsubscribed',
         'bounced', 'blocked', 'over_gmail_limit']
     search_fields = ['id', 'email_address', 'first_name', 'last_name', 'name_1',
         'opens', 'clicks', 'replied', 'unsubscribed', 'bounced', 'blocked',
         'over_gmail_limit', 'bounce_reason', 'gmail_response', 'email',
-        'gmass_campaign']
+        'invalid_email', 'gmass_campaign']
     ordering = comadm.standard_ordering
     show_full_result_count = True
     
@@ -30,9 +32,8 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
         (None, {'fields': ['email_address', 'first_name',
             'last_name', 'name_1', 'opens', 'clicks', 'replied', 'unsubscribed',
             'bounced', 'blocked', 'over_gmail_limit', 'bounce_reason',
-            'gmail_response']
-        }),
-        (None, {'fields': ['email', 'gmass_campaign']})
+            'invalid_email', 'gmail_response', 'email', 'gmass_campaign']
+        })
     ]
     autocomplete_fields = ['email', 'gmass_campaign']
 

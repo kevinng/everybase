@@ -3,22 +3,108 @@ from common.models import (fk, m2m, m2mt, tf, cf, dtf, uid, eml, pintf,
     Standard, Choice, short_text)
 
 class GmassCampaignResult(Standard):
-    email_address = cf(null=True)
-    first_name = cf(null=True)
-    last_name = cf(null=True)
-    name_1 = cf(null=True)
-    opens = pintf(null=True)
-    clicks = pintf(null=True)
-    replied = cf(null=True)
-    unsubscribed = cf(null=True)
-    bounced = cf(null=True)
-    blocked = cf(null=True)
-    over_gmail_limit = cf(null=True)
-    bounce_reason = tf(null=True)
-    gmail_response = cf(null=True)
+    email_address = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    first_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    last_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    name_1 = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    opens = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    clicks = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    replied = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    unsubscribed = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    bounced = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    blocked = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    over_gmail_limit = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    bounce_reason = models.TextField(
+        null=True,
+        blank=True
+    )
+    gmail_response = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
-    email = fk('relationships.Email', 'gmass_campaign_results', null=True)
-    gmass_campaign = fk('GmassCampaign', 'results', null=True)
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='gmass_campaign_results',
+        related_query_name='gmass_campaign_results',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='gmass_campaign_results',
+        related_query_name='gmass_campaign_results',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    gmass_campaign = models.ForeignKey(
+        'GmassCampaign',
+        related_name='gmass_campaign_results',
+        related_query_name='gmass_campaign_results',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
     def __str__(self):
         return f'({self.email_address} [{self.id}])'

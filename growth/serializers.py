@@ -8,7 +8,8 @@ class GmassCampaignResultSerializer(serializers.ModelSerializer):
         fields = ['id'] + standard_fieldnames + ['email_address', 'first_name',
             'last_name', 'name_1', 'opens', 'clicks', 'replied',
             'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
-            'bounce_reason', 'gmail_response', 'email', 'gmass_campaign']
+            'bounce_reason', 'gmail_response', 'email', 'invalid_email',
+            'gmass_campaign']
 
 class GmassCampaignSerializer(serializers.ModelSerializer):
     class Meta:
