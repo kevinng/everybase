@@ -43,17 +43,7 @@ urlpatterns = [
         views.ZeroBounceResultList.as_view()),
     path('zero_bounce_result/<int:pk>/',
         views.ZeroBounceResultDetail.as_view()),
-
-    path('data_source/',
-        views.DataSourceList.as_view()),
-    path('data_source/<int:pk>/',
-        views.DataSourceDetail.as_view()),
-
-    path('sourced_email/',
-        views.SourcedEmailList.as_view()),
-    path('sourced_email/<int:pk>/',
-        views.SourcedEmailDetail.as_view()),
-
+        
     path('chemical_book_supplier/',
         views.ChemicalBookSupplierList.as_view()),
     path('chemical_book_supplier/<int:pk>/',

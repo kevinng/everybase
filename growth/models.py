@@ -1,8 +1,16 @@
 from django.db import models
-from common.models import (fk, m2m, m2mt, tf, cf, dtf, uid, eml, pintf, 
-    Standard, Choice, short_text)
+from common.models import Standard, Choice, short_text
 
 class GmassCampaignResult(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='gmass_campaign_results',
+        related_query_name='gmass_campaign_results',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     email_address = models.CharField(
         max_length=100,
         null=True,
@@ -110,6 +118,15 @@ class GmassCampaignResult(Standard):
         return f'({self.email_address} [{self.id}])'
 
 class GmassCampaign(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='gmass_campaigns',
+        related_query_name='gmass_campaigns',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     sent = models.DateTimeField(
         null=True,
         blank=True,
@@ -680,22 +697,6 @@ class ZeroBounceResult(Standard):
     def __str__(self):
         return f'({self.email_str} [{self.id}])'
 
-class DataSource(Choice):
-    emails = m2mt(
-        'relationships.Email',
-        'SourcedEmail',
-        'source', 'email',
-        'data_sources')
-
-class SourcedEmail(Standard):
-    harvested = dtf(null=True)
-
-    source = fk('DataSource', 'sourced_emails')
-    email = fk('relationships.Email', 'sourced_emails')
-
-    def __str__(self):
-        return f'({self.email_address} [{self.id}])'
-
 class ChemicalBookSupplier(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
@@ -898,7 +899,7 @@ class LookChemSupplier(Standard):
         verbose_name_plural = 'LookChem suppliers'
 
     def __str__(self):
-        return f'({self.coy_name} [{self.id}])'
+        return f'({self.company_name} [{self.id}])'
 
 class WorldOfChemicalsSupplier(Standard):
     import_job = models.ForeignKey(
