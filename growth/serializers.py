@@ -28,13 +28,13 @@ class ChemicalClusterOfSingaporeCompanySerializer(serializers.ModelSerializer):
 
 class ChemicalClusterOfSingaporeProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.ChemicalClusterOfSingaporeCompany
+        model = models.ChemicalClusterOfSingaporeProduct
         fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
             'source_url', 'company_name', 'product']
 
 class ChemicalClusterOfSingaporeServiceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.ChemicalClusterOfSingaporeCompany
+        model = models.ChemicalClusterOfSingaporeService
         fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
             'source_url', 'company_name', 'service']
 
