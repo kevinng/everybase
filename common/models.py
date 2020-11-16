@@ -136,6 +136,20 @@ class Choice(models.Model):
     class Meta:
         abstract = True
 
+class LowerCaseCharField(models.CharField):
+    def __init__(self, *args, **kwargs):
+        super(LowerCaseCharField, self).__init__(*args, **kwargs)
+
+    def get_prep_value(self, value):
+        return str(value).lower()
+
+class LowerCaseEmailField(models.EmailField):
+    def __init__(self, *args, **kwargs):
+        super(LowerCaseEmailField, self).__init__(*args, **kwargs)
+
+    def get_prep_value(self, value):
+        return str(value).lower()
+
 # --- End: Abstract models ---
 
 # --- Start: Common models ---

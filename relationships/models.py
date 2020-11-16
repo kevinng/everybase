@@ -1,6 +1,7 @@
 from django.db import models
 from common.models import fk, m2m, m2mt, tf, cf, dtf, pintf, eml, url
-from common.models import Standard, Choice
+from common.models import (Standard, Choice, LowerCaseCharField,
+    LowerCaseEmailField)
 
 # --- Start: Abstract classes ---
 
@@ -273,7 +274,7 @@ class Company(Standard):
         return f'({self.company_name} [{self.id}])'
 
 class Email(Standard):
-    email = models.EmailField(
+    email = LowerCaseEmailField(
         unique=True,
         null=False,
         blank=False,
@@ -293,7 +294,7 @@ class Email(Standard):
         return f'({self.email} [{self.id}])'
 
 class InvalidEmail(Standard):
-    email = models.CharField(
+    email = LowerCaseCharField(
         max_length=100,
         unique=True,
         null=False,
