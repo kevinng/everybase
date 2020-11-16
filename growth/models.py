@@ -2,6 +2,15 @@ from django.db import models
 from common.models import Standard, Choice, short_text
 
 class GmassCampaignResult(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='gmass_campaign_results',
+        related_query_name='gmass_campaign_results',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     email_address = models.CharField(
         max_length=100,
         null=True,
@@ -109,6 +118,15 @@ class GmassCampaignResult(Standard):
         return f'({self.email_address} [{self.id}])'
 
 class GmassCampaign(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='gmass_campaigns',
+        related_query_name='gmass_campaigns',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     sent = models.DateTimeField(
         null=True,
         blank=True,
