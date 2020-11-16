@@ -110,10 +110,29 @@ class GmassCampaignResult(Standard):
         return f'({self.email_address} [{self.id}])'
 
 class GmassCampaign(Standard):
-    sent = dtf(null=True)
-    campaign_id = cf()
-    subject = cf(null=True)
-    spreadsheet = cf(null=True)
+    sent = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    campaign_id = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    subject = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    spreadsheet = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     def __str__(self):
         return f'({self.campaign_id}, {self.sent} [{self.id}])'
