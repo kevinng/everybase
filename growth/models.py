@@ -887,6 +887,12 @@ class OKChemBuyingRequest(Standard):
         blank=True,
         db_index=True
     )
+    domain = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     
     class Meta:
         verbose_name = 'OKChem buying request'
