@@ -55,34 +55,34 @@ class GmassCampaign(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['sent', 'campaign_id', 'subject', 'spreadsheet']})]
 
-@admin.register(mod.ChemicalClusterOfSingaporeResult)
-class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + ['harvested', 'source_link',
-        'company_name', 'telephone', 'fax', 'email_str', 'website',
-        'address_str', 'company', 'email', 'phone_number', 'link', 'address']
-    list_editable = comadm.standard_list_editable + ['harvested', 'source_link',
-        'company_name', 'telephone', 'fax', 'email_str', 'website',
-        'address_str', 'company', 'email', 'phone_number', 'link', 'address']
-    list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested']
-    search_fields = ['id', 'source_link', 'company_name', 'telephone', 'fax',
-        'email_str', 'website', 'address_str', 'company', 'email',
-        'phone_number', 'link', 'address']
-    ordering = comadm.standard_ordering + ['harvested']
-    show_full_result_count = True
+# @admin.register(mod.ChemicalClusterOfSingaporeResult)
+# class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + ['harvested', 'source_link',
+#         'company_name', 'telephone', 'fax', 'email_str', 'website',
+#         'address_str', 'company', 'email', 'phone_number', 'link', 'address']
+#     list_editable = comadm.standard_list_editable + ['harvested', 'source_link',
+#         'company_name', 'telephone', 'fax', 'email_str', 'website',
+#         'address_str', 'company', 'email', 'phone_number', 'link', 'address']
+#     list_per_page = 50
+#     list_filter = comadm.standard_list_filter + ['harvested']
+#     search_fields = ['id', 'source_link', 'company_name', 'telephone', 'fax',
+#         'email_str', 'website', 'address_str', 'company', 'email',
+#         'phone_number', 'link', 'address']
+#     ordering = comadm.standard_ordering + ['harvested']
+#     show_full_result_count = True
     
-    # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields + ['id']
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['harvested', 'source_link', 'company_name',
-            'telephone', 'fax', 'email_str', 'website', 'address_str']}),
-        (None, {'fields': ['company', 'email', 'phone_number', 'link',
-            'address']})
-    ]
-    autocomplete_fields = ['company', 'email', 'phone_number', 'link',
-        'address']
+#     # Details page settings
+#     save_on_top = True
+#     readonly_fields = comadm.standard_readonly_fields + ['id']
+#     fieldsets = comadm.standard_fieldsets + [
+#         (None, {'fields': ['harvested', 'source_link', 'company_name',
+#             'telephone', 'fax', 'email_str', 'website', 'address_str']}),
+#         (None, {'fields': ['company', 'email', 'phone_number', 'link',
+#             'address']})
+#     ]
+#     autocomplete_fields = ['company', 'email', 'phone_number', 'link',
+#         'address']
 
 @admin.register(mod.Fibre2FashionBuyingOffer)
 class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):

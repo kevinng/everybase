@@ -32,38 +32,38 @@ class GmassCampaign(Standard):
     def __str__(self):
         return f'({self.campaign_id}, {self.sent} [{self.id}])'
 
-class ChemicalClusterOfSingaporeResult(Standard):
-    harvested = dtf(null=True)
-    source_link = cf(null=True)
+# class ChemicalClusterOfSingaporeResult(Standard):
+#     harvested = dtf(null=True)
+#     source_link = cf(null=True)
     
-    company_name = cf(null=True)
-    telephone = cf(null=True)
-    fax = cf(null=True)
-    email_str = cf(null=True)
-    website = cf(null=True)
-    address_str = cf(null=True, db_index=False)
+#     company_name = cf(null=True)
+#     telephone = cf(null=True)
+#     fax = cf(null=True)
+#     email_str = cf(null=True)
+#     website = cf(null=True)
+#     address_str = cf(null=True, db_index=False)
 
-    company = fk('relationships.Company',
-        'chemical_cluster_of_singapore_results', null=True)
+#     company = fk('relationships.Company',
+#         'chemical_cluster_of_singapore_results', null=True)
     
-    email = fk('relationships.Email',
-        'chemical_cluster_of_singapore_results', null=True)
+#     email = fk('relationships.Email',
+#         'chemical_cluster_of_singapore_results', null=True)
 
-    phone_number = fk('relationships.PhoneNumber',
-        'chemical_cluster_of_singapore_results', null=True)
+#     phone_number = fk('relationships.PhoneNumber',
+#         'chemical_cluster_of_singapore_results', null=True)
 
-    link = fk('relationships.Link',
-        'chemical_cluster_of_singapore_results', null=True)
+#     link = fk('relationships.Link',
+#         'chemical_cluster_of_singapore_results', null=True)
 
-    address = fk('relationships.Address',
-        'chemical_cluster_of_singapore_results', null=True)
+#     address = fk('relationships.Address',
+#         'chemical_cluster_of_singapore_results', null=True)
 
-    class Meta:
-        verbose_name = 'ChemicalClusterOfSingapore result'
-        verbose_name_plural = 'ChemicalClusterOfSingapore results'
+#     class Meta:
+#         verbose_name = 'ChemicalClusterOfSingapore result'
+#         verbose_name_plural = 'ChemicalClusterOfSingapore results'
 
-    def __str__(self):
-        return f'({self.company_name}, {self.harvested} [{self.id}])'
+#     def __str__(self):
+#         return f'({self.company_name}, {self.harvested} [{self.id}])'
 
 class Fibre2FashionBuyingOffer(Standard):
     import_job = models.ForeignKey(
