@@ -81,7 +81,7 @@ class Fibre2FashionBuyingOffer(Standard):
         db_index=True
     )
 
-    source_link = models.CharField(
+    source_url = models.CharField(
         max_length=300,
         null=False,
         blank=False,
@@ -166,7 +166,7 @@ class Fibre2FashionSellingOffer(Standard):
         db_index=True
     )
 
-    source_link = models.CharField(
+    source_url = models.CharField(
         max_length=300,
         null=False,
         blank=False,

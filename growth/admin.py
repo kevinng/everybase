@@ -88,17 +88,17 @@ class ChemicalClusterOfSingaporeAdmin(admin.ModelAdmin):
 class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
-        'source_link', 'category', 'sub_category', 'title', 'reference_no',
+        'source_url', 'category', 'sub_category', 'title', 'reference_no',
         'description', 'email_str', 'product_info_html', 'email',
         'invalid_email']
     list_editable = comadm.standard_list_editable + ['harvested',
-        'source_link', 'category', 'sub_category', 'title', 'reference_no',
+        'source_url', 'category', 'sub_category', 'title', 'reference_no',
         'description', 'email_str', 'product_info_html', 'email',
         'invalid_email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
         'category', 'sub_category']
-    search_fields = ['id', 'import_job__description', 'source_link', 'category',
+    search_fields = ['id', 'import_job__description', 'source_url', 'category',
         'sub_category', 'title', 'reference_no', 'description', 'email_str',
         'product_info_html', 'email__email', 'invalid_email__email']
     ordering = ['harvested'] + comadm.standard_ordering
@@ -117,17 +117,17 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
 class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
-        'source_link', 'category', 'sub_category', 'title', 'reference_no',
+        'source_url', 'category', 'sub_category', 'title', 'reference_no',
         'description', 'email_str', 'company_name', 'company_address',
         'product_info_html', 'email', 'invalid_email']
     list_editable = comadm.standard_list_editable + ['harvested',
-        'source_link', 'category', 'sub_category', 'title', 'reference_no',
+        'source_url', 'category', 'sub_category', 'title', 'reference_no',
         'description', 'email_str', 'company_name', 'company_address',
         'product_info_html', 'email', 'invalid_email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
         'category', 'sub_category']
-    search_fields = ['id', 'import_job__description', 'source_link', 'category',
+    search_fields = ['id', 'import_job__description', 'source_url', 'category',
         'sub_category', 'title', 'reference_no', 'description', 'email_str',
         'company_name', 'company_address', 'product_info_html', 'email__email',
         'invalid_email__email']
