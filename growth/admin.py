@@ -311,12 +311,12 @@ class WorldOfChemicalsSupplierAdmin(admin.ModelAdmin):
 class OKChemBuyingRequestAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['id', 'import_job',
-        'harvested', 'name', 'country', 'request', 'email']
+        'harvested', 'name', 'country', 'request', 'email', 'domain']
     list_editable = comadm.standard_list_editable + ['harvested', 'name',
-        'country', 'request', 'email']
+        'country', 'request', 'email', 'domain']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
-        'country']
+        'country', 'domain']
     search_fields = ['id', 'source', 'name', 'country', 'request', 'email']
     ordering = ['harvested']
     show_full_result_count = True
@@ -326,4 +326,4 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields + ['id']
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['harvested', 'name', 'country', 'request',
-            'email']})]
+            'email', 'domain']})]

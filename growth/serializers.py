@@ -91,4 +91,4 @@ class OKChemBuyingRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.OKChemBuyingRequest
         fields = ['id'] + standard_fieldnames + ['harvested', 'name', 'country',
-            'request', 'email']
+            'request', 'email', 'domain']
