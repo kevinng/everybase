@@ -797,7 +797,7 @@ class LookChemSupplier(Standard):
         db_index=True
     )
 
-    coy_name = models.CharField(
+    company_name = models.CharField(
         max_length=100,
         null=True,
         blank=True,

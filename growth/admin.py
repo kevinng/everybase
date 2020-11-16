@@ -288,17 +288,17 @@ class ChemicalBookSupplierAdmin(admin.ModelAdmin):
 class LookChemSupplierAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['id', 'harvested',
-        'coy_name', 'contact_person', 'street_address', 'city',
+        'company_name', 'contact_person', 'street_address', 'city',
         'province_state', 'country_region', 'zip_code', 'business_type', 'tel',
         'mobile', 'email_str', 'website', 'qq', 'email', 'invalid_email']
-    list_editable = comadm.standard_list_editable + ['harvested', 'coy_name',
-        'contact_person', 'street_address', 'city', 'province_state',
-        'country_region', 'zip_code', 'business_type', 'tel', 'mobile',
-        'email_str', 'website', 'qq', 'email', 'invalid_email']
+    list_editable = comadm.standard_list_editable + ['harvested',
+        'company_name', 'contact_person', 'street_address', 'city',
+        'province_state', 'country_region', 'zip_code', 'business_type', 'tel',
+        'mobile', 'email_str', 'website', 'qq', 'email', 'invalid_email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested', 'city',
         'province_state', 'country_region', 'business_type']
-    search_fields = ['id', 'coy_name', 'contact_person', 'street_address',
+    search_fields = ['id', 'company_name', 'contact_person', 'street_address',
         'city', 'province_state', 'country_region', 'zip_code', 'business_type',
         'tel', 'mobile', 'email', 'website', 'qq']
     ordering = ['harvested']
@@ -308,7 +308,7 @@ class LookChemSupplierAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields + ['id']
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': ['harvested', 'coy_name',
+        [(None, {'fields': ['harvested', 'company_name',
             'contact_person', 'street_address', 'city', 'province_state',
             'country_region', 'zip_code', 'business_type', 'tel', 'mobile',
             'email_str', 'website', 'qq', 'email', 'invalid_email']})]
