@@ -32,38 +32,136 @@ class GmassCampaign(Standard):
     def __str__(self):
         return f'({self.campaign_id}, {self.sent} [{self.id}])'
 
-# class ChemicalClusterOfSingaporeResult(Standard):
-#     harvested = dtf(null=True)
-#     source_link = cf(null=True)
-    
-#     company_name = cf(null=True)
-#     telephone = cf(null=True)
-#     fax = cf(null=True)
-#     email_str = cf(null=True)
-#     website = cf(null=True)
-#     address_str = cf(null=True, db_index=False)
+class ChemicalClusterOfSingaporeCompany(Standard):
+    import_job = models.ForeignKey(
+        'common.ImportJob',
+        related_name='chemical_cluster_of_singapore_companies',
+        related_query_name='chemical_cluster_of_singapore_companies',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    harvested = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
-#     company = fk('relationships.Company',
-#         'chemical_cluster_of_singapore_results', null=True)
-    
-#     email = fk('relationships.Email',
-#         'chemical_cluster_of_singapore_results', null=True)
+    source_url = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    telephone = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    fax = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    email_str = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    website = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    address = models.CharField(
+        max_length=300,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    nature_of_business = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    executive_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    executive_telephone = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    executive_email_str = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
-#     phone_number = fk('relationships.PhoneNumber',
-#         'chemical_cluster_of_singapore_results', null=True)
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='chemical_cluster_of_singapore_company_emails',
+        related_query_name='chemical_cluster_of_singapore_company_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='chemical_cluster_of_singapore_company_invalid_emails',
+        related_query_name=
+            'chemical_cluster_of_singapore_company_invalid_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    executive_email = models.ForeignKey(
+        'relationships.Email',
+        related_name='chemical_cluster_of_singapore_company_executive_emails',
+        related_query_name=
+            'chemical_cluster_of_singapore_company_executive_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_executive_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name=
+            'chemical_cluster_of_singapore_company_invalid_executive_emails',
+        related_query_name=
+            'chemical_cluster_of_singapore_company_invalid_executive_emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
-#     link = fk('relationships.Link',
-#         'chemical_cluster_of_singapore_results', null=True)
+    class Meta:
+        verbose_name = 'Chemical Cluster of Singapore company'
+        verbose_name_plural = 'Chemical Cluster of Singapore companies'
 
-#     address = fk('relationships.Address',
-#         'chemical_cluster_of_singapore_results', null=True)
-
-#     class Meta:
-#         verbose_name = 'ChemicalClusterOfSingapore result'
-#         verbose_name_plural = 'ChemicalClusterOfSingapore results'
-
-#     def __str__(self):
-#         return f'({self.company_name}, {self.harvested} [{self.id}])'
+    def __str__(self):
+        return f'({self.company_name}, {self.harvested} [{self.id}])'
 
 class Fibre2FashionBuyingOffer(Standard):
     import_job = models.ForeignKey(

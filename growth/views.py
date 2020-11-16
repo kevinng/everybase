@@ -32,20 +32,20 @@ class GmassCampaignDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
-# class ChemicalClusterOfSingaporeResultAPI():
-#     queryset = models.ChemicalClusterOfSingaporeResult.objects.all()
-#     serializer_class = serializers.ChemicalClusterOfSingaporeResultSerializer
-#     permission_classes = [permissions.IsAuthenticated]
+class ChemicalClusterOfSingaporeCompanyAPI():
+    queryset = models.ChemicalClusterOfSingaporeCompany.objects.all()
+    serializer_class = serializers.ChemicalClusterOfSingaporeCompanySerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-# class ChemicalClusterOfSingaporeResultList(
-#     ChemicalClusterOfSingaporeResultAPI,
-#     generics.ListCreateAPIView):
-#     pass
+class ChemicalClusterOfSingaporeCompanyList(
+    ChemicalClusterOfSingaporeCompanyAPI,
+    generics.ListCreateAPIView):
+    pass
 
-# class ChemicalClusterOfSingaporeResultDetail(
-#     ChemicalClusterOfSingaporeResultAPI,
-#     generics.RetrieveUpdateDestroyAPIView):
-#     pass
+class ChemicalClusterOfSingaporeCompanyDetail(
+    ChemicalClusterOfSingaporeCompanyAPI,
+    generics.RetrieveUpdateDestroyAPIView):
+    pass
 
 class Fibre2FashionBuyingOfferAPI():
     queryset = models.Fibre2FashionBuyingOffer.objects.all()

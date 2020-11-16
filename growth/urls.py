@@ -14,10 +14,10 @@ urlpatterns = [
     path('gmass_campaign/<int:pk>/',
         views.GmassCampaignDetail.as_view()),
 
-    # path('chemical_cluster_of_singapore_result/',
-    #     views.ChemicalClusterOfSingaporeResultList.as_view()),
-    # path('chemical_cluster_of_singapore_result/<int:pk>/',
-    #     views.ChemicalClusterOfSingaporeResultDetail.as_view()),
+    path('chemical_cluster_of_singapore_company/',
+        views.ChemicalClusterOfSingaporeCompanyList.as_view()),
+    path('chemical_cluster_of_singapore_company/<int:pk>/',
+        views.ChemicalClusterOfSingaporeCompanyDetail.as_view()),
 
     path('fibre2fashion_buying_offer/',
         views.Fibre2FashionBuyingOfferList.as_view()),

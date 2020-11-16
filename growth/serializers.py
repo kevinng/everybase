@@ -16,13 +16,14 @@ class GmassCampaignSerializer(serializers.ModelSerializer):
         fields = ['id'] + standard_fieldnames + ['campaign_id', 'sent',
             'subject', 'spreadsheet']
 
-# class ChemicalClusterOfSingaporeResultSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = models.ChemicalClusterOfSingaporeResult
-#         fields = ['id'] + standard_fieldnames + ['sourced', 'source_link',
-#             'company_name', 'telephone', 'fax', 'email_str', 'website',
-#             'address_str', 'company', 'email', 'phone_numbers', 'link',
-#             'address']
+class ChemicalClusterOfSingaporeCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ChemicalClusterOfSingaporeCompany
+        fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
+            'source_url', 'company_name', 'telephone', 'fax', 'email_str',
+            'website', 'address', 'nature_of_business', 'executive_name',
+            'executive_telephone', 'executive_email_str', 'email',
+            'invalid_email', 'executive_email', 'invalid_executive_email']
 
 class Fibre2FashionBuyingOfferSerializer(serializers.ModelSerializer):
     class Meta:
