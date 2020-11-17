@@ -5,8 +5,8 @@ from . import models
 class GmassCampaignResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.GmassCampaignResult
-        fields = ['id'] + standard_fieldnames + ['email_address', 'first_name',
-            'last_name', 'name_1', 'opens', 'clicks', 'replied',
+        fields = ['id'] + standard_fieldnames + ['import_job', 'email_address',
+            'first_name', 'last_name', 'name_1', 'opens', 'clicks', 'replied',
             'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
             'bounce_reason', 'gmail_response', 'email', 'invalid_email',
             'gmass_campaign']
@@ -14,8 +14,8 @@ class GmassCampaignResultSerializer(serializers.ModelSerializer):
 class GmassCampaignSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.GmassCampaign
-        fields = ['id'] + standard_fieldnames + ['campaign_id', 'sent',
-            'subject', 'spreadsheet']
+        fields = ['id'] + standard_fieldnames + ['import_job', 'campaign_id',
+            'sent', 'subject', 'spreadsheet']
 
 class ChemicalClusterOfSingaporeCompanySerializer(serializers.ModelSerializer):
     class Meta:
@@ -83,9 +83,10 @@ class LookChemSupplierSerializer(serializers.ModelSerializer):
 class WorldOfChemicalSupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.WorldOfChemicalsSupplier
-        fields = ['id'] + standard_fieldnames + ['coy_id', 'coy_name',
-            'coy_about_html', 'coy_pri_contact', 'coy_addr_1', 'coy_addr_2',
-            'coy_city', 'coy_state', 'coy_country', 'coy_postal', 'coy_phone',
+        fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
+            'source_url' 'coy_id', 'coy_name', 'coy_about_html',
+            'coy_pri_contact', 'coy_addr_1', 'coy_addr_2', 'coy_city',
+            'coy_state', 'coy_country', 'coy_postal', 'coy_phone',
             'coy_phone_2', 'coy_email', 'coy_owner_email', 'coy_alt_email',
             'coy_alt_email_2', 'coy_alt_email_3', 'coy_website', 'email',
             'owner_email', 'alt_email', 'alt_email_2', 'alt_email_3',
@@ -95,5 +96,5 @@ class WorldOfChemicalSupplierSerializer(serializers.ModelSerializer):
 class OKChemBuyingRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.OKChemBuyingRequest
-        fields = ['id'] + standard_fieldnames + ['harvested', 'name', 'country',
-            'request', 'email', 'domain']
+        fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
+            'name', 'country', 'request', 'email', 'domain']
