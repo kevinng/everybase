@@ -1,6 +1,6 @@
 import os
 import boto3
-from settings import AWS_STORAGE_BUCKET_NAME
+import settings
 
 _NAMESPACE_ROOT = '/scripts/namespaces'
 _NAMESPACE = 'chemical_book_supplier'
@@ -9,7 +9,11 @@ _NUM_FILES = 3
 
 def download_file():
     s3 = boto3.client('s3')
-    s3.download_file(AWS_STORAGE_BUCKET_NAME, f'{_OBJECT_PREFIX}/test.txt', 'saved_test.txt')
+    s3.download_file(
+        settings.AWS_STORAGE_BUCKET_NAME,
+        f'{_OBJECT_PREFIX}/test.txt',
+        'saved_test.txt'
+    )
 
 def parse_file():
     pass
