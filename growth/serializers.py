@@ -84,7 +84,7 @@ class WorldOfChemicalSupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.WorldOfChemicalsSupplier
         fields = ['id'] + standard_fieldnames + ['import_job', 'harvested',
-            'source_url' 'coy_id', 'coy_name', 'coy_about_html',
+            'source_url', 'coy_id', 'coy_name', 'coy_about_html',
             'coy_pri_contact', 'coy_addr_1', 'coy_addr_2', 'coy_city',
             'coy_state', 'coy_country', 'coy_postal', 'coy_phone',
             'coy_phone_2', 'coy_email', 'coy_owner_email', 'coy_alt_email',
