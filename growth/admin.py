@@ -72,7 +72,7 @@ class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
         'invalid_executive_email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested']
-    search_fields = ['id', 'import_job', 'source_url', 'company_name',
+    search_fields = ['id', 'source_url', 'company_name',
         'telephone', 'fax', 'email_str', 'website', 'address',
         'nature_of_business', 'executive_name', 'executive_telephone',
         'executive_email_str']
@@ -101,8 +101,7 @@ class ChemicalClusterOfSingaporeProductAdmin(admin.ModelAdmin):
         'company_name', 'product']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested']
-    search_fields = ['id', 'import_job', 'source_url', 'company_name',
-        'product']
+    search_fields = ['id', 'source_url', 'company_name', 'product']
     ordering = ['harvested'] + comadm.standard_ordering
     show_full_result_count = True
 
@@ -124,8 +123,7 @@ class ChemicalClusterOfSingaporeServiceAdmin(admin.ModelAdmin):
         'company_name', 'service']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested']
-    search_fields = ['id', 'import_job', 'source_url', 'company_name',
-        'service']
+    search_fields = ['id', 'source_url', 'company_name', 'service']
     ordering = ['harvested'] + comadm.standard_ordering
     show_full_result_count = True
 
@@ -152,9 +150,8 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
         'category', 'sub_category']
-    search_fields = ['id', 'import_job__description', 'source_url', 'category',
-        'sub_category', 'title', 'reference_no', 'description', 'email_str',
-        'product_info_html', 'email__email', 'invalid_email__email']
+    search_fields = ['id', 'source_url', 'category', 'sub_category', 'title',
+        'reference_no', 'description', 'email_str', 'product_info_html']
     ordering = ['harvested'] + comadm.standard_ordering
     show_full_result_count = True
     
@@ -181,10 +178,9 @@ class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
         'category', 'sub_category']
-    search_fields = ['id', 'import_job__description', 'source_url', 'category',
-        'sub_category', 'title', 'reference_no', 'description', 'email_str',
-        'company_name', 'company_address', 'product_info_html', 'email__email',
-        'invalid_email__email']
+    search_fields = ['id', 'source_url', 'category', 'sub_category', 'title',
+        'reference_no', 'description', 'email_str', 'company_name',
+        'company_address', 'product_info_html']
     ordering = ['harvested'] + comadm.standard_ordering
     show_full_result_count = True
     
@@ -214,10 +210,9 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'generated',
         'status', 'sub_status', 'gender', 'free_email', 'mx_found']
-    search_fields = ['id', 'import_job__description', 'email_str', 'status',
-        'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
-        'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean',
-        'email__email', 'invalid_email__email', 'did_you_mean_email__email']
+    search_fields = ['id', 'email_str', 'status', 'sub_status', 'account',
+        'domain', 'first_name', 'last_name', 'gender', 'free_email',
+        'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
     ordering = ['email_str']
     show_full_result_count = True
     
@@ -245,9 +240,8 @@ class ChemicalBookSupplierAdmin(admin.ModelAdmin):
         'corporate_site_url', 'nationality', 'email', 'invalid_email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested']
-    search_fields = ['id', 'import_job__description', 'source_url',
-        'company_name', 'internal_url', 'telephone', 'email_str',
-        'corporate_site_url', 'nationality']
+    search_fields = ['id', 'source_url', 'company_name', 'internal_url',
+        'telephone', 'email_str', 'corporate_site_url', 'nationality']
     ordering = ['harvested']
     show_full_result_count = True
 
