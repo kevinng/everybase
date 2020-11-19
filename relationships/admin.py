@@ -96,7 +96,7 @@ class EmailAdmin(admin.ModelAdmin):
 class InvalidEmailAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['email', 'import_job']
-    list_editable = comadm.standard_list_editable + ['email', 'import_job']
+    list_editable = comadm.standard_list_editable + ['email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job']
     search_fields = ['id', 'email', 'import_job__description']
