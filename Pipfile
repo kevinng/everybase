@@ -19,8 +19,8 @@ boto3 = "*"
 httpie = "*"
 djangorestframework = "*"
 django-extensions = "*"
-json-lines = "*"
 django-filter = "*"
+jsonlines = "*"
 
 [requires]
 python_version = "3.7"
