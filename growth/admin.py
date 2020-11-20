@@ -93,8 +93,6 @@ class ChemicalClusterOfSingaporeProductAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
         'source_url', 'company_name', 'product']
-    list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
-        'company_name', 'product']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested']
     search_fields = ['id', 'source_url', 'company_name', 'product']
