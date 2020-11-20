@@ -12,7 +12,7 @@ class GmassCampaignResult(Standard):
         db_index=True
     )
     email_address = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
@@ -195,7 +195,7 @@ class ChemicalClusterOfSingaporeCompany(Standard):
         db_index=True
     )
     email_str = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
@@ -231,7 +231,7 @@ class ChemicalClusterOfSingaporeCompany(Standard):
         db_index=True
     )
     executive_email_str = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
@@ -404,7 +404,7 @@ class Fibre2FashionBuyingOffer(Standard):
         blank=True
     )
     email_str = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
@@ -489,7 +489,7 @@ class Fibre2FashionSellingOffer(Standard):
         blank=True
     )
     email_str = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
@@ -553,7 +553,7 @@ class ZeroBounceResult(Standard):
     )
 
     email_str = models.CharField(
-        max_length=100,
+        max_length=400,
         null=False,
         blank=False,
         db_index=True
@@ -738,7 +738,7 @@ class ChemicalBookSupplier(Standard):
         db_index=True
     )
     email_str = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
@@ -857,13 +857,13 @@ class LookChemSupplier(Standard):
         db_index=True
     )
     email_str = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
     )
     website = models.CharField(
-        max_length=100,
+        max_length=300,
         null=True,
         blank=True,
         db_index=True
@@ -992,31 +992,31 @@ class WorldOfChemicalsSupplier(Standard):
         db_index=True
     )
     coy_email = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
     )
     coy_owner_email = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
     )
     coy_alt_email = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
     )
     coy_alt_email_2 = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
     )
     coy_alt_email_3 = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
@@ -1156,13 +1156,13 @@ class OKChemBuyingRequest(Standard):
         db_index=True
     )
     email = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
     )
     domain = models.CharField(
-        max_length=100,
+        max_length=400,
         null=True,
         blank=True,
         db_index=True
