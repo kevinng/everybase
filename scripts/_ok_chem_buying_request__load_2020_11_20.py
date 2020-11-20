@@ -12,7 +12,7 @@ def parse_row(row, import_job):
 
     request = OKChemBuyingRequest(
         import_job=import_job,
-        harvested=datetime.now(pytz.timezone('Asia/Singapore')),
+        harvested=datetime.now(pytz.timezone('Asia/Singapore')), # Wrong
         name=helpers.clean_string(row.get('name', None)),
         country=helpers.clean_string(row.get('country', None)),
         request=helpers.clean_string(row.get('request', None)),

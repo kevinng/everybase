@@ -1,9 +1,9 @@
 import pytz
 from datetime import datetime
 from .shared import helpers
-from growth.models import WorldOfChemicalsSupplier
+from growth.models import ZeroBounceResult
 
-_NAMESPACE = 'world_of_chemicals_supplier'
+_NAMESPACE = 'zero_bounce_result'
 
 def parse_row(row, import_job):
 
@@ -26,7 +26,7 @@ def parse_row(row, import_job):
     (alt_email_3, invalid_alt_email_3) = helpers.record_email(coy_alt_email_3,
         import_job)
 
-    supplier = WorldOfChemicalsSupplier(
+    supplier = ZeroBounceResult(
         import_job=import_job,
         harvested=datetime.now(pytz.timezone('Asia/Singapore')), # Wrong
         source_url=helpers.clean_string(row.get('source_url', None)),

@@ -14,7 +14,7 @@ def parse_row(row, import_job):
 
     supplier = ChemicalBookSupplier(
         import_job=import_job,
-        harvested=datetime.now(pytz.timezone('Asia/Singapore')),
+        harvested=datetime.now(pytz.timezone('Asia/Singapore')), # Wrong
         source_url=helpers.clean_string(row.get('source_url', None)),
         company_name=helpers.clean_string(row.get('coy_name', None)),
         internal_url=helpers.clean_string(row.get('coy_internal_href', None)),

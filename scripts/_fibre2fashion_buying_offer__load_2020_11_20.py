@@ -14,7 +14,7 @@ def parse_row(row, import_job):
 
     offer = Fibre2FashionBuyingOffer(
         import_job=import_job,
-        harvested=datetime.now(pytz.timezone('Asia/Singapore')),
+        harvested=datetime.now(pytz.timezone('Asia/Singapore')), # Wrong
         source_url=helpers.clean_string(row.get('url', None)),
         category=helpers.clean_string(row.get('cat', None)),
         sub_category=helpers.clean_string(row.get('subcat', None)),

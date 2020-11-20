@@ -14,7 +14,7 @@ def parse_row(row, import_job):
 
     supplier = LookChemSupplier(
         import_job=import_job,
-        harvested=datetime.now(pytz.timezone('Asia/Singapore')),
+        harvested=datetime.now(pytz.timezone('Asia/Singapore')), # Wrong
         company_name=helpers.clean_string(row.get('coy_name', None)),
         contact_person=helpers.clean_string(row.get('contact_person', None)),
         street_address=helpers.clean_string(row.get('street_address', None)),

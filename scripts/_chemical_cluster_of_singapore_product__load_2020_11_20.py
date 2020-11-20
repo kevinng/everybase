@@ -9,7 +9,7 @@ def parse_row(row, import_job):
 
     product = ChemicalClusterOfSingaporeProduct(
         import_job=import_job,
-        harvested=datetime.now(pytz.timezone('Asia/Singapore')),
+        harvested=datetime.now(pytz.timezone('Asia/Singapore')), # Wrong
         source_url=helpers.clean_string(row.get('url', None)),
         company_name=helpers.clean_string(row.get('name', None)),
         product=helpers.clean_string(row.get('product', None))
