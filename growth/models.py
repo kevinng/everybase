@@ -207,7 +207,7 @@ class ChemicalClusterOfSingaporeCompany(Standard):
         db_index=True
     )
     address = models.CharField(
-        max_length=300,
+        max_length=500,
         null=False,
         blank=False,
         db_index=True
