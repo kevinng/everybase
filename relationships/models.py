@@ -295,7 +295,7 @@ class Email(Standard):
 
 class InvalidEmail(Standard):
     email = LowerCaseCharField(
-        max_length=100,
+        max_length=500,
         unique=True,
         null=False,
         blank=False,
