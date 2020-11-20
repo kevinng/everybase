@@ -51,7 +51,10 @@ def run():
         helpers.import_namespace(parse_row, _NAMESPACE)
     except Exception as e:
         traceback.print_exc()
-        os.listdir()
+        print('---')
+        print(os.listdir('./'))
+        print('---')
+        print(os.listdir('/'))
 
         # Update import job status
         import_job.status = 'failed'
