@@ -7,60 +7,42 @@ _NAMESPACE = 'zero_bounce_result'
 
 def parse_row(row, import_job):
 
-    coy_email = helpers.clean_string(row.get('coy_email', None))
-    (email, invalid_email) = helpers.record_email(coy_email, import_job)
+    email_str = helpers.clean_string(row.get('Email Address', None))
+    (email, invalid_email) = helpers.record_email(email_str, import_job)
 
-    coy_owner_email = helpers.clean_string(row.get('coy_owner_email', None))
-    (owner_email, invalid_owner_email) = helpers.record_email(
-        coy_owner_email, import_job)
+    did_you_mean = helpers.clean_string(row.get('ZB Did You Mean', None))
+    (did_you_mean_email, _) = helpers.record_email(did_you_mean, import_job)
 
-    coy_alt_email = helpers.clean_string(row.get('coy_alt_email', None))
-    (alt_email, invalid_alt_email) = helpers.record_email(coy_alt_email,
-        import_job)
+    free_email = True if helpers.clean_string(row.get('ZB Free Email', None)) \
+        == 'true' else False
 
-    coy_alt_email_2 = helpers.clean_string(row.get('coy_alt_email_2', None))
-    (alt_email_2, invalid_alt_email_2) = helpers.record_email(coy_alt_email_2,
-        import_job)
+    mx_found = True if helpers.clean_string(row.get('ZB MX Found', None)) \
+        == 'true' else False
 
-    coy_alt_email_3 = helpers.clean_string(row.get('coy_alt_email_3', None))
-    (alt_email_3, invalid_alt_email_3) = helpers.record_email(coy_alt_email_3,
-        import_job)
+    sgtz = pytz.timezone('Asia/Singapore')
 
-    supplier = ZeroBounceResult(
+    result = ZeroBounceResult(
         import_job=import_job,
-        harvested=datetime.now(pytz.timezone('Asia/Singapore')), # Wrong
-        source_url=helpers.clean_string(row.get('source_url', None)),
-        coy_id=helpers.clean_string(row.get('coy_id', None)),
-        coy_name=helpers.clean_string(row.get('coy_name', None)),
-        coy_about_html=helpers.clean_string(row.get('coy_about_html', None)),
-        coy_pri_contact=helpers.clean_string(row.get('coy_pri_contact', None)),
-        coy_addr_1=helpers.clean_string(row.get('coy_addr_1', None)),
-        coy_addr_2=helpers.clean_string(row.get('coy_addr_2', None)),
-        coy_city=helpers.clean_string(row.get('coy_city', None)),
-        coy_state=helpers.clean_string(row.get('coy_state', None)),
-        coy_country=helpers.clean_string(row.get('coy_country', None)),
-        coy_postal=helpers.clean_string(row.get('coy_postal', None)),
-        coy_phone=helpers.clean_string(row.get('coy_phone', None)),
-        coy_phone_2=helpers.clean_string(row.get('coy_phone_2', None)),
-        coy_email=coy_email,
-        coy_owner_email=coy_owner_email,
-        coy_alt_email=coy_alt_email,
-        coy_alt_email_2=coy_alt_email_2,
-        coy_alt_email_3=coy_alt_email_3,
-        coy_website=helpers.clean_string(row.get('coy_website', None)),
+        generated=datetime(2020, 3, 9, tzinfo=sgtz),
+        email_str=email_str,
+        status=helpers.clean_string(row.get('ZB Status', None)),
+        sub_status=helpers.clean_string(row.get('ZB Sub Status', None)),
+        account=helpers.clean_string(row.get('ZB Account', None)),
+        domain=helpers.clean_string(row.get('ZB Domain', None)),
+        first_name=helpers.clean_string(row.get('ZB First Name', None)),
+        last_name=helpers.clean_string(row.get('ZB Last Name', None)),
+        gender=helpers.clean_string(row.get('ZB Gender', None)),
+        free_email=free_email,
+        mx_found=mx_found,
+        mx_record=helpers.clean_string(row.get('ZB MX Record', None)),
+        smtp_provider=helpers.clean_string(row.get('ZB SMTP Provider', None)),
+        did_you_mean=did_you_mean,
         email=email,
-        owner_email=owner_email,
-        alt_email=alt_email,
-        alt_email_2=alt_email_2,
-        alt_email_3=alt_email_3,
         invalid_email=invalid_email,
-        invalid_owner_email=invalid_owner_email,
-        invalid_alt_email=invalid_alt_email,
-        invalid_alt_email_2=invalid_alt_email_2,
-        invalid_alt_email_3=invalid_alt_email_3
+        did_you_mean_email=did_you_mean_email
     )
-    supplier.full_clean()
-    supplier.save()
+    result.full_clean()
+    result.save()
     
 def run():
     helpers.load(parse_row, _NAMESPACE)
