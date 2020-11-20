@@ -1,6 +1,7 @@
 import os
 import boto3
 import pytz
+import traceback
 from datetime import datetime
 from .shared import helpers
 from common.models import ImportJob
@@ -44,13 +45,21 @@ def run():
         supplier.full_clean()
         supplier.save()
 
+    failed = False
+
     try:
         helpers.import_namespace(parse_row, _NAMESPACE)
-    except:
+    except Exception as e:
+        traceback.print_exc()
+        print(e)
+
         # Update import job status
         import_job.status = 'failed'
         import_job.save()
 
-    # Update import job status
-    import_job.status = 'succeeded'
-    import_job.save()
+        failed = True
+
+    if failed == False:
+        # Update import job status
+        import_job.status = 'succeeded'
+        import_job.save()
