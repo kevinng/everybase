@@ -155,14 +155,10 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
 @admin.register(mod.Fibre2FashionSellingOffer)
 class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['import_job', 'harvested',
-        'source_url', 'category', 'sub_category', 'title', 'reference_no',
-        'description', 'email_str', 'company_name', 'company_address',
-        'product_info_html', 'email', 'invalid_email']
-    list_editable = comadm.standard_list_editable + ['harvested',
-        'source_url', 'category', 'sub_category', 'title', 'reference_no',
-        'description', 'email_str', 'company_name', 'company_address',
-        'product_info_html', 'email', 'invalid_email']
+    list_display = comadm.standard_list_display + ['email', 'invalid_email',
+        'import_job', 'harvested', 'source_url', 'category', 'sub_category',
+        'title', 'reference_no', 'description', 'email_str', 'company_name',
+        'company_address', 'product_info_html']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
         'category', 'sub_category']
