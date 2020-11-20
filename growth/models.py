@@ -213,7 +213,7 @@ class ChemicalClusterOfSingaporeCompany(Standard):
         db_index=True
     )
     nature_of_business = models.CharField(
-        max_length=100,
+        max_length=500,
         null=True,
         blank=True,
         db_index=True
