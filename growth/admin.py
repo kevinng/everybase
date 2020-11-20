@@ -264,25 +264,16 @@ class LookChemSupplierAdmin(admin.ModelAdmin):
 @admin.register(mod.WorldOfChemicalsSupplier)
 class WorldOfChemicalsSupplierAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['id', 'import_job',
-        'harvested', 'source_url', 'coy_id', 'coy_name', 'coy_about_html',
-        'coy_pri_contact', 'coy_addr_1', 'coy_addr_2', 'coy_city', 'coy_state',
-        'coy_country', 'coy_postal', 'coy_phone', 'coy_phone_2', 'coy_email',
-        'coy_owner_email', 'coy_alt_email', 'coy_alt_email_2',
-        'coy_alt_email_3', 'coy_website', 'email', 'owner_email', 'alt_email',
-        'alt_email_2', 'alt_email_3', 'invalid_email', 'invalid_owner_email',
-        'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
-    list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
+    list_display = comadm.standard_list_display + ['email', 'owner_email',
+        'alt_email', 'alt_email_2', 'alt_email_3', 'invalid_email',
+        'invalid_owner_email', 'invalid_alt_email', 'invalid_alt_email_2',
+        'invalid_alt_email_3', 'import_job', 'harvested', 'source_url',
         'coy_id', 'coy_name', 'coy_about_html', 'coy_pri_contact', 'coy_addr_1',
         'coy_addr_2', 'coy_city', 'coy_state', 'coy_country', 'coy_postal',
         'coy_phone', 'coy_phone_2', 'coy_email', 'coy_owner_email',
-        'coy_alt_email', 'coy_alt_email_2', 'coy_alt_email_3', 'coy_website',
-        'email', 'owner_email', 'alt_email', 'alt_email_2', 'alt_email_3',
-        'invalid_email', 'invalid_owner_email', 'invalid_alt_email',
-        'invalid_alt_email_2', 'invalid_alt_email_3']
+        'coy_alt_email', 'coy_alt_email_2', 'coy_alt_email_3', 'coy_website']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested', 'coy_city',
-        'coy_state', 'coy_country']
+    list_filter = comadm.standard_list_filter + ['harvested']
     search_fields = ['id', 'source_url', 'coy_id', 'coy_name', 'coy_about_html',
         'coy_pri_contact', 'coy_addr_1', 'coy_addr_2', 'coy_city', 'coy_state',
         'coy_country', 'coy_postal', 'coy_phone', 'coy_phone_2', 'coy_email',
