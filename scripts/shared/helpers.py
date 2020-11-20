@@ -94,81 +94,70 @@ def read_file(filename, namespace):
 
     return (None, None)
 
-def create_get_email(email, import_job_id=None):
+def create_get_email(email_str, import_job=None):
     """Attempt to get an existing email and return its primary key id, or create
     a new email if the input email does not exist.
 
     Args:
-        email: Email address to get, or create if it does not exist.
-        import_job: Import job to associate the creation of this email with.
+        email_str: Email address to get, or create if it does not exist.
+        import_job: Import job model reference to associate the creation of this email with.
 
     """
     try:
-        return Email.objects.get(email=email).id
+        return Email.objects.get(email=email_str)
     except Email.DoesNotExist:
         pass
 
-    # Will raise an uncaught DoesNotExist error if input import_job_id does
-    # not exist
-    i = ImportJob.objects.get(pk=import_job_id) \
-        if import_job_id is not None else None
-
     try:
-        e = Email(email=email, import_job=i)
-        e.full_clean() # Raise error if input email fails validation
+        e = Email(email=email_str, import_job=import_job)
+        e.full_clean() # Raise validation error if inputs invalid
         e.save()
-        return e.id
+        return e
     except ValidationError:
         return None
 
-def create_get_invalid_email(email, import_job_id=None):
+def create_get_invalid_email(email_str, import_job=None):
     """Attempt to get an existing invalid email and return its primary key id,
     or create a new invalid email if the input email does not exist.
 
     Args:
-        email: Invalid email address to get, or create if it does not exist.
-        import_job: Import job to associate the creation of this email with.
+        email_str: Invalid email address to get, or create if it does not exist.
+        import_job: Import job model reference to associate the creation of this invalid email with.
 
     """
     try:
-        return InvalidEmail.objects.get(email=email).id
+        return InvalidEmail.objects.get(email=email_str)
     except InvalidEmail.DoesNotExist:
         pass
-
-    # Will raise an uncaught DoesNotExist error if input import_job_id does
-    # not exist
-    i = ImportJob.objects.get(pk=import_job_id) \
-        if import_job_id is not None else None
     
     try:
-        e = InvalidEmail(email=email, import_job=i)
-        e.full_clean() # Raise error if input email fails validation
+        e = InvalidEmail(email=email_str, import_job=import_job)
+        e.full_clean() # Raise validation error if inputs invalid
         e.save()
-        return e.id
+        return e
     except ValidationError:
         return None
 
-def record_email(email, import_job_id=None):
-    """Record email as either an email or an invalid email.
+def record_email(email_str, import_job=None):
+    """Record email as either an email or an invalid-email.
 
     Args:
-        email: Email to record.
-        import_job_id: ID of the import job to associate this email with.
+        email_str: Email to record.
+        import_job: Import job model reference to associate this email with.
 
     Returns:
-        (<email ID or None>, <invalid email ID or None>)
+        (<email model reference>, <invalid-email model reference or None>)
     """
-    if email is None or email == '':
-        print('None or empty email found')
+    if email_str is None or email_str == '':
         return (None, None)
 
-    email_id = create_get_email(email, import_job_id)
+    email = create_get_email(email_str, import_job)
 
-    invalid_email_id = None
-    if email_id is None:
-        invalid_email_id = create_get_invalid_email(email, import_job_id)
+    invalid_email = None
+    if email is None:
+        invalid_email = create_get_invalid_email(email_str, import_job)
 
-    return (email_id, invalid_email_id)
+    return (email, invalid_email)
 
 def get_object_keys(prefix):
     # Get object keys with specified prefix
@@ -201,12 +190,20 @@ def download_object(key, filename, namespace):
     s3.download_file(AWS_STORAGE_BUCKET_NAME, key, full_path)
 
 def parse_objects(keys, parse_row, namespace):
+    log_file = os.path.join(namespace,
+        f'{inspect.currentframe().f_code.co_name}.log')
+
     for key in keys:
+        print(f'Parsing {key}...')
+
         filename = key.split('/')[-1] # Remove S3 folder paths in S3
         download_object(key, filename, namespace)
         (_, rows) = read_file(filename, namespace)
         for row in rows:
-            parse_row(row)
+            try:
+                parse_row(row)
+            except Exception as e:
+                log(log_file, row, e)
         delete_file(filename, namespace)
 
 def import_namespace(parse_row, namespace):
