@@ -239,17 +239,12 @@ class ChemicalBookSupplierAdmin(admin.ModelAdmin):
 @admin.register(mod.LookChemSupplier)
 class LookChemSupplierAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['id', 'harvested',
-        'company_name', 'contact_person', 'street_address', 'city',
+    list_display = comadm.standard_list_display + ['email', 'invalid_email',
+        'harvested', 'company_name', 'contact_person', 'street_address', 'city',
         'province_state', 'country_region', 'zip_code', 'business_type', 'tel',
-        'mobile', 'email_str', 'website', 'qq', 'email', 'invalid_email']
-    list_editable = comadm.standard_list_editable + ['harvested',
-        'company_name', 'contact_person', 'street_address', 'city',
-        'province_state', 'country_region', 'zip_code', 'business_type', 'tel',
-        'mobile', 'email_str', 'website', 'qq', 'email', 'invalid_email']
+        'mobile', 'email_str', 'website', 'qq']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested', 'city',
-        'province_state', 'country_region', 'business_type']
+    list_filter = comadm.standard_list_filter + ['harvested', 'business_type']
     search_fields = ['id', 'company_name', 'contact_person', 'street_address',
         'city', 'province_state', 'country_region', 'zip_code', 'business_type',
         'tel', 'mobile', 'email', 'website', 'qq']
