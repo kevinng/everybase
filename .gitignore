@@ -1,4 +1,6 @@
-raw_data/
+# Data files
+*.csv
+*.jl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
