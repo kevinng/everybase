@@ -232,12 +232,9 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
 @admin.register(mod.ChemicalBookSupplier)
 class ChemicalBookSupplierAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['import_job', 'harvested',
-        'source_url', 'company_name', 'internal_url', 'telephone', 'email_str',
-        'corporate_site_url', 'nationality', 'email', 'invalid_email']
-    list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
-        'company_name', 'internal_url', 'telephone', 'email_str',
-        'corporate_site_url', 'nationality', 'email', 'invalid_email']
+    list_display = comadm.standard_list_display + ['email', 'invalid_email',
+        'import_job', 'harvested', 'source_url', 'company_name', 'internal_url',
+        'telephone', 'email_str', 'corporate_site_url', 'nationality']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'harvested']
     search_fields = ['id', 'source_url', 'company_name', 'internal_url',
