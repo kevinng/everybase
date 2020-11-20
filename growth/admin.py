@@ -60,18 +60,14 @@ class GmassCampaign(admin.ModelAdmin):
 @admin.register(mod.ChemicalClusterOfSingaporeCompany)
 class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['import_job', 'harvested',
-        'source_url', 'company_name', 'telephone', 'fax', 'email_str',
-        'website', 'address', 'nature_of_business', 'executive_name',
-        'executive_telephone', 'executive_email_str', 'email', 'invalid_email',
-        'executive_email', 'invalid_executive_email']
-    list_editable = comadm.standard_list_editable + ['harvested', 'source_url',
-        'company_name', 'telephone', 'fax', 'email_str', 'website', 'address',
-        'nature_of_business', 'executive_name', 'executive_telephone',
+    list_display = comadm.standard_list_display + ['email_str',
         'executive_email_str', 'email', 'invalid_email', 'executive_email',
-        'invalid_executive_email']
+        'invalid_executive_email', 'import_job', 'harvested', 'source_url',
+        'company_name', 'telephone', 'fax', 'website', 'address',
+        'nature_of_business', 'executive_name', 'executive_telephone']
+    list_editable = comadm.standard_list_editable
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested']
+    list_filter = comadm.standard_list_filter + ['harvested', 'import_job']
     search_fields = ['id', 'source_url', 'company_name',
         'telephone', 'fax', 'email_str', 'website', 'address',
         'nature_of_business', 'executive_name', 'executive_telephone',
