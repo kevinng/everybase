@@ -211,3 +211,31 @@ def import_namespace(parse_row, namespace):
     prefix = f'{_DATA_TRANSFER_REMOTE_PATH}/{namespace}/'
     keys = get_object_keys(prefix)
     parse_objects(keys, parse_row, namespace)
+
+def load(parse_row, namespace):
+    # New import job
+    import_job = ImportJob(
+        status='started',
+        description=f'Namespace: {namespace}'
+    )
+    import_job.save()
+
+    # Preset import job for parse_row function
+    preset_parse_row = lambda row: parse_row(row, import_job)
+
+    failed = False
+    try:
+        import_namespace(preset_parse_row, namespace)
+    except Exception:
+        traceback.print_exc()
+
+        # Update import job status
+        import_job.status = 'failed'
+        import_job.save()
+
+        failed = True
+
+    if failed == False:
+        # Update import job status
+        import_job.status = 'succeeded'
+        import_job.save()
