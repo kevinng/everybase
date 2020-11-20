@@ -1,5 +1,3 @@
-import os
-import boto3
 import pytz
 from datetime import datetime
 from .shared import helpers
