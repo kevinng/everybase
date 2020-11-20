@@ -55,6 +55,8 @@ def run():
         print(os.listdir('./'))
         print('---')
         print(os.listdir('/'))
+        print('---')
+        print(os.listdir('./scripts'))
 
         # Update import job status
         import_job.status = 'failed'
