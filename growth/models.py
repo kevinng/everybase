@@ -212,11 +212,9 @@ class ChemicalClusterOfSingaporeCompany(Standard):
         blank=False,
         db_index=True
     )
-    nature_of_business = models.CharField(
-        max_length=500,
+    nature_of_business = models.TextField(
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
     executive_name = models.CharField(
         max_length=100,
