@@ -203,6 +203,7 @@ def parse_objects(keys, parse_row, namespace):
             try:
                 parse_row(row)
             except Exception as e:
+                traceback.print_exc()
                 log(log_file, row, e)
         delete_file(filename, namespace)
 
