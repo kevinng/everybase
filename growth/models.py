@@ -11,6 +11,12 @@ class GmassCampaignResult(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    gmass_campaign_identifier = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     email_address = models.CharField(
         max_length=400,
         null=True,
@@ -104,6 +110,7 @@ class GmassCampaignResult(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+
     gmass_campaign = models.ForeignKey(
         'GmassCampaign',
         related_name='gmass_campaign_results',
