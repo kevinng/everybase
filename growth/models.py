@@ -168,7 +168,6 @@ class GmassCampaign(Standard):
         db_index=True
     )
 
-
     def __str__(self):
         return f'({self.campaign_id}, {self.sent} [{self.id}])'
 
