@@ -139,13 +139,13 @@ class GmassCampaign(Standard):
         db_index=True
     )
     subject = models.CharField(
-        max_length=100,
+        max_length=200,
         null=True,
         blank=True,
         db_index=True
     )
     spreadsheet = models.CharField(
-        max_length=100,
+        max_length=200,
         null=True,
         blank=True,
         db_index=True
