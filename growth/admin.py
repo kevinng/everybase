@@ -47,7 +47,7 @@ class GmassCampaign(admin.ModelAdmin):
     list_filter = ['sent'] + comadm.standard_list_filter
     search_fields = ['id', 'campaign_id', 'subject', 'spreadsheet',
         'report_url']
-    ordering = comadm.standard_ordering
+    ordering = ['sent'] + comadm.standard_ordering
     show_full_result_count = True
     
     # Details page settings
