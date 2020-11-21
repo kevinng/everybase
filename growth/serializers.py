@@ -15,7 +15,7 @@ class GmassCampaignSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.GmassCampaign
         fields = ['id'] + standard_fieldnames + ['import_job', 'campaign_id',
-            'sent', 'subject', 'spreadsheet']
+            'sent', 'subject', 'spreadsheet', 'report_url']
 
 class ChemicalClusterOfSingaporeCompanySerializer(serializers.ModelSerializer):
     class Meta:

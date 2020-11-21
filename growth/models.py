@@ -151,6 +151,12 @@ class GmassCampaign(Standard):
         blank=True,
         db_index=True
     )
+    report_url = models.URLField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
 
     def __str__(self):
         return f'({self.campaign_id}, {self.sent} [{self.id}])'
