@@ -42,10 +42,11 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
 class GmassCampaign(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['sent', 'campaign_id',
-        'subject', 'spreadsheet']
+        'subject', 'spreadsheet', 'report_url']
     list_per_page = 50
     list_filter = ['sent'] + comadm.standard_list_filter
-    search_fields = ['id', 'campaign_id', 'subject', 'spreadsheet']
+    search_fields = ['id', 'campaign_id', 'subject', 'spreadsheet',
+        'report_url']
     ordering = comadm.standard_ordering
     show_full_result_count = True
     
