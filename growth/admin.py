@@ -42,7 +42,8 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
 class GmassCampaign(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['sent', 'campaign_id',
-        'subject', 'spreadsheet', 'report_url']
+        'subject', 'spreadsheet', 'report_url', 'report_last_accessed',
+        'report_accessed_count']
     list_per_page = 50
     list_filter = ['sent'] + comadm.standard_list_filter
     search_fields = ['id', 'campaign_id', 'subject', 'spreadsheet',
@@ -55,7 +56,7 @@ class GmassCampaign(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields + ['id']
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['sent', 'campaign_id', 'subject', 'spreadsheet',
-            'report_url']})]
+            'report_url', 'report_last_accessed', 'report_accessed_count']})]
 
 @admin.register(mod.ChemicalClusterOfSingaporeCompany)
 class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
