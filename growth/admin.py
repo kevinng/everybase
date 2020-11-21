@@ -54,7 +54,8 @@ class GmassCampaign(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields + ['id']
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': ['sent', 'campaign_id', 'subject', 'spreadsheet']})]
+        [(None, {'fields': ['sent', 'campaign_id', 'subject', 'spreadsheet',
+            'report_url']})]
 
 @admin.register(mod.ChemicalClusterOfSingaporeCompany)
 class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
