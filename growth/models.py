@@ -156,6 +156,17 @@ class GmassCampaign(Standard):
         blank=False,
         db_index=True
     )
+    report_last_accessed = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    report_accessed_count = models.IntegerField(
+        null=False,
+        blank=False,
+        default=0,
+        db_index=True
+    )
 
 
     def __str__(self):
