@@ -137,6 +137,7 @@ class GmassCampaign(Standard):
         max_length=100,
         null=False,
         blank=False,
+        unique=True,
         db_index=True
     )
     subject = models.CharField(
