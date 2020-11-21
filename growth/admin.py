@@ -65,7 +65,6 @@ class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
         'invalid_executive_email', 'import_job', 'harvested', 'source_url',
         'company_name', 'telephone', 'fax', 'website', 'address',
         'nature_of_business', 'executive_name', 'executive_telephone']
-    list_editable = comadm.standard_list_editable
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['harvested', 'import_job']
     search_fields = ['id', 'source_url', 'company_name',
