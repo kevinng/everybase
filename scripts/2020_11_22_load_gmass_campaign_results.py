@@ -1,11 +1,16 @@
 import requests
-import csv
-import os
+from growth.models import GmassCampaign
 from growth.tasks import load_gmass_campaign_results
 
 def run():
-    id = '63d7d845-a384-4f24-8cdd-aad77f1e360f'
-    load_gmass_campaign_results(id)
+    # id = '63d7d845-a384-4f24-8cdd-aad77f1e360f'
+    # load_gmass_campaign_results.delay(id)
+    # load_gmass_campaign_results(id)
+
+    campaign = GmassCampaign.objects.get(pk=3)
+    load_gmass_campaign_results(campaign)
+
+
     
 
     
