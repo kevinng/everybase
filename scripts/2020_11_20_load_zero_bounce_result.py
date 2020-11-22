@@ -2,16 +2,17 @@ import pytz
 from datetime import datetime
 from .shared import helpers
 from growth.models import ZeroBounceResult
+from relationships.shared import record_email
 
 _NAMESPACE = 'zero_bounce_result'
 
 def parse_row(row, import_job):
 
     email_str = helpers.clean_string(row.get('Email Address', None))
-    (email, invalid_email) = helpers.record_email(email_str, import_job)
+    (email, invalid_email) = record_email(email_str, import_job)
 
     did_you_mean = helpers.clean_string(row.get('ZB Did You Mean', None))
-    (did_you_mean_email, _) = helpers.record_email(did_you_mean, import_job)
+    (did_you_mean_email, _) = record_email(did_you_mean, import_job)
 
     free_email = True if helpers.clean_string(row.get('ZB Free Email', None)) \
         == 'true' else False

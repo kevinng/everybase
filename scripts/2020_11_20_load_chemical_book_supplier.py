@@ -2,6 +2,7 @@ import pytz
 from datetime import datetime
 from .shared import helpers
 from growth.models import ChemicalBookSupplier
+from relationships.shared import record_email
 
 _NAMESPACE = 'chemical_book_supplier'
 
@@ -10,7 +11,7 @@ def parse_row(row, import_job):
     email_str = helpers.clean_string(row.get('coy_email', None))
 
     # Record this email
-    (email, invalid_email) = helpers.record_email(email_str, import_job)
+    (email, invalid_email) = record_email(email_str, import_job)
 
     supplier = ChemicalBookSupplier(
         import_job=import_job,

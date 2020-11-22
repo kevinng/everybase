@@ -2,6 +2,7 @@ import pytz
 from datetime import datetime
 from .shared import helpers
 from growth.models import ChemicalClusterOfSingaporeCompany
+from relationships.shared import record_email
 
 _NAMESPACE = 'chemical_cluster_of_singapore_company'
 
@@ -9,11 +10,11 @@ def parse_row(row, import_job):
 
     # Email
     email_str = helpers.clean_string(row.get('email', None))
-    (email, invalid_email) = helpers.record_email(email_str, import_job)
+    (email, invalid_email) = record_email(email_str, import_job)
 
     # Executive email
     executive_email_str = helpers.clean_string(row.get('executive_email', None))
-    (executive_email, invalid_executive_email) = helpers.record_email(
+    (executive_email, invalid_executive_email) = record_email(
         executive_email_str, import_job)
 
     company = ChemicalClusterOfSingaporeCompany(

@@ -2,28 +2,29 @@ import pytz
 from datetime import datetime
 from .shared import helpers
 from growth.models import WorldOfChemicalsSupplier
+from relationships.shared import record_email
 
 _NAMESPACE = 'world_of_chemicals_supplier'
 
 def parse_row(row, import_job):
 
     coy_email = helpers.clean_string(row.get('coy_email', None))
-    (email, invalid_email) = helpers.record_email(coy_email, import_job)
+    (email, invalid_email) = record_email(coy_email, import_job)
 
     coy_owner_email = helpers.clean_string(row.get('coy_owner_email', None))
-    (owner_email, invalid_owner_email) = helpers.record_email(
+    (owner_email, invalid_owner_email) = record_email(
         coy_owner_email, import_job)
 
     coy_alt_email = helpers.clean_string(row.get('coy_alt_email', None))
-    (alt_email, invalid_alt_email) = helpers.record_email(coy_alt_email,
+    (alt_email, invalid_alt_email) = record_email(coy_alt_email,
         import_job)
 
     coy_alt_email_2 = helpers.clean_string(row.get('coy_alt_email_2', None))
-    (alt_email_2, invalid_alt_email_2) = helpers.record_email(coy_alt_email_2,
+    (alt_email_2, invalid_alt_email_2) = record_email(coy_alt_email_2,
         import_job)
 
     coy_alt_email_3 = helpers.clean_string(row.get('coy_alt_email_3', None))
-    (alt_email_3, invalid_alt_email_3) = helpers.record_email(coy_alt_email_3,
+    (alt_email_3, invalid_alt_email_3) = record_email(coy_alt_email_3,
         import_job)
 
     supplier = WorldOfChemicalsSupplier(
