@@ -211,6 +211,3 @@ en_formats.DATETIME_FORMAT = 'd M Y H:i:s'
 
 # Increase maximum number of fields allowable in a form for bulk upload
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000
-
-# Gmass Campaign results file cache folder path
-_GMASS_CAMPAIGN_RESULTS_CACHE_PATH = './growth/cache/gmass_campaign_result'

@@ -1,2 +1,0 @@
-This file is necessary to check in empty directories to Git.
-This directory must exist for scripts to run properly.
