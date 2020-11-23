@@ -211,3 +211,7 @@ en_formats.DATETIME_FORMAT = 'd M Y H:i:s'
 
 # Increase maximum number of fields allowable in a form for bulk upload
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000
+
+# System timestamps keys - of timestamps to track in the system
+SYSTS_LAST_UPDATED_GMASS_BOUNCES = 'GMASS_BOUNCES'
+SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES = 'GMASS_UNSUBSCRIBES'
