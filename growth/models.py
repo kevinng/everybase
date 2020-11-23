@@ -17,19 +17,19 @@ class GmassEmailStatus(Standard):
         db_index=True
     )
 
-    email = models.ForeignKey(
+    email = models.OneToOneField(
         'relationships.Email',
-        related_name='gmass_email_statuses',
-        related_query_name='gmass_email_statuses',
+        related_name='gmass_email_status',
+        related_query_name='gmass_email_status',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
-    invalid_email = models.ForeignKey(
+    invalid_email = models.OneToOneField(
         'relationships.InvalidEmail',
-        related_name='gmass_email_statuses',
-        related_query_name='gmass_email_statuses',
+        related_name='gmass_email_status',
+        related_query_name='gmass_email_status',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
