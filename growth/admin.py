@@ -2,6 +2,27 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
+@admin.register(mod.GmassEmailStatus)
+class GmassEmailStatusAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + ['bounced', 'bounce_reason',
+        'unsubscribed', 'email', 'invalid_email']
+    list_per_page = 50
+    list_filter = ['bounced', 'unsubscribed'] + comadm.standard_list_filter
+    search_fields = ['id', 'bounce_reason', 'email__email',
+        'invalid_email__email']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+    
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['bounced', 'bounce_reason', 'unsubscribed', 'email',
+            'invalid_email']})
+    ]
+    autocomplete_fields = ['email', 'invalid_email']
+
 @admin.register(mod.GmassCampaignResult)
 class GmassCampaignResultAdmin(admin.ModelAdmin):
     # List page settings
