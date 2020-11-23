@@ -192,6 +192,7 @@ class SystemTimestamp(Standard):
         max_length=100,
         null=False,
         blank=False,
+        unique=True,
         db_index=True
     )
     timestamp = models.DateTimeField(
