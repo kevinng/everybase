@@ -22,6 +22,20 @@ def clean_string(value):
 
     return value.strip()
 
+def clean_integer(value):
+    if value is None:
+        return None
+
+    return int(value)
+
+def clean_boolean(value, true, false):
+    if value == true:
+        return True
+    elif value == false:
+        return False
+    
+    return None
+
 def append_row(path, row):
     with open(path, 'a') as file:
         file.write(row)
