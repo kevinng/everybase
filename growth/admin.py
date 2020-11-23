@@ -8,21 +8,13 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + ['import_job',
         'email_address', 'first_name', 'last_name', 'name_1', 'opens', 'clicks',
         'replied', 'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
-        'bounce_reason', 'gmail_response', 'email', 'invalid_email',
-        'gmass_campaign']
-    list_editable = comadm.standard_list_editable + ['import_job',
-        'email_address', 'first_name', 'last_name', 'name_1', 'opens', 'clicks',
-        'replied', 'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
-        'bounce_reason', 'gmail_response', 'email', 'invalid_email',
-        'gmass_campaign']
+        'gmail_response', 'email', 'invalid_email', 'gmass_campaign']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['import_job', 'replied',
         'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit']
     search_fields = ['id', 'email_address', 'first_name', 'last_name', 'name_1',
-        'opens', 'clicks', 'replied', 'unsubscribed', 'bounced', 'blocked',
-        'over_gmail_limit', 'bounce_reason', 'gmail_response',
-        'gmass_campaign__campaign_id', 'gmass_campaign__subject',
-        'gmass_campaign__spreadsheet']
+        'replied', 'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
+        'gmail_response']
     ordering = comadm.standard_ordering
     show_full_result_count = True
     
@@ -42,8 +34,7 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
 class GmassCampaign(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['sent', 'campaign_id',
-        'subject', 'spreadsheet', 'report_url', 'report_last_accessed',
-        'report_accessed_count']
+        'subject', 'spreadsheet', 'report_url', 'report_last_accessed']
     list_per_page = 50
     list_filter = ['sent'] + comadm.standard_list_filter
     search_fields = ['id', 'campaign_id', 'subject', 'spreadsheet',
@@ -56,7 +47,7 @@ class GmassCampaign(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields + ['id']
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['sent', 'campaign_id', 'subject', 'spreadsheet',
-            'report_url', 'report_last_accessed', 'report_accessed_count']})]
+            'report_url', 'report_last_accessed']})]
 
 @admin.register(mod.ChemicalClusterOfSingaporeCompany)
 class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
