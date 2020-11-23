@@ -187,4 +187,17 @@ class ImportJob(Standard):
     def __str__(self):
         return f'({self.created}, {self.status} [{self.id}])'
 
+class SystemTimestamp(Standard):
+    key = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    timestamp = models.DateTimeField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
 # --- End: Other models ---

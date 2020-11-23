@@ -1,6 +1,31 @@
 from django.db import models
 from common.models import Standard, Choice, short_text
 
+class GmassEmailStatus(Standard):
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='gmass_email_status',
+        related_query_name='gmass_email_status',
+        null=False,
+        blank=False,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    bounced = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    bounce_reason = models.TextField(
+        null=True,
+        blank=True
+    )
+    unsubscribed = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
 class GmassCampaignResult(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
