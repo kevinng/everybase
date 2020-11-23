@@ -1,5 +1,5 @@
 from django.contrib import admin
-from common.models import short_text, Country, State, ImportJob
+from common.models import short_text, Country, State, ImportJob, SystemTimestamp
 
 # Fields for standard models
 
@@ -82,3 +82,19 @@ class ImportJobAdmin(admin.ModelAdmin):
     readonly_fields = ['id', 'created', 'updated']
     fieldsets = standard_fieldsets + [
         (None, {'fields': ['status', 'description']})]
+
+@admin.register(SystemTimestamp)
+class SystemTimestampAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display + ['key', 'timestamp']
+    list_editable = standard_list_editable
+    list_per_page = 50
+    search_fields = ['id', 'key', 'timestamp']
+    list_filter = ['key'] + standard_list_filter
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets + [
+        (None, {'fields': ['key', 'timestamp']})]
