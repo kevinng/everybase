@@ -6,12 +6,16 @@ import io
 import datetime
 import pytz
 
-from growth.models import GmassCampaignResult
 from celery import shared_task
 from scripts.shared import helpers
-from relationships.shared import record_email
 from django.core.exceptions import ValidationError
-from everybase.settings import TIME_ZONE
+
+from everybase.settings import (TIME_ZONE, SYSTS_LAST_UPDATED_GMASS_BOUNCES,
+    SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES)
+
+from relationships.shared import record_email
+from growth.models import GmassCampaignResult, GmassEmailStatus
+from common.models import SystemTimestamp
 
 def get_gmass_campaign_id(gmass_campaign):
     return gmass_campaign.report_url\
@@ -30,7 +34,7 @@ def load_gmass_account_unsubscribes(gmass_campaign):
 
     # Download CSV file as data (without materializing into file)
     download_url = \
-        f'https://www.gmass.co/gmass/DownloadCSV?C={id}&RT=ua'
+        f'https://www.gmass.co/gmass/downloadcsvaction?C={id}&RT=ua'
     data = requests.get(download_url).json()['data']
 
     # Parse CSV file in-memory with StringIO
@@ -51,15 +55,47 @@ def load_gmass_account_bounces(gmass_campaign):
 
     # Download CSV file as data (without materializing into file)
     download_url = \
-        f'https://www.gmass.co/gmass/DownloadCSV?C={id}&RT=ba'
+        f'https://www.gmass.co/gmass/downloadcsvaction?C={id}&RT=ba'
     data = requests.get(download_url).json()['data']
 
     # Parse CSV file in-memory with StringIO
     reader = csv.DictReader(io.StringIO(data))
 
-    print(reader.fieldnames)
+    # Create/update Gmass email bounce status
+    for row in reader:
+        email_address = row.get('EmailAddress', None)
+        (email, invalid_email) = record_email(email_address)
 
-    # TODO: to be implemented
+        bounce_reason = row.get('BounceReason', None)
+
+        try:
+            status = GmassEmailStatus.objects.get(
+                email=email,
+                invalid_email=invalid_email
+            )
+        except GmassEmailStatus.DoesNotExist:
+            status = GmassEmailStatus(
+                email=email,
+                invalid_email=invalid_email
+            )
+
+        status.bounced = True
+        status.bounce_reason = bounce_reason
+        status.full_clean()
+        status.save()
+
+    # Update last updated system timestamp
+    try:
+        timestamp = SystemTimestamp.objects.get(
+            key=SYSTS_LAST_UPDATED_GMASS_BOUNCES)
+    except SystemTimestamp.DoesNotExist:
+        timestamp = SystemTimestamp(
+            key=SYSTS_LAST_UPDATED_GMASS_BOUNCES)
+
+    sgtz = pytz.timezone(TIME_ZONE)
+    timestamp.timestamp = datetime.datetime.now(sgtz)
+    timestamp.full_clean()
+    timestamp.save()
 
 @shared_task
 def load_gmass_campaign_main_report(gmass_campaign):
@@ -131,4 +167,5 @@ def load_gmass_campaign_main_report(gmass_campaign):
     # Update Gmass campaign report last accessed timestamp
     sgtz = pytz.timezone(TIME_ZONE)
     gmass_campaign.report_last_accessed = datetime.datetime.now(sgtz)
+    gmass_campaign.full_clean()
     gmass_campaign.save()

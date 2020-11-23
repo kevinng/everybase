@@ -36,6 +36,14 @@ class GmassEmailStatus(Standard):
         db_index=True
     )
 
+    class Meta:
+        verbose_name = 'Gmass email status'
+        verbose_name_plural = 'Gmass email statuses'
+
+    def __str__(self):
+        email_str = self.email if self.email is not None else self.invalid_email
+        return f'({email_str} [{self.id}])'
+
 class GmassCampaignResult(Standard):
     import_job = models.ForeignKey(
         'common.ImportJob',
