@@ -75,10 +75,6 @@ class GmassCampaignResult(Standard):
         blank=True,
         db_index=True
     )
-    bounce_reason = models.TextField(
-        null=True,
-        blank=True
-    )
     gmail_response = models.CharField(
         max_length=100,
         null=True,
@@ -160,12 +156,6 @@ class GmassCampaign(Standard):
     report_last_accessed = models.DateTimeField(
         null=True,
         blank=True,
-        db_index=True
-    )
-    report_accessed_count = models.IntegerField(
-        null=False,
-        blank=False,
-        default=0,
         db_index=True
     )
 
