@@ -40,9 +40,40 @@ def load_gmass_account_unsubscribes(gmass_campaign):
     # Parse CSV file in-memory with StringIO
     reader = csv.DictReader(io.StringIO(data))
 
-    print(reader.fieldnames)
+    for row in reader:
+        email_or_domain = row.get('EmailAddressOrDomain', None)
 
-    # TODO: to be implemented
+        # Note: will be recorded as an invalid email if this is a domain and
+        # not an email (but this is rare).
+        (email, invalid_email) = record_email(email_or_domain)
+
+        try:
+            status = GmassEmailStatus.objects.get(
+                email=email,
+                invalid_email=invalid_email
+            )
+        except GmassEmailStatus.DoesNotExist:
+            status = GmassEmailStatus(
+                email=email,
+                invalid_email=invalid_email
+            )
+
+        status.unsubscribed = True
+        status.full_clean()
+        status.save()
+
+    # Update last updated system timestamp
+    try:
+        timestamp = SystemTimestamp.objects.get(
+            key=SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES)
+    except SystemTimestamp.DoesNotExist:
+        timestamp = SystemTimestamp(
+            key=SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES)
+
+    sgtz = pytz.timezone(TIME_ZONE)
+    timestamp.timestamp = datetime.datetime.now(sgtz)
+    timestamp.full_clean()
+    timestamp.save()
 
 @shared_task
 def load_gmass_account_bounces(gmass_campaign):
