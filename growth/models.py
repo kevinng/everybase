@@ -2,15 +2,6 @@ from django.db import models
 from common.models import Standard, Choice, short_text
 
 class GmassEmailStatus(Standard):
-    email = models.ForeignKey(
-        'relationships.Email',
-        related_name='gmass_email_status',
-        related_query_name='gmass_email_status',
-        null=False,
-        blank=False,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
     bounced = models.BooleanField(
         null=True,
         blank=True,
@@ -23,6 +14,25 @@ class GmassEmailStatus(Standard):
     unsubscribed = models.BooleanField(
         null=True,
         blank=True,
+        db_index=True
+    )
+
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='gmass_email_statuses',
+        related_query_name='gmass_email_statuses',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    invalid_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='gmass_email_statuses',
+        related_query_name='gmass_email_statuses',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
         db_index=True
     )
 
