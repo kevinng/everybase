@@ -165,6 +165,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+# Celery-related configurations
 
 if 'REDIS_URL' in os.environ:
     CELERY_BROKER_URL = config('REDIS_URL')
@@ -176,6 +177,15 @@ else:
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULE = {
+    'schedule-load-gmass-campaign-main-report': {
+        'task': 'growth.tasks.schedule_load_gmass_campaign_main_report',
+        'schedule': 43200.0
+    }
+}
+
+# Email-related configurations
 
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT')

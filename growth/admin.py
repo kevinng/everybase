@@ -45,8 +45,8 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': ['email_address', 'first_name',
             'last_name', 'name_1', 'opens', 'clicks', 'replied', 'unsubscribed',
-            'bounced', 'blocked', 'over_gmail_limit', 'bounce_reason',
-            'invalid_email', 'gmail_response', 'email', 'gmass_campaign']
+            'bounced', 'blocked', 'over_gmail_limit', 'invalid_email',
+            'gmail_response', 'email', 'gmass_campaign']
         })
     ]
     autocomplete_fields = ['email', 'gmass_campaign']

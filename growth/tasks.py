@@ -48,20 +48,18 @@ def load_gmass_account_unsubscribes(gmass_campaign):
         # not an email (but this is rare).
         (email, invalid_email) = record_email(email_or_domain)
 
-        try:
-            status = GmassEmailStatus.objects.get(
-                email=email,
-                invalid_email=invalid_email
-            )
-        except GmassEmailStatus.DoesNotExist:
-            status = GmassEmailStatus(
-                email=email,
-                invalid_email=invalid_email
-            )
+        status, _ = GmassEmailStatus.objects.get_or_create(
+            email=email,
+            invalid_email=invalid_email
+        )
 
         status.unsubscribed = True
-        status.full_clean()
-        status.save()
+
+        try:
+            status.full_clean()
+            status.save()
+        except ValidationError:
+            traceback.print_exc()
 
     # Update last updated system timestamp
     try:
