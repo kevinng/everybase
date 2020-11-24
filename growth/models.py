@@ -428,6 +428,7 @@ class Fibre2FashionBuyingOffer(Standard):
         max_length=300,
         null=True,
         blank=True,
+        unique=True,
         db_index=True
     )
     category = models.CharField(
@@ -519,6 +520,7 @@ class Fibre2FashionSellingOffer(Standard):
         max_length=300,
         null=True,
         blank=True,
+        unique=True,
         db_index=True
     )
     category = models.CharField(
