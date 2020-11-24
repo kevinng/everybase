@@ -6,7 +6,7 @@ import io
 import datetime
 import pytz
 
-from celery import shared_task
+from celery import Celery, shared_task
 from scripts.shared import helpers
 from django.core.exceptions import ValidationError
 
@@ -14,8 +14,10 @@ from everybase.settings import (TIME_ZONE, SYSTS_LAST_UPDATED_GMASS_BOUNCES,
     SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES)
 
 from relationships.shared import record_email
-from growth.models import GmassCampaignResult, GmassEmailStatus
+from growth.models import GmassCampaign, GmassCampaignResult, GmassEmailStatus
 from common.models import SystemTimestamp
+
+app = Celery()
 
 def get_gmass_campaign_id(gmass_campaign):
     return gmass_campaign.report_url\
@@ -23,7 +25,6 @@ def get_gmass_campaign_id(gmass_campaign):
         .split('&')[0]\
         .split('=')[1]
 
-@shared_task
 def load_gmass_account_unsubscribes(gmass_campaign):
     """
     Note: we provide the campaign ID though we're requesting for account-level
@@ -75,7 +76,6 @@ def load_gmass_account_unsubscribes(gmass_campaign):
     timestamp.full_clean()
     timestamp.save()
 
-@shared_task
 def load_gmass_account_bounces(gmass_campaign):
     """
     Note: we provide the campaign ID though we're requesting for account-level
@@ -128,7 +128,6 @@ def load_gmass_account_bounces(gmass_campaign):
     timestamp.full_clean()
     timestamp.save()
 
-@shared_task
 def load_gmass_campaign_main_report(gmass_campaign):
 
     id = get_gmass_campaign_id(gmass_campaign)
@@ -141,51 +140,27 @@ def load_gmass_campaign_main_report(gmass_campaign):
     # Parse CSV file in-memory with StringIO
     reader = csv.DictReader(io.StringIO(data))
 
-    row_created_count = 0
-    row_updated_count = 0
     for row in reader:
         email_address = helpers.clean_string(row.get('emailaddress', None))
 
         (email, invalid_email) = record_email(email_address)
 
-        first_name = helpers.clean_string(row.get('firstname', None))
-        last_name = helpers.clean_string(row.get('lastname', None))
-        name_1 = helpers.clean_string(row.get('name1', None))
-        opens = helpers.clean_integer(row.get('Opens', None))
-        clicks = helpers.clean_integer(row.get('Clicks', None))
-        replied = helpers.clean_string(row.get('Replied', None))
-        unsubscribed = helpers.clean_string(row.get('Unsubscribed', None))
-        bounced = helpers.clean_string(row.get('Bounced', None))
-        blocked = helpers.clean_string(row.get('Blocked', None))
-        over_gmail_limit = helpers.clean_string(row.get('OverGmailLimit', None))
-        gmail_response = helpers.clean_string(row.get('GmailResponse', None))
+        result, _ = GmassCampaignResult.objects.get_or_create(
+            email_address=email_address,
+            gmass_campaign=gmass_campaign
+        )
 
-        # Get result for this campaign with its email (an email is unique for
-        # a campaign)
-        try:
-            result = GmassCampaignResult.objects.get(
-                email_address=email_address,
-                gmass_campaign=gmass_campaign
-            )
-            row_updated_count += 1
-        except GmassCampaignResult.DoesNotExist:
-            result = GmassCampaignResult(
-                email_address=email_address,
-                gmass_campaign=gmass_campaign
-            )
-            row_created_count += 1
-
-        result.first_name = first_name
-        result.last_name = last_name
-        result.name_1 = name_1
-        result.opens = opens
-        result.clicks = clicks
-        result.replied = replied
-        result.unsubscribed = unsubscribed
-        result.bounced = bounced
-        result.blocked = blocked
-        result.over_gmail_limit = over_gmail_limit
-        result.gmail_response = gmail_response
+        result.first_name = helpers.clean_string(row.get('firstname', None))
+        result.last_name = helpers.clean_string(row.get('lastname', None))
+        result.name_1 = helpers.clean_string(row.get('name1', None))
+        result.opens = helpers.clean_integer(row.get('Opens', None))
+        result.clicks = helpers.clean_integer(row.get('Clicks', None))
+        result.replied = helpers.clean_string(row.get('Replied', None))
+        result.unsubscribed = helpers.clean_string(row.get('Unsubscribed', None))
+        result.bounced = helpers.clean_string(row.get('Bounced', None))
+        result.blocked = helpers.clean_string(row.get('Blocked', None))
+        result.over_gmail_limit = helpers.clean_string(row.get('OverGmailLimit', None))
+        result.gmail_response = helpers.clean_string(row.get('GmailResponse', None))
         result.email = email
         result.invalid_email = invalid_email
         
@@ -200,3 +175,15 @@ def load_gmass_campaign_main_report(gmass_campaign):
     gmass_campaign.report_last_accessed = datetime.datetime.now(sgtz)
     gmass_campaign.full_clean()
     gmass_campaign.save()
+
+@app.task
+def load_all_gmass_campaign_main_report():
+    """Load Gmass campaign results younger than 14 days old.
+    """
+
+    # Process rows younger than 14 days old
+    campaigns = GmassCampaign.objects.filter(
+        created__gte=datetime.datetime.now() - datetime.timedelta(days=14))
+
+    for campaign in campaigns:
+        load_gmass_campaign_main_report(campaign)
