@@ -27,7 +27,7 @@ def get_gmass_campaign_id(gmass_campaign):
 
 def load_gmass_account_unsubscribes(gmass_campaign):
     """
-    Note: we provide the campaign ID though we're requesting for account-level
+    Note: we provide the campaign though we're requesting for account-level
     unsubscribes.
     """
 
@@ -78,7 +78,7 @@ def load_gmass_account_unsubscribes(gmass_campaign):
 
 def load_gmass_account_bounces(gmass_campaign):
     """
-    Note: we provide the campaign ID though we're requesting for account-level
+    Note: we provide the campaign though we're requesting for account-level
     bounces.
     """
 
