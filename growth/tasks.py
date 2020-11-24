@@ -182,7 +182,7 @@ def update_gmass_data():
 
     for campaign in campaigns:
         print('Updating ' + str(campaign.id) + '...')
-        pritnt('\tUpdating main report...')
+        print('\tUpdating main report...')
         load_gmass_campaign_main_report(campaign)
         print('\tUpdating bounces...')
         load_gmass_account_bounces(campaign)
