@@ -147,7 +147,7 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
         'invalid_email', 'import_job', 'harvested', 'source_url', 'category',
         'sub_category', 'title', 'reference_no', 'description', 'email_str',
         'product_info_html']
-    list_per_page = 2000
+    list_per_page = 50
     list_filter = ['import_job', 'harvested', 'category', 'sub_category'] + \
         comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'category', 'sub_category', 'title',
