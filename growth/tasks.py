@@ -178,11 +178,11 @@ def update_gmass_data():
     # Process only campaigns sent less than 14 days ago
     sgtz = pytz.timezone(TIME_ZONE)
     campaigns = GmassCampaign.objects.filter(
-        created__gte=datetime.datetime.now(sgtz) - datetime.timedelta(days=14))\
+        sent__gte=datetime.datetime.now(sgtz) - datetime.timedelta(days=14))\
             .order_by('updated')
 
     for campaign in campaigns:
-        print('Updating ' + str(campaign.id) + '...')
+        print(f'Updating Gmass campaign {campaign.id}...')
         print('\tUpdating main report...')
         load_gmass_campaign_main_report(campaign)
         print('\tUpdating bounces...')
