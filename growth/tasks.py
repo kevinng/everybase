@@ -6,7 +6,7 @@ import io
 import datetime
 import pytz
 
-from celery import Celery, shared_task
+from celery import Celery
 from scripts.shared import helpers
 from django.core.exceptions import ValidationError
 
