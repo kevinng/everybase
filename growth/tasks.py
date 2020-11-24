@@ -171,8 +171,8 @@ def load_gmass_campaign_main_report(gmass_campaign):
     gmass_campaign.save()
 
 @app.task
-def load_all_gmass_campaign_main_report():
-    """Load Gmass campaign results younger than 14 days old.
+def update_gmass_data():
+    """Update Gmass data for campaigns younger than 14 days old.
     """
 
     # Process rows younger than 14 days old
@@ -181,3 +181,5 @@ def load_all_gmass_campaign_main_report():
 
     for campaign in campaigns:
         load_gmass_campaign_main_report(campaign)
+        load_gmass_account_bounces(campaign)
+        load_gmass_account_unsubscribes(campaign)

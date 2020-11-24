@@ -180,8 +180,8 @@ CELERY_TASK_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULE = {
     'schedule-load-gmass-campaign-main-report': {
-        'task': 'growth.tasks.schedule_load_gmass_campaign_main_report',
-        'schedule': 43200.0
+        'task': 'growth.tasks.update_gmass_data',
+        'schedule': 43200.0 # 12-hour interval
     }
 }
 
