@@ -189,3 +189,4 @@ def update_gmass_data():
         load_gmass_account_bounces(campaign)
         print('\tUpdating subscribes...')
         load_gmass_account_unsubscribes(campaign)
+        print('\tDone')

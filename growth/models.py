@@ -462,6 +462,12 @@ class Fibre2FashionBuyingOffer(Standard):
         blank=True,
         db_index=True
     )
+    company_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     product_info_html = models.TextField(
         null=True,
         blank=True
