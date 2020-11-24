@@ -201,6 +201,10 @@ class GmassCampaign(Standard):
         blank=True,
         db_index=True
     )
+    description = models.TextField(
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return f'({self.campaign_id}, {self.sent} [{self.id}])'
