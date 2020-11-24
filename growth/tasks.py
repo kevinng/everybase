@@ -172,13 +172,13 @@ def load_gmass_campaign_main_report(gmass_campaign):
 
 @app.task
 def update_gmass_data():
-    """Update Gmass data for campaigns younger than 14 days old.
+    """Update Gmass data for campaigns sent less than 14 days ago
     """
 
-    # Process rows younger than 14 days old
+    # Process only campaigns sent less than 14 days ago
     sgtz = pytz.timezone(TIME_ZONE)
     campaigns = GmassCampaign.objects.filter(
-        created__gte=datetime.datetime.now(sgtz) - datetime.timedelta(days=14))
+        sent__gte=datetime.datetime.now(sgtz) - datetime.timedelta(days=14))
 
     for campaign in campaigns:
         load_gmass_campaign_main_report(campaign)
