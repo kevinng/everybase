@@ -31,8 +31,8 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
         'replied', 'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
         'gmail_response', 'email', 'invalid_email', 'gmass_campaign']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['import_job', 'replied',
-        'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit']
+    list_filter = ['import_job', 'replied', 'unsubscribed', 'bounced',
+        'blocked', 'over_gmail_limit'] + comadm.standard_list_filter
     search_fields = ['id', 'email_address', 'first_name', 'last_name', 'name_1',
         'replied', 'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
         'gmail_response']
