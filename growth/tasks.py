@@ -94,26 +94,22 @@ def load_gmass_account_bounces(gmass_campaign):
 
     # Create/update Gmass email bounce status
     for row in reader:
-        email_address = row.get('EmailAddress', None)
+        email_address = helpers.clean_string(row.get('EmailAddress', None))
         (email, invalid_email) = record_email(email_address)
 
-        bounce_reason = row.get('BounceReason', None)
-
-        try:
-            status = GmassEmailStatus.objects.get(
-                email=email,
-                invalid_email=invalid_email
-            )
-        except GmassEmailStatus.DoesNotExist:
-            status = GmassEmailStatus(
-                email=email,
-                invalid_email=invalid_email
-            )
+        status, _ = GmassEmailStatus.objects.get_or_create(
+            email=email,
+            invalid_email=invalid_email
+        )
 
         status.bounced = True
-        status.bounce_reason = bounce_reason
-        status.full_clean()
-        status.save()
+        status.bounce_reason = helpers.clean_string(row.get('BounceReason', None))
+
+        try:
+            status.full_clean()
+            status.save()
+        except ValidationError:
+            traceback.print_exc()
 
     # Update last updated system timestamp
     try:
