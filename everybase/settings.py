@@ -220,7 +220,7 @@ LEAD_SIGN_UP_NOTIFICATION_LIST = ['kevin@everybase.co']
 en_formats.DATETIME_FORMAT = 'd M Y H:i:s'
 
 # Increase maximum number of fields allowable in a form for bulk upload
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000000
 
 # System timestamps keys - of timestamps to track in the system
 SYSTS_LAST_UPDATED_GMASS_BOUNCES = 'GMASS_BOUNCES'
