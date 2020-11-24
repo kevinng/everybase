@@ -79,7 +79,7 @@ class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
         'company_name', 'telephone', 'fax', 'website', 'address',
         'nature_of_business', 'executive_name', 'executive_telephone']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested', 'import_job']
+    list_filter = ['harvested', 'import_job'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'company_name',
         'telephone', 'fax', 'email_str', 'website', 'address',
         'nature_of_business', 'executive_name', 'executive_telephone',
@@ -106,7 +106,7 @@ class ChemicalClusterOfSingaporeProductAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
         'source_url', 'company_name', 'product']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested']
+    list_filter = ['harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'company_name', 'product']
     ordering = ['harvested'] + comadm.standard_ordering
     show_full_result_count = True
@@ -126,7 +126,7 @@ class ChemicalClusterOfSingaporeServiceAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
         'source_url', 'company_name', 'service']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested']
+    list_filter = ['harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'company_name', 'service']
     ordering = ['harvested'] + comadm.standard_ordering
     show_full_result_count = True
@@ -148,8 +148,8 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
         'sub_category', 'title', 'reference_no', 'description', 'email_str',
         'product_info_html']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
-        'category', 'sub_category']
+    list_filter = ['import_job', 'harvested', 'category', 'sub_category'] + \
+        comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'category', 'sub_category', 'title',
         'reference_no', 'description', 'email_str', 'product_info_html']
     ordering = ['harvested'] + comadm.standard_ordering
@@ -172,8 +172,8 @@ class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
         'title', 'reference_no', 'description', 'email_str', 'company_name',
         'company_address', 'product_info_html']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['import_job', 'harvested',
-        'category', 'sub_category']
+    list_filter = ['import_job', 'harvested', 'category', 'sub_category'] + \
+        comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'category', 'sub_category', 'title',
         'reference_no', 'description', 'email_str', 'company_name',
         'company_address', 'product_info_html']
@@ -198,8 +198,8 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
         'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['import_job', 'generated',
-        'status', 'sub_status', 'gender', 'free_email', 'mx_found']
+    list_filter = ['import_job', 'generated', 'status', 'sub_status', 'gender',
+        'free_email', 'mx_found'] + comadm.standard_list_filter
     search_fields = ['id', 'email_str', 'status', 'sub_status', 'account',
         'domain', 'first_name', 'last_name', 'gender', 'free_email',
         'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
@@ -226,7 +226,7 @@ class ChemicalBookSupplierAdmin(admin.ModelAdmin):
         'import_job', 'harvested', 'source_url', 'company_name', 'internal_url',
         'telephone', 'email_str', 'corporate_site_url', 'nationality']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['import_job', 'harvested']
+    list_filter = ['import_job', 'harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'company_name', 'internal_url',
         'telephone', 'email_str', 'corporate_site_url', 'nationality']
     ordering = ['harvested']
@@ -250,7 +250,7 @@ class LookChemSupplierAdmin(admin.ModelAdmin):
         'province_state', 'country_region', 'zip_code', 'business_type', 'tel',
         'mobile', 'email_str', 'website', 'qq']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested', 'business_type']
+    list_filter = ['harvested', 'business_type'] + comadm.standard_list_filter
     search_fields = ['id', 'company_name', 'contact_person', 'street_address',
         'city', 'province_state', 'country_region', 'zip_code', 'business_type',
         'tel', 'mobile', 'email', 'website', 'qq']
@@ -279,7 +279,7 @@ class WorldOfChemicalsSupplierAdmin(admin.ModelAdmin):
         'coy_phone', 'coy_phone_2', 'coy_email', 'coy_owner_email',
         'coy_alt_email', 'coy_alt_email_2', 'coy_alt_email_3', 'coy_website']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['harvested']
+    list_filter = ['harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'coy_id', 'coy_name', 'coy_about_html',
         'coy_pri_contact', 'coy_addr_1', 'coy_addr_2', 'coy_city', 'coy_state',
         'coy_country', 'coy_postal', 'coy_phone', 'coy_phone_2', 'coy_email',
@@ -310,7 +310,7 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + ['request', 'email', 'domain',
         'import_job', 'harvested', 'name', 'country']
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['import_job', 'harvested']
+    list_filter = ['import_job', 'harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source', 'name', 'country', 'request', 'email']
     ordering = ['harvested']
     show_full_result_count = True
