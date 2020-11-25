@@ -19,7 +19,7 @@ def parse_row(row, import_job):
     offer, created = Fibre2FashionBuyingOffer.objects.get_or_create(
         source_url=helpers.clean_string(row.get('url', None)),
         defaults={
-            'harvested': datetime(2020, 3, 3, tzinfo=sgtz) # Set to right date/time
+            'harvested': datetime(2020, 11, 24, tzinfo=sgtz) # Set to right date/time
         }
     )
 
