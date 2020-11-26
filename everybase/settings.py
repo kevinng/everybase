@@ -193,6 +193,10 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
 EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
+# System email sender
+EMAIL_SYS_SENDER_EMAIL_ADDRESS = 'system@everybase.co'
+# System email receivers
+EMAIL_SYS_RECEIVER_EMAIL_ADDRESSES = ['system@everybase.co']
 
 if DEBUG == False:
     # Force HTTPS only

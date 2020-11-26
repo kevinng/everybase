@@ -1,4 +1,5 @@
 from celery import shared_task
+from django.core.mail import send_mail
 
 @shared_task
 def send_email(
@@ -14,7 +15,7 @@ def send_email(
     Boolean: True if successful
     """
     
-    return django.core.mail.send_mail(
+    return send_mail(
         subject,
         message,
         from_email,

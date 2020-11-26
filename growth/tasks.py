@@ -11,11 +11,13 @@ from scripts.shared import helpers
 from django.core.exceptions import ValidationError
 
 from everybase.settings import (TIME_ZONE, SYSTS_LAST_UPDATED_GMASS_BOUNCES,
-    SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES)
+    SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES, EMAIL_SYS_SENDER_EMAIL_ADDRESS,
+    EMAIL_SYS_RECEIVER_EMAIL_ADDRESSES)
 
 from relationships.shared import record_email
 from growth.models import GmassCampaign, GmassCampaignResult, GmassEmailStatus
 from common.models import SystemTimestamp
+from common.tasks import send_email
 
 app = Celery()
 
@@ -174,19 +176,28 @@ def load_gmass_campaign_main_report(gmass_campaign):
 def update_gmass_data():
     """Update Gmass data for campaigns sent less than 14 days ago
     """
-
     # Process only campaigns sent less than 14 days ago
     sgtz = pytz.timezone(TIME_ZONE)
+    now = datetime.datetime.now(sgtz)
     campaigns = GmassCampaign.objects.filter(
-        sent__gte=datetime.datetime.now(sgtz) - datetime.timedelta(days=14))\
+        sent__gte=now - datetime.timedelta(days=14))\
             .order_by('updated')
 
+    start_msg = f'{str(now)} - Background task, update_gmass_data(), started'
+    send_email.delay(
+        start_msg, start_msg,
+        EMAIL_SYS_SENDER_EMAIL_ADDRESS,
+        EMAIL_SYS_RECEIVER_EMAIL_ADDRESSES
+    )
+
     for campaign in campaigns:
-        print(f'Updating Gmass campaign {campaign.id}...')
-        print('\tUpdating main report...')
         load_gmass_campaign_main_report(campaign)
-        print('\tUpdating bounces...')
         load_gmass_account_bounces(campaign)
-        print('\tUpdating subscribes...')
         load_gmass_account_unsubscribes(campaign)
-        print('\tDone')
+
+    end_msg = f'{str(now)} - Background task, update_gmass_data(), ended'
+    send_email.delay(
+        end_msg, end_msg,
+        EMAIL_SYS_SENDER_EMAIL_ADDRESS,
+        EMAIL_SYS_RECEIVER_EMAIL_ADDRESSES
+    )
