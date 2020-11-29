@@ -183,9 +183,10 @@ def update_gmass_data():
         sent__gte=now - datetime.timedelta(days=14))\
             .order_by('updated')
 
-    start_msg = f'{str(now)} - Background task, update_gmass_data(), started'
+    start_subject = f'{str(now)} - Background task, update_gmass_data(), started'
+    start_body = f'Time started: {str(now)}'
     send_email.delay(
-        start_msg, start_msg,
+        start_subject, start_body,
         EMAIL_SYS_SENDER_EMAIL_ADDRESS,
         EMAIL_SYS_RECEIVER_EMAIL_ADDRESSES
     )
@@ -194,10 +195,13 @@ def update_gmass_data():
         load_gmass_campaign_main_report(campaign)
         load_gmass_account_bounces(campaign)
         load_gmass_account_unsubscribes(campaign)
-
-    end_msg = f'{str(now)} - Background task, update_gmass_data(), ended'
+    
+    end_time = datetime.datetime.now(sgtz)
+    end_subject = f'{str(now)} - Background task, update_gmass_data(), ended'
+    end_body = f'Number of campaigns processed: {str(len(campaigns))}\n' + \
+        f'Time ended: {str(end_time)}'
     send_email.delay(
-        end_msg, end_msg,
+        end_subject, end_body,
         EMAIL_SYS_SENDER_EMAIL_ADDRESS,
         EMAIL_SYS_RECEIVER_EMAIL_ADDRESSES
     )
