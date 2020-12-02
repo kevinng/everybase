@@ -9,6 +9,7 @@ import pytz
 from celery import Celery
 from scripts.shared import helpers
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
 
 from everybase.settings import (TIME_ZONE, SYSTS_LAST_UPDATED_GMASS_BOUNCES,
     SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES, EMAIL_SYS_SENDER_EMAIL_ADDRESS,
@@ -178,13 +179,21 @@ def update_gmass_data():
     """
     # Process only campaigns sent less than 14 days ago
     sgtz = pytz.timezone(TIME_ZONE)
-    now = datetime.datetime.now(sgtz)
+    start_time = datetime.datetime.now(sgtz)
     campaigns = GmassCampaign.objects.filter(
-        sent__gte=now - datetime.timedelta(days=14))\
+        sent__gte=start_time-datetime.timedelta(days=14))\
             .order_by('updated')
 
-    start_subject = f'{str(now)} - Background task, update_gmass_data(), started'
-    start_body = f'Time started: {str(now)}'
+    et_path = lambda template: 'growth/email/' + template
+
+    start_subject = render_to_string(
+        et_path('update_gmass_data_start_subject.txt'),
+        {'timestamp': str(start_time)}
+    )
+    start_body = render_to_string(
+        et_path('update_gmass_data_start_body.txt'),
+        {}
+    )
     send_email.delay(
         start_subject, start_body,
         EMAIL_SYS_SENDER_EMAIL_ADDRESS,
@@ -197,9 +206,14 @@ def update_gmass_data():
         load_gmass_account_unsubscribes(campaign)
     
     end_time = datetime.datetime.now(sgtz)
-    end_subject = f'{str(now)} - Background task, update_gmass_data(), ended'
-    end_body = f'Number of campaigns processed: {str(len(campaigns))}\n' + \
-        f'Time ended: {str(end_time)}'
+    end_subject = render_to_string(
+        et_path('update_gmass_data_end_subject.txt'),
+        {'timestamp': str(end_time)}
+    )
+    end_body = render_to_string(
+        et_path('update_gmass_data_end_body.txt'),
+        {'count': str(len(campaigns))}
+    )
     send_email.delay(
         end_subject, end_body,
         EMAIL_SYS_SENDER_EMAIL_ADDRESS,
