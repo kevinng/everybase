@@ -2,88 +2,6 @@ from django.db import models
 from django.contrib import admin
 import uuid
 
-# --- Start: Helper lambda for model field declarations ---
-
-# Foreign key
-fk = lambda klass, name=None, verbose_name=None, null=False, db_index=True: \
-    models.ForeignKey(
-    klass,
-    on_delete=models.PROTECT,
-    related_name=name,
-    related_query_name=name,
-    verbose_name=verbose_name,
-    null=null,
-    blank=null,
-    db_index=db_index
-)
-
-# Many-to-many
-m2m = lambda klass, name, blank=False, db_index=True: models.ManyToManyField(
-    klass,
-    related_name=name,
-    related_query_name=name,
-    blank=blank,
-    db_index=db_index
-)
-
-# Many-to-many through
-m2mt = lambda klass, thru, f1, f2, name, db_index=True: models.ManyToManyField(
-    klass,
-    through=thru,
-    through_fields=(f1, f2),
-    related_name=name,
-    related_query_name=name,
-    db_index=db_index
-)
-
-# Integer
-pintf = lambda verbose_name=None, null=False, db_index=True: models.\
-    PositiveIntegerField(verbose_name=verbose_name, null=null, blank=null,
-        db_index=db_index)
-
-# Text
-tf = lambda verbose_name=None, null=False: models.TextField(
-    verbose_name=verbose_name, null=null, blank=null)
-
-# Char
-cf = lambda verbose_name=None, null=False, max_length=100, db_index=True: \
-    models.CharField(verbose_name=verbose_name, max_length=max_length,
-        null=null, blank=null, db_index=db_index)
-
-# Float
-ff = lambda verbose_name=None, null=False, db_index=True: models.FloatField(
-    verbose_name=verbose_name, null=null, blank=null, db_index=db_index)
-
-# Datetime
-dtf = lambda verbose_name=None, null=False, default=None, db_index=True: \
-    models.DateTimeField( verbose_name=verbose_name, null=null, blank=null, \
-    default=default, db_index=db_index)
-
-dtf_now_add = lambda verbose_name=None, null=False, auto_now_add=True, \
-    db_index=True: models.DateTimeField(verbose_name=verbose_name, null=null, \
-    blank=null, auto_now_add=auto_now_add, db_index=db_index)
-
-dtf_now = lambda verbose_name=None, null=False, auto_now=True, db_index=True: \
-    models.DateTimeField(verbose_name=verbose_name, null=null, blank=null,
-    auto_now=auto_now, db_index=db_index)
-
-# URL
-
-url = lambda verbose_name=None, null=False, db_index=True: models.URLField(
-    verbose_name=verbose_name, null=null, blank=null, db_index=db_index)
-
-# Email
-
-eml = lambda verbose_name=None, null=False, db_index=True: models.EmailField(
-    verbose_name=verbose_name, null=null, blank=null, db_index=db_index)
-
-# UUID
-
-uid = lambda: models.UUIDField(unique=True, default=uuid.uuid4, editable=False,
-    db_index=True)
-
-# --- End: Helper lambda for model field declarations ---
-
 # --- Start: Helper functions ---
 
 def short_text(text, top_length=20, blank='-', backward=False):
@@ -111,9 +29,24 @@ class Standard(models.Model):
     """
     Abstract model with standard fields.
     """
-    created = dtf_now_add()
-    updated = dtf_now(null=True)
-    deleted = dtf(null=True)
+    created = models.DateTimeField(
+        null=False,
+        blank=False,
+        auto_now_add=True,
+        db_index=True
+    )
+    updated = models.DateTimeField(
+        null=True,
+        blank=True,
+        auto_now=True,
+        db_index=True
+    )
+    deleted = models.DateTimeField(
+        default=None,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     class Meta:
         abstract = True
@@ -124,11 +57,29 @@ class Choice(models.Model):
     """
     Abstract model for a choice model.
     """
-    name = cf(db_index=True)
-    details_md = tf('Details in Markdown', null=True)
+    name = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    details_md = models.TextField(
+        verbose_name='Details in Markdown',
+        null=True,
+        blank=True
+    )
 
-    programmatic_key = cf(null=True, db_index=True)
-    programmatic_details_md = tf('Programmatic details in Markdown', null=True)
+    programmatic_key = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    programmatic_details_md = models.TextField(
+        verbose_name='Programmatic details in Markdown',
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return '(%s [%d])' % (self.name, self.id)
@@ -155,13 +106,27 @@ class LowerCaseEmailField(models.EmailField):
 # --- Start: Common models ---
 
 class Country(Choice):
-    cc_tld = cf('CC TLD', null=True, db_index=True)
+    cc_tld = models.CharField(
+        verbose_name='CC TLD',
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     class Meta:
         verbose_name = 'Country'
         verbose_name_plural = 'Countries'
 
 class State(Choice):
-    country = fk('Country', 'states')
+    country = models.ForeignKey(
+        'Country',
+        on_delete=models.PROTECT,
+        related_name='states',
+        related_query_name='states',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
 # --- End: Common models ---
 
