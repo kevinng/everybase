@@ -1,5 +1,4 @@
 from django.db import models
-from common.models import fk, m2m, m2mt, tf, cf, dtf, pintf, eml, url
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
 
@@ -7,7 +6,11 @@ from common.models import (Standard, Choice, LowerCaseCharField,
 
 relationship_fieldnames = ['details_md']
 class Relationship(Standard):
-    details_md = tf('Details in Markdown')
+    details_md = models.TextField(
+        verbose_name='Details in Markdown',
+        null=False,
+        blank=False
+    )
 
     class Meta:
         abstract = True
@@ -22,10 +25,34 @@ class PersonLinkType(Choice):
         verbose_name_plural = 'Person-link types'
 
 class PersonLink(Relationship):
-    rtype = fk('PersonLinkType', 'person_link_relationships',
-        'Person-link relationship type')
-    person = fk('Person', 'person_link_relationships')
-    link = fk('Link', 'person_link_relationships')
+    rtype = models.ForeignKey(
+        'PersonLinkType',
+        on_delete=models.PROTECT,
+        related_name='person_link_relationships',
+        related_query_name='person_link_relationships',
+        verbose_name='Person-link relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'Person',
+        on_delete=models.PROTECT,
+        related_name='person_link_relationships',
+        related_query_name='person_link_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    link = models.ForeignKey(
+        'Link',
+        on_delete=models.PROTECT,
+        related_name='person_link_relationships',
+        related_query_name='person_link_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Person-link'
@@ -40,10 +67,34 @@ class PersonCompanyType(Choice):
         verbose_name_plural = 'Person-company types'
 
 class PersonCompany(Relationship):
-    rtype = fk('PersonCompanyType', 'person_company_relationships',
-        'Person-company relationship type')
-    person = fk('Person', 'persons')
-    company = fk('Company', 'companies')
+    rtype = models.ForeignKey(
+        'PersonCompanyType',
+        on_delete=models.PROTECT,
+        related_name='person_company_relationships',
+        related_query_name='person_company_relationships',
+        verbose_name='Person-company relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'Person',
+        on_delete=models.PROTECT,
+        related_name='persons',
+        related_query_name='persons',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        on_delete=models.PROTECT,
+        related_name='companies',
+        related_query_name='companies',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Person-company relationship'
@@ -58,10 +109,34 @@ class PersonAddressType(Choice):
         verbose_name_plural = 'Person-address types'
 
 class PersonAddress(Relationship):
-    rtype = fk('PersonAddressType', 'person_address_relationships',
-        'Person-address relationship type')
-    person = fk('Person', 'person_address_relationships')
-    address = fk('Address', 'person_address_relationships')
+    rtype = models.ForeignKey(
+        'PersonAddressType',
+        on_delete=models.PROTECT,
+        related_name='person_address_relationships',
+        related_query_name='person_address_relationships',
+        verbose_name='Person-address relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'Person',
+        on_delete=models.PROTECT,
+        related_name='person_address_relationships',
+        related_query_name='person_address_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    address = models.ForeignKey(
+        'Address',
+        on_delete=models.PROTECT,
+        related_name='person_address_relationships',
+        related_query_name='person_address_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Person-address relationship'
@@ -76,10 +151,34 @@ class PersonPhoneNumberType(Choice):
         verbose_name_plural = 'Person-phonenumber types'
 
 class PersonPhoneNumber(Relationship):
-    rtype = fk('PersonPhoneNumberType', 'person_phonenumber_relationships',
-        'Person-phonenumber relationship type')
-    person = fk('Person', 'person_phonenumber_relationships')
-    phone_number = fk('PhoneNumber', 'person_phonenumber_relationships')
+    rtype = models.ForeignKey(
+        'PersonPhoneNumberType',
+        on_delete=models.PROTECT,
+        related_name='person_phonenumber_relationships',
+        related_query_name='person_phonenumber_relationships',
+        verbose_name='Person-phonenumber relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'Person',
+        on_delete=models.PROTECT,
+        related_name='person_phonenumber_relationships',
+        related_query_name='person_phonenumber_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        on_delete=models.PROTECT,
+        related_name='person_phonenumber_relationships',
+        related_query_name='person_phonenumber_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Person-phonenumber relationship'
@@ -94,10 +193,34 @@ class PersonEmailType(Choice):
         verbose_name_plural = 'Person-email types'
 
 class PersonEmail(Relationship):
-    rtype = fk('PersonEmailType', 'person_email_relationships',
-        'Person-email relationship type')
-    person = fk('Person', 'person_email_relationships')
-    email = fk('Email', 'person_email_relationships')
+    rtype = models.ForeignKey(
+        'PersonEmailType',
+        on_delete=models.PROTECT,
+        related_name='person_email_relationships',
+        related_query_name='person_email_relationships',
+        verbose_name='Person-email relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'Person',
+        on_delete=models.PROTECT,
+        related_name='person_email_relationships',
+        related_query_name='person_email_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    email = models.ForeignKey(
+        'Email',
+        on_delete=models.PROTECT,
+        related_name='person_email_relationships',
+        related_query_name='person_email_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Person-email relationship'
@@ -116,10 +239,34 @@ class CompanyLinkType(Choice):
         verbose_name_plural = 'Company-link types'
 
 class CompanyLink(Relationship):
-    rtype = fk('CompanyLinkType', 'company_link_relationships',
-        'Company-link relationship type')
-    company = fk('Company', 'company_link_relationships')
-    link = fk('Link', 'company_link_relationships')
+    rtype = models.ForeignKey(
+        'CompanyLinkType',
+        on_delete=models.PROTECT,
+        related_name='company_link_relationships',
+        related_query_name='company_link_relationships',
+        verbose_name='Company-link relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        on_delete=models.PROTECT,
+        related_name='company_link_relationships',
+        related_query_name='company_link_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    link = models.ForeignKey(
+        'Link',
+        on_delete=models.PROTECT,
+        related_name='company_link_relationships',
+        related_query_name='company_link_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Company-link relationship'
@@ -134,10 +281,34 @@ class CompanyAddressType(Choice):
         verbose_name_plural = 'Company-address types'
 
 class CompanyAddress(Relationship):
-    rtype = fk('CompanyAddressType', 'company_address_relationships',
-        'Company-address relationship type')
-    company = fk('Company', 'company_address_relationships')
-    address = fk('Address', 'company_address_relationships')
+    rtype = models.ForeignKey(
+        'CompanyAddressType',
+        on_delete=models.PROTECT,
+        related_name='company_address_relationships',
+        related_query_name='company_address_relationships',
+        verbose_name='Company-address relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        on_delete=models.PROTECT,
+        related_name='company_address_relationships',
+        related_query_name='company_address_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    address = models.ForeignKey(
+        'Address',
+        on_delete=models.PROTECT,
+        related_name='company_address_relationships',
+        related_query_name='company_address_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Company-address relationship'
@@ -152,10 +323,34 @@ class CompanyPhoneNumberType(Choice):
         verbose_name_plural = 'Company-phonenumber types'
 
 class CompanyPhoneNumber(Relationship):
-    rtype = fk('CompanyPhoneNumberType', 'company_phonenumber_relationships',
-        'Company-phonenumber relationship type')
-    company = fk('Company', 'company_phonenumber_relationships')
-    phone_number = fk('PhoneNumber', 'company_phonenumber_relationships')
+    rtype = models.ForeignKey(
+        'CompanyPhoneNumberType',
+        on_delete=models.PROTECT,
+        related_name='company_phonenumber_relationships',
+        related_query_name='company_phonenumber_relationships',
+        verbose_name='Company-phonenumber relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        on_delete=models.PROTECT,
+        related_name='company_phonenumber_relationships',
+        related_query_name='company_phonenumber_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        on_delete=models.PROTECT,
+        related_name='company_phonenumber_relationships',
+        related_query_name='company_phonenumber_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Company-phonenumber relationship'
@@ -171,10 +366,34 @@ class CompanyEmailType(Choice):
         verbose_name_plural = 'Company-email types'
 
 class CompanyEmail(Relationship):
-    rtype = fk('CompanyEmailType', 'company_email_relationships',
-        'Company-email relationship type')
-    company = fk('Company', 'company_email_relationships')
-    email = fk('Email', 'company_email_relationships')
+    rtype = models.ForeignKey(
+        'CompanyEmailType',
+        on_delete=models.PROTECT,
+        related_name='company_email_relationships',
+        related_query_name='company_email_relationships',
+        verbose_name='Company-email relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        on_delete=models.PROTECT,
+        related_name='company_email_relationships',
+        related_query_name='company_email_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    email = models.ForeignKey(
+        'Email',
+        on_delete=models.PROTECT,
+        related_name='company_email_relationships',
+        related_query_name='company_email_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Company-email relationship'
@@ -188,45 +407,85 @@ class CompanyEmail(Relationship):
 # --- Start: Entities ---
 
 class Person(Standard):
-    given_name = cf(null=True)
-    family_name = cf(null=True)
-    country = fk('common.Country', 'persons', null=True)
-    state = fk('common.State', 'persons', null=True)
-    notes_md = tf('Notes in Markdown', null=True)
+    given_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    family_name = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='persons',
+        related_query_name='persons',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    state = models.ForeignKey(
+        'common.State',
+        on_delete=models.PROTECT,
+        related_name='persons',
+        related_query_name='persons',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    notes_md = models.TextField(
+        verbose_name='Notes in Markdown', 
+        null=True,
+        blank=True
+    )
 
-    companies = m2mt(
+    companies = models.ManyToManyField(
         'Company',
-        'PersonCompany',
-        'person', 'company',
-        'persons'
+        through='PersonCompany',
+        through_fields=('person', 'company'),
+        related_name='persons',
+        related_query_name='persons',
+        db_index=True
     )
 
-    emails = m2mt(
+    emails = models.ManyToManyField(
         'Email',
-        'PersonEmail',
-        'person', 'email',
-        'persons'
+        through='PersonEmail',
+        through_fields=('person', 'email'),
+        related_name='persons',
+        related_query_name='persons',
+        db_index=True
     )
 
-    phone_numbers = m2mt(
+    phone_numbers = models.ManyToManyField(
         'PhoneNumber',
-        'PersonPhoneNumber',
-        'person', 'phone_number',
-        'persons'
+        through='PersonPhoneNumber',
+        through_fields=('person', 'phone_number'),
+        related_name='persons',
+        related_query_name='persons',
+        db_index=True
     )
 
-    addresses = m2mt(
+    addresses = models.ManyToManyField(
         'Address',
-        'PersonAddress',
-        'person', 'address',
-        'persons'
+        through='PersonAddress',
+        through_fields=('person', 'address'),
+        related_name='persons',
+        related_query_name='persons',
+        db_index=True
     )
 
-    links = m2mt(
+    links = models.ManyToManyField(
         'Link',
-        'PersonLink',
-        'person', 'link',
-        'persons'
+        through='PersonLink',
+        through_fields=('person', 'link'),
+        related_name='persons',
+        related_query_name='persons',
+        db_index=True
     )
 
     def __str__(self):
@@ -234,36 +493,58 @@ class Person(Standard):
             [{self.id}])'
 
 class Company(Standard):
-    company_name = cf()
-    company_name_wo_postfix = cf()
-    notes_md = tf('Notes in Markdown', True)
+    company_name = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company_name_wo_postfix = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    notes_md = models.TextField(
+        verbose_name='Notes in Markdown',
+        null=True,
+        blank=True
+    )
 
-    emails = m2mt(
+    emails = models.ManyToManyField(
         'Email',
-        'CompanyEmail',
-        'company', 'email',
-        'companies'
+        through='CompanyEmail',
+        through_fields=('company', 'email'),
+        related_name='companies',
+        related_query_name='companies',
+        db_index=True
     )
 
-    phone_numbers = m2mt(
+    phone_numbers = models.ManyToManyField(
         'PhoneNumber',
-        'CompanyPhoneNumber',
-        'company', 'phone_number',
-        'companies'
+        through='CompanyPhoneNumber',
+        through_fields=('company', 'phone_number'),
+        related_name='companies',
+        related_query_name='companies',
+        db_index=True
     )
 
-    addresses = m2mt(
+    addresses = models.ManyToManyField(
         'Address',
-        'CompanyAddress',
-        'company', 'address',
-        'companies'
+        through='CompanyAddress',
+        through_fields=('company', 'address'),
+        related_name='companies',
+        related_query_name='companies',
+        db_index=True
     )
 
-    links = m2mt(
+    links = models.ManyToManyField(
         'Link',
-        'CompanyLink',
-        'company', 'link',
-        'companies'
+        through='CompanyLink',
+        through_fields=('company', 'link'),
+        related_name='companies',
+        related_query_name='companies',
+        db_index=True
     )
 
     class Meta:
@@ -315,19 +596,64 @@ class InvalidEmail(Standard):
         return f'({self.email} [{self.id}])'
 
 class Link(Standard):
-    verified = dtf(null=True)
-    link = url()
+    verified = models.DateTimeField(
+        null=True,
+        blank=True,
+        default=None,
+        db_index=True
+    )
+    link = models.URLField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     def __str__(self):
         return f'({self.link} [{self.id}])'
 
 class Address(Standard):
-    address_1 = cf()
-    address_2 = cf(null=True)
-    address_3 = cf(null=True)
-    country = fk('common.Country', 'addresses')
-    state = fk('common.State', 'addresses', null=True)
-    postal_code = cf(null=True)
+    address_1 = models.CharField(
+        max_length=100,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    address_2 = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    address_3 = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country = models.ForeignKey(
+        'common.Country',
+        related_name='addresses',
+        related_query_name='addresses',
+        null=False,
+        blank=False,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    state = models.ForeignKey(
+        'common.State',
+        related_name='addresses',
+        related_query_name='addresses',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    postal_code = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Address'
@@ -340,9 +666,23 @@ class PhoneNumberType(Choice):
     pass
 
 class PhoneNumber(Standard):
-    types = m2m('PhoneNumber', 'phone_numbers', True)
-    country_code = pintf()
-    national_number = pintf()
+    types = models.ManyToManyField(
+        'PhoneNumber',
+        related_name='phone_numbers',
+        related_query_name='phone_numbers',
+        blank=True,
+        db_index=True
+    )
+    country_code = models.PositiveIntegerField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    national_number = models.PositiveIntegerField(
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     def __str__(self):
         return f'(+{self.country_code} {self.national_number} [{self.id}])'
