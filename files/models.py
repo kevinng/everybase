@@ -1,12 +1,16 @@
 from django.db import models
-from common.models import fk, uid, dtf, cf, pintf, tf, m2mt, m2m
 from common.models import Standard, Choice
+import uuid
 
 # --- Start: Abstract classes ---
 
 relationship_fieldnames = ['details_md']
 class Relationship(Standard):
-    details_md = tf('Details in Markdown')
+    details_md = models.TextField(
+        'Details in Markdown',
+        null=False,
+        blank=False
+    )
 
     class Meta:
         abstract = True
@@ -21,10 +25,34 @@ class FileSupplyType(Choice):
         verbose_name_plural = 'File-supply types'
 
 class FileSupply(Relationship):
-    rtype = fk('FileSupplyType', 'file_supply_relationships',
-        'File-supply relationship type')
-    file = fk('File', 'file_supply_relationships')
-    supply = fk('leads.Supply', 'file_supply_relationships')
+    rtype = models.ForeignKey(
+        'FileSupplyType',
+        on_delete=models.PROTECT,
+        related_name='file_supply_relationships',
+        related_query_name='file_supply_relationships',
+        verbose_name='File-supply relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    file = models.ForeignKey(
+        'File',
+        on_delete=models.PROTECT,
+        related_name='file_supply_relationships',
+        related_query_name='file_supply_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    supply = models.ForeignKey(
+        'leads.Supply',
+        on_delete=models.PROTECT,
+        related_name='file_supply_relationships',
+        related_query_name='file_supply_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'File-supply relationship'
@@ -39,10 +67,34 @@ class FileDemandType(Choice):
         verbose_name_plural = 'File-demand types'
 
 class FileDemand(Relationship):
-    rtype = fk('FileDemandType', 'file_demand_relationships',
-        'File-demand relationship type')
-    file = fk('File', 'file_demand_relationships')
-    demand = fk('leads.Demand', 'file_demand_relationships')
+    rtype = models.ForeignKey(
+        'FileDemandType',
+        on_delete=models.PROTECT,
+        related_name='file_demand_relationships',
+        related_query_name='file_demand_relationships',
+        verbose_name='File-demand relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    file = models.ForeignKey(
+        'File',
+        on_delete=models.PROTECT,
+        related_name='file_demand_relationships',
+        related_query_name='file_demand_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    demand = models.ForeignKey(
+        'leads.Demand',
+        on_delete=models.PROTECT,
+        related_name='file_demand_relationships',
+        related_query_name='file_demand_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'File-demand relationship'
@@ -57,10 +109,34 @@ class FileIssueType(Choice):
         verbose_name_plural = 'File-issue types'
 
 class FileIssue(Relationship):
-    rtype = fk('FileIssueType', 'file_issue_relationships',
-        'File-issue relationship type')
-    file = fk('File', 'file_issue_relationships')
-    issue = fk('communication.Issue', 'file_issue_relationships')
+    rtype = models.ForeignKey(
+        'FileIssueType',
+        on_delete=models.PROTECT,
+        related_name='file_issue_relationships',
+        related_query_name='file_issue_relationships',
+        verbose_name='File-issue relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    file = models.ForeignKey(
+        'File',
+        on_delete=models.PROTECT,
+        related_name='file_issue_relationships',
+        related_query_name='file_issue_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    issue = models.ForeignKey(
+        'communication.Issue',
+        on_delete=models.PROTECT,
+        related_name='file_issue_relationships',
+        related_query_name='file_issue_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'File-issue relationship'
@@ -75,10 +151,34 @@ class FilePersonType(Choice):
         verbose_name_plural = 'File-person types'
 
 class FilePerson(Relationship):
-    rtype = fk('FilePersonType', 'file_person_relationships',
-        'File-person relationship type')
-    file = fk('File', 'file_person_relationships')
-    person = fk('relationships.Person', 'file_person_relationships')
+    rtype = models.ForeignKey(
+        'FilePersonType',
+        on_delete=models.PROTECT,
+        related_name='file_person_relationships',
+        related_query_name='file_person_relationships',
+        verbose_name='File-person relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    file = models.ForeignKey(
+        'File',
+        on_delete=models.PROTECT,
+        related_name='file_person_relationships',
+        related_query_name='file_person_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'relationships.Person',
+        on_delete=models.PROTECT,
+        related_name='file_person_relationships',
+        related_query_name='file_person_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'File-person relationship'
@@ -92,50 +192,115 @@ class FilePerson(Relationship):
 # --- Start: File classes ---
 
 class FileTag(Choice):
-    parent = fk('self', 'children', null=True)
+    parent = models.ForeignKey(
+        'self',
+        on_delete=models.PROTECT,
+        related_name='children',
+        related_query_name='children',
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
 class File(Standard):
-    upload_confirmed = dtf(null=True)
-    uuid = uid()
+    upload_confirmed = models.DateTimeField(
+        default=None,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False,
+        db_index=True
+    )
 
-    s3_bucket_name = cf(max_length=63, null=True)
-    s3_object_key = cf(max_length=1024, null=True)
-    s3_object_content_length = pintf(null=True)
-    s3_object_e_tag = cf(null=True)
-    s3_object_content_type = cf(null=True)
-    s3_object_last_modified = dtf(null=True)
+    s3_bucket_name = models.CharField(
+        max_length=63,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    s3_object_key = models.CharField(
+        max_length=1024,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    s3_object_content_length = models.PositiveIntegerField(
+        null=True, 
+        blank=True,
+        db_index=True
+    )
+    s3_object_e_tag = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    s3_object_content_type = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    s3_object_last_modified = models.DateTimeField(
+        default=None,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
-    details_md = tf('Details in Markdown', True)
+    details_md = models.TextField(
+        verbose_name='Details in Markdown',
+        null=True,
+        blank=True
+    )
 
-    supplies = m2mt(
+    supplies = models.ManyToManyField(
         'leads.Supply',
-        'FileSupply',
-        'file', 'supply',
-        'files'
+        through=FileSupply,
+        through_fields=('file', 'supply'),
+        related_name='files',
+        related_query_name='files',
+        db_index=True
     )
 
-    demands = m2mt(
+    demands = models.ManyToManyField(
         'leads.Demand',
-        'FileDemand',
-        'file', 'demand',
-        'files'
+        through=FileDemand,
+        through_fields=('file', 'demand'),
+        related_name='files',
+        related_query_name='files',
+        db_index=True
     )
 
-    issues = m2mt(
+    issues = models.ManyToManyField(
         'communication.Issue',
-        'FileIssue',
-        'file', 'issue',
-        'files'
+        through=FileIssue,
+        through_fields=('file', 'issue'),
+        related_name='files',
+        related_query_name='files',
+        db_index=True
     )
 
-    persons = m2mt(
+    persons = models.ManyToManyField(
         'relationships.Person',
-        'FilePerson',
-        'file', 'person',
-        'files'
+        through=FilePerson,
+        through_fields=('file', 'person'),
+        related_name='files',
+        related_query_name='files',
+        db_index=True
     )
 
-    tags = m2m('FileTag', 'files', blank=True)
+    tags = models.ManyToManyField(
+        'FileTag',
+        related_name='files',
+        related_query_name='files',
+        blank=True,
+        db_index=True
+    )
 
     def __str__(self):
         return f'({self.s3_bucket_name}, {self.s3_object_key} [{self.id}])'
