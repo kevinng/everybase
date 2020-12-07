@@ -22,6 +22,7 @@ django-extensions = "*"
 django-filter = "*"
 jsonlines = "*"
 pytz = "*"
+wagtail = "*"
 
 [requires]
 python_version = "3.7"
