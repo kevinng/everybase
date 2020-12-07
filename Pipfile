@@ -23,6 +23,7 @@ django-filter = "*"
 jsonlines = "*"
 pytz = "*"
 wagtail = "*"
+django-storages = "*"
 
 [requires]
 python_version = "3.7"
