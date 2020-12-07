@@ -34,6 +34,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
     'common.apps.CommonConfig',
     'relationships.apps.RelationshipsConfig',
     'communication.apps.CommunicationConfig',
@@ -43,14 +49,21 @@ INSTALLED_APPS = [
     'lander.apps.LanderConfig',
     'django_filters',
     'django_extensions',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
     'widget_tweaks',
     'rest_framework',
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.core',
+    'modelcluster',
+    'taggit'
 ]
 
 MIDDLEWARE = [
@@ -62,6 +75,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'wagtail.core.middleware.SiteMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware'
 ]
 
 ROOT_URLCONF = 'everybase.urls'
@@ -224,3 +239,6 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000000
 # System timestamps keys - of timestamps to track in the system
 SYSTS_LAST_UPDATED_GMASS_BOUNCES = 'GMASS_BOUNCES'
 SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES = 'GMASS_UNSUBSCRIBES'
+
+# Wagtail admin name
+WAGTAIL_SITE_NAME = 'Everybase'
