@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'leads.apps.LeadsConfig',
     'growth.apps.GrowthConfig',
     'lander.apps.LanderConfig',
+    'blog.apps.BlogConfig',
     'django_filters',
     'django_extensions',
     'widget_tweaks',
@@ -169,6 +170,7 @@ STATIC_URL = '/static/'
 # https://warehouse.python.org/project/whitenoise/
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Override message tags
 MESSAGE_TAGS = {
@@ -224,6 +226,9 @@ AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.us-east-1.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_PRESIGNED_URL_EXPIRES_IN = config('AWS_PRESIGNED_URL_EXPIRES_IN')
 
+# Media URL
+MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+
 # Root for all files uploaded via the 'files' app.
 AWS_S3_FILES_ROOT = 'files'
 
@@ -242,3 +247,6 @@ SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES = 'GMASS_UNSUBSCRIBES'
 
 # Wagtail admin name
 WAGTAIL_SITE_NAME = 'Everybase'
+
+# Wagtail usage count - note: this could be slow with many pages
+WAGTAIL_USAGE_COUNT_ENABLED = True
