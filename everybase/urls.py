@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import include
 
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.core import urls as wagtail_urls
+from wagtail.documents import urls as wagtaildocs_urls
+
 urlpatterns = [
     path('common/', include('common.urls')),
     path('files/', include('files.urls')),
@@ -32,5 +36,14 @@ urlpatterns = [
     path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
 
     # Django Rest Framework login
-    path('api-auth/', include('rest_framework.urls'))
+    path('api-auth/', include('rest_framework.urls')),
+
+    # Wagtail admin, with obfuscated URL
+    path('u2AWFpEV7LQe3u2ZuJPzXydGTwAFyebHHDaz/', include(wagtailadmin_urls)),
+
+    # Wagtail document files root
+    path('d/', include(wagtaildocs_urls)),
+
+    # Wagtail pages root
+    path('p/', include(wagtail_urls))
 ]
