@@ -1,6 +1,6 @@
 from django.contrib import admin
 from . import models as mod
-from common import admin as commod
+from common import admin as comadm
 
 # --- Start: Abstract configurations ---
 
@@ -35,14 +35,14 @@ _lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
     mod.MatchStatus,
     mod.PaymentMode,
     mod.SupplyQuoteStatus)
-class ChoiceAdmin(commod.ChoiceAdmin):
+class ChoiceAdmin(comadm.ChoiceAdmin):
     pass
 
 @admin.register(mod.LeadCategory)
-class LeadCategoryAdmin(commod.ChoiceAdmin):
-    list_display = commod.choice_list_display + ['parent']
-    list_editable = commod.choice_list_editable + ['parent']
-    fieldsets = commod.choice_fieldsets + \
+class LeadCategoryAdmin(comadm.ChoiceAdmin):
+    list_display = comadm.choice_list_display + ['parent']
+    list_editable = comadm.choice_list_editable + ['parent']
+    fieldsets = comadm.choice_fieldsets + \
         [('Model references', {'fields': ['parent']})]
     autocomplete_fields = ['parent']
 
@@ -59,15 +59,15 @@ class UOMRelationshipParentInline(admin.StackedInline):
     verbose_name_plurals = 'Child UOM Relationships'
 
 @admin.register(mod.UnitOfMeasure)
-class UnitOfMeasureAdmin(commod.ChoiceAdmin):
+class UnitOfMeasureAdmin(comadm.ChoiceAdmin):
     # List page settings
-    list_display = commod.choice_list_display + ['category']
-    list_editable = commod.choice_list_editable + ['category']
+    list_display = comadm.choice_list_display + ['category']
+    list_editable = comadm.choice_list_editable + ['category']
     list_filter = ['category']
     search_fields = ['id', 'category', 'parents']
 
     # Details page settings
-    fieldsets = commod.choice_fieldsets + [(None, {'fields': ['category']})]
+    fieldsets = comadm.choice_fieldsets + [(None, {'fields': ['category']})]
     autocomplete_fields = ['category']
     inlines = [
         UOMRelationshipChildInline,
@@ -97,14 +97,14 @@ class UOMRelationshipAdmin(admin.ModelAdmin):
 @admin.register(mod.Supply)
 class SupplyAdmin(admin.ModelAdmin):
     search_fields = ['id']
-    list_display = commod.standard_list_display + \
+    list_display = comadm.standard_list_display + \
         _expirable_invalidable_fields + \
         _lead_fields
-    list_editable = commod.standard_list_editable + \
+    list_editable = comadm.standard_list_editable + \
         _expirable_invalidable_fields + \
         _lead_fields
     list_per_page = 50
-    list_filter = commod.standard_list_filter + \
+    list_filter = comadm.standard_list_filter + \
         _expirable_invalidable_filter + \
         _lead_filter
     search_fields = ['id'] + \
@@ -113,7 +113,8 @@ class SupplyAdmin(admin.ModelAdmin):
     show_full_result_count = True
 
     # Details page settings
-    fieldsets = commod.standard_fieldsets + \
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
         _expirable_invalidable_fieldsets + \
         _lead_fieldsets
     autocomplete_fields = _lead_autocomplete_fields
@@ -121,14 +122,14 @@ class SupplyAdmin(admin.ModelAdmin):
 @admin.register(mod.Demand)
 class DemandAdmin(admin.ModelAdmin):
     search_fields = ['id']
-    list_display = commod.standard_list_display + \
+    list_display = comadm.standard_list_display + \
         _expirable_invalidable_fields + \
         _lead_fields
-    list_editable = commod.standard_list_editable + \
+    list_editable = comadm.standard_list_editable + \
         _expirable_invalidable_fields + \
         _lead_fields
     list_per_page = 50
-    list_filter = commod.standard_list_filter + \
+    list_filter = comadm.standard_list_filter + \
         _expirable_invalidable_filter + \
         _lead_filter
     search_fields = ['id'] + \
@@ -137,7 +138,7 @@ class DemandAdmin(admin.ModelAdmin):
     show_full_result_count = True
 
     # Details page settings
-    fieldsets = commod.standard_fieldsets + \
+    fieldsets = comadm.standard_fieldsets + \
         _expirable_invalidable_fieldsets + \
         _lead_fieldsets
     autocomplete_fields = _lead_autocomplete_fields
@@ -145,38 +146,38 @@ class DemandAdmin(admin.ModelAdmin):
 @admin.register(mod.DemandCommission)
 class DemandCommissionAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = commod.standard_list_display + \
+    list_display = comadm.standard_list_display + \
         ['demand', 'person', 'company']
-    list_editable = commod.standard_list_editable + \
+    list_editable = comadm.standard_list_editable + \
         ['demand', 'person', 'company']
     list_per_page = 50
-    list_filter = commod.standard_list_filter + ['demand', 'person', 'company']
+    list_filter = comadm.standard_list_filter + ['demand', 'person', 'company']
     search_fields = ['id', 'demand', 'person', 'company']
-    ordering = commod.standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
-    fieldsets = commod.standard_fieldsets + [
+    fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': ['quotes', 'demand', 'person', 'company']})]
     autocomplete_fields = ['quotes', 'demand', 'person', 'company']
 
 @admin.register(mod.DemandQuote)
 class DemandQuoteAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = commod.standard_list_display + ['demand', 'status',
+    list_display = comadm.standard_list_display + ['demand', 'status',
         'details_as_received_md', 'negative_details_md']
-    list_editable = commod.standard_list_editable + ['demand', 'status',
+    list_editable = comadm.standard_list_editable + ['demand', 'status',
         'details_as_received_md', 'negative_details_md']
     list_per_page = 50
-    list_filter = commod.standard_list_filter + ['demand', 'status']
+    list_filter = comadm.standard_list_filter + ['demand', 'status']
     search_fields = ['id', 'positive_origin_countries',
         'negative_origin_countries'] + ['demand', 'status',
         'details_as_received_md', 'negative_details_md']
-    ordering = commod.standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
-    fieldsets = commod.standard_fieldsets + [
+    fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': ['positive_origin_countries',
             'negative_origin_countries', 'demand', 'status',
             'details_as_received_md', 'negative_details_md']})
@@ -187,36 +188,36 @@ class DemandQuoteAdmin(admin.ModelAdmin):
 @admin.register(mod.SupplyCommission)
 class SupplyCommissionAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = commod.standard_list_display + \
+    list_display = comadm.standard_list_display + \
         ['supply', 'person', 'company']
-    list_editable = commod.standard_list_editable + \
+    list_editable = comadm.standard_list_editable + \
         ['supply', 'person', 'company']
     list_per_page = 50
-    list_filter = commod.standard_list_filter + ['supply', 'person', 'company']
+    list_filter = comadm.standard_list_filter + ['supply', 'person', 'company']
     search_fields = ['id', 'supply', 'person', 'company']
-    ordering = commod.standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
-    fieldsets = commod.standard_fieldsets + \
+    fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['quotes', 'supply', 'person', 'company']})]
     autocomplete_fields = ['quotes', 'supply', 'person', 'company']
 
 @admin.register(mod.SupplyQuote)
 class SupplyQuoteAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = commod.standard_list_display + ['supply', 'status',
+    list_display = comadm.standard_list_display + ['supply', 'status',
         'packing_details_md']
-    list_editable = commod.standard_list_editable + ['supply', 'status',
+    list_editable = comadm.standard_list_editable + ['supply', 'status',
         'packing_details_md']
     list_per_page = 50
-    list_filter = commod.standard_list_filter + ['status']
+    list_filter = comadm.standard_list_filter + ['status']
     search_fields = ['id'] + ['supply', 'status', 'packing_details_md']
-    ordering = commod.standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
-    fieldsets = commod.standard_fieldsets + \
+    fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': ['supply', 'status', 'packing_details_md',
             'downstreams']})]
     autocomplete_fields = ['supply', 'status', 'downstreams']
@@ -224,19 +225,19 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
 @admin.register(mod.Match)
 class MatchAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = commod.standard_list_display + \
+    list_display = comadm.standard_list_display + \
         ['demand_quote', 'supply_quote', 'status', 'method', 'details_md']
-    list_editable = commod.standard_list_editable + \
+    list_editable = comadm.standard_list_editable + \
         ['demand_quote', 'supply_quote', 'status', 'method', 'details_md']
     list_per_page = 50
-    list_filter = commod.standard_list_filter + ['status', 'method']
+    list_filter = comadm.standard_list_filter + ['status', 'method']
     search_fields = ['id', 'demand_quote', 'supply_quote', 'status', 'method',
         'details_md']
-    ordering = commod.standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
-    fieldsets = commod.standard_fieldsets + \
+    fieldsets = comadm.standard_fieldsets + \
         [('Match details', {'fields': ['demand_quote', 'supply_quote', 'status',
             'method', 'details_md']})]
     autocomplete_fields = ['demand_quote', 'supply_quote', 'status', 'method']
@@ -244,18 +245,18 @@ class MatchAdmin(admin.ModelAdmin):
 @admin.register(mod.ProductionCapability)
 class ProductionCapabilityAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = commod.standard_list_display + ['supply_quote', \
+    list_display = comadm.standard_list_display + ['supply_quote', \
         'details_md', 'start', 'end', 'capacity_quantity', 'capacity_seconds']
-    list_editable = commod.standard_list_editable + ['supply_quote', \
+    list_editable = comadm.standard_list_editable + ['supply_quote', \
         'details_md', 'start', 'end', 'capacity_quantity', 'capacity_seconds']
     list_per_page = 50
-    list_filter = commod.standard_list_filter + ['start', 'end']
+    list_filter = comadm.standard_list_filter + ['start', 'end']
     search_fields = ['id', 'supply_quote', 'details_md']
-    ordering = commod.standard_ordering
+    ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
-    fieldsets = commod.standard_fieldsets + \
+    fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['supply_quote', 'details_md', 'start', 'end',
             'capacity_quantity', 'capacity_seconds']})]
     autocomplete_fields = ['supply_quote']
