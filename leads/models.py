@@ -64,6 +64,15 @@ class Lead(models.Model):
         blank=True
     )
 
+    links = models.ManyToManyField(
+        'relationships.Link',
+        related_name='%(class)s_leads',
+        related_query_name='%(class)s_leads',
+        # null=True, # No effect
+        blank=True,
+        db_index=True
+    )
+
     contact = models.ForeignKey(
         'relationships.Person',
         on_delete=models.PROTECT,
