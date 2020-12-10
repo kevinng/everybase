@@ -223,9 +223,8 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': ['supply', 'status', 'packing_details_md',
-            'downstreams']})]
-    autocomplete_fields = ['supply', 'status', 'downstreams']
+        [('Details', {'fields': ['supply', 'status', 'packing_details_md']})]
+    autocomplete_fields = ['supply', 'status']
 
 @admin.register(mod.Match)
 class MatchAdmin(admin.ModelAdmin):

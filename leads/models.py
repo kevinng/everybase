@@ -382,13 +382,6 @@ class SupplyQuote(Standard, Quote, ExpirableInvalidable):
         blank=True
     )
 
-    matches = models.ManyToManyField(
-        'Match',
-        related_name='supply_quotes',
-        related_query_name='supply_quotes',
-        db_index=True
-    )
-
 class ProductionCapability(Standard):
     supply_quote = models.ForeignKey(
         'SupplyQuote',
