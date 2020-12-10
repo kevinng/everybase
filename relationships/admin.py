@@ -120,7 +120,10 @@ class InvalidEmailAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['import_job']
 
-_person_fields = ['given_name', 'family_name', 'country', 'state', 'notes_md']
+class PersonAddressInlineAdmin(admin.TabularInline):
+    model = mod.PersonAddress
+
+_person_fields = ['given_name', 'family_name', 'notes_md']
 @admin.register(mod.Person)
 class PersonAdmin(admin.ModelAdmin):
     # List page settings
@@ -137,7 +140,7 @@ class PersonAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _person_fields})]
-    autocomplete_fields = ['country', 'state']
+    inlines = [PersonAddressInlineAdmin]
 
 _link_fields = ['verified', 'link']
 @admin.register(mod.Link)

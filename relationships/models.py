@@ -419,24 +419,6 @@ class Person(Standard):
         blank=True,
         db_index=True
     )
-    country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='persons',
-        related_query_name='persons',
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    state = models.ForeignKey(
-        'common.State',
-        on_delete=models.PROTECT,
-        related_name='persons',
-        related_query_name='persons',
-        null=True,
-        blank=True,
-        db_index=True
-    )
     notes_md = models.TextField(
         verbose_name='Notes in Markdown', 
         null=True,
