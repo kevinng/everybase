@@ -74,6 +74,12 @@ class PhoneNumberAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _phone_number_fields})]
 
+class CompanyEmailInlineAdmin(admin.TabularInline):
+    model = mod.CompanyEmail
+
+class PersonEmailInlineAdmin(admin.TabularInline):
+    model = mod.PersonEmail
+
 @admin.register(mod.Email)
 class EmailAdmin(admin.ModelAdmin):
     # List page settings
@@ -92,6 +98,7 @@ class EmailAdmin(admin.ModelAdmin):
         (None, {'fields': ['email', 'import_job']})
     ]
     autocomplete_fields = ['import_job']
+    inlines = [CompanyEmailInlineAdmin, PersonEmailInlineAdmin]
 
 @admin.register(mod.InvalidEmail)
 class InvalidEmailAdmin(admin.ModelAdmin):
