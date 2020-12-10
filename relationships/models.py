@@ -495,15 +495,17 @@ class Person(Standard):
 class Company(Standard):
     company_name = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        default=None,
+        null=True,
+        blank=True,
         db_index=True
     )
     company_name_wo_postfix = models.CharField(
         'Company name without postfix',
         max_length=100,
-        null=False,
-        blank=False,
+        default=None,
+        null=True,
+        blank=True,
         db_index=True
     )
     notes_md = models.TextField(

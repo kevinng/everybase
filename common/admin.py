@@ -29,7 +29,6 @@ choice_search_fields = ['id', 'name', 'programmatic_key', 'details_md',
     'programmatic_details_md']
 choice_ordering = ['id']
 
-@admin.register(State)
 class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = choice_list_display
@@ -49,6 +48,13 @@ class ChoiceAdmin(admin.ModelAdmin):
 
     def short_programmatic_details_md(self, obj):
         return short_text(obj.programmatic_details_md)
+
+@admin.register(State)
+class StateAdmin(ChoiceAdmin):
+    fieldsets = choice_fieldsets + [
+        (None, {'fields': ['country']})
+    ]
+    autocomplete_fields = ['country']
 
 class ParentChildrenChoiceAdmin(ChoiceAdmin):
     list_display = choice_list_display + ['parent']
