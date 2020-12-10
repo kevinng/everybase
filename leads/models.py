@@ -3,7 +3,7 @@ from common.models import Choice, Standard, short_text
 
 # --- Start: Abstract models ---
 
-expirable_invalidable_fieldnames = ['expired', 'invalidated',
+expirable_invalidable_fieldnames = ['received', 'expired', 'invalidated',
     'invalidated_reason_md']
 class ExpirableInvalidable(models.Model):
     received = models.DateTimeField(db_index=True)
@@ -107,7 +107,7 @@ class Lead(models.Model):
     )
 
     def __str__(self):
-        return f'({short_text(self.details_md)} [{self.id}])'
+        return f'({self.display_name} [{self.id}])'
 
     class Meta:
         abstract = True

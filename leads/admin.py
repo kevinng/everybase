@@ -6,7 +6,7 @@ from common import admin as comadm
 
 # Expirable/Invalidable
 
-_expirable_invalidable_fields = ['expired', 'invalidated',
+_expirable_invalidable_fields = ['received', 'expired', 'invalidated',
     'invalidated_reason_md']
 _expirable_invalidable_fieldsets = \
     [(None, {'fields': _expirable_invalidable_fields})]
