@@ -261,6 +261,7 @@ class ProductionCapabilityAdmin(admin.ModelAdmin):
     show_full_result_count = True
 
     # Details page settings
+    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['supply_quote', 'details_md', 'start', 'end',
             'capacity_quantity', 'capacity_seconds']})]

@@ -412,8 +412,8 @@ class ProductionCapability(Standard):
         db_index=True
     )
     capacity_seconds = models.FloatField(
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
 
