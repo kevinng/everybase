@@ -13,7 +13,8 @@ from common import admin as comadm
     mod.CompanyAddressType,
     mod.CompanyPhoneNumberType,
     mod.CompanyEmailType,
-    mod.PhoneNumberType)
+    mod.PhoneNumberType,
+    mod.BlackListReasonType)
 class ChoiceAdmin(comadm.ChoiceAdmin):
     pass
 
@@ -154,10 +155,10 @@ class LinkAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _link_fields})]
+        [(None, {'fields': _link_fields})]    
 
-_black_list_entry_fields = ['start', 'invalidated', 'reason_md', 'email',
-    'phone_number', 'company', 'person']
+_black_list_entry_fields = ['start', 'invalidated', 'reason', 'reason_md',
+    'email', 'phone_number', 'company', 'person']
 _black_list_entry_rel_fields = ['email', 'phone_number', 'company', 'person']
 @admin.register(mod.BlackListEntry)
 class BlackListEntryAdmin(admin.ModelAdmin):
@@ -176,13 +177,13 @@ class BlackListEntryAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-            (None, {'fields': ['start', 'invalidated', 'reason_md']}),
+            (None, {'fields': ['start', 'invalidated', 'reason', 'reason_md']}),
             (None, {
                 'fields': _black_list_entry_rel_fields,
                 'description': 'At least one of these must be set'
             })
         ]
-    autocomplete_fields = _black_list_entry_rel_fields
+    autocomplete_fields = _black_list_entry_rel_fields + ['reason']
 
 # --- Start: Relationships ---
 
