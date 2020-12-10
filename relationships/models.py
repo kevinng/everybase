@@ -500,6 +500,7 @@ class Company(Standard):
         db_index=True
     )
     company_name_wo_postfix = models.CharField(
+        'Company name without postfix'
         max_length=100,
         null=False,
         blank=False,
