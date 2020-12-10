@@ -250,12 +250,11 @@ class ContactType(Choice):
     pass
 
 class LeadCategory(Choice):
-    parent = models.ForeignKey(
+    parents = models.ManyToManyField(
         'self',
-        on_delete=models.PROTECT,
         related_name='children',
         related_query_name='children',
-        null=True,
+        # null=True, # No effect
         blank=True,
         db_index=True
     )

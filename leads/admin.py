@@ -40,11 +40,11 @@ class ChoiceAdmin(comadm.ChoiceAdmin):
 
 @admin.register(mod.LeadCategory)
 class LeadCategoryAdmin(comadm.ChoiceAdmin):
-    list_display = comadm.choice_list_display + ['parent']
-    list_editable = comadm.choice_list_editable + ['parent']
+    list_display = comadm.choice_list_display
+    list_editable = comadm.choice_list_editable
     fieldsets = comadm.choice_fieldsets + \
-        [('Model references', {'fields': ['parent']})]
-    autocomplete_fields = ['parent']
+        [('Model references', {'fields': ['parents']})]
+    autocomplete_fields = ['parents']
 
 class UOMRelationshipChildInline(admin.StackedInline):
     model = mod.UOMRelationship
