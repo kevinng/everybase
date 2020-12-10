@@ -30,6 +30,7 @@ class ExpirableInvalidable(models.Model):
 lead_fieldnames = ['category', 'display_name', 'base_uom', 'details_md',
     'contact', 'company', 'contact_type', 'contact_type_details_md']
 class Lead(models.Model):
+    received = models.DateTimeField(db_index=True)
     category = models.ForeignKey(
         'LeadCategory',
         on_delete=models.PROTECT,
