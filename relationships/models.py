@@ -471,8 +471,7 @@ class Person(Standard):
     )
 
     def __str__(self):
-        return f'({self.given_name}, {self.family_name}, {self.country} \
-            [{self.id}])'
+        return f'({self.given_name}, {self.family_name} [{self.id}])'
 
 class Company(Standard):
     company_name = models.CharField(
