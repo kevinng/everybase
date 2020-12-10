@@ -204,8 +204,14 @@ class SupplyCommissionAdmin(admin.ModelAdmin):
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': ['quotes', 'supply', 'person', 'company']})]
-    autocomplete_fields = ['quotes', 'supply', 'person', 'company']
+        [(None, {'fields': ['quote', 'supply', 'person', 'company']})]
+    autocomplete_fields = ['quote', 'supply', 'person', 'company']
+
+class ProductionCapacityInstanceInline(admin.TabularInline):
+    model = mod.ProductionCapability
+
+class SupplyCommissionInstanceInline(admin.TabularInline):
+    model = mod.SupplyCommission
 
 @admin.register(mod.SupplyQuote)
 class SupplyQuoteAdmin(admin.ModelAdmin):
@@ -226,6 +232,7 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
         [(None, {'fields': ['received', 'supply', 'status',
             'packing_details_md']})]
     autocomplete_fields = ['supply', 'status']
+    inlines = [ProductionCapacityInstanceInline, SupplyCommissionInstanceInline]
 
 @admin.register(mod.Match)
 class MatchAdmin(admin.ModelAdmin):
