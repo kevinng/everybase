@@ -180,6 +180,7 @@ class DemandQuoteAdmin(admin.ModelAdmin):
     show_full_result_count = True
 
     # Details page settings
+    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': ['positive_origin_countries',
             'negative_origin_countries', 'demand', 'status',
@@ -220,6 +221,7 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
     show_full_result_count = True
 
     # Details page settings
+    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': ['supply', 'status', 'packing_details_md',
             'downstreams']})]
