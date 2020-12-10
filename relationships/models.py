@@ -8,8 +8,8 @@ relationship_fieldnames = ['details_md']
 class Relationship(Standard):
     details_md = models.TextField(
         verbose_name='Details in Markdown',
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
 
     class Meta:

@@ -65,6 +65,7 @@ class Choice(models.Model):
     )
     details_md = models.TextField(
         verbose_name='Details in Markdown',
+        default=None,
         null=True,
         blank=True
     )
