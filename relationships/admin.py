@@ -37,7 +37,8 @@ class AddressAdmin(admin.ModelAdmin):
         [(None, {'fields': _address_fields})]
     autocomplete_fields = ['country', 'state']
 
-_company_fields = ['company_name', 'company_name_wo_postfix', 'notes_md']
+_company_fields = ['company_name', 'company_name_wo_postfix', 'notes_md',
+    'domain']
 @admin.register(mod.Company)
 class CompanyAdmin(admin.ModelAdmin):
     # List page settings

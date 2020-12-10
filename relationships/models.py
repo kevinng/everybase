@@ -511,6 +511,12 @@ class Company(Standard):
         null=True,
         blank=True
     )
+    domain = models.CharField(
+        max_length=300,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     emails = models.ManyToManyField(
         'Email',
