@@ -23,9 +23,9 @@
     "model": "leads.supplyquotestatus",
     "pk": 3,
     "fields": {
-        "name": "Bad/Incomplete Details",
+        "name": "Abandoned Detailing",
         "details_md": "E.g. abandoned without soliciting more details.",
-        "programmatic_key": "bad_incomplete_details",
+        "programmatic_key": "abandoned_detailing",
         "programmatic_details_md": ""
     }
 }
