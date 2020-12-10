@@ -694,10 +694,22 @@ class PhoneNumber(Standard):
     def __str__(self):
         return f'(+{self.country_code} {self.national_number} [{self.id}])'
 
+class BlackListReasonType(Choice):
+    pass
+
 class BlackListEntry(Standard):
     start = models.DateTimeField(db_index=True)
     invalidated = models.DateTimeField(
         default=None,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    reason = models.ForeignKey(
+        'BlackListReasonType',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        on_delete=models.PROTECT,
         null=True,
         blank=True,
         db_index=True
