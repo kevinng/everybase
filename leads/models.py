@@ -625,10 +625,12 @@ class SupplyCommission(Standard, Commission, ExpirableInvalidable):
     )
 
 class DemandCommission(Standard, Commission, ExpirableInvalidable):
-    quotes = models.ManyToManyField(
+    quote = models.ForeignKey(
         'DemandQuote',
+        on_delete=models.PROTECT,
         related_name='commissions',
         related_query_name='commissions',
+        null=True,
         blank=True,
         db_index=True
     )

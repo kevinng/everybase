@@ -161,8 +161,8 @@ class DemandCommissionAdmin(admin.ModelAdmin):
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['quotes', 'demand', 'person', 'company']})]
-    autocomplete_fields = ['quotes', 'demand', 'person', 'company']
+        (None, {'fields': ['quote', 'demand', 'person', 'company']})]
+    autocomplete_fields = ['quote', 'demand', 'person', 'company']
 
 @admin.register(mod.DemandQuote)
 class DemandQuoteAdmin(admin.ModelAdmin):
