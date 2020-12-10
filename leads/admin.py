@@ -182,7 +182,7 @@ class DemandQuoteAdmin(admin.ModelAdmin):
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['positive_origin_countries',
+        (None, {'fields': ['received', 'positive_origin_countries',
             'negative_origin_countries', 'demand', 'status',
             'details_as_received_md', 'negative_details_md']})
     ]
@@ -223,7 +223,8 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': ['supply', 'status', 'packing_details_md']})]
+        [(None, {'fields': ['received', 'supply', 'status',
+            'packing_details_md']})]
     autocomplete_fields = ['supply', 'status']
 
 @admin.register(mod.Match)
