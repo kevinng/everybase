@@ -149,6 +149,34 @@ class LinkAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _link_fields})]
 
+_black_list_entry_fields = ['start', 'invalidated', 'reason_md', 'email',
+    'phone_number', 'company', 'person']
+_black_list_entry_rel_fields = ['email', 'phone_number', 'company', 'person']
+@admin.register(mod.BlackListEntry)
+class BlackListEntryAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _black_list_entry_fields
+    list_editable = comadm.standard_list_editable + _black_list_entry_fields
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter
+    search_fields = ['id', 'reason_md', 'email__email',
+        'phone_number__country_code', 'phone_number__national_number',
+        'company__company_name', 'person__given_name', 'person__family_name']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+            (None, {'fields': ['start', 'invalidated', 'reason_md']}),
+            (None, {
+                'fields': _black_list_entry_rel_fields,
+                'description': 'At least one of these must be set'
+            })
+        ]
+    autocomplete_fields = _black_list_entry_rel_fields
+
 # --- Start: Relationships ---
 
 _rel_list_display = comadm.standard_list_display + ['details_md', 'rtype']

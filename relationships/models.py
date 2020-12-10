@@ -694,4 +694,60 @@ class PhoneNumber(Standard):
     def __str__(self):
         return f'(+{self.country_code} {self.national_number} [{self.id}])'
 
+class BlackListEntry(Standard):
+    start = models.DateTimeField(db_index=True)
+    invalidated = models.DateTimeField(
+        default=None,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    reason_md = models.TextField(
+        'Reason in Markdown',
+        null=True,
+        blank=True,
+    )
+
+    # At least one of the following must be set
+    email = models.ForeignKey(
+        'Email',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'Person',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Blacklist entry'
+        verbose_name_plural = 'Blacklist entries'
+
 # --- End: Entities ---
