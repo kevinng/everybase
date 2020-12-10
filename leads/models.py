@@ -382,18 +382,8 @@ class SupplyQuote(Standard, Quote, ExpirableInvalidable):
         blank=True
     )
 
-    downstreams = models.ManyToManyField(
-        'self',
-        related_name='upstreams',
-        related_query_name='upstreams',
-        blank=True,
-        db_index=True
-    )
-
-    demand_quotes = models.ManyToManyField(
-        'DemandQuote',
-        through='Match',
-        through_fields=('supply_quote', 'demand_quote'),
+    matches = models.ManyToManyField(
+        'Match',
         related_name='supply_quotes',
         related_query_name='supply_quotes',
         db_index=True
