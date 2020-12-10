@@ -122,6 +122,7 @@ class InvalidEmailAdmin(admin.ModelAdmin):
 
 class PersonAddressInlineAdmin(admin.TabularInline):
     model = mod.PersonAddress
+    extra = 1
 
 _person_fields = ['given_name', 'family_name', 'notes_md']
 @admin.register(mod.Person)
