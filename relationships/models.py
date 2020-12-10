@@ -623,8 +623,8 @@ class Link(Standard):
 class Address(Standard):
     address_1 = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     address_2 = models.CharField(
