@@ -19,7 +19,7 @@ _lead_fields = ['category', 'display_name', 'base_uom', 'details_md',
     'contact', 'company', 'contact_type', 'contact_type_details_md']
 _lead_fieldsets = [
     ('Lead details', {'fields': _lead_fields}),
-    ('Related models', {'fields': ['links']})
+    ('Links', {'fields': ['links']})
 ]
 _lead_filter = ['category', 'base_uom', 'contact_type']
 _lead_autocomplete_fields = ['category', 'base_uom', 'contact', 'company',
