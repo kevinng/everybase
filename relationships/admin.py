@@ -100,10 +100,12 @@ class PhoneNumberAdmin(admin.ModelAdmin):
 class CompanyEmailInlineAdmin(admin.TabularInline):
     model = mod.CompanyEmail
     extra = 1
+    autocomplete_fields = ['rtype', 'company']
 
 class PersonEmailInlineAdmin(admin.TabularInline):
     model = mod.PersonEmail
     extra = 1
+    autocomplete_fields = ['rtype', 'person']
 
 @admin.register(mod.Email)
 class EmailAdmin(admin.ModelAdmin):
@@ -120,7 +122,7 @@ class EmailAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['email', 'import_job']})
+        ('Details', {'fields': ['email', 'import_job']})
     ]
     autocomplete_fields = ['import_job']
     inlines = [CompanyEmailInlineAdmin, PersonEmailInlineAdmin]
@@ -144,9 +146,30 @@ class InvalidEmailAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['import_job']
 
+class PersonLinkInlineAdmin(admin.TabularInline):
+    model = mod.PersonLink
+    extra = 1
+    autocomplete_fields = ['rtype', 'link']
+
+class PersonCompanyInlineAdmin(admin.TabularInline):
+    model = mod.PersonCompany
+    extra = 1
+    autocomplete_fields = ['rtype', 'company']
+
 class PersonAddressInlineAdmin(admin.TabularInline):
     model = mod.PersonAddress
     extra = 1
+    autocomplete_fields = ['rtype', 'address']
+
+class PersonPhoneNumberInlineAdmin(admin.TabularInline):
+    model = mod.PersonPhoneNumber
+    extra = 1
+    autocomplete_fields = ['rtype', 'phone_number']
+
+class PersonEmailInlineAdmin(admin.TabularInline):
+    model = mod.PersonEmail
+    extra = 1
+    autocomplete_fields = ['rtype', 'email']
 
 _person_fields = ['given_name', 'family_name', 'notes_md']
 @admin.register(mod.Person)
@@ -165,7 +188,9 @@ class PersonAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _person_fields})]
-    inlines = [PersonAddressInlineAdmin]
+    inlines = [PersonLinkInlineAdmin, PersonCompanyInlineAdmin,
+        PersonAddressInlineAdmin, PersonPhoneNumberInlineAdmin,
+        PersonEmailInlineAdmin]
 
 _link_fields = ['verified', 'link']
 @admin.register(mod.Link)
