@@ -1,5 +1,6 @@
 from django.contrib import admin
 from . import models as mod
+from files import models as fod
 from common import admin as comadm
 
 # --- Start: Abstract configurations ---
@@ -97,6 +98,22 @@ class UOMRelationshipAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['child', 'parent']
 
+class FileSupplyInlineAdmin(admin.TabularInline):
+    model = fod.FileSupply
+    extra = 1
+    autocomplete_fields = ['rtype', 'file']
+
+class SupplyQuoteInlineAdmin(admin.TabularInline):
+    model = mod.SupplyQuote
+    extra = 1
+    autocomplete_fields = ['incoterm', 'incoterm_country',
+        'currency', 'deposit_paymodes', 'remainder_paymodes', 'status']
+
+class SupplyCommissionInlineAdmin(admin.TabularInline):
+    model = mod.SupplyCommission
+    extra = 1
+    autocomplete_fields = ['quote', 'person', 'company']
+
 @admin.register(mod.Supply)
 class SupplyAdmin(admin.ModelAdmin):
     search_fields = ['id']
@@ -121,6 +138,8 @@ class SupplyAdmin(admin.ModelAdmin):
         _expirable_invalidable_fieldsets + \
         _lead_fieldsets
     autocomplete_fields = _lead_autocomplete_fields
+    inlines = [FileSupplyInlineAdmin, SupplyQuoteInlineAdmin,
+        SupplyCommissionInlineAdmin]
 
 @admin.register(mod.Demand)
 class DemandAdmin(admin.ModelAdmin):
