@@ -1,6 +1,7 @@
 from django.contrib import admin
 from . import models as mod
 from files import models as fod
+from communication import models as cod
 from common import admin as comadm
 
 # --- Start: Abstract configurations ---
@@ -10,7 +11,8 @@ from common import admin as comadm
 _expirable_invalidable_fields = ['received', 'expired', 'invalidated',
     'invalidated_reason_md']
 _expirable_invalidable_fieldsets = \
-    [('Expirable and invalidable fields', {'fields': _expirable_invalidable_fields})]
+    [('Expirable and invalidable fields',
+        {'fields': _expirable_invalidable_fields})]
 _expirable_invalidable_filter = ['expired', 'invalidated']
 _expirable_search_fields = ['invalidated_reason_md']
 
@@ -235,27 +237,51 @@ class MatchInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['supply_quote', 'demand_quote', 'status', 'method']
 
+class TrenchInlineAdmin(admin.TabularInline):
+    model = mod.Trench
+    extra = 1
+    autocomplete_fields = ['paymode', 'demand_quote']
+
+class IssueInlineAdmin(admin.TabularInline):
+    model = cod.Issue
+    extra = 1
+    autocomplete_fields = ['tags', 'status', 'supply', 'demand', 'match',
+        'supply_commission', 'demand_commission']
+
+_quote_fields = ['details_md', 'incoterm', 'incoterm_country',
+    'incoterm_location', 'currency', 'price', 'price_details_md',
+    'deposit_percent', 'payterms_details_md', 'delivery_details_md']
+_supply_quote_fields = ['supply', 'status', 'packing_details_md']
 @admin.register(mod.SupplyQuote)
 class SupplyQuoteAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['supply', 'status',
-        'packing_details_md']
-    list_editable = comadm.standard_list_editable + ['supply', 'status',
-        'packing_details_md']
+    list_display = comadm.standard_list_display + \
+        _quote_fields + \
+        _supply_quote_fields
+    list_editable = comadm.standard_list_editable + \
+        _quote_fields + \
+        _supply_quote_fields
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['status']
-    search_fields = ['id'] + ['supply', 'status', 'packing_details_md']
+    list_filter = comadm.standard_list_filter + ['status', 'incoterm',
+        'currency']
+    search_fields = ['id', 'supply__display_name', 'supply__details_md',
+        'packing_details_md', 'details_md', 'price_details_md',
+        'payterms_details_md', 'delivery_details_md']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': ['received', 'supply', 'status',
-            'packing_details_md']})]
-    autocomplete_fields = ['supply', 'status']
+        _expirable_invalidable_fieldsets + \
+        [('Details', {'fields': ['supply', 'status', 'packing_details_md',
+            'details_md', 'incoterm', 'incoterm_country', 'incoterm_location',
+            'currency', 'price', 'price_details_md', 'deposit_percent',
+            'payterms_details_md', 'delivery_details_md']})]
+    autocomplete_fields = ['supply', 'status', 'incoterm', 'incoterm_country',
+        'currency']
     inlines = [ProductionCapacityInlineAdmin, SupplyCommissionInlineAdmin,
-        MatchInlineAdmin]
+        MatchInlineAdmin, TrenchInlineAdmin, IssueInlineAdmin]
 
 @admin.register(mod.Match)
 class MatchAdmin(admin.ModelAdmin):
