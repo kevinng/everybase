@@ -230,6 +230,11 @@ class ProductionCapacityInlineAdmin(admin.TabularInline):
     model = mod.ProductionCapability
     extra = 1
 
+class MatchInlineAdmin(admin.TabularInline):
+    model = mod.Match
+    extra = 1
+    autocomplete_fields = ['supply_quote', 'demand_quote', 'status', 'method']
+
 @admin.register(mod.SupplyQuote)
 class SupplyQuoteAdmin(admin.ModelAdmin):
     # List page settings
@@ -249,7 +254,8 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
         [('Details', {'fields': ['received', 'supply', 'status',
             'packing_details_md']})]
     autocomplete_fields = ['supply', 'status']
-    inlines = [ProductionCapacityInlineAdmin, SupplyCommissionInlineAdmin]
+    inlines = [ProductionCapacityInlineAdmin, SupplyCommissionInlineAdmin,
+        MatchInlineAdmin]
 
 @admin.register(mod.Match)
 class MatchAdmin(admin.ModelAdmin):
