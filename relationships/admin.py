@@ -187,7 +187,7 @@ class PersonAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _person_fields})]
+        [('Details', {'fields': _person_fields})]
     inlines = [PersonLinkInlineAdmin, PersonCompanyInlineAdmin,
         PersonAddressInlineAdmin, PersonPhoneNumberInlineAdmin,
         PersonEmailInlineAdmin]
