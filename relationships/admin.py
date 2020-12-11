@@ -38,9 +38,25 @@ class AddressAdmin(admin.ModelAdmin):
         [(None, {'fields': _address_fields})]
     autocomplete_fields = ['country', 'state']
 
+class CompanyEmailInlineAdmin(admin.TabularInline):
+    model = mod.CompanyEmail
+    extra = 1
+    autocomplete_fields = ['rtype', 'email']
+
+class CompanyPhoneNumberInlineAdmin(admin.TabularInline):
+    model = mod.CompanyPhoneNumber
+    extra = 1
+    autocomplete_fields = ['rtype', 'phone_number']
+
 class CompanyAddressInlineAdmin(admin.TabularInline):
     model = mod.CompanyAddress
     extra = 1
+    autocomplete_fields = ['rtype', 'address']
+
+class CompanyLinkInlineAdmin(admin.TabularInline):
+    model = mod.CompanyLink
+    extra = 1
+    autocomplete_fields = ['rtype', 'link']
 
 _company_fields = ['company_name', 'company_name_wo_postfix', 'notes_md',
     'domain']
@@ -60,7 +76,8 @@ class CompanyAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _company_fields})]
-    inlines = [CompanyAddressInlineAdmin]
+    inlines = [CompanyEmailInlineAdmin, CompanyPhoneNumberInlineAdmin,
+        CompanyAddressInlineAdmin, CompanyLinkInlineAdmin]
 
 _phone_number_fields = ['country_code', 'national_number']
 @admin.register(mod.PhoneNumber)
