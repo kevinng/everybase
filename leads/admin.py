@@ -9,7 +9,7 @@ from common import admin as comadm
 _expirable_invalidable_fields = ['received', 'expired', 'invalidated',
     'invalidated_reason_md']
 _expirable_invalidable_fieldsets = \
-    [(None, {'fields': _expirable_invalidable_fields})]
+    [('Expirable and invalidable fields', {'fields': _expirable_invalidable_fields})]
 _expirable_invalidable_filter = ['expired', 'invalidated']
 _expirable_search_fields = ['invalidated_reason_md']
 
