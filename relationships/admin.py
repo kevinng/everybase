@@ -38,6 +38,10 @@ class AddressAdmin(admin.ModelAdmin):
         [(None, {'fields': _address_fields})]
     autocomplete_fields = ['country', 'state']
 
+class CompanyAddressInlineAdmin(admin.TabularInline):
+    model = mod.CompanyAddress
+    extra = 1
+
 _company_fields = ['company_name', 'company_name_wo_postfix', 'notes_md',
     'domain']
 @admin.register(mod.Company)
@@ -55,7 +59,8 @@ class CompanyAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _company_fields})]
+        [('Details', {'fields': _company_fields})]
+    inlines = [CompanyAddressInlineAdmin]
 
 _phone_number_fields = ['country_code', 'national_number']
 @admin.register(mod.PhoneNumber)
