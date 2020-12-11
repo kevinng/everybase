@@ -112,7 +112,7 @@ class SupplyQuoteInlineAdmin(admin.TabularInline):
 class SupplyCommissionInlineAdmin(admin.TabularInline):
     model = mod.SupplyCommission
     extra = 1
-    autocomplete_fields = ['quote', 'person', 'company']
+    autocomplete_fields = ['supply', 'quote', 'person', 'company']
 
 @admin.register(mod.Supply)
 class SupplyAdmin(admin.ModelAdmin):
@@ -226,11 +226,9 @@ class SupplyCommissionAdmin(admin.ModelAdmin):
         [(None, {'fields': ['quote', 'supply', 'person', 'company']})]
     autocomplete_fields = ['quote', 'supply', 'person', 'company']
 
-class ProductionCapacityInstanceInline(admin.TabularInline):
+class ProductionCapacityInlineAdmin(admin.TabularInline):
     model = mod.ProductionCapability
-
-class SupplyCommissionInstanceInline(admin.TabularInline):
-    model = mod.SupplyCommission
+    extra = 1
 
 @admin.register(mod.SupplyQuote)
 class SupplyQuoteAdmin(admin.ModelAdmin):
@@ -248,10 +246,10 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': ['received', 'supply', 'status',
+        [('Details', {'fields': ['received', 'supply', 'status',
             'packing_details_md']})]
     autocomplete_fields = ['supply', 'status']
-    inlines = [ProductionCapacityInstanceInline, SupplyCommissionInstanceInline]
+    inlines = [ProductionCapacityInlineAdmin, SupplyCommissionInlineAdmin]
 
 @admin.register(mod.Match)
 class MatchAdmin(admin.ModelAdmin):
