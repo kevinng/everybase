@@ -82,9 +82,11 @@ class PhoneNumberAdmin(admin.ModelAdmin):
 
 class CompanyEmailInlineAdmin(admin.TabularInline):
     model = mod.CompanyEmail
+    extra = 1
 
 class PersonEmailInlineAdmin(admin.TabularInline):
     model = mod.PersonEmail
+    extra = 1
 
 @admin.register(mod.Email)
 class EmailAdmin(admin.ModelAdmin):
