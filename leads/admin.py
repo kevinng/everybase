@@ -66,7 +66,8 @@ class IssueInlineAdmin(admin.TabularInline):
     model = cod.Issue
     extra = 1
     autocomplete_fields = ['tags', 'status', 'supply', 'demand', 'match',
-        'supply_commission', 'demand_commission']
+        'supply_commission', 'demand_commission', 'supply_quote',
+        'demand_quote']
 
 class MatchInlineAdmin(admin.TabularInline):
     model = mod.Match
@@ -91,7 +92,7 @@ class SupplyQuoteInlineAdmin(admin.TabularInline):
 class TrenchInlineAdmin(admin.TabularInline):
     model = mod.Trench
     extra = 1
-    autocomplete_fields = ['paymode', 'demand_quote']
+    autocomplete_fields = ['paymode', 'demand_quote', 'supply_quote']
 
 # --- End: Inline ---
 
@@ -237,30 +238,36 @@ class DemandCommissionAdmin(admin.ModelAdmin):
         (None, {'fields': ['quote', 'demand', 'person', 'company']})]
     autocomplete_fields = ['quote', 'demand', 'person', 'company']
 
+_demand_quote_fields = ['demand', 'status', 'details_as_received_md',
+    'negative_details_md']
 @admin.register(mod.DemandQuote)
 class DemandQuoteAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['demand', 'status',
-        'details_as_received_md', 'negative_details_md']
-    list_editable = comadm.standard_list_editable + ['demand', 'status',
-        'details_as_received_md', 'negative_details_md']
+    list_display = comadm.standard_list_display + \
+        _demand_quote_fields + \
+        _quote_fields
+    list_editable = comadm.standard_list_editable + \
+        _demand_quote_fields + \
+        _quote_fields
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['demand', 'status']
-    search_fields = ['id', 'positive_origin_countries',
-        'negative_origin_countries'] + ['demand', 'status',
+    list_filter = comadm.standard_list_filter + ['status']
+    search_fields = ['id', 'demand__display_name', 'demand__deetails_md',
         'details_as_received_md', 'negative_details_md']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['received', 'positive_origin_countries',
-            'negative_origin_countries', 'demand', 'status',
-            'details_as_received_md', 'negative_details_md']})
-    ]
+    fieldsets = comadm.standard_fieldsets + \
+        _expirable_invalidable_fieldsets + \
+        [('Details', {'fields': _demand_quote_fields + [
+            'positive_origin_countries', 'negative_origin_countries'] + \
+            _quote_fields})]
     autocomplete_fields = ['demand', 'status', 'positive_origin_countries',
-        'negative_origin_countries']
+        'negative_origin_countries', 'incoterm', 'incoterm_country',
+        'currency']
+    inlines = [DemandCommissionInlineAdmin, MatchInlineAdmin, TrenchInlineAdmin,
+        IssueInlineAdmin]
 
 @admin.register(mod.SupplyCommission)
 class SupplyCommissionAdmin(admin.ModelAdmin):
