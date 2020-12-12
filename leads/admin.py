@@ -265,11 +265,11 @@ _supply_quote_fields = ['supply', 'status', 'packing_details_md']
 class SupplyQuoteAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + \
-        _quote_fields + \
-        _supply_quote_fields
+        _supply_quote_fields + \
+        _quote_fields
     list_editable = comadm.standard_list_editable + \
-        _quote_fields + \
-        _supply_quote_fields
+        _supply_quote_fields + \
+        _quote_fields
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['status', 'incoterm',
         'currency']
