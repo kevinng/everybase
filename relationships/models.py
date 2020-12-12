@@ -745,4 +745,17 @@ class BlackListEntry(Standard):
         verbose_name = 'Blacklist entry'
         verbose_name_plural = 'Blacklist entries'
 
+    def __str__(self):
+        blacklist_obj = ''
+        if self.email is not None:
+            blacklist_obj = self.email
+        elif self.phone_number is not None:
+            blacklist_obj = self.phone_number
+        elif self.company is not None:
+            blacklist_obj = self.company
+        elif self.person is not None:
+            blacklist_obj = self.person
+
+        return f'({blacklist_obj} [{self.id}])'
+
 # --- End: Entities ---
