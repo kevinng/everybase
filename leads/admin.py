@@ -30,7 +30,55 @@ _lead_autocomplete_fields = ['category', 'base_uom', 'contact', 'company',
 _lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
     'company', 'contact_type', 'contact_type_details_md']
 
+# Quote
+
+_quote_fields = ['details_md', 'incoterm', 'incoterm_country',
+    'incoterm_location', 'currency', 'price', 'price_details_md',
+    'deposit_percent', 'payterms_details_md', 'delivery_details_md']
+
 # --- End: Abstract configurations ---
+
+# --- Start: Inline ---
+
+class FileSupplyInlineAdmin(admin.TabularInline):
+    model = fod.FileSupply
+    extra = 1
+    autocomplete_fields = ['rtype', 'file']
+
+class IssueInlineAdmin(admin.TabularInline):
+    model = cod.Issue
+    extra = 1
+    autocomplete_fields = ['tags', 'status', 'supply', 'demand', 'match',
+        'supply_commission', 'demand_commission']
+
+class MatchInlineAdmin(admin.TabularInline):
+    model = mod.Match
+    extra = 1
+    autocomplete_fields = ['supply_quote', 'demand_quote', 'status', 'method']
+
+class ProductionCapacityInlineAdmin(admin.TabularInline):
+    model = mod.ProductionCapability
+    extra = 1
+
+class SupplyCommissionInlineAdmin(admin.TabularInline):
+    model = mod.SupplyCommission
+    extra = 1
+    autocomplete_fields = ['supply', 'quote', 'person', 'company']
+
+class SupplyQuoteInlineAdmin(admin.TabularInline):
+    model = mod.SupplyQuote
+    extra = 1
+    autocomplete_fields = ['incoterm', 'incoterm_country',
+        'currency', 'deposit_paymodes', 'remainder_paymodes', 'status']
+
+class TrenchInlineAdmin(admin.TabularInline):
+    model = mod.Trench
+    extra = 1
+    autocomplete_fields = ['paymode', 'demand_quote']
+
+# --- End: Inline ---
+
+# --- Start: Configurations ---
 
 @admin.register(
     mod.ContactType,
@@ -99,22 +147,6 @@ class UOMRelationshipAdmin(admin.ModelAdmin):
         (None, {'fields': ['child', 'parent', 'multiple', 'details_md']})
     ]
     autocomplete_fields = ['child', 'parent']
-
-class FileSupplyInlineAdmin(admin.TabularInline):
-    model = fod.FileSupply
-    extra = 1
-    autocomplete_fields = ['rtype', 'file']
-
-class SupplyQuoteInlineAdmin(admin.TabularInline):
-    model = mod.SupplyQuote
-    extra = 1
-    autocomplete_fields = ['incoterm', 'incoterm_country',
-        'currency', 'deposit_paymodes', 'remainder_paymodes', 'status']
-
-class SupplyCommissionInlineAdmin(admin.TabularInline):
-    model = mod.SupplyCommission
-    extra = 1
-    autocomplete_fields = ['supply', 'quote', 'person', 'company']
 
 @admin.register(mod.Supply)
 class SupplyAdmin(admin.ModelAdmin):
@@ -228,29 +260,6 @@ class SupplyCommissionAdmin(admin.ModelAdmin):
         [(None, {'fields': ['quote', 'supply', 'person', 'company']})]
     autocomplete_fields = ['quote', 'supply', 'person', 'company']
 
-class ProductionCapacityInlineAdmin(admin.TabularInline):
-    model = mod.ProductionCapability
-    extra = 1
-
-class MatchInlineAdmin(admin.TabularInline):
-    model = mod.Match
-    extra = 1
-    autocomplete_fields = ['supply_quote', 'demand_quote', 'status', 'method']
-
-class TrenchInlineAdmin(admin.TabularInline):
-    model = mod.Trench
-    extra = 1
-    autocomplete_fields = ['paymode', 'demand_quote']
-
-class IssueInlineAdmin(admin.TabularInline):
-    model = cod.Issue
-    extra = 1
-    autocomplete_fields = ['tags', 'status', 'supply', 'demand', 'match',
-        'supply_commission', 'demand_commission']
-
-_quote_fields = ['details_md', 'incoterm', 'incoterm_country',
-    'incoterm_location', 'currency', 'price', 'price_details_md',
-    'deposit_percent', 'payterms_details_md', 'delivery_details_md']
 _supply_quote_fields = ['supply', 'status', 'packing_details_md']
 @admin.register(mod.SupplyQuote)
 class SupplyQuoteAdmin(admin.ModelAdmin):
@@ -274,10 +283,7 @@ class SupplyQuoteAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         _expirable_invalidable_fieldsets + \
-        [('Details', {'fields': ['supply', 'status', 'packing_details_md',
-            'details_md', 'incoterm', 'incoterm_country', 'incoterm_location',
-            'currency', 'price', 'price_details_md', 'deposit_percent',
-            'payterms_details_md', 'delivery_details_md']})]
+        [('Details', {'fields': _supply_quote_fields + _quote_fields})]
     autocomplete_fields = ['supply', 'status', 'incoterm', 'incoterm_country',
         'currency']
     inlines = [ProductionCapacityInlineAdmin, SupplyCommissionInlineAdmin,
@@ -344,3 +350,5 @@ class TrenchAdmin(admin.ModelAdmin):
         'after_deposit_seconds', 'paymode', 'payment_before_release',
         'details_md']})]
     autocomplete_fields = ['supply_quote', 'demand_quote', 'paymode']
+
+# --- End: Configurations ----
