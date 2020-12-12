@@ -155,8 +155,9 @@ quote_fieldnames = ['details_md', 'incoterm', 'incoterm_country',
 class Quote(models.Model):
     details_md = models.TextField(
         verbose_name='Details in Markdown',
-        null=False,
-        blank=False
+        default=None,
+        null=True,
+        blank=True
     )
 
     incoterm = models.ForeignKey(
