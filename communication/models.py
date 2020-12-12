@@ -67,6 +67,15 @@ class Issue(Standard):
         blank=True,
         db_index=True
     )
+    demand_quote = models.ForeignKey(
+        'leads.DemandQuote',
+        on_delete=models.PROTECT,
+        related_name='issues',
+        related_query_name='issues',
+        null=True,
+        blank=True,
+        db_index=True
+    )
     match = models.ForeignKey(
         'leads.Match',
         on_delete=models.PROTECT,
