@@ -331,10 +331,12 @@ class MatchAdmin(admin.ModelAdmin):
     show_full_result_count = True
 
     # Details page settings
+    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [('Match details', {'fields': ['demand_quote', 'supply_quote', 'status',
             'method', 'details_md']})]
     autocomplete_fields = ['demand_quote', 'supply_quote', 'status', 'method']
+    inlines = [IssueInlineAdmin]
 
 @admin.register(mod.ProductionCapability)
 class ProductionCapabilityAdmin(admin.ModelAdmin):
