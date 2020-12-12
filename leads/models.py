@@ -382,6 +382,10 @@ class SupplyQuote(Standard, Quote, ExpirableInvalidable):
         blank=True
     )
 
+    def __str__(self):
+        return f'({self.supply.display_name}, {short_text(self.details_md)}' + \
+            f' [{self.id}])'
+
 class ProductionCapability(Standard):
     supply_quote = models.ForeignKey(
         'SupplyQuote',
@@ -474,6 +478,10 @@ class DemandQuote(Standard, Quote, ExpirableInvalidable):
         null=True,
         blank=True
     )
+
+    def __str__(self):
+        return f'({self.demand.display_name}, {short_text(self.details_md)}' + \
+            f' [{self.id}])'
 
 class Trench(models.Model):
     quantity = models.FloatField(
