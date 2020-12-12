@@ -40,6 +40,23 @@ _quote_fields = ['details_md', 'incoterm', 'incoterm_country',
 
 # --- Start: Inline ---
 
+class DemandCommissionInlineAdmin(admin.TabularInline):
+    model = mod.DemandCommission
+    extra = 1
+    autocomplete_fields = ['demand', 'quote', 'person', 'company']
+
+class DemandQuoteInlineAdmin(admin.TabularInline):
+    model = mod.DemandQuote
+    extra = 1
+    autocomplete_fields = ['incoterm', 'incoterm_country', 'status',
+        'currency', 'deposit_paymodes', 'remainder_paymodes',
+        'positive_origin_countries', 'negative_origin_countries']
+
+class FileDemandInlineAdmin(admin.TabularInline):
+    model = fod.FileDemand
+    extra = 1
+    autocomplete_fields = ['rtype', 'file']
+
 class FileSupplyInlineAdmin(admin.TabularInline):
     model = fod.FileSupply
     extra = 1
@@ -194,10 +211,13 @@ class DemandAdmin(admin.ModelAdmin):
     show_full_result_count = True
 
     # Details page settings
+    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         _expirable_invalidable_fieldsets + \
         _lead_fieldsets
     autocomplete_fields = _lead_autocomplete_fields
+    inlines = [FileDemandInlineAdmin, DemandQuoteInlineAdmin,
+        DemandCommissionInlineAdmin]
 
 @admin.register(mod.DemandCommission)
 class DemandCommissionAdmin(admin.ModelAdmin):
