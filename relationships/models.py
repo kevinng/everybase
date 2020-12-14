@@ -645,6 +645,27 @@ class Address(Standard):
         db_index=True
     )
 
+    en_canonical = models.ForeignKey(
+        'self',
+        related_name='lang_versions',
+        related_query_name='lang_versions',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    language = models.CharField(
+        max_length=20,
+        default='EN',
+        choices=[
+            ('EN', 'English'),
+            ('CH', 'Chinese')
+        ],
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
     class Meta:
         verbose_name = 'Address'
         verbose_name_plural = 'Addresses'
