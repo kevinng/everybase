@@ -3,40 +3,7 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
-@admin.register(
-    mod.PersonLinkType,
-    mod.PersonCompanyType,
-    mod.PersonAddressType,
-    mod.PersonPhoneNumberType,
-    mod.PersonEmailType,
-    mod.CompanyLinkType,
-    mod.CompanyAddressType,
-    mod.CompanyPhoneNumberType,
-    mod.CompanyEmailType,
-    mod.PhoneNumberType,
-    mod.BlackListReasonType)
-class ChoiceAdmin(comadm.ChoiceAdmin):
-    pass
-
-_address_fields = ['address_1', 'address_2', 'address_3', 'country',
-    'state', 'postal_code']
-@admin.register(mod.Address)
-class AddressAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _address_fields
-    list_editable = comadm.standard_list_editable + _address_fields
-    list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['country', 'state']
-    search_fields = ['id'] + _address_fields
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
-
-    # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
-    fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _address_fields})]
-    autocomplete_fields = ['country', 'state']
+# --- Start: Inline ---
 
 class CompanyEmailInlineAdmin(admin.TabularInline):
     model = mod.CompanyEmail
@@ -57,6 +24,84 @@ class CompanyLinkInlineAdmin(admin.TabularInline):
     model = mod.CompanyLink
     extra = 1
     autocomplete_fields = ['rtype', 'link']
+
+class CompanyEmailInlineAdmin(admin.TabularInline):
+    model = mod.CompanyEmail
+    extra = 1
+    autocomplete_fields = ['rtype', 'company']
+
+class PersonEmailInlineAdmin(admin.TabularInline):
+    model = mod.PersonEmail
+    extra = 1
+    autocomplete_fields = ['rtype', 'person']
+
+class PersonLinkInlineAdmin(admin.TabularInline):
+    model = mod.PersonLink
+    extra = 1
+    autocomplete_fields = ['rtype', 'link']
+
+class PersonCompanyInlineAdmin(admin.TabularInline):
+    model = mod.PersonCompany
+    extra = 1
+    autocomplete_fields = ['rtype', 'company']
+
+class PersonAddressInlineAdmin(admin.TabularInline):
+    model = mod.PersonAddress
+    extra = 1
+    autocomplete_fields = ['rtype', 'address']
+
+class PersonPhoneNumberInlineAdmin(admin.TabularInline):
+    model = mod.PersonPhoneNumber
+    extra = 1
+    autocomplete_fields = ['rtype', 'phone_number']
+
+class PersonEmailInlineAdmin(admin.TabularInline):
+    model = mod.PersonEmail
+    extra = 1
+    autocomplete_fields = ['rtype', 'email']
+
+class AddressInlineAdmin(admin.TabularInline):
+    model = mod.Address
+    extra = 1
+    autocomplete_fields = ['country', 'state', 'en_canonical']
+
+# --- End: Inline ---
+
+@admin.register(
+    mod.PersonLinkType,
+    mod.PersonCompanyType,
+    mod.PersonAddressType,
+    mod.PersonPhoneNumberType,
+    mod.PersonEmailType,
+    mod.CompanyLinkType,
+    mod.CompanyAddressType,
+    mod.CompanyPhoneNumberType,
+    mod.CompanyEmailType,
+    mod.PhoneNumberType,
+    mod.BlackListReasonType)
+class ChoiceAdmin(comadm.ChoiceAdmin):
+    pass
+
+_address_fields = ['address_1', 'address_2', 'address_3', 'country',
+    'state', 'postal_code', 'en_canonical', 'language']
+@admin.register(mod.Address)
+class AddressAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _address_fields
+    list_editable = comadm.standard_list_editable + _address_fields
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter + ['country', 'state']
+    search_fields = ['id'] + _address_fields
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
+        [(None, {'fields': _address_fields})]
+    autocomplete_fields = ['country', 'state', 'en_canonical']
+    inlines = [AddressInlineAdmin]
 
 _company_fields = ['company_name', 'company_name_wo_postfix', 'notes_md',
     'domain']
@@ -97,16 +142,6 @@ class PhoneNumberAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _phone_number_fields})]
 
-class CompanyEmailInlineAdmin(admin.TabularInline):
-    model = mod.CompanyEmail
-    extra = 1
-    autocomplete_fields = ['rtype', 'company']
-
-class PersonEmailInlineAdmin(admin.TabularInline):
-    model = mod.PersonEmail
-    extra = 1
-    autocomplete_fields = ['rtype', 'person']
-
 @admin.register(mod.Email)
 class EmailAdmin(admin.ModelAdmin):
     # List page settings
@@ -145,31 +180,6 @@ class InvalidEmailAdmin(admin.ModelAdmin):
         (None, {'fields': ['email', 'import_job']})
     ]
     autocomplete_fields = ['import_job']
-
-class PersonLinkInlineAdmin(admin.TabularInline):
-    model = mod.PersonLink
-    extra = 1
-    autocomplete_fields = ['rtype', 'link']
-
-class PersonCompanyInlineAdmin(admin.TabularInline):
-    model = mod.PersonCompany
-    extra = 1
-    autocomplete_fields = ['rtype', 'company']
-
-class PersonAddressInlineAdmin(admin.TabularInline):
-    model = mod.PersonAddress
-    extra = 1
-    autocomplete_fields = ['rtype', 'address']
-
-class PersonPhoneNumberInlineAdmin(admin.TabularInline):
-    model = mod.PersonPhoneNumber
-    extra = 1
-    autocomplete_fields = ['rtype', 'phone_number']
-
-class PersonEmailInlineAdmin(admin.TabularInline):
-    model = mod.PersonEmail
-    extra = 1
-    autocomplete_fields = ['rtype', 'email']
 
 _person_fields = ['given_name', 'family_name', 'notes_md']
 @admin.register(mod.Person)
