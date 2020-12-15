@@ -682,12 +682,16 @@ class PhoneNumber(Standard):
         blank=True,
         db_index=True
     )
-    country_code = models.PositiveIntegerField(
+    country_code = models.CharField(
+        max_length=50,
+        default=None,
         null=False,
         blank=False,
         db_index=True
     )
-    national_number = models.PositiveIntegerField(
+    national_number = models.CharField(
+        max_length=100,
+        default=None,
         null=False,
         blank=False,
         db_index=True
