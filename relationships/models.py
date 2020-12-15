@@ -654,15 +654,13 @@ class Address(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    language = models.CharField(
-        max_length=20,
-        default='EN',
-        choices=[
-            ('EN', 'English'),
-            ('CH', 'Chinese')
-        ],
-        null=False,
-        blank=False,
+    language = models.ForeignKey(
+        'common.Language',
+        related_name='addresses',
+        related_query_name='addresses',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
         db_index=True
     )
 

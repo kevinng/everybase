@@ -129,6 +129,9 @@ class State(Choice):
         db_index=True
     )
 
+class Language(Choice):
+    pass
+
 # --- End: Common models ---
 
 # --- Start: Other models ---
