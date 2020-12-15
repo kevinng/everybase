@@ -868,6 +868,7 @@ class WeChatID(Standard):
         db_index=True
     )
     wechat_id = models.CharField(
+        'WeChat ID',
         max_length=300,
         unique=True,
         null=False,
