@@ -90,7 +90,8 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + _address_fields
     list_editable = comadm.standard_list_editable + _address_fields
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['country', 'state', 'language']
+    list_filter = comadm.standard_list_filter + ['language',
+        'company_address_relationships', 'person_address_relationships']
     search_fields = ['id'] + _address_fields
     ordering = comadm.standard_ordering
     show_full_result_count = True
@@ -100,7 +101,7 @@ class AddressAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _address_fields})]
-    autocomplete_fields = ['country', 'state', 'en_canonical', 'language']
+    autocomplete_fields = ['en_canonical', 'language']
     inlines = [AddressInlineAdmin, CompanyAddressInlineAdmin,
         PersonAddressInlineAdmin]
 
