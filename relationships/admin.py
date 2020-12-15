@@ -63,7 +63,7 @@ class PersonEmailInlineAdmin(admin.TabularInline):
 class AddressInlineAdmin(admin.TabularInline):
     model = mod.Address
     extra = 1
-    autocomplete_fields = ['country', 'state', 'en_canonical']
+    autocomplete_fields = ['country', 'state', 'en_canonical', 'language']
 
 # --- End: Inline ---
 
@@ -90,7 +90,7 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + _address_fields
     list_editable = comadm.standard_list_editable + _address_fields
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['country', 'state']
+    list_filter = comadm.standard_list_filter + ['country', 'state', 'language']
     search_fields = ['id'] + _address_fields
     ordering = comadm.standard_ordering
     show_full_result_count = True
@@ -100,7 +100,7 @@ class AddressAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _address_fields})]
-    autocomplete_fields = ['country', 'state', 'en_canonical']
+    autocomplete_fields = ['country', 'state', 'en_canonical', 'language']
     inlines = [AddressInlineAdmin, CompanyAddressInlineAdmin,
         PersonAddressInlineAdmin]
 
