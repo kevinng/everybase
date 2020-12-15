@@ -92,7 +92,11 @@ class AddressAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['language',
         'company_address_relationships', 'person_address_relationships']
-    search_fields = ['id'] + _address_fields
+    search_fields = ['id', 'address_1', 'address_2', 'address_3',
+        'country__name', 'state__name', 'postal_code',
+        'company_address_relationships__company__company_name',
+        'person_address_relationships__person__given_name',
+        'person_address_relationships__person__family_name']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
