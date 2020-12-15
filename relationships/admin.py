@@ -68,7 +68,8 @@ class AddressInlineAdmin(admin.TabularInline):
     mod.CompanyPhoneNumberType,
     mod.CompanyEmailType,
     mod.PhoneNumberType,
-    mod.BlackListReasonType)
+    mod.BlackListReasonType,
+    mod.WeChatIDType)
 class ChoiceAdmin(comadm.ChoiceAdmin):
     pass
 
@@ -244,6 +245,23 @@ class BlackListEntryAdmin(admin.ModelAdmin):
             })
         ]
     autocomplete_fields = _black_list_entry_rel_fields + ['reason']
+
+_wechat_id_fields = ['wechat_id']
+@admin.register(mod.WeChatID)
+class WeChatIDAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _wechat_id_fields
+    list_editable = comadm.standard_list_editable + _wechat_id_fields
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter + _wechat_id_fields
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _wechat_id_fields})]
 
 # --- Start: Relationships ---
 
