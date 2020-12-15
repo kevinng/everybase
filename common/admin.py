@@ -1,5 +1,5 @@
 from django.contrib import admin
-from common.models import short_text, Country, State, ImportJob, SystemTimestamp
+from common import models
 
 # Fields for standard models
 
@@ -44,12 +44,12 @@ class ChoiceAdmin(admin.ModelAdmin):
     fieldsets = choice_fieldsets
 
     def short_details_md(self, obj):
-        return short_text(obj.details_md)
+        return models.short_text(obj.details_md)
 
     def short_programmatic_details_md(self, obj):
-        return short_text(obj.programmatic_details_md)
+        return models.short_text(obj.programmatic_details_md)
 
-@admin.register(State)
+@admin.register(models.State)
 class StateAdmin(ChoiceAdmin):
     fieldsets = choice_fieldsets + [
         (None, {'fields': ['country']})
@@ -64,7 +64,7 @@ class ParentChildrenChoiceAdmin(ChoiceAdmin):
     ]
     autocomplete_fields = ['parent']
 
-@admin.register(Country)
+@admin.register(models.Country)
 class CountryAdmin(ChoiceAdmin):
     list_display = choice_list_display + ['cc_tld']
     list_editable = choice_list_editable + ['cc_tld']
@@ -73,7 +73,11 @@ class CountryAdmin(ChoiceAdmin):
         ('Other details', {'fields': ['cc_tld']})
     ]
 
-@admin.register(ImportJob)
+@admin.register(models.Language)
+class LanguageAdmin(ChoiceAdmin):
+    pass
+
+@admin.register(models.ImportJob)
 class ImportJobAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['status', 'description']
@@ -89,7 +93,7 @@ class ImportJobAdmin(admin.ModelAdmin):
     fieldsets = standard_fieldsets + [
         (None, {'fields': ['status', 'description']})]
 
-@admin.register(SystemTimestamp)
+@admin.register(models.SystemTimestamp)
 class SystemTimestampAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['key', 'timestamp']
