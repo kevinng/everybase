@@ -25,6 +25,11 @@ class CompanyEmailInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['rtype', 'company', 'email']
 
+class CompanyWeChatIDInlineAdmin(admin.TabularInline):
+    model = mod.CompanyWeChatID
+    extra = 1
+    autocomplete_fields = ['rtype', 'company', 'wechat_id']
+
 class PersonLinkInlineAdmin(admin.TabularInline):
     model = mod.PersonLink
     extra = 1
@@ -50,6 +55,11 @@ class PersonEmailInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['rtype', 'person', 'email']
 
+class PersonWeChatIDInlineAdmin(admin.TabularInline):
+    model = mod.PersonWeChatID
+    extra = 1
+    autocomplete_fields = ['rtype', 'person', 'wechat_id']
+
 class AddressInlineAdmin(admin.TabularInline):
     model = mod.Address
     extra = 1
@@ -69,7 +79,9 @@ class AddressInlineAdmin(admin.TabularInline):
     mod.CompanyEmailType,
     mod.PhoneNumberType,
     mod.BlackListReasonType,
-    mod.WeChatIDType)
+    mod.WeChatIDType,
+    mod.CompanyWeChatIDType,
+    mod.PersonWeChatIDType)
 class ChoiceAdmin(comadm.ChoiceAdmin):
     pass
 
@@ -254,6 +266,7 @@ class WeChatIDAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + _wechat_id_fields
     list_per_page = 50
     list_filter = comadm.standard_list_filter + _wechat_id_fields
+    search_fields = ['id'] + _wechat_id_fields
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -261,7 +274,8 @@ class WeChatIDAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _wechat_id_fields})]
+        [('Details', {'fields': _wechat_id_fields + ['types']})]
+    inlines = [CompanyWeChatIDInlineAdmin, PersonWeChatIDInlineAdmin]
 
 # --- Start: Relationships ---
 
@@ -353,6 +367,17 @@ class PersonEmailAdmin(RelationshipAdmin):
     fieldsets = _prel_fieldsets('email')
     autocomplete_fields = _prel_autocomplete_fields + ['email']
 
+@admin.register(mod.PersonWeChatID)
+class PersonWeChatIDAdmin(RelationshipAdmin):
+    # List page settings
+    list_display = _prel_list_display + ['wechat_id']
+    list_editable = _prel_list_editable + ['wechat_id']
+    search_fields = _prel_list_search_fields + ['wechat_id__wechat_id']
+
+    # Details page settings
+    fieldsets = _prel_fieldsets('wechat_id')
+    autocomplete_fields = _prel_autocomplete_fields + ['wechat_id']
+
 @admin.register(mod.CompanyLink)
 class CompanyLinkAdmin(RelationshipAdmin):
     # List page settings
@@ -396,5 +421,16 @@ class CompanyEmailAdmin(RelationshipAdmin):
     # Details page settings
     fieldsets = _crel_fieldsets('email')
     autocomplete_fields = _crel_autocomplete_fields + ['email']
+
+@admin.register(mod.CompanyWeChatID)
+class CompanyWeChatIDAdmin(RelationshipAdmin):
+    # List page settings
+    list_display = _crel_list_display + ['wechat_id']
+    list_editable = _crel_list_editable + ['wechat_id']
+    search_fields = _crel_list_search_fields + ['wechat_id__wechat_id']
+
+    # Details page settings
+    fieldsets = _crel_fieldsets('wechat_id')
+    autocomplete_fields = _crel_autocomplete_fields + ['wechat_id']
 
 # --- End: Relationships ---
