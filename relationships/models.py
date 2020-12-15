@@ -229,6 +229,41 @@ class PersonEmail(Relationship):
     def __str__(self):
         return f'({self.rtype}, {self.person}, {self.email} [{self.id}])'
 
+class PersonWeChatIDType(Choice):
+    class Meta:
+        verbose_name = 'Person-WeChatID type'
+        verbose_name_plural = 'Person-WeChatID types'
+
+class PersonWeChatID(Relationship):
+    rtype = models.ForeignKey(
+        'PersonWeChatIDType',
+        on_delete=models.PROTECT,
+        related_name='person_wechatid_relationships',
+        related_query_name='person_wechatid_relationships',
+        verbose_name='Person-WeChatID relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'Person',
+        on_delete=models.PROTECT,
+        related_name='person_wechatid_relationships',
+        related_query_name='person_wechatid_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    wechat_id = models.ForeignKey(
+        'WeChatID',
+        on_delete=models.PROTECT,
+        related_name='person_wechatid_relationships',
+        related_query_name='person_wechatid_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
 # --- End: Person Relationships ---
 
 # --- Start: Company Relationships ---
@@ -401,6 +436,41 @@ class CompanyEmail(Relationship):
 
     def __str__(self):
         return f'({self.rtype}, {self.company}, {self.email} [{self.id}])'
+
+class CompanyWeChatIDType(Choice):
+    class Meta:
+        verbose_name = 'Company-WeChatID type'
+        verbose_name_plural = 'Company-WeChatID types'
+
+class CompanyWeChatID(Relationship):
+    rtype = models.ForeignKey(
+        'CompanyWeChatIDType',
+        on_delete=models.PROTECT,
+        related_name='company_wechatid_relationships',
+        related_query_name='company_wechatid_relationships',
+        verbose_name='Company-WeChatID relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        on_delete=models.PROTECT,
+        related_name='company_wechatid_relationships',
+        related_query_name='company_wechatid_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    wechat_id = models.ForeignKey(
+        'WeChatID',
+        on_delete=models.PROTECT,
+        related_name='company_wechatid_relationships',
+        related_query_name='company_wechatid_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
 
 # --- End: Company Relationships ---
 
@@ -783,5 +853,33 @@ class BlackListEntry(Standard):
             blacklist_obj = self.person
 
         return f'({blacklist_obj} [{self.id}])'
+
+class WeChatIDType(Choice):
+    class Meta:
+        verbose_name = 'WeChat ID type'
+        verbose_name_plural = 'WeChat ID types'
+
+class WeChatID(Standard):
+    types = models.ManyToManyField(
+        'WeChatIDType',
+        related_name='wechat_ids',
+        related_query_name='wechat_ids',
+        blank=True,
+        db_index=True
+    )
+    wechat_id = models.CharField(
+        max_length=300,
+        unique=True,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'WeChat ID'
+        verbose_name_plural = 'WeChat IDs'
+
+    def __str__(self):
+        return f'({self.wechat_id} [{self.id}])'
 
 # --- End: Entities ---
