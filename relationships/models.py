@@ -676,7 +676,7 @@ class PhoneNumberType(Choice):
 
 class PhoneNumber(Standard):
     types = models.ManyToManyField(
-        'PhoneNumber',
+        'PhoneNumberType',
         related_name='phone_numbers',
         related_query_name='phone_numbers',
         blank=True,
