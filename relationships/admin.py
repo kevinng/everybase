@@ -8,7 +8,7 @@ from common import admin as comadm
 class CompanyPhoneNumberInlineAdmin(admin.TabularInline):
     model = mod.CompanyPhoneNumber
     extra = 1
-    autocomplete_fields = ['rtype', 'phone_number']
+    autocomplete_fields = ['rtype', 'company', 'phone_number']
 
 class CompanyAddressInlineAdmin(admin.TabularInline):
     model = mod.CompanyAddress
@@ -43,7 +43,7 @@ class PersonAddressInlineAdmin(admin.TabularInline):
 class PersonPhoneNumberInlineAdmin(admin.TabularInline):
     model = mod.PersonPhoneNumber
     extra = 1
-    autocomplete_fields = ['rtype', 'phone_number']
+    autocomplete_fields = ['rtype', 'person', 'phone_number']
 
 class PersonEmailInlineAdmin(admin.TabularInline):
     model = mod.PersonEmail
@@ -137,6 +137,7 @@ class PhoneNumberAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _phone_number_fields})]
+    inlines = [PersonPhoneNumberInlineAdmin, CompanyPhoneNumberInlineAdmin]
 
 @admin.register(mod.Email)
 class EmailAdmin(admin.ModelAdmin):
