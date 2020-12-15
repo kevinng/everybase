@@ -5,11 +5,6 @@ from common import admin as comadm
 
 # --- Start: Inline ---
 
-class CompanyEmailInlineAdmin(admin.TabularInline):
-    model = mod.CompanyEmail
-    extra = 1
-    autocomplete_fields = ['rtype', 'email']
-
 class CompanyPhoneNumberInlineAdmin(admin.TabularInline):
     model = mod.CompanyPhoneNumber
     extra = 1
@@ -28,12 +23,7 @@ class CompanyLinkInlineAdmin(admin.TabularInline):
 class CompanyEmailInlineAdmin(admin.TabularInline):
     model = mod.CompanyEmail
     extra = 1
-    autocomplete_fields = ['rtype', 'company']
-
-class PersonEmailInlineAdmin(admin.TabularInline):
-    model = mod.PersonEmail
-    extra = 1
-    autocomplete_fields = ['rtype', 'person']
+    autocomplete_fields = ['rtype', 'company', 'email']
 
 class PersonLinkInlineAdmin(admin.TabularInline):
     model = mod.PersonLink
@@ -58,7 +48,7 @@ class PersonPhoneNumberInlineAdmin(admin.TabularInline):
 class PersonEmailInlineAdmin(admin.TabularInline):
     model = mod.PersonEmail
     extra = 1
-    autocomplete_fields = ['rtype', 'email']
+    autocomplete_fields = ['rtype', 'person', 'email']
 
 class AddressInlineAdmin(admin.TabularInline):
     model = mod.Address
