@@ -136,7 +136,7 @@ class PhoneNumberAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _phone_number_fields})]
+        [('Details', {'fields': _phone_number_fields + ['types']})]
     inlines = [PersonPhoneNumberInlineAdmin, CompanyPhoneNumberInlineAdmin]
 
 @admin.register(mod.Email)
