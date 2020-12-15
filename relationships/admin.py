@@ -18,7 +18,7 @@ class CompanyPhoneNumberInlineAdmin(admin.TabularInline):
 class CompanyAddressInlineAdmin(admin.TabularInline):
     model = mod.CompanyAddress
     extra = 1
-    autocomplete_fields = ['rtype', 'address']
+    autocomplete_fields = ['rtype', 'company', 'address']
 
 class CompanyLinkInlineAdmin(admin.TabularInline):
     model = mod.CompanyLink
@@ -48,7 +48,7 @@ class PersonCompanyInlineAdmin(admin.TabularInline):
 class PersonAddressInlineAdmin(admin.TabularInline):
     model = mod.PersonAddress
     extra = 1
-    autocomplete_fields = ['rtype', 'address']
+    autocomplete_fields = ['rtype', 'person', 'address']
 
 class PersonPhoneNumberInlineAdmin(admin.TabularInline):
     model = mod.PersonPhoneNumber
@@ -101,7 +101,8 @@ class AddressAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _address_fields})]
     autocomplete_fields = ['country', 'state', 'en_canonical']
-    inlines = [AddressInlineAdmin]
+    inlines = [AddressInlineAdmin, CompanyAddressInlineAdmin,
+        PersonAddressInlineAdmin]
 
 _company_fields = ['company_name', 'company_name_wo_postfix', 'notes_md',
     'domain']
