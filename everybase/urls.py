@@ -34,3 +34,7 @@ urlpatterns = [
     # Django Rest Framework login
     path('api-auth/', include('rest_framework.urls'))
 ]
+
+admin.site.site_header = "Everybase Admin"
+admin.site.site_title = "" # No title
+admin.site.index_title = "Welcome to Everybase Admin Portal"
