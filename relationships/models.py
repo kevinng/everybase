@@ -698,6 +698,24 @@ class Address(Standard):
         blank=True,
         db_index=True
     )
+    address_1_cn = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    address_2_cn = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    address_3_cn = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     country = models.ForeignKey(
         'common.Country',
         related_name='addresses',

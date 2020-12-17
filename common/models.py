@@ -119,6 +119,12 @@ class Country(Choice):
         verbose_name_plural = 'Countries'
 
 class State(Choice):
+    china_province_name_cn = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     country = models.ForeignKey(
         'Country',
         on_delete=models.PROTECT,
