@@ -60,11 +60,6 @@ class PersonWeChatIDInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['rtype', 'person', 'wechat_id']
 
-class AddressInlineAdmin(admin.TabularInline):
-    model = mod.Address
-    extra = 1
-    autocomplete_fields = ['country', 'state', 'en_canonical', 'language']
-
 # --- End: Inline ---
 
 @admin.register(
@@ -85,14 +80,14 @@ class ChoiceAdmin(comadm.ChoiceAdmin):
     pass
 
 _address_fields = ['address_1', 'address_2', 'address_3', 'country',
-    'state', 'postal_code', 'en_canonical', 'language']
+    'state', 'postal_code']
 @admin.register(mod.Address)
 class AddressAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _address_fields
     list_editable = comadm.standard_list_editable + _address_fields
     list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['language',
+    list_filter = comadm.standard_list_filter + [
         'company_address_relationships', 'person_address_relationships']
     search_fields = ['id', 'address_1', 'address_2', 'address_3',
         'country__name', 'state__name', 'postal_code',
@@ -107,9 +102,8 @@ class AddressAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _address_fields})]
-    autocomplete_fields = ['en_canonical', 'language']
-    inlines = [AddressInlineAdmin, CompanyAddressInlineAdmin,
-        PersonAddressInlineAdmin]
+    autocomplete_fields = ['country', 'state']
+    inlines = [CompanyAddressInlineAdmin, PersonAddressInlineAdmin]
 
 _company_fields = ['company_name', 'company_name_wo_postfix', 'notes_md',
     'domain']
