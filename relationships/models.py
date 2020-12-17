@@ -264,6 +264,10 @@ class PersonWeChatID(Relationship):
         db_index=True
     )
 
+    class Meta:
+        verbose_name = 'Person-WeChatID type'
+        verbose_name_plural = 'Person-WeChatID types'
+
 # --- End: Person Relationships ---
 
 # --- Start: Company Relationships ---
@@ -471,6 +475,10 @@ class CompanyWeChatID(Relationship):
         blank=False,
         db_index=True
     )
+
+    class Meta:
+        verbose_name = 'Company-WeChatID'
+        verbose_name_plural = 'Company-WeChatIDs'
 
 # --- End: Company Relationships ---
 
