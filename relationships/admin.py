@@ -79,7 +79,6 @@ class AddressInlineAdmin(admin.TabularInline):
     mod.CompanyEmailType,
     mod.PhoneNumberType,
     mod.BlackListReasonType,
-    mod.WeChatIDType,
     mod.CompanyWeChatIDType,
     mod.PersonWeChatIDType)
 class ChoiceAdmin(comadm.ChoiceAdmin):
@@ -274,7 +273,7 @@ class WeChatIDAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _wechat_id_fields + ['types']})]
+        [('Details', {'fields': _wechat_id_fields})]
     inlines = [CompanyWeChatIDInlineAdmin, PersonWeChatIDInlineAdmin]
 
 # --- Start: Relationships ---

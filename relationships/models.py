@@ -854,19 +854,7 @@ class BlackListEntry(Standard):
 
         return f'({blacklist_obj} [{self.id}])'
 
-class WeChatIDType(Choice):
-    class Meta:
-        verbose_name = 'WeChat ID type'
-        verbose_name_plural = 'WeChat ID types'
-
 class WeChatID(Standard):
-    types = models.ManyToManyField(
-        'WeChatIDType',
-        related_name='wechat_ids',
-        related_query_name='wechat_ids',
-        blank=True,
-        db_index=True
-    )
     wechat_id = models.CharField(
         'WeChat ID',
         max_length=300,
