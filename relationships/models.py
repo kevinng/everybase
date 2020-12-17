@@ -699,18 +699,21 @@ class Address(Standard):
         db_index=True
     )
     address_1_cn = models.CharField(
+        'Address 1 in Chinese',
         max_length=100,
         null=True,
         blank=True,
         db_index=True
     )
     address_2_cn = models.CharField(
+        'Address 2 in Chinese',
         max_length=100,
         null=True,
         blank=True,
         db_index=True
     )
     address_3_cn = models.CharField(
+        'Address 3 in Chinese',
         max_length=100,
         null=True,
         blank=True,

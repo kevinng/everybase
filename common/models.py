@@ -120,6 +120,7 @@ class Country(Choice):
 
 class State(Choice):
     china_province_name_cn = models.CharField(
+        'China province name in Chinese',
         max_length=100,
         null=True,
         blank=True,

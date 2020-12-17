@@ -79,8 +79,8 @@ class PersonWeChatIDInlineAdmin(admin.TabularInline):
 class ChoiceAdmin(comadm.ChoiceAdmin):
     pass
 
-_address_fields = ['address_1', 'address_2', 'address_3', 'country',
-    'state', 'postal_code']
+_address_fields = ['address_1', 'address_2', 'address_3', 'address_1_cn',
+    'address_2_cn', 'address_3_cn', 'country', 'state', 'postal_code']
 @admin.register(mod.Address)
 class AddressAdmin(admin.ModelAdmin):
     # List page settings
@@ -90,6 +90,7 @@ class AddressAdmin(admin.ModelAdmin):
     list_filter = comadm.standard_list_filter + [
         'company_address_relationships', 'person_address_relationships']
     search_fields = ['id', 'address_1', 'address_2', 'address_3',
+        'address_1_cn', 'address_2_cn', 'address_3_cn',
         'country__name', 'state__name', 'postal_code',
         'company_address_relationships__company__company_name',
         'person_address_relationships__person__given_name',
