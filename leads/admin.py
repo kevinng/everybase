@@ -109,7 +109,7 @@ _rel_list_search_fields = ['id', 'details_md', 'rtype', 'link']
 _rel_fieldsets = lambda field: comadm.standard_fieldsets + [
     (None, {'fields': ['details_md', 'rtype', 'link', field]})]
 
-_rel_autocomplete_fields = ['rtype']
+_rel_autocomplete_fields = ['rtype', 'link']
 
 @admin.register(
     mod.SupplyLinkType,
