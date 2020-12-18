@@ -664,12 +664,6 @@ class InvalidEmail(Standard):
         return f'({self.email} [{self.id}])'
 
 class Link(Standard):
-    verified = models.DateTimeField(
-        null=True,
-        blank=True,
-        default=None,
-        db_index=True
-    )
     link = models.URLField(
         null=False,
         blank=False,

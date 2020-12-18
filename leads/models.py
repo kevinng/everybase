@@ -1,5 +1,6 @@
 from django.db import models
 from common.models import Choice, Standard, short_text
+from relationships.models import Relationship
 
 # --- Start: Abstract models ---
 
@@ -62,15 +63,6 @@ class Lead(models.Model):
         verbose_name='Details in Markdown',
         null=True,
         blank=True
-    )
-
-    links = models.ManyToManyField(
-        'relationships.Link',
-        related_name='%(class)s_leads',
-        related_query_name='%(class)s_leads',
-        # null=True, # No effect
-        blank=True,
-        db_index=True
     )
 
     contact = models.ForeignKey(
@@ -349,13 +341,113 @@ class UOMRelationship(models.Model):
 
 # --- Start: Main models ---
 
+class SupplyLinkType(Choice):
+    class Meta:
+        verbose_name = 'Supply-link type'
+        verbose_name_plural = 'Supply-link types'
+
+class SupplyLink(Relationship):
+    rtype = models.ForeignKey(
+        'SupplyLinkType',
+        on_delete=models.PROTECT,
+        related_name='supply_link_relationships',
+        related_query_name='supply_link_relationships',
+        verbose_name='Supply-link relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    supply = models.ForeignKey(
+        'Supply',
+        on_delete=models.PROTECT,
+        related_name='supply_link_relationships',
+        related_query_name='supply_link_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    link = models.ForeignKey(
+        'relationships.Link',
+        on_delete=models.PROTECT,
+        related_name='supply_link_relationships',
+        related_query_name='supply_link_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Supply-link'
+        verbose_name_plural = 'Supply-links'
+    
+    def __str__(self):
+        return f'({self.rtype}, {self.supply}, {self.link} [{self.id}])'
+
 class Supply(Standard, Lead, ExpirableInvalidable):
+    links = models.ManyToManyField(
+        'SupplyLink',
+        related_name='supplies',
+        related_query_name='supplies',
+        # null=True, # No effect
+        blank=True,
+        db_index=True
+    )
+
     class Meta:
         verbose_name = 'Supply'
         verbose_name_plural = 'Supplies'
 
+class DemandLinkType(Choice):
+    class Meta:
+        verbose_name = 'Demand-link type'
+        verbose_name_plural = 'Demand-link types'
+
+class DemandLink(Relationship):
+    rtype = models.ForeignKey(
+        'DemandLinkType',
+        on_delete=models.PROTECT,
+        related_name='demand_link_relationships',
+        related_query_name='demand_link_relationships',
+        verbose_name='Demand-link relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    demand = models.ForeignKey(
+        'Demand',
+        on_delete=models.PROTECT,
+        related_name='demand_link_relationships',
+        related_query_name='demand_link_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    link = models.ForeignKey(
+        'relationships.Link',
+        on_delete=models.PROTECT,
+        related_name='demand_link_relationships',
+        related_query_name='demand_link_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Demand-link'
+        verbose_name_plural = 'Demand-links'
+    
+    def __str__(self):
+        return f'({self.rtype}, {self.demand}, {self.link} [{self.id}])'
+
 class Demand(Standard, Lead, ExpirableInvalidable):
-    pass
+    links = models.ManyToManyField(
+        'DemandLink',
+        related_name='demands',
+        related_query_name='demands',
+        # null=True, # No effect
+        blank=True,
+        db_index=True
+    )
 
 class SupplyQuote(Standard, Quote, ExpirableInvalidable):
     supply = models.ForeignKey(

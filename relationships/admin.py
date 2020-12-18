@@ -206,7 +206,7 @@ class PersonAdmin(admin.ModelAdmin):
         PersonAddressInlineAdmin, PersonPhoneNumberInlineAdmin,
         PersonEmailInlineAdmin]
 
-_link_fields = ['verified', 'link']
+_link_fields = ['link']
 @admin.register(mod.Link)
 class LinkAdmin(admin.ModelAdmin):
     # List page settings

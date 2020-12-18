@@ -3,6 +3,7 @@ from . import models as mod
 from files import models as fod
 from communication import models as cod
 from common import admin as comadm
+from relationships import admin as reladm
 
 # --- Start: Abstract configurations ---
 
@@ -21,12 +22,11 @@ _expirable_search_fields = ['invalidated_reason_md']
 _lead_fields = ['category', 'display_name', 'base_uom', 'details_md',
     'contact', 'company', 'contact_type', 'contact_type_details_md']
 _lead_fieldsets = [
-    ('Lead details', {'fields': _lead_fields}),
-    ('Links', {'fields': ['links']})
+    ('Lead details', {'fields': _lead_fields})
 ]
 _lead_filter = ['category', 'base_uom', 'contact_type']
 _lead_autocomplete_fields = ['category', 'base_uom', 'contact', 'company',
-    'contact_type', 'links']
+    'contact_type']
 _lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
     'company', 'contact_type', 'contact_type_details_md']
 
@@ -95,6 +95,51 @@ class TrenchInlineAdmin(admin.TabularInline):
     autocomplete_fields = ['paymode', 'demand_quote', 'supply_quote']
 
 # --- End: Inline ---
+
+# --- Start: Relationships ---
+
+_rel_list_display = comadm.standard_list_display + \
+    ['details_md', 'rtype', 'link']
+
+_rel_list_editable = comadm.standard_list_editable + \
+    ['details_md', 'rtype', 'link']
+
+_rel_list_search_fields = ['id', 'details_md', 'rtype', 'link']
+
+_rel_fieldsets = lambda field: comadm.standard_fieldsets + [
+    (None, {'fields': ['details_md', 'rtype', 'link', field]})]
+
+_rel_autocomplete_fields = ['rtype']
+
+@admin.register(
+    mod.SupplyLinkType,
+    mod.DemandLinkType)
+class ChoiceAdmin(comadm.ChoiceAdmin):
+    pass
+
+@admin.register(mod.SupplyLink)
+class SupplyLinkAdmin(reladm.RelationshipAdmin):
+    # List page settings
+    list_display = _rel_list_display + ['supply']
+    list_editable = _rel_list_editable + ['supply']
+    search_fields = _rel_list_search_fields + ['supply']
+
+    # Details page settings
+    fieldsets = _rel_fieldsets('supply')
+    autocomplete_fields = _rel_autocomplete_fields + ['supply']
+
+@admin.register(mod.DemandLink)
+class DemandLinkAdmin(reladm.RelationshipAdmin):
+    # List page settings
+    list_display = _rel_list_display + ['demand']
+    list_editable = _rel_list_editable + ['demand']
+    search_fields = _rel_list_search_fields + ['demand']
+
+    # Details page settings
+    fieldsets = _rel_fieldsets('demand')
+    autocomplete_fields = _rel_autocomplete_fields + ['demand']
+
+# --- End: Relationships ---
 
 # --- Start: Configurations ---
 
