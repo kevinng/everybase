@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='link',
             name='ltype',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.PROTECT, to='relationships.linktype', verbose_name='Link type'),
+            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.PROTECT, to='relationships.linktype', verbose_name='Link type'),
         ),
     ]
