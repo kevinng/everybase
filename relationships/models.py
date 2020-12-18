@@ -669,6 +669,7 @@ class LinkType(Choice):
 class Link(Standard):
     ltype = models.ForeignKey(
         'LinkType',
+        verbose_name='Link type',
         null=False,
         blank=False,
         default=None,
