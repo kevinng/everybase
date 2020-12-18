@@ -73,14 +73,6 @@ class Lead(models.Model):
         db_index=True
     )
 
-    public_details_url = models.URLField(
-        'Public details URL',
-        default=None,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
     contact = models.ForeignKey(
         'relationships.Person',
         on_delete=models.PROTECT,
