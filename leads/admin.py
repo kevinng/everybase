@@ -26,7 +26,7 @@ _lead_fieldsets = [
 ]
 _lead_filter = ['category', 'base_uom', 'contact_type']
 _lead_autocomplete_fields = ['category', 'base_uom', 'contact', 'company',
-    'contact_type']
+    'contact_type', 'links']
 _lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
     'company', 'contact_type', 'contact_type_details_md']
 
