@@ -54,7 +54,7 @@ class StateAdmin(ChoiceAdmin):
     fieldsets = choice_fieldsets + [
         (None, {'fields': ['country', 'china_province_name_cn']})
     ]
-    autocomplete_fields = ['country', 'china_province_name_cn']
+    autocomplete_fields = ['country']
 
 class ParentChildrenChoiceAdmin(ChoiceAdmin):
     list_display = choice_list_display + ['parent']
