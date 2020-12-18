@@ -11,9 +11,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='link',
-            name='ltype',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='relationships.linktype', verbose_name='Link type'),
-        ),
+
     ]

@@ -10,11 +10,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='link',
-            name='ltype',
-        ),
-        migrations.DeleteModel(
-            name='LinkType',
-        ),
+
     ]

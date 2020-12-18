@@ -11,22 +11,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='LinkType',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(db_index=True, max_length=100)),
-                ('details_md', models.TextField(blank=True, default=None, null=True, verbose_name='Details in Markdown')),
-                ('programmatic_key', models.CharField(blank=True, db_index=True, max_length=100, null=True)),
-                ('programmatic_details_md', models.TextField(blank=True, null=True, verbose_name='Programmatic details in Markdown')),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.AddField(
-            model_name='link',
-            name='ltype',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.PROTECT, to='relationships.linktype'),
-        ),
+
     ]
