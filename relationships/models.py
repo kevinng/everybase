@@ -672,7 +672,6 @@ class Link(Standard):
         verbose_name='Link type',
         null=False,
         blank=False,
-        default=None,
         on_delete=models.PROTECT,
         db_index=True
     )
