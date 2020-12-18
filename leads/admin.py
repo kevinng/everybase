@@ -19,7 +19,8 @@ _expirable_search_fields = ['invalidated_reason_md']
 # Lead
 
 _lead_fields = ['category', 'display_name', 'base_uom', 'details_md',
-    'contact', 'company', 'contact_type', 'contact_type_details_md']
+    'contact', 'company', 'contact_type', 'contact_type_details_md',
+    'public_details_url']
 _lead_fieldsets = [
     ('Lead details', {'fields': _lead_fields}),
     ('Links', {'fields': ['links']})
