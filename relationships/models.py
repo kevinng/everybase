@@ -663,18 +663,7 @@ class InvalidEmail(Standard):
     def __str__(self):
         return f'({self.email} [{self.id}])'
 
-class LinkType(Choice):
-    pass
-
 class Link(Standard):
-    ltype = models.ForeignKey(
-        'LinkType',
-        verbose_name='Link type',
-        null=False,
-        blank=False,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
     verified = models.DateTimeField(
         null=True,
         blank=True,

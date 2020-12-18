@@ -73,7 +73,6 @@ class PersonWeChatIDInlineAdmin(admin.TabularInline):
     mod.CompanyPhoneNumberType,
     mod.CompanyEmailType,
     mod.PhoneNumberType,
-    mod.LinkType,
     mod.BlackListReasonType,
     mod.CompanyWeChatIDType,
     mod.PersonWeChatIDType)
@@ -207,7 +206,7 @@ class PersonAdmin(admin.ModelAdmin):
         PersonAddressInlineAdmin, PersonPhoneNumberInlineAdmin,
         PersonEmailInlineAdmin]
 
-_link_fields = ['verified', 'link', 'ltype']
+_link_fields = ['verified', 'link']
 @admin.register(mod.Link)
 class LinkAdmin(admin.ModelAdmin):
     # List page settings
@@ -224,7 +223,6 @@ class LinkAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _link_fields})]
-    autocomplete_fields = ['ltype']
 
 _black_list_entry_fields = ['start', 'invalidated', 'reason', 'reason_md',
     'email', 'phone_number', 'company', 'person']
