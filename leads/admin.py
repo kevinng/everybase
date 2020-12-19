@@ -94,6 +94,16 @@ class TrenchInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['paymode', 'demand_quote', 'supply_quote']
 
+class SupplyLinkInlineAdmin(admin.TabularInline):
+    model = mod.SupplyLink
+    extra = 1
+    autocomplete_fields = ['rtype', 'supply', 'link']
+
+class DemandLinkInlineAdmin(admin.TabularInline):
+    model = mod.DemandLink
+    extra = 1
+    autocomplete_fields = ['rtype', 'demand', 'link']
+
 # --- End: Inline ---
 
 # --- Start: Relationships ---
@@ -235,8 +245,8 @@ class SupplyAdmin(admin.ModelAdmin):
         _expirable_invalidable_fieldsets + \
         _lead_fieldsets
     autocomplete_fields = _lead_autocomplete_fields
-    inlines = [FileSupplyInlineAdmin, SupplyQuoteInlineAdmin,
-        SupplyCommissionInlineAdmin]
+    inlines = [SupplyQuoteInlineAdmin, SupplyCommissionInlineAdmin,
+        FileSupplyInlineAdmin, SupplyLinkInlineAdmin]
 
 @admin.register(mod.Demand)
 class DemandAdmin(admin.ModelAdmin):
@@ -263,7 +273,7 @@ class DemandAdmin(admin.ModelAdmin):
         _lead_fieldsets
     autocomplete_fields = _lead_autocomplete_fields
     inlines = [FileDemandInlineAdmin, DemandQuoteInlineAdmin,
-        DemandCommissionInlineAdmin]
+        DemandCommissionInlineAdmin, DemandLinkInlineAdmin]
 
 @admin.register(mod.DemandCommission)
 class DemandCommissionAdmin(admin.ModelAdmin):
