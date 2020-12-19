@@ -19,8 +19,8 @@ _expirable_search_fields = ['invalidated_reason_md']
 
 # Lead
 
-_lead_fields = ['category', 'display_name', 'base_uom', 'details_md',
-    'contact', 'company', 'contact_type', 'contact_type_details_md']
+_lead_fields = ['contact', 'company', 'category', 'display_name', 'base_uom',
+    'details_md', 'contact_type', 'contact_type_details_md']
 _lead_fieldsets = [
     ('Lead details', {'fields': _lead_fields})
 ]
@@ -215,11 +215,11 @@ class UOMRelationshipAdmin(admin.ModelAdmin):
 class SupplyAdmin(admin.ModelAdmin):
     search_fields = ['id']
     list_display = comadm.standard_list_display + \
-        _expirable_invalidable_fields + \
-        _lead_fields
+        _lead_fields + \
+        _expirable_invalidable_fields # Display at the back
     list_editable = comadm.standard_list_editable + \
-        _expirable_invalidable_fields + \
-        _lead_fields
+        _lead_fields + \
+        _expirable_invalidable_fields # Display at the back
     list_per_page = 50
     list_filter = comadm.standard_list_filter + \
         _expirable_invalidable_filter + \
