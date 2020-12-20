@@ -667,6 +667,7 @@ class Link(Standard):
     link = models.URLField(
         null=False,
         blank=False,
+        unique=True,
         db_index=True
     )
 
