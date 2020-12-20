@@ -171,6 +171,7 @@ class LeadCategoryAdmin(comadm.ChoiceAdmin):
     list_editable = comadm.choice_list_editable
     fieldsets = comadm.choice_fieldsets + \
         [('Model references', {'fields': ['parents']})]
+    search_fields = comadm.choice_search_fields
     autocomplete_fields = ['parents']
 
 class UOMRelationshipChildInline(admin.StackedInline):
