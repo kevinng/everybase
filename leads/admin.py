@@ -192,7 +192,9 @@ class UnitOfMeasureAdmin(comadm.ChoiceAdmin):
     list_display = comadm.choice_list_display + ['category']
     list_editable = comadm.choice_list_editable + ['category']
     list_filter = ['category']
-    search_fields = ['id', 'category', 'parents']
+    search_fields = comadm.choice_search_fields + \
+        ['category__name', 'category__programmatic_key', 'details_md',
+            'programmatic_details_md']
 
     # Details page settings
     fieldsets = comadm.choice_fieldsets + [(None, {'fields': ['category']})]
