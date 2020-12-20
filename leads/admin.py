@@ -27,8 +27,10 @@ _lead_fieldsets = [
 _lead_filter = ['category', 'base_uom', 'contact_type', 'company']
 _lead_autocomplete_fields = ['category', 'base_uom', 'contact', 'company',
     'contact_type']
-_lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
-    'company', 'contact_type', 'contact_type_details_md']
+_lead_search_fields = ['category__name', 'category__details_md', 'display_name',
+    'details_md', 'contact__given_name', 'contact__family_name',
+    'company__company_name', 'company__company_name_wo_postfix',
+    'contact_type__name', 'contact_type__details_md']
 
 # Quote
 
@@ -226,7 +228,6 @@ class UOMRelationshipAdmin(admin.ModelAdmin):
 
 @admin.register(mod.Supply)
 class SupplyAdmin(admin.ModelAdmin):
-    search_fields = ['id']
     list_display = comadm.standard_list_display + \
         _lead_fields + \
         _expirable_invalidable_fields # Display at the back
