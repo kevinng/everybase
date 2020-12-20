@@ -24,7 +24,7 @@ _lead_fields = ['contact', 'company', 'category', 'display_name', 'base_uom',
 _lead_fieldsets = [
     ('Lead details', {'fields': _lead_fields})
 ]
-_lead_filter = ['category', 'base_uom', 'contact_type']
+_lead_filter = ['category', 'base_uom', 'contact_type', 'company']
 _lead_autocomplete_fields = ['category', 'base_uom', 'contact', 'company',
     'contact_type']
 _lead_search_fields = ['category', 'display_name', 'details_md', 'contact',
