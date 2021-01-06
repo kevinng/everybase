@@ -129,15 +129,14 @@ class IssueAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['scheduled', 'description_md', 'outcome_md',
+        ('Details', {'fields': ['scheduled', 'description_md', 'outcome_md',
             'status', 'tags']}),
-        (None, {
+        ('Source', {
             'fields': ['supply', 'demand', 'supply_quote', 'match',
                 'supply_commission', 'demand_commission'],
-            'description': 'Source of this issue - at least one of these must \
-                be set'})]
+            'description': 'At least one of these sources must be set'})]
     autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
-        'match', 'supply_commission', 'demand_commission']
+        'match', 'supply_commission', 'demand_commission', 'company', 'person']
 
     def source_type(self, obj):
         if obj.supply is not None:
