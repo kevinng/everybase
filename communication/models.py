@@ -39,7 +39,7 @@ class Issue(Standard):
         db_index=True
     )
 
-    # At least one of the following source must be set.
+    # At least one of the following sources must be set.
     supply = models.ForeignKey(
         'leads.Supply',
         on_delete=models.PROTECT,
@@ -96,6 +96,24 @@ class Issue(Standard):
     )
     demand_commission = models.ForeignKey(
         'leads.DemandCommission',
+        on_delete=models.PROTECT,
+        related_name='issues',
+        related_query_name='issues',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'relationships.Company',
+        on_delete=models.PROTECT,
+        related_name='issues',
+        related_query_name='issues',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'relationships.Person',
         on_delete=models.PROTECT,
         related_name='issues',
         related_query_name='issues',
