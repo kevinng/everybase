@@ -672,11 +672,16 @@ class Link(Standard):
     )
     language = models.ForeignKey(
         'common.Language',
-        related_name='links',
-        related_query_name='links',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
+        db_index=True
+    )
+    languages = models.ManyToManyField(
+        'common.Language',
+        related_name='links',
+        related_query_name='links',
+        blank=True,
         db_index=True
     )
 
