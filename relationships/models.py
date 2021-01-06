@@ -670,6 +670,15 @@ class Link(Standard):
         unique=True,
         db_index=True
     )
+    language = models.ForeignKey(
+        'common.Language',
+        related_name='links',
+        related_query_name='links',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
     def __str__(self):
         return f'({self.link} [{self.id}])'

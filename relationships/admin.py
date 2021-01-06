@@ -206,7 +206,7 @@ class PersonAdmin(admin.ModelAdmin):
         PersonAddressInlineAdmin, PersonPhoneNumberInlineAdmin,
         PersonEmailInlineAdmin]
 
-_link_fields = ['link']
+_link_fields = ['link', 'language']
 @admin.register(mod.Link)
 class LinkAdmin(admin.ModelAdmin):
     # List page settings
@@ -222,7 +222,7 @@ class LinkAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _link_fields})]
+        [('Details', {'fields': _link_fields})]
 
 _black_list_entry_fields = ['start', 'invalidated', 'reason', 'reason_md',
     'email', 'phone_number', 'company', 'person']
