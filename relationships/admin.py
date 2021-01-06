@@ -222,7 +222,7 @@ class LinkAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _link_fields + ['languages']})]
+        [('Details', {'fields': _link_fields})]
     autocomplete_fields = ['language', 'languages']
 
 _black_list_entry_fields = ['start', 'invalidated', 'reason', 'reason_md',
