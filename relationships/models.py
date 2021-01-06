@@ -753,7 +753,7 @@ class Address(Standard):
         verbose_name_plural = 'Addresses'
 
     def __str__(self):
-        return f'({self.postal_code}, {self.country} [{self.id}])'
+        return f'({self.postal_code}, {self.state}, {self.country} [{self.id}])'
 
 class PhoneNumberType(Choice):
     pass
