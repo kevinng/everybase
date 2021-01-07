@@ -116,7 +116,7 @@ class ParentChildrenChoiceAdmin(comadm.ParentChildrenChoiceAdmin):
 class IssueAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['status', 'scheduled',
-        'source_type', 'tags_string', 'description_md', 'outcome_md']
+        'tags_string', 'description_md', 'outcome_md']
     list_editable = comadm.standard_list_editable + ['status', 'scheduled',
         'description_md', 'outcome_md']
     list_per_page = 50
@@ -137,22 +137,6 @@ class IssueAdmin(admin.ModelAdmin):
             'description': 'At least one of these sources must be set'})]
     autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
         'match', 'supply_commission', 'demand_commission', 'company', 'person']
-
-    def source_type(self, obj):
-        if obj.supply is not None:
-            return 'Supply'
-        elif obj.demand is not None:
-            return 'Demand'
-        elif obj.supply_quote is not None:
-            return 'Supply Quote'
-        elif obj.match is not None:
-            return 'Match'
-        elif obj.supply_commission is not None:
-            return 'Supply Commission'
-        elif obj.demand_commission is not None:
-            return 'Demand Commission'
-        
-        return '-'
     
     def tags_string(self, obj):
         return ', '.join([t.name for t in obj.tags.all()])
