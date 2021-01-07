@@ -34,8 +34,8 @@ class Issue(Standard):
         on_delete=models.PROTECT,
         related_name='issues',
         related_query_name='issues',
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
 
