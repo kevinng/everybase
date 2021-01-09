@@ -145,7 +145,8 @@ class IssueAdmin(admin.ModelAdmin):
                 'match', 'supply_commission', 'demand_commission', 'company',
                 'person']})]
     autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
-        'match', 'supply_commission', 'demand_commission', 'company', 'person']
+        'demand_quote', 'match', 'supply_commission', 'demand_commission',
+        'company', 'person']
     inlines = [ConversationInlineAdmin]
     
     def tags_string(self, obj):
