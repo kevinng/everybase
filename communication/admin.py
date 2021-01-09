@@ -2,6 +2,15 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
+# --- Start: Inline ---
+
+class ConversationInlineAdmin(admin.TabularInline):
+    model = mod.Conversation
+    extra = 1
+    autocomplete_fields = ['channel', 'emails', 'chats', 'voices', 'videos']
+
+# --- End: Inline ---
+
 @admin.register(mod.Conversation)
 class ConversationAdmin(admin.ModelAdmin):
     # List page settings
@@ -138,6 +147,7 @@ class IssueAdmin(admin.ModelAdmin):
             'description': 'At least one of these sources must be set'})]
     autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
         'match', 'supply_commission', 'demand_commission', 'company', 'person']
+    inlines = [ConversationInlineAdmin]
     
     def tags_string(self, obj):
         return ', '.join([t.name for t in obj.tags.all()])
