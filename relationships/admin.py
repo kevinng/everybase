@@ -283,8 +283,9 @@ _prel_list_editable = _rel_list_editable + ['person']
 _crel_list_editable = _rel_list_editable + ['company']
 
 _rel_list_search_fields = ['id', 'details_md', 'rtype']
-_prel_list_search_fields = _rel_list_search_fields + ['person']
-_crel_list_search_fields = _rel_list_search_fields + ['company']
+_prel_list_search_fields = _rel_list_search_fields + ['person__given_name',
+    'person__family_name']
+_crel_list_search_fields = _rel_list_search_fields + ['company__company_name']
 
 _rel_fieldsets_fields = ['details_md', 'rtype']
 _prel_fieldsets = lambda field: comadm.standard_fieldsets + [
