@@ -140,11 +140,10 @@ class IssueAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': ['scheduled', 'description_md', 'outcome_md',
             'status', 'tags']}),
-        ('Source', {
+        ('Related', {
             'fields': ['supply', 'demand', 'supply_quote', 'demand_quote',
                 'match', 'supply_commission', 'demand_commission', 'company',
-                'person'],
-            'description': 'At least one of these sources must be set'})]
+                'person']})]
     autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
         'match', 'supply_commission', 'demand_commission', 'company', 'person']
     inlines = [ConversationInlineAdmin]
