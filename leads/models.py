@@ -683,7 +683,8 @@ class Match(Standard):
         verbose_name_plural = 'Matches'
 
     def __str__(self):
-        return f'({short_text(self.details_md)} [{self.id}])'
+        return f'({short_text(self.demand_quote)}, \
+            {short_text(self.supply_quote)} [{self.id}])'
 
 class SupplyCommission(Standard, Commission, ExpirableInvalidable):
     quote = models.ForeignKey(
