@@ -125,10 +125,10 @@ _issue_related_fields = ['supply', 'demand', 'supply_quote', 'demand_quote',
 @admin.register(mod.Issue)
 class IssueAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['status', 'scheduled',
-        'tags_string', 'description_md', 'outcome_md']
-    list_editable = comadm.standard_list_editable + ['status', 'scheduled',
-        'description_md', 'outcome_md']
+    list_display = comadm.standard_list_display + _issue_related_fields +
+        ['status', 'scheduled', 'tags_string', 'description_md', 'outcome_md']
+    list_editable = comadm.standard_list_editable + _issue_related_fields +
+        ['status', 'scheduled', 'description_md', 'outcome_md']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['status', 'tags']
     search_fields = ['id', 'description_md', 'outcome_md']
