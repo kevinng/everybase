@@ -282,7 +282,7 @@ _rel_list_editable = comadm.standard_list_editable + ['details_md', 'rtype']
 _prel_list_editable = _rel_list_editable + ['person']
 _crel_list_editable = _rel_list_editable + ['company']
 
-_rel_list_search_fields = ['id', 'details_md', 'rtype']
+_rel_list_search_fields = ['id', 'details_md', 'rtype__name']
 _prel_list_search_fields = _rel_list_search_fields + ['person__given_name',
     'person__family_name']
 _crel_list_search_fields = _rel_list_search_fields + ['company__company_name']
