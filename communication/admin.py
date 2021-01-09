@@ -120,6 +120,8 @@ class ChoiceAdmin(comadm.ChoiceAdmin):
 class ParentChildrenChoiceAdmin(comadm.ParentChildrenChoiceAdmin):
     pass
 
+_issue_related_fields = ['supply', 'demand', 'supply_quote', 'demand_quote',
+    'match', 'supply_commission', 'demand_commission', 'company', 'person']
 @admin.register(mod.Issue)
 class IssueAdmin(admin.ModelAdmin):
     # List page settings
@@ -137,15 +139,11 @@ class IssueAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': ['scheduled', 'description_md', 'outcome_md',
-            'status', 'tags']}),
+        ('Details', {'fields': _issue_related_fields + ['scheduled',
+            'description_md', 'outcome_md', 'status', 'tags']}),
         ('Related', {
-            'fields': ['supply', 'demand', 'supply_quote', 'demand_quote',
-                'match', 'supply_commission', 'demand_commission', 'company',
-                'person']})]
-    autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
-        'demand_quote', 'match', 'supply_commission', 'demand_commission',
-        'person', 'company']
+            'fields': _issue_related_fields})]
+    autocomplete_fields = ['status', 'tags'] + _issue_related_fields
     inlines = [ConversationInlineAdmin]
     
     def tags_string(self, obj):
