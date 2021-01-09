@@ -15,9 +15,9 @@ class ConversationInlineAdmin(admin.TabularInline):
 class ConversationAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['channel', 'agenda_md',
-        'minutes_md', 'front_conversation_id', 'issue']
+        'minutes_md', 'issue']
     list_editable = comadm.standard_list_editable + ['agenda_md', 'channel',
-        'minutes_md', 'front_conversation_id', 'issue']
+        'minutes_md', 'issue']
     list_filter = comadm.standard_list_filter + ['channel']
     search_fields = ['id', 'agenda_md', 'minutes_md', 'front_conversation_id',
         'issue']
@@ -32,8 +32,7 @@ class ConversationAdmin(admin.ModelAdmin):
         (None, {'fields': ['channel']}),
         (None, {'fields': ['emails', 'chats', 'voices', 'videos'],
             'description': 'One of the following channels must be set'}),
-        (None, {'fields': ['front_conversation_id', 'agenda_md', 'minutes_md',
-            'issue']})
+        (None, {'fields': ['agenda_md', 'minutes_md', 'issue']})
     ]
     autocomplete_fields = ['channel', 'emails', 'chats', 'voices', 'videos',
         'issue']

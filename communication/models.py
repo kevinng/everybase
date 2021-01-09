@@ -177,14 +177,6 @@ class Conversation(Standard):
         blank=True
     )
 
-    front_conversation_id = models.CharField(
-        verbose_name='Front conversation ID',
-        max_length=100,
-        null=True,
-        blank=True, 
-        db_index=True
-    )
-
     # One and only one of the following conversations must be set.
     emails = models.ForeignKey(
         'ConversationEmail',
