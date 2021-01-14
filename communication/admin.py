@@ -139,8 +139,8 @@ class IssueAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _issue_related_fields + ['scheduled',
-            'description_md', 'outcome_md', 'status', 'tags']}),
+        ('Details', {'fields': ['scheduled', 'description_md', 'outcome_md',
+            'status', 'tags']}),
         ('Related', {
             'fields': _issue_related_fields})]
     autocomplete_fields = ['status', 'tags'] + _issue_related_fields
