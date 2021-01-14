@@ -1,6 +1,8 @@
 from django.db import models
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 # --- Start: Abstract classes ---
 
@@ -551,6 +553,16 @@ class Person(Standard):
     def __str__(self):
         return f'({self.given_name}, {self.family_name} [{self.id}])'
 
+def validate_company_domain(value):
+    if value is not None and len(value) > 0 and \
+        (value.endswith('/') or \
+        value.startswith('http://') or \
+        value.startswith('https://')):
+        raise ValidationError(
+            _('%(value)s is not a valid domain'),
+            params={'value': value},
+        )
+
 class Company(Standard):
     company_name = models.CharField(
         max_length=100,
@@ -576,7 +588,8 @@ class Company(Standard):
         max_length=300,
         null=True,
         blank=True,
-        db_index=True
+        db_index=True,
+        validators=[validate_company_domain]
     )
 
     emails = models.ManyToManyField(
