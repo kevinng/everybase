@@ -781,6 +781,13 @@ class Address(Standard):
 class PhoneNumberType(Choice):
     pass
 
+def validate_phone_number_country_code(value):
+    if value is not None and len(value) > 0 and value.startswith('+'):
+        raise ValidationError(
+            _('%(value)s must not start with "+"'),
+            params={'value': value},
+        )
+
 class PhoneNumber(Standard):
     types = models.ManyToManyField(
         'PhoneNumberType',
@@ -794,7 +801,8 @@ class PhoneNumber(Standard):
         default=None,
         null=False,
         blank=False,
-        db_index=True
+        db_index=True,
+        validators=[validate_phone_number_country_code]
     )
     national_number = models.CharField(
         max_length=100,
