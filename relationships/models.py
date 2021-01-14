@@ -676,12 +676,24 @@ class InvalidEmail(Standard):
     def __str__(self):
         return f'({self.email} [{self.id}])'
 
+def validate_link_link(value):
+    if value is not None and len(value) > 0 and \
+        (value.endswith('/') or \
+        not value.startswith('http://') or \
+        not value.startswith('https://')):
+        raise ValidationError(
+            _('%(value)s must start with "http://" or "https://" and not end \
+                with "/"'),
+            params={'value': value},
+        )
+
 class Link(Standard):
     link = models.URLField(
         null=False,
         blank=False,
         unique=True,
-        db_index=True
+        db_index=True,
+        validators=[validate_link_link]
     )
     languages = models.ManyToManyField(
         'common.Language',
