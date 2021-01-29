@@ -55,10 +55,10 @@ def post_dump(request):
     """
     Dump all HTTP call parameters into the console.
     """
-    if request.method == 'POST':
-        print(request)
-        data = JSONParser().parse(request)
-        print(data) # Output post data to log
-        return JsonResponse(data, status=200)
+    print(request)
+    # if request.method == 'POST':
+    #     data = JSONParser().parse(request)
+    #     print(data) # Output post data to log
+    #     return JsonResponse(data, status=200)
 
     return JsonResponse({}, status=200)
