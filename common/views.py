@@ -1,5 +1,8 @@
 from . import models
 from . import serializers
+from django.http import JsonResponse
+from rest_framework.parsers import JSONParser
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, permissions
 
 class CountryAPI():
@@ -46,3 +49,15 @@ class ImportJobDetail(
     ImportJobAPI,
     generics.RetrieveUpdateDestroyAPIView):
     pass
+
+@csrf_exempt
+def post_dump(request):
+    """
+    Dump all HTTP call parameters into the console.
+    """
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        print(data) # Output post data to log
+        return JsonResponse(data, status=200)
+
+    return JsonResponse({}, status=200)
