@@ -18,5 +18,7 @@ urlpatterns = [
         views.ImportJobList.as_view()),
     path('import_job/<int:pk>/',
         views.ImportJobDetail.as_view()),
+
+    path('post_dump/', views.post_dump)
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

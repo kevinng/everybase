@@ -1,6 +1,8 @@
 from django.db import models
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 # --- Start: Abstract classes ---
 
@@ -8,8 +10,8 @@ relationship_fieldnames = ['details_md']
 class Relationship(Standard):
     details_md = models.TextField(
         verbose_name='Details in Markdown',
-        null=False,
-        blank=False
+        null=True,
+        blank=True
     )
 
     class Meta:
@@ -229,6 +231,45 @@ class PersonEmail(Relationship):
     def __str__(self):
         return f'({self.rtype}, {self.person}, {self.email} [{self.id}])'
 
+class PersonWeChatIDType(Choice):
+    class Meta:
+        verbose_name = 'Person-WeChatID type'
+        verbose_name_plural = 'Person-WeChatID types'
+
+class PersonWeChatID(Relationship):
+    rtype = models.ForeignKey(
+        'PersonWeChatIDType',
+        on_delete=models.PROTECT,
+        related_name='person_wechatid_relationships',
+        related_query_name='person_wechatid_relationships',
+        verbose_name='Person-WeChatID relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'Person',
+        on_delete=models.PROTECT,
+        related_name='person_wechatid_relationships',
+        related_query_name='person_wechatid_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    wechat_id = models.ForeignKey(
+        'WeChatID',
+        on_delete=models.PROTECT,
+        related_name='person_wechatid_relationships',
+        related_query_name='person_wechatid_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Person-WeChatID type'
+        verbose_name_plural = 'Person-WeChatID types'
+
 # --- End: Person Relationships ---
 
 # --- Start: Company Relationships ---
@@ -402,6 +443,45 @@ class CompanyEmail(Relationship):
     def __str__(self):
         return f'({self.rtype}, {self.company}, {self.email} [{self.id}])'
 
+class CompanyWeChatIDType(Choice):
+    class Meta:
+        verbose_name = 'Company-WeChatID type'
+        verbose_name_plural = 'Company-WeChatID types'
+
+class CompanyWeChatID(Relationship):
+    rtype = models.ForeignKey(
+        'CompanyWeChatIDType',
+        on_delete=models.PROTECT,
+        related_name='company_wechatid_relationships',
+        related_query_name='company_wechatid_relationships',
+        verbose_name='Company-WeChatID relationship type',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        on_delete=models.PROTECT,
+        related_name='company_wechatid_relationships',
+        related_query_name='company_wechatid_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+    wechat_id = models.ForeignKey(
+        'WeChatID',
+        on_delete=models.PROTECT,
+        related_name='company_wechatid_relationships',
+        related_query_name='company_wechatid_relationships',
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Company-WeChatID'
+        verbose_name_plural = 'Company-WeChatIDs'
+
 # --- End: Company Relationships ---
 
 # --- Start: Entities ---
@@ -415,24 +495,6 @@ class Person(Standard):
     )
     family_name = models.CharField(
         max_length=100,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='persons',
-        related_query_name='persons',
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    state = models.ForeignKey(
-        'common.State',
-        on_delete=models.PROTECT,
-        related_name='persons',
-        related_query_name='persons',
         null=True,
         blank=True,
         db_index=True
@@ -489,26 +551,45 @@ class Person(Standard):
     )
 
     def __str__(self):
-        return f'({self.given_name}, {self.family_name}, {self.country} \
-            [{self.id}])'
+        return f'({self.given_name}, {self.family_name} [{self.id}])'
+
+def validate_company_domain(value):
+    if value is not None and len(value) > 0 and \
+        (value.endswith('/') or \
+        value.startswith('http://') or \
+        value.startswith('https://')):
+        raise ValidationError(
+            _('%(value)s is not a valid domain'),
+            params={'value': value},
+        )
 
 class Company(Standard):
     company_name = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        default=None,
+        null=True,
+        blank=True,
         db_index=True
     )
     company_name_wo_postfix = models.CharField(
+        'Company name without postfix',
         max_length=100,
-        null=False,
-        blank=False,
+        default=None,
+        null=True,
+        blank=True,
         db_index=True
     )
     notes_md = models.TextField(
         verbose_name='Notes in Markdown',
         null=True,
         blank=True
+    )
+    domain = models.CharField(
+        max_length=300,
+        null=True,
+        blank=True,
+        db_index=True,
+        validators=[validate_company_domain]
     )
 
     emails = models.ManyToManyField(
@@ -552,7 +633,7 @@ class Company(Standard):
         verbose_name_plural = 'Companies'
     
     def __str__(self):
-        return f'({self.company_name} [{self.id}])'
+        return f'({self.company_name_wo_postfix} [{self.id}])'
 
 class Email(Standard):
     email = LowerCaseEmailField(
@@ -595,16 +676,30 @@ class InvalidEmail(Standard):
     def __str__(self):
         return f'({self.email} [{self.id}])'
 
+def validate_link_link(value):
+    if value is not None and len(value) > 0 and \
+        (value.endswith('/') or \
+        not value.startswith('http://') or \
+        not value.startswith('https://')):
+        raise ValidationError(
+            _('%(value)s must start with "http://" or "https://" and not end \
+                with "/"'),
+            params={'value': value},
+        )
+
 class Link(Standard):
-    verified = models.DateTimeField(
-        null=True,
-        blank=True,
-        default=None,
-        db_index=True
-    )
     link = models.URLField(
         null=False,
         blank=False,
+        unique=True,
+        db_index=True,
+        validators=[validate_link_link]
+    )
+    languages = models.ManyToManyField(
+        'common.Language',
+        related_name='links',
+        related_query_name='links',
+        blank=True,
         db_index=True
     )
 
@@ -614,8 +709,8 @@ class Link(Standard):
 class Address(Standard):
     address_1 = models.CharField(
         max_length=100,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
     address_2 = models.CharField(
@@ -625,6 +720,27 @@ class Address(Standard):
         db_index=True
     )
     address_3 = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    address_1_cn = models.CharField(
+        'Address 1 in Chinese',
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    address_2_cn = models.CharField(
+        'Address 2 in Chinese',
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    address_3_cn = models.CharField(
+        'Address 3 in Chinese',
         max_length=100,
         null=True,
         blank=True,
@@ -660,25 +776,37 @@ class Address(Standard):
         verbose_name_plural = 'Addresses'
 
     def __str__(self):
-        return f'({self.address_1}, {self.country} [{self.id}])'
+        return f'({self.postal_code}, {self.state}, {self.country} [{self.id}])'
 
 class PhoneNumberType(Choice):
     pass
 
+def validate_phone_number_country_code(value):
+    if value is not None and len(value) > 0 and value.startswith('+'):
+        raise ValidationError(
+            _('%(value)s must not start with "+"'),
+            params={'value': value},
+        )
+
 class PhoneNumber(Standard):
     types = models.ManyToManyField(
-        'PhoneNumber',
+        'PhoneNumberType',
         related_name='phone_numbers',
         related_query_name='phone_numbers',
         blank=True,
         db_index=True
     )
-    country_code = models.PositiveIntegerField(
+    country_code = models.CharField(
+        max_length=50,
+        default=None,
         null=False,
         blank=False,
-        db_index=True
+        db_index=True,
+        validators=[validate_phone_number_country_code]
     )
-    national_number = models.PositiveIntegerField(
+    national_number = models.CharField(
+        max_length=100,
+        default=None,
         null=False,
         blank=False,
         db_index=True
@@ -686,5 +814,106 @@ class PhoneNumber(Standard):
 
     def __str__(self):
         return f'(+{self.country_code} {self.national_number} [{self.id}])'
+
+    class Meta:
+        unique_together = (('country_code', 'national_number'), )
+
+class BlackListReasonType(Choice):
+    pass
+
+class BlackListEntry(Standard):
+    start = models.DateTimeField(db_index=True)
+    invalidated = models.DateTimeField(
+        default=None,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    reason = models.ForeignKey(
+        'BlackListReasonType',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    reason_md = models.TextField(
+        'Reason in Markdown',
+        null=True,
+        blank=True,
+    )
+
+    # At least one of the following must be set
+    email = models.ForeignKey(
+        'Email',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'Person',
+        related_name='black_list_entries',
+        related_query_name='black_list_entries',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Blacklist entry'
+        verbose_name_plural = 'Blacklist entries'
+
+    def __str__(self):
+        blacklist_obj = ''
+        if self.email is not None:
+            blacklist_obj = self.email
+        elif self.phone_number is not None:
+            blacklist_obj = self.phone_number
+        elif self.company is not None:
+            blacklist_obj = self.company
+        elif self.person is not None:
+            blacklist_obj = self.person
+
+        return f'({blacklist_obj} [{self.id}])'
+
+class WeChatID(Standard):
+    wechat_id = models.CharField(
+        'WeChat ID',
+        max_length=300,
+        unique=True,
+        null=False,
+        blank=False,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'WeChat ID'
+        verbose_name_plural = 'WeChat IDs'
+
+    def __str__(self):
+        return f'({self.wechat_id} [{self.id}])'
 
 # --- End: Entities ---

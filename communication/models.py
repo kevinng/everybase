@@ -34,12 +34,12 @@ class Issue(Standard):
         on_delete=models.PROTECT,
         related_name='issues',
         related_query_name='issues',
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         db_index=True
     )
 
-    # At least one of the following source must be set.
+    # At least one of the following sources must be set.
     supply = models.ForeignKey(
         'leads.Supply',
         on_delete=models.PROTECT,
@@ -67,6 +67,15 @@ class Issue(Standard):
         blank=True,
         db_index=True
     )
+    demand_quote = models.ForeignKey(
+        'leads.DemandQuote',
+        on_delete=models.PROTECT,
+        related_name='issues',
+        related_query_name='issues',
+        null=True,
+        blank=True,
+        db_index=True
+    )
     match = models.ForeignKey(
         'leads.Match',
         on_delete=models.PROTECT,
@@ -87,6 +96,24 @@ class Issue(Standard):
     )
     demand_commission = models.ForeignKey(
         'leads.DemandCommission',
+        on_delete=models.PROTECT,
+        related_name='issues',
+        related_query_name='issues',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'relationships.Company',
+        on_delete=models.PROTECT,
+        related_name='issues',
+        related_query_name='issues',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    person = models.ForeignKey(
+        'relationships.Person',
         on_delete=models.PROTECT,
         related_name='issues',
         related_query_name='issues',
@@ -148,14 +175,6 @@ class Conversation(Standard):
         verbose_name='Minutes in Markdown',
         null=True,
         blank=True
-    )
-
-    front_conversation_id = models.CharField(
-        verbose_name='Front conversation ID',
-        max_length=100,
-        null=True,
-        blank=True, 
-        db_index=True
     )
 
     # One and only one of the following conversations must be set.

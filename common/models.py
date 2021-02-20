@@ -65,6 +65,7 @@ class Choice(models.Model):
     )
     details_md = models.TextField(
         verbose_name='Details in Markdown',
+        default=None,
         null=True,
         blank=True
     )
@@ -118,6 +119,13 @@ class Country(Choice):
         verbose_name_plural = 'Countries'
 
 class State(Choice):
+    china_province_name_cn = models.CharField(
+        'China province name in Chinese',
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     country = models.ForeignKey(
         'Country',
         on_delete=models.PROTECT,
@@ -127,6 +135,9 @@ class State(Choice):
         blank=False,
         db_index=True
     )
+
+class Language(Choice):
+    pass
 
 # --- End: Common models ---
 

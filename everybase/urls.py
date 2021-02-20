@@ -36,14 +36,9 @@ urlpatterns = [
     path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
 
     # Django Rest Framework login
-    path('api-auth/', include('rest_framework.urls')),
-
-    # Wagtail admin, with obfuscated URL
-    path('u2AWFpEV7LQe3u2ZuJPzXydGTwAFyebHHDaz/', include(wagtailadmin_urls)),
-
-    # Wagtail document files root
-    path('d/', include(wagtaildocs_urls)),
-
-    # Wagtail pages root
-    path('p/', include(wagtail_urls))
+    path('api-auth/', include('rest_framework.urls'))
 ]
+
+admin.site.site_header = "Everybase Admin"
+admin.site.site_title = "" # No title
+admin.site.index_title = "Welcome to Everybase Admin Portal"

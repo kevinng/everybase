@@ -2,13 +2,22 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
+# --- Start: Inline ---
+
+class ConversationInlineAdmin(admin.TabularInline):
+    model = mod.Conversation
+    extra = 1
+    autocomplete_fields = ['channel', 'emails', 'chats', 'voices', 'videos']
+
+# --- End: Inline ---
+
 @admin.register(mod.Conversation)
 class ConversationAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['channel', 'agenda_md',
-        'minutes_md', 'front_conversation_id', 'issue']
+        'minutes_md', 'issue']
     list_editable = comadm.standard_list_editable + ['agenda_md', 'channel',
-        'minutes_md', 'front_conversation_id', 'issue']
+        'minutes_md', 'issue']
     list_filter = comadm.standard_list_filter + ['channel']
     search_fields = ['id', 'agenda_md', 'minutes_md', 'front_conversation_id',
         'issue']
@@ -23,8 +32,7 @@ class ConversationAdmin(admin.ModelAdmin):
         (None, {'fields': ['channel']}),
         (None, {'fields': ['emails', 'chats', 'voices', 'videos'],
             'description': 'One of the following channels must be set'}),
-        (None, {'fields': ['front_conversation_id', 'agenda_md', 'minutes_md',
-            'issue']})
+        (None, {'fields': ['agenda_md', 'minutes_md', 'issue']})
     ]
     autocomplete_fields = ['channel', 'emails', 'chats', 'voices', 'videos',
         'issue']
@@ -112,13 +120,15 @@ class ChoiceAdmin(comadm.ChoiceAdmin):
 class ParentChildrenChoiceAdmin(comadm.ParentChildrenChoiceAdmin):
     pass
 
+_issue_related_fields = ['supply', 'demand', 'supply_quote', 'demand_quote',
+    'match', 'supply_commission', 'demand_commission', 'company', 'person']
 @admin.register(mod.Issue)
 class IssueAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['status', 'scheduled',
-        'source_type', 'tags_string', 'description_md', 'outcome_md']
-    list_editable = comadm.standard_list_editable + ['status', 'scheduled',
-        'description_md', 'outcome_md']
+    list_display = comadm.standard_list_display + _issue_related_fields + \
+        ['status', 'scheduled', 'tags_string', 'description_md', 'outcome_md']
+    list_editable = comadm.standard_list_editable + _issue_related_fields + \
+        ['status', 'scheduled', 'description_md', 'outcome_md']
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['status', 'tags']
     search_fields = ['id', 'description_md', 'outcome_md']
@@ -129,31 +139,12 @@ class IssueAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['scheduled', 'description_md', 'outcome_md',
+        ('Details', {'fields': ['scheduled', 'description_md', 'outcome_md',
             'status', 'tags']}),
-        (None, {
-            'fields': ['supply', 'demand', 'supply_quote', 'match',
-                'supply_commission', 'demand_commission'],
-            'description': 'Source of this issue - at least one of these must \
-                be set'})]
-    autocomplete_fields = ['status', 'tags', 'supply', 'demand', 'supply_quote',
-        'match', 'supply_commission', 'demand_commission']
-
-    def source_type(self, obj):
-        if obj.supply is not None:
-            return 'Supply'
-        elif obj.demand is not None:
-            return 'Demand'
-        elif obj.supply_quote is not None:
-            return 'Supply Quote'
-        elif obj.match is not None:
-            return 'Match'
-        elif obj.supply_commission is not None:
-            return 'Supply Commission'
-        elif obj.demand_commission is not None:
-            return 'Demand Commission'
-        
-        return '-'
+        ('Related', {
+            'fields': _issue_related_fields})]
+    autocomplete_fields = ['status', 'tags'] + _issue_related_fields
+    inlines = [ConversationInlineAdmin]
     
     def tags_string(self, obj):
         return ', '.join([t.name for t in obj.tags.all()])
