@@ -18,8 +18,6 @@ urlpatterns = [
     path('import_job/<int:pk>/',
         views.ImportJobDetail.as_view()),
 
-    path('post_dump/', views.post_dump),
-
     path('r/<str:file_to_render>', views.r),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)

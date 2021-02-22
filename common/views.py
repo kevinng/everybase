@@ -51,22 +51,6 @@ class ImportJobDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
-@csrf_exempt
-def post_dump(request):
-    """
-    Dump all HTTP call parameters into the console.
-    """
-    print(request)
-    print(request.POST)
-    print(request.META)
-    print(request.body)
-    # if request.method == 'POST':
-    #     data = JSONParser().parse(request)
-    #     print(data) # Output post data to log
-    #     return JsonResponse(data, status=200)
-
-    return JsonResponse({}, status=200)
-
 def r(request, file_to_render):
     template_name = 'examples/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
