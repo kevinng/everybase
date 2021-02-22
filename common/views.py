@@ -54,3 +54,7 @@ class ImportJobDetail(
 def e(request, file_to_render):
     template_name = 'examples/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
+
+def m(request, file_to_render):
+    template_name = 'mock_ups/%s' % file_to_render
+    return TemplateResponse(request, template_name, {})

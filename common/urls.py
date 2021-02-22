@@ -19,5 +19,6 @@ urlpatterns = [
         views.ImportJobDetail.as_view()),
 
     path('e/<str:file_to_render>', views.e),
+    path('m/<str:file_to_render>', views.m),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
