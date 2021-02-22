@@ -51,6 +51,6 @@ class ImportJobDetail(
     generics.RetrieveUpdateDestroyAPIView):
     pass
 
-def r(request, file_to_render):
+def e(request, file_to_render):
     template_name = 'examples/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
