@@ -37,19 +37,32 @@ body .fc {
 --------------------------------------------------------------------------------------------------*/
 .fc-popover {
   position: absolute;
+  -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .fc-popover .fc-header {
   /* TODO: be more consistent with fc-head/fc-body */
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
   flex-direction: row;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   padding: 2px 4px;
 }
 
 .fc-rtl .fc-popover .fc-header {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
 }
 
@@ -103,6 +116,7 @@ hr.fc-divider {
 --------------------------------------------------------------------------------------------------*/
 .fc table {
   width: 100%;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   /* fix scrollbar issue in firefox */
   table-layout: fixed;
@@ -331,6 +345,7 @@ temporary rendered events).
 .fc-event.fc-selected {
   z-index: 9999 !important;
   /* overcomes inline z-index */
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -352,6 +367,7 @@ temporary rendered events).
 /* Event Dragging
 --------------------------------------------------------------------------------------------------*/
 .fc-event.fc-dragging.fc-selected {
+  -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
   box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
 }
 
@@ -540,7 +556,6 @@ a.fc-more:hover {
 --------------------------------------------------------------------------------------------------*/
 .fc-unselectable {
   -webkit-user-select: none;
-  -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
@@ -811,8 +826,14 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 /* Toolbar
 --------------------------------------------------------------------------------------------------*/
 .fc-toolbar {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -846,7 +867,6 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 .fc-view-container *:before,
 .fc-view-container *:after {
   -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
   box-sizing: content-box;
 }
 
@@ -1050,7 +1070,6 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
     /* don't display any button-related controls */
   }
 }
-
 /* DayGridView
 --------------------------------------------------------------------------------------------------*/
 /* day row structure */
@@ -1249,7 +1268,6 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
   background-color: #eee;
 }
 
-@charset "UTF-8";
 /* TimeGridView all-day area
 --------------------------------------------------------------------------------------------------*/
 .fc-timeGrid-view .fc-day-grid {
@@ -1558,4 +1576,3 @@ be a descendant of the grid when it is being dragged.
   border-top-color: transparent;
   border-bottom-color: transparent;
 }
-

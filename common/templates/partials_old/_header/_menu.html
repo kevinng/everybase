@@ -1,0 +1,13 @@
+<button class="kt-header-menu-wrapper-close" id="kt_header_menu_mobile_close_btn"><i class="la la-close"></i></button>
+<div class="kt-header-menu-wrapper kt-grid__item kt-grid__item--fluid" id="kt_header_menu_wrapper">
+	<div id="kt_header_menu" class="kt-header-menu kt-header-menu-mobile ">
+		<ul class="kt-menu__nav ">
+			{% if user.is_authenticated %}
+				<li class="kt-menu__item{% if location == 'documents' %} kt-menu__item--here{% endif %}"><a href="{% url 'documents:list' %}" class="kt-menu__link"><span class="kt-menu__link-text">Documents</span></a></li>
+				<li class="kt-menu__item{% if location == 'sent' %} kt-menu__item--here{% endif %}"><a href="" class="kt-menu__link"><span class="kt-menu__link-text">Sent</span></a></li>
+				<li class="kt-menu__item{% if location == 'materials' %} kt-menu__item--here{% endif %}"><a href="{% url 'materials:list' %}" class="kt-menu__link"><span class="kt-menu__link-text">Materials</span></a></li>
+				<li class="kt-menu__item{% if location == 'colleagues' %} kt-menu__item--here{% endif %}"><a href="" class="kt-menu__link"><span class="kt-menu__link-text">Colleagues</span></a></li>
+			{% endif %}
+		</ul>
+	</div>
+</div>

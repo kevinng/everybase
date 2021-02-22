@@ -1,101 +1,288 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "../src/assets/js/pages/custom/projects/list-datatable.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "../src/assets/js/pages/custom/projects/list-datatable.js":
-/*!****************************************************************!*\
-  !*** ../src/assets/js/pages/custom/projects/list-datatable.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
-eval("\r\n// Class definition\r\n\r\nvar KTUserListDatatable = function() {\r\n\r\n\t// variables\r\n\tvar datatable;\r\n\r\n\t// init\r\n\tvar init = function() {\r\n\t\t// init the datatables. Learn more: https://keenthemes.com/metronic/?page=docs&section=datatable\r\n\t\tdatatable = $('#kt_apps_user_list_datatable').KTDatatable({\r\n\t\t\t// datasource definition\r\n\t\t\tdata: {\r\n\t\t\t\ttype: 'remote',\r\n\t\t\t\tsource: {\r\n\t\t\t\t\tread: {\r\n\t\t\t\t\t\turl: 'https://keenthemes.com/metronic/tools/preview/api/datatables/demos/default.php',\r\n\t\t\t\t\t},\r\n\t\t\t\t},\r\n\t\t\t\tpageSize: 10, // display 20 records per page\r\n\t\t\t\tserverPaging: true,\r\n\t\t\t\tserverFiltering: true,\r\n\t\t\t\tserverSorting: true,\r\n\t\t\t},\r\n\r\n\t\t\t// layout definition\r\n\t\t\tlayout: {\r\n\t\t\t\tscroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.\r\n\t\t\t\tfooter: false, // display/hide footer\r\n\t\t\t},\r\n\r\n\t\t\t// column sorting\r\n\t\t\tsortable: true,\r\n\r\n\t\t\tpagination: true,\r\n\r\n\t\t\tsearch: {\r\n\t\t\t\tinput: $('#generalSearch'),\r\n\t\t\t\tdelay: 400,\r\n\t\t\t},\r\n\r\n\t\t\t// columns definition\r\n\t\t\tcolumns: [{\r\n\t\t\t\tfield: 'RecordID',\r\n\t\t\t\ttitle: '#',\r\n\t\t\t\tsortable: false,\r\n\t\t\t\twidth: 20,\r\n\t\t\t\tselector: {\r\n\t\t\t\t\tclass: 'kt-checkbox--solid'\r\n\t\t\t\t},\r\n\t\t\t\ttextAlign: 'center',\r\n\t\t\t}, {\r\n\t\t\t\tfield: \"ShipName\",\r\n\t\t\t\ttitle: \"Company\",\r\n\t\t\t\twidth: 'auto',\r\n\t\t\t\tautoHide: false,\r\n\t\t\t\t// callback function support for column rendering\r\n\t\t\t\ttemplate: function(data, i) {\r\n\t\t\t\t\tvar number = i + 1;\r\n\t\t\t\t\twhile (number > 5) {\r\n\t\t\t\t\t\tnumber = number - 3;\r\n\t\t\t\t\t}\r\n\t\t\t\t\tvar img = number + '.png';\r\n\r\n\t\t\t\t\tvar skills = [\r\n\t\t\t\t\t\t'Angular, React',\r\n\t\t\t\t\t\t'Vue, Kendo',\r\n\t\t\t\t\t\t'.NET, Oracle, MySQL',\r\n\t\t\t\t\t\t'Node, SASS, Webpack',\r\n\t\t\t\t\t\t'MangoDB, Java',\r\n\t\t\t\t\t\t'HTML5, jQuery, CSS3'\r\n\t\t\t\t\t];\r\n\r\n\t\t\t\t\tvar output = '\\\r\n                        <div class=\"kt-user-card-v2 kt-user-card-v2--uncircle\">\\\r\n                            <div class=\"kt-user-card-v2__pic\">\\\r\n                                <img src=\"assets/media/project-logos/' + img + '\" alt=\"photo\">\\\r\n                            </div>\\\r\n                            <div class=\"kt-user-card-v2__details\">\\\r\n                                <a href=\"#\" class=\"kt-user-card-v2__name\">' + data.CompanyName + '</a>\\\r\n                                <span class=\"kt-user-card-v2__email\">' +\r\n\t\t\t\t\t\tskills[number - 1] + '</span>\\\r\n                            </div>\\\r\n                        </div>';\r\n\r\n\t\t\t\t\treturn output;\r\n\t\t\t\t}\r\n\t\t\t}, {\r\n\t\t\t\tfield: 'Country',\r\n\t\t\t\ttitle: 'Country',\r\n\t\t\t\ttemplate: function(row) {\r\n\t\t\t\t\treturn row.Country + ' ' + row.ShipCountry;\r\n\t\t\t\t},\r\n\t\t\t}, {\r\n\t\t\t\tfield: 'ShipDate',\r\n\t\t\t\ttitle: 'Ship Date',\r\n\t\t\t\ttype: 'date',\r\n\t\t\t\tformat: 'MM/DD/YYYY',\r\n\t\t\t}, {\r\n\t\t\t\tfield: \"AgentName\",\r\n\t\t\t\ttitle: \"Assigned\",\r\n\t\t\t\twidth: 200,\r\n\t\t\t\t// callback function support for column rendering\r\n\t\t\t\ttemplate: function(data, i) {\r\n\t\t\t\t\tvar number = 4 + i;\r\n\t\t\t\t\twhile (number > 12) {\r\n\t\t\t\t\t\tnumber = number - 3;\r\n\t\t\t\t\t}\r\n\t\t\t\t\tvar user_img = '100_' + number + '.jpg';\r\n\r\n\t\t\t\t\tvar pos = KTUtil.getRandomInt(0, 5);\r\n\t\t\t\t\tvar position = [\r\n\t\t\t\t\t\t'Developer',\r\n\t\t\t\t\t\t'Designer',\r\n\t\t\t\t\t\t'CEO',\r\n\t\t\t\t\t\t'Manager',\r\n\t\t\t\t\t\t'Architect',\r\n\t\t\t\t\t\t'Sales'\r\n\t\t\t\t\t];\r\n\r\n\t\t\t\t\tvar output = '';\r\n\t\t\t\t\tif (number > 5) {\r\n\t\t\t\t\t\toutput = '<div class=\"kt-user-card-v2\">\\\r\n\t\t\t\t\t\t\t\t<div class=\"kt-user-card-v2__pic\">\\\r\n\t\t\t\t\t\t\t\t\t<img src=\"assets/media/users/' + user_img + '\" alt=\"photo\">\\\r\n\t\t\t\t\t\t\t\t</div>\\\r\n\t\t\t\t\t\t\t\t<div class=\"kt-user-card-v2__details\">\\\r\n\t\t\t\t\t\t\t\t\t<a href=\"#\" class=\"kt-user-card-v2__name\">' + data.CompanyAgent + '</a>\\\r\n\t\t\t\t\t\t\t\t\t<span class=\"kt-user-card-v2__desc\">' + position[pos] + '</span>\\\r\n\t\t\t\t\t\t\t\t</div>\\\r\n\t\t\t\t\t\t\t</div>';\r\n\t\t\t\t\t} else {\r\n\t\t\t\t\t\tvar stateNo = KTUtil.getRandomInt(0, 6);\r\n\t\t\t\t\t\tvar states = [\r\n\t\t\t\t\t\t\t'success',\r\n\t\t\t\t\t\t\t'brand',\r\n\t\t\t\t\t\t\t'danger',\r\n\t\t\t\t\t\t\t'success',\r\n\t\t\t\t\t\t\t'warning',\r\n\t\t\t\t\t\t\t'primary',\r\n\t\t\t\t\t\t\t'info'\r\n\t\t\t\t\t\t];\r\n\t\t\t\t\t\tvar state = states[stateNo];\r\n\r\n\t\t\t\t\t\toutput = '<div class=\"kt-user-card-v2\">\\\r\n\t\t\t\t\t\t\t\t<div class=\"kt-user-card-v2__pic\">\\\r\n\t\t\t\t\t\t\t\t\t<div class=\"kt-badge kt-badge--xl kt-badge--' + state + '\">' + data.CompanyAgent.substring(0, 1) + '</div>\\\r\n\t\t\t\t\t\t\t\t</div>\\\r\n\t\t\t\t\t\t\t\t<div class=\"kt-user-card-v2__details\">\\\r\n\t\t\t\t\t\t\t\t\t<a href=\"#\" class=\"kt-user-card-v2__name\">' + data.CompanyAgent + '</a>\\\r\n\t\t\t\t\t\t\t\t\t<span class=\"kt-user-card-v2__desc\">' + position[pos] + '</span>\\\r\n\t\t\t\t\t\t\t\t</div>\\\r\n\t\t\t\t\t\t\t</div>';\r\n\t\t\t\t\t}\r\n\r\n\t\t\t\t\treturn output;\r\n\t\t\t\t}\r\n\t\t\t}, {\r\n\t\t\t\tfield: \"Status\",\r\n\t\t\t\ttitle: \"Status\",\r\n\t\t\t\twidth: 100,\r\n\t\t\t\t// callback function support for column rendering\r\n\t\t\t\ttemplate: function(row) {\r\n\t\t\t\t\tvar status = {\r\n\t\t\t\t\t\t1: {\r\n\t\t\t\t\t\t\t'title': 'Pending',\r\n\t\t\t\t\t\t\t'class': ' btn-label-brand'\r\n\t\t\t\t\t\t},\r\n\t\t\t\t\t\t2: {\r\n\t\t\t\t\t\t\t'title': 'Processing',\r\n\t\t\t\t\t\t\t'class': ' btn-label-danger'\r\n\t\t\t\t\t\t},\r\n\t\t\t\t\t\t3: {\r\n\t\t\t\t\t\t\t'title': 'Success',\r\n\t\t\t\t\t\t\t'class': ' btn-label-success'\r\n\t\t\t\t\t\t},\r\n\t\t\t\t\t\t4: {\r\n\t\t\t\t\t\t\t'title': 'Delivered',\r\n\t\t\t\t\t\t\t'class': ' btn-label-success'\r\n\t\t\t\t\t\t},\r\n\t\t\t\t\t\t5: {\r\n\t\t\t\t\t\t\t'title': 'Canceled',\r\n\t\t\t\t\t\t\t'class': ' btn-label-warning'\r\n\t\t\t\t\t\t},\r\n\t\t\t\t\t\t6: {\r\n\t\t\t\t\t\t\t'title': 'Done',\r\n\t\t\t\t\t\t\t'class': ' btn-label-danger'\r\n\t\t\t\t\t\t},\r\n\t\t\t\t\t\t7: {\r\n\t\t\t\t\t\t\t'title': 'On Hold',\r\n\t\t\t\t\t\t\t'class': ' btn-label-warning'\r\n\t\t\t\t\t\t}\r\n\t\t\t\t\t};\r\n\t\t\t\t\treturn '<span class=\"btn btn-bold btn-sm btn-font-sm ' + status[row.Status].class + '\">' + status[row.Status].title + '</span>';\r\n\t\t\t\t}\r\n\t\t\t}, {\r\n\t\t\t\twidth: 110,\r\n\t\t\t\tfield: 'Type',\r\n\t\t\t\ttitle: 'Type',\r\n\t\t\t\tautoHide: false,\r\n\t\t\t\t// callback function support for column rendering\r\n\t\t\t\ttemplate: function(row) {\r\n\t\t\t\t\tvar status = {\r\n\t\t\t\t\t\t1: {'title': 'Company', 'state': 'danger'},\r\n\t\t\t\t\t\t2: {'title': 'Customer', 'state': 'primary'},\r\n\t\t\t\t\t\t3: {'title': 'Staff', 'state': 'success'},\r\n\t\t\t\t\t};\r\n\t\t\t\t\treturn '<span class=\"kt-badge kt-badge--' + status[row.Type].state + ' kt-badge--dot\"></span>&nbsp;<span class=\"kt-font-bold kt-font-' + status[row.Type].state + '\">' +\r\n\t\t\t\t\t\t\tstatus[row.Type].title + '</span>';\r\n\t\t\t\t},\r\n\t\t\t}, {\r\n\t\t\t\tfield: \"Actions\",\r\n\t\t\t\twidth: 80,\r\n\t\t\t\ttitle: \"Actions\",\r\n\t\t\t\tsortable: false,\r\n\t\t\t\tautoHide: false,\r\n\t\t\t\toverflow: 'visible',\r\n\t\t\t\ttemplate: function() {\r\n\t\t\t\t\treturn '\\\r\n\t\t\t\t\t\t\t<div class=\"dropdown\">\\\r\n\t\t\t\t\t\t\t\t<a href=\"javascript:;\" class=\"btn btn-sm btn-clean btn-icon btn-icon-md\" data-toggle=\"dropdown\">\\\r\n\t\t\t\t\t\t\t\t\t<i class=\"flaticon-more-1\"></i>\\\r\n\t\t\t\t\t\t\t\t</a>\\\r\n\t\t\t\t\t\t\t\t<div class=\"dropdown-menu dropdown-menu-right\">\\\r\n\t\t\t\t\t\t\t\t\t<ul class=\"kt-nav\">\\\r\n\t\t\t\t\t\t\t\t\t\t<li class=\"kt-nav__item\">\\\r\n\t\t\t\t\t\t\t\t\t\t\t<a href=\"#\" class=\"kt-nav__link\">\\\r\n\t\t\t\t\t\t\t\t\t\t\t\t<i class=\"kt-nav__link-icon flaticon2-expand\"></i>\\\r\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"kt-nav__link-text\">View</span>\\\r\n\t\t\t\t\t\t\t\t\t\t\t</a>\\\r\n\t\t\t\t\t\t\t\t\t\t</li>\\\r\n\t\t\t\t\t\t\t\t\t\t<li class=\"kt-nav__item\">\\\r\n\t\t\t\t\t\t\t\t\t\t\t<a href=\"#\" class=\"kt-nav__link\">\\\r\n\t\t\t\t\t\t\t\t\t\t\t\t<i class=\"kt-nav__link-icon flaticon2-contract\"></i>\\\r\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"kt-nav__link-text\">Edit</span>\\\r\n\t\t\t\t\t\t\t\t\t\t\t</a>\\\r\n\t\t\t\t\t\t\t\t\t\t</li>\\\r\n\t\t\t\t\t\t\t\t\t\t<li class=\"kt-nav__item\">\\\r\n\t\t\t\t\t\t\t\t\t\t\t<a href=\"#\" class=\"kt-nav__link\">\\\r\n\t\t\t\t\t\t\t\t\t\t\t\t<i class=\"kt-nav__link-icon flaticon2-trash\"></i>\\\r\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"kt-nav__link-text\">Delete</span>\\\r\n\t\t\t\t\t\t\t\t\t\t\t</a>\\\r\n\t\t\t\t\t\t\t\t\t\t</li>\\\r\n\t\t\t\t\t\t\t\t\t\t<li class=\"kt-nav__item\">\\\r\n\t\t\t\t\t\t\t\t\t\t\t<a href=\"#\" class=\"kt-nav__link\">\\\r\n\t\t\t\t\t\t\t\t\t\t\t\t<i class=\"kt-nav__link-icon flaticon2-mail-1\"></i>\\\r\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"kt-nav__link-text\">Export</span>\\\r\n\t\t\t\t\t\t\t\t\t\t\t</a>\\\r\n\t\t\t\t\t\t\t\t\t\t</li>\\\r\n\t\t\t\t\t\t\t\t\t</ul>\\\r\n\t\t\t\t\t\t\t\t</div>\\\r\n\t\t\t\t\t\t\t</div>\\\r\n\t\t\t\t\t\t';\r\n\t\t\t\t},\r\n\t\t\t}]\r\n\t\t});\r\n\t}\r\n\r\n\t// search\r\n\tvar search = function() {\r\n\t\t$('#kt_form_status').on('change', function() {\r\n\t\t\tdatatable.search($(this).val().toLowerCase(), 'Status');\r\n\t\t});\r\n\t}\r\n\r\n\t// selection\r\n\tvar selection = function() {\r\n\t\t// init form controls\r\n\t\t//$('#kt_form_status, #kt_form_type').selectpicker();\r\n\r\n\t\t// event handler on check and uncheck on records\r\n\t\tdatatable.on('kt-datatable--on-check kt-datatable--on-uncheck kt-datatable--on-layout-updated',\tfunction(e) {\r\n\t\t\tvar checkedNodes = datatable.rows('.kt-datatable__row--active').nodes(); // get selected records\r\n\t\t\tvar count = checkedNodes.length; // selected records count\r\n\r\n\t\t\t$('#kt_subheader_group_selected_rows').html(count);\r\n\t\t\t\t\r\n\t\t\tif (count > 0) {\r\n\t\t\t\t$('#kt_subheader_search').addClass('kt-hidden');\r\n\t\t\t\t$('#kt_subheader_group_actions').removeClass('kt-hidden');\r\n\t\t\t} else {\r\n\t\t\t\t$('#kt_subheader_search').removeClass('kt-hidden');\r\n\t\t\t\t$('#kt_subheader_group_actions').addClass('kt-hidden');\r\n\t\t\t}\r\n\t\t});\r\n\t}\r\n\r\n\t// fetch selected records\r\n\tvar selectedFetch = function() {\r\n\t\t// event handler on selected records fetch modal launch\r\n\t\t$('#kt_datatable_records_fetch_modal').on('show.bs.modal', function(e) {\r\n\t\t\t// show loading dialog\r\n            var loading = new KTDialog({'type': 'loader', 'placement': 'top center', 'message': 'Loading ...'});\r\n            loading.show();\r\n\r\n            setTimeout(function() {\r\n                loading.hide();\r\n\t\t\t}, 1000);\r\n\t\t\t\r\n\t\t\t// fetch selected IDs\r\n\t\t\tvar ids = datatable.rows('.kt-datatable__row--active').nodes().find('.kt-checkbox--single > [type=\"checkbox\"]').map(function(i, chk) {\r\n\t\t\t\treturn $(chk).val();\r\n\t\t\t});\r\n\r\n\t\t\t// populate selected IDs\r\n\t\t\tvar c = document.createDocumentFragment();\r\n\t\t\t\t\r\n\t\t\tfor (var i = 0; i < ids.length; i++) {\r\n\t\t\t\tvar li = document.createElement('li');\r\n\t\t\t\tli.setAttribute('data-id', ids[i]);\r\n\t\t\t\tli.innerHTML = 'Selected record ID: ' + ids[i];\r\n\t\t\t\tc.appendChild(li);\r\n\t\t\t}\r\n\r\n\t\t\t$(e.target).find('#kt_apps_user_fetch_records_selected').append(c);\r\n\t\t}).on('hide.bs.modal', function(e) {\r\n\t\t\t$(e.target).find('#kt_apps_user_fetch_records_selected').empty();\r\n\t\t});\r\n\t};\r\n\r\n\t// selected records status update\r\n\tvar selectedStatusUpdate = function() {\r\n\t\t$('#kt_subheader_group_actions_status_change').on('click', \"[data-toggle='status-change']\", function() {\r\n\t\t\tvar status = $(this).find(\".kt-nav__link-text\").html();\r\n\r\n\t\t\t// fetch selected IDs\r\n\t\t\tvar ids = datatable.rows('.kt-datatable__row--active').nodes().find('.kt-checkbox--single > [type=\"checkbox\"]').map(function(i, chk) {\r\n\t\t\t\treturn $(chk).val();\r\n\t\t\t});\r\n\r\n\t\t\tif (ids.length > 0) {\r\n\t\t\t\t// learn more: https://sweetalert2.github.io/\r\n\t\t\t\tswal.fire({\r\n\t\t\t\t\tbuttonsStyling: false,\r\n\r\n\t\t\t\t\thtml: \"Are you sure to update \" + ids.length + \" selected records status to \" + status + \" ?\",\r\n\t\t\t\t\ttype: \"info\",\r\n\t\r\n\t\t\t\t\tconfirmButtonText: \"Yes, update!\",\r\n\t\t\t\t\tconfirmButtonClass: \"btn btn-sm btn-bold btn-brand\",\r\n\t\r\n\t\t\t\t\tshowCancelButton: true,\r\n\t\t\t\t\tcancelButtonText: \"No, cancel\",\r\n\t\t\t\t\tcancelButtonClass: \"btn btn-sm btn-bold btn-default\"\r\n\t\t\t\t}).then(function(result) {\r\n\t\t\t\t\tif (result.value) {\r\n\t\t\t\t\t\tswal.fire({\r\n\t\t\t\t\t\t\ttitle: 'Deleted!',\r\n\t\t\t\t\t\t\ttext: 'Your selected records statuses have been updated!',\r\n\t\t\t\t\t\t\ttype: 'success',\r\n\t\t\t\t\t\t\tbuttonsStyling: false,\r\n\t\t\t\t\t\t\tconfirmButtonText: \"OK\",\r\n\t\t\t\t\t\t\tconfirmButtonClass: \"btn btn-sm btn-bold btn-brand\",\r\n\t\t\t\t\t\t})\r\n\t\t\t\t\t\t// result.dismiss can be 'cancel', 'overlay',\r\n\t\t\t\t\t\t// 'close', and 'timer'\r\n\t\t\t\t\t} else if (result.dismiss === 'cancel') {\r\n\t\t\t\t\t\tswal.fire({\r\n\t\t\t\t\t\t\ttitle: 'Cancelled',\r\n\t\t\t\t\t\t\ttext: 'You selected records statuses have not been updated!',\r\n\t\t\t\t\t\t\ttype: 'error',\r\n\t\t\t\t\t\t\tbuttonsStyling: false,\r\n\t\t\t\t\t\t\tconfirmButtonText: \"OK\",\r\n\t\t\t\t\t\t\tconfirmButtonClass: \"btn btn-sm btn-bold btn-brand\",\r\n\t\t\t\t\t\t});\r\n\t\t\t\t\t}\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t});\r\n\t}\r\n\r\n\t// selected records delete\r\n\tvar selectedDelete = function() {\r\n\t\t$('#kt_subheader_group_actions_delete_all').on('click', function() {\r\n\t\t\t// fetch selected IDs\r\n\t\t\tvar ids = datatable.rows('.kt-datatable__row--active').nodes().find('.kt-checkbox--single > [type=\"checkbox\"]').map(function(i, chk) {\r\n\t\t\t\treturn $(chk).val();\r\n\t\t\t});\r\n\r\n\t\t\tif (ids.length > 0) {\r\n\t\t\t\t// learn more: https://sweetalert2.github.io/\r\n\t\t\t\tswal.fire({\r\n\t\t\t\t\tbuttonsStyling: false,\r\n\r\n\t\t\t\t\ttext: \"Are you sure to delete \" + ids.length + \" selected records ?\",\r\n\t\t\t\t\ttype: \"danger\",\r\n\r\n\t\t\t\t\tconfirmButtonText: \"Yes, delete!\",\r\n\t\t\t\t\tconfirmButtonClass: \"btn btn-sm btn-bold btn-danger\",\r\n\r\n\t\t\t\t\tshowCancelButton: true,\r\n\t\t\t\t\tcancelButtonText: \"No, cancel\",\r\n\t\t\t\t\tcancelButtonClass: \"btn btn-sm btn-bold btn-brand\"\r\n\t\t\t\t}).then(function(result) {\r\n\t\t\t\t\tif (result.value) {\r\n\t\t\t\t\t\tswal.fire({\r\n\t\t\t\t\t\t\ttitle: 'Deleted!',\r\n\t\t\t\t\t\t\ttext: 'Your selected records have been deleted! :(',\r\n\t\t\t\t\t\t\ttype: 'success',\r\n\t\t\t\t\t\t\tbuttonsStyling: false,\r\n\t\t\t\t\t\t\tconfirmButtonText: \"OK\",\r\n\t\t\t\t\t\t\tconfirmButtonClass: \"btn btn-sm btn-bold btn-brand\",\r\n\t\t\t\t\t\t})\r\n\t\t\t\t\t\t// result.dismiss can be 'cancel', 'overlay',\r\n\t\t\t\t\t\t// 'close', and 'timer'\r\n\t\t\t\t\t} else if (result.dismiss === 'cancel') {\r\n\t\t\t\t\t\tswal.fire({\r\n\t\t\t\t\t\t\ttitle: 'Cancelled',\r\n\t\t\t\t\t\t\ttext: 'You selected records have not been deleted! :)',\r\n\t\t\t\t\t\t\ttype: 'error',\r\n\t\t\t\t\t\t\tbuttonsStyling: false,\r\n\t\t\t\t\t\t\tconfirmButtonText: \"OK\",\r\n\t\t\t\t\t\t\tconfirmButtonClass: \"btn btn-sm btn-bold btn-brand\",\r\n\t\t\t\t\t\t});\r\n\t\t\t\t\t}\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t});\t\t\r\n\t}\r\n\r\n\tvar updateTotal = function() {\r\n\t\tdatatable.on('kt-datatable--on-layout-updated', function () {\r\n\t\t\t//$('#kt_subheader_total').html(datatable.getTotalRows() + ' Total');\r\n\t\t});\r\n\t};\r\n\r\n\treturn {\r\n\t\t// public functions\r\n\t\tinit: function() {\r\n\t\t\tinit();\r\n\t\t\tsearch();\r\n\t\t\tselection();\r\n\t\t\tselectedFetch();\r\n\t\t\tselectedStatusUpdate();\r\n\t\t\tselectedDelete();\r\n\t\t\tupdateTotal();\r\n\t\t},\r\n\t};\r\n}();\r\n\r\n// On document ready\r\nKTUtil.ready(function() {\r\n\tKTUserListDatatable.init();\r\n});\n\n//# sourceURL=webpack:///../src/assets/js/pages/custom/projects/list-datatable.js?");
+// Class definition
 
-/***/ })
+var KTAppsProjectsListDatatable = function() {
+    // Private functions
 
-/******/ });
+    // basic demo
+    var _demo = function() {
+        var datatable = $('#kt_datatable').KTDatatable({
+            // datasource definition
+            data: {
+                type: 'remote',
+                source: {
+                    read: {
+                        url: HOST_URL + '/api/datatables/demos/default.php',
+                    },
+                },
+                pageSize: 10, // display 20 records per page
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true,
+            },
+
+            // layout definition
+            layout: {
+                scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+                footer: false, // display/hide footer
+            },
+
+            // column sorting
+            sortable: true,
+
+            pagination: true,
+
+            search: {
+                input: $('#kt_subheader_search_form'),
+                delay: 400,
+                key: 'generalSearch'
+            },
+
+            // columns definition
+            columns: [{
+                field: 'RecordID',
+                title: '#',
+                sortable: 'asc',
+                width: 40,
+                type: 'number',
+                selector: false,
+                textAlign: 'left',
+                template: function(data) {
+                    return '<span class="font-weight-bolder">' + data.RecordID + '</span>';
+                }
+            }, {
+                field: 'OrderID',
+                title: 'Customer',
+                width: 250,
+                template: function(data) {
+                    var number = KTUtil.getRandomInt(1, 10);
+                    var img = number + '.png';
+
+					var skills = [
+				        'Angular, React',
+				        'Vue, Kendo',
+				        '.NET, Oracle, MySQL',
+				        'Node, SASS, Webpack',
+				        'MangoDB, Java',
+				        'HTML5, jQuery, CSS3',
+						'React, Vue',
+						'MangoDB, Node.js'
+				    ];
+
+                    var output = '';
+                    if (number < 7) {
+                        output = '<div class="d-flex align-items-center">\
+								<div class="symbol symbol-40 symbol-circle symbol-sm">\
+									<img class="" src="assets/media/project-logos/' + img + '" alt="photo"/>\
+								</div>\
+								<div class="ml-3">\
+									<div class="text-dark-75 font-weight-bolder font-size-lg mb-0">' + data.CompanyAgent + '</div>\
+									<a href="#" class="text-muted font-weight-bold text-hover-primary">' +
+                            		skills[number -1] + '</a>\
+								</div>\
+							</div>';
+                    } else {
+                        var stateNo = KTUtil.getRandomInt(0, 7);
+                        var states = [
+                            'success',
+                            'primary',
+                            'danger',
+                            'success',
+                            'warning',
+                            'dark',
+                            'primary',
+                            'info'
+                        ];
+                        var state = states[stateNo];
+
+                        output = '<div class="d-flex align-items-center">\
+								<div class="symbol symbol-40 symbol-circle symbol-light-' + state + '">\
+									<span class="symbol-label font-size-h4">' + data.CompanyAgent.substring(0, 1) + '</span>\
+								</div>\
+								<div class="ml-3">\
+									<div class="text-dark-75 font-weight-bolder font-size-lg mb-0">' + data.CompanyAgent + '</div>\
+									<a href="#" class="text-muted font-weight-bold text-hover-primary">' +
+                            skills[number - 4] + '</a>\
+								</div>\
+							</div>';
+                    }
+
+                    return output;
+                },
+            }, {
+                field: 'Country',
+                title: 'Country',
+                template: function(row) {
+                    var output = '';
+
+                    output += '<div class="font-weight-bolder font-size-lg mb-0">' + row.Country + '</div>';
+                    output += '<div class="font-weight-bold text-muted">Code: ' + row.ShipCountry + '</div>';
+
+                    return output;
+                }
+            }, {
+                field: 'ShipDate',
+                title: 'Ship Date',
+                type: 'date',
+                format: 'MM/DD/YYYY',
+                template: function(row) {
+                    var output = '';
+
+                    var status = {
+                        1: {'title': 'Paid', 'class': ' label-light-primary'},
+                        2: {'title': 'Approved', 'class': ' label-light-danger'},
+                        3: {'title': 'Pending', 'class': ' label-light-primary'},
+                        4: {'title': 'Rejected', 'class': ' label-light-success'}
+                    };
+                    var index = KTUtil.getRandomInt(1, 4);
+
+                    output += '<div class="font-weight-bolder text-primary mb-0">' + row.ShipDate + '</div>';
+                    output += '<div class="text-muted">' + status[index].title + '</div>';
+
+                    return output;
+                },
+            }, {
+                field: 'CompanyName',
+                title: 'Company Name',
+                template: function(row) {
+                    var output = '';
+
+                    output += '<div class="font-weight-bold text-muted">' + row.CompanyName + '</div>';
+
+                    return output;
+                }
+            }, {
+                field: 'Status',
+                title: 'Status',
+                // callback function support for column rendering
+                template: function(row) {
+                    var status = {
+                        1: {
+                            'title': 'Pending',
+                            'class': ' label-light-primary'
+                        },
+                        2: {
+                            'title': 'Delivered',
+                            'class': ' label-light-danger'
+                        },
+                        3: {
+                            'title': 'Canceled',
+                            'class': ' label-light-primary'
+                        },
+                        4: {
+                            'title': 'Success',
+                            'class': ' label-light-success'
+                        },
+                        5: {
+                            'title': 'Info',
+                            'class': ' label-light-info'
+                        },
+                        6: {
+                            'title': 'Danger',
+                            'class': ' label-light-danger'
+                        },
+                        7: {
+                            'title': 'Warning',
+                            'class': ' label-light-warning'
+                        },
+                    };
+                    return '<span class="label label-lg font-weight-bold ' + status[row.Status].class + ' label-inline">' + status[row.Status].title + '</span>';
+                },
+            }, {
+                field: 'Actions',
+                title: 'Actions',
+                sortable: false,
+                width: 130,
+                overflow: 'visible',
+                autoHide: false,
+                template: function() {
+                    return '\
+                        <div class="dropdown dropdown-inline">\
+                            <a href="javascript:;" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon mr-2" data-toggle="dropdown">\
+                                <span class="svg-icon svg-icon-md">\
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="svg-icon">\
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">\
+                                            <rect x="0" y="0" width="24" height="24"/>\
+                                            <path d="M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z" fill="#000000"/>\
+                                            <path d="M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z" fill="#000000" opacity="0.3"/>\
+                                        </g>\
+                                    </svg>\
+                                </span>\
+                            </a>\
+                            <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">\
+                                <ul class="navi flex-column navi-hover py-2">\
+                                    <li class="navi-header font-weight-bolder text-uppercase font-size-xs text-primary pb-2">\
+                                        Choose an action:\
+                                    </li>\
+                                    <li class="navi-item">\
+                                        <a href="#" class="navi-link">\
+                                            <span class="navi-icon"><i class="la la-print"></i></span>\
+                                            <span class="navi-text">Print</span>\
+                                        </a>\
+                                    </li>\
+                                    <li class="navi-item">\
+                                        <a href="#" class="navi-link">\
+                                            <span class="navi-icon"><i class="la la-copy"></i></span>\
+                                            <span class="navi-text">Copy</span>\
+                                        </a>\
+                                    </li>\
+                                    <li class="navi-item">\
+                                        <a href="#" class="navi-link">\
+                                            <span class="navi-icon"><i class="la la-file-excel-o"></i></span>\
+                                            <span class="navi-text">Excel</span>\
+                                        </a>\
+                                    </li>\
+                                    <li class="navi-item">\
+                                        <a href="#" class="navi-link">\
+                                            <span class="navi-icon"><i class="la la-file-text-o"></i></span>\
+                                            <span class="navi-text">CSV</span>\
+                                        </a>\
+                                    </li>\
+                                    <li class="navi-item">\
+                                        <a href="#" class="navi-link">\
+                                            <span class="navi-icon"><i class="la la-file-pdf-o"></i></span>\
+                                            <span class="navi-text">PDF</span>\
+                                        </a>\
+                                    </li>\
+                                </ul>\
+                            </div>\
+                        </div>\
+                        <a href="javascript:;" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon mr-2" title="Edit details">\
+                            <span class="svg-icon svg-icon-md">\
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">\
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">\
+                                        <rect x="0" y="0" width="24" height="24"/>\
+                                        <path d="M12.2674799,18.2323597 L12.0084872,5.45852451 C12.0004303,5.06114792 12.1504154,4.6768183 12.4255037,4.38993949 L15.0030167,1.70195304 L17.5910752,4.40093695 C17.8599071,4.6812911 18.0095067,5.05499603 18.0083938,5.44341307 L17.9718262,18.2062508 C17.9694575,19.0329966 17.2985816,19.701953 16.4718324,19.701953 L13.7671717,19.701953 C12.9505952,19.701953 12.2840328,19.0487684 12.2674799,18.2323597 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.701953, 10.701953) rotate(-135.000000) translate(-14.701953, -10.701953) "/>\
+                                        <path d="M12.9,2 C13.4522847,2 13.9,2.44771525 13.9,3 C13.9,3.55228475 13.4522847,4 12.9,4 L6,4 C4.8954305,4 4,4.8954305 4,6 L4,18 C4,19.1045695 4.8954305,20 6,20 L18,20 C19.1045695,20 20,19.1045695 20,18 L20,13 C20,12.4477153 20.4477153,12 21,12 C21.5522847,12 22,12.4477153 22,13 L22,18 C22,20.209139 20.209139,22 18,22 L6,22 C3.790861,22 2,20.209139 2,18 L2,6 C2,3.790861 3.790861,2 6,2 L12.9,2 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>\
+                                    </g>\
+                                </svg>\
+                            </span>\
+                        </a>\
+                        <a href="javascript:;" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon" title="Delete">\
+                            <span class="svg-icon svg-icon-md">\
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">\
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">\
+                                        <rect x="0" y="0" width="24" height="24"/>\
+                                        <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero"/>\
+                                        <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3"/>\
+                                    </g>\
+                                </svg>\
+                            </span>\
+                        </a>\
+                    ';
+                },
+            }]
+        });
+    };
+
+    return {
+        // public functions
+        init: function() {
+            _demo();
+        },
+    };
+}();
+
+jQuery(document).ready(function() {
+    KTAppsProjectsListDatatable.init();
+});

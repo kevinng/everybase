@@ -1,113 +1,2417 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./webpack/vendors/custom/gmaps.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./node_modules/gmaps/gmaps.js":
-/*!*************************************!*\
-  !*** ./node_modules/gmaps/gmaps.js ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
-eval("\n(function(root, factory) {\n  if(true) {\n    module.exports = factory();\n  }\n  else {}\n\n\n}(this, function() {\n\n/*!\n * GMaps.js v0.4.24\n * http://hpneo.github.com/gmaps/\n *\n * Copyright 2016, Gustavo Leon\n * Released under the MIT License.\n */\n\nvar extend_object = function(obj, new_obj) {\n  var name;\n\n  if (obj === new_obj) {\n    return obj;\n  }\n\n  for (name in new_obj) {\n    if (new_obj[name] !== undefined) {\n      obj[name] = new_obj[name];\n    }\n  }\n\n  return obj;\n};\n\nvar replace_object = function(obj, replace) {\n  var name;\n\n  if (obj === replace) {\n    return obj;\n  }\n\n  for (name in replace) {\n    if (obj[name] != undefined) {\n      obj[name] = replace[name];\n    }\n  }\n\n  return obj;\n};\n\nvar array_map = function(array, callback) {\n  var original_callback_params = Array.prototype.slice.call(arguments, 2),\n      array_return = [],\n      array_length = array.length,\n      i;\n\n  if (Array.prototype.map && array.map === Array.prototype.map) {\n    array_return = Array.prototype.map.call(array, function(item) {\n      var callback_params = original_callback_params.slice(0);\n      callback_params.splice(0, 0, item);\n\n      return callback.apply(this, callback_params);\n    });\n  }\n  else {\n    for (i = 0; i < array_length; i++) {\n      callback_params = original_callback_params;\n      callback_params.splice(0, 0, array[i]);\n      array_return.push(callback.apply(this, callback_params));\n    }\n  }\n\n  return array_return;\n};\n\nvar array_flat = function(array) {\n  var new_array = [],\n      i;\n\n  for (i = 0; i < array.length; i++) {\n    new_array = new_array.concat(array[i]);\n  }\n\n  return new_array;\n};\n\nvar coordsToLatLngs = function(coords, useGeoJSON) {\n  var first_coord = coords[0],\n      second_coord = coords[1];\n\n  if (useGeoJSON) {\n    first_coord = coords[1];\n    second_coord = coords[0];\n  }\n\n  return new google.maps.LatLng(first_coord, second_coord);\n};\n\nvar arrayToLatLng = function(coords, useGeoJSON) {\n  var i;\n\n  for (i = 0; i < coords.length; i++) {\n    if (!(coords[i] instanceof google.maps.LatLng)) {\n      if (coords[i].length > 0 && typeof(coords[i][0]) === \"object\") {\n        coords[i] = arrayToLatLng(coords[i], useGeoJSON);\n      }\n      else {\n        coords[i] = coordsToLatLngs(coords[i], useGeoJSON);\n      }\n    }\n  }\n\n  return coords;\n};\n\nvar getElementsByClassName = function (class_name, context) {\n    var element,\n        _class = class_name.replace('.', '');\n\n    if ('jQuery' in this && context) {\n        element = $(\".\" + _class, context)[0];\n    } else {\n        element = document.getElementsByClassName(_class)[0];\n    }\n    return element;\n\n};\n\nvar getElementById = function(id, context) {\n  var element,\n  id = id.replace('#', '');\n\n  if ('jQuery' in window && context) {\n    element = $('#' + id, context)[0];\n  } else {\n    element = document.getElementById(id);\n  };\n\n  return element;\n};\n\nvar findAbsolutePosition = function(obj)  {\n  var curleft = 0,\n      curtop = 0;\n\n  if (obj.offsetParent) {\n    do {\n      curleft += obj.offsetLeft;\n      curtop += obj.offsetTop;\n    } while (obj = obj.offsetParent);\n  }\n\n  return [curleft, curtop];\n};\n\nvar GMaps = (function(global) {\n  \"use strict\";\n\n  var doc = document;\n  /**\n   * Creates a new GMaps instance, including a Google Maps map.\n   * @class GMaps\n   * @constructs\n   * @param {object} options - `options` accepts all the [MapOptions](https://developers.google.com/maps/documentation/javascript/reference#MapOptions) and [events](https://developers.google.com/maps/documentation/javascript/reference#Map) listed in the Google Maps API. Also accepts:\n   * * `lat` (number): Latitude of the map's center\n   * * `lng` (number): Longitude of the map's center\n   * * `el` (string or HTMLElement): container where the map will be rendered\n   * * `markerClusterer` (function): A function to create a marker cluster. You can use MarkerClusterer or MarkerClustererPlus.\n   */\n  var GMaps = function(options) {\n\n    if (!(typeof window.google === 'object' && window.google.maps)) {\n      if (typeof window.console === 'object' && window.console.error) {\n        console.error('Google Maps API is required. Please register the following JavaScript library https://maps.googleapis.com/maps/api/js.');\n      }\n\n      return function() {};\n    }\n\n    if (!this) return new GMaps(options);\n\n    options.zoom = options.zoom || 15;\n    options.mapType = options.mapType || 'roadmap';\n\n    var valueOrDefault = function(value, defaultValue) {\n      return value === undefined ? defaultValue : value;\n    };\n\n    var self = this,\n        i,\n        events_that_hide_context_menu = [\n          'bounds_changed', 'center_changed', 'click', 'dblclick', 'drag',\n          'dragend', 'dragstart', 'idle', 'maptypeid_changed', 'projection_changed',\n          'resize', 'tilesloaded', 'zoom_changed'\n        ],\n        events_that_doesnt_hide_context_menu = ['mousemove', 'mouseout', 'mouseover'],\n        options_to_be_deleted = ['el', 'lat', 'lng', 'mapType', 'width', 'height', 'markerClusterer', 'enableNewStyle'],\n        identifier = options.el || options.div,\n        markerClustererFunction = options.markerClusterer,\n        mapType = google.maps.MapTypeId[options.mapType.toUpperCase()],\n        map_center = new google.maps.LatLng(options.lat, options.lng),\n        zoomControl = valueOrDefault(options.zoomControl, true),\n        zoomControlOpt = options.zoomControlOpt || {\n          style: 'DEFAULT',\n          position: 'TOP_LEFT'\n        },\n        zoomControlStyle = zoomControlOpt.style || 'DEFAULT',\n        zoomControlPosition = zoomControlOpt.position || 'TOP_LEFT',\n        panControl = valueOrDefault(options.panControl, true),\n        mapTypeControl = valueOrDefault(options.mapTypeControl, true),\n        scaleControl = valueOrDefault(options.scaleControl, true),\n        streetViewControl = valueOrDefault(options.streetViewControl, true),\n        overviewMapControl = valueOrDefault(overviewMapControl, true),\n        map_options = {},\n        map_base_options = {\n          zoom: this.zoom,\n          center: map_center,\n          mapTypeId: mapType\n        },\n        map_controls_options = {\n          panControl: panControl,\n          zoomControl: zoomControl,\n          zoomControlOptions: {\n            style: google.maps.ZoomControlStyle[zoomControlStyle],\n            position: google.maps.ControlPosition[zoomControlPosition]\n          },\n          mapTypeControl: mapTypeControl,\n          scaleControl: scaleControl,\n          streetViewControl: streetViewControl,\n          overviewMapControl: overviewMapControl\n        };\n\n      if (typeof(options.el) === 'string' || typeof(options.div) === 'string') {\n        if (identifier.indexOf(\"#\") > -1) {\n            /**\n             * Container element\n             *\n             * @type {HTMLElement}\n             */\n            this.el = getElementById(identifier, options.context);\n        } else {\n            this.el = getElementsByClassName.apply(this, [identifier, options.context]);\n        }\n      } else {\n          this.el = identifier;\n      }\n\n    if (typeof(this.el) === 'undefined' || this.el === null) {\n      throw 'No element defined.';\n    }\n\n    window.context_menu = window.context_menu || {};\n    window.context_menu[self.el.id] = {};\n\n    /**\n     * Collection of custom controls in the map UI\n     *\n     * @type {array}\n     */\n    this.controls = [];\n    /**\n     * Collection of map's overlays\n     *\n     * @type {array}\n     */\n    this.overlays = [];\n    /**\n     * Collection of KML/GeoRSS and FusionTable layers\n     *\n     * @type {array}\n     */\n    this.layers = [];\n    /**\n     * Collection of data layers (See {@link GMaps#addLayer})\n     *\n     * @type {object}\n     */\n    this.singleLayers = {};\n    /**\n     * Collection of map's markers\n     *\n     * @type {array}\n     */\n    this.markers = [];\n    /**\n     * Collection of map's lines\n     *\n     * @type {array}\n     */\n    this.polylines = [];\n    /**\n     * Collection of map's routes requested by {@link GMaps#getRoutes}, {@link GMaps#renderRoute}, {@link GMaps#drawRoute}, {@link GMaps#travelRoute} or {@link GMaps#drawSteppedRoute}\n     *\n     * @type {array}\n     */\n    this.routes = [];\n    /**\n     * Collection of map's polygons\n     *\n     * @type {array}\n     */\n    this.polygons = [];\n    this.infoWindow = null;\n    this.overlay_el = null;\n    /**\n     * Current map's zoom\n     *\n     * @type {number}\n     */\n    this.zoom = options.zoom;\n    this.registered_events = {};\n\n    this.el.style.width = options.width || this.el.scrollWidth || this.el.offsetWidth;\n    this.el.style.height = options.height || this.el.scrollHeight || this.el.offsetHeight;\n\n    google.maps.visualRefresh = options.enableNewStyle;\n\n    for (i = 0; i < options_to_be_deleted.length; i++) {\n      delete options[options_to_be_deleted[i]];\n    }\n\n    if(options.disableDefaultUI != true) {\n      map_base_options = extend_object(map_base_options, map_controls_options);\n    }\n\n    map_options = extend_object(map_base_options, options);\n\n    for (i = 0; i < events_that_hide_context_menu.length; i++) {\n      delete map_options[events_that_hide_context_menu[i]];\n    }\n\n    for (i = 0; i < events_that_doesnt_hide_context_menu.length; i++) {\n      delete map_options[events_that_doesnt_hide_context_menu[i]];\n    }\n\n    /**\n     * Google Maps map instance\n     *\n     * @type {google.maps.Map}\n     */\n    this.map = new google.maps.Map(this.el, map_options);\n\n    if (markerClustererFunction) {\n      /**\n       * Marker Clusterer instance\n       *\n       * @type {object}\n       */\n      this.markerClusterer = markerClustererFunction.apply(this, [this.map]);\n    }\n\n    var buildContextMenuHTML = function(control, e) {\n      var html = '',\n          options = window.context_menu[self.el.id][control];\n\n      for (var i in options){\n        if (options.hasOwnProperty(i)) {\n          var option = options[i];\n\n          html += '<li><a id=\"' + control + '_' + i + '\" href=\"#\">' + option.title + '</a></li>';\n        }\n      }\n\n      if (!getElementById('gmaps_context_menu')) return;\n\n      var context_menu_element = getElementById('gmaps_context_menu');\n\n      context_menu_element.innerHTML = html;\n\n      var context_menu_items = context_menu_element.getElementsByTagName('a'),\n          context_menu_items_count = context_menu_items.length,\n          i;\n\n      for (i = 0; i < context_menu_items_count; i++) {\n        var context_menu_item = context_menu_items[i];\n\n        var assign_menu_item_action = function(ev){\n          ev.preventDefault();\n\n          options[this.id.replace(control + '_', '')].action.apply(self, [e]);\n          self.hideContextMenu();\n        };\n\n        google.maps.event.clearListeners(context_menu_item, 'click');\n        google.maps.event.addDomListenerOnce(context_menu_item, 'click', assign_menu_item_action, false);\n      }\n\n      var position = findAbsolutePosition.apply(this, [self.el]),\n          left = position[0] + e.pixel.x - 15,\n          top = position[1] + e.pixel.y- 15;\n\n      context_menu_element.style.left = left + \"px\";\n      context_menu_element.style.top = top + \"px\";\n\n      // context_menu_element.style.display = 'block';\n    };\n\n    this.buildContextMenu = function(control, e) {\n      if (control === 'marker') {\n        e.pixel = {};\n\n        var overlay = new google.maps.OverlayView();\n        overlay.setMap(self.map);\n\n        overlay.draw = function() {\n          var projection = overlay.getProjection(),\n              position = e.marker.getPosition();\n\n          e.pixel = projection.fromLatLngToContainerPixel(position);\n\n          buildContextMenuHTML(control, e);\n        };\n      }\n      else {\n        buildContextMenuHTML(control, e);\n      }\n\n      var context_menu_element = getElementById('gmaps_context_menu');\n\n      setTimeout(function() {\n        context_menu_element.style.display = 'block';\n      }, 0);\n    };\n\n    /**\n     * Add a context menu for a map or a marker.\n     *\n     * @param {object} options - The `options` object should contain:\n     * * `control` (string): Kind of control the context menu will be attached. Can be \"map\" or \"marker\".\n     * * `options` (array): A collection of context menu items:\n     *   * `title` (string): Item's title shown in the context menu.\n     *   * `name` (string): Item's identifier.\n     *   * `action` (function): Function triggered after selecting the context menu item.\n     */\n    this.setContextMenu = function(options) {\n      window.context_menu[self.el.id][options.control] = {};\n\n      var i,\n          ul = doc.createElement('ul');\n\n      for (i in options.options) {\n        if (options.options.hasOwnProperty(i)) {\n          var option = options.options[i];\n\n          window.context_menu[self.el.id][options.control][option.name] = {\n            title: option.title,\n            action: option.action\n          };\n        }\n      }\n\n      ul.id = 'gmaps_context_menu';\n      ul.style.display = 'none';\n      ul.style.position = 'absolute';\n      ul.style.minWidth = '100px';\n      ul.style.background = 'white';\n      ul.style.listStyle = 'none';\n      ul.style.padding = '8px';\n      ul.style.boxShadow = '2px 2px 6px #ccc';\n\n      if (!getElementById('gmaps_context_menu')) {\n        doc.body.appendChild(ul);\n      }\n\n      var context_menu_element = getElementById('gmaps_context_menu');\n\n      google.maps.event.addDomListener(context_menu_element, 'mouseout', function(ev) {\n        if (!ev.relatedTarget || !this.contains(ev.relatedTarget)) {\n          window.setTimeout(function(){\n            context_menu_element.style.display = 'none';\n          }, 400);\n        }\n      }, false);\n    };\n\n    /**\n     * Hide the current context menu\n     */\n    this.hideContextMenu = function() {\n      var context_menu_element = getElementById('gmaps_context_menu');\n\n      if (context_menu_element) {\n        context_menu_element.style.display = 'none';\n      }\n    };\n\n    var setupListener = function(object, name) {\n      google.maps.event.addListener(object, name, function(e){\n        if (e == undefined) {\n          e = this;\n        }\n\n        options[name].apply(this, [e]);\n\n        self.hideContextMenu();\n      });\n    };\n\n    //google.maps.event.addListener(this.map, 'idle', this.hideContextMenu);\n    google.maps.event.addListener(this.map, 'zoom_changed', this.hideContextMenu);\n\n    for (var ev = 0; ev < events_that_hide_context_menu.length; ev++) {\n      var name = events_that_hide_context_menu[ev];\n\n      if (name in options) {\n        setupListener(this.map, name);\n      }\n    }\n\n    for (var ev = 0; ev < events_that_doesnt_hide_context_menu.length; ev++) {\n      var name = events_that_doesnt_hide_context_menu[ev];\n\n      if (name in options) {\n        setupListener(this.map, name);\n      }\n    }\n\n    google.maps.event.addListener(this.map, 'rightclick', function(e) {\n      if (options.rightclick) {\n        options.rightclick.apply(this, [e]);\n      }\n\n      if(window.context_menu[self.el.id]['map'] != undefined) {\n        self.buildContextMenu('map', e);\n      }\n    });\n\n    /**\n     * Trigger a `resize` event, useful if you need to repaint the current map (for changes in the viewport or display / hide actions).\n     */\n    this.refresh = function() {\n      google.maps.event.trigger(this.map, 'resize');\n    };\n\n    /**\n     * Adjust the map zoom to include all the markers added in the map.\n     */\n    this.fitZoom = function() {\n      var latLngs = [],\n          markers_length = this.markers.length,\n          i;\n\n      for (i = 0; i < markers_length; i++) {\n        if(typeof(this.markers[i].visible) === 'boolean' && this.markers[i].visible) {\n          latLngs.push(this.markers[i].getPosition());\n        }\n      }\n\n      this.fitLatLngBounds(latLngs);\n    };\n\n    /**\n     * Adjust the map zoom to include all the coordinates in the `latLngs` array.\n     *\n     * @param {array} latLngs - Collection of `google.maps.LatLng` objects.\n     */\n    this.fitLatLngBounds = function(latLngs) {\n      var total = latLngs.length,\n          bounds = new google.maps.LatLngBounds(),\n          i;\n\n      for(i = 0; i < total; i++) {\n        bounds.extend(latLngs[i]);\n      }\n\n      this.map.fitBounds(bounds);\n    };\n\n    /**\n     * Center the map using the `lat` and `lng` coordinates.\n     *\n     * @param {number} lat - Latitude of the coordinate.\n     * @param {number} lng - Longitude of the coordinate.\n     * @param {function} [callback] - Callback that will be executed after the map is centered.\n     */\n    this.setCenter = function(lat, lng, callback) {\n      this.map.panTo(new google.maps.LatLng(lat, lng));\n\n      if (callback) {\n        callback();\n      }\n    };\n\n    /**\n     * Return the HTML element container of the map.\n     *\n     * @returns {HTMLElement} the element container.\n     */\n    this.getElement = function() {\n      return this.el;\n    };\n\n    /**\n     * Increase the map's zoom.\n     *\n     * @param {number} [magnitude] - The number of times the map will be zoomed in.\n     */\n    this.zoomIn = function(value) {\n      value = value || 1;\n\n      this.zoom = this.map.getZoom() + value;\n      this.map.setZoom(this.zoom);\n    };\n\n    /**\n     * Decrease the map's zoom.\n     *\n     * @param {number} [magnitude] - The number of times the map will be zoomed out.\n     */\n    this.zoomOut = function(value) {\n      value = value || 1;\n\n      this.zoom = this.map.getZoom() - value;\n      this.map.setZoom(this.zoom);\n    };\n\n    var native_methods = [],\n        method;\n\n    for (method in this.map) {\n      if (typeof(this.map[method]) == 'function' && !this[method]) {\n        native_methods.push(method);\n      }\n    }\n\n    for (i = 0; i < native_methods.length; i++) {\n      (function(gmaps, scope, method_name) {\n        gmaps[method_name] = function(){\n          return scope[method_name].apply(scope, arguments);\n        };\n      })(this, this.map, native_methods[i]);\n    }\n  };\n\n  return GMaps;\n})(this);\n\nGMaps.prototype.createControl = function(options) {\n  var control = document.createElement('div');\n\n  control.style.cursor = 'pointer';\n\n  if (options.disableDefaultStyles !== true) {\n    control.style.fontFamily = 'Roboto, Arial, sans-serif';\n    control.style.fontSize = '11px';\n    control.style.boxShadow = 'rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px';\n  }\n\n  for (var option in options.style) {\n    control.style[option] = options.style[option];\n  }\n\n  if (options.id) {\n    control.id = options.id;\n  }\n\n  if (options.title) {\n    control.title = options.title;\n  }\n\n  if (options.classes) {\n    control.className = options.classes;\n  }\n\n  if (options.content) {\n    if (typeof options.content === 'string') {\n      control.innerHTML = options.content;\n    }\n    else if (options.content instanceof HTMLElement) {\n      control.appendChild(options.content);\n    }\n  }\n\n  if (options.position) {\n    control.position = google.maps.ControlPosition[options.position.toUpperCase()];\n  }\n\n  for (var ev in options.events) {\n    (function(object, name) {\n      google.maps.event.addDomListener(object, name, function(){\n        options.events[name].apply(this, [this]);\n      });\n    })(control, ev);\n  }\n\n  control.index = 1;\n\n  return control;\n};\n\n/**\n * Add a custom control to the map UI.\n *\n * @param {object} options - The `options` object should contain:\n * * `style` (object): The keys and values of this object should be valid CSS properties and values.\n * * `id` (string): The HTML id for the custom control.\n * * `classes` (string): A string containing all the HTML classes for the custom control.\n * * `content` (string or HTML element): The content of the custom control.\n * * `position` (string): Any valid [`google.maps.ControlPosition`](https://developers.google.com/maps/documentation/javascript/controls#ControlPositioning) value, in lower or upper case.\n * * `events` (object): The keys of this object should be valid DOM events. The values should be functions.\n * * `disableDefaultStyles` (boolean): If false, removes the default styles for the controls like font (family and size), and box shadow.\n * @returns {HTMLElement}\n */\nGMaps.prototype.addControl = function(options) {\n  var control = this.createControl(options);\n\n  this.controls.push(control);\n  this.map.controls[control.position].push(control);\n\n  return control;\n};\n\n/**\n * Remove a control from the map. `control` should be a control returned by `addControl()`.\n *\n * @param {HTMLElement} control - One of the controls returned by `addControl()`.\n * @returns {HTMLElement} the removed control.\n */\nGMaps.prototype.removeControl = function(control) {\n  var position = null,\n      i;\n\n  for (i = 0; i < this.controls.length; i++) {\n    if (this.controls[i] == control) {\n      position = this.controls[i].position;\n      this.controls.splice(i, 1);\n    }\n  }\n\n  if (position) {\n    for (i = 0; i < this.map.controls.length; i++) {\n      var controlsForPosition = this.map.controls[control.position];\n\n      if (controlsForPosition.getAt(i) == control) {\n        controlsForPosition.removeAt(i);\n\n        break;\n      }\n    }\n  }\n\n  return control;\n};\n\nGMaps.prototype.createMarker = function(options) {\n  if (options.lat == undefined && options.lng == undefined && options.position == undefined) {\n    throw 'No latitude or longitude defined.';\n  }\n\n  var self = this,\n      details = options.details,\n      fences = options.fences,\n      outside = options.outside,\n      base_options = {\n        position: new google.maps.LatLng(options.lat, options.lng),\n        map: null\n      },\n      marker_options = extend_object(base_options, options);\n\n  delete marker_options.lat;\n  delete marker_options.lng;\n  delete marker_options.fences;\n  delete marker_options.outside;\n\n  var marker = new google.maps.Marker(marker_options);\n\n  marker.fences = fences;\n\n  if (options.infoWindow) {\n    marker.infoWindow = new google.maps.InfoWindow(options.infoWindow);\n\n    var info_window_events = ['closeclick', 'content_changed', 'domready', 'position_changed', 'zindex_changed'];\n\n    for (var ev = 0; ev < info_window_events.length; ev++) {\n      (function(object, name) {\n        if (options.infoWindow[name]) {\n          google.maps.event.addListener(object, name, function(e){\n            options.infoWindow[name].apply(this, [e]);\n          });\n        }\n      })(marker.infoWindow, info_window_events[ev]);\n    }\n  }\n\n  var marker_events = ['animation_changed', 'clickable_changed', 'cursor_changed', 'draggable_changed', 'flat_changed', 'icon_changed', 'position_changed', 'shadow_changed', 'shape_changed', 'title_changed', 'visible_changed', 'zindex_changed'];\n\n  var marker_events_with_mouse = ['dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup'];\n\n  for (var ev = 0; ev < marker_events.length; ev++) {\n    (function(object, name) {\n      if (options[name]) {\n        google.maps.event.addListener(object, name, function(){\n          options[name].apply(this, [this]);\n        });\n      }\n    })(marker, marker_events[ev]);\n  }\n\n  for (var ev = 0; ev < marker_events_with_mouse.length; ev++) {\n    (function(map, object, name) {\n      if (options[name]) {\n        google.maps.event.addListener(object, name, function(me){\n          if(!me.pixel){\n            me.pixel = map.getProjection().fromLatLngToPoint(me.latLng)\n          }\n\n          options[name].apply(this, [me]);\n        });\n      }\n    })(this.map, marker, marker_events_with_mouse[ev]);\n  }\n\n  google.maps.event.addListener(marker, 'click', function() {\n    this.details = details;\n\n    if (options.click) {\n      options.click.apply(this, [this]);\n    }\n\n    if (marker.infoWindow) {\n      self.hideInfoWindows();\n      marker.infoWindow.open(self.map, marker);\n    }\n  });\n\n  google.maps.event.addListener(marker, 'rightclick', function(e) {\n    e.marker = this;\n\n    if (options.rightclick) {\n      options.rightclick.apply(this, [e]);\n    }\n\n    if (window.context_menu[self.el.id]['marker'] != undefined) {\n      self.buildContextMenu('marker', e);\n    }\n  });\n\n  if (marker.fences) {\n    google.maps.event.addListener(marker, 'dragend', function() {\n      self.checkMarkerGeofence(marker, function(m, f) {\n        outside(m, f);\n      });\n    });\n  }\n\n  return marker;\n};\n\nGMaps.prototype.addMarker = function(options) {\n  var marker;\n  if(options.hasOwnProperty('gm_accessors_')) {\n    // Native google.maps.Marker object\n    marker = options;\n  }\n  else {\n    if ((options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) || options.position) {\n      marker = this.createMarker(options);\n    }\n    else {\n      throw 'No latitude or longitude defined.';\n    }\n  }\n\n  marker.setMap(this.map);\n\n  if(this.markerClusterer) {\n    this.markerClusterer.addMarker(marker);\n  }\n\n  this.markers.push(marker);\n\n  GMaps.fire('marker_added', marker, this);\n\n  return marker;\n};\n\nGMaps.prototype.addMarkers = function(array) {\n  for (var i = 0, marker; marker=array[i]; i++) {\n    this.addMarker(marker);\n  }\n\n  return this.markers;\n};\n\nGMaps.prototype.hideInfoWindows = function() {\n  for (var i = 0, marker; marker = this.markers[i]; i++){\n    if (marker.infoWindow) {\n      marker.infoWindow.close();\n    }\n  }\n};\n\nGMaps.prototype.removeMarker = function(marker) {\n  for (var i = 0; i < this.markers.length; i++) {\n    if (this.markers[i] === marker) {\n      this.markers[i].setMap(null);\n      this.markers.splice(i, 1);\n\n      if(this.markerClusterer) {\n        this.markerClusterer.removeMarker(marker);\n      }\n\n      GMaps.fire('marker_removed', marker, this);\n\n      break;\n    }\n  }\n\n  return marker;\n};\n\nGMaps.prototype.removeMarkers = function (collection) {\n  var new_markers = [];\n\n  if (typeof collection == 'undefined') {\n    for (var i = 0; i < this.markers.length; i++) {\n      var marker = this.markers[i];\n      marker.setMap(null);\n\n      GMaps.fire('marker_removed', marker, this);\n    }\n\n    if(this.markerClusterer && this.markerClusterer.clearMarkers) {\n      this.markerClusterer.clearMarkers();\n    }\n\n    this.markers = new_markers;\n  }\n  else {\n    for (var i = 0; i < collection.length; i++) {\n      var index = this.markers.indexOf(collection[i]);\n\n      if (index > -1) {\n        var marker = this.markers[index];\n        marker.setMap(null);\n\n        if(this.markerClusterer) {\n          this.markerClusterer.removeMarker(marker);\n        }\n\n        GMaps.fire('marker_removed', marker, this);\n      }\n    }\n\n    for (var i = 0; i < this.markers.length; i++) {\n      var marker = this.markers[i];\n      if (marker.getMap() != null) {\n        new_markers.push(marker);\n      }\n    }\n\n    this.markers = new_markers;\n  }\n};\n\nGMaps.prototype.drawOverlay = function(options) {\n  var overlay = new google.maps.OverlayView(),\n      auto_show = true;\n\n  overlay.setMap(this.map);\n\n  if (options.auto_show != null) {\n    auto_show = options.auto_show;\n  }\n\n  overlay.onAdd = function() {\n    var el = document.createElement('div');\n\n    el.style.borderStyle = \"none\";\n    el.style.borderWidth = \"0px\";\n    el.style.position = \"absolute\";\n    el.style.zIndex = 100;\n    el.innerHTML = options.content;\n\n    overlay.el = el;\n\n    if (!options.layer) {\n      options.layer = 'overlayLayer';\n    }\n    \n    var panes = this.getPanes(),\n        overlayLayer = panes[options.layer],\n        stop_overlay_events = ['contextmenu', 'DOMMouseScroll', 'dblclick', 'mousedown'];\n\n    overlayLayer.appendChild(el);\n\n    for (var ev = 0; ev < stop_overlay_events.length; ev++) {\n      (function(object, name) {\n        google.maps.event.addDomListener(object, name, function(e){\n          if (navigator.userAgent.toLowerCase().indexOf('msie') != -1 && document.all) {\n            e.cancelBubble = true;\n            e.returnValue = false;\n          }\n          else {\n            e.stopPropagation();\n          }\n        });\n      })(el, stop_overlay_events[ev]);\n    }\n\n    if (options.click) {\n      panes.overlayMouseTarget.appendChild(overlay.el);\n      google.maps.event.addDomListener(overlay.el, 'click', function() {\n        options.click.apply(overlay, [overlay]);\n      });\n    }\n\n    google.maps.event.trigger(this, 'ready');\n  };\n\n  overlay.draw = function() {\n    var projection = this.getProjection(),\n        pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));\n\n    options.horizontalOffset = options.horizontalOffset || 0;\n    options.verticalOffset = options.verticalOffset || 0;\n\n    var el = overlay.el,\n        content = el.children[0],\n        content_height = content.clientHeight,\n        content_width = content.clientWidth;\n\n    switch (options.verticalAlign) {\n      case 'top':\n        el.style.top = (pixel.y - content_height + options.verticalOffset) + 'px';\n        break;\n      default:\n      case 'middle':\n        el.style.top = (pixel.y - (content_height / 2) + options.verticalOffset) + 'px';\n        break;\n      case 'bottom':\n        el.style.top = (pixel.y + options.verticalOffset) + 'px';\n        break;\n    }\n\n    switch (options.horizontalAlign) {\n      case 'left':\n        el.style.left = (pixel.x - content_width + options.horizontalOffset) + 'px';\n        break;\n      default:\n      case 'center':\n        el.style.left = (pixel.x - (content_width / 2) + options.horizontalOffset) + 'px';\n        break;\n      case 'right':\n        el.style.left = (pixel.x + options.horizontalOffset) + 'px';\n        break;\n    }\n\n    el.style.display = auto_show ? 'block' : 'none';\n\n    if (!auto_show) {\n      options.show.apply(this, [el]);\n    }\n  };\n\n  overlay.onRemove = function() {\n    var el = overlay.el;\n\n    if (options.remove) {\n      options.remove.apply(this, [el]);\n    }\n    else {\n      overlay.el.parentNode.removeChild(overlay.el);\n      overlay.el = null;\n    }\n  };\n\n  this.overlays.push(overlay);\n  return overlay;\n};\n\nGMaps.prototype.removeOverlay = function(overlay) {\n  for (var i = 0; i < this.overlays.length; i++) {\n    if (this.overlays[i] === overlay) {\n      this.overlays[i].setMap(null);\n      this.overlays.splice(i, 1);\n\n      break;\n    }\n  }\n};\n\nGMaps.prototype.removeOverlays = function() {\n  for (var i = 0, item; item = this.overlays[i]; i++) {\n    item.setMap(null);\n  }\n\n  this.overlays = [];\n};\n\nGMaps.prototype.drawPolyline = function(options) {\n  var path = [],\n      points = options.path;\n\n  if (points.length) {\n    if (points[0][0] === undefined) {\n      path = points;\n    }\n    else {\n      for (var i = 0, latlng; latlng = points[i]; i++) {\n        path.push(new google.maps.LatLng(latlng[0], latlng[1]));\n      }\n    }\n  }\n\n  var polyline_options = {\n    map: this.map,\n    path: path,\n    strokeColor: options.strokeColor,\n    strokeOpacity: options.strokeOpacity,\n    strokeWeight: options.strokeWeight,\n    geodesic: options.geodesic,\n    clickable: true,\n    editable: false,\n    visible: true\n  };\n\n  if (options.hasOwnProperty(\"clickable\")) {\n    polyline_options.clickable = options.clickable;\n  }\n\n  if (options.hasOwnProperty(\"editable\")) {\n    polyline_options.editable = options.editable;\n  }\n\n  if (options.hasOwnProperty(\"icons\")) {\n    polyline_options.icons = options.icons;\n  }\n\n  if (options.hasOwnProperty(\"zIndex\")) {\n    polyline_options.zIndex = options.zIndex;\n  }\n\n  var polyline = new google.maps.Polyline(polyline_options);\n\n  var polyline_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];\n\n  for (var ev = 0; ev < polyline_events.length; ev++) {\n    (function(object, name) {\n      if (options[name]) {\n        google.maps.event.addListener(object, name, function(e){\n          options[name].apply(this, [e]);\n        });\n      }\n    })(polyline, polyline_events[ev]);\n  }\n\n  this.polylines.push(polyline);\n\n  GMaps.fire('polyline_added', polyline, this);\n\n  return polyline;\n};\n\nGMaps.prototype.removePolyline = function(polyline) {\n  for (var i = 0; i < this.polylines.length; i++) {\n    if (this.polylines[i] === polyline) {\n      this.polylines[i].setMap(null);\n      this.polylines.splice(i, 1);\n\n      GMaps.fire('polyline_removed', polyline, this);\n\n      break;\n    }\n  }\n};\n\nGMaps.prototype.removePolylines = function() {\n  for (var i = 0, item; item = this.polylines[i]; i++) {\n    item.setMap(null);\n  }\n\n  this.polylines = [];\n};\n\nGMaps.prototype.drawCircle = function(options) {\n  options =  extend_object({\n    map: this.map,\n    center: new google.maps.LatLng(options.lat, options.lng)\n  }, options);\n\n  delete options.lat;\n  delete options.lng;\n\n  var polygon = new google.maps.Circle(options),\n      polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];\n\n  for (var ev = 0; ev < polygon_events.length; ev++) {\n    (function(object, name) {\n      if (options[name]) {\n        google.maps.event.addListener(object, name, function(e){\n          options[name].apply(this, [e]);\n        });\n      }\n    })(polygon, polygon_events[ev]);\n  }\n\n  this.polygons.push(polygon);\n\n  return polygon;\n};\n\nGMaps.prototype.drawRectangle = function(options) {\n  options = extend_object({\n    map: this.map\n  }, options);\n\n  var latLngBounds = new google.maps.LatLngBounds(\n    new google.maps.LatLng(options.bounds[0][0], options.bounds[0][1]),\n    new google.maps.LatLng(options.bounds[1][0], options.bounds[1][1])\n  );\n\n  options.bounds = latLngBounds;\n\n  var polygon = new google.maps.Rectangle(options),\n      polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];\n\n  for (var ev = 0; ev < polygon_events.length; ev++) {\n    (function(object, name) {\n      if (options[name]) {\n        google.maps.event.addListener(object, name, function(e){\n          options[name].apply(this, [e]);\n        });\n      }\n    })(polygon, polygon_events[ev]);\n  }\n\n  this.polygons.push(polygon);\n\n  return polygon;\n};\n\nGMaps.prototype.drawPolygon = function(options) {\n  var useGeoJSON = false;\n\n  if(options.hasOwnProperty(\"useGeoJSON\")) {\n    useGeoJSON = options.useGeoJSON;\n  }\n\n  delete options.useGeoJSON;\n\n  options = extend_object({\n    map: this.map\n  }, options);\n\n  if (useGeoJSON == false) {\n    options.paths = [options.paths.slice(0)];\n  }\n\n  if (options.paths.length > 0) {\n    if (options.paths[0].length > 0) {\n      options.paths = array_flat(array_map(options.paths, arrayToLatLng, useGeoJSON));\n    }\n  }\n\n  var polygon = new google.maps.Polygon(options),\n      polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];\n\n  for (var ev = 0; ev < polygon_events.length; ev++) {\n    (function(object, name) {\n      if (options[name]) {\n        google.maps.event.addListener(object, name, function(e){\n          options[name].apply(this, [e]);\n        });\n      }\n    })(polygon, polygon_events[ev]);\n  }\n\n  this.polygons.push(polygon);\n\n  GMaps.fire('polygon_added', polygon, this);\n\n  return polygon;\n};\n\nGMaps.prototype.removePolygon = function(polygon) {\n  for (var i = 0; i < this.polygons.length; i++) {\n    if (this.polygons[i] === polygon) {\n      this.polygons[i].setMap(null);\n      this.polygons.splice(i, 1);\n\n      GMaps.fire('polygon_removed', polygon, this);\n\n      break;\n    }\n  }\n};\n\nGMaps.prototype.removePolygons = function() {\n  for (var i = 0, item; item = this.polygons[i]; i++) {\n    item.setMap(null);\n  }\n\n  this.polygons = [];\n};\n\nGMaps.prototype.getFromFusionTables = function(options) {\n  var events = options.events;\n\n  delete options.events;\n\n  var fusion_tables_options = options,\n      layer = new google.maps.FusionTablesLayer(fusion_tables_options);\n\n  for (var ev in events) {\n    (function(object, name) {\n      google.maps.event.addListener(object, name, function(e) {\n        events[name].apply(this, [e]);\n      });\n    })(layer, ev);\n  }\n\n  this.layers.push(layer);\n\n  return layer;\n};\n\nGMaps.prototype.loadFromFusionTables = function(options) {\n  var layer = this.getFromFusionTables(options);\n  layer.setMap(this.map);\n\n  return layer;\n};\n\nGMaps.prototype.getFromKML = function(options) {\n  var url = options.url,\n      events = options.events;\n\n  delete options.url;\n  delete options.events;\n\n  var kml_options = options,\n      layer = new google.maps.KmlLayer(url, kml_options);\n\n  for (var ev in events) {\n    (function(object, name) {\n      google.maps.event.addListener(object, name, function(e) {\n        events[name].apply(this, [e]);\n      });\n    })(layer, ev);\n  }\n\n  this.layers.push(layer);\n\n  return layer;\n};\n\nGMaps.prototype.loadFromKML = function(options) {\n  var layer = this.getFromKML(options);\n  layer.setMap(this.map);\n\n  return layer;\n};\n\nGMaps.prototype.addLayer = function(layerName, options) {\n  //var default_layers = ['weather', 'clouds', 'traffic', 'transit', 'bicycling', 'panoramio', 'places'];\n  options = options || {};\n  var layer;\n\n  switch(layerName) {\n    case 'weather': this.singleLayers.weather = layer = new google.maps.weather.WeatherLayer();\n      break;\n    case 'clouds': this.singleLayers.clouds = layer = new google.maps.weather.CloudLayer();\n      break;\n    case 'traffic': this.singleLayers.traffic = layer = new google.maps.TrafficLayer();\n      break;\n    case 'transit': this.singleLayers.transit = layer = new google.maps.TransitLayer();\n      break;\n    case 'bicycling': this.singleLayers.bicycling = layer = new google.maps.BicyclingLayer();\n      break;\n    case 'panoramio':\n        this.singleLayers.panoramio = layer = new google.maps.panoramio.PanoramioLayer();\n        layer.setTag(options.filter);\n        delete options.filter;\n\n        //click event\n        if (options.click) {\n          google.maps.event.addListener(layer, 'click', function(event) {\n            options.click(event);\n            delete options.click;\n          });\n        }\n      break;\n      case 'places':\n        this.singleLayers.places = layer = new google.maps.places.PlacesService(this.map);\n\n        //search, nearbySearch, radarSearch callback, Both are the same\n        if (options.search || options.nearbySearch || options.radarSearch) {\n          var placeSearchRequest  = {\n            bounds : options.bounds || null,\n            keyword : options.keyword || null,\n            location : options.location || null,\n            name : options.name || null,\n            radius : options.radius || null,\n            rankBy : options.rankBy || null,\n            types : options.types || null\n          };\n\n          if (options.radarSearch) {\n            layer.radarSearch(placeSearchRequest, options.radarSearch);\n          }\n\n          if (options.search) {\n            layer.search(placeSearchRequest, options.search);\n          }\n\n          if (options.nearbySearch) {\n            layer.nearbySearch(placeSearchRequest, options.nearbySearch);\n          }\n        }\n\n        //textSearch callback\n        if (options.textSearch) {\n          var textSearchRequest  = {\n            bounds : options.bounds || null,\n            location : options.location || null,\n            query : options.query || null,\n            radius : options.radius || null\n          };\n\n          layer.textSearch(textSearchRequest, options.textSearch);\n        }\n      break;\n  }\n\n  if (layer !== undefined) {\n    if (typeof layer.setOptions == 'function') {\n      layer.setOptions(options);\n    }\n    if (typeof layer.setMap == 'function') {\n      layer.setMap(this.map);\n    }\n\n    return layer;\n  }\n};\n\nGMaps.prototype.removeLayer = function(layer) {\n  if (typeof(layer) == \"string\" && this.singleLayers[layer] !== undefined) {\n     this.singleLayers[layer].setMap(null);\n\n     delete this.singleLayers[layer];\n  }\n  else {\n    for (var i = 0; i < this.layers.length; i++) {\n      if (this.layers[i] === layer) {\n        this.layers[i].setMap(null);\n        this.layers.splice(i, 1);\n\n        break;\n      }\n    }\n  }\n};\n\nvar travelMode, unitSystem;\n\nGMaps.prototype.getRoutes = function(options) {\n  switch (options.travelMode) {\n    case 'bicycling':\n      travelMode = google.maps.TravelMode.BICYCLING;\n      break;\n    case 'transit':\n      travelMode = google.maps.TravelMode.TRANSIT;\n      break;\n    case 'driving':\n      travelMode = google.maps.TravelMode.DRIVING;\n      break;\n    default:\n      travelMode = google.maps.TravelMode.WALKING;\n      break;\n  }\n\n  if (options.unitSystem === 'imperial') {\n    unitSystem = google.maps.UnitSystem.IMPERIAL;\n  }\n  else {\n    unitSystem = google.maps.UnitSystem.METRIC;\n  }\n\n  var base_options = {\n        avoidHighways: false,\n        avoidTolls: false,\n        optimizeWaypoints: false,\n        waypoints: []\n      },\n      request_options =  extend_object(base_options, options);\n\n  request_options.origin = /string/.test(typeof options.origin) ? options.origin : new google.maps.LatLng(options.origin[0], options.origin[1]);\n  request_options.destination = /string/.test(typeof options.destination) ? options.destination : new google.maps.LatLng(options.destination[0], options.destination[1]);\n  request_options.travelMode = travelMode;\n  request_options.unitSystem = unitSystem;\n\n  delete request_options.callback;\n  delete request_options.error;\n\n  var self = this,\n      routes = [],\n      service = new google.maps.DirectionsService();\n\n  service.route(request_options, function(result, status) {\n    if (status === google.maps.DirectionsStatus.OK) {\n      for (var r in result.routes) {\n        if (result.routes.hasOwnProperty(r)) {\n          routes.push(result.routes[r]);\n        }\n      }\n\n      if (options.callback) {\n        options.callback(routes, result, status);\n      }\n    }\n    else {\n      if (options.error) {\n        options.error(result, status);\n      }\n    }\n  });\n};\n\nGMaps.prototype.removeRoutes = function() {\n  this.routes.length = 0;\n};\n\nGMaps.prototype.getElevations = function(options) {\n  options = extend_object({\n    locations: [],\n    path : false,\n    samples : 256\n  }, options);\n\n  if (options.locations.length > 0) {\n    if (options.locations[0].length > 0) {\n      options.locations = array_flat(array_map([options.locations], arrayToLatLng,  false));\n    }\n  }\n\n  var callback = options.callback;\n  delete options.callback;\n\n  var service = new google.maps.ElevationService();\n\n  //location request\n  if (!options.path) {\n    delete options.path;\n    delete options.samples;\n\n    service.getElevationForLocations(options, function(result, status) {\n      if (callback && typeof(callback) === \"function\") {\n        callback(result, status);\n      }\n    });\n  //path request\n  } else {\n    var pathRequest = {\n      path : options.locations,\n      samples : options.samples\n    };\n\n    service.getElevationAlongPath(pathRequest, function(result, status) {\n     if (callback && typeof(callback) === \"function\") {\n        callback(result, status);\n      }\n    });\n  }\n};\n\nGMaps.prototype.cleanRoute = GMaps.prototype.removePolylines;\n\nGMaps.prototype.renderRoute = function(options, renderOptions) {\n  var self = this,\n      panel = ((typeof renderOptions.panel === 'string') ? document.getElementById(renderOptions.panel.replace('#', '')) : renderOptions.panel),\n      display;\n\n  renderOptions.panel = panel;\n  renderOptions = extend_object({\n    map: this.map\n  }, renderOptions);\n  display = new google.maps.DirectionsRenderer(renderOptions);\n\n  this.getRoutes({\n    origin: options.origin,\n    destination: options.destination,\n    travelMode: options.travelMode,\n    waypoints: options.waypoints,\n    unitSystem: options.unitSystem,\n    error: options.error,\n    avoidHighways: options.avoidHighways,\n    avoidTolls: options.avoidTolls,\n    optimizeWaypoints: options.optimizeWaypoints,\n    callback: function(routes, response, status) {\n      if (status === google.maps.DirectionsStatus.OK) {\n        display.setDirections(response);\n      }\n    }\n  });\n};\n\nGMaps.prototype.drawRoute = function(options) {\n  var self = this;\n\n  this.getRoutes({\n    origin: options.origin,\n    destination: options.destination,\n    travelMode: options.travelMode,\n    waypoints: options.waypoints,\n    unitSystem: options.unitSystem,\n    error: options.error,\n    avoidHighways: options.avoidHighways,\n    avoidTolls: options.avoidTolls,\n    optimizeWaypoints: options.optimizeWaypoints,\n    callback: function(routes) {\n      if (routes.length > 0) {\n        var polyline_options = {\n          path: routes[routes.length - 1].overview_path,\n          strokeColor: options.strokeColor,\n          strokeOpacity: options.strokeOpacity,\n          strokeWeight: options.strokeWeight\n        };\n\n        if (options.hasOwnProperty(\"icons\")) {\n          polyline_options.icons = options.icons;\n        }\n\n        self.drawPolyline(polyline_options);\n\n        if (options.callback) {\n          options.callback(routes[routes.length - 1]);\n        }\n      }\n    }\n  });\n};\n\nGMaps.prototype.travelRoute = function(options) {\n  if (options.origin && options.destination) {\n    this.getRoutes({\n      origin: options.origin,\n      destination: options.destination,\n      travelMode: options.travelMode,\n      waypoints : options.waypoints,\n      unitSystem: options.unitSystem,\n      error: options.error,\n      callback: function(e) {\n        //start callback\n        if (e.length > 0 && options.start) {\n          options.start(e[e.length - 1]);\n        }\n\n        //step callback\n        if (e.length > 0 && options.step) {\n          var route = e[e.length - 1];\n          if (route.legs.length > 0) {\n            var steps = route.legs[0].steps;\n            for (var i = 0, step; step = steps[i]; i++) {\n              step.step_number = i;\n              options.step(step, (route.legs[0].steps.length - 1));\n            }\n          }\n        }\n\n        //end callback\n        if (e.length > 0 && options.end) {\n           options.end(e[e.length - 1]);\n        }\n      }\n    });\n  }\n  else if (options.route) {\n    if (options.route.legs.length > 0) {\n      var steps = options.route.legs[0].steps;\n      for (var i = 0, step; step = steps[i]; i++) {\n        step.step_number = i;\n        options.step(step);\n      }\n    }\n  }\n};\n\nGMaps.prototype.drawSteppedRoute = function(options) {\n  var self = this;\n\n  if (options.origin && options.destination) {\n    this.getRoutes({\n      origin: options.origin,\n      destination: options.destination,\n      travelMode: options.travelMode,\n      waypoints : options.waypoints,\n      error: options.error,\n      callback: function(e) {\n        //start callback\n        if (e.length > 0 && options.start) {\n          options.start(e[e.length - 1]);\n        }\n\n        //step callback\n        if (e.length > 0 && options.step) {\n          var route = e[e.length - 1];\n          if (route.legs.length > 0) {\n            var steps = route.legs[0].steps;\n            for (var i = 0, step; step = steps[i]; i++) {\n              step.step_number = i;\n              var polyline_options = {\n                path: step.path,\n                strokeColor: options.strokeColor,\n                strokeOpacity: options.strokeOpacity,\n                strokeWeight: options.strokeWeight\n              };\n\n              if (options.hasOwnProperty(\"icons\")) {\n                polyline_options.icons = options.icons;\n              }\n\n              self.drawPolyline(polyline_options);\n              options.step(step, (route.legs[0].steps.length - 1));\n            }\n          }\n        }\n\n        //end callback\n        if (e.length > 0 && options.end) {\n           options.end(e[e.length - 1]);\n        }\n      }\n    });\n  }\n  else if (options.route) {\n    if (options.route.legs.length > 0) {\n      var steps = options.route.legs[0].steps;\n      for (var i = 0, step; step = steps[i]; i++) {\n        step.step_number = i;\n        var polyline_options = {\n          path: step.path,\n          strokeColor: options.strokeColor,\n          strokeOpacity: options.strokeOpacity,\n          strokeWeight: options.strokeWeight\n        };\n\n        if (options.hasOwnProperty(\"icons\")) {\n          polyline_options.icons = options.icons;\n        }\n\n        self.drawPolyline(polyline_options);\n        options.step(step);\n      }\n    }\n  }\n};\n\nGMaps.Route = function(options) {\n  this.origin = options.origin;\n  this.destination = options.destination;\n  this.waypoints = options.waypoints;\n\n  this.map = options.map;\n  this.route = options.route;\n  this.step_count = 0;\n  this.steps = this.route.legs[0].steps;\n  this.steps_length = this.steps.length;\n\n  var polyline_options = {\n    path: new google.maps.MVCArray(),\n    strokeColor: options.strokeColor,\n    strokeOpacity: options.strokeOpacity,\n    strokeWeight: options.strokeWeight\n  };\n\n  if (options.hasOwnProperty(\"icons\")) {\n    polyline_options.icons = options.icons;\n  }\n\n  this.polyline = this.map.drawPolyline(polyline_options).getPath();\n};\n\nGMaps.Route.prototype.getRoute = function(options) {\n  var self = this;\n\n  this.map.getRoutes({\n    origin : this.origin,\n    destination : this.destination,\n    travelMode : options.travelMode,\n    waypoints : this.waypoints || [],\n    error: options.error,\n    callback : function() {\n      self.route = e[0];\n\n      if (options.callback) {\n        options.callback.call(self);\n      }\n    }\n  });\n};\n\nGMaps.Route.prototype.back = function() {\n  if (this.step_count > 0) {\n    this.step_count--;\n    var path = this.route.legs[0].steps[this.step_count].path;\n\n    for (var p in path){\n      if (path.hasOwnProperty(p)){\n        this.polyline.pop();\n      }\n    }\n  }\n};\n\nGMaps.Route.prototype.forward = function() {\n  if (this.step_count < this.steps_length) {\n    var path = this.route.legs[0].steps[this.step_count].path;\n\n    for (var p in path){\n      if (path.hasOwnProperty(p)){\n        this.polyline.push(path[p]);\n      }\n    }\n    this.step_count++;\n  }\n};\n\nGMaps.prototype.checkGeofence = function(lat, lng, fence) {\n  return fence.containsLatLng(new google.maps.LatLng(lat, lng));\n};\n\nGMaps.prototype.checkMarkerGeofence = function(marker, outside_callback) {\n  if (marker.fences) {\n    for (var i = 0, fence; fence = marker.fences[i]; i++) {\n      var pos = marker.getPosition();\n      if (!this.checkGeofence(pos.lat(), pos.lng(), fence)) {\n        outside_callback(marker, fence);\n      }\n    }\n  }\n};\n\nGMaps.prototype.toImage = function(options) {\n  var options = options || {},\n      static_map_options = {};\n\n  static_map_options['size'] = options['size'] || [this.el.clientWidth, this.el.clientHeight];\n  static_map_options['lat'] = this.getCenter().lat();\n  static_map_options['lng'] = this.getCenter().lng();\n\n  if (this.markers.length > 0) {\n    static_map_options['markers'] = [];\n    \n    for (var i = 0; i < this.markers.length; i++) {\n      static_map_options['markers'].push({\n        lat: this.markers[i].getPosition().lat(),\n        lng: this.markers[i].getPosition().lng()\n      });\n    }\n  }\n\n  if (this.polylines.length > 0) {\n    var polyline = this.polylines[0];\n    \n    static_map_options['polyline'] = {};\n    static_map_options['polyline']['path'] = google.maps.geometry.encoding.encodePath(polyline.getPath());\n    static_map_options['polyline']['strokeColor'] = polyline.strokeColor\n    static_map_options['polyline']['strokeOpacity'] = polyline.strokeOpacity\n    static_map_options['polyline']['strokeWeight'] = polyline.strokeWeight\n  }\n\n  return GMaps.staticMapURL(static_map_options);\n};\n\nGMaps.staticMapURL = function(options){\n  var parameters = [],\n      data,\n      static_root = (location.protocol === 'file:' ? 'http:' : location.protocol ) + '//maps.googleapis.com/maps/api/staticmap';\n\n  if (options.url) {\n    static_root = options.url;\n    delete options.url;\n  }\n\n  static_root += '?';\n\n  var markers = options.markers;\n  \n  delete options.markers;\n\n  if (!markers && options.marker) {\n    markers = [options.marker];\n    delete options.marker;\n  }\n\n  var styles = options.styles;\n\n  delete options.styles;\n\n  var polyline = options.polyline;\n  delete options.polyline;\n\n  /** Map options **/\n  if (options.center) {\n    parameters.push('center=' + options.center);\n    delete options.center;\n  }\n  else if (options.address) {\n    parameters.push('center=' + options.address);\n    delete options.address;\n  }\n  else if (options.lat) {\n    parameters.push(['center=', options.lat, ',', options.lng].join(''));\n    delete options.lat;\n    delete options.lng;\n  }\n  else if (options.visible) {\n    var visible = encodeURI(options.visible.join('|'));\n    parameters.push('visible=' + visible);\n  }\n\n  var size = options.size;\n  if (size) {\n    if (size.join) {\n      size = size.join('x');\n    }\n    delete options.size;\n  }\n  else {\n    size = '630x300';\n  }\n  parameters.push('size=' + size);\n\n  if (!options.zoom && options.zoom !== false) {\n    options.zoom = 15;\n  }\n\n  var sensor = options.hasOwnProperty('sensor') ? !!options.sensor : true;\n  delete options.sensor;\n  parameters.push('sensor=' + sensor);\n\n  for (var param in options) {\n    if (options.hasOwnProperty(param)) {\n      parameters.push(param + '=' + options[param]);\n    }\n  }\n\n  /** Markers **/\n  if (markers) {\n    var marker, loc;\n\n    for (var i = 0; data = markers[i]; i++) {\n      marker = [];\n\n      if (data.size && data.size !== 'normal') {\n        marker.push('size:' + data.size);\n        delete data.size;\n      }\n      else if (data.icon) {\n        marker.push('icon:' + encodeURI(data.icon));\n        delete data.icon;\n      }\n\n      if (data.color) {\n        marker.push('color:' + data.color.replace('#', '0x'));\n        delete data.color;\n      }\n\n      if (data.label) {\n        marker.push('label:' + data.label[0].toUpperCase());\n        delete data.label;\n      }\n\n      loc = (data.address ? data.address : data.lat + ',' + data.lng);\n      delete data.address;\n      delete data.lat;\n      delete data.lng;\n\n      for(var param in data){\n        if (data.hasOwnProperty(param)) {\n          marker.push(param + ':' + data[param]);\n        }\n      }\n\n      if (marker.length || i === 0) {\n        marker.push(loc);\n        marker = marker.join('|');\n        parameters.push('markers=' + encodeURI(marker));\n      }\n      // New marker without styles\n      else {\n        marker = parameters.pop() + encodeURI('|' + loc);\n        parameters.push(marker);\n      }\n    }\n  }\n\n  /** Map Styles **/\n  if (styles) {\n    for (var i = 0; i < styles.length; i++) {\n      var styleRule = [];\n      if (styles[i].featureType){\n        styleRule.push('feature:' + styles[i].featureType.toLowerCase());\n      }\n\n      if (styles[i].elementType) {\n        styleRule.push('element:' + styles[i].elementType.toLowerCase());\n      }\n\n      for (var j = 0; j < styles[i].stylers.length; j++) {\n        for (var p in styles[i].stylers[j]) {\n          var ruleArg = styles[i].stylers[j][p];\n          if (p == 'hue' || p == 'color') {\n            ruleArg = '0x' + ruleArg.substring(1);\n          }\n          styleRule.push(p + ':' + ruleArg);\n        }\n      }\n\n      var rule = styleRule.join('|');\n      if (rule != '') {\n        parameters.push('style=' + rule);\n      }\n    }\n  }\n\n  /** Polylines **/\n  function parseColor(color, opacity) {\n    if (color[0] === '#'){\n      color = color.replace('#', '0x');\n\n      if (opacity) {\n        opacity = parseFloat(opacity);\n        opacity = Math.min(1, Math.max(opacity, 0));\n        if (opacity === 0) {\n          return '0x00000000';\n        }\n        opacity = (opacity * 255).toString(16);\n        if (opacity.length === 1) {\n          opacity += opacity;\n        }\n\n        color = color.slice(0,8) + opacity;\n      }\n    }\n    return color;\n  }\n\n  if (polyline) {\n    data = polyline;\n    polyline = [];\n\n    if (data.strokeWeight) {\n      polyline.push('weight:' + parseInt(data.strokeWeight, 10));\n    }\n\n    if (data.strokeColor) {\n      var color = parseColor(data.strokeColor, data.strokeOpacity);\n      polyline.push('color:' + color);\n    }\n\n    if (data.fillColor) {\n      var fillcolor = parseColor(data.fillColor, data.fillOpacity);\n      polyline.push('fillcolor:' + fillcolor);\n    }\n\n    var path = data.path;\n    if (path.join) {\n      for (var j=0, pos; pos=path[j]; j++) {\n        polyline.push(pos.join(','));\n      }\n    }\n    else {\n      polyline.push('enc:' + path);\n    }\n\n    polyline = polyline.join('|');\n    parameters.push('path=' + encodeURI(polyline));\n  }\n\n  /** Retina support **/\n  var dpi = window.devicePixelRatio || 1;\n  parameters.push('scale=' + dpi);\n\n  parameters = parameters.join('&');\n  return static_root + parameters;\n};\n\nGMaps.prototype.addMapType = function(mapTypeId, options) {\n  if (options.hasOwnProperty(\"getTileUrl\") && typeof(options[\"getTileUrl\"]) == \"function\") {\n    options.tileSize = options.tileSize || new google.maps.Size(256, 256);\n\n    var mapType = new google.maps.ImageMapType(options);\n\n    this.map.mapTypes.set(mapTypeId, mapType);\n  }\n  else {\n    throw \"'getTileUrl' function required.\";\n  }\n};\n\nGMaps.prototype.addOverlayMapType = function(options) {\n  if (options.hasOwnProperty(\"getTile\") && typeof(options[\"getTile\"]) == \"function\") {\n    var overlayMapTypeIndex = options.index;\n\n    delete options.index;\n\n    this.map.overlayMapTypes.insertAt(overlayMapTypeIndex, options);\n  }\n  else {\n    throw \"'getTile' function required.\";\n  }\n};\n\nGMaps.prototype.removeOverlayMapType = function(overlayMapTypeIndex) {\n  this.map.overlayMapTypes.removeAt(overlayMapTypeIndex);\n};\n\nGMaps.prototype.addStyle = function(options) {\n  var styledMapType = new google.maps.StyledMapType(options.styles, { name: options.styledMapName });\n\n  this.map.mapTypes.set(options.mapTypeId, styledMapType);\n};\n\nGMaps.prototype.setStyle = function(mapTypeId) {\n  this.map.setMapTypeId(mapTypeId);\n};\n\nGMaps.prototype.createPanorama = function(streetview_options) {\n  if (!streetview_options.hasOwnProperty('lat') || !streetview_options.hasOwnProperty('lng')) {\n    streetview_options.lat = this.getCenter().lat();\n    streetview_options.lng = this.getCenter().lng();\n  }\n\n  this.panorama = GMaps.createPanorama(streetview_options);\n\n  this.map.setStreetView(this.panorama);\n\n  return this.panorama;\n};\n\nGMaps.createPanorama = function(options) {\n  var el = getElementById(options.el, options.context);\n\n  options.position = new google.maps.LatLng(options.lat, options.lng);\n\n  delete options.el;\n  delete options.context;\n  delete options.lat;\n  delete options.lng;\n\n  var streetview_events = ['closeclick', 'links_changed', 'pano_changed', 'position_changed', 'pov_changed', 'resize', 'visible_changed'],\n      streetview_options = extend_object({visible : true}, options);\n\n  for (var i = 0; i < streetview_events.length; i++) {\n    delete streetview_options[streetview_events[i]];\n  }\n\n  var panorama = new google.maps.StreetViewPanorama(el, streetview_options);\n\n  for (var i = 0; i < streetview_events.length; i++) {\n    (function(object, name) {\n      if (options[name]) {\n        google.maps.event.addListener(object, name, function(){\n          options[name].apply(this);\n        });\n      }\n    })(panorama, streetview_events[i]);\n  }\n\n  return panorama;\n};\n\nGMaps.prototype.on = function(event_name, handler) {\n  return GMaps.on(event_name, this, handler);\n};\n\nGMaps.prototype.off = function(event_name) {\n  GMaps.off(event_name, this);\n};\n\nGMaps.prototype.once = function(event_name, handler) {\n  return GMaps.once(event_name, this, handler);\n};\n\nGMaps.custom_events = ['marker_added', 'marker_removed', 'polyline_added', 'polyline_removed', 'polygon_added', 'polygon_removed', 'geolocated', 'geolocation_failed'];\n\nGMaps.on = function(event_name, object, handler) {\n  if (GMaps.custom_events.indexOf(event_name) == -1) {\n    if(object instanceof GMaps) object = object.map; \n    return google.maps.event.addListener(object, event_name, handler);\n  }\n  else {\n    var registered_event = {\n      handler : handler,\n      eventName : event_name\n    };\n\n    object.registered_events[event_name] = object.registered_events[event_name] || [];\n    object.registered_events[event_name].push(registered_event);\n\n    return registered_event;\n  }\n};\n\nGMaps.off = function(event_name, object) {\n  if (GMaps.custom_events.indexOf(event_name) == -1) {\n    if(object instanceof GMaps) object = object.map; \n    google.maps.event.clearListeners(object, event_name);\n  }\n  else {\n    object.registered_events[event_name] = [];\n  }\n};\n\nGMaps.once = function(event_name, object, handler) {\n  if (GMaps.custom_events.indexOf(event_name) == -1) {\n    if(object instanceof GMaps) object = object.map;\n    return google.maps.event.addListenerOnce(object, event_name, handler);\n  }\n};\n\nGMaps.fire = function(event_name, object, scope) {\n  if (GMaps.custom_events.indexOf(event_name) == -1) {\n    google.maps.event.trigger(object, event_name, Array.prototype.slice.apply(arguments).slice(2));\n  }\n  else {\n    if(event_name in scope.registered_events) {\n      var firing_events = scope.registered_events[event_name];\n\n      for(var i = 0; i < firing_events.length; i++) {\n        (function(handler, scope, object) {\n          handler.apply(scope, [object]);\n        })(firing_events[i]['handler'], scope, object);\n      }\n    }\n  }\n};\n\nGMaps.geolocate = function(options) {\n  var complete_callback = options.always || options.complete;\n\n  if (navigator.geolocation) {\n    navigator.geolocation.getCurrentPosition(function(position) {\n      options.success(position);\n\n      if (complete_callback) {\n        complete_callback();\n      }\n    }, function(error) {\n      options.error(error);\n\n      if (complete_callback) {\n        complete_callback();\n      }\n    }, options.options);\n  }\n  else {\n    options.not_supported();\n\n    if (complete_callback) {\n      complete_callback();\n    }\n  }\n};\n\nGMaps.geocode = function(options) {\n  this.geocoder = new google.maps.Geocoder();\n  var callback = options.callback;\n  if (options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) {\n    options.latLng = new google.maps.LatLng(options.lat, options.lng);\n  }\n\n  delete options.lat;\n  delete options.lng;\n  delete options.callback;\n  \n  this.geocoder.geocode(options, function(results, status) {\n    callback(results, status);\n  });\n};\n\nif (typeof window.google === 'object' && window.google.maps) {\n  //==========================\n  // Polygon containsLatLng\n  // https://github.com/tparkin/Google-Maps-Point-in-Polygon\n  // Poygon getBounds extension - google-maps-extensions\n  // http://code.google.com/p/google-maps-extensions/source/browse/google.maps.Polygon.getBounds.js\n  if (!google.maps.Polygon.prototype.getBounds) {\n    google.maps.Polygon.prototype.getBounds = function(latLng) {\n      var bounds = new google.maps.LatLngBounds();\n      var paths = this.getPaths();\n      var path;\n\n      for (var p = 0; p < paths.getLength(); p++) {\n        path = paths.getAt(p);\n        for (var i = 0; i < path.getLength(); i++) {\n          bounds.extend(path.getAt(i));\n        }\n      }\n\n      return bounds;\n    };\n  }\n\n  if (!google.maps.Polygon.prototype.containsLatLng) {\n    // Polygon containsLatLng - method to determine if a latLng is within a polygon\n    google.maps.Polygon.prototype.containsLatLng = function(latLng) {\n      // Exclude points outside of bounds as there is no way they are in the poly\n      var bounds = this.getBounds();\n\n      if (bounds !== null && !bounds.contains(latLng)) {\n        return false;\n      }\n\n      // Raycast point in polygon method\n      var inPoly = false;\n\n      var numPaths = this.getPaths().getLength();\n      for (var p = 0; p < numPaths; p++) {\n        var path = this.getPaths().getAt(p);\n        var numPoints = path.getLength();\n        var j = numPoints - 1;\n\n        for (var i = 0; i < numPoints; i++) {\n          var vertex1 = path.getAt(i);\n          var vertex2 = path.getAt(j);\n\n          if (vertex1.lng() < latLng.lng() && vertex2.lng() >= latLng.lng() || vertex2.lng() < latLng.lng() && vertex1.lng() >= latLng.lng()) {\n            if (vertex1.lat() + (latLng.lng() - vertex1.lng()) / (vertex2.lng() - vertex1.lng()) * (vertex2.lat() - vertex1.lat()) < latLng.lat()) {\n              inPoly = !inPoly;\n            }\n          }\n\n          j = i;\n        }\n      }\n\n      return inPoly;\n    };\n  }\n\n  if (!google.maps.Circle.prototype.containsLatLng) {\n    google.maps.Circle.prototype.containsLatLng = function(latLng) {\n      if (google.maps.geometry) {\n        return google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius();\n      }\n      else {\n        return true;\n      }\n    };\n  }\n\n  google.maps.Rectangle.prototype.containsLatLng = function(latLng) {\n    return this.getBounds().contains(latLng);\n  };\n\n  google.maps.LatLngBounds.prototype.containsLatLng = function(latLng) {\n    return this.contains(latLng);\n  };\n\n  google.maps.Marker.prototype.setFences = function(fences) {\n    this.fences = fences;\n  };\n\n  google.maps.Marker.prototype.addFence = function(fence) {\n    this.fences.push(fence);\n  };\n\n  google.maps.Marker.prototype.getId = function() {\n    return this['__gm_id'];\n  };\n}\n\n//==========================\n// Array indexOf\n// https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf\nif (!Array.prototype.indexOf) {\n  Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {\n      \"use strict\";\n      if (this == null) {\n          throw new TypeError();\n      }\n      var t = Object(this);\n      var len = t.length >>> 0;\n      if (len === 0) {\n          return -1;\n      }\n      var n = 0;\n      if (arguments.length > 1) {\n          n = Number(arguments[1]);\n          if (n != n) { // shortcut for verifying if it's NaN\n              n = 0;\n          } else if (n != 0 && n != Infinity && n != -Infinity) {\n              n = (n > 0 || -1) * Math.floor(Math.abs(n));\n          }\n      }\n      if (n >= len) {\n          return -1;\n      }\n      var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);\n      for (; k < len; k++) {\n          if (k in t && t[k] === searchElement) {\n              return k;\n          }\n      }\n      return -1;\n  }\n}\n\nreturn GMaps;\n}));\n\n\n//# sourceURL=webpack:///./node_modules/gmaps/gmaps.js?");
+(function(root, factory) {
+  if(typeof exports === 'object') {
+    module.exports = factory();
+  }
+  else if(typeof define === 'function' && define.amd) {
+    define(['jquery', 'googlemaps!'], factory);
+  }
+  else {
+    root.GMaps = factory();
+  }
 
-/***/ }),
 
-/***/ "./webpack/vendors/custom/gmaps.js":
-/*!*****************************************!*\
-  !*** ./webpack/vendors/custom/gmaps.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+}(this, function() {
 
-"use strict";
-eval("\r\n\r\n/**\r\n * Define the output of this file. The output of CSS and JS file will be auto detected.\r\n *\r\n * @output plugins/custom/gmaps/gmaps\r\n */\r\n\r\n// gmaps\r\nwindow.GMaps = __webpack_require__(/*! gmaps */ \"./node_modules/gmaps/gmaps.js\");\n\n//# sourceURL=webpack:///./webpack/vendors/custom/gmaps.js?");
+/*!
+ * GMaps.js v0.4.25
+ * http://hpneo.github.com/gmaps/
+ *
+ * Copyright 2017, Gustavo Leon
+ * Released under the MIT License.
+ */
 
-/***/ })
+var extend_object = function(obj, new_obj) {
+  var name;
 
-/******/ });
+  if (obj === new_obj) {
+    return obj;
+  }
+
+  for (name in new_obj) {
+    if (new_obj[name] !== undefined) {
+      obj[name] = new_obj[name];
+    }
+  }
+
+  return obj;
+};
+
+var replace_object = function(obj, replace) {
+  var name;
+
+  if (obj === replace) {
+    return obj;
+  }
+
+  for (name in replace) {
+    if (obj[name] != undefined) {
+      obj[name] = replace[name];
+    }
+  }
+
+  return obj;
+};
+
+var array_map = function(array, callback) {
+  var original_callback_params = Array.prototype.slice.call(arguments, 2),
+      array_return = [],
+      array_length = array.length,
+      i;
+
+  if (Array.prototype.map && array.map === Array.prototype.map) {
+    array_return = Array.prototype.map.call(array, function(item) {
+      var callback_params = original_callback_params.slice(0);
+      callback_params.splice(0, 0, item);
+
+      return callback.apply(this, callback_params);
+    });
+  }
+  else {
+    for (i = 0; i < array_length; i++) {
+      callback_params = original_callback_params;
+      callback_params.splice(0, 0, array[i]);
+      array_return.push(callback.apply(this, callback_params));
+    }
+  }
+
+  return array_return;
+};
+
+var array_flat = function(array) {
+  var new_array = [],
+      i;
+
+  for (i = 0; i < array.length; i++) {
+    new_array = new_array.concat(array[i]);
+  }
+
+  return new_array;
+};
+
+var coordsToLatLngs = function(coords, useGeoJSON) {
+  var first_coord = coords[0],
+      second_coord = coords[1];
+
+  if (useGeoJSON) {
+    first_coord = coords[1];
+    second_coord = coords[0];
+  }
+
+  return new google.maps.LatLng(first_coord, second_coord);
+};
+
+var arrayToLatLng = function(coords, useGeoJSON) {
+  var i;
+
+  for (i = 0; i < coords.length; i++) {
+    if (!(coords[i] instanceof google.maps.LatLng)) {
+      if (coords[i].length > 0 && typeof(coords[i][0]) === "object") {
+        coords[i] = arrayToLatLng(coords[i], useGeoJSON);
+      }
+      else {
+        coords[i] = coordsToLatLngs(coords[i], useGeoJSON);
+      }
+    }
+  }
+
+  return coords;
+};
+
+var getElementsByClassName = function (class_name, context) {
+    var element,
+        _class = class_name.replace('.', '');
+
+    if ('jQuery' in this && context) {
+        element = $("." + _class, context)[0];
+    } else {
+        element = document.getElementsByClassName(_class)[0];
+    }
+    return element;
+
+};
+
+var getElementById = function(id, context) {
+  var element,
+  id = id.replace('#', '');
+
+  if ('jQuery' in window && context) {
+    element = $('#' + id, context)[0];
+  } else {
+    element = document.getElementById(id);
+  };
+
+  return element;
+};
+
+var findAbsolutePosition = function(obj)  {
+  var curleft = 0,
+      curtop = 0;
+
+  if (obj.getBoundingClientRect) {
+      var rect = obj.getBoundingClientRect();
+      var sx = -(window.scrollX ? window.scrollX : window.pageXOffset);
+      var sy = -(window.scrollY ? window.scrollY : window.pageYOffset);
+
+      return [(rect.left - sx), (rect.top - sy)];
+  }
+
+  if (obj.offsetParent) {
+    do {
+      curleft += obj.offsetLeft;
+      curtop += obj.offsetTop;
+    } while (obj = obj.offsetParent);
+  }
+
+  return [curleft, curtop];
+};
+
+var GMaps = (function(global) {
+  "use strict";
+
+  var doc = document;
+  /**
+   * Creates a new GMaps instance, including a Google Maps map.
+   * @class GMaps
+   * @constructs
+   * @param {object} options - `options` accepts all the [MapOptions](https://developers.google.com/maps/documentation/javascript/reference#MapOptions) and [events](https://developers.google.com/maps/documentation/javascript/reference#Map) listed in the Google Maps API. Also accepts:
+   * * `lat` (number): Latitude of the map's center
+   * * `lng` (number): Longitude of the map's center
+   * * `el` (string or HTMLElement): container where the map will be rendered
+   * * `markerClusterer` (function): A function to create a marker cluster. You can use MarkerClusterer or MarkerClustererPlus.
+   */
+  var GMaps = function(options) {
+
+    if (!(typeof window.google === 'object' && window.google.maps)) {
+      if (typeof window.console === 'object' && window.console.error) {
+        console.error('Google Maps API is required. Please register the following JavaScript library https://maps.googleapis.com/maps/api/js.');
+      }
+
+      return function() {};
+    }
+
+    if (!this) return new GMaps(options);
+
+    options.zoom = options.zoom || 15;
+    options.mapType = options.mapType || 'roadmap';
+
+    var valueOrDefault = function(value, defaultValue) {
+      return value === undefined ? defaultValue : value;
+    };
+
+    var self = this,
+        i,
+        events_that_hide_context_menu = [
+          'bounds_changed', 'center_changed', 'click', 'dblclick', 'drag',
+          'dragend', 'dragstart', 'idle', 'maptypeid_changed', 'projection_changed',
+          'resize', 'tilesloaded', 'zoom_changed'
+        ],
+        events_that_doesnt_hide_context_menu = ['mousemove', 'mouseout', 'mouseover'],
+        options_to_be_deleted = ['el', 'lat', 'lng', 'mapType', 'width', 'height', 'markerClusterer', 'enableNewStyle'],
+        identifier = options.el || options.div,
+        markerClustererFunction = options.markerClusterer,
+        mapType = google.maps.MapTypeId[options.mapType.toUpperCase()],
+        map_center = new google.maps.LatLng(options.lat, options.lng),
+        zoomControl = valueOrDefault(options.zoomControl, true),
+        zoomControlOpt = options.zoomControlOpt || {
+          style: 'DEFAULT',
+          position: 'TOP_LEFT'
+        },
+        zoomControlStyle = zoomControlOpt.style || 'DEFAULT',
+        zoomControlPosition = zoomControlOpt.position || 'TOP_LEFT',
+        panControl = valueOrDefault(options.panControl, true),
+        mapTypeControl = valueOrDefault(options.mapTypeControl, true),
+        scaleControl = valueOrDefault(options.scaleControl, true),
+        streetViewControl = valueOrDefault(options.streetViewControl, true),
+        overviewMapControl = valueOrDefault(overviewMapControl, true),
+        map_options = {},
+        map_base_options = {
+          zoom: this.zoom,
+          center: map_center,
+          mapTypeId: mapType
+        },
+        map_controls_options = {
+          panControl: panControl,
+          zoomControl: zoomControl,
+          zoomControlOptions: {
+            style: google.maps.ZoomControlStyle[zoomControlStyle],
+            position: google.maps.ControlPosition[zoomControlPosition]
+          },
+          mapTypeControl: mapTypeControl,
+          scaleControl: scaleControl,
+          streetViewControl: streetViewControl,
+          overviewMapControl: overviewMapControl
+        };
+
+      if (typeof(options.el) === 'string' || typeof(options.div) === 'string') {
+        if (identifier.indexOf("#") > -1) {
+            /**
+             * Container element
+             *
+             * @type {HTMLElement}
+             */
+            this.el = getElementById(identifier, options.context);
+        } else {
+            this.el = getElementsByClassName.apply(this, [identifier, options.context]);
+        }
+      } else {
+          this.el = identifier;
+      }
+
+    if (typeof(this.el) === 'undefined' || this.el === null) {
+      throw 'No element defined.';
+    }
+
+    window.context_menu = window.context_menu || {};
+    window.context_menu[self.el.id] = {};
+
+    /**
+     * Collection of custom controls in the map UI
+     *
+     * @type {array}
+     */
+    this.controls = [];
+    /**
+     * Collection of map's overlays
+     *
+     * @type {array}
+     */
+    this.overlays = [];
+    /**
+     * Collection of KML/GeoRSS and FusionTable layers
+     *
+     * @type {array}
+     */
+    this.layers = [];
+    /**
+     * Collection of data layers (See {@link GMaps#addLayer})
+     *
+     * @type {object}
+     */
+    this.singleLayers = {};
+    /**
+     * Collection of map's markers
+     *
+     * @type {array}
+     */
+    this.markers = [];
+    /**
+     * Collection of map's lines
+     *
+     * @type {array}
+     */
+    this.polylines = [];
+    /**
+     * Collection of map's routes requested by {@link GMaps#getRoutes}, {@link GMaps#renderRoute}, {@link GMaps#drawRoute}, {@link GMaps#travelRoute} or {@link GMaps#drawSteppedRoute}
+     *
+     * @type {array}
+     */
+    this.routes = [];
+    /**
+     * Collection of map's polygons
+     *
+     * @type {array}
+     */
+    this.polygons = [];
+    this.infoWindow = null;
+    this.overlay_el = null;
+    /**
+     * Current map's zoom
+     *
+     * @type {number}
+     */
+    this.zoom = options.zoom;
+    this.registered_events = {};
+
+    this.el.style.width = options.width || this.el.scrollWidth || this.el.offsetWidth;
+    this.el.style.height = options.height || this.el.scrollHeight || this.el.offsetHeight;
+
+    google.maps.visualRefresh = options.enableNewStyle;
+
+    for (i = 0; i < options_to_be_deleted.length; i++) {
+      delete options[options_to_be_deleted[i]];
+    }
+
+    if(options.disableDefaultUI != true) {
+      map_base_options = extend_object(map_base_options, map_controls_options);
+    }
+
+    map_options = extend_object(map_base_options, options);
+
+    for (i = 0; i < events_that_hide_context_menu.length; i++) {
+      delete map_options[events_that_hide_context_menu[i]];
+    }
+
+    for (i = 0; i < events_that_doesnt_hide_context_menu.length; i++) {
+      delete map_options[events_that_doesnt_hide_context_menu[i]];
+    }
+
+    /**
+     * Google Maps map instance
+     *
+     * @type {google.maps.Map}
+     */
+    this.map = new google.maps.Map(this.el, map_options);
+
+    if (markerClustererFunction) {
+      /**
+       * Marker Clusterer instance
+       *
+       * @type {object}
+       */
+      this.markerClusterer = markerClustererFunction.apply(this, [this.map]);
+    }
+
+    var buildContextMenuHTML = function(control, e) {
+      var html = '',
+          options = window.context_menu[self.el.id][control];
+
+      for (var i in options){
+        if (options.hasOwnProperty(i)) {
+          var option = options[i];
+
+          html += '<li><a id="' + control + '_' + i + '" href="#">' + option.title + '</a></li>';
+        }
+      }
+
+      if (!getElementById('gmaps_context_menu')) return;
+
+      var context_menu_element = getElementById('gmaps_context_menu');
+
+      context_menu_element.innerHTML = html;
+
+      var context_menu_items = context_menu_element.getElementsByTagName('a'),
+          context_menu_items_count = context_menu_items.length,
+          i;
+
+      for (i = 0; i < context_menu_items_count; i++) {
+        var context_menu_item = context_menu_items[i];
+
+        var assign_menu_item_action = function(ev){
+          ev.preventDefault();
+
+          options[this.id.replace(control + '_', '')].action.apply(self, [e]);
+          self.hideContextMenu();
+        };
+
+        google.maps.event.clearListeners(context_menu_item, 'click');
+        google.maps.event.addDomListenerOnce(context_menu_item, 'click', assign_menu_item_action, false);
+      }
+
+      var position = findAbsolutePosition.apply(this, [self.el]),
+          left = position[0] + e.pixel.x - 15,
+          top = position[1] + e.pixel.y- 15;
+
+      context_menu_element.style.left = left + "px";
+      context_menu_element.style.top = top + "px";
+
+      // context_menu_element.style.display = 'block';
+    };
+
+    this.buildContextMenu = function(control, e) {
+      if (control === 'marker') {
+        e.pixel = {};
+
+        var overlay = new google.maps.OverlayView();
+        overlay.setMap(self.map);
+
+        overlay.draw = function() {
+          var projection = overlay.getProjection(),
+              position = e.marker.getPosition();
+
+          e.pixel = projection.fromLatLngToContainerPixel(position);
+
+          buildContextMenuHTML(control, e);
+        };
+      }
+      else {
+        buildContextMenuHTML(control, e);
+      }
+
+      var context_menu_element = getElementById('gmaps_context_menu');
+
+      setTimeout(function() {
+        context_menu_element.style.display = 'block';
+      }, 0);
+    };
+
+    /**
+     * Add a context menu for a map or a marker.
+     *
+     * @param {object} options - The `options` object should contain:
+     * * `control` (string): Kind of control the context menu will be attached. Can be "map" or "marker".
+     * * `options` (array): A collection of context menu items:
+     *   * `title` (string): Item's title shown in the context menu.
+     *   * `name` (string): Item's identifier.
+     *   * `action` (function): Function triggered after selecting the context menu item.
+     */
+    this.setContextMenu = function(options) {
+      window.context_menu[self.el.id][options.control] = {};
+
+      var i,
+          ul = doc.createElement('ul');
+
+      for (i in options.options) {
+        if (options.options.hasOwnProperty(i)) {
+          var option = options.options[i];
+
+          window.context_menu[self.el.id][options.control][option.name] = {
+            title: option.title,
+            action: option.action
+          };
+        }
+      }
+
+      ul.id = 'gmaps_context_menu';
+      ul.style.display = 'none';
+      ul.style.position = 'absolute';
+      ul.style.minWidth = '100px';
+      ul.style.background = 'white';
+      ul.style.listStyle = 'none';
+      ul.style.padding = '8px';
+      ul.style.boxShadow = '2px 2px 6px #ccc';
+
+      if (!getElementById('gmaps_context_menu')) {
+        doc.body.appendChild(ul);
+      }
+
+      var context_menu_element = getElementById('gmaps_context_menu');
+
+      google.maps.event.addDomListener(context_menu_element, 'mouseout', function(ev) {
+        if (!ev.relatedTarget || !this.contains(ev.relatedTarget)) {
+          window.setTimeout(function(){
+            context_menu_element.style.display = 'none';
+          }, 400);
+        }
+      }, false);
+    };
+
+    /**
+     * Hide the current context menu
+     */
+    this.hideContextMenu = function() {
+      var context_menu_element = getElementById('gmaps_context_menu');
+
+      if (context_menu_element) {
+        context_menu_element.style.display = 'none';
+      }
+    };
+
+    var setupListener = function(object, name) {
+      google.maps.event.addListener(object, name, function(e){
+        if (e == undefined) {
+          e = this;
+        }
+
+        options[name].apply(this, [e]);
+
+        self.hideContextMenu();
+      });
+    };
+
+    //google.maps.event.addListener(this.map, 'idle', this.hideContextMenu);
+    google.maps.event.addListener(this.map, 'zoom_changed', this.hideContextMenu);
+
+    for (var ev = 0; ev < events_that_hide_context_menu.length; ev++) {
+      var name = events_that_hide_context_menu[ev];
+
+      if (name in options) {
+        setupListener(this.map, name);
+      }
+    }
+
+    for (var ev = 0; ev < events_that_doesnt_hide_context_menu.length; ev++) {
+      var name = events_that_doesnt_hide_context_menu[ev];
+
+      if (name in options) {
+        setupListener(this.map, name);
+      }
+    }
+
+    google.maps.event.addListener(this.map, 'rightclick', function(e) {
+      if (options.rightclick) {
+        options.rightclick.apply(this, [e]);
+      }
+
+      if(window.context_menu[self.el.id]['map'] != undefined) {
+        self.buildContextMenu('map', e);
+      }
+    });
+
+    /**
+     * Trigger a `resize` event, useful if you need to repaint the current map (for changes in the viewport or display / hide actions).
+     */
+    this.refresh = function() {
+      google.maps.event.trigger(this.map, 'resize');
+    };
+
+    /**
+     * Adjust the map zoom to include all the markers added in the map.
+     */
+    this.fitZoom = function() {
+      var latLngs = [],
+          markers_length = this.markers.length,
+          i;
+
+      for (i = 0; i < markers_length; i++) {
+        if(typeof(this.markers[i].visible) === 'boolean' && this.markers[i].visible) {
+          latLngs.push(this.markers[i].getPosition());
+        }
+      }
+
+      this.fitLatLngBounds(latLngs);
+    };
+
+    /**
+     * Adjust the map zoom to include all the coordinates in the `latLngs` array.
+     *
+     * @param {array} latLngs - Collection of `google.maps.LatLng` objects.
+     */
+    this.fitLatLngBounds = function(latLngs) {
+      var total = latLngs.length,
+          bounds = new google.maps.LatLngBounds(),
+          i;
+
+      for(i = 0; i < total; i++) {
+        bounds.extend(latLngs[i]);
+      }
+
+      this.map.fitBounds(bounds);
+    };
+
+    /**
+     * Center the map using the `lat` and `lng` coordinates.
+     *
+     * @param {number} lat - Latitude of the coordinate.
+     * @param {number} lng - Longitude of the coordinate.
+     * @param {function} [callback] - Callback that will be executed after the map is centered.
+     */
+    this.setCenter = function(lat, lng, callback) {
+      this.map.panTo(new google.maps.LatLng(lat, lng));
+
+      if (callback) {
+        callback();
+      }
+    };
+
+    /**
+     * Return the HTML element container of the map.
+     *
+     * @returns {HTMLElement} the element container.
+     */
+    this.getElement = function() {
+      return this.el;
+    };
+
+    /**
+     * Increase the map's zoom.
+     *
+     * @param {number} [magnitude] - The number of times the map will be zoomed in.
+     */
+    this.zoomIn = function(value) {
+      value = value || 1;
+
+      this.zoom = this.map.getZoom() + value;
+      this.map.setZoom(this.zoom);
+    };
+
+    /**
+     * Decrease the map's zoom.
+     *
+     * @param {number} [magnitude] - The number of times the map will be zoomed out.
+     */
+    this.zoomOut = function(value) {
+      value = value || 1;
+
+      this.zoom = this.map.getZoom() - value;
+      this.map.setZoom(this.zoom);
+    };
+
+    var native_methods = [],
+        method;
+
+    for (method in this.map) {
+      if (typeof(this.map[method]) == 'function' && !this[method]) {
+        native_methods.push(method);
+      }
+    }
+
+    for (i = 0; i < native_methods.length; i++) {
+      (function(gmaps, scope, method_name) {
+        gmaps[method_name] = function(){
+          return scope[method_name].apply(scope, arguments);
+        };
+      })(this, this.map, native_methods[i]);
+    }
+  };
+
+  return GMaps;
+})(this);
+
+GMaps.prototype.createControl = function(options) {
+  var control = document.createElement('div');
+
+  control.style.cursor = 'pointer';
+
+  if (options.disableDefaultStyles !== true) {
+    control.style.fontFamily = 'Roboto, Arial, sans-serif';
+    control.style.fontSize = '11px';
+    control.style.boxShadow = 'rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px';
+  }
+
+  for (var option in options.style) {
+    control.style[option] = options.style[option];
+  }
+
+  if (options.id) {
+    control.id = options.id;
+  }
+
+  if (options.title) {
+    control.title = options.title;
+  }
+
+  if (options.classes) {
+    control.className = options.classes;
+  }
+
+  if (options.content) {
+    if (typeof options.content === 'string') {
+      control.innerHTML = options.content;
+    }
+    else if (options.content instanceof HTMLElement) {
+      control.appendChild(options.content);
+    }
+  }
+
+  if (options.position) {
+    control.position = google.maps.ControlPosition[options.position.toUpperCase()];
+  }
+
+  for (var ev in options.events) {
+    (function(object, name) {
+      google.maps.event.addDomListener(object, name, function(){
+        options.events[name].apply(this, [this]);
+      });
+    })(control, ev);
+  }
+
+  control.index = 1;
+
+  return control;
+};
+
+/**
+ * Add a custom control to the map UI.
+ *
+ * @param {object} options - The `options` object should contain:
+ * * `style` (object): The keys and values of this object should be valid CSS properties and values.
+ * * `id` (string): The HTML id for the custom control.
+ * * `classes` (string): A string containing all the HTML classes for the custom control.
+ * * `content` (string or HTML element): The content of the custom control.
+ * * `position` (string): Any valid [`google.maps.ControlPosition`](https://developers.google.com/maps/documentation/javascript/controls#ControlPositioning) value, in lower or upper case.
+ * * `events` (object): The keys of this object should be valid DOM events. The values should be functions.
+ * * `disableDefaultStyles` (boolean): If false, removes the default styles for the controls like font (family and size), and box shadow.
+ * @returns {HTMLElement}
+ */
+GMaps.prototype.addControl = function(options) {
+  var control = this.createControl(options);
+
+  this.controls.push(control);
+  this.map.controls[control.position].push(control);
+
+  return control;
+};
+
+/**
+ * Remove a control from the map. `control` should be a control returned by `addControl()`.
+ *
+ * @param {HTMLElement} control - One of the controls returned by `addControl()`.
+ * @returns {HTMLElement} the removed control.
+ */
+GMaps.prototype.removeControl = function(control) {
+  var position = null,
+      i;
+
+  for (i = 0; i < this.controls.length; i++) {
+    if (this.controls[i] == control) {
+      position = this.controls[i].position;
+      this.controls.splice(i, 1);
+    }
+  }
+
+  if (position) {
+    for (i = 0; i < this.map.controls.length; i++) {
+      var controlsForPosition = this.map.controls[control.position];
+
+      if (controlsForPosition.getAt(i) == control) {
+        controlsForPosition.removeAt(i);
+
+        break;
+      }
+    }
+  }
+
+  return control;
+};
+
+GMaps.prototype.createMarker = function(options) {
+  if (options.lat == undefined && options.lng == undefined && options.position == undefined) {
+    throw 'No latitude or longitude defined.';
+  }
+
+  var self = this,
+      details = options.details,
+      fences = options.fences,
+      outside = options.outside,
+      base_options = {
+        position: new google.maps.LatLng(options.lat, options.lng),
+        map: null
+      },
+      marker_options = extend_object(base_options, options);
+
+  delete marker_options.lat;
+  delete marker_options.lng;
+  delete marker_options.fences;
+  delete marker_options.outside;
+
+  var marker = new google.maps.Marker(marker_options);
+
+  marker.fences = fences;
+
+  if (options.infoWindow) {
+    marker.infoWindow = new google.maps.InfoWindow(options.infoWindow);
+
+    var info_window_events = ['closeclick', 'content_changed', 'domready', 'position_changed', 'zindex_changed'];
+
+    for (var ev = 0; ev < info_window_events.length; ev++) {
+      (function(object, name) {
+        if (options.infoWindow[name]) {
+          google.maps.event.addListener(object, name, function(e){
+            options.infoWindow[name].apply(this, [e]);
+          });
+        }
+      })(marker.infoWindow, info_window_events[ev]);
+    }
+  }
+
+  var marker_events = ['animation_changed', 'clickable_changed', 'cursor_changed', 'draggable_changed', 'flat_changed', 'icon_changed', 'position_changed', 'shadow_changed', 'shape_changed', 'title_changed', 'visible_changed', 'zindex_changed'];
+
+  var marker_events_with_mouse = ['dblclick', 'drag', 'dragend', 'dragstart', 'mousedown', 'mouseout', 'mouseover', 'mouseup'];
+
+  for (var ev = 0; ev < marker_events.length; ev++) {
+    (function(object, name) {
+      if (options[name]) {
+        google.maps.event.addListener(object, name, function(){
+          options[name].apply(this, [this]);
+        });
+      }
+    })(marker, marker_events[ev]);
+  }
+
+  for (var ev = 0; ev < marker_events_with_mouse.length; ev++) {
+    (function(map, object, name) {
+      if (options[name]) {
+        google.maps.event.addListener(object, name, function(me){
+          if(!me.pixel){
+            me.pixel = map.getProjection().fromLatLngToPoint(me.latLng)
+          }
+
+          options[name].apply(this, [me]);
+        });
+      }
+    })(this.map, marker, marker_events_with_mouse[ev]);
+  }
+
+  google.maps.event.addListener(marker, 'click', function() {
+    this.details = details;
+
+    if (options.click) {
+      options.click.apply(this, [this]);
+    }
+
+    if (marker.infoWindow) {
+      self.hideInfoWindows();
+      marker.infoWindow.open(self.map, marker);
+    }
+  });
+
+  google.maps.event.addListener(marker, 'rightclick', function(e) {
+    e.marker = this;
+
+    if (options.rightclick) {
+      options.rightclick.apply(this, [e]);
+    }
+
+    if (window.context_menu[self.el.id]['marker'] != undefined) {
+      self.buildContextMenu('marker', e);
+    }
+  });
+
+  if (marker.fences) {
+    google.maps.event.addListener(marker, 'dragend', function() {
+      self.checkMarkerGeofence(marker, function(m, f) {
+        outside(m, f);
+      });
+    });
+  }
+
+  return marker;
+};
+
+GMaps.prototype.addMarker = function(options) {
+  var marker;
+  if(options.hasOwnProperty('gm_accessors_')) {
+    // Native google.maps.Marker object
+    marker = options;
+  }
+  else {
+    if ((options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) || options.position) {
+      marker = this.createMarker(options);
+    }
+    else {
+      throw 'No latitude or longitude defined.';
+    }
+  }
+
+  marker.setMap(this.map);
+
+  if(this.markerClusterer) {
+    this.markerClusterer.addMarker(marker);
+  }
+
+  this.markers.push(marker);
+
+  GMaps.fire('marker_added', marker, this);
+
+  return marker;
+};
+
+GMaps.prototype.addMarkers = function(array) {
+  for (var i = 0, marker; marker=array[i]; i++) {
+    this.addMarker(marker);
+  }
+
+  return this.markers;
+};
+
+GMaps.prototype.hideInfoWindows = function() {
+  for (var i = 0, marker; marker = this.markers[i]; i++){
+    if (marker.infoWindow) {
+      marker.infoWindow.close();
+    }
+  }
+};
+
+GMaps.prototype.removeMarker = function(marker) {
+  for (var i = 0; i < this.markers.length; i++) {
+    if (this.markers[i] === marker) {
+      this.markers[i].setMap(null);
+      this.markers.splice(i, 1);
+
+      if(this.markerClusterer) {
+        this.markerClusterer.removeMarker(marker);
+      }
+
+      GMaps.fire('marker_removed', marker, this);
+
+      break;
+    }
+  }
+
+  return marker;
+};
+
+GMaps.prototype.removeMarkers = function (collection) {
+  var new_markers = [];
+
+  if (typeof collection == 'undefined') {
+    for (var i = 0; i < this.markers.length; i++) {
+      var marker = this.markers[i];
+      marker.setMap(null);
+
+      GMaps.fire('marker_removed', marker, this);
+    }
+
+    if(this.markerClusterer && this.markerClusterer.clearMarkers) {
+      this.markerClusterer.clearMarkers();
+    }
+
+    this.markers = new_markers;
+  }
+  else {
+    for (var i = 0; i < collection.length; i++) {
+      var index = this.markers.indexOf(collection[i]);
+
+      if (index > -1) {
+        var marker = this.markers[index];
+        marker.setMap(null);
+
+        if(this.markerClusterer) {
+          this.markerClusterer.removeMarker(marker);
+        }
+
+        GMaps.fire('marker_removed', marker, this);
+      }
+    }
+
+    for (var i = 0; i < this.markers.length; i++) {
+      var marker = this.markers[i];
+      if (marker.getMap() != null) {
+        new_markers.push(marker);
+      }
+    }
+
+    this.markers = new_markers;
+  }
+};
+
+GMaps.prototype.drawOverlay = function(options) {
+  var overlay = new google.maps.OverlayView(),
+      auto_show = true;
+
+  overlay.setMap(this.map);
+
+  if (options.auto_show != null) {
+    auto_show = options.auto_show;
+  }
+
+  overlay.onAdd = function() {
+    var el = document.createElement('div');
+
+    el.style.borderStyle = "none";
+    el.style.borderWidth = "0px";
+    el.style.position = "absolute";
+    el.style.zIndex = 100;
+    el.innerHTML = options.content;
+
+    overlay.el = el;
+
+    if (!options.layer) {
+      options.layer = 'overlayLayer';
+    }
+    
+    var panes = this.getPanes(),
+        overlayLayer = panes[options.layer],
+        stop_overlay_events = ['contextmenu', 'DOMMouseScroll', 'dblclick', 'mousedown'];
+
+    overlayLayer.appendChild(el);
+
+    for (var ev = 0; ev < stop_overlay_events.length; ev++) {
+      (function(object, name) {
+        google.maps.event.addDomListener(object, name, function(e){
+          if (navigator.userAgent.toLowerCase().indexOf('msie') != -1 && document.all) {
+            e.cancelBubble = true;
+            e.returnValue = false;
+          }
+          else {
+            e.stopPropagation();
+          }
+        });
+      })(el, stop_overlay_events[ev]);
+    }
+
+    if (options.click) {
+      panes.overlayMouseTarget.appendChild(overlay.el);
+      google.maps.event.addDomListener(overlay.el, 'click', function() {
+        options.click.apply(overlay, [overlay]);
+      });
+    }
+
+    google.maps.event.trigger(this, 'ready');
+  };
+
+  overlay.draw = function() {
+    var projection = this.getProjection(),
+        pixel = projection.fromLatLngToDivPixel(new google.maps.LatLng(options.lat, options.lng));
+
+    options.horizontalOffset = options.horizontalOffset || 0;
+    options.verticalOffset = options.verticalOffset || 0;
+
+    var el = overlay.el,
+        content = el.children[0],
+        content_height = content.clientHeight,
+        content_width = content.clientWidth;
+
+    switch (options.verticalAlign) {
+      case 'top':
+        el.style.top = (pixel.y - content_height + options.verticalOffset) + 'px';
+        break;
+      default:
+      case 'middle':
+        el.style.top = (pixel.y - (content_height / 2) + options.verticalOffset) + 'px';
+        break;
+      case 'bottom':
+        el.style.top = (pixel.y + options.verticalOffset) + 'px';
+        break;
+    }
+
+    switch (options.horizontalAlign) {
+      case 'left':
+        el.style.left = (pixel.x - content_width + options.horizontalOffset) + 'px';
+        break;
+      default:
+      case 'center':
+        el.style.left = (pixel.x - (content_width / 2) + options.horizontalOffset) + 'px';
+        break;
+      case 'right':
+        el.style.left = (pixel.x + options.horizontalOffset) + 'px';
+        break;
+    }
+
+    el.style.display = auto_show ? 'block' : 'none';
+
+    if (!auto_show) {
+      options.show.apply(this, [el]);
+    }
+  };
+
+  overlay.onRemove = function() {
+    var el = overlay.el;
+
+    if (options.remove) {
+      options.remove.apply(this, [el]);
+    }
+    else {
+      overlay.el.parentNode.removeChild(overlay.el);
+      overlay.el = null;
+    }
+  };
+
+  this.overlays.push(overlay);
+  return overlay;
+};
+
+GMaps.prototype.removeOverlay = function(overlay) {
+  for (var i = 0; i < this.overlays.length; i++) {
+    if (this.overlays[i] === overlay) {
+      this.overlays[i].setMap(null);
+      this.overlays.splice(i, 1);
+
+      break;
+    }
+  }
+};
+
+GMaps.prototype.removeOverlays = function() {
+  for (var i = 0, item; item = this.overlays[i]; i++) {
+    item.setMap(null);
+  }
+
+  this.overlays = [];
+};
+
+GMaps.prototype.drawPolyline = function(options) {
+  var path = [],
+      points = options.path;
+
+  if (points.length) {
+    if (points[0][0] === undefined) {
+      path = points;
+    }
+    else {
+      for (var i = 0, latlng; latlng = points[i]; i++) {
+        path.push(new google.maps.LatLng(latlng[0], latlng[1]));
+      }
+    }
+  }
+
+  var polyline_options = {
+    map: this.map,
+    path: path,
+    strokeColor: options.strokeColor,
+    strokeOpacity: options.strokeOpacity,
+    strokeWeight: options.strokeWeight,
+    geodesic: options.geodesic,
+    clickable: true,
+    editable: false,
+    visible: true
+  };
+
+  if (options.hasOwnProperty("clickable")) {
+    polyline_options.clickable = options.clickable;
+  }
+
+  if (options.hasOwnProperty("editable")) {
+    polyline_options.editable = options.editable;
+  }
+
+  if (options.hasOwnProperty("icons")) {
+    polyline_options.icons = options.icons;
+  }
+
+  if (options.hasOwnProperty("zIndex")) {
+    polyline_options.zIndex = options.zIndex;
+  }
+
+  var polyline = new google.maps.Polyline(polyline_options);
+
+  var polyline_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+
+  for (var ev = 0; ev < polyline_events.length; ev++) {
+    (function(object, name) {
+      if (options[name]) {
+        google.maps.event.addListener(object, name, function(e){
+          options[name].apply(this, [e]);
+        });
+      }
+    })(polyline, polyline_events[ev]);
+  }
+
+  this.polylines.push(polyline);
+
+  GMaps.fire('polyline_added', polyline, this);
+
+  return polyline;
+};
+
+GMaps.prototype.removePolyline = function(polyline) {
+  for (var i = 0; i < this.polylines.length; i++) {
+    if (this.polylines[i] === polyline) {
+      this.polylines[i].setMap(null);
+      this.polylines.splice(i, 1);
+
+      GMaps.fire('polyline_removed', polyline, this);
+
+      break;
+    }
+  }
+};
+
+GMaps.prototype.removePolylines = function() {
+  for (var i = 0, item; item = this.polylines[i]; i++) {
+    item.setMap(null);
+  }
+
+  this.polylines = [];
+};
+
+GMaps.prototype.drawCircle = function(options) {
+  options =  extend_object({
+    map: this.map,
+    center: new google.maps.LatLng(options.lat, options.lng)
+  }, options);
+
+  delete options.lat;
+  delete options.lng;
+
+  var polygon = new google.maps.Circle(options),
+      polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+
+  for (var ev = 0; ev < polygon_events.length; ev++) {
+    (function(object, name) {
+      if (options[name]) {
+        google.maps.event.addListener(object, name, function(e){
+          options[name].apply(this, [e]);
+        });
+      }
+    })(polygon, polygon_events[ev]);
+  }
+
+  this.polygons.push(polygon);
+
+  return polygon;
+};
+
+GMaps.prototype.drawRectangle = function(options) {
+  options = extend_object({
+    map: this.map
+  }, options);
+
+  var latLngBounds = new google.maps.LatLngBounds(
+    new google.maps.LatLng(options.bounds[0][0], options.bounds[0][1]),
+    new google.maps.LatLng(options.bounds[1][0], options.bounds[1][1])
+  );
+
+  options.bounds = latLngBounds;
+
+  var polygon = new google.maps.Rectangle(options),
+      polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+
+  for (var ev = 0; ev < polygon_events.length; ev++) {
+    (function(object, name) {
+      if (options[name]) {
+        google.maps.event.addListener(object, name, function(e){
+          options[name].apply(this, [e]);
+        });
+      }
+    })(polygon, polygon_events[ev]);
+  }
+
+  this.polygons.push(polygon);
+
+  return polygon;
+};
+
+GMaps.prototype.drawPolygon = function(options) {
+  var useGeoJSON = false;
+
+  if(options.hasOwnProperty("useGeoJSON")) {
+    useGeoJSON = options.useGeoJSON;
+  }
+
+  delete options.useGeoJSON;
+
+  options = extend_object({
+    map: this.map
+  }, options);
+
+  if (useGeoJSON == false) {
+    options.paths = [options.paths.slice(0)];
+  }
+
+  if (options.paths.length > 0) {
+    if (options.paths[0].length > 0) {
+      options.paths = array_flat(array_map(options.paths, arrayToLatLng, useGeoJSON));
+    }
+  }
+
+  var polygon = new google.maps.Polygon(options),
+      polygon_events = ['click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'rightclick'];
+
+  for (var ev = 0; ev < polygon_events.length; ev++) {
+    (function(object, name) {
+      if (options[name]) {
+        google.maps.event.addListener(object, name, function(e){
+          options[name].apply(this, [e]);
+        });
+      }
+    })(polygon, polygon_events[ev]);
+  }
+
+  this.polygons.push(polygon);
+
+  GMaps.fire('polygon_added', polygon, this);
+
+  return polygon;
+};
+
+GMaps.prototype.removePolygon = function(polygon) {
+  for (var i = 0; i < this.polygons.length; i++) {
+    if (this.polygons[i] === polygon) {
+      this.polygons[i].setMap(null);
+      this.polygons.splice(i, 1);
+
+      GMaps.fire('polygon_removed', polygon, this);
+
+      break;
+    }
+  }
+};
+
+GMaps.prototype.removePolygons = function() {
+  for (var i = 0, item; item = this.polygons[i]; i++) {
+    item.setMap(null);
+  }
+
+  this.polygons = [];
+};
+
+GMaps.prototype.getFromFusionTables = function(options) {
+  var events = options.events;
+
+  delete options.events;
+
+  var fusion_tables_options = options,
+      layer = new google.maps.FusionTablesLayer(fusion_tables_options);
+
+  for (var ev in events) {
+    (function(object, name) {
+      google.maps.event.addListener(object, name, function(e) {
+        events[name].apply(this, [e]);
+      });
+    })(layer, ev);
+  }
+
+  this.layers.push(layer);
+
+  return layer;
+};
+
+GMaps.prototype.loadFromFusionTables = function(options) {
+  var layer = this.getFromFusionTables(options);
+  layer.setMap(this.map);
+
+  return layer;
+};
+
+GMaps.prototype.getFromKML = function(options) {
+  var url = options.url,
+      events = options.events;
+
+  delete options.url;
+  delete options.events;
+
+  var kml_options = options,
+      layer = new google.maps.KmlLayer(url, kml_options);
+
+  for (var ev in events) {
+    (function(object, name) {
+      google.maps.event.addListener(object, name, function(e) {
+        events[name].apply(this, [e]);
+      });
+    })(layer, ev);
+  }
+
+  this.layers.push(layer);
+
+  return layer;
+};
+
+GMaps.prototype.loadFromKML = function(options) {
+  var layer = this.getFromKML(options);
+  layer.setMap(this.map);
+
+  return layer;
+};
+
+GMaps.prototype.addLayer = function(layerName, options) {
+  //var default_layers = ['weather', 'clouds', 'traffic', 'transit', 'bicycling', 'panoramio', 'places'];
+  options = options || {};
+  var layer;
+
+  switch(layerName) {
+    case 'weather': this.singleLayers.weather = layer = new google.maps.weather.WeatherLayer();
+      break;
+    case 'clouds': this.singleLayers.clouds = layer = new google.maps.weather.CloudLayer();
+      break;
+    case 'traffic': this.singleLayers.traffic = layer = new google.maps.TrafficLayer();
+      break;
+    case 'transit': this.singleLayers.transit = layer = new google.maps.TransitLayer();
+      break;
+    case 'bicycling': this.singleLayers.bicycling = layer = new google.maps.BicyclingLayer();
+      break;
+    case 'panoramio':
+        this.singleLayers.panoramio = layer = new google.maps.panoramio.PanoramioLayer();
+        layer.setTag(options.filter);
+        delete options.filter;
+
+        //click event
+        if (options.click) {
+          google.maps.event.addListener(layer, 'click', function(event) {
+            options.click(event);
+            delete options.click;
+          });
+        }
+      break;
+      case 'places':
+        this.singleLayers.places = layer = new google.maps.places.PlacesService(this.map);
+
+        //search, nearbySearch, radarSearch callback, Both are the same
+        if (options.search || options.nearbySearch || options.radarSearch) {
+          var placeSearchRequest  = {
+            bounds : options.bounds || null,
+            keyword : options.keyword || null,
+            location : options.location || null,
+            name : options.name || null,
+            radius : options.radius || null,
+            rankBy : options.rankBy || null,
+            types : options.types || null
+          };
+
+          if (options.radarSearch) {
+            layer.radarSearch(placeSearchRequest, options.radarSearch);
+          }
+
+          if (options.search) {
+            layer.search(placeSearchRequest, options.search);
+          }
+
+          if (options.nearbySearch) {
+            layer.nearbySearch(placeSearchRequest, options.nearbySearch);
+          }
+        }
+
+        //textSearch callback
+        if (options.textSearch) {
+          var textSearchRequest  = {
+            bounds : options.bounds || null,
+            location : options.location || null,
+            query : options.query || null,
+            radius : options.radius || null
+          };
+
+          layer.textSearch(textSearchRequest, options.textSearch);
+        }
+      break;
+  }
+
+  if (layer !== undefined) {
+    if (typeof layer.setOptions == 'function') {
+      layer.setOptions(options);
+    }
+    if (typeof layer.setMap == 'function') {
+      layer.setMap(this.map);
+    }
+
+    return layer;
+  }
+};
+
+GMaps.prototype.removeLayer = function(layer) {
+  if (typeof(layer) == "string" && this.singleLayers[layer] !== undefined) {
+     this.singleLayers[layer].setMap(null);
+
+     delete this.singleLayers[layer];
+  }
+  else {
+    for (var i = 0; i < this.layers.length; i++) {
+      if (this.layers[i] === layer) {
+        this.layers[i].setMap(null);
+        this.layers.splice(i, 1);
+
+        break;
+      }
+    }
+  }
+};
+
+var travelMode, unitSystem;
+
+GMaps.prototype.getRoutes = function(options) {
+  switch (options.travelMode) {
+    case 'bicycling':
+      travelMode = google.maps.TravelMode.BICYCLING;
+      break;
+    case 'transit':
+      travelMode = google.maps.TravelMode.TRANSIT;
+      break;
+    case 'driving':
+      travelMode = google.maps.TravelMode.DRIVING;
+      break;
+    default:
+      travelMode = google.maps.TravelMode.WALKING;
+      break;
+  }
+
+  if (options.unitSystem === 'imperial') {
+    unitSystem = google.maps.UnitSystem.IMPERIAL;
+  }
+  else {
+    unitSystem = google.maps.UnitSystem.METRIC;
+  }
+
+  var base_options = {
+        avoidHighways: false,
+        avoidTolls: false,
+        optimizeWaypoints: false,
+        waypoints: []
+      },
+      request_options =  extend_object(base_options, options);
+
+  request_options.origin = /string/.test(typeof options.origin) ? options.origin : new google.maps.LatLng(options.origin[0], options.origin[1]);
+  request_options.destination = /string/.test(typeof options.destination) ? options.destination : new google.maps.LatLng(options.destination[0], options.destination[1]);
+  request_options.travelMode = travelMode;
+  request_options.unitSystem = unitSystem;
+
+  delete request_options.callback;
+  delete request_options.error;
+
+  var self = this,
+      routes = [],
+      service = new google.maps.DirectionsService();
+
+  service.route(request_options, function(result, status) {
+    if (status === google.maps.DirectionsStatus.OK) {
+      for (var r in result.routes) {
+        if (result.routes.hasOwnProperty(r)) {
+          routes.push(result.routes[r]);
+        }
+      }
+
+      if (options.callback) {
+        options.callback(routes, result, status);
+      }
+    }
+    else {
+      if (options.error) {
+        options.error(result, status);
+      }
+    }
+  });
+};
+
+GMaps.prototype.removeRoutes = function() {
+  this.routes.length = 0;
+};
+
+GMaps.prototype.getElevations = function(options) {
+  options = extend_object({
+    locations: [],
+    path : false,
+    samples : 256
+  }, options);
+
+  if (options.locations.length > 0) {
+    if (options.locations[0].length > 0) {
+      options.locations = array_flat(array_map([options.locations], arrayToLatLng,  false));
+    }
+  }
+
+  var callback = options.callback;
+  delete options.callback;
+
+  var service = new google.maps.ElevationService();
+
+  //location request
+  if (!options.path) {
+    delete options.path;
+    delete options.samples;
+
+    service.getElevationForLocations(options, function(result, status) {
+      if (callback && typeof(callback) === "function") {
+        callback(result, status);
+      }
+    });
+  //path request
+  } else {
+    var pathRequest = {
+      path : options.locations,
+      samples : options.samples
+    };
+
+    service.getElevationAlongPath(pathRequest, function(result, status) {
+     if (callback && typeof(callback) === "function") {
+        callback(result, status);
+      }
+    });
+  }
+};
+
+GMaps.prototype.cleanRoute = GMaps.prototype.removePolylines;
+
+GMaps.prototype.renderRoute = function(options, renderOptions) {
+  var self = this,
+      panel = ((typeof renderOptions.panel === 'string') ? document.getElementById(renderOptions.panel.replace('#', '')) : renderOptions.panel),
+      display;
+
+  renderOptions.panel = panel;
+  renderOptions = extend_object({
+    map: this.map
+  }, renderOptions);
+  display = new google.maps.DirectionsRenderer(renderOptions);
+
+  this.getRoutes({
+    origin: options.origin,
+    destination: options.destination,
+    travelMode: options.travelMode,
+    waypoints: options.waypoints,
+    unitSystem: options.unitSystem,
+    error: options.error,
+    avoidHighways: options.avoidHighways,
+    avoidTolls: options.avoidTolls,
+    optimizeWaypoints: options.optimizeWaypoints,
+    callback: function(routes, response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        display.setDirections(response);
+      }
+    }
+  });
+};
+
+GMaps.prototype.drawRoute = function(options) {
+  var self = this;
+
+  this.getRoutes({
+    origin: options.origin,
+    destination: options.destination,
+    travelMode: options.travelMode,
+    waypoints: options.waypoints,
+    unitSystem: options.unitSystem,
+    error: options.error,
+    avoidHighways: options.avoidHighways,
+    avoidTolls: options.avoidTolls,
+    optimizeWaypoints: options.optimizeWaypoints,
+    callback: function(routes) {
+      if (routes.length > 0) {
+        var polyline_options = {
+          path: routes[routes.length - 1].overview_path,
+          strokeColor: options.strokeColor,
+          strokeOpacity: options.strokeOpacity,
+          strokeWeight: options.strokeWeight
+        };
+
+        if (options.hasOwnProperty("icons")) {
+          polyline_options.icons = options.icons;
+        }
+
+        self.drawPolyline(polyline_options);
+
+        if (options.callback) {
+          options.callback(routes[routes.length - 1]);
+        }
+      }
+    }
+  });
+};
+
+GMaps.prototype.travelRoute = function(options) {
+  if (options.origin && options.destination) {
+    this.getRoutes({
+      origin: options.origin,
+      destination: options.destination,
+      travelMode: options.travelMode,
+      waypoints : options.waypoints,
+      unitSystem: options.unitSystem,
+      error: options.error,
+      callback: function(e) {
+        //start callback
+        if (e.length > 0 && options.start) {
+          options.start(e[e.length - 1]);
+        }
+
+        //step callback
+        if (e.length > 0 && options.step) {
+          var route = e[e.length - 1];
+          if (route.legs.length > 0) {
+            var steps = route.legs[0].steps;
+            for (var i = 0, step; step = steps[i]; i++) {
+              step.step_number = i;
+              options.step(step, (route.legs[0].steps.length - 1));
+            }
+          }
+        }
+
+        //end callback
+        if (e.length > 0 && options.end) {
+           options.end(e[e.length - 1]);
+        }
+      }
+    });
+  }
+  else if (options.route) {
+    if (options.route.legs.length > 0) {
+      var steps = options.route.legs[0].steps;
+      for (var i = 0, step; step = steps[i]; i++) {
+        step.step_number = i;
+        options.step(step);
+      }
+    }
+  }
+};
+
+GMaps.prototype.drawSteppedRoute = function(options) {
+  var self = this;
+
+  if (options.origin && options.destination) {
+    this.getRoutes({
+      origin: options.origin,
+      destination: options.destination,
+      travelMode: options.travelMode,
+      waypoints : options.waypoints,
+      error: options.error,
+      callback: function(e) {
+        //start callback
+        if (e.length > 0 && options.start) {
+          options.start(e[e.length - 1]);
+        }
+
+        //step callback
+        if (e.length > 0 && options.step) {
+          var route = e[e.length - 1];
+          if (route.legs.length > 0) {
+            var steps = route.legs[0].steps;
+            for (var i = 0, step; step = steps[i]; i++) {
+              step.step_number = i;
+              var polyline_options = {
+                path: step.path,
+                strokeColor: options.strokeColor,
+                strokeOpacity: options.strokeOpacity,
+                strokeWeight: options.strokeWeight
+              };
+
+              if (options.hasOwnProperty("icons")) {
+                polyline_options.icons = options.icons;
+              }
+
+              self.drawPolyline(polyline_options);
+              options.step(step, (route.legs[0].steps.length - 1));
+            }
+          }
+        }
+
+        //end callback
+        if (e.length > 0 && options.end) {
+           options.end(e[e.length - 1]);
+        }
+      }
+    });
+  }
+  else if (options.route) {
+    if (options.route.legs.length > 0) {
+      var steps = options.route.legs[0].steps;
+      for (var i = 0, step; step = steps[i]; i++) {
+        step.step_number = i;
+        var polyline_options = {
+          path: step.path,
+          strokeColor: options.strokeColor,
+          strokeOpacity: options.strokeOpacity,
+          strokeWeight: options.strokeWeight
+        };
+
+        if (options.hasOwnProperty("icons")) {
+          polyline_options.icons = options.icons;
+        }
+
+        self.drawPolyline(polyline_options);
+        options.step(step);
+      }
+    }
+  }
+};
+
+GMaps.Route = function(options) {
+  this.origin = options.origin;
+  this.destination = options.destination;
+  this.waypoints = options.waypoints;
+
+  this.map = options.map;
+  this.route = options.route;
+  this.step_count = 0;
+  this.steps = this.route.legs[0].steps;
+  this.steps_length = this.steps.length;
+
+  var polyline_options = {
+    path: new google.maps.MVCArray(),
+    strokeColor: options.strokeColor,
+    strokeOpacity: options.strokeOpacity,
+    strokeWeight: options.strokeWeight
+  };
+
+  if (options.hasOwnProperty("icons")) {
+    polyline_options.icons = options.icons;
+  }
+
+  this.polyline = this.map.drawPolyline(polyline_options).getPath();
+};
+
+GMaps.Route.prototype.getRoute = function(options) {
+  var self = this;
+
+  this.map.getRoutes({
+    origin : this.origin,
+    destination : this.destination,
+    travelMode : options.travelMode,
+    waypoints : this.waypoints || [],
+    error: options.error,
+    callback : function() {
+      self.route = e[0];
+
+      if (options.callback) {
+        options.callback.call(self);
+      }
+    }
+  });
+};
+
+GMaps.Route.prototype.back = function() {
+  if (this.step_count > 0) {
+    this.step_count--;
+    var path = this.route.legs[0].steps[this.step_count].path;
+
+    for (var p in path){
+      if (path.hasOwnProperty(p)){
+        this.polyline.pop();
+      }
+    }
+  }
+};
+
+GMaps.Route.prototype.forward = function() {
+  if (this.step_count < this.steps_length) {
+    var path = this.route.legs[0].steps[this.step_count].path;
+
+    for (var p in path){
+      if (path.hasOwnProperty(p)){
+        this.polyline.push(path[p]);
+      }
+    }
+    this.step_count++;
+  }
+};
+
+GMaps.prototype.checkGeofence = function(lat, lng, fence) {
+  return fence.containsLatLng(new google.maps.LatLng(lat, lng));
+};
+
+GMaps.prototype.checkMarkerGeofence = function(marker, outside_callback) {
+  if (marker.fences) {
+    for (var i = 0, fence; fence = marker.fences[i]; i++) {
+      var pos = marker.getPosition();
+      if (!this.checkGeofence(pos.lat(), pos.lng(), fence)) {
+        outside_callback(marker, fence);
+      }
+    }
+  }
+};
+
+GMaps.prototype.toImage = function(options) {
+  var options = options || {},
+      static_map_options = {};
+
+  static_map_options['size'] = options['size'] || [this.el.clientWidth, this.el.clientHeight];
+  static_map_options['lat'] = this.getCenter().lat();
+  static_map_options['lng'] = this.getCenter().lng();
+
+  if (this.markers.length > 0) {
+    static_map_options['markers'] = [];
+    
+    for (var i = 0; i < this.markers.length; i++) {
+      static_map_options['markers'].push({
+        lat: this.markers[i].getPosition().lat(),
+        lng: this.markers[i].getPosition().lng()
+      });
+    }
+  }
+
+  if (this.polylines.length > 0) {
+    var polyline = this.polylines[0];
+    
+    static_map_options['polyline'] = {};
+    static_map_options['polyline']['path'] = google.maps.geometry.encoding.encodePath(polyline.getPath());
+    static_map_options['polyline']['strokeColor'] = polyline.strokeColor
+    static_map_options['polyline']['strokeOpacity'] = polyline.strokeOpacity
+    static_map_options['polyline']['strokeWeight'] = polyline.strokeWeight
+  }
+
+  return GMaps.staticMapURL(static_map_options);
+};
+
+GMaps.staticMapURL = function(options){
+  var parameters = [],
+      data,
+      static_root = (location.protocol === 'file:' ? 'http:' : location.protocol ) + '//maps.googleapis.com/maps/api/staticmap';
+
+  if (options.url) {
+    static_root = options.url;
+    delete options.url;
+  }
+
+  static_root += '?';
+
+  var markers = options.markers;
+  
+  delete options.markers;
+
+  if (!markers && options.marker) {
+    markers = [options.marker];
+    delete options.marker;
+  }
+
+  var styles = options.styles;
+
+  delete options.styles;
+
+  var polyline = options.polyline;
+  delete options.polyline;
+
+  /** Map options **/
+  if (options.center) {
+    parameters.push('center=' + options.center);
+    delete options.center;
+  }
+  else if (options.address) {
+    parameters.push('center=' + options.address);
+    delete options.address;
+  }
+  else if (options.lat) {
+    parameters.push(['center=', options.lat, ',', options.lng].join(''));
+    delete options.lat;
+    delete options.lng;
+  }
+  else if (options.visible) {
+    var visible = encodeURI(options.visible.join('|'));
+    parameters.push('visible=' + visible);
+  }
+
+  var size = options.size;
+  if (size) {
+    if (size.join) {
+      size = size.join('x');
+    }
+    delete options.size;
+  }
+  else {
+    size = '630x300';
+  }
+  parameters.push('size=' + size);
+
+  if (!options.zoom && options.zoom !== false) {
+    options.zoom = 15;
+  }
+
+  var sensor = options.hasOwnProperty('sensor') ? !!options.sensor : true;
+  delete options.sensor;
+  parameters.push('sensor=' + sensor);
+
+  for (var param in options) {
+    if (options.hasOwnProperty(param)) {
+      parameters.push(param + '=' + options[param]);
+    }
+  }
+
+  /** Markers **/
+  if (markers) {
+    var marker, loc;
+
+    for (var i = 0; data = markers[i]; i++) {
+      marker = [];
+
+      if (data.size && data.size !== 'normal') {
+        marker.push('size:' + data.size);
+        delete data.size;
+      }
+      else if (data.icon) {
+        marker.push('icon:' + encodeURI(data.icon));
+        delete data.icon;
+      }
+
+      if (data.color) {
+        marker.push('color:' + data.color.replace('#', '0x'));
+        delete data.color;
+      }
+
+      if (data.label) {
+        marker.push('label:' + data.label[0].toUpperCase());
+        delete data.label;
+      }
+
+      loc = (data.address ? data.address : data.lat + ',' + data.lng);
+      delete data.address;
+      delete data.lat;
+      delete data.lng;
+
+      for(var param in data){
+        if (data.hasOwnProperty(param)) {
+          marker.push(param + ':' + data[param]);
+        }
+      }
+
+      if (marker.length || i === 0) {
+        marker.push(loc);
+        marker = marker.join('|');
+        parameters.push('markers=' + encodeURI(marker));
+      }
+      // New marker without styles
+      else {
+        marker = parameters.pop() + encodeURI('|' + loc);
+        parameters.push(marker);
+      }
+    }
+  }
+
+  /** Map Styles **/
+  if (styles) {
+    for (var i = 0; i < styles.length; i++) {
+      var styleRule = [];
+      if (styles[i].featureType){
+        styleRule.push('feature:' + styles[i].featureType.toLowerCase());
+      }
+
+      if (styles[i].elementType) {
+        styleRule.push('element:' + styles[i].elementType.toLowerCase());
+      }
+
+      for (var j = 0; j < styles[i].stylers.length; j++) {
+        for (var p in styles[i].stylers[j]) {
+          var ruleArg = styles[i].stylers[j][p];
+          if (p == 'hue' || p == 'color') {
+            ruleArg = '0x' + ruleArg.substring(1);
+          }
+          styleRule.push(p + ':' + ruleArg);
+        }
+      }
+
+      var rule = styleRule.join('|');
+      if (rule != '') {
+        parameters.push('style=' + rule);
+      }
+    }
+  }
+
+  /** Polylines **/
+  function parseColor(color, opacity) {
+    if (color[0] === '#'){
+      color = color.replace('#', '0x');
+
+      if (opacity) {
+        opacity = parseFloat(opacity);
+        opacity = Math.min(1, Math.max(opacity, 0));
+        if (opacity === 0) {
+          return '0x00000000';
+        }
+        opacity = (opacity * 255).toString(16);
+        if (opacity.length === 1) {
+          opacity += opacity;
+        }
+
+        color = color.slice(0,8) + opacity;
+      }
+    }
+    return color;
+  }
+
+  if (polyline) {
+    data = polyline;
+    polyline = [];
+
+    if (data.strokeWeight) {
+      polyline.push('weight:' + parseInt(data.strokeWeight, 10));
+    }
+
+    if (data.strokeColor) {
+      var color = parseColor(data.strokeColor, data.strokeOpacity);
+      polyline.push('color:' + color);
+    }
+
+    if (data.fillColor) {
+      var fillcolor = parseColor(data.fillColor, data.fillOpacity);
+      polyline.push('fillcolor:' + fillcolor);
+    }
+
+    var path = data.path;
+    if (path.join) {
+      for (var j=0, pos; pos=path[j]; j++) {
+        polyline.push(pos.join(','));
+      }
+    }
+    else {
+      polyline.push('enc:' + path);
+    }
+
+    polyline = polyline.join('|');
+    parameters.push('path=' + encodeURI(polyline));
+  }
+
+  /** Retina support **/
+  var dpi = window.devicePixelRatio || 1;
+  parameters.push('scale=' + dpi);
+
+  parameters = parameters.join('&');
+  return static_root + parameters;
+};
+
+GMaps.prototype.addMapType = function(mapTypeId, options) {
+  if (options.hasOwnProperty("getTileUrl") && typeof(options["getTileUrl"]) == "function") {
+    options.tileSize = options.tileSize || new google.maps.Size(256, 256);
+
+    var mapType = new google.maps.ImageMapType(options);
+
+    this.map.mapTypes.set(mapTypeId, mapType);
+  }
+  else {
+    throw "'getTileUrl' function required.";
+  }
+};
+
+GMaps.prototype.addOverlayMapType = function(options) {
+  if (options.hasOwnProperty("getTile") && typeof(options["getTile"]) == "function") {
+    var overlayMapTypeIndex = options.index;
+
+    delete options.index;
+
+    this.map.overlayMapTypes.insertAt(overlayMapTypeIndex, options);
+  }
+  else {
+    throw "'getTile' function required.";
+  }
+};
+
+GMaps.prototype.removeOverlayMapType = function(overlayMapTypeIndex) {
+  this.map.overlayMapTypes.removeAt(overlayMapTypeIndex);
+};
+
+GMaps.prototype.addStyle = function(options) {
+  var styledMapType = new google.maps.StyledMapType(options.styles, { name: options.styledMapName });
+
+  this.map.mapTypes.set(options.mapTypeId, styledMapType);
+};
+
+GMaps.prototype.setStyle = function(mapTypeId) {
+  this.map.setMapTypeId(mapTypeId);
+};
+
+GMaps.prototype.createPanorama = function(streetview_options) {
+  if (!streetview_options.hasOwnProperty('lat') || !streetview_options.hasOwnProperty('lng')) {
+    streetview_options.lat = this.getCenter().lat();
+    streetview_options.lng = this.getCenter().lng();
+  }
+
+  this.panorama = GMaps.createPanorama(streetview_options);
+
+  this.map.setStreetView(this.panorama);
+
+  return this.panorama;
+};
+
+GMaps.createPanorama = function(options) {
+  var el = getElementById(options.el, options.context);
+
+  options.position = new google.maps.LatLng(options.lat, options.lng);
+
+  delete options.el;
+  delete options.context;
+  delete options.lat;
+  delete options.lng;
+
+  var streetview_events = ['closeclick', 'links_changed', 'pano_changed', 'position_changed', 'pov_changed', 'resize', 'visible_changed'],
+      streetview_options = extend_object({visible : true}, options);
+
+  for (var i = 0; i < streetview_events.length; i++) {
+    delete streetview_options[streetview_events[i]];
+  }
+
+  var panorama = new google.maps.StreetViewPanorama(el, streetview_options);
+
+  for (var i = 0; i < streetview_events.length; i++) {
+    (function(object, name) {
+      if (options[name]) {
+        google.maps.event.addListener(object, name, function(){
+          options[name].apply(this);
+        });
+      }
+    })(panorama, streetview_events[i]);
+  }
+
+  return panorama;
+};
+
+GMaps.prototype.on = function(event_name, handler) {
+  return GMaps.on(event_name, this, handler);
+};
+
+GMaps.prototype.off = function(event_name) {
+  GMaps.off(event_name, this);
+};
+
+GMaps.prototype.once = function(event_name, handler) {
+  return GMaps.once(event_name, this, handler);
+};
+
+GMaps.custom_events = ['marker_added', 'marker_removed', 'polyline_added', 'polyline_removed', 'polygon_added', 'polygon_removed', 'geolocated', 'geolocation_failed'];
+
+GMaps.on = function(event_name, object, handler) {
+  if (GMaps.custom_events.indexOf(event_name) == -1) {
+    if(object instanceof GMaps) object = object.map; 
+    return google.maps.event.addListener(object, event_name, handler);
+  }
+  else {
+    var registered_event = {
+      handler : handler,
+      eventName : event_name
+    };
+
+    object.registered_events[event_name] = object.registered_events[event_name] || [];
+    object.registered_events[event_name].push(registered_event);
+
+    return registered_event;
+  }
+};
+
+GMaps.off = function(event_name, object) {
+  if (GMaps.custom_events.indexOf(event_name) == -1) {
+    if(object instanceof GMaps) object = object.map; 
+    google.maps.event.clearListeners(object, event_name);
+  }
+  else {
+    object.registered_events[event_name] = [];
+  }
+};
+
+GMaps.once = function(event_name, object, handler) {
+  if (GMaps.custom_events.indexOf(event_name) == -1) {
+    if(object instanceof GMaps) object = object.map;
+    return google.maps.event.addListenerOnce(object, event_name, handler);
+  }
+};
+
+GMaps.fire = function(event_name, object, scope) {
+  if (GMaps.custom_events.indexOf(event_name) == -1) {
+    google.maps.event.trigger(object, event_name, Array.prototype.slice.apply(arguments).slice(2));
+  }
+  else {
+    if(event_name in scope.registered_events) {
+      var firing_events = scope.registered_events[event_name];
+
+      for(var i = 0; i < firing_events.length; i++) {
+        (function(handler, scope, object) {
+          handler.apply(scope, [object]);
+        })(firing_events[i]['handler'], scope, object);
+      }
+    }
+  }
+};
+
+GMaps.geolocate = function(options) {
+  var complete_callback = options.always || options.complete;
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      options.success(position);
+
+      if (complete_callback) {
+        complete_callback();
+      }
+    }, function(error) {
+      options.error(error);
+
+      if (complete_callback) {
+        complete_callback();
+      }
+    }, options.options);
+  }
+  else {
+    options.not_supported();
+
+    if (complete_callback) {
+      complete_callback();
+    }
+  }
+};
+
+GMaps.geocode = function(options) {
+  this.geocoder = new google.maps.Geocoder();
+  var callback = options.callback;
+  if (options.hasOwnProperty('lat') && options.hasOwnProperty('lng')) {
+    options.latLng = new google.maps.LatLng(options.lat, options.lng);
+  }
+
+  delete options.lat;
+  delete options.lng;
+  delete options.callback;
+  
+  this.geocoder.geocode(options, function(results, status) {
+    callback(results, status);
+  });
+};
+
+if (typeof window.google === 'object' && window.google.maps) {
+  //==========================
+  // Polygon containsLatLng
+  // https://github.com/tparkin/Google-Maps-Point-in-Polygon
+  // Poygon getBounds extension - google-maps-extensions
+  // http://code.google.com/p/google-maps-extensions/source/browse/google.maps.Polygon.getBounds.js
+  if (!google.maps.Polygon.prototype.getBounds) {
+    google.maps.Polygon.prototype.getBounds = function(latLng) {
+      var bounds = new google.maps.LatLngBounds();
+      var paths = this.getPaths();
+      var path;
+
+      for (var p = 0; p < paths.getLength(); p++) {
+        path = paths.getAt(p);
+        for (var i = 0; i < path.getLength(); i++) {
+          bounds.extend(path.getAt(i));
+        }
+      }
+
+      return bounds;
+    };
+  }
+
+  if (!google.maps.Polygon.prototype.containsLatLng) {
+    // Polygon containsLatLng - method to determine if a latLng is within a polygon
+    google.maps.Polygon.prototype.containsLatLng = function(latLng) {
+      // Exclude points outside of bounds as there is no way they are in the poly
+      var bounds = this.getBounds();
+
+      if (bounds !== null && !bounds.contains(latLng)) {
+        return false;
+      }
+
+      // Raycast point in polygon method
+      var inPoly = false;
+
+      var numPaths = this.getPaths().getLength();
+      for (var p = 0; p < numPaths; p++) {
+        var path = this.getPaths().getAt(p);
+        var numPoints = path.getLength();
+        var j = numPoints - 1;
+
+        for (var i = 0; i < numPoints; i++) {
+          var vertex1 = path.getAt(i);
+          var vertex2 = path.getAt(j);
+
+          if (vertex1.lng() < latLng.lng() && vertex2.lng() >= latLng.lng() || vertex2.lng() < latLng.lng() && vertex1.lng() >= latLng.lng()) {
+            if (vertex1.lat() + (latLng.lng() - vertex1.lng()) / (vertex2.lng() - vertex1.lng()) * (vertex2.lat() - vertex1.lat()) < latLng.lat()) {
+              inPoly = !inPoly;
+            }
+          }
+
+          j = i;
+        }
+      }
+
+      return inPoly;
+    };
+  }
+
+  if (!google.maps.Circle.prototype.containsLatLng) {
+    google.maps.Circle.prototype.containsLatLng = function(latLng) {
+      if (google.maps.geometry) {
+        return google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius();
+      }
+      else {
+        return true;
+      }
+    };
+  }
+
+  google.maps.Rectangle.prototype.containsLatLng = function(latLng) {
+    return this.getBounds().contains(latLng);
+  };
+
+  google.maps.LatLngBounds.prototype.containsLatLng = function(latLng) {
+    return this.contains(latLng);
+  };
+
+  google.maps.Marker.prototype.setFences = function(fences) {
+    this.fences = fences;
+  };
+
+  google.maps.Marker.prototype.addFence = function(fence) {
+    this.fences.push(fence);
+  };
+
+  google.maps.Marker.prototype.getId = function() {
+    return this['__gm_id'];
+  };
+}
+
+//==========================
+// Array indexOf
+// https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/indexOf
+if (!Array.prototype.indexOf) {
+  Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
+      "use strict";
+      if (this == null) {
+          throw new TypeError();
+      }
+      var t = Object(this);
+      var len = t.length >>> 0;
+      if (len === 0) {
+          return -1;
+      }
+      var n = 0;
+      if (arguments.length > 1) {
+          n = Number(arguments[1]);
+          if (n != n) { // shortcut for verifying if it's NaN
+              n = 0;
+          } else if (n != 0 && n != Infinity && n != -Infinity) {
+              n = (n > 0 || -1) * Math.floor(Math.abs(n));
+          }
+      }
+      if (n >= len) {
+          return -1;
+      }
+      var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+      for (; k < len; k++) {
+          if (k in t && t[k] === searchElement) {
+              return k;
+          }
+      }
+      return -1;
+  }
+}
+
+return GMaps;
+}));

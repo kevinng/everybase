@@ -1,101 +1,232 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "../src/assets/js/pages/custom/todo/todo.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "../src/assets/js/pages/custom/todo/todo.js":
-/*!**************************************************!*\
-  !*** ../src/assets/js/pages/custom/todo/todo.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
-eval("\r\n\r\n// Class definition\r\nvar KTAppTodo = function() {\r\n    var asideEl;\r\n    var listEl;\r\n    var viewEl;\r\n\r\n    var asideOffcanvas;\r\n\r\n    var initEditor = function(editor) {\r\n        // init editor\r\n        var options = {\r\n            modules: {\r\n                toolbar: {}\r\n            },\r\n            placeholder: 'Type message...',\r\n            theme: 'snow'\r\n        };\r\n\r\n        var editor = new Quill('#' + editor, options);\r\n    }\r\n\r\n    var initAttachments = function(elemId) {\r\n        var id = \"#\" + elemId;\r\n        var previewNode = $(id + \" .dropzone-item\");\r\n        previewNode.id = \"\";\r\n        var previewTemplate = previewNode.parent('.dropzone-items').html();\r\n        previewNode.remove();\r\n\r\n        var myDropzone = new Dropzone(id, { // Make the whole body a dropzone\r\n            url: \"https://keenthemes.com/scripts/void.php\", // Set the url for your upload script location\r\n            parallelUploads: 20,\r\n            maxFilesize: 1, // Max filesize in MB\r\n            previewTemplate: previewTemplate,\r\n            previewsContainer: id + \" .dropzone-items\", // Define the container to display the previews\r\n            clickable: id + \"_select\" // Define the element that should be used as click trigger to select files.\r\n        });\r\n\r\n        myDropzone.on(\"addedfile\", function(file) {\r\n            // Hookup the start button\r\n            $(document).find(id + ' .dropzone-item').css('display', '');\r\n        });\r\n\r\n        // Update the total progress bar\r\n        myDropzone.on(\"totaluploadprogress\", function(progress) {\r\n            document.querySelector(id + \" .progress-bar\").style.width = progress + \"%\";\r\n        });\r\n\r\n        myDropzone.on(\"sending\", function(file) {\r\n            // Show the total progress bar when upload starts\r\n            document.querySelector(id + \" .progress-bar\").style.opacity = \"1\";\r\n        });\r\n\r\n        // Hide the total progress bar when nothing's uploading anymore\r\n        myDropzone.on(\"complete\", function(progress) {\r\n            var thisProgressBar = id + \" .dz-complete\";\r\n            setTimeout(function() {\r\n                $(thisProgressBar + \" .progress-bar, \" + thisProgressBar + \" .progress\").css('opacity', '0');\r\n            }, 300)\r\n        });\r\n    }\r\n\r\n    return {\r\n        // public functions\r\n        init: function() {\r\n            asideEl = KTUtil.getByID('kt_todo_aside');\r\n            listEl = KTUtil.getByID('kt_todo_list');\r\n            viewEl = KTUtil.getByID('kt_todo_view');\r\n\r\n            // init\r\n            KTAppTodo.initAside();\r\n            KTAppTodo.initList();\r\n            KTAppTodo.initCommentForm();\r\n            KTAppTodo.initView();\r\n        },\r\n\r\n        initAside: function() {\r\n            // Mobile offcanvas for mobile mode\r\n            asideOffcanvas = new KTOffcanvas(asideEl, {\r\n                overlay: true,\r\n                baseClass: 'kt-todo__aside',\r\n                closeBy: 'kt_todo_aside_close',\r\n                toggleBy: 'kt_subheader_mobile_toggle'\r\n            });\r\n        },\r\n\r\n        initList: function() {\r\n            // View message\r\n            KTUtil.on(listEl, '.kt-todo__item', 'click', function(e) {\r\n                var actionsEl = KTUtil.find(this, '.kt-todo__actions');\r\n\r\n                // skip actions click\r\n                if (e.target === actionsEl || (actionsEl && actionsEl.contains(e.target) === true)) {\r\n                    return false;\r\n                }\r\n\r\n                if (KTUtil.isInResponsiveRange('tablet-and-mobile') === false) {\r\n                    return; // mobile mode\r\n                }\r\n\r\n                // demo loading\r\n                var loading = new KTDialog({\r\n                    'type': 'loader',\r\n                    'placement': 'top center',\r\n                    'message': 'Loading ...'\r\n                });\r\n                loading.show();\r\n\r\n                setTimeout(function() {\r\n                    loading.hide();\r\n\r\n                    KTUtil.css(listEl, 'display', 'none');\r\n                    KTUtil.css(viewEl, 'display', 'flex');\r\n                }, 700);\r\n            });\r\n\r\n            // Group selection\r\n            KTUtil.on(listEl, '.kt-todo__toolbar .kt-todo__check .kt-checkbox input', 'click', function() {\r\n                var items = KTUtil.findAll(listEl, '.kt-todo__items .kt-todo__item');\r\n\r\n                for (var i = 0, j = items.length; i < j; i++) {\r\n                    var item = items[i];\r\n                    var checkbox = KTUtil.find(item, '.kt-todo__actions .kt-checkbox input');\r\n                    checkbox.checked = this.checked;\r\n\r\n                    if (this.checked) {\r\n                        KTUtil.addClass(item, 'kt-todo__item--selected');\r\n                    } else {\r\n                        KTUtil.removeClass(item, 'kt-todo__item--selected');\r\n                    }\r\n                }\r\n            });\r\n\r\n            // Individual selection\r\n            KTUtil.on(listEl, '.kt-todo__item .kt-checkbox input', 'click', function() {\r\n                var item = this.closest('.kt-todo__item');\r\n\r\n                if (item && this.checked) {\r\n                    KTUtil.addClass(item, 'kt-todo__item--selected');\r\n                } else {\r\n                    KTUtil.removeClass(item, 'kt-todo__item--selected');\r\n                }\r\n            });\r\n        },\r\n\r\n        initView: function() {\r\n            // Back to listing\r\n            KTUtil.on(viewEl, '.kt-todo__toolbar .kt-todo__icon.kt-todo__icon--back', 'click', function() {\r\n                // demo loading\r\n                var loading = new KTDialog({\r\n                    'type': 'loader',\r\n                    'placement': 'top center',\r\n                    'message': 'Loading ...'\r\n                });\r\n                loading.show();\r\n\r\n                setTimeout(function() {\r\n                    loading.hide();\r\n\r\n                    KTUtil.css(listEl, 'display', 'flex');\r\n                    KTUtil.css(viewEl, 'display', 'none');\r\n                }, 700);\r\n            });\r\n        },\r\n\r\n        initCommentForm: function() {\r\n            initEditor('kt_todo_post_editor');\r\n            initAttachments('kt_todo_post_attachments');\r\n        }\r\n    };\r\n}();\r\n\r\nKTUtil.ready(function() {\r\n    KTAppTodo.init();\r\n});\r\n\n\n//# sourceURL=webpack:///../src/assets/js/pages/custom/todo/todo.js?");
 
-/***/ })
+// Class definition
+var KTAppTodo = function() {
+    // Private properties
+    var _asideEl;
+    var _listEl;
+    var _viewEl;
+    var _replyEl;
+    var _asideOffcanvas;
 
-/******/ });
+    // Private methods
+    var _initEditor = function(form, editor) {
+        // init editor
+        var options = {
+            modules: {
+                toolbar: {}
+            },
+            placeholder: 'Type message...',
+            theme: 'snow'
+        };
+
+        if (!KTUtil.getById(editor)) {
+            return;
+        }
+
+        // Init editor
+        var editor = new Quill('#' + editor, options);
+
+        // Customize editor
+        var toolbar = KTUtil.find(form, '.ql-toolbar');
+        var editor = KTUtil.find(form, '.ql-editor');
+
+        if (toolbar) {
+            KTUtil.addClass(toolbar, 'px-5 border-top-0 border-left-0 border-right-0');
+        }
+
+        if (editor) {
+            KTUtil.addClass(editor, 'px-8');
+        }
+    }
+
+    var _initAttachments = function(elemId) {
+        if (!KTUtil.getById(elemId)) {
+            return;
+        }
+
+        var id = "#" + elemId;
+        var previewNode = $(id + " .dropzone-item");
+        previewNode.id = "";
+        var previewTemplate = previewNode.parent('.dropzone-items').html();
+        previewNode.remove();
+
+        var myDropzone = new Dropzone(id, { // Make the whole body a dropzone
+            url: "https://keenthemes.com/scripts/void.php", // Set the url for your upload script location
+            parallelUploads: 20,
+            maxFilesize: 1, // Max filesize in MB
+            previewTemplate: previewTemplate,
+            previewsContainer: id + " .dropzone-items", // Define the container to display the previews
+            clickable: id + "_select" // Define the element that should be used as click trigger to select files.
+        });
+
+        myDropzone.on("addedfile", function(file) {
+            // Hookup the start button
+            $(document).find(id + ' .dropzone-item').css('display', '');
+        });
+
+        // Update the total progress bar
+        myDropzone.on("totaluploadprogress", function(progress) {
+            document.querySelector(id + " .progress-bar").style.width = progress + "%";
+        });
+
+        myDropzone.on("sending", function(file) {
+            // Show the total progress bar when upload starts
+            document.querySelector(id + " .progress-bar").style.opacity = "1";
+        });
+
+        // Hide the total progress bar when nothing's uploading anymore
+        myDropzone.on("complete", function(progress) {
+            var thisProgressBar = id + " .dz-complete";
+            setTimeout(function() {
+                $(thisProgressBar + " .progress-bar, " + thisProgressBar + " .progress").css('opacity', '0');
+            }, 300)
+        });
+    }
+
+    // Public methods
+    return {
+        // Public functions
+        init: function() {
+            // Init variables
+            _asideEl = KTUtil.getById('kt_todo_aside');
+            _listEl = KTUtil.getById('kt_todo_list');
+            _viewEl = KTUtil.getById('kt_todo_view');
+            _replyEl = KTUtil.getById('kt_todo_reply');
+
+            // Init handlers
+            KTAppTodo.initAside();
+            KTAppTodo.initList();
+            KTAppTodo.initView();
+            KTAppTodo.initReply();
+        },
+
+        initAside: function() {
+            // Mobile offcanvas for mobile mode
+            _asideOffcanvas = new KTOffcanvas(_asideEl, {
+                overlay: true,
+                baseClass: 'offcanvas-mobile',
+                //closeBy: 'kt_todo_aside_close',
+                toggleBy: 'kt_subheader_mobile_toggle'
+            });
+
+            // View list
+            KTUtil.on(_asideEl, '.list-item[data-action="list"]', 'click', function(e) {
+                var type = KTUtil.attr(this, 'data-type');
+                var listItemsEl = KTUtil.find(_listEl, '.kt-inbox__items');
+                var navItemEl = this.closest('.kt-nav__item');
+                var navItemActiveEl = KTUtil.find(_asideEl, '.kt-nav__item.kt-nav__item--active');
+
+                // demo loading
+                var loading = new KTDialog({
+                    'type': 'loader',
+                    'placement': 'top center',
+                    'message': 'Loading ...'
+                });
+                loading.show();
+
+                setTimeout(function() {
+                    loading.hide();
+
+                    KTUtil.css(_listEl, 'display', 'flex'); // show list
+                    KTUtil.css(_viewEl, 'display', 'none'); // hide view
+
+                    KTUtil.addClass(navItemEl, 'kt-nav__item--active');
+                    KTUtil.removeClass(navItemActiveEl, 'kt-nav__item--active');
+
+                    KTUtil.attr(listItemsEl, 'data-type', type);
+                }, 600);
+            });
+        },
+
+        initList: function() {
+            // Group selection
+            KTUtil.on(_listEl, '[data-inbox="group-select"] input', 'click', function() {
+                var messages = KTUtil.findAll(_listEl, '[data-inbox="message"]');
+
+                for (var i = 0, j = messages.length; i < j; i++) {
+                    var message = messages[i];
+                    var checkbox = KTUtil.find(message, '.checkbox input');
+                    checkbox.checked = this.checked;
+
+                    if (this.checked) {
+                        KTUtil.addClass(message, 'active');
+                    } else {
+                        KTUtil.removeClass(message, 'active');
+                    }
+                }
+            });
+
+            // Individual selection
+            KTUtil.on(_listEl, '[data-inbox="message"] [data-inbox="actions"] .checkbox input', 'click', function() {
+                var item = this.closest('[data-inbox="message"]');
+
+                if (item && this.checked) {
+                    KTUtil.addClass(item, 'active');
+                } else {
+                    KTUtil.removeClass(item, 'active');
+                }
+            });
+        },
+
+        initView: function() {
+            // Back to listing
+            KTUtil.on(_viewEl, '[data-inbox="back"]', 'click', function() {
+                // demo loading
+                var loading = new KTDialog({
+                    'type': 'loader',
+                    'placement': 'top center',
+                    'message': 'Loading ...'
+                });
+
+                loading.show();
+
+                setTimeout(function() {
+                    loading.hide();
+
+                    KTUtil.addClass(_listEl, 'd-block');
+                    KTUtil.removeClass(_listEl, 'd-none');
+
+                    KTUtil.addClass(_viewEl, 'd-none');
+                    KTUtil.removeClass(_viewEl, 'd-block');
+                }, 700);
+            });
+
+            // Expand/Collapse reply
+            KTUtil.on(_viewEl, '[data-inbox="message"]', 'click', function(e) {
+                var message = this.closest('[data-inbox="message"]');
+
+                var dropdownToggleEl = KTUtil.find(this, '[data-toggle="dropdown"]');
+                var toolbarEl = KTUtil.find(this, '[data-inbox="toolbar"]');
+
+                // skip dropdown toggle click
+                if (e.target === dropdownToggleEl || (dropdownToggleEl && dropdownToggleEl.contains(e.target) === true)) {
+                    return false;
+                }
+
+                // skip group actions click
+                if (e.target === toolbarEl || (toolbarEl && toolbarEl.contains(e.target) === true)) {
+                    return false;
+                }
+
+                if (KTUtil.hasClass(message, 'toggle-on')) {
+                    KTUtil.addClass(message, 'toggle-off');
+                    KTUtil.removeClass(message, 'toggle-on');
+                } else {
+                    KTUtil.removeClass(message, 'toggle-off');
+                    KTUtil.addClass(message, 'toggle-on');
+                }
+            });
+        },
+
+        initReply: function() {
+            _initEditor(_replyEl, 'kt_todo_reply_editor');
+            _initAttachments('kt_todo_reply_attachments');
+        }
+    };
+}();
+
+// Class Initialization
+jQuery(document).ready(function() {
+    KTAppTodo.init();
+});

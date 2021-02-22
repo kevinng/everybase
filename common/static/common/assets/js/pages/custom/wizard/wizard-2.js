@@ -1,101 +1,354 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "../src/assets/js/pages/custom/wizard/wizard-2.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "../src/assets/js/pages/custom/wizard/wizard-2.js":
-/*!********************************************************!*\
-  !*** ../src/assets/js/pages/custom/wizard/wizard-2.js ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
 "use strict";
-eval("\r\n\r\n// Class definition\r\nvar KTWizard2 = function () {\r\n    // Base elements\r\n    var wizardEl;\r\n    var formEl;\r\n    var validator;\r\n    var wizard;\r\n\r\n    // Private functions\r\n    var initWizard = function () {\r\n        // Initialize form wizard\r\n        wizard = new KTWizard('kt_wizard_v2', {\r\n            startStep: 1, // initial active step number\r\n\t\t\tclickableSteps: true  // allow step clicking\r\n        });\r\n\r\n        // Validation before going to next page\r\n        wizard.on('beforeNext', function(wizardObj) {\r\n            if (validator.form() !== true) {\r\n                wizardObj.stop();  // don't go to the next step\r\n            }\r\n        });\r\n\r\n        wizard.on('beforePrev', function(wizardObj) {\r\n\t\t\tif (validator.form() !== true) {\r\n\t\t\t\twizardObj.stop();  // don't go to the next step\r\n\t\t\t}\r\n\t\t});\r\n\r\n        // Change event\r\n        wizard.on('change', function(wizard) {\r\n            KTUtil.scrollTop();\r\n        });\r\n    }\r\n\r\n    var initValidation = function() {\r\n        validator = formEl.validate({\r\n            // Validate only visible fields\r\n            ignore: \":hidden\",\r\n\r\n            // Validation rules\r\n            rules: {\r\n               \t//= Step 1\r\n\t\t\t\tfname: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tlname: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tphone: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\temaul: {\r\n\t\t\t\t\trequired: true,\r\n\t\t\t\t\temail: true\r\n\t\t\t\t},\r\n\r\n\t\t\t\t//= Step 2\r\n\t\t\t\taddress1: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tpostcode: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tcity: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tstate: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tcountry: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\r\n\t\t\t\t//= Step 3\r\n\t\t\t\tdelivery: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tpackaging: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tpreferreddelivery: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\r\n\t\t\t\t//= Step 4\r\n\t\t\t\tlocaddress1: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tlocpostcode: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tloccity: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tlocstate: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tloccountry: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\r\n\t\t\t\t//= Step 5\r\n\t\t\t\tccname: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tccnumber: {\r\n\t\t\t\t\trequired: true,\r\n\t\t\t\t\tcreditcard: true\r\n\t\t\t\t},\r\n\t\t\t\tccmonth: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tccyear: {\r\n\t\t\t\t\trequired: true\r\n\t\t\t\t},\r\n\t\t\t\tcccvv: {\r\n\t\t\t\t\trequired: true,\r\n\t\t\t\t\tminlength: 2,\r\n\t\t\t\t\tmaxlength: 3\r\n\t\t\t\t},\r\n            },\r\n\r\n            // Display error\r\n            invalidHandler: function(event, validator) {\r\n                KTUtil.scrollTop();\r\n\r\n                swal.fire({\r\n                    \"title\": \"\",\r\n                    \"text\": \"There are some errors in your submission. Please correct them.\",\r\n                    \"type\": \"error\",\r\n                    \"confirmButtonClass\": \"btn btn-secondary\"\r\n                });\r\n            },\r\n\r\n            // Submit valid form\r\n            submitHandler: function (form) {\r\n\r\n            }\r\n        });\r\n    }\r\n\r\n    var initSubmit = function() {\r\n        var btn = formEl.find('[data-ktwizard-type=\"action-submit\"]');\r\n\r\n        btn.on('click', function(e) {\r\n            e.preventDefault();\r\n\r\n            if (validator.form()) {\r\n                // See: src\\js\\framework\\base\\app.js\r\n                KTApp.progress(btn);\r\n                //KTApp.block(formEl);\r\n\r\n                // See: http://malsup.com/jquery/form/#ajaxSubmit\r\n                formEl.ajaxSubmit({\r\n                    success: function() {\r\n                        KTApp.unprogress(btn);\r\n                        //KTApp.unblock(formEl);\r\n\r\n                        swal.fire({\r\n                            \"title\": \"\",\r\n                            \"text\": \"The application has been successfully submitted!\",\r\n                            \"type\": \"success\",\r\n                            \"confirmButtonClass\": \"btn btn-secondary\"\r\n                        });\r\n                    }\r\n                });\r\n            }\r\n        });\r\n    }\r\n\r\n    return {\r\n        // public functions\r\n        init: function() {\r\n            wizardEl = KTUtil.get('kt_wizard_v2');\r\n            formEl = $('#kt_form');\r\n\r\n            initWizard();\r\n            initValidation();\r\n            initSubmit();\r\n        }\r\n    };\r\n}();\r\n\r\njQuery(document).ready(function() {\r\n    KTWizard2.init();\r\n});\r\n\n\n//# sourceURL=webpack:///../src/assets/js/pages/custom/wizard/wizard-2.js?");
 
-/***/ })
+// Class definition
+var KTWizard2 = function () {
+	// Base elements
+	var _wizardEl;
+	var _formEl;
+	var _wizardObj;
+	var _validations = [];
 
-/******/ });
+	// Private functions
+	var _initWizard = function () {
+		// Initialize form wizard
+		_wizardObj = new KTWizard(_wizardEl, {
+			startStep: 1, // initial active step number
+			clickableSteps: false // to make steps clickable this set value true and add data-wizard-clickable="true" in HTML for class="wizard" element
+		});
+
+		// Validation before going to next page
+		_wizardObj.on('change', function (wizard) {
+			if (wizard.getStep() > wizard.getNewStep()) {
+				return; // Skip if stepped back
+			}
+
+			// Validate form before change wizard step
+			var validator = _validations[wizard.getStep() - 1]; // get validator for currnt step
+
+			if (validator) {
+				validator.validate().then(function (status) {
+					if (status == 'Valid') {
+						wizard.goTo(wizard.getNewStep());
+
+						KTUtil.scrollTop();
+					} else {
+						Swal.fire({
+							text: "Sorry, looks like there are some errors detected, please try again.",
+							icon: "error",
+							buttonsStyling: false,
+							confirmButtonText: "Ok, got it!",
+							customClass: {
+								confirmButton: "btn font-weight-bold btn-light"
+							}
+						}).then(function () {
+							KTUtil.scrollTop();
+						});
+					}
+				});
+			}
+
+			return false;  // Do not change wizard step, further action will be handled by he validator
+		});
+
+		// Change event
+		_wizardObj.on('changed', function (wizard) {
+			KTUtil.scrollTop();
+		});
+
+		// Submit event
+		_wizardObj.on('submit', function (wizard) {
+			Swal.fire({
+				text: "All is good! Please confirm the form submission.",
+				icon: "success",
+				showCancelButton: true,
+				buttonsStyling: false,
+				confirmButtonText: "Yes, submit!",
+				cancelButtonText: "No, cancel",
+				customClass: {
+					confirmButton: "btn font-weight-bold btn-primary",
+					cancelButton: "btn font-weight-bold btn-default"
+				}
+			}).then(function (result) {
+				if (result.value) {
+					_formEl.submit(); // Submit form
+				} else if (result.dismiss === 'cancel') {
+					Swal.fire({
+						text: "Your form has not been submitted!.",
+						icon: "error",
+						buttonsStyling: false,
+						confirmButtonText: "Ok, got it!",
+						customClass: {
+							confirmButton: "btn font-weight-bold btn-primary",
+						}
+					});
+				}
+			});
+		});
+	}
+
+	var _initValidation = function () {
+		// Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
+		// Step 1
+		_validations.push(FormValidation.formValidation(
+			_formEl,
+			{
+				fields: {
+					fname: {
+						validators: {
+							notEmpty: {
+								message: 'First name is required'
+							}
+						}
+					},
+					lname: {
+						validators: {
+							notEmpty: {
+								message: 'Last Name is required'
+							}
+						}
+					},
+					phone: {
+						validators: {
+							notEmpty: {
+								message: 'Phone is required'
+							}
+						}
+					},
+					email: {
+						validators: {
+							notEmpty: {
+								message: 'Email is required'
+							},
+							emailAddress: {
+								message: 'The value is not a valid email address'
+							}
+						}
+					}
+				},
+				plugins: {
+					trigger: new FormValidation.plugins.Trigger(),
+					// Bootstrap Framework Integration
+					bootstrap: new FormValidation.plugins.Bootstrap({
+						//eleInvalidClass: '',
+						eleValidClass: '',
+					})
+				}
+			}
+		));
+
+		// Step 2
+		_validations.push(FormValidation.formValidation(
+			_formEl,
+			{
+				fields: {
+					address1: {
+						validators: {
+							notEmpty: {
+								message: 'Address is required'
+							}
+						}
+					},
+					postcode: {
+						validators: {
+							notEmpty: {
+								message: 'Postcode is required'
+							}
+						}
+					},
+					city: {
+						validators: {
+							notEmpty: {
+								message: 'City is required'
+							}
+						}
+					},
+					state: {
+						validators: {
+							notEmpty: {
+								message: 'State is required'
+							}
+						}
+					},
+					country: {
+						validators: {
+							notEmpty: {
+								message: 'Country is required'
+							}
+						}
+					}
+				},
+				plugins: {
+					trigger: new FormValidation.plugins.Trigger(),
+					// Bootstrap Framework Integration
+					bootstrap: new FormValidation.plugins.Bootstrap({
+						//eleInvalidClass: '',
+						eleValidClass: '',
+					})
+				}
+			}
+		));
+
+		// Step 3
+		_validations.push(FormValidation.formValidation(
+			_formEl,
+			{
+				fields: {
+					delivery: {
+						validators: {
+							notEmpty: {
+								message: 'Delivery type is required'
+							}
+						}
+					},
+					packaging: {
+						validators: {
+							notEmpty: {
+								message: 'Packaging type is required'
+							}
+						}
+					},
+					preferreddelivery: {
+						validators: {
+							notEmpty: {
+								message: 'Preferred delivery window is required'
+							}
+						}
+					}
+				},
+				plugins: {
+					trigger: new FormValidation.plugins.Trigger(),
+					// Bootstrap Framework Integration
+					bootstrap: new FormValidation.plugins.Bootstrap({
+						//eleInvalidClass: '',
+						eleValidClass: '',
+					})
+				}
+			}
+		));
+
+		// Step 4
+		_validations.push(FormValidation.formValidation(
+			_formEl,
+			{
+				fields: {
+					locaddress1: {
+						validators: {
+							notEmpty: {
+								message: 'Address is required'
+							}
+						}
+					},
+					locpostcode: {
+						validators: {
+							notEmpty: {
+								message: 'Postcode is required'
+							}
+						}
+					},
+					loccity: {
+						validators: {
+							notEmpty: {
+								message: 'City is required'
+							}
+						}
+					},
+					locstate: {
+						validators: {
+							notEmpty: {
+								message: 'State is required'
+							}
+						}
+					},
+					loccountry: {
+						validators: {
+							notEmpty: {
+								message: 'Country is required'
+							}
+						}
+					}
+				},
+				plugins: {
+					trigger: new FormValidation.plugins.Trigger(),
+					// Bootstrap Framework Integration
+					bootstrap: new FormValidation.plugins.Bootstrap({
+						//eleInvalidClass: '',
+						eleValidClass: '',
+					})
+				}
+			}
+		));
+
+		// Step 5
+		_validations.push(FormValidation.formValidation(
+			_formEl,
+			{
+				fields: {
+					ccname: {
+						validators: {
+							notEmpty: {
+								message: 'Credit card name is required'
+							}
+						}
+					},
+					ccnumber: {
+						validators: {
+							notEmpty: {
+								message: 'Credit card number is required'
+							},
+							creditCard: {
+								message: 'The credit card number is not valid'
+							}
+						}
+					},
+					ccmonth: {
+						validators: {
+							notEmpty: {
+								message: 'Credit card month is required'
+							}
+						}
+					},
+					ccyear: {
+						validators: {
+							notEmpty: {
+								message: 'Credit card year is required'
+							}
+						}
+					},
+					cccvv: {
+						validators: {
+							notEmpty: {
+								message: 'Credit card CVV is required'
+							},
+							digits: {
+								message: 'The CVV value is not valid. Only numbers is allowed'
+							}
+						}
+					}
+				},
+				plugins: {
+					trigger: new FormValidation.plugins.Trigger(),
+					// Bootstrap Framework Integration
+					bootstrap: new FormValidation.plugins.Bootstrap({
+						//eleInvalidClass: '',
+						eleValidClass: '',
+					})
+				}
+			}
+		));
+	}
+
+	return {
+		// public functions
+		init: function () {
+			_wizardEl = KTUtil.getById('kt_wizard');
+			_formEl = KTUtil.getById('kt_form');
+
+			_initWizard();
+			_initValidation();
+		}
+	};
+}();
+
+jQuery(document).ready(function () {
+	KTWizard2.init();
+});
