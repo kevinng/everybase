@@ -68,5 +68,5 @@ def post_dump(request):
     return JsonResponse({}, status=200)
 
 def r(request, file_to_render):
-    template_name = 'common/%s' % file_to_render
+    template_name = 'examples/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
