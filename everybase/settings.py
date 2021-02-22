@@ -47,24 +47,10 @@ INSTALLED_APPS = [
     'leads.apps.LeadsConfig',
     'growth.apps.GrowthConfig',
     'lander.apps.LanderConfig',
-    'blog.apps.BlogConfig',
     'django_filters',
     'django_extensions',
     'widget_tweaks',
     'rest_framework',
-    'wagtail.contrib.forms',
-    'wagtail.contrib.redirects',
-    'wagtail.embeds',
-    'wagtail.sites',
-    'wagtail.users',
-    'wagtail.snippets',
-    'wagtail.documents',
-    'wagtail.images',
-    'wagtail.search',
-    'wagtail.admin',
-    'wagtail.core',
-    'modelcluster',
-    'taggit',
     'storages'
 ]
 
@@ -76,8 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'wagtail.contrib.redirects.middleware.RedirectMiddleware'
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'everybase.urls'
