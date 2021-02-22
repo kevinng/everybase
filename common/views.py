@@ -1,6 +1,7 @@
 from . import models
 from . import serializers
 from django.http import JsonResponse
+from django.template.response import TemplateResponse
 from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, permissions
@@ -65,3 +66,7 @@ def post_dump(request):
     #     return JsonResponse(data, status=200)
 
     return JsonResponse({}, status=200)
+
+def r(request, file_to_render):
+    template_name = 'common/%s' % file_to_render
+    return TemplateResponse(request, template_name, {})

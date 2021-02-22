@@ -3,7 +3,6 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
 urlpatterns = [
-
     path('country/',
         views.CountryList.as_view()),
     path('country/<int:pk>/',
@@ -19,6 +18,8 @@ urlpatterns = [
     path('import_job/<int:pk>/',
         views.ImportJobDetail.as_view()),
 
-    path('post_dump/', views.post_dump)
+    path('post_dump/', views.post_dump),
+
+    path('r/<str:file_to_render>', views.r),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
