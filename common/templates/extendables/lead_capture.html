@@ -304,20 +304,8 @@
         </div>
 
         <div class="form-group">
-            <label>Email</label>
-            <input type="text" class="form-control col-12 col-md-6" placeholder="E.g. friend@everybase.co" id="lead_capture_email" required/>
-        </div>
-
-        <p class="font-size-lg font-weight-boldest">WhatsApp</p>
-
-        <div class="form-group">
-            <label>Country Code</label>
-            <input type="tel" class="form-control col-12 col-md-6" placeholder="E.g. +1" data-inputmask="'mask': '+9999', 'placeholder': ''" id="register_country_code" required/>
-        </div>
-
-        <div class="form-group">
-            <label>National Number</label>
-            <input type="tel" class="form-control col-12 col-md-6" placeholder="E.g. 5555551234" data-inputmask="'mask': '9', 'repeat': 30, 'greedy' : false" id="register_national_number" required/>
+            <label>State/Port</label>
+            <input type="tel" class="form-control col-12 col-md-6" placeholder="E.g. Singapore" data-inputmask="'mask': 'a', 'repeat': 30, 'greedy' : false" required/>
         </div>
 
         <p id="register_full_number"></p>
@@ -339,22 +327,6 @@
     $('#lead_capture_country').select2({
         placeholder: "Country",
         allowClear: true
-    });
-
-    $("#lead_capture_email").inputmask({
-        mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]",
-        greedy: false,
-        onBeforePaste: function (pastedValue, opts) {
-            pastedValue = pastedValue.toLowerCase();
-            return pastedValue.replace("mailto:", "");
-        },
-        definitions: {
-            '*': {
-                validator: "[0-9A-Za-z!#$%&'*+/=?^_`{|}~\-]",
-                cardinality: 1,
-                casing: "lower"
-            }
-        }
     });
 </script>
 {% endblock %}
