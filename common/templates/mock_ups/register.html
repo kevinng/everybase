@@ -1,0 +1,86 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+<form class="form">
+    <div class="card-body">
+        <p class="font-size-lg font-weight-boldest">Register</p>
+
+        <div class="form-group">
+            <label>Given/first name</label>
+            <input type="text" class="form-control col-12 col-md-6" placeholder="Given/First name" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Family/last name</label>
+            <input type="text" class="form-control col-12 col-md-6" placeholder="Family/last name" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Company name</label>
+            <input type="text" class="form-control col-12 col-md-6" placeholder="Company name" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="text" class="form-control col-12 col-md-6" placeholder="Email" id="register_email" required/>
+        </div>
+
+        <p class="font-size-lg font-weight-boldest">WhatsApp</p>
+
+        <div class="form-group">
+            <label>Country Code</label>
+            <input type="tel" class="form-control col-12 col-md-6" placeholder="+1" data-inputmask="'mask': '+9999', 'placeholder': ''" id="register_country_code" required/>
+        </div>
+
+        <div class="form-group">
+            <label>National Number</label>
+            <input type="tel" class="form-control col-12 col-md-6" placeholder="5555551234" data-inputmask="'mask': '9', 'repeat': 30, 'greedy' : false" id="register_national_number" required/>
+        </div>
+
+        <p id="register_full_number"></p>
+    </div>
+
+    <div class="card-footer">
+        <a href="#" class="btn btn-secondary col-5 col-md-2 mr-2">Cancel</a>
+        <button type="submit" class="btn btn-primary col-5 col-md-2">Submit</button>
+    </div>
+</form>
+{% endblock %}
+
+
+{% block local_script %}
+<script>
+    $(document).ready(function(){
+        $(":input").inputmask();
+    });
+
+    $("#register_email").inputmask({
+        mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]",
+        greedy: false,
+        onBeforePaste: function (pastedValue, opts) {
+        pastedValue = pastedValue.toLowerCase();
+            return pastedValue.replace("mailto:", "");
+        },
+        definitions: {
+        '*': {
+                validator: "[0-9A-Za-z!#$%&'*+/=?^_`{|}~\-]",
+                cardinality: 1,
+                casing: "lower"
+            }
+        }
+    });
+
+    update_full_number = function() {
+        $("#register_full_number").text($("#register_country_code").val() + " "
+            + $("#register_national_number").val()) 
+    }
+
+    $("#register_country_code").keypress(function() {
+        update_full_number();
+    });
+
+    $("#register_national_number").keypress(function() {
+        update_full_number();
+    });
+</script>
+{% endblock %}
