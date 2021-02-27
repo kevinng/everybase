@@ -1,0 +1,32 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+<form class="form">
+    <div class="card-body">
+        <p class="font-size-lg font-weight-boldest">Contact wants to buy</p>
+
+        <div class="form-group">
+            <textarea class="form-control col-12 col-md-6" rows="5" readonly></textarea>
+        </div>
+
+        <p class="font-size-lg font-weight-boldest">Destination</p>
+
+        <div class="form-group">
+            <label>Country</label>
+            <input type="text" class="form-control col-12 col-md-6" readonly/>
+        </div>
+
+        <div class="form-group">
+            <label>State/Port</label>
+            <input type="text" class="form-control col-12 col-md-6" readonly/>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <p class="font-size-lg font-weight-boldest">Interested?</p>
+
+        <a href="#" class="btn btn-danger col-5 col-md-2 mr-2">No</a>
+        <button type="submit" class="btn btn-success col-5 col-md-2">Yes</button>
+    </div>
+</form>
+{% endblock %}
