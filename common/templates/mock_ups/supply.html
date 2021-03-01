@@ -1,0 +1,112 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+    <div class="card-body">
+
+        <div class="alert alert-custom alert-success fade show mb-5" role="alert">
+            <div class="alert-text">
+                Thanks for the purchase.<br>
+                You have <span class="font-weight-boldest">475</span> credits left.<br>
+                <a href="#buyer_contact" class="alert-link"><u>Find buyer contact below</u></a>.
+            </div>
+            <div class="alert-close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                </button>
+            </div>
+        </div>
+        
+        <p class="font-size-lg font-weight-boldest">Buyer wants</p>
+
+        <div class="form-group">
+            <textarea class="form-control col-12 col-md-6" rows="12" id="kt_clipboard_2" readonly>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu efficitur nunc. Duis pulvinar tincidunt faucibus. Curabitur faucibus ligula in eros convallis, at tristique neque dapibus. Duis non quam pretium, varius nunc sed, gravida nunc. Ut nec erat ullamcorper nunc consequat luctus. In convallis dolor a ex commodo luctus. Sed metus ligula, convallis ut sem at, dictum gravida metus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;</textarea>
+        </div>
+
+        <a href="#" class="btn btn-secondary mb-10" data-clipboard="true" data-clipboard-target="#kt_clipboard_2"><i class="la la-clipboard"></i> Copy</a>
+
+        <p class="font-size-lg font-weight-boldest">Destination</p>
+
+        <div class="form-group">
+            <label>Country</label>
+            <p class="form-control-plaintext text-dark-50 font-size-lg">United States of America (USA)</p>
+        </div>
+
+        <div class="form-group">
+            <label>State/Port</label>
+            <p class="form-control-plaintext text-dark-50 font-size-lg">New York</p>
+        </div>
+
+        <a id="buyer_contact"></a>
+        <p class="font-size-lg font-weight-boldest">Contact</p>
+
+        <div class="form-group">
+            <label>Name</label>
+            <div class="input-group">
+                <input type="text" class="form-control col-12 col-md-6" id="clipboard_1" value="John Jamuji" readonly />
+                <div class="input-group-append">
+                    <a href="#" class="btn btn-secondary" data-clipboard="true" data-clipboard-target="#clipboard_1"><i class="la la-copy"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Phone</label>
+            <div class="input-group">
+                <input type="text" class="form-control col-12 col-md-6" id="clipboard_1" value="+0 1234567890" readonly />
+                <div class="input-group-append">
+                    <a href="#" class="btn btn-secondary" data-clipboard="true" data-clipboard-target="#clipboard_1"><i class="la la-copy"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <div class="input-group">
+                <input type="text" class="form-control col-12 col-md-6" id="clipboard_1" value="friend@everybase.co" readonly />
+                <div class="input-group-append">
+                    <a href="#" class="btn btn-secondary" data-clipboard="true" data-clipboard-target="#clipboard_1"><i class="la la-copy"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Country</label>
+            <p class="form-control-plaintext text-dark-50 font-size-lg">United States of America (USA)</p>
+        </div>
+
+        <div class="form-group">
+            <a href="#" class="btn btn-light-dark">Email</a>
+            <a href="#" class="btn btn-primary ml-2">WhatsApp</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block local_script %}
+<script>
+"use strict";
+// Class definition
+
+var Clipboard = function () {
+    // Private functions
+    var clipboards = function () {
+        // basic example
+        new ClipboardJS('[data-clipboard=true]').on('success', function(e) {
+            e.clearSelection();
+            alert('Copied!');
+        });
+    }
+
+    return {
+        // public functions
+        init: function() {
+            clipboards();
+        }
+    };
+}();
+
+jQuery(document).ready(function() {
+    Clipboard.init();
+});
+</script>
+{% endblock %}
+
