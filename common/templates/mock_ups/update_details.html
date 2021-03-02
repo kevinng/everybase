@@ -1,0 +1,60 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+<form class="form">
+    <div class="card-body">
+        <div class="alert alert-custom alert-outline-primary fade show mb-5" role="alert">
+            <div class="alert-text">For <span class="font-weight-bold">Kevin</span> (+65 96***75) <u>only</u>.<br />Do <u>not</u> forward this link.</div>
+            <div class="alert-close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Given/first name</label>
+            <input type="text" class="form-control col-12 col-md-6" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Family/last name</label>
+            <input type="text" class="form-control col-12 col-md-6" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="text" class="form-control col-12 col-md-6" id="register_email" required/>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary col-5 col-md-2">Update</button>
+    </div>
+</form>
+{% endblock %}
+
+
+{% block local_script %}
+<script>
+    $(document).ready(function(){
+        $(":input").inputmask();
+    });
+
+    $("#register_email").inputmask({
+        mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]",
+        greedy: false,
+        onBeforePaste: function (pastedValue, opts) {
+        pastedValue = pastedValue.toLowerCase();
+            return pastedValue.replace("mailto:", "");
+        },
+        definitions: {
+        '*': {
+                validator: "[0-9A-Za-z!#$%&'*+/=?^_`{|}~\-]",
+                cardinality: 1,
+                casing: "lower"
+            }
+        }
+    });
+</script>
+{% endblock %}
