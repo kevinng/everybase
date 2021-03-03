@@ -12,14 +12,12 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Buyer wants</label>
-            <p class="form-control-plaintext text-dark-50 font-size-lg">Lorem ipsum dolor sit amet, con...</p>
-        </div>
+        <p class="font-size-lg font-weight-boldest">Demand</p>
 
         <div class="form-group">
-            <label>Destination</label>
-            <p class="form-control-plaintext text-dark-50 font-size-lg">United States of America (USA)<br />New York</p>
+            <!-- Calculate the number of rows based on character count (40 characters per line) -->
+            <!-- this field combines all buy-side input fields to make it easy to copy -  product specifications, quantity and destination -->
+            <textarea class="form-control col-12 col-md-6" id="kt_clipboard_2" rows="8" readonly>Powder-free nitrile gloves&#10;FDA 510(K)&#10;400k boxes total&#10;20k boxes to start&#10;United States of America (USA)&#10;New York</textarea>
         </div>
 
         <div class="separator separator-dashed separator-border-1 separator-dark mb-10"></div>
@@ -30,16 +28,16 @@
         </div>
 
         <div class="form-group">
-            <label>Price</label>
+            <label>Referral Price</label>
             <p class="form-control-plaintext text-dark-50 font-size-lg">25 Credits</p>
         </div>
     </div>
 
     <div class="card-footer">
-        <p class="font-size-lg font-weight-boldest">Buy contact?</p>
+        <p class="font-size-lg font-weight-boldest">Purchase buyer's contact?</p>
 
         <a href="#" class="btn btn-secondary col-5 col-md-2 mr-2">Back</a>
-        <button type="submit" class="btn btn-primary col-5 col-md-2">Yes, Buy</button>
+        <button type="submit" class="btn btn-primary col-5 col-md-2">Yes, Purchase</button>
 
         <span class="form-text text-danger mt-4">You'll be directed to top-up credits.</span>
     </div>
