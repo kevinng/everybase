@@ -1,0 +1,79 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+<form class="form">
+    <div class="card-body">
+        <div class="alert alert-custom alert-outline-primary fade show mb-5" role="alert">
+            <div class="alert-text">For <span class="font-weight-bold">Kevin</span> (+65 96***75) <u>only</u>.<br>Do <u>not</u> forward this link.</div>
+            <div class="alert-close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                </button>
+            </div>
+        </div>
+
+        <p class="font-size-lg font-weight-boldest">Why not interested?</p>
+
+        <div class="form-group">
+            <label class="mb-6">Reason</label>
+            <div class="radio-list">
+                <label class="radio radio-lg">
+                    <input type="radio" name="radios3_1" required/>
+                    <span></span>
+                    Not enough details
+                </label>
+
+                <label class="radio radio-lg">
+                    <input type="radio" name="radios3_1"/>
+                    <span></span>
+                    Can't meet requirements
+                </label>
+
+                <label class="radio radio-lg">
+                    <input type="radio" name="radios3_1"/>
+                    <span></span>
+                    Looks like scam
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Why?</label>
+            <textarea class="form-control col-12 col-md-6" id="kt_autosize_1" rows="3"></textarea>
+        </div>
+
+    </div>
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary col-5 col-md-2">Submit</button>
+    </div>
+</form>
+{% endblock %}
+
+
+{% block local_script %}
+<script>
+// Class definition
+
+var KTAutosize = function () {
+ // Private functions
+ var demos = function () {
+  // basic demo
+  var demo1 = $('#kt_autosize_1');
+
+  autosize(demo1);
+ }
+
+ return {
+  // public functions
+  init: function() {
+   demos();
+  }
+ };
+}();
+
+jQuery(document).ready(function() {
+ KTAutosize.init();
+});
+</script>
+{% endblock %}
