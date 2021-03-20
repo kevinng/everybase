@@ -1,0 +1,89 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+<form class="form">
+    <div class="card-body">
+        <div class="alert alert-custom alert-outline-primary fade show mb-5" role="alert">
+            <div class="alert-text">For <span class="font-weight-bold">Kevin</span> (+65 96***75) <u>only</u>.<br>Do <u>not</u> forward this link.</div>
+            <div class="alert-close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                </button>
+            </div>
+        </div>
+
+        <p class="font-size-lg font-weight-boldest">Demand</p>
+
+        <div class="form-group">
+            <label>What I want to buy</label>
+            <textarea id="kt_autosize_1" class="form-control col-12 col-md-6" rows="7" placeholder="E.g.&#10;Powder-free nitrile gloves&#10;FDA 510(K)" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity &#38; delivery schedule</label>
+            <textarea id="kt_autosize_2" class="form-control col-12 col-md-6" rows="7" placeholder="E.g.&#10;200k boxes total&#10;20k boxes to start" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Target FOB Price</label>
+            <input type="text" class="form-control col-12 col-md-6" placeholder="E.g. USD 7 per box of 10 pieces" data-inputmask="'mask': 'a', 'repeat': 30, 'greedy' : false" required/>
+        </div>
+
+        <p class="font-size-lg font-weight-boldest">Destination</p>
+
+        <div class="form-group">
+            <label>Country</label><br />
+            <input type="text" class="form-control col-12 col-md-6" placeholder="E.g. Canada" data-inputmask="'mask': 'a', 'repeat': 30, 'greedy' : false" required/>
+        </div>
+
+        <div class="form-group">
+            <label>State/Port</label>
+            <input type="text" class="form-control col-12 col-md-6" placeholder="E.g. Vancouver" data-inputmask="'mask': 'a', 'repeat': 30, 'greedy' : false" required/>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <a href="#" class="btn btn-secondary col-5 col-md-2 mr-2">Cancel</a>
+        <button type="submit" class="btn btn-primary col-5 col-md-2">Submit</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block local_script %}
+<script>
+    $(document).ready(function(){
+        $(":input").inputmask();
+    });
+
+    $('#lead_capture_country').select2({
+        placeholder: "Country",
+        allowClear: true
+    });
+
+    // Class definition
+    var KTAutosize = function () {
+
+    // Private functions
+    var demos = function () {
+        // basic demo
+        var demo1 = $('#kt_autosize_1');
+        var demo2 = $('#kt_autosize_2');
+
+        autosize(demo1);
+        autosize(demo2);
+        autosize.update(demo2);
+    }
+
+    return {
+        // public functions
+        init: function() {
+                demos();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function() {
+        KTAutosize.init();
+    });
+</script>
+{% endblock %}
