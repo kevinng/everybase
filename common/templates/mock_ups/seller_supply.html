@@ -1,0 +1,59 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+<form class="form">
+    <div class="card-body">
+        <p class="font-size-lg font-weight-boldest">I am selling</p>
+
+        <div class="form-group">
+            <label>Goods details</label>
+            <textarea id="ta0" class="form-control col-12 col-md-6" rows="2" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity available &#38; delivery schedule</label>
+            <textarea id="ta1" class="form-control col-12 col-md-6" rows="2" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Origin country/state/port</label><br />
+            <input type="text" class="form-control col-12 col-md-6" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Comments and questions for buyer</label>
+            <textarea id="ta2" class="form-control col-12 col-md-6" rows="2" required></textarea>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Help me find BUYERS</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block local_script %}
+<script>
+    var Autosize = function () {
+        var autosize_all = function () {
+            var ta0 = $('#ta0');
+            var ta1 = $('#ta1');
+            var ta2 = $('#ta2');
+
+            autosize(ta0);
+            autosize(ta1);
+            autosize(ta2);
+        }
+
+        return {
+            init: function() {
+                autosize_all();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function() {
+        Autosize.init();
+    });
+</script>
+{% endblock %}

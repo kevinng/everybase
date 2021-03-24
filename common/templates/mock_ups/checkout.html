@@ -3,81 +3,51 @@
 {% block form %}
 <form class="form">
     <div class="card-body">
-        <div class="alert alert-custom alert-outline-primary fade show mb-5" role="alert">
-            <div class="alert-text">For <span class="font-weight-bold">Kevin</span> (+65 96***75) <u>only</u>.<br>Do <u>not</u> forward this link.</div>
-            <div class="alert-close">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true"><i class="ki ki-close"></i></span>
-                </button>
-            </div>
-        </div>
-
-        <p class="font-size-lg font-weight-boldest">Demand</p>
+        <p class="font-size-lg font-weight-boldest">Top-up wallet</p>
 
         <div class="form-group">
-            <!-- Calculate the number of rows based on character count (40 characters per line) -->
-            <!-- this field combines all buy-side input fields to make it easy to copy -  product specifications, quantity and destination -->
-            <textarea class="form-control col-12 col-md-6" id="kt_clipboard_2" rows="8" readonly>Powder-free nitrile gloves&#10;FDA 510(K)&#10;400k boxes total&#10;20k boxes to start&#10;United States of America (USA)&#10;New York</textarea>
-        </div>
-
-        <div class="separator separator-dashed separator-border-1 separator-dark mb-10"></div>
-
-        <div class="form-group">
-            <label>You Have</label>
-            <p class="form-control-plaintext text-dark-50 font-size-lg">500 Credits<span class="label label-light-danger label-inline font-weight-bolder ml-2">Insufficient</span></p>
+            <p class="form-control-plaintext font-size-lg">Referral cost is <span class="font-weight-boldest">US$ 1</span>.<br />You have <span class="font-weight-boldest">US$ 0</span> in your wallet.<br />Minimum top-up value is <span class="font-weight-boldest">US$ 5</span>.</p>
         </div>
 
         <div class="form-group">
-            <label>Referral Price</label>
-            <p class="form-control-plaintext text-dark-50 font-size-lg">25 Credits</p>
+            <label>Add value</label>
+            <input id="top_up_value" type="text" class="form-control" value="5" readonly/>
         </div>
     </div>
 
     <div class="card-footer">
-        <p class="font-size-lg font-weight-boldest">Purchase buyer's contact?</p>
-
-        <a href="#" class="btn btn-secondary col-5 col-md-2 mr-2">Back</a>
-        <button type="submit" class="btn btn-primary col-5 col-md-2">Yes, Purchase</button>
-
-        <span class="form-text text-danger mt-4">You'll be directed to top-up credits.</span>
+        <button type="submit" class="btn btn-primary">Checkout</button>
     </div>
 </form>
 {% endblock %}
 
-
 {% block local_script %}
 <script>
-    $(document).ready(function(){
-        $(":input").inputmask();
-    });
+    "use strict";
 
-    $("#register_email").inputmask({
-        mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]",
-        greedy: false,
-        onBeforePaste: function (pastedValue, opts) {
-        pastedValue = pastedValue.toLowerCase();
-            return pastedValue.replace("mailto:", "");
-        },
-        definitions: {
-        '*': {
-                validator: "[0-9A-Za-z!#$%&'*+/=?^_`{|}~\-]",
-                cardinality: 1,
-                casing: "lower"
-            }
+    var Touchspin = function() {
+        var touchspin = function() {
+            $('#top_up_value').TouchSpin({
+                buttondown_class: 'btn btn-secondary',
+                buttonup_class: 'btn btn-secondary',
+                min: 5,
+                max: 1000000000,
+                step: 5,
+                decimals: 2,
+                booster: false,
+                prefix: 'US$'
+            });
         }
-    });
 
-    update_full_number = function() {
-        $("#register_full_number").text($("#register_country_code").val() + " "
-            + $("#register_national_number").val()) 
-    }
+        return {
+            init: function() {
+                touchspin();
+            }
+        };
+    }();
 
-    $("#register_country_code").keypress(function() {
-        update_full_number();
-    });
-
-    $("#register_national_number").keypress(function() {
-        update_full_number();
+    jQuery(document).ready(function() {
+        Touchspin.init();
     });
 </script>
 {% endblock %}

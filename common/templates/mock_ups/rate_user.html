@@ -1,0 +1,52 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+<form class="form">
+    <div class="card-body">
+
+        <p class="font-size-lg font-weight-boldest">Will you work with this buyer?</p>
+        <!-- or seller -->
+
+        <div class="form-group">
+            <p class="font-size-lg">John Jamuji</a>
+            <!-- only show goods details -->
+            <textarea class="form-control form-control-solid col-12 col-md-6 mt-2" id="ta0" readonly>Powder-free nitrile gloves&#10;FDA 510(K)</textarea>
+        </p>
+
+        <div class="form-group">
+            <label>Reasons</label>
+            <textarea class="form-control col-12 col-md-6 mt-2" id="ta1" rows="2" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <a href="#" class="btn btn-success">Yes</a>
+            <a href="#" class="btn btn-outline-success ml-2">Maybe</a>
+            <a href="#" class="btn btn-danger ml-2">No</a>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+
+{% block local_script %}
+<script>
+    var Autosize = function () {
+        var autosizes = function () {
+            var ta0 = $('#ta0');
+            var ta1 = $('#ta1');
+            autosize(ta0);
+            autosize(ta1);
+        }
+
+        return {
+            init: function() {
+                autosizes();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function() {
+        Autosize.init();
+    });
+</script>
+{% endblock %}

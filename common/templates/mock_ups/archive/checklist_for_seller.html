@@ -1,0 +1,79 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+<form class="form">
+    <div class="card-body">
+        <div class="alert alert-custom alert-outline-primary fade show mb-5" role="alert">
+            <div class="alert-text">For <span class="font-weight-bold">Kevin</span> (+65 96***75) <u>only</u>.<br>Do <u>not</u> forward this link.</div>
+            <div class="alert-close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                </button>
+            </div>
+        </div>
+
+        <p class="font-size-lg font-weight-boldest">Nitrile Gloves</p>
+
+        <div class="form-group">
+            <label>Select requirements you can meet</label>
+            <div class="checkbox-list col-12 col-md-6">
+                <label class="checkbox checkbox-lg">
+                    <input type="checkbox" name="Checkboxes1"/>
+                    <span></span>
+                    FDA 501K
+                </label>
+                <label class="checkbox checkbox-lg">
+                    <input type="checkbox" name="Checkboxes1"/>
+                    <span></span>
+                    Medical Grade
+                </label>
+                <label class="checkbox checkbox-lg">
+                    <input type="checkbox" name="Checkboxes1"/>
+                    <span></span>
+                    FDA 501K
+                </label>
+                <label class="checkbox checkbox-lg">
+                    <input type="checkbox" name="Checkboxes1"/>
+                    <span></span>
+                    Medical Grade
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>FOB Price, USD</label>
+            <input type="text" class="form-control col-12 col-md-6" placeholder="E.g. USD 7 per box of 10 pieces" required/>
+        </div>
+
+        <div class="form-group">
+            <label>FOB Country</label><br />
+            <input type="text" class="form-control col-12 col-md-6" placeholder="E.g. Vietnam" required/>
+        </div>
+
+        <div class="form-group">
+            <label>FOB State/Port</label>
+            <input type="text" class="form-control col-12 col-md-6" placeholder="E.g. Hai Phong" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity &#38; delivery schedule</label>
+            <textarea id="kt_autosize_2" class="form-control col-12 col-md-6" rows="7" placeholder="E.g.&#10;200k boxes total&#10;20k boxes to start" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Other comments</label>
+            <textarea id="kt_autosize_2" class="form-control col-12 col-md-6" rows="7" placeholder="E.g.&#10;200k boxes total&#10;20k boxes to start" required></textarea>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <button type="submit" class="btn btn-success col-5 col-md-2">Submit</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block local_script %}
+<script>
+
+</script>
+{% endblock %}
