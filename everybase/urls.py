@@ -20,7 +20,6 @@ from django.conf.urls import include
 urlpatterns = [
     path('common/', include('common.urls')),
     path('files/', include('files.urls')),
-    path('communication/', include('communication.urls')),
     path('growth/', include('growth.urls')),
     path('leads/', include('leads.urls')),
     path('relationships/', include('relationships.urls')),
