@@ -867,7 +867,6 @@
   font-family: tinymce-mobile;
   font-style: normal;
   font-weight: 400;
-  src: url(fonts/tinymce-mobile.woff?8x92w3) format("woff");
 }
 @media (min-device-width: 700px) {
   .tinymce-mobile-outer-container, .tinymce-mobile-outer-container input {
