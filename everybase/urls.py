@@ -21,7 +21,6 @@ urlpatterns = [
     path('common/', include('common.urls')),
     path('files/', include('files.urls')),
     path('growth/', include('growth.urls')),
-    path('leads/', include('leads.urls')),
     path('relationships/', include('relationships.urls')),
 
     # Django admin, with obfuscated URL
