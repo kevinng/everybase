@@ -22,7 +22,6 @@ django-extensions = "*"
 django-filter = "*"
 jsonlines = "*"
 pytz = "*"
-wagtail = "*"
 django-storages = "*"
 
 [requires]
