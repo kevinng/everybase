@@ -1,0 +1,52 @@
+[
+{
+    "model": "communication.conversationvideostatus",
+    "pk": 1,
+    "fields": {
+        "name": "To Initiate If Required",
+        "details_md": "",
+        "programmatic_key": "to_initiate_if_required",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationvideostatus",
+    "pk": 2,
+    "fields": {
+        "name": "Awaiting Response",
+        "details_md": "",
+        "programmatic_key": "awaiting_response",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationvideostatus",
+    "pk": 3,
+    "fields": {
+        "name": "Unable to Connect - Fatal",
+        "details_md": "",
+        "programmatic_key": "unable_to_connect_fatal",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationvideostatus",
+    "pk": 4,
+    "fields": {
+        "name": "Unable to Connect - Non-Fatal",
+        "details_md": "",
+        "programmatic_key": "unable_to_connect_non_fatal",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationvideostatus",
+    "pk": 5,
+    "fields": {
+        "name": "Unintended Recipient",
+        "details_md": "",
+        "programmatic_key": "unintended_recipient",
+        "programmatic_details_md": ""
+    }
+}
+]

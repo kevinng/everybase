@@ -1,0 +1,52 @@
+[
+{
+    "model": "communication.conversationemailstatus",
+    "pk": 1,
+    "fields": {
+        "name": "To Initiate If Required",
+        "details_md": "",
+        "programmatic_key": "to_initiate_if_required",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationemailstatus",
+    "pk": 2,
+    "fields": {
+        "name": "Awaiting Response",
+        "details_md": "",
+        "programmatic_key": "awaiting_response",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationemailstatus",
+    "pk": 3,
+    "fields": {
+        "name": "Unable to Deliver - Fatal",
+        "details_md": "",
+        "programmatic_key": "unable_to_deliver_fatal",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationemailstatus",
+    "pk": 4,
+    "fields": {
+        "name": "Unable to Deliver - Non-Fatal",
+        "details_md": "",
+        "programmatic_key": "unable_to_deliver_non_fatal",
+        "programmatic_details_md": ""
+    }
+},
+{
+    "model": "communication.conversationemailstatus",
+    "pk": 5,
+    "fields": {
+        "name": "Unintended Recipient",
+        "details_md": "",
+        "programmatic_key": "unintended_recipient",
+        "programmatic_details_md": ""
+    }
+}
+]

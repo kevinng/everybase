@@ -1,0 +1,24 @@
+[
+{
+    "model": "communication.issuetag",
+    "pk": 1,
+    "fields": {
+        "name": "User Acquisition",
+        "details_md": "",
+        "programmatic_key": "user_acquisition",
+        "programmatic_details_md": "",
+        "parent": null
+    }
+},
+{
+    "model": "communication.issuetag",
+    "pk": 4,
+    "fields": {
+        "name": "Matching",
+        "details_md": "",
+        "programmatic_key": "matching",
+        "programmatic_details_md": "",
+        "parent": null
+    }
+}
+]
