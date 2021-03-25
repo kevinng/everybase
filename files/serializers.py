@@ -107,4 +107,4 @@ class FileSerializer(serializers.ModelSerializer):
         fields = ['id', 'upload_confirmed', 'uuid', 's3_bucket_name',
             's3_object_key', 's3_object_content_length', 's3_object_e_tag',
             's3_object_content_type', 's3_object_last_modified', 'details_md',
-            'supplies', 'demands', 'issues', 'persons', 'tags']
+            'supplies', 'demands', 'issues', 'persons']
