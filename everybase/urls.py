@@ -25,9 +25,6 @@ urlpatterns = [
     path('leads/', include('leads.urls')),
     path('relationships/', include('relationships.urls')),
 
-    # Landing page
-    path('', include('lander.urls')),
-
     # Django admin, with obfuscated URL
     path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
 
