@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'files.apps.FilesConfig',
     'leads.apps.LeadsConfig',
     'growth.apps.GrowthConfig',
-    'lander.apps.LanderConfig',
     'django_filters',
     'django_extensions',
     'widget_tweaks',
