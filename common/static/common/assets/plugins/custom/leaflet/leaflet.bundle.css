@@ -412,13 +412,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
 }
 
 .leaflet-control-layers-toggle {
-  background-image: url("images/layers.png");
   width: 36px;
   height: 36px;
 }
 
 .leaflet-retina .leaflet-control-layers-toggle {
-  background-image: url("images/layers-2x.png");
   background-size: 26px 26px;
 }
 
@@ -467,7 +465,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 /* Default icon URLs */
 .leaflet-default-icon-path {
-  background-image: url("images/marker-icon.png");
 }
 
 /* attribution and scale controls */
@@ -739,7 +736,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
   top: 0;
   background-color: white;
   background-repeat: no-repeat;
-  background-image: url("img/search.png");
   background-size: 26px;
   border: none;
   padding: 0;
@@ -758,7 +754,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 .geocoder-control-input-disabled {
   background-color: #f4f4f4;
-  background-image: url("img/search-disabled.png");
 }
 
 .geocoder-control {
@@ -773,21 +768,17 @@ svg.leaflet-image-layer.leaflet-interactive path {
 }
 
 .geocoder-control-input.geocoder-control-loading {
-  background-image: url("img/loading.gif");
   background-size: 26px;
 }
 
 @media only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
   .geocoder-control-input {
-    background-image: url("img/search@2x.png");
   }
 
   .geocoder-control-input-disabled {
-    background-image: url("img/search@2x-disabled.png");
   }
 
   .geocoder-control-input.geocoder-control-loading {
-    background-image: url("img/loading@2x.gif");
   }
 }
 .geocoder-control-input:focus {
