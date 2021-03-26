@@ -17,15 +17,15 @@ standard_list_editable = ['deleted']
 
 choice_readonly_fields = ('id',)
 choice_fieldsets = [
-    (None, {'fields': ['id', 'name', 'details_md']}),
+    (None, {'fields': ['id', 'name', 'description']}),
     ('Developer', {'fields': [
         'programmatic_key',
         'programmatic_details_md']}),
 ]
-choice_list_display = ['id', 'name', 'programmatic_key', 'short_details_md',
-    'short_programmatic_details_md']
+choice_list_display = ['id', 'name', 'programmatic_key', 'short_description',
+    'short_programmatic_details']
 choice_list_editable = ['name', 'programmatic_key']
-choice_search_fields = ['id', 'name', 'programmatic_key', 'details_md',
+choice_search_fields = ['id', 'name', 'programmatic_key', 'description',
     'programmatic_details_md']
 choice_ordering = ['id']
 
@@ -43,10 +43,10 @@ class ChoiceAdmin(admin.ModelAdmin):
     readonly_fields = choice_readonly_fields
     fieldsets = choice_fieldsets
 
-    def short_details_md(self, obj):
+    def short_description(self, obj):
         return models.short_text(obj.details_md)
 
-    def short_programmatic_details_md(self, obj):
+    def short_programmatic_details(self, obj):
         return models.short_text(obj.programmatic_details_md)
 
 @admin.register(models.State)
