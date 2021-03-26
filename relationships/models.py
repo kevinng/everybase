@@ -85,6 +85,8 @@ class InvalidEmail(Standard):
     def __str__(self):
         return f'({self.email} [{self.id}])'
 
+# Remove following code after migrations ran to drop tables
+
 def validate_link_link(value):
     if value is not None and len(value) > 0 and \
         (value.endswith('/') or \
