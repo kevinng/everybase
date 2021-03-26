@@ -51,8 +51,8 @@ class Standard(models.Model):
     class Meta:
         abstract = True
 
-choice_fieldnames = ['name', 'details_md', 'programmatic_key',
-    'programmatic_details_md']
+choice_fieldnames = ['name', 'description', 'programmatic_key',
+    'programmatic_details']
 class Choice(models.Model):
     """
     Abstract model for a choice model.

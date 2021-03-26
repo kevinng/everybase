@@ -20,13 +20,13 @@ choice_fieldsets = [
     (None, {'fields': ['id', 'name', 'description']}),
     ('Developer', {'fields': [
         'programmatic_key',
-        'programmatic_details_md']}),
+        'programmatic_details']}),
 ]
 choice_list_display = ['id', 'name', 'programmatic_key', 'short_description',
     'short_programmatic_details']
 choice_list_editable = ['name', 'programmatic_key']
 choice_search_fields = ['id', 'name', 'programmatic_key', 'description',
-    'programmatic_details_md']
+    'programmatic_details']
 choice_ordering = ['id']
 
 class ChoiceAdmin(admin.ModelAdmin):
@@ -44,10 +44,10 @@ class ChoiceAdmin(admin.ModelAdmin):
     fieldsets = choice_fieldsets
 
     def short_description(self, obj):
-        return models.short_text(obj.details_md)
+        return models.short_text(obj.description)
 
     def short_programmatic_details(self, obj):
-        return models.short_text(obj.programmatic_details_md)
+        return models.short_text(obj.programmatic_details)
 
 @admin.register(models.State)
 class StateAdmin(ChoiceAdmin):
