@@ -75,8 +75,8 @@ class Choice(models.Model):
         blank=True,
         db_index=True
     )
-    programmatic_details_md = models.TextField(
-        verbose_name='Programmatic details in Markdown',
+    programmatic_details = models.TextField(
+        verbose_name='Programmatic details',
         null=True,
         blank=True
     )
