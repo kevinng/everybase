@@ -6,12 +6,18 @@
         <p class="font-size-lg font-weight-boldest">Top-up wallet</p>
 
         <div class="form-group">
-            <p class="form-control-plaintext font-size-lg">Referral cost is <span class="font-weight-boldest">US$ 1</span>.<br />You have <span class="font-weight-boldest">US$ 0</span> in your wallet.<br />Minimum top-up value is <span class="font-weight-boldest">US$ 5</span>.</p>
+            <input id="referral_cost_usd" type="hidden" value="1">
+            <input id="before_wallet_value_usd" type="hidden" value="3">
+            <p class="form-control-plaintext font-size-lg">Referral cost is <span class="font-weight-boldest">US$ <span class="referral_cost_usd_text"></span><!-- server-side value --></span>.<br />You have <span class="font-weight-boldest">US$ <span class="before_wallet_value_usd_text"><!-- server-side value --></span></span> in your wallet.<br />Top-up in increments of <span class="font-weight-boldest">US$ 5</span>.<br />Minimum top-up value of <span class="font-weight-boldest">US$ 10<!-- serverside value --></span>.</p>
         </div>
 
         <div class="form-group">
             <label>Add value</label>
-            <input id="top_up_value" type="text" class="form-control" value="5" readonly/>
+            <input id="top_up_value_usd" type="text" class="form-control" value="5" readonly/>
+        </div>
+
+        <div class="form-group">
+            <p class="form-control-plaintext font-size-lg ">US$ 3 + US$ <span class="top_up_value_usd_text"><!-- server side value--></span> - US$ <span class="referral_cost_usd_text"><!-- serverside value --></span> = <span class="font-weight-boldest">US$ <span class="after_wallet_value_usd_text"><!-- serverside value --></span></span><br/>You'll have <span class="font-weight-boldest">US$ <span class="after_wallet_value_usd_text"><!-- server-side value --></span></span> left in your wallet.</p>
         </div>
     </div>
 
@@ -27,13 +33,12 @@
 
     var Touchspin = function() {
         var touchspin = function() {
-            $('#top_up_value').TouchSpin({
+            $('#top_up_value_usd').TouchSpin({
                 buttondown_class: 'btn btn-secondary',
                 buttonup_class: 'btn btn-secondary',
-                min: 5,
+                min: 5, // Minimum must be > referral cost + increment
                 max: 1000000000,
                 step: 5,
-                decimals: 2,
                 booster: false,
                 prefix: 'US$'
             });
@@ -46,8 +51,37 @@
         };
     }();
 
+    var Calculator = function() {
+        var calculator = function () {
+            var update_values = function() {
+                var before_wallet_value_usd = parseInt($('#before_wallet_value_usd').val());
+                var referral_cost_usd = parseInt($('#referral_cost_usd').val());
+                var top_up_value_usd = parseInt($('#top_up_value_usd').val());
+                var after_wallet_value_usd = before_wallet_value_usd - referral_cost_usd + top_up_value_usd;
+
+                $('.referral_cost_usd_text').text(referral_cost_usd);
+                $('.top_up_value_usd_text').text(top_up_value_usd);
+                $('.before_wallet_value_usd_text').text(before_wallet_value_usd);
+                $('.after_wallet_value_usd_text').text(after_wallet_value_usd);
+            };
+
+            update_values();
+            $('#top_up_value_usd').change(function (e) {
+                update_values();
+                //alert($(this).val());
+            });
+        }
+
+        return {
+            init: function() {
+                calculator();
+            }
+        };
+    }();
+
     jQuery(document).ready(function() {
         Touchspin.init();
+        Calculator.init();
     });
 </script>
 {% endblock %}

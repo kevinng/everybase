@@ -1,0 +1,134 @@
+{% extends 'extendables/form.html' %}
+
+{% block form %}
+<form class="form">
+    <div class="card-body">
+
+        <a id="demand_details"></a>
+
+        <p class="font-size-lg font-weight-boldest">Demand</p>
+
+        <div class="form-group">
+            <label>Demand ID</label>
+            <div class="input-group">
+                <input type="text" class="form-control form-control-solid col-12 col-md-6" id="demand_id" value="123" readonly/>
+                <div class="input-group-append">
+                    <a href="#" class="btn btn-secondary" data-clipboard="true" data-clipboard-target="#demand_id"><i class="la la-copy"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Goods details</label>
+            <textarea id="ta0" class="form-control form-control-solid col-12 col-md-6" readonly>Nitrile exam 510k only&#10;FDA 510(K)</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity required &#38; schedule</label>
+            <textarea id="ta1" class="form-control form-control-solid col-12 col-md-6" readonly>OTG&#10;20k boxes to start</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Destination country/state/port</label><br />
+            <input type="text" class="form-control form-control-solid col-12 col-md-6" value="Canada, Vancouver" readonly/>
+        </div>
+
+        <div class="form-group">
+            <label>Comments &#38; questions</label><br />
+            <textarea id="ta2" class="form-control form-control-solid col-12 col-md-6 mb-2" readonly>Can you do LC?</textarea>
+        </div>
+
+        <div class="separator separator-dashed separator-border-1 separator-primary mt-10 mb-10"></div>
+
+        <div class="alert alert-custom alert-light-success fade show" role="alert">
+            Please state what you can sell.<br/>
+
+            See demand details above.
+
+            <div class="alert-close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="ki ki-close"></i></span>
+                </button>
+            </div>
+        </div>
+
+        <p class="font-size-lg font-weight-boldest">I can sell</p>
+
+        <div class="form-group">
+            <label>Goods details</label>
+            <textarea id="ta3" class="form-control col-12 col-md-6" rows="2" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity available &#38; schedule</label>
+            <textarea id="ta4" class="form-control col-12 col-md-6" rows="2" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Origin country/state/port</label><br />
+            <input type="text" class="form-control col-12 col-md-6" required/>
+        </div>
+
+        <div class="form-group">
+            <label>Comments and questions for buyer</label>
+            <textarea id="ta5" class="form-control col-12 col-md-6" rows="2" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-success col-12 mb-2">Reply Buyer</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block local_script %}
+<script>
+    "use strict";
+
+    // Clipboard
+    var Clipboard = function () {
+        var clipboards = function () {
+                new ClipboardJS('[data-clipboard=true]').on('success', function(e) {
+                e.clearSelection();
+                alert('Copied:\n\n' + e.text);
+            });
+        }
+
+        return {
+            init: function() {
+                clipboards();
+            }
+        };
+    }();
+
+    // Autosizing
+    var Autosize = function () {
+        var autosize_all = function () {
+            var ta0 = $('#ta0');
+            var ta1 = $('#ta1');
+            var ta2 = $('#ta2');
+            var ta3 = $('#ta3');
+            var ta4 = $('#ta4');
+            var ta5 = $('#ta5');
+
+            autosize(ta0);
+            autosize(ta1);
+            autosize(ta2);
+            autosize(ta3);
+            autosize(ta4);
+            autosize(ta5);
+        }
+
+        return {
+            init: function() {
+                autosize_all();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function() {
+        Autosize.init();
+        Clipboard.init();
+    });
+</script>
+{% endblock %}

@@ -4,9 +4,9 @@
 <form class="form">
     <div class="card-body">
         <div class="alert alert-custom alert-light-success fade show" role="alert">
-            {% comment %} Buyer has replied!&nbsp<a href="#">See Discussion</a>. {% endcomment %}
+            Buyer replied!&nbsp<a href="#">See discussion</a>.
 
-            Connected!&nbsp<a href="#">See buyer details</a>.
+            {% comment %} Connected!&nbsp<a href="#">See buyer details</a>. {% endcomment %}
 
             <div class="alert-close">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -14,22 +14,6 @@
                 </button>
             </div>
         </div>
-
-        {% comment %}
-
-            Textfield needs to be positioned off-screen to be both copy-able and invisible.
-            Setting it "visibility:hidden" or "display:none" renders it invisible but not copy-able.
-
-        {% endcomment %}
-        <div style="position: absolute; top: -10000px">
-            <textarea id="invisible_details" rows="1">Kaka!</textarea>
-        </div>
-        <a href="#" class="btn btn-outline-info mb-10" data-clipboard="true" data-clipboard-target="#invisible_details"><i class="la la-clipboard"></i> Copy Details</a>
-
-<!--
-    Pre-connection
-        <p class="font-size-lg font-weight-boldest">Connect with this buyer?</p>
--->
 
 <!-- Post-connection -->
 
@@ -70,6 +54,11 @@
             <a href="#" class="btn btn-success ml-2">WhatsApp</a>
         </div>
 
+<!--
+    Pre-connection
+        <p class="font-size-lg font-weight-boldest">Connect with buyer?</p>
+-->
+
         <p class="font-size-lg font-weight-boldest">Demand</p>
 
         <div class="form-group">
@@ -83,18 +72,9 @@
         </div>
 
         <div class="form-group">
-            <label>Goods details</label>
-            <textarea id="ta0" class="form-control form-control-solid col-12 col-md-6" readonly>Nitrile exam 510k only&#10;FDA 510(K)</textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Quantity required &#38; schedule</label>
-            <textarea id="ta1" class="form-control form-control-solid col-12 col-md-6" readonly>OTG&#10;20k boxes to start</textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Destination country/state/port</label><br />
-            <input type="text" class="form-control form-control-solid col-12 col-md-6" value="Canada, Vancouver" readonly/>
+        <!-- the details in this text field must be complete -->
+            <textarea id="ta0" class="form-control form-control-solid col-12 col-md-6" readonly>Nitrile exam 510k only&#10;FDA 510(K)&#10;OTG&#10;20k boxes to start&#10;Canada, Vancouver</textarea>
+            <a href="#" class="btn btn-secondary mt-4" data-clipboard="true" data-clipboard-target="#ta0"><i class="la la-clipboard"></i> Copy Details</a>
         </div>
 
         <div class="separator separator-dashed separator-border-1 separator-primary mt-10 mb-10"></div>
@@ -116,21 +96,21 @@
 
             <div><span class="label label-inline label-warning label-pill font-weight-bold mb-2">Buyer</span></div>
             <textarea id="ta6" class="form-control form-control-solid col-12 col-md-6 mb-2" readonly>Can you do LC?</textarea>
-
-            <div><span class="label label-inline label-warning label-pill font-weight-bold mb-2" style="float:right;">You</span></div>
-            <textarea id="ta7" class="form-control col-12 col-md-6" rows="2"></textarea>
-            <p class="form-text text-muted">Do not post contact details.</p>
         </div>
 
         <div class="form-group">
-            <button type="submit" class="btn btn-success col-12">Reply &#38; Connect</button>
-            <p class="form-control-plaintext text-info">A referral fee of <span class="font-weight-boldest">US$ 5.00</span> will be deducted.<br/>You have <span class="font-weight-boldest">US$ 20.00</span> in your wallet.</p>
-            <button type="submit" class="btn btn-success col-12">Reply Only</button>
+            <button type="submit" class="btn btn-success col-12">Connect with Buyer</button>
+            <p class="form-control-plaintext text-info">
+                <span class="font-weight-boldest text-success">You'll be directed to top-up your wallet</span><br/>
+                A referral fee of <span class="font-weight-boldest">US$ 5.00</span> will be deducted.<br/>
+                You have <span class="font-weight-boldest">US$ 20.00</span> in your wallet.<br/>
+                You'll receive the seller's contacts (e.g. WhatsApp).
+            </p>
+
+            <!-- This button will redirect to WhatsApp -->
+        <!-- When the user exits from this screen, after a short while, we'd whatsapp him for his response -->
+            <button type="submit" class="btn btn-success col-12">Reply Us in WhatsApp</button>
             <p class="form-control-plaintext">If you're not ready to connect.</p>
-        </div>
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-success col-12">Reply</button>
         </div>
     </div>
 </form>
