@@ -1,0 +1,232 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>{% block title %}Everybase - Contact{% endblock %}</title>
+		<meta name="description" content="{% block description %}{% endblock %}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        {% comment %} Override to allow robot indexing {% endcomment %}
+        {% comment %} TODO: Put this in otherheadtags when overriding {% endcomment %}
+        {% block noindex %}<meta name="robots" content="noindex">{% endblock %}
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+		
+        {% comment %} Global styles used by all pages {% endcomment %}
+		<link href="{% static 'common/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'common/assets/plugins/custom/prismjs/prismjs.bundle.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'common/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+
+		<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+
+        {% block otherheadtags %}{% endblock %}
+	</head>
+
+	<body id="kt_body" class="page-loading">
+		<div class="d-flex flex-column flex-root">
+			{% comment %} Page {% endcomment %}
+			<div class="d-flex flex-row flex-column-fluid page">
+				{% comment %} Wrapper {% endcomment %}
+				<div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+					{% comment %} Content {% endcomment %}
+					<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+						{% comment %} Entry {% endcomment %}
+						<div class="d-flex flex-column-fluid">
+							{% comment %} Container {% endcomment %}
+							<div class="container">
+								{% comment %}
+                                    Details
+
+                                    Note: id="kt_page_sticky_card" is required to make sticky head work.
+                                {% endcomment %}
+                                <div class="card card-custom card-sticky" id="kt_page_sticky_card">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            <h3 class="card-label">Contact</h3>
+                                        </div>
+                                        <div class="card-toolbar">
+                                            <a href="#" class="btn btn-light-dark font-weight-bolder mr-2">Email</a>
+                                            <a href="#" class="btn btn-primary font-weight-bolder">WhatsApp</a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                                <div class="form-group">
+                                                    <label class="font-weight-bolder">Name</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control form-control-solid" id="seller_name" value="John Jamuji" readonly/>
+                                                        <div class="input-group-append">
+                                                            <a href="#" class="btn btn-secondary" data-clipboard="true" data-clipboard-target="#seller_name"><i class="la la-copy"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="font-weight-bolder">Phone</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control form-control-solid" id="seller_phone" value="+0 1234567890" readonly/>
+                                                        <div class="input-group-append">
+                                                            <a href="#" class="btn btn-secondary" data-clipboard="true" data-clipboard-target="#seller_phone"><i class="la la-copy"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="font-weight-bolder">Email</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control form-control-solid" id="seller_email" value="friend@everybase.co" readonly/>
+                                                        <div class="input-group-append">
+                                                            <a href="#" class="btn btn-secondary" data-clipboard="true" data-clipboard-target="#seller_email"><i class="la la-copy"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="font-weight-bolder">Supply</label>
+                                                    {% comment %} Programmatically insert line breaks {% endcomment %}
+                                                    <p class="text-body">
+                                                        Nitrile exam 510k only<br/>
+                                                        FDA 510(K)<br/>
+                                                        OTG<br/>
+                                                        20k boxes to start<br/>
+                                                        Canada, Vancouver<br/>
+                                                        Nitrile exam 510k only<br/>
+                                                        FDA 510(K)<br/>
+                                                        OTG<br/>
+                                                        20k boxes to start<br/>
+                                                        Canada, Vancouver<br/>
+                                                        Nitrile exam 510k only<br/>
+                                                        FDA 510(K)<br/>
+                                                        OTG<br/>
+                                                        20k boxes to start<br/>
+                                                        Canada, Vancouver<br/>
+                                                        Nitrile exam 510k only<br/>
+                                                        FDA 510(K)<br/>
+                                                        OTG<br/>
+                                                        20k boxes to start<br/>
+                                                        Canada, Vancouver<br/>
+                                                        Nitrile exam 510k only<br/>
+                                                        FDA 510(K)<br/>
+                                                        OTG<br/>
+                                                        20k boxes to start<br/>
+                                                        Canada, Vancouver<br/>
+                                                        Nitrile exam 510k only<br/>
+                                                        FDA 510(K)<br/>
+                                                        OTG<br/>
+                                                        20k boxes to start<br/>
+                                                        Canada, Vancouver<br/>
+                                                        Nitrile exam 510k only<br/>
+                                                        FDA 510(K)<br/>
+                                                        OTG<br/>
+                                                        20k boxes to start<br/>
+                                                        Canada, Vancouver<br/>
+                                                        Nitrile exam 510k only<br/>
+                                                        FDA 510(K)<br/>
+                                                        OTG<br/>
+                                                        20k boxes to start<br/>
+                                                        Canada, Vancouver<br/>
+                                                        Nitrile exam 510k only<br/>
+                                                        FDA 510(K)<br/>
+                                                        OTG<br/>
+                                                        20k boxes to start<br/>
+                                                        Canada, Vancouver
+                                                    </p>
+                                                    {% comment %} Programmatically insert encoded line breaks {% endcomment %}
+                                                    <textarea id="supply-details" class="offcanvas offcanvas-right">
+Nitrile exam 510k only&#10;
+FDA 510(K)&#10;
+OTG&#10;
+20k boxes to start&#10;
+Canada, Vancouver&#10;
+Nitrile exam 510k only&#10;
+FDA 510(K)&#10;
+OTG&#10;
+20k boxes to start&#10;
+Canada, Vancouver&#10;
+Nitrile exam 510k only&#10;
+FDA 510(K)&#10;
+OTG&#10;
+20k boxes to start&#10;
+Canada, Vancouver&#10;
+Nitrile exam 510k only&#10;
+FDA 510(K)&#10;
+OTG&#10;
+20k boxes to start&#10;
+Canada, Vancouver&#10;
+Nitrile exam 510k only&#10;
+FDA 510(K)&#10;
+OTG&#10;
+20k boxes to start&#10;
+Canada, Vancouver&#10;
+Nitrile exam 510k only&#10;
+FDA 510(K)&#10;
+OTG&#10;
+20k boxes to start&#10;
+Canada, Vancouver&#10;
+Nitrile exam 510k only&#10;
+FDA 510(K)&#10;
+OTG&#10;
+20k boxes to start&#10;
+Canada, Vancouver&#10;
+Nitrile exam 510k only&#10;
+FDA 510(K)&#10;
+OTG&#10;
+20k boxes to start&#10;
+Canada, Vancouver&#10;
+Nitrile exam 510k only&#10;
+FDA 510(K)&#10;
+OTG&#10;
+20k boxes to start&#10;
+Canada, Vancouver
+                                                    </textarea>
+                                                    <a href="#" class="btn btn-secondary mt-4" data-clipboard="true" data-clipboard-target="#supply-details"><i class="la la-clipboard"></i> Copy Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% comment %} Global config {% endcomment %}
+        <script>var HOST_URL = "https://everybase.co";</script>
+		<script>var KTAppSettings = {"breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#0BB783", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#D7F9EF", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
+
+        {% comment %} Global theme {% endcomment %}
+        <script src="{% static 'common/assets/plugins/global/plugins.bundle.js' %}"></script>
+        <script src="{% static 'common/assets/plugins/custom/prismjs/prismjs.bundle.js' %}"></script>
+		<script src="{% static 'common/assets/js/scripts.bundle.js' %}"></script>
+
+        <script>
+            "use strict";
+
+            // Clipboard
+            var Clipboard = function () {
+                var clipboards = function () {
+                        new ClipboardJS('[data-clipboard=true]').on('success', function(e) {
+                        e.clearSelection();
+                        alert('Copied:\n\n' + e.text);
+                    });
+                }
+
+                return {
+                    init: function() {
+                        clipboards();
+                    }
+                };
+            }();
+
+            jQuery(document).ready(function() {
+                Clipboard.init();
+            });
+        </script>
+
+	</body>
+</html>
