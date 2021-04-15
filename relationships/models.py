@@ -84,3 +84,6 @@ class InvalidEmail(Standard):
 
     def __str__(self):
         return f'({self.email} [{self.id}])'
+
+class User(Standard):
+    pass
