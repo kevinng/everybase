@@ -269,3 +269,40 @@ class UserIPDevice(Standard):
     class Meta:
         verbose_name = 'User IP-Device'
         verbose_name_plural = 'User IP-Devices'
+
+class ProductType(Standard, Choice):
+    pass
+
+class CompanyProductType(Standard):
+    popularity = models.FloatField(db_index=True)
+
+    company = models.ForeignKey(
+        'Company',
+        on_delete=models.PROTECT
+    )
+    product_type = models.ForeignKey(
+        'ProductType',
+        on_delete=models.PROTECT
+    )
+
+class Company(Standard):
+    display_name = models.CharField(
+        max_length=200,
+        db_index=True
+    )
+    notes = models.TextField()
+
+    product_types = models.ManyToManyField(
+        'ProductType',
+        through='CompanyProductType',
+        related_name='companies',
+        related_query_name='companies'
+    )
+
+    class Meta:
+        verbose_name = 'Company'
+        verbose_name_plural = 'Companies'
+
+    def __str__(self):
+        return f'({self.display_name} [{self.id}])'
+    

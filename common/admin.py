@@ -12,22 +12,35 @@ standard_fieldsets = [
 standard_ordering = ['-created', '-updated']
 standard_list_filter = ['created', 'updated', 'deleted']
 standard_list_editable = ['deleted']
+standard_search_fields = ['id']
 
 # Fields for choice models
 
-choice_readonly_fields = ('id',)
+choice_list_display = ['id', 'name', 'programmatic_key', 'description',
+    'programmatic_details']
+choice_readonly_fields = ['id']
 choice_fieldsets = [
     (None, {'fields': ['id', 'name', 'description']}),
-    ('Developer', {'fields': [
-        'programmatic_key',
-        'programmatic_details']}),
+    ('Developer', {'fields': ['programmatic_key', 'programmatic_details']}),
 ]
-choice_list_display = ['id', 'name', 'programmatic_key', 'short_description',
-    'short_programmatic_details']
+choice_ordering = ['id']
 choice_list_editable = ['name', 'programmatic_key']
 choice_search_fields = ['id', 'name', 'programmatic_key', 'description',
     'programmatic_details']
-choice_ordering = ['id']
+
+# Fields for standard + choice models
+
+standard_choice_list_display = standard_list_display + choice_list_display[1:]
+standard_choice_readonly_fields = standard_readonly_fields
+standard_choice_fieldsets = [
+    (None, {'fields': ['id', 'name', 'description']}),
+    ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
+    ('Developer', {'fields': ['programmatic_key', 'programmatic_details']}),
+]
+standard_choice_ordering = standard_ordering
+standard_choice_list_filter = standard_list_filter
+standard_choice_list_editable = standard_list_editable + choice_list_editable
+standard_choice_search_fields = choice_search_fields
 
 class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
