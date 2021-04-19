@@ -115,7 +115,7 @@ class User(Standard):
         db_index=True
     )
     phone_number = models.OneToOneField(
-        'relationships.PhoneNumber',
+        'PhoneNumber',
         related_name='users',
         related_query_name='users',
         on_delete=models.PROTECT,
@@ -128,7 +128,7 @@ class User(Standard):
     )
 
     email = models.ForeignKey(
-        'relationships.Email',
+        'Email',
         related_name='users',
         related_query_name='users',
         on_delete=models.PROTECT,
@@ -140,7 +140,7 @@ class User(Standard):
 
 class AccessedURL(Standard):
     user = models.ForeignKey(
-        'relationships.User',
+        'User',
         related_name='accessed_urls',
         related_query_name='accessed_urls',
         on_delete=models.PROTECT,
@@ -164,7 +164,7 @@ class AccessedURL(Standard):
 
 class UserIPDevice(Standard):
     user = models.ForeignKey(
-        'relationships.User',
+        'User',
         related_name='ip_devices',
         related_query_name='ip_devices',
         on_delete=models.PROTECT,
@@ -260,7 +260,7 @@ class UserIPDevice(Standard):
     )
         
     accessed_urls = models.ManyToManyField(
-        'relationships.AccessedURL',
+        'AccessedURL',
         related_name='user_ip_devices',
         related_query_name='user_ip_devices',
         db_index=True
