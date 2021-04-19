@@ -185,6 +185,27 @@ class InvalidEmailAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['import_job']
 
+@admin.register(mod.User)
+class UserAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        ['key', 'phone_number', 'name', 'email']
+    list_editable = comadm.standard_list_editable + \
+        ['phone_number', 'name', 'email']
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter
+    search_fields = ['id', 'key', 'phone_number', 'name', 'email']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = ['key'] + comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['key', 'phone_number', 'name', 'email']})
+    ]
+    autocomplete_fields = ['phone_number', 'email']
+
 # _person_fields = ['given_name', 'family_name', 'notes_md']
 # @admin.register(mod.Person)
 # class PersonAdmin(admin.ModelAdmin):
