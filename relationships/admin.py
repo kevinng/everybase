@@ -206,6 +206,62 @@ class UserAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['phone_number', 'email']
 
+@admin.register(mod.AccessedURL)
+class AccessedURLAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        ['user', 'first_accessed', 'last_accessed', 'count', 'url']
+    list_editable = comadm.standard_list_editable + \
+        ['user', 'first_accessed', 'last_accessed', 'count', 'url']
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter
+    search_fields = ['id', 'user__id', 'url']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': ['user', 'first_accessed', 'last_accessed', 'count',
+            'url']})
+    ]
+    autocomplete_fields = ['user']
+
+@admin.register(mod.UserIPDevice)
+class UserIPDeviceAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        ['user', 'first_accessed', 'last_accessed', 'count', 'ip_address',
+        'is_mobile', 'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot',
+        'browser', 'browser_family', 'browser_version',
+        'browser_version_string', 'os', 'os_version', 'os_version_string',
+        'device', 'device_family']
+    list_editable = comadm.standard_list_editable + \
+        ['user', 'first_accessed', 'last_accessed', 'count', 'ip_address',
+        'is_mobile', 'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot',
+        'browser', 'browser_family', 'browser_version',
+        'browser_version_string', 'os', 'os_version', 'os_version_string',
+        'device', 'device_family']
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter
+    search_fields = ['id', 'user__id', 'ip_address', 'browser',
+        'browser_family', 'os', 'device', 'device_family']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': ['user', 'first_accessed', 'last_accessed',
+            'count', 'ip_address', 'is_mobile', 'is_tablet', 'is_touch_capable',
+            'is_pc', 'is_bot', 'browser', 'browser_family', 'browser_version',
+            'browser_version_string', 'os', 'os_version', 'os_version_string',
+            'device', 'device_family', 'accessed_urls']})
+    ]
+    autocomplete_fields = ['user']
+
 # _person_fields = ['given_name', 'family_name', 'notes_md']
 # @admin.register(mod.Person)
 # class PersonAdmin(admin.ModelAdmin):

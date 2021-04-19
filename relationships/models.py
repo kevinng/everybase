@@ -137,3 +137,135 @@ class User(Standard):
 
     def __str__(self):
         return f'({self.name} [{self.id}])'
+
+class AccessedURL(Standard):
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='accessed_urls',
+        related_query_name='accessed_urls',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    first_accessed = models.DateTimeField(db_index=True)
+    last_accessed = models.DateTimeField(db_index=True)
+    count = models.IntegerField(db_index=True)
+    url = models.URLField(
+        'URL',
+        unique=True,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Accessed URL'
+        verbose_name_plural = 'Accessed URLs'
+    
+    def __str__(self):
+        return f'({self.url} [{self.id}])'
+
+class UserIPDevice(Standard):
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='ip_devices',
+        related_query_name='ip_devices',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    first_accessed = models.DateTimeField(db_index=True)
+    last_accessed = models.DateTimeField(db_index=True)
+    count = models.IntegerField(db_index=True)
+        
+    ip_address = models.GenericIPAddressField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_mobile = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_tablet = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_touch_capable = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_pc = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_bot = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_version = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_version_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_version = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_version_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    device = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    device_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+        
+    accessed_urls = models.ManyToManyField(
+        'relationships.AccessedURL',
+        related_name='user_ip_devices',
+        related_query_name='user_ip_devices',
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'User IP-Device'
+        verbose_name_plural = 'User IP-Devices'
