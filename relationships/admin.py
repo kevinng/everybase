@@ -135,7 +135,7 @@ class PhoneNumberAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + _phone_number_fields
     list_per_page = 50
     list_filter = comadm.standard_list_filter + ['country_code']
-    search_fields = ['id'] + _phone_number_fields
+    search_fields = comadm.standard_search_fields + _phone_number_fields
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -153,7 +153,7 @@ class EmailAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + ['email']
     list_per_page = 50
     list_filter = ['import_job'] + comadm.standard_list_filter
-    search_fields = ['id', 'email']
+    search_fields = comadm.standard_search_fields + ['email']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -173,7 +173,7 @@ class InvalidEmailAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + ['email']
     list_per_page = 50
     list_filter = ['import_job'] + comadm.standard_list_filter
-    search_fields = ['id', 'email']
+    search_fields = comadm.standard_search_fields + ['email']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -194,7 +194,8 @@ class UserAdmin(admin.ModelAdmin):
         ['phone_number', 'name', 'email']
     list_per_page = 50
     list_filter = comadm.standard_list_filter
-    search_fields = ['id', 'key', 'phone_number', 'name', 'email']
+    search_fields = comadm.standard_search_fields + \
+        ['key', 'phone_number', 'name', 'email']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -215,7 +216,7 @@ class AccessedURLAdmin(admin.ModelAdmin):
         ['user', 'first_accessed', 'last_accessed', 'count', 'url']
     list_per_page = 50
     list_filter = comadm.standard_list_filter
-    search_fields = ['id', 'user__id', 'url']
+    search_fields = comadm.standard_search_fields + ['user__id', 'url']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -245,8 +246,8 @@ class UserIPDeviceAdmin(admin.ModelAdmin):
         'device', 'device_family']
     list_per_page = 50
     list_filter = comadm.standard_list_filter
-    search_fields = ['id', 'user__id', 'ip_address', 'browser',
-        'browser_family', 'os', 'device', 'device_family']
+    search_fields = comadm.standard_search_fields + ['user__id', 'ip_address',
+        'browser', 'browser_family', 'os', 'device', 'device_family']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
