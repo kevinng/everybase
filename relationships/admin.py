@@ -207,13 +207,13 @@ class UserAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['phone_number', 'email']
 
+_accessed_url_fields = ['user', 'first_accessed', 'last_accessed', 'count',
+    'url']
 @admin.register(mod.AccessedURL)
 class AccessedURLAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + \
-        ['user', 'first_accessed', 'last_accessed', 'count', 'url']
-    list_editable = comadm.standard_list_editable + \
-        ['user', 'first_accessed', 'last_accessed', 'count', 'url']
+    list_display = comadm.standard_list_display + _accessed_url_fields
+    list_editable = comadm.standard_list_editable + _accessed_url_fields
     list_per_page = 50
     list_filter = comadm.standard_list_filter
     search_fields = comadm.standard_search_fields + ['user__id', 'url']
@@ -224,26 +224,20 @@ class AccessedURLAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['user', 'first_accessed', 'last_accessed', 'count',
-            'url']})
+        (None, {'fields': _accessed_url_fields})
     ]
     autocomplete_fields = ['user']
 
+_user_ip_device_fields = ['user', 'first_accessed', 'last_accessed', 'count',
+    'ip_address', 'is_mobile', 'is_tablet', 'is_touch_capable', 'is_pc',
+    'is_bot', 'browser', 'browser_family', 'browser_version',
+    'browser_version_string', 'os', 'os_version', 'os_version_string', 'device',
+    'device_family']
 @admin.register(mod.UserIPDevice)
 class UserIPDeviceAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + \
-        ['user', 'first_accessed', 'last_accessed', 'count', 'ip_address',
-        'is_mobile', 'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot',
-        'browser', 'browser_family', 'browser_version',
-        'browser_version_string', 'os', 'os_version', 'os_version_string',
-        'device', 'device_family']
-    list_editable = comadm.standard_list_editable + \
-        ['user', 'first_accessed', 'last_accessed', 'count', 'ip_address',
-        'is_mobile', 'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot',
-        'browser', 'browser_family', 'browser_version',
-        'browser_version_string', 'os', 'os_version', 'os_version_string',
-        'device', 'device_family']
+    list_display = comadm.standard_list_display + _user_ip_device_fields
+    list_editable = comadm.standard_list_editable + _user_ip_device_fields
     list_per_page = 50
     list_filter = comadm.standard_list_filter
     search_fields = comadm.standard_search_fields + ['user__id', 'ip_address',
@@ -255,11 +249,7 @@ class UserIPDeviceAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': ['user', 'first_accessed', 'last_accessed',
-            'count', 'ip_address', 'is_mobile', 'is_tablet', 'is_touch_capable',
-            'is_pc', 'is_bot', 'browser', 'browser_family', 'browser_version',
-            'browser_version_string', 'os', 'os_version', 'os_version_string',
-            'device', 'device_family', 'accessed_urls']})
+        ('Details', {'fields': _user_ip_device_fields + ['accessed_urls']})
     ]
     autocomplete_fields = ['user']
 
