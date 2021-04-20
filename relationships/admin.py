@@ -363,6 +363,27 @@ class CompanyProductAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['company', 'product']
 
+_product_specification_type = ['display_name', 'notes', 'product_type']
+@admin.register(mod.ProductSpecificationType)
+class ProductSpecificationTypeAdmin(admin.ModelAdmin):
+        # List page settings
+    list_display = comadm.standard_list_display + _product_specification_type
+    list_editable = comadm.standard_list_editable + _product_specification_type
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter
+    search_fields = comadm.standard_search_fields + ['company__display_name',
+        'product__display_name']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _product_specification_type})
+    ]
+    autocomplete_fields = ['product_type']
+
 # _person_fields = ['given_name', 'family_name', 'notes_md']
 # @admin.register(mod.Person)
 # class PersonAdmin(admin.ModelAdmin):

@@ -327,6 +327,10 @@ class CompanyProduct(Standard):
         db_index=True
     )
 
+    def __str__(self):
+        return f'({self.company.display_name}, {self.product.display_name} \
+            [{self.id}])'
+
 class Product(Standard):
     display_name = models.CharField(
         max_length=200,
@@ -344,3 +348,18 @@ class Product(Standard):
 
     def __str__(self):
         return f'({self.display_name} [{self.id}])'
+
+class ProductSpecificationType(Standard):
+    display_name = models.CharField(
+        max_length=200,
+        db_index=True
+    )
+    notes = models.TextField(db_index=True)
+	
+    product_type = models.ForeignKey(
+        'ProductType',
+        related_name='product_specifications',
+        related_query_name='product_specifications',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
