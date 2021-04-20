@@ -366,3 +366,48 @@ class ProductSpecificationType(Standard):
 
     def __str__(self):
         return f'({self.display_name} [{self.id}])'
+
+class Lead(Standard):
+    product_type = models.ForeignKey(
+        'ProductType',
+        related_name='%(class)s_leads',
+        related_query_name='%(class)s_leads',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        related_name='%(class)s_leads',
+        related_query_name='%(class)s_leads',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    product = models.ForeignKey(
+        'Product',
+        related_name='%(class)s_leads',
+        related_query_name='%(class)s_leads',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    user = models.ForeignKey(
+        'User',
+        related_name='%(class)s_leads',
+        related_query_name='%(class)s_leads',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    
+    def __str__(self):
+        return f'({self.product_type.name}, {self.user.name} [{self.id}])'
+    
+    class Meta:
+        abstract = True
+
+class Supply(Lead):
+    class Meta:
+        verbose_name = 'Supply'
+        verbose_name_plural = 'Supplies'
+
+class Demand(Lead):
+    pass

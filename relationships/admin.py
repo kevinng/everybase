@@ -357,7 +357,7 @@ class CompanyProductAdmin(admin.ModelAdmin):
 _product_specification_type = ['display_name', 'notes', 'product_type']
 @admin.register(mod.ProductSpecificationType)
 class ProductSpecificationTypeAdmin(admin.ModelAdmin):
-        # List page settings
+    # List page settings
     list_display = comadm.standard_list_display + _product_specification_type
     list_editable = comadm.standard_list_editable + _product_specification_type
     list_per_page = 50
@@ -374,6 +374,49 @@ class ProductSpecificationTypeAdmin(admin.ModelAdmin):
         ('Details', {'fields': _product_specification_type})
     ]
     autocomplete_fields = ['product_type']
+
+_lead_fields = ['product_type', 'company', 'product', 'user']
+_lead_search_fields = ['product_type__name', 'product_type__description',
+    'company__display_name', 'company__notes', 'product__display_name',
+    'product__notes', 'user__name']
+
+@admin.register(mod.Supply)
+class SupplyAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _lead_fields
+    list_editable = comadm.standard_list_editable + _lead_fields
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter + ['product_type']
+    search_fields = comadm.standard_search_fields + _lead_search_fields
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _lead_fields})
+    ]
+    autocomplete_fields = ['product_type', 'company', 'product', 'user']
+
+@admin.register(mod.Demand)
+class DemandAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _lead_fields
+    list_editable = comadm.standard_list_editable + _lead_fields
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter + ['product_type']
+    search_fields = comadm.standard_search_fields + _lead_search_fields
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _lead_fields})
+    ]
+    autocomplete_fields = ['product_type', 'company', 'product', 'user']
 
 # _person_fields = ['given_name', 'family_name', 'notes_md']
 # @admin.register(mod.Person)
