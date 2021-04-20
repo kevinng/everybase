@@ -121,9 +121,17 @@ class User(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-
     name = models.CharField(
         max_length=100,
+        db_index=True
+    )
+    is_banned = models.BooleanField(
+        default=False,
+        db_index=True
+    )
+    notes = models.TextField(
+        null=True,
+        blank=True,
         db_index=True
     )
 
