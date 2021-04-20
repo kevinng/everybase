@@ -305,4 +305,39 @@ class Company(Standard):
 
     def __str__(self):
         return f'({self.display_name} [{self.id}])'
+
+class CompanyProduct(Standard):
+    popularity = models.FloatField(db_index=True)
+
+    company = models.ForeignKey(
+        'Company',
+        related_name='companies',
+        related_query_name='companies',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    product = models.ForeignKey(
+        'Product',
+        related_name='products',
+        related_query_name='products',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+class Product(Standard):
+    display_name = models.CharField(
+        max_length=200,
+        db_index=True
+    )
+    notes = models.TextField(db_index=True)
     
+    product_type = models.ForeignKey(
+        'ProductType',
+        related_name='products',
+        related_query_name='products',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def __str__(self):
+        return f'({self.display_name} [{self.id}])'
