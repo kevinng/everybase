@@ -278,11 +278,13 @@ class CompanyProductType(Standard):
 
     company = models.ForeignKey(
         'Company',
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        db_index=True
     )
     product_type = models.ForeignKey(
         'ProductType',
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        db_index=True
     )
 
 class Company(Standard):
@@ -290,13 +292,14 @@ class Company(Standard):
         max_length=200,
         db_index=True
     )
-    notes = models.TextField()
+    notes = models.TextField(db_index=True)
 
     product_types = models.ManyToManyField(
         'ProductType',
         through='CompanyProductType',
         related_name='companies',
-        related_query_name='companies'
+        related_query_name='companies',
+        db_index=True
     )
 
     class Meta:
