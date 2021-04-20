@@ -327,6 +327,10 @@ class CompanyProduct(Standard):
         db_index=True
     )
 
+    def __str__(self):
+        return f'({self.company.display_name}, {self.product.display_name} \
+            [{self.id}])'
+
 class Product(Standard):
     display_name = models.CharField(
         max_length=200,
