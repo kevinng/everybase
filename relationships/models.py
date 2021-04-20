@@ -411,3 +411,45 @@ class Supply(Lead):
 
 class Demand(Lead):
     pass
+
+class ProductSpecification(Standard):
+    is_exists = models.BooleanField(db_index=True)
+    value = models.FloatField(db_index=True)
+    
+    product_specification_type = models.ForeignKey(
+        'ProductSpecificationType',
+        related_name='product_specifications',
+        related_query_name='product_specifications',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    product = models.ForeignKey(
+        'Product',
+        related_name='product_specifications',
+        related_query_name='product_specifications',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    supply = models.ForeignKey(
+        'Supply',
+        related_name='product_specifications',
+        related_query_name='product_specifications',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    demand = models.ForeignKey(
+        'Demand',
+        related_name='product_specifications',
+        related_query_name='product_specifications',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def __str__(self):
+        return f'({self.product_specification_type.display_name}, \
+            {self.product.display_name}, {self.is_exists}, {self.value}, \
+            [{self.id}])'
