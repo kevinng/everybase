@@ -310,7 +310,7 @@ class CompanyProductTypeAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_filter = comadm.standard_list_filter
     search_fields = comadm.standard_search_fields + ['company__display_name',
-        'product_type__name']
+        'company__notes', 'product_type__name', 'product_type__description']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -330,10 +330,11 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + _product_fields
     list_per_page = 50
     list_filter = comadm.standard_list_filter
-    search_fields = comadm.standard_search_fields + ['display_name', 'notes']
+    search_fields = comadm.standard_search_fields + ['display_name', 'notes',
+        'product_type__name', 'product_type__description']
     ordering = comadm.standard_ordering
     show_full_result_count = True
-
+    
     # Details page settings
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
@@ -351,7 +352,7 @@ class CompanyProductAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_filter = comadm.standard_list_filter
     search_fields = comadm.standard_search_fields + ['company__display_name',
-        'product__display_name']
+        'company__notes', 'product__display_name', 'product__notes']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
