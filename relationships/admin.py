@@ -371,8 +371,8 @@ class ProductSpecificationTypeAdmin(admin.ModelAdmin):
     list_editable = comadm.standard_list_editable + _product_specification_type
     list_per_page = 50
     list_filter = comadm.standard_list_filter
-    search_fields = comadm.standard_search_fields + ['company__display_name',
-        'product__display_name']
+    search_fields = comadm.standard_search_fields + ['display_name', 'notes',
+        'product_type__name', 'product_type__description']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
