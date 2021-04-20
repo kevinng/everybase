@@ -334,7 +334,7 @@ class ProductAdmin(admin.ModelAdmin):
         'product_type__name', 'product_type__description']
     ordering = comadm.standard_ordering
     show_full_result_count = True
-    
+
     # Details page settings
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
