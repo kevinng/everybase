@@ -322,7 +322,16 @@ class Company(Standard):
         return f'({self.display_name} [{self.id}])'
 
 class CompanyProduct(Standard):
-    popularity = models.FloatField(db_index=True)
+    """Relationship between company and product.
+
+    Last updated: 21 April 2021, 9:51 PM
+    """
+
+    popularity = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     company = models.ForeignKey(
         'Company',
@@ -623,7 +632,7 @@ class ExcludedPrice(Standard, Choice):
 class Lead(Standard):
     """Abstract lead to be overriden by Supply and Demand.
 
-    Last updated: 21 April 2021, 8:33 PM
+    Last updated: 21 April 2021, 10:01 PM
     """
 
     product_type = models.ForeignKey(
@@ -635,6 +644,8 @@ class Lead(Standard):
     )
     company = models.ForeignKey(
         'Company',
+        null=True,
+        blank=True,
         related_name='%(class)s_leads',
         related_query_name='%(class)s_leads',
         on_delete=models.PROTECT,
@@ -642,6 +653,8 @@ class Lead(Standard):
     )
     product = models.ForeignKey(
         'Product',
+        null=True,
+        blank=True,
         related_name='%(class)s_leads',
         related_query_name='%(class)s_leads',
         on_delete=models.PROTECT,
