@@ -16,6 +16,11 @@ def validate_phone_number_country_code(value):
         )
 
 class PhoneNumber(Standard):
+    """Phone numbers.
+    
+    Last updated: 21 April 2021, 11:18 PM
+    """
+
     types = models.ManyToManyField(
         'PhoneNumberType',
         related_name='phone_numbers',
@@ -26,16 +31,12 @@ class PhoneNumber(Standard):
     country_code = models.CharField(
         max_length=50,
         default=None,
-        null=False,
-        blank=False,
         db_index=True,
         validators=[validate_phone_number_country_code]
     )
     national_number = models.CharField(
         max_length=100,
         default=None,
-        null=False,
-        blank=False,
         db_index=True
     )
 
@@ -43,7 +44,7 @@ class PhoneNumber(Standard):
         return f'(+{self.country_code} {self.national_number} [{self.id}])'
 
     class Meta:
-        unique_together = (('country_code', 'national_number'), )
+        unique_together = ['country_code', 'national_number']
 
 class Email(Standard):
     """Email.
