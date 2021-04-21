@@ -156,12 +156,11 @@ class AccessedURL(Standard):
     )
     first_accessed = models.DateTimeField(db_index=True)
     last_accessed = models.DateTimeField(db_index=True)
-    count = models.IntegerField(db_index=True)
     url = models.URLField(
         'URL',
-        unique=True,
         db_index=True
     )
+    count = models.IntegerField(db_index=True)
 
     class Meta:
         verbose_name = 'Accessed URL'
