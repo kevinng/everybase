@@ -282,7 +282,16 @@ class ProductType(Standard, Choice):
     pass
 
 class CompanyProductType(Standard):
-    popularity = models.FloatField(db_index=True)
+    """Relationship between company and product type.
+
+    Last updated: 21 April 2021, 10:29 PM
+    """
+
+    popularity = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     company = models.ForeignKey(
         'Company',
