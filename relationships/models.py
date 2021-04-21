@@ -147,6 +147,11 @@ class User(Standard):
         return f'({self.name} [{self.id}])'
 
 class AccessedURL(Standard):
+    """Accessed URL.
+
+    Last updated: 21 April 2021, 10:57 PM
+    """
+
     user = models.ForeignKey(
         'User',
         related_name='accessed_urls',
