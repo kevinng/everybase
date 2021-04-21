@@ -279,6 +279,10 @@ class UserIPDevice(Standard):
         verbose_name_plural = 'User IP-Devices'
 
 class ProductType(Standard, Choice):
+    """Product type.
+
+    Last updated: 21 April 2021, 10:45 PM
+    """
     pass
 
 class CompanyProductType(Standard):
