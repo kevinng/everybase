@@ -26,3 +26,11 @@ USING relationships_user
 WHERE
 relationships_supply.user_id = relationships_user.id AND
 relationships_user.email_id > 1000;
+
+
+DELETE FROM relationships_productspecification
+USING relationships_supply, relationships_user
+WHERE
+relationships_productspecification.supply_id = relationships_supply.id AND
+relationships_supply.user_id = relationships_user.id AND
+relationships_user.email_id > 1000;
