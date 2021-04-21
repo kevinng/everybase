@@ -66,11 +66,14 @@ class Email(Standard):
         return f'({self.email} [{self.id}])'
 
 class InvalidEmail(Standard):
+    """Invalid email.
+
+    Last updated: 21 April 2021, 11:13 PM
+    """
+
     email = LowerCaseCharField(
         max_length=1000,
         unique=True,
-        null=False,
-        blank=False,
         db_index=True
     )
     import_job = models.ForeignKey(
