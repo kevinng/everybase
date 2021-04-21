@@ -46,10 +46,13 @@ class PhoneNumber(Standard):
         unique_together = (('country_code', 'national_number'), )
 
 class Email(Standard):
+    """Email.
+
+    Last updated: 21 April 2021, 11:15 PM
+    """
+
     email = LowerCaseEmailField(
         unique=True,
-        null=False,
-        blank=False,
         db_index=True
     )
     import_job = models.ForeignKey(
