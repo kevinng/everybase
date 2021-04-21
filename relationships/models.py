@@ -171,6 +171,11 @@ class AccessedURL(Standard):
         return f'({self.url} [{self.id}])'
 
 class UserIPDevice(Standard):
+    """IP address and device user used to access our system.
+
+    Last updated: 21 April 2021, 10:56 PM
+    """
+
     user = models.ForeignKey(
         'User',
         related_name='ip_devices',
