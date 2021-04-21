@@ -446,6 +446,139 @@ class ProductSpecificationAdmin(admin.ModelAdmin):
     autocomplete_fields = ['product_specification_type', 'product', 'supply',
         'demand']
 
+@admin.register(mod.IncotermAvailability)
+class IncotermAvailabilityAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_choice_list_display
+    list_editable = comadm.standard_choice_list_editable
+    list_per_page = 50
+    list_filter = comadm.standard_choice_list_filter
+    search_fields = comadm.standard_choice_search_fields
+    ordering = comadm.standard_choice_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_choice_readonly_fields
+    fieldsets = comadm.standard_choice_fieldsets
+
+@admin.register(mod.Location)
+class LocationAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_choice_list_display
+    list_editable = comadm.standard_choice_list_editable
+    list_per_page = 50
+    list_filter = comadm.standard_choice_list_filter
+    search_fields = comadm.standard_choice_search_fields
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_choice_readonly_fields
+    fieldsets = comadm.standard_choice_fieldsets
+
+_payment_term_fields = ['supply_quote', 'demand_quote']
+@admin.register(mod.PaymentTerm)
+class PaymentTermAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_choice_list_display + _payment_term_fields
+    list_editable = comadm.standard_choice_list_editable + _payment_term_fields
+    list_per_page = 50
+    list_filter = comadm.standard_choice_list_filter
+    search_fields = comadm.standard_choice_search_fields
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_choice_readonly_fields
+    fieldsets = comadm.standard_choice_fieldsets + [
+        ('Details', {'fields': _payment_term_fields})
+    ]
+    autocomplete_fields = _payment_term_fields
+
+_unit_of_measure_fields = ['plural_name', 'product_type']
+@admin.register(mod.UnitOfMeasure)
+class UnitOfMeasureAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_choice_list_display + _unit_of_measure_fields
+    list_editable = comadm.standard_choice_list_editable + _unit_of_measure_fields
+    list_per_page = 50
+    list_filter = comadm.standard_choice_list_filter + ['product_type']
+    search_fields = comadm.standard_choice_search_fields + \
+        ['product_type__name', 'product_type__description']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_choice_readonly_fields
+    fieldsets = comadm.standard_choice_fieldsets + [
+        ('Details', {'fields': _unit_of_measure_fields})
+    ]
+    autocomplete_fields = ['product_type']
+
+_lead_quote_fields = ['entered', 'price', 'price_uom', 'currency',
+    'incoterm_availability', 'location', 'total_quantity', 'total_quantity_uom',
+    'moq_quantity', 'moq_quantity_uom', 'delivery_interval_quantity',
+    'delivery_interval_quantity_uom', 'delivery_interval_count',
+    'delivery_interval_length', 'delivery_interval_uom',
+    'commission_percentage_sales', 'commission_amount',
+    'commission_amount_currency', 'commission_amount_uom']
+
+@admin.register(mod.SupplyQuote)
+class SupplyQuoteAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _lead_quote_fields
+    list_editable = comadm.standard_list_editable + _lead_quote_fields
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter + ['currency',
+        'incoterm_availability', 'location', 'supply__product_type']
+    search_fields = comadm.standard_search_fields + \
+        ['supply__product_type__name']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _lead_quote_fields + ['supply']})
+    ]
+    autocomplete_fields = ['price_uom', 'currency', 'incoterm_availability',
+        'location', 'total_quantity_uom', 'moq_quantity_uom',
+        'delivery_interval_quantity_uom', 'commission_amount_currency',
+        'commission_amount_uom', 'supply']
+
+@admin.register(mod.DemandQuote)
+class DemandQuoteAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _lead_quote_fields
+    list_editable = comadm.standard_list_editable + _lead_quote_fields
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter + ['currency',
+        'incoterm_availability', 'location', 'demand__product_type']
+    search_fields = comadm.standard_search_fields + \
+        ['demand__product_type__name']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _lead_quote_fields + ['demand']})
+    ]
+    autocomplete_fields = ['price_uom', 'currency', 'incoterm_availability',
+        'location', 'total_quantity_uom', 'moq_quantity_uom',
+        'delivery_interval_quantity_uom', 'commission_amount_currency',
+        'commission_amount_uom', 'demand']
+
+
+
+
+
 # _person_fields = ['given_name', 'family_name', 'notes_md']
 # @admin.register(mod.Person)
 # class PersonAdmin(admin.ModelAdmin):

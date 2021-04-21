@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'relationships.apps.RelationshipsConfig',
     'files.apps.FilesConfig',
     'growth.apps.GrowthConfig',
+    'payments.apps.PaymentsConfig',
     'django_filters',
     'django_extensions',
     'widget_tweaks',

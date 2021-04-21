@@ -461,3 +461,360 @@ class ProductSpecification(Standard):
         return f'({self.product_specification_type.display_name}, \
             {self.product.display_name}, {self.is_exists}, {self.value}, \
             [{self.id}])'
+
+class IncotermAvailability(Standard, Choice):
+    """Incoterm/availability - e.g., FOB, CIF, OTG, pre-order.
+
+    Last updated: 21 April 2021, 4:34 PM
+    Last verified with dictionary: 21 April 2021, 3:30 PM
+    """
+    class Meta:
+        verbose_name = 'Incoterm/Availability'
+        verbose_name_plural = 'Incoterms/Availabilities'
+
+class Location(Standard, Choice):
+    """Location.
+
+    Last updated: 21 April 2021, 3:24 PM
+    Last verified with dictionary: 21 April 2021, 3:24 PM
+    """
+    pass
+
+class PaymentTerm(Standard, Choice):
+    """Payment term.
+
+    Last updated: 21 April 2021, 3:21 PM
+    Last verified with dictionary: 21 April 2021, 3:21 PM
+    """
+    
+    # At least one of the following must be set.
+    supply_quote = models.ForeignKey(
+        'SupplyQuote',
+        null=True,
+        blank=True,
+        related_name='payment_terms',
+        related_query_name='payment_terms',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    demand_quote = models.ForeignKey(
+        'DemandQuote',
+        null=True,
+        blank=True,
+        related_name='payment_terms',
+        related_query_name='payment_terms',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def clean(self):
+        super(PaymentTerm, self).clean()
+
+        # Either supply_quote or demand_quote must be set.
+        if (self.supply_quote is None and self.demand_quote is None) or \
+            (self.supply_quote is not None and self.demand_quote is not None):
+            raise ValidationError('Either supply_quote or demand_quote must be \
+                set.')
+
+class Packing(Standard):
+    """Packing.
+
+    Last updated: 21 April 2021, 3:08 PM
+    Last verified with dictionary: 21 April 2021, 3:08 PM
+    """
+
+    base_quantity = models.FloatField(db_index=True)
+    base_uom = models.ForeignKey(
+        'UnitOfMeasure',
+        related_name='packing_base_uoms',
+        related_query_name='packing_base_uoms',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    pack_uom = models.ForeignKey(
+        'UnitOfMeasure',
+        related_name='packing_pack_uom',
+        related_query_name='packing_pack_uom',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    # At least one of the following must be set.
+    supply_quote = models.ForeignKey(
+        'SupplyQuote',
+        null=True,
+        blank=True,
+        related_name='packings',
+        related_query_name='packings',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    demand_quote = models.ForeignKey(
+        'DemandQuote',
+        null=True,
+        blank=True,
+        related_name='packings',
+        related_query_name='packings',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def clean(self):
+        super(Packing, self).clean()
+
+        # Either supply_quote or demand_quote must be set.
+        if (self.supply_quote is None and self.demand_quote is None) or \
+            (self.supply_quote is not None and self.demand_quote is not None):
+            raise ValidationError('Either supply_quote or demand_quote must be \
+                set.')
+
+class UnitOfMeasure(Standard, Choice):
+    """Unit of measure.
+
+    Last updated: 21 April 2021, 2:44 PM
+    Last verified with dictionary: 21 April 2021, 2:44 PM
+    """
+
+    plural_name = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    product_type = models.ForeignKey(
+        'ProductType',
+        related_name='unit_of_measures',
+        related_query_name='unit_of_measures',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+class ExcludedPrice(Standard, Choice):
+    """Prices excluded from quoted price - e.g., VAT, GST.
+
+    Last updated: 21 April 2021, 2:45 PM
+    Last verified with dictionary: 21 April 2021, 2:45 PM
+    """
+
+    # At least one of the following must be set.
+    supply_quote = models.ForeignKey(
+        'SupplyQuote',
+        null=True,
+        blank=True,
+        related_name='excluded_prices',
+        related_query_name='excluded_prices',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    demand_quote = models.ForeignKey(
+        'DemandQuote',
+        null=True,
+        blank=True,
+        related_name='excluded_prices',
+        related_query_name='excluded_prices',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def clean(self):
+        super(ExcludedPrice, self).clean()
+
+        # Either supply_quote or demand_quote must be set.
+        if (self.supply_quote is None and self.demand_quote is None) or \
+            (self.supply_quote is not None and self.demand_quote is not None):
+            raise ValidationError('Either supply_quote or demand_quote must be \
+                set.')
+
+class LeadQuote(Standard):
+    """Abstract lead quote class - to be extended by SupplyQuote and
+    DemandQuote.
+
+    Last updated: 21 April 2021, 3:33 PM
+    Last verified with dictionary: 21 April 2021, 3:33 PM
+    """
+
+    entered = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    price = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    price_uom = models.ForeignKey(
+        'UnitOfMeasure',
+        null=True,
+        blank=True,
+        related_name='%(class)s_price_uoms',
+        related_query_name='%(class)s_price_uoms',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    currency = models.ForeignKey(
+        'payments.Currency',
+        null=True,
+        blank=True,
+        related_name='%(class)s_currencies',
+        related_query_name='%(class)s_currencies',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    incoterm_availability = models.ForeignKey(
+        'IncotermAvailability',
+        null=True,
+        blank=True,
+        related_name='%(class)s_incoterm_availabilities',
+        related_query_name='%(class)s_incoterm_availabilities',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    location = models.ForeignKey(
+        'Location',
+        null=True,
+        blank=True,
+        related_name='%(class)s_locations',
+        related_query_name='%(class)s_locations',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    total_quantity = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    total_quantity_uom = models.ForeignKey(
+        'UnitOfMeasure',
+        null=True,
+        blank=True,
+        related_name='%(class)s_total_quantity_uoms',
+        related_query_name='%(class)s_total_quantity_uoms',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    moq_quantity = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    moq_quantity_uom = models.ForeignKey(
+        'UnitOfMeasure',
+        null=True,
+        blank=True,
+        related_name='%(class)s_moq_quantity_uoms',
+        related_query_name='%(class)s_moq_quantity_uoms',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    delivery_interval_quantity = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    delivery_interval_quantity_uom = models.ForeignKey(
+        'UnitOfMeasure',
+        null=True,
+        blank=True,
+        related_name='%(class)s_delivery_interval_quantity_uoms',
+        related_query_name=\
+            '%(class)s_delivery_interval_quantity_uoms',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    delivery_interval_count = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    delivery_interval_length = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    delivery_interval_uom = models.CharField(
+        max_length=2,
+        null=True,
+        blank=True,
+        choices=[
+            ('d', 'Day'),
+            ('w', 'Week'),
+            ('m', 'Month'),
+            ('y', 'Year')
+        ],
+        db_index=True
+    )
+
+    commission_percentage_sales = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_amount = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_amount_currency = models.ForeignKey(
+        'payments.Currency',
+        null=True,
+        blank=True,
+        related_name='%(class)s_commission_amount_currencies',
+        related_query_name='%(class)s_commission_amount_currencies',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    commission_amount_uom = models.ForeignKey(
+        'UnitOfMeasure',
+        null=True,
+        blank=True,
+        related_name='%(class)s_commission_amount_uom',
+        related_query_name='%(class)s_commission_amount_uom',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    class Meta:
+        abstract = True
+
+class SupplyQuote(LeadQuote):
+    """Supply quote.
+
+    Last updated: 21 April 2021, 5:23 PM
+    Last verified with dictionary: 21 April 2021, 5:23 PM
+    """
+
+    supply = models.ForeignKey(
+        'UnitOfMeasure',
+        related_name='supply_quotes',
+        related_query_name='supply_quotes',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def __str__(self):
+        return f'({self.supply.product_type.name}, [{self.id}])'
+
+class DemandQuote(LeadQuote):
+    """Demand quote.
+
+    Last updated: 21 April 2021, 5:23 PM
+    Last verified with dictionary: 21 April 2021, 5:23 PM
+    """
+
+    demand = models.ForeignKey(
+        'Demand',
+        related_name='demand_quotes',
+        related_query_name='demand_quotes',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def __str__(self):
+        return f'({self.demand.product_type.name}, [{self.id}])'
