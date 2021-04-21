@@ -108,6 +108,11 @@ def get_user_key(length=_USER_KEY_LENGTH):
     return key
 
 class User(Standard):
+    """User details.
+
+    Last updated: 21 April 2021, 11:10 PM
+    """
+
     key = models.CharField(
         max_length=_USER_KEY_LENGTH,
         unique=True,
