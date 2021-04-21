@@ -300,11 +300,20 @@ class CompanyProductType(Standard):
             [{self.id}])'
 
 class Company(Standard):
+    """Company selling products. Not companies of users.
+
+    Last updated: 21 April 2021, 10:24 PM
+    """
+
     display_name = models.CharField(
         max_length=200,
         db_index=True
     )
-    notes = models.TextField(db_index=True)
+    notes = models.TextField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     product_types = models.ManyToManyField(
         'ProductType',
