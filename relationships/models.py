@@ -344,6 +344,11 @@ class CompanyProduct(Standard):
             [{self.id}])'
 
 class Product(Standard):
+    """Product.
+
+    Last updated: 21 April 2021, 9:46 PM
+    """
+
     display_name = models.CharField(
         max_length=200,
         db_index=True
@@ -367,7 +372,6 @@ class ProductSpecificationType(Standard):
     ProductSpecification.
 
     Last updated: 21 April 2021, 9:33 PM
-    Last verified with dictionary: 21 April 2021, 9:33 PM
     """
 
     display_name = models.CharField(
@@ -396,7 +400,6 @@ class ProductSpecification(Standard):
     product-specification-type on a product.
 
     Last updated: 21 April 2021, 9:09 PM
-    Last verified with dictionary: 21 April 2021, 9:09 PM
     """
 
     is_exists = models.BooleanField(
@@ -463,7 +466,6 @@ class IncotermAvailability(Standard, Choice):
     """Incoterm/availability - e.g., FOB, CIF, OTG, pre-order.
 
     Last updated: 21 April 2021, 4:34 PM
-    Last verified with dictionary: 21 April 2021, 3:30 PM
     """
     class Meta:
         verbose_name = 'Incoterm/Availability'
@@ -473,7 +475,6 @@ class Location(Standard, Choice):
     """Location.
 
     Last updated: 21 April 2021, 3:24 PM
-    Last verified with dictionary: 21 April 2021, 3:24 PM
     """
     pass
 
@@ -481,7 +482,6 @@ class PaymentTerm(Standard, Choice):
     """Payment term.
 
     Last updated: 21 April 2021, 3:21 PM
-    Last verified with dictionary: 21 April 2021, 3:21 PM
     """
     
     # At least one of the following must be set.
@@ -517,7 +517,6 @@ class Packing(Standard):
     """Packing.
 
     Last updated: 21 April 2021, 3:08 PM
-    Last verified with dictionary: 21 April 2021, 3:08 PM
     """
 
     base_quantity = models.FloatField(db_index=True)
@@ -569,7 +568,6 @@ class UnitOfMeasure(Standard, Choice):
     """Unit of measure.
 
     Last updated: 21 April 2021, 2:44 PM
-    Last verified with dictionary: 21 April 2021, 2:44 PM
     """
 
     plural_name = models.CharField(
@@ -591,7 +589,6 @@ class ExcludedPrice(Standard, Choice):
     """Prices excluded from quoted price - e.g., VAT, GST.
 
     Last updated: 21 April 2021, 2:45 PM
-    Last verified with dictionary: 21 April 2021, 2:45 PM
     """
 
     # At least one of the following must be set.
@@ -627,7 +624,6 @@ class Lead(Standard):
     """Abstract lead to be overriden by Supply and Demand.
 
     Last updated: 21 April 2021, 8:33 PM
-    Last verified with dictionary: 21 April 2021, 8:33 PM
     """
 
     product_type = models.ForeignKey(
@@ -670,7 +666,6 @@ class Supply(Lead):
     """Supply.
 
     Last updated: 21 April 2021, 8:30 PM
-    Last verified with dictionary: 21 April 2021, 8:30 PM
     """
 
     class Meta:
@@ -681,7 +676,6 @@ class Demand(Lead):
     """Demand.
 
     Last updated: 21 April 2021, 8:30 PM
-    Last verified with dictionary: 21 April 2021, 8:30 PM
     """
 
     pass
@@ -691,7 +685,6 @@ class LeadQuote(Standard):
     DemandQuote.
 
     Last updated: 21 April 2021, 3:33 PM
-    Last verified with dictionary: 21 April 2021, 3:33 PM
     """
 
     entered = models.DateTimeField(
@@ -847,7 +840,6 @@ class SupplyQuote(LeadQuote):
     """Supply quote.
 
     Last updated: 21 April 2021, 5:23 PM
-    Last verified with dictionary: 21 April 2021, 5:23 PM
     """
 
     supply = models.ForeignKey(
@@ -865,7 +857,6 @@ class DemandQuote(LeadQuote):
     """Demand quote.
 
     Last updated: 21 April 2021, 5:23 PM
-    Last verified with dictionary: 21 April 2021, 5:23 PM
     """
 
     demand = models.ForeignKey(
