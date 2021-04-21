@@ -127,6 +127,10 @@ from common import admin as comadm
 #     inlines = [CompanyEmailInlineAdmin, CompanyPhoneNumberInlineAdmin,
 #         CompanyAddressInlineAdmin, CompanyLinkInlineAdmin]
 
+@admin.register(mod.PhoneNumberType)
+class PhoneNumberTypeAdmin(comadm.ChoiceAdmin):
+    pass
+
 _phone_number_fields = ['country_code', 'national_number']
 @admin.register(mod.PhoneNumber)
 class PhoneNumberAdmin(admin.ModelAdmin):
@@ -144,7 +148,6 @@ class PhoneNumberAdmin(admin.ModelAdmin):
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _phone_number_fields + ['types']})]
-    # inlines = [PersonPhoneNumberInlineAdmin, CompanyPhoneNumberInlineAdmin]
 
 @admin.register(mod.Email)
 class EmailAdmin(admin.ModelAdmin):
