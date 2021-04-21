@@ -295,6 +295,10 @@ class CompanyProductType(Standard):
         db_index=True
     )
 
+    def __str__(self):
+        return f'({self.company.display_name}, {self.product_type.name} \
+            [{self.id}])'
+
 class Company(Standard):
     display_name = models.CharField(
         max_length=200,
@@ -791,7 +795,7 @@ class SupplyQuote(LeadQuote):
     """
 
     supply = models.ForeignKey(
-        'UnitOfMeasure',
+        'Supply',
         related_name='supply_quotes',
         related_query_name='supply_quotes',
         on_delete=models.PROTECT,
