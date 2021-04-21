@@ -380,12 +380,23 @@ class ProductSpecificationType(Standard):
         return f'({self.display_name} [{self.id}])'
 
 class ProductSpecification(Standard):
+    """Details on specification existance or value of a
+    product-specification-type on a product.
+
+    Last updated: 21 April 2021, 9:09 PM
+    Last verified with dictionary: 21 April 2021, 9:09 PM
     """
 
-    """
-    
-    is_exists = models.BooleanField(db_index=True)
-    value = models.FloatField(db_index=True)
+    is_exists = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    value = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     
     product_specification_type = models.ForeignKey(
         'ProductSpecificationType',
@@ -394,10 +405,14 @@ class ProductSpecification(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+
+    # At least 1 of the following must be set
     product = models.ForeignKey(
         'Product',
         related_name='product_specifications',
         related_query_name='product_specifications',
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -424,6 +439,13 @@ class ProductSpecification(Standard):
         return f'({self.product_specification_type.display_name}, \
             {self.product.display_name}, {self.is_exists}, {self.value}, \
             [{self.id}])'
+
+    def clean(self):
+        super(ProductSpecification, self).clean()
+
+        # Either supply_quote or demand_quote must be set.
+        if self.product is None and self.supply is None and self.demand:
+            raise ValidationError('Either product, supply, demand must be set.')
 
 class IncotermAvailability(Standard, Choice):
     """Incoterm/availability - e.g., FOB, CIF, OTG, pre-order.
