@@ -6,6 +6,9 @@ from django.utils.translation import gettext_lazy as _
 import random
 
 class PhoneNumberType(Choice):
+    """
+
+    """
     pass
 
 def validate_phone_number_country_code(value):
