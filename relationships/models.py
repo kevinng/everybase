@@ -165,6 +165,8 @@ class AccessedURL(Standard):
     class Meta:
         verbose_name = 'Accessed URL'
         verbose_name_plural = 'Accessed URLs'
+        unique_together = ['user', 'url']
+        index_together = ['user', 'url']
     
     def __str__(self):
         return f'({self.url} [{self.id}])'
