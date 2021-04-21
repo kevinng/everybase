@@ -697,12 +697,10 @@ class LeadQuote(Standard):
     """Abstract lead quote class - to be extended by SupplyQuote and
     DemandQuote.
 
-    Last updated: 21 April 2021, 3:33 PM
+    Last updated: 21 April 2021, 10:06 PM
     """
 
     entered = models.DateTimeField(
-        null=True,
-        blank=True,
         db_index=True
     )
 
