@@ -379,52 +379,11 @@ class ProductSpecificationType(Standard):
     def __str__(self):
         return f'({self.display_name} [{self.id}])'
 
-class Lead(Standard):
-    product_type = models.ForeignKey(
-        'ProductType',
-        related_name='%(class)s_leads',
-        related_query_name='%(class)s_leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    company = models.ForeignKey(
-        'Company',
-        related_name='%(class)s_leads',
-        related_query_name='%(class)s_leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    product = models.ForeignKey(
-        'Product',
-        related_name='%(class)s_leads',
-        related_query_name='%(class)s_leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
-    user = models.ForeignKey(
-        'User',
-        related_name='%(class)s_leads',
-        related_query_name='%(class)s_leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    
-    def __str__(self):
-        return f'({self.product_type.name}, {self.user.name} [{self.id}])'
-    
-    class Meta:
-        abstract = True
-
-class Supply(Lead):
-    class Meta:
-        verbose_name = 'Supply'
-        verbose_name_plural = 'Supplies'
-
-class Demand(Lead):
-    pass
-
 class ProductSpecification(Standard):
+    """
+
+    """
+    
     is_exists = models.BooleanField(db_index=True)
     value = models.FloatField(db_index=True)
     
@@ -629,6 +588,69 @@ class ExcludedPrice(Standard, Choice):
             (self.supply_quote is not None and self.demand_quote is not None):
             raise ValidationError('Either supply_quote or demand_quote must be \
                 set.')
+
+class Lead(Standard):
+    """Abstract lead to be overriden by Supply and Demand.
+
+    Last updated: 21 April 2021, 8:33 PM
+    Last verified with dictionary: 21 April 2021, 8:33 PM
+    """
+
+    product_type = models.ForeignKey(
+        'ProductType',
+        related_name='%(class)s_leads',
+        related_query_name='%(class)s_leads',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'Company',
+        related_name='%(class)s_leads',
+        related_query_name='%(class)s_leads',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    product = models.ForeignKey(
+        'Product',
+        related_name='%(class)s_leads',
+        related_query_name='%(class)s_leads',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    user = models.ForeignKey(
+        'User',
+        related_name='%(class)s_leads',
+        related_query_name='%(class)s_leads',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    
+    def __str__(self):
+        return f'({self.product_type.name}, {self.user.name} [{self.id}])'
+    
+    class Meta:
+        abstract = True
+
+class Supply(Lead):
+    """Supply.
+
+    Last updated: 21 April 2021, 8:30 PM
+    Last verified with dictionary: 21 April 2021, 8:30 PM
+    """
+
+    class Meta:
+        verbose_name = 'Supply'
+        verbose_name_plural = 'Supplies'
+
+class Demand(Lead):
+    """Demand.
+
+    Last updated: 21 April 2021, 8:30 PM
+    Last verified with dictionary: 21 April 2021, 8:30 PM
+    """
+
+    pass
 
 class LeadQuote(Standard):
     """Abstract lead quote class - to be extended by SupplyQuote and
