@@ -6,8 +6,9 @@ from django.utils.translation import gettext_lazy as _
 import random
 
 class PhoneNumberType(Choice):
-    """
+    """Phone number type.
 
+    Last updated: 21 April 2021, 11:23 PM
     """
     pass
 
@@ -928,3 +929,48 @@ class DemandQuote(LeadQuote):
 
     def __str__(self):
         return f'({self.demand.product_type.name}, [{self.id}])'
+
+class Match(Standard):
+    """Match.
+
+    Last updated: 21 April 2021, 4:01 PM
+    """
+
+    buyer_sent = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    seller_sent = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    connected = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    supply_quote = models.ForeignKey(
+        'SupplyQuote',
+        related_name='matches',
+        related_query_name='matches',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    demand_quote = models.ForeignKey(
+        'DemandQuote',
+        related_name='matches',
+        related_query_name='matches',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Match'
+        verbose_name_plural = 'Matches'
+
+    def __str__(self):
+        return f'({self.demand_quote.demand.product_type.name}, \
+            {self.supply_quote.supply.product_type.name}, [{self.id}])'
