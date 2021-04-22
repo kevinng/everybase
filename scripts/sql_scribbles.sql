@@ -1,4 +1,9 @@
-DELETE FROM relationships_email WHERE id > 1000;
+DELETE FROM relationships_email WHERE id > 100;
+
+DELETE FROM growth_zerobounceresult
+USING relationships_email
+WHERE
+growth_zerobounceresult.email_id = relationships_email.id;
 
 DELETE FROM relationships_user where email_id > 1000;
 
