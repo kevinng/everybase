@@ -6,7 +6,7 @@ from common import admin as comadm
 _stripe_session_fields = ['started', 'succeeded', 'failed', 'session_id',
     'currency', 'unit_amount']
 @admin.register(mod.StripeSession)
-class StripeSession(admin.ModelAdmin):
+class StripeSessionAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _stripe_session_fields
     list_editable = comadm.standard_list_editable + _stripe_session_fields
