@@ -9,19 +9,14 @@ class PhoneNumberTypeAdmin(comadm.ChoiceAdmin):
 
 _phone_number_fields = ['country_code', 'national_number']
 @admin.register(mod.PhoneNumber)
-class PhoneNumberAdmin(admin.ModelAdmin):
+class PhoneNumberAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _phone_number_fields
     list_editable = comadm.standard_list_editable + _phone_number_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['country_code']
     search_fields = comadm.standard_search_fields + _phone_number_fields
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _phone_number_fields + ['types']})]
     autocomplete_fields = ['types']
