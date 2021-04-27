@@ -257,6 +257,7 @@ _lead_fields = ['product_type', 'company', 'product', 'user']
 _lead_search_fields = ['product_type__name', 'product_type__description',
     'company__display_name', 'company__notes', 'product__display_name',
     'product__notes', 'user__name']
+_lead_autocomplete_fields = ['product_type', 'company', 'product', 'user']
 
 @admin.register(mod.Supply)
 class SupplyAdmin(admin.ModelAdmin):
@@ -275,7 +276,7 @@ class SupplyAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _lead_fields})
     ]
-    autocomplete_fields = ['product_type', 'company', 'product', 'user']
+    autocomplete_fields = _lead_autocomplete_fields
 
 @admin.register(mod.Demand)
 class DemandAdmin(admin.ModelAdmin):
@@ -294,7 +295,7 @@ class DemandAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _lead_fields})
     ]
-    autocomplete_fields = ['product_type', 'company', 'product', 'user']
+    autocomplete_fields = _lead_autocomplete_fields
 
 _unit_of_measure_fields = ['plural_name', 'product_type']
 @admin.register(mod.UnitOfMeasure)
