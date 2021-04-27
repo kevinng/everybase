@@ -6,6 +6,7 @@ class StripeSession(Standard):
 
     Last updated: 25 April 2021, 4:12 PM
     """
+
     started = models.DateTimeField(
         null=True,
         blank=True,
@@ -47,6 +48,7 @@ class PaymentEvent(Standard):
 
     Last updated: 25 April 2021, 3:45 PM
     """
+    
     event_type = models.ForeignKey(
         'PaymentEventType',
         related_name='payment_events',
