@@ -380,9 +380,8 @@ class Company(Standard):
         db_index=True
     )
 
-    product_types = models.ManyToManyField(
-        'ProductType',
-        through='CompanyProductType',
+    company_product_types = models.ManyToManyField(
+        'CompanyProductType',
         related_name='companies',
         related_query_name='companies',
         db_index=True
