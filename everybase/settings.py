@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'files.apps.FilesConfig',
     'growth.apps.GrowthConfig',
     'payments.apps.PaymentsConfig',
+    'processor.apps.ProcessorConfig',
     'django_filters',
     'django_extensions',
     'widget_tweaks',

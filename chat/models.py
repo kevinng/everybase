@@ -577,18 +577,18 @@ class Method(Standard, Choice):
         db_index=True
     )
 	
-    category = models.ForeignKey(
-        'MethodCategory',
+    tags = models.ManyToManyField(
+        'MethodTag',
         related_name='methods',
         related_query_name='methods',
-        on_delete=models.PROTECT,
+        blank=True,
         db_index=True
     )
 
-class MethodCategory(Standard, Choice):
-    """Method category.
+class MethodTag(Standard, Choice):
+    """Method tag.
 
-    Last updated: 23 April 2021, 1:49 PM
+    Last updated: 26 April 2021, 9:31 PM
     """
     pass
 
