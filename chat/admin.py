@@ -64,7 +64,7 @@ class TwilioStatusCallbackAdmin(comadm.StandardAdmin):
         'account_sid', 'api_version', 'channel_to_address',
         'channel_install_sid', 'channel_status_message', 'channel_prefix',
         'message_sid', 'message_status', 'sms_sid', 'sms_status', 'error_code',
-        'event_type', 'log_entry__payload']
+        'event_type', 'message__body', 'log_entry__payload']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
