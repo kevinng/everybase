@@ -46,13 +46,14 @@ class EmailAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['import_job']
 
+_invalid_email_fields = ['email', 'import_job']
 @admin.register(mod.InvalidEmail)
 class InvalidEmailAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['email', 'import_job']
+    list_display = comadm.standard_list_display + _invalid_email_fields
     list_editable = comadm.standard_list_editable + ['email']
     list_per_page = 50
-    list_filter = ['import_job'] + comadm.standard_list_filter
+    list_filter = comadm.standard_list_filter + ['import_job']
     search_fields = comadm.standard_search_fields + ['email']
     ordering = comadm.standard_ordering
     show_full_result_count = True
@@ -61,7 +62,7 @@ class InvalidEmailAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['email', 'import_job']})
+        (None, {'fields': _invalid_email_fields})
     ]
     autocomplete_fields = ['import_job']
 
