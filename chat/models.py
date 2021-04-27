@@ -577,6 +577,10 @@ class Method(Standard, Choice):
     Last updated: 23 April 2021, 1:49 PM
     """
 
+    is_function = models.BooleanField(
+        default=False,
+        db_index=True
+    )
     title = models.CharField(
         max_length=200,
         db_index=True
