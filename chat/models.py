@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import Standard, Choice
+from common.models import Standard, Choice, short_text
 
 class MessageTemplate(Standard):
     """Message template.
@@ -145,7 +145,7 @@ class TwilioOutboundMessage(Standard):
     )
 
     def __str__(self):
-        return f'({self.to_str}, {self.body} [{self.id}])'
+        return f'({self.to_str}, {short_text(self.body)} [{self.id}])'
 
 class TwilioStatusCallback(Standard):
     """Twilio status callback.
@@ -267,7 +267,7 @@ class TwilioStatusCallbackLogEntry(Standard):
     )
 
     def __str__(self):
-        return f'({self.payload} [{self.id}])'
+        return f'({short_text(self.payload)} [{self.id}])'
 
     class Meta:
         verbose_name = 'Twilio Status Callback Log Entry'
@@ -449,7 +449,7 @@ class TwilioInboundMessage(Standard):
     )
 
     def __str__(self):
-        return f'({self.from_str}, {self.body} [{self.id}])'    
+        return f'({self.from_str}, {short_text(self.body)} [{self.id}])'    
 
 class TwilioInboundMessageMedia(Standard):
     """Twilio inbound message media.
@@ -496,6 +496,9 @@ class TwilioInboundMessageLogEntry(Standard):
     class Meta:
         verbose_name = 'Twilio Inbound Message Log Entry'
         verbose_name_plural = 'Twilio Inbound Message Log Entries'
+
+    def __str__(self):
+        return f'({self.message} [{self.id}])'
 
 class InboundMessageGroup(Standard):
     """We operate on inbound messages one group at a time. This is a group of

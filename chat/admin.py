@@ -146,6 +146,23 @@ class TwilioInboundMessageMediaAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['message']
 
+_twilio_inbound_message_log_entry = ['payload', 'message']
+@admin.register(mod.TwilioInboundMessageLogEntry)
+class TwilioInboundMessageLogEntryAdmin(comadm.StandardAdmin):
+        # List page settings
+    list_display = comadm.standard_list_display + \
+        _twilio_inbound_message_log_entry
+    list_editable = comadm.standard_list_editable + \
+        _twilio_inbound_message_log_entry
+    search_fields = comadm.standard_search_fields + \
+        _twilio_inbound_message_log_entry
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _twilio_inbound_message_log_entry})
+    ]
+    autocomplete_fields = ['message']
+
 _inbound_message_group_fields = ['is_disabled', 'grouped', 'initial_body']
 @admin.register(mod.InboundMessageGroup)
 class InboundMessageGroupAdmin(admin.ModelAdmin):
