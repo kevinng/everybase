@@ -405,15 +405,15 @@ class CompanyProduct(Standard):
 
     company = models.ForeignKey(
         'Company',
-        related_name='companies',
-        related_query_name='companies',
+        related_name='company_products',
+        related_query_name='company_products',
         on_delete=models.PROTECT,
         db_index=True
     )
     product = models.ForeignKey(
         'Product',
-        related_name='products',
-        related_query_name='products',
+        related_name='company_products',
+        related_query_name='company_products',
         on_delete=models.PROTECT,
         db_index=True
     )
