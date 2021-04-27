@@ -62,6 +62,27 @@ class ChoiceAdmin(admin.ModelAdmin):
     def short_programmatic_details(self, obj):
         return models.short_text(obj.programmatic_details)
 
+class StandardChoiceAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_choice_list_display
+    list_editable = standard_choice_list_editable
+    list_per_page = 50
+    list_filter = standard_choice_list_filter
+    search_fields = standard_choice_search_fields
+    ordering = standard_choice_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_choice_readonly_fields
+    fieldsets = standard_choice_fieldsets
+
+    def short_description(self, obj):
+        return models.short_text(obj.description)
+
+    def short_programmatic_details(self, obj):
+        return models.short_text(obj.programmatic_details)
+
 @admin.register(models.State)
 class StateAdmin(ChoiceAdmin):
     fieldsets = choice_fieldsets + [
