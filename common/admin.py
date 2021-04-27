@@ -42,6 +42,21 @@ standard_choice_list_filter = standard_list_filter
 standard_choice_list_editable = standard_list_editable + choice_list_editable
 standard_choice_search_fields = choice_search_fields
 
+class StandardAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = standard_list_display
+    list_editable = standard_list_editable
+    list_per_page = 50
+    list_filter = standard_list_filter
+    search_fields = standard_search_fields
+    ordering = standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = standard_readonly_fields
+    fieldsets = standard_fieldsets
+
 class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = choice_list_display
