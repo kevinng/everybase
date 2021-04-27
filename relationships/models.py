@@ -12,10 +12,19 @@ class PhoneNumberType(Choice):
     """
     pass
 
-def validate_phone_number_country_code(value):
-    if value is not None and len(value) > 0 and value.startswith('+'):
+def validate_country_code(value):
+    """Validates country code. Raise ValidationError if value is invalid.
+
+    Parameters
+    ----------
+    value : str
+        Phone number's country code
+    """
+
+    if value is not None and len(value) > 0 and (value.startswith('+') or \
+        not value.isnumeric()):
         raise ValidationError(
-            _('%(value)s must not start with "+"'),
+            _('%(value)s must be numeric and not start with "+"'),
             params={'value': value},
         )
 
@@ -36,7 +45,7 @@ class PhoneNumber(Standard):
         max_length=50,
         default=None,
         db_index=True,
-        validators=[validate_phone_number_country_code]
+        validators=[validate_country_code]
     )
     national_number = models.CharField(
         max_length=100,
@@ -111,6 +120,7 @@ def get_user_key(length=_USER_KEY_LENGTH):
     key
         URL friendly key
     """
+
     chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890'
     key = ''
     for i in range(0, length):
