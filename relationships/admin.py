@@ -253,6 +253,23 @@ class PackingAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['base_uom', 'pack_uom', 'supply_quote',
         'demand_quote']
 
+_unit_of_measure_fields = ['plural_name', 'product_type']
+@admin.register(mod.UnitOfMeasure)
+class UnitOfMeasureAdmin(comadm.StandardChoiceAdmin):
+    # List page settings
+    list_display = comadm.standard_choice_list_display + _unit_of_measure_fields
+    list_editable = comadm.standard_choice_list_editable + \
+        _unit_of_measure_fields
+    list_filter = comadm.standard_choice_list_filter + ['product_type']
+    search_fields = comadm.standard_choice_search_fields + \
+        ['product_type__name', 'product_type__description']
+
+    # Details page settings
+    fieldsets = comadm.standard_choice_fieldsets + [
+        ('Details', {'fields': _unit_of_measure_fields})
+    ]
+    autocomplete_fields = ['product_type']
+
 _lead_fields = ['product_type', 'company', 'product', 'user']
 _lead_search_fields = ['product_type__name', 'product_type__description',
     'company__display_name', 'company__notes', 'product__display_name',
@@ -286,27 +303,6 @@ class DemandAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _lead_fields})
     ]
     autocomplete_fields = _lead_autocomplete_fields
-
-_unit_of_measure_fields = ['plural_name', 'product_type']
-@admin.register(mod.UnitOfMeasure)
-class UnitOfMeasureAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = comadm.standard_choice_list_display + _unit_of_measure_fields
-    list_editable = comadm.standard_choice_list_editable + _unit_of_measure_fields
-    list_per_page = 50
-    list_filter = comadm.standard_choice_list_filter + ['product_type']
-    search_fields = comadm.standard_choice_search_fields + \
-        ['product_type__name', 'product_type__description']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
-
-    # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_choice_readonly_fields
-    fieldsets = comadm.standard_choice_fieldsets + [
-        ('Details', {'fields': _unit_of_measure_fields})
-    ]
-    autocomplete_fields = ['product_type']
 
 _lead_quote_fields = ['entered', 'price', 'price_uom', 'currency',
     'incoterm_availability', 'location', 'total_quantity', 'total_quantity_uom',
