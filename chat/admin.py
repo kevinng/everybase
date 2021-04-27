@@ -183,21 +183,16 @@ class InboundMessageGroupAdmin(comadm.StandardAdmin):
 _grouping_method_fields = ['applied', 'order', 'inbound_message_group',
     'method']
 @admin.register(mod.GroupingMethod)
-class GroupingMethodAdmin(admin.ModelAdmin):
+class GroupingMethodAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _grouping_method_fields
     list_editable = comadm.standard_list_editable + \
         _grouping_method_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['applied', 'method']
     search_fields = comadm.standard_search_fields + [
         'inbound_message_group__initial_body', 'method__title']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _grouping_method_fields})
     ]
