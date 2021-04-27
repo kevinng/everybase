@@ -493,6 +493,10 @@ class TwilioInboundMessageLogEntry(Standard):
         db_index=True
     )
 
+    class Meta:
+        verbose_name = 'Twilio Inbound Message Log Entry'
+        verbose_name_plural = 'Twilio Inbound Message Log Entries'
+
 class InboundMessageGroup(Standard):
     """We operate on inbound messages one group at a time. This is a group of
     inbound messages.
