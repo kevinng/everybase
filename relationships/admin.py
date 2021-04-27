@@ -171,20 +171,15 @@ class ProductAdmin(comadm.StandardAdmin):
 
 _product_specification_type = ['display_name', 'notes', 'product_type']
 @admin.register(mod.ProductSpecificationType)
-class ProductSpecificationTypeAdmin(admin.ModelAdmin):
+class ProductSpecificationTypeAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _product_specification_type
     list_editable = comadm.standard_list_editable + _product_specification_type
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['product_type']
     search_fields = comadm.standard_search_fields + ['display_name', 'notes',
         'product_type__name', 'product_type__description']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _product_specification_type})
     ]
