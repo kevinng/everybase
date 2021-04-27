@@ -121,7 +121,8 @@ class UserIPDeviceAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_filter = comadm.standard_list_filter
     search_fields = comadm.standard_search_fields + ['user__id', 'ip_address',
-        'browser', 'browser_family', 'os', 'device', 'device_family']
+        'browser', 'browser_family', 'browser_version_string', 'os',
+        'os_version_string', 'device', 'device_family']
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
@@ -131,7 +132,7 @@ class UserIPDeviceAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _user_ip_device_fields + ['accessed_urls']})
     ]
-    autocomplete_fields = ['user']
+    autocomplete_fields = ['user', 'accessed_urls']
 
 @admin.register(mod.ProductType)
 class ProductTypeAdmin(admin.ModelAdmin):
