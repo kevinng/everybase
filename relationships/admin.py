@@ -70,22 +70,17 @@ class UserAdmin(comadm.StandardAdmin):
 _accessed_url_fields = ['user', 'first_accessed', 'last_accessed', 'url',
     'count']
 @admin.register(mod.AccessedURL)
-class AccessedURLAdmin(admin.ModelAdmin):
+class AccessedURLAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _accessed_url_fields
     list_editable = comadm.standard_list_editable + _accessed_url_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['first_accessed',
         'last_accessed']
     search_fields = comadm.standard_search_fields + ['user__id', 'url']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _accessed_url_fields})
+        ('Details', {'fields': _accessed_url_fields})
     ]
     autocomplete_fields = ['user']
 
