@@ -43,12 +43,16 @@ class StripeSession(Standard):
         db_index=True
     )
 
+    def __str__(self):
+        return f'({self.session_id}, {self.unit_amount}, {self.currency} \
+            [{self.id}])'
+
 class PaymentEvent(Standard):
     """Payment event.
 
     Last updated: 25 April 2021, 3:45 PM
     """
-    
+
     event_type = models.ForeignKey(
         'PaymentEventType',
         related_name='payment_events',
