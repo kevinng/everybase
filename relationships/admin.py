@@ -234,11 +234,10 @@ class PaymentTermAdmin(comadm.StandardChoiceAdmin):
 _packing_fields = ['base_quantity', 'base_uom', 'pack_uom', 'supply_quote',
     'demand_quote']
 @admin.register(mod.Packing)
-class PackingAdmin(admin.ModelAdmin):
+class PackingAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _packing_fields
     list_editable = comadm.standard_list_editable + _packing_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['base_uom', 'pack_uom']
     search_fields = comadm.standard_search_fields + [
         'base_uom__name', 'base_uom__description', 'pack_uom__name',
@@ -246,12 +245,8 @@ class PackingAdmin(admin.ModelAdmin):
         'supply_quote__product_type__description',
         'demand_quote__product_type__name',
         'demand_quote__product_type__description']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _packing_fields})
     ]
