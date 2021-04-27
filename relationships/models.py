@@ -394,7 +394,7 @@ class Company(Standard):
 class CompanyProduct(Standard):
     """Relationship between company and product.
 
-    Last updated: 21 April 2021, 9:51 PM
+    Last updated: 27 April 2021, 1:20 PM
     """
 
     popularity = models.FloatField(
