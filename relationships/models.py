@@ -367,7 +367,7 @@ class CompanyProductType(Standard):
 class Company(Standard):
     """Company selling products. Not companies of users.
 
-    Last updated: 21 April 2021, 10:24 PM
+    Last updated: 27 April 2021, 1:00 PM
     """
 
     display_name = models.CharField(
