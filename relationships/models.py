@@ -28,10 +28,28 @@ def validate_country_code(value):
             params={'value': value},
         )
 
+# For migration to run - to be deleted
+def validate_phone_number_country_code(value):
+    pass
+
+def validate_national_number(value):
+    """Validates national number. Raise ValidationError if value is invalid.
+
+    Parameters
+    ----------
+    value : str
+        Phone number's national number
+    """
+
+    if value is not None and len(value) > 0 and not value.isnumeric():
+        raise ValidationError(
+            _('%(value)s must be numeric'), params={'value': value},
+        )
+
 class PhoneNumber(Standard):
     """Phone numbers.
     
-    Last updated: 21 April 2021, 11:18 PM
+    Last updated: 27 April 2021, 11:43 AM
     """
 
     types = models.ManyToManyField(
@@ -50,7 +68,8 @@ class PhoneNumber(Standard):
     national_number = models.CharField(
         max_length=100,
         default=None,
-        db_index=True
+        db_index=True,
+        validators=[validate_national_number]
     )
 
     def __str__(self):
