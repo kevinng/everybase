@@ -238,7 +238,7 @@ class MethodAdmin(comadm.StandardChoiceAdmin):
     autocomplete_fields = ['tags']
 
 @admin.register(mod.MethodTag)
-class MethodTagAdmin(comadm.ChoiceAdmin):
+class MethodTagAdmin(comadm.StandardChoiceAdmin):
     pass
 
 _inbound_message_group_relationship_fields = ['associated', 'group']
