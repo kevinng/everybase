@@ -52,12 +52,11 @@ _twilio_status_callback_fields = ['from_str', 'to_str', 'account_sid',
     'channel_status_message', 'channel_prefix', 'message_sid', 'message_status',
     'sms_sid', 'sms_status', 'error_code', 'event_type', 'message', 'log_entry']
 @admin.register(mod.TwilioStatusCallback)
-class TwilioStatusCallbackAdmin(admin.ModelAdmin):
+class TwilioStatusCallbackAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _twilio_status_callback_fields
     list_editable = comadm.standard_list_editable + \
         _twilio_status_callback_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['api_version',
         'channel_status_message', 'channel_prefix', 'message_status',
         'error_code', 'event_type']
@@ -66,12 +65,8 @@ class TwilioStatusCallbackAdmin(admin.ModelAdmin):
         'channel_install_sid', 'channel_status_message', 'channel_prefix',
         'message_sid', 'message_status', 'sms_sid', 'sms_status', 'error_code',
         'event_type', 'log_entry__payload']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _twilio_status_callback_fields})
     ]
