@@ -6,20 +6,15 @@ from common import admin as comadm
 _message_template_fields = ['programmatic_key', 'is_active', 'internal_title',
     'notes', 'body']
 @admin.register(mod.MessageTemplate)
-class MessageTemplateAdmin(admin.ModelAdmin):
+class MessageTemplateAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _message_template_fields
     list_editable = comadm.standard_list_editable + _message_template_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['is_active']
     search_fields = comadm.standard_search_fields + ['programmatic_key',
         'internal_title', 'notes', 'body']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _message_template_fields})
     ]
