@@ -389,7 +389,7 @@ class MatchAdmin(comadm.StandardAdmin):
 
 _location_product_specification_type_fields = ['purpose', 'is_exists', 'value',
     'operator', 'location', 'product_specification_type']
-@admin.register(comadm.StandardAdmin)
+@admin.register(mod.LocationProductSpecificationType)
 class LocationProductSpecificationTypeAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + \
