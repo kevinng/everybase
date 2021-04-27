@@ -389,26 +389,21 @@ class MatchAdmin(comadm.StandardAdmin):
 
 _location_product_specification_type_fields = ['purpose', 'is_exists', 'value',
     'operator', 'location', 'product_specification_type']
-@admin.register(mod.LocationProductSpecificationType)
+@admin.register(comadm.StandardAdmin)
 class LocationProductSpecificationTypeAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + \
         _location_product_specification_type_fields
     list_editable = comadm.standard_list_editable + \
         _location_product_specification_type_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['purpose', 'location',
         'product_specification_type']
     search_fields = comadm.standard_search_fields + \
         ['location__name', 'location__description',
         'product_specification_type__display_name',
         'product_specification_type__notes']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _location_product_specification_type_fields})
     ]
