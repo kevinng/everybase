@@ -4,7 +4,7 @@ from common.models import Standard, Choice
 class StripeSession(Standard):
     """Stripe session.
 
-    Last updated: 25 April 2021, 4:12 PM
+    Last updated: 27 April 2021, 9:00 PM
     """
 
     started = models.DateTimeField(
@@ -50,7 +50,7 @@ class StripeSession(Standard):
 class PaymentEvent(Standard):
     """Payment event.
 
-    Last updated: 25 April 2021, 3:45 PM
+    Last updated: 27 April 2021, 9:03 PM
     """
 
     event_type = models.ForeignKey(
@@ -90,6 +90,10 @@ class PaymentEvent(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+
+    def __str__(self):
+        return f'({self.user}, {self.amount}, {self.currency} \
+            [{self.id}])'
 
 class PaymentEventType(Choice):
     """Payment event type.
