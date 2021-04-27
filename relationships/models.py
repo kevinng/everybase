@@ -28,10 +28,6 @@ def validate_country_code(value):
             params={'value': value},
         )
 
-# For migration to run - to be deleted
-def validate_phone_number_country_code(value):
-    pass
-
 def validate_national_number(value):
     """Validates national number. Raise ValidationError if value is invalid.
 
@@ -150,7 +146,7 @@ def get_user_key(length=_USER_KEY_LENGTH):
 class User(Standard):
     """User details.
 
-    Last updated: 21 April 2021, 11:10 PM
+    Last updated: 27 April 2021, 12:20 PM
     """
 
     key = models.CharField(
@@ -180,10 +176,10 @@ class User(Standard):
         db_index=True
     )
 
-    email = models.ForeignKey(
+    email = models.OneToOneField(
         'Email',
-        related_name='users',
-        related_query_name='users',
+        related_name='user',
+        related_query_name='user',
         on_delete=models.PROTECT,
         db_index=True
     )
