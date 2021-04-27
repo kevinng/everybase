@@ -177,7 +177,7 @@ class CompanyAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': ['display_name', 'notes']})
+        ('Details', {'fields': _company_fields + ['product_types']})
     ]
     autocomplete_fields = ['product_types']
 
