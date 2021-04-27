@@ -73,14 +73,14 @@ class UserAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + ['key'] + _user_fields
     list_editable = comadm.standard_list_editable + _user_fields
     list_per_page = 50
-    list_filter = comadm.standard_list_filter
+    list_filter = comadm.standard_list_filter + ['is_banned']
     search_fields = comadm.standard_search_fields + _user_fields
     ordering = comadm.standard_ordering
     show_full_result_count = True
 
     # Details page settings
     save_on_top = True
-    readonly_fields = ['key'] + comadm.standard_readonly_fields
+    readonly_fields = comadm.standard_readonly_fields + ['key']
     fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': ['key'] + _user_fields})
     ]
