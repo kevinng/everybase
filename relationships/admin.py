@@ -90,21 +90,15 @@ _user_ip_device_fields = ['user', 'first_accessed', 'last_accessed', 'count',
     'browser_version_string', 'os', 'os_version', 'os_version_string', 'device',
     'device_family']
 @admin.register(mod.UserIPDevice)
-class UserIPDeviceAdmin(admin.ModelAdmin):
+class UserIPDeviceAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_ip_device_fields
     list_editable = comadm.standard_list_editable + _user_ip_device_fields
-    list_per_page = 50
-    list_filter = comadm.standard_list_filter
     search_fields = comadm.standard_search_fields + ['user__id', 'ip_address',
         'browser', 'browser_family', 'browser_version_string', 'os',
         'os_version_string', 'device', 'device_family']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _user_ip_device_fields + ['accessed_urls']})
     ]
