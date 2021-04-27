@@ -99,7 +99,7 @@ _twilio_inbound_message_whatsapp_fields = ['profile_name', 'wa_id', 'forwarded',
 _twilio_inbound_message_whatsapp_location_fields = ['latitude', 'longitude',
     'address', 'label']
 @admin.register(mod.TwilioInboundMessage)
-class TwilioInboundMessage(admin.ModelAdmin):
+class TwilioInboundMessage(comadm.StandardAdmin):
         # List page settings
     list_display = comadm.standard_list_display + \
         _twilio_inbound_message_request_fields + \
@@ -111,19 +111,13 @@ class TwilioInboundMessage(admin.ModelAdmin):
         _twilio_inbound_message_geographic_fields + \
         _twilio_inbound_message_whatsapp_fields + \
         _twilio_inbound_message_whatsapp_location_fields
-    list_per_page = 50
-    list_filter = comadm.standard_list_filter
     search_fields = comadm.standard_search_fields + ['api_version',
         'message_sid', 'sms_sid', 'sms_message_sid', 'account_sid',
         'message_service_sid', 'from_str', 'to_str', 'body', 'from_city',
         'from_state', 'from_zip', 'from_country', 'to_city', 'to_state',
         'to_zip', 'to_country', 'profile_name', 'wa_id', 'address', 'label']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Request Parameters',
             {'fields': _twilio_inbound_message_request_fields}),
