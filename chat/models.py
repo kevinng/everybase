@@ -150,7 +150,7 @@ class TwilioOutboundMessage(Standard):
 class TwilioStatusCallback(Standard):
     """Twilio status callback.
 
-    Last updated: 23 April 2021, 10:30 PM
+    Last updated: 27 April 2021, 5:10 PM
     """
 
     from_str = models.CharField(
@@ -245,13 +245,6 @@ class TwilioStatusCallback(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    log_entry = models.OneToOneField(
-        'TwilioStatusCallbackLogEntry',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
 
     def __str__(self):
         return f'({self.to_str} [{self.id}])'
@@ -259,10 +252,19 @@ class TwilioStatusCallback(Standard):
 class TwilioStatusCallbackLogEntry(Standard):
     """Twilio status callback log entry. 
 
-    Last updated: 23 April 2021, 10:49 AM
+    Last updated: 27 April 2021, 5:10 PM
     """
 
     payload = models.TextField(db_index=True)
+    callback = models.ForeignKey(
+        'TwilioStatusCallback',
+        related_name='log_entries',
+        related_query_name='log_entries',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
     def __str__(self):
         return f'({self.payload} [{self.id}])'

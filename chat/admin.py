@@ -50,7 +50,7 @@ class TwilioOutboundMessage(comadm.StandardAdmin):
 _twilio_status_callback_fields = ['from_str', 'to_str', 'account_sid',
     'api_version', 'channel_to_address', 'channel_install_sid',
     'channel_status_message', 'channel_prefix', 'message_sid', 'message_status',
-    'sms_sid', 'sms_status', 'error_code', 'event_type', 'message', 'log_entry']
+    'sms_sid', 'sms_status', 'error_code', 'event_type', 'message']
 @admin.register(mod.TwilioStatusCallback)
 class TwilioStatusCallbackAdmin(comadm.StandardAdmin):
     # List page settings
@@ -70,7 +70,7 @@ class TwilioStatusCallbackAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _twilio_status_callback_fields})
     ]
-    autocomplete_fields = ['message', 'log_entry']
+    autocomplete_fields = ['message']
 
 @admin.register(mod.TwilioStatusCallbackLogEntry)
 class TwilioStatusCallbackLogEntryAdmin(admin.ModelAdmin):
