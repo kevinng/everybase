@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
                 ('updated', models.DateTimeField(auto_now=True, db_index=True, null=True)),
                 ('deleted', models.DateTimeField(blank=True, db_index=True, default=None, null=True)),
-                ('country_code', models.CharField(db_index=True, default=None, max_length=50, validators=[relationships.models.validate_phone_number_country_code])),
+                ('country_code', models.CharField(db_index=True, default=None, max_length=50, validators=[])),
                 ('national_number', models.CharField(db_index=True, default=None, max_length=100)),
                 ('types', models.ManyToManyField(blank=True, db_index=True, related_name='phone_numbers', related_query_name='phone_numbers', to='relationships.PhoneNumberType')),
             ],
