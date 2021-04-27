@@ -643,6 +643,9 @@ class Packing(Standard):
             raise ValidationError('Either supply_quote or demand_quote must be \
                 set.')
 
+    def __str__(self):
+        return f'({self.base_quantity} {self.base_uom} in 1 {self.pack_uom} [{self.id}])'
+
 class UnitOfMeasure(Standard, Choice):
     """Unit of measure.
 
