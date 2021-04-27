@@ -270,6 +270,26 @@ class UnitOfMeasureAdmin(comadm.StandardChoiceAdmin):
     ]
     autocomplete_fields = ['product_type']
 
+_excluded_price_fields = ['supply_quote', 'demand_quote']
+@admin.register(mod.ExcludedPrice)
+class ExcludedPriceAdmin(comadm.StandardChoiceAdmin):
+    # list page settings
+    list_display = comadm.standard_choice_list_display + _excluded_price_fields
+    list_editable = comadm.standard_choice_list_editable + \
+        _excluded_price_fields    
+    list_filter = comadm.standard_choice_list_filter + _excluded_price_fields
+    search_fields = comadm.standard_choice_search_fields + \
+        ['supply_quote__supply__product_type__name',
+        'supply_quote__supply__product_type__description',
+        'demand_quote__demand__product_type__name',
+        'demand_quote__demand__product_type__description']
+
+    # Details page settings
+    fieldsets = comadm.standard_choice_fieldsets + [
+        ('Details', {'fields': _excluded_price_fields})
+    ]
+    autocomplete_fields = _excluded_price_fields
+
 _lead_fields = ['product_type', 'company', 'product', 'user']
 _lead_search_fields = ['product_type__name', 'product_type__description',
     'company__display_name', 'company__notes', 'product__display_name',
