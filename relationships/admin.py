@@ -138,6 +138,29 @@ class UserIPDeviceAdmin(admin.ModelAdmin):
 class ProductTypeAdmin(comadm.StandardChoiceAdmin):
     pass
 
+_company_product_type_fields = ['popularity', 'company', 'product_type']
+@admin.register(mod.CompanyProductType)
+class CompanyProductTypeAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        _company_product_type_fields
+    list_editable = comadm.standard_list_editable + \
+        _company_product_type_fields
+    list_per_page = 50
+    list_filter = comadm.standard_list_filter + ['product_type']
+    search_fields = comadm.standard_search_fields + ['company__display_name',
+        'company__notes', 'product_type__name', 'product_type__description']
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _company_product_type_fields})
+    ]
+    autocomplete_fields = ['company', 'product_type']
+
 _company_fields = ['display_name', 'notes']
 @admin.register(mod.Company)
 class CompanyAdmin(admin.ModelAdmin):
@@ -157,29 +180,6 @@ class CompanyAdmin(admin.ModelAdmin):
         ('Details', {'fields': ['display_name', 'notes']})
     ]
     autocomplete_fields = ['product_types']
-
-_company_product_type_fields = ['popularity', 'company', 'product_type']
-@admin.register(mod.CompanyProductType)
-class CompanyProductTypeAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + \
-        _company_product_type_fields
-    list_editable = comadm.standard_list_editable + \
-        _company_product_type_fields
-    list_per_page = 50
-    list_filter = comadm.standard_list_filter
-    search_fields = comadm.standard_search_fields + ['company__display_name',
-        'company__notes', 'product_type__name', 'product_type__description']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
-
-    # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _company_product_type_fields})
-    ]
-    autocomplete_fields = ['company', 'product_type']
 
 _product_fields = ['display_name', 'notes', 'product_type']
 @admin.register(mod.Product)
