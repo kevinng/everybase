@@ -24,13 +24,12 @@ _twilio_outbound_message_fields = ['message_template', 'date_created',
     'to_str', 'body', 'uri', 'error_message', 'error_code', 'api_version',
     'from_user', 'to_user', 'twilml_response_to']
 @admin.register(mod.TwilioOutboundMessage)
-class TwilioOutboundMessage(admin.ModelAdmin):
+class TwilioOutboundMessage(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + \
         _twilio_outbound_message_fields
     list_editable = comadm.standard_list_editable + \
         _twilio_outbound_message_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['message_template',
         'date_created', 'date_sent', 'direction', 'error_message', 'error_code',
         'api_version']
@@ -40,12 +39,8 @@ class TwilioOutboundMessage(admin.ModelAdmin):
         'account_sid', 'message_sid', 'from_str', 'to_str', 'uri',
         'error_message', 'error_code', 'api_version', 'from_user', 'to_user',
         'twilml_response_to__message_sid']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _twilio_outbound_message_fields})
     ]
