@@ -72,23 +72,21 @@ class TwilioStatusCallbackAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['message']
 
+_twilio_status_callback_log_entries_fields = ['payload', 'callback']
 @admin.register(mod.TwilioStatusCallbackLogEntry)
-class TwilioStatusCallbackLogEntryAdmin(admin.ModelAdmin):
+class TwilioStatusCallbackLogEntryAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['payload']
-    list_editable = comadm.standard_list_editable + ['payload']
-    list_per_page = 50
-    list_filter = comadm.standard_list_filter
+    list_display = comadm.standard_list_display + \
+        _twilio_status_callback_log_entries_fields
+    list_editable = comadm.standard_list_editable + \
+        _twilio_status_callback_log_entries_fields
     search_fields = comadm.standard_search_fields + ['payload']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': ['payload']})
+        ('Details', {'fields': _twilio_status_callback_log_entries_fields})
     ]
+    autocomplete_fields = ['callback']
 
 _twilio_inbound_message_request_fields = ['api_version',
     'message_sid', 'sms_sid', 'sms_message_sid', 'account_sid',
