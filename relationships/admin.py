@@ -274,19 +274,14 @@ class SupplyAdmin(comadm.StandardAdmin):
     autocomplete_fields = _lead_autocomplete_fields
 
 @admin.register(mod.Demand)
-class DemandAdmin(admin.ModelAdmin):
+class DemandAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _lead_fields
     list_editable = comadm.standard_list_editable + _lead_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['product_type']
     search_fields = comadm.standard_search_fields + _lead_search_fields
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _lead_fields})
     ]
