@@ -371,22 +371,17 @@ class DemandQuoteAdmin(comadm.StandardAdmin):
 _match_fields = ['buyer_sent', 'seller_sent', 'connected', 'supply_quote',
     'demand_quote']
 @admin.register(mod.Match)
-class MatchAdmin(admin.ModelAdmin):
+class MatchAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _match_fields
     list_editable = comadm.standard_list_editable + _match_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['buyer_sent', 'seller_sent',
         'connected']
     search_fields = comadm.standard_search_fields + \
         ['supply_quote__supply__product_type__name',
         'demand_quote__demand__product_type__name']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _match_fields})
     ]
