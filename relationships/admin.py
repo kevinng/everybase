@@ -86,15 +86,16 @@ class UserAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['phone_number', 'email']
 
-_accessed_url_fields = ['user', 'first_accessed', 'last_accessed', 'count',
-    'url']
+_accessed_url_fields = ['user', 'first_accessed', 'last_accessed', 'url',
+    'count']
 @admin.register(mod.AccessedURL)
 class AccessedURLAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _accessed_url_fields
     list_editable = comadm.standard_list_editable + _accessed_url_fields
     list_per_page = 50
-    list_filter = comadm.standard_list_filter
+    list_filter = comadm.standard_list_filter + ['first_accessed',
+        'last_accessed']
     search_fields = comadm.standard_search_fields + ['user__id', 'url']
     ordering = comadm.standard_ordering
     show_full_result_count = True
