@@ -1,17 +1,17 @@
 from django.db import models
-from common.models import Standard, Choice
+from common.models import Standard, Choice, short_text
 from django.core.exceptions import ValidationError
 
 class TestMessageGroup(Standard):
     """Message group (to ascertain base truths on). The unit of operation is a
     group of messages.
 
-    Last updated: 26 April 2021, 10:51 AM
+    Last updated: 27 April 2021, 9:06 PM
     """
     body = models.TextField(db_index=True)
 
     def __str__(self):
-        return f'({self.body[:50]} [{self.id}])'
+        return f'({short_text(self.body)} [{self.id}])'
 
 class BaseTruth(Standard):
     """Base truth - i.e., what we expect when we run a function over a message.
