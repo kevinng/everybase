@@ -223,22 +223,17 @@ class OperationMethodAdmin(admin.ModelAdmin):
 
 _method_fields = ['title', 'version']
 @admin.register(mod.Method)
-class MethodAdmin(admin.ModelAdmin):
+class MethodAdmin(comadm.StandardChoiceAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _method_fields
-    list_editable = comadm.standard_list_editable + \
-        _method_fields
-    list_per_page = 50
-    list_filter = comadm.standard_list_filter + ['tags']
-    search_fields = comadm.standard_search_fields + ['title', 'version']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
+    list_display = comadm.standard_choice_list_display + _method_fields
+    list_editable = comadm.standard_choice_list_editable + _method_fields
+    list_filter = comadm.standard_choice_list_filter + ['tags']
+    search_fields = comadm.standard_choice_search_fields + ['title', 'version']
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _grouping_method_fields + ['tags']})
+    readonly_fields = comadm.standard_choice_readonly_fields
+    fieldsets = comadm.standard_choice_fieldsets + [
+        ('Details', {'fields': _method_fields + ['tags']})
     ]
     autocomplete_fields = ['tags']
 

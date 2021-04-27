@@ -594,6 +594,9 @@ class Method(Standard, Choice):
         db_index=True
     )
 
+    def __str__(self):
+        return f'({self.title} [{self.id}])'
+
 class MethodTag(Standard, Choice):
     """Method tag.
 
