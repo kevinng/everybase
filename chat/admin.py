@@ -100,7 +100,7 @@ _twilio_inbound_message_whatsapp_location_fields = ['latitude', 'longitude',
     'address', 'label']
 @admin.register(mod.TwilioInboundMessage)
 class TwilioInboundMessage(comadm.StandardAdmin):
-        # List page settings
+    # List page settings
     list_display = comadm.standard_list_display + \
         _twilio_inbound_message_request_fields + \
         _twilio_inbound_message_geographic_fields + \
@@ -128,6 +128,23 @@ class TwilioInboundMessage(comadm.StandardAdmin):
         ('WhatsApp Location-Sharing Parameters',
             {'fields': _twilio_inbound_message_whatsapp_location_fields})
     ]
+
+_twilio_inbound_message_media_fields = ['content_type', 'url', 'message']
+@admin.register(mod.TwilioInboundMessageMedia)
+class TwilioInboundMessage(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        _twilio_inbound_message_media_fields
+    list_editable = comadm.standard_list_editable + \
+        _twilio_inbound_message_media_fields
+    search_fields = comadm.standard_search_fields + ['content_type',
+        'url', 'message__body']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _twilio_inbound_message_media_fields})
+    ]
+    autocomplete_fields = ['message']
 
 _inbound_message_group_fields = ['is_disabled', 'grouped', 'initial_body']
 @admin.register(mod.InboundMessageGroup)
