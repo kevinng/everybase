@@ -26,13 +26,14 @@ class PhoneNumberAdmin(admin.ModelAdmin):
         [('Details', {'fields': _phone_number_fields + ['types']})]
     autocomplete_fields = ['types']
 
+_email_fields = ['email', 'import_job']
 @admin.register(mod.Email)
 class EmailAdmin(admin.ModelAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['email', 'import_job']
+    list_display = comadm.standard_list_display + _email_fields
     list_editable = comadm.standard_list_editable + ['email']
     list_per_page = 50
-    list_filter = ['import_job'] + comadm.standard_list_filter
+    list_filter = comadm.standard_list_filter + ['import_job']
     search_fields = comadm.standard_search_fields + ['email']
     ordering = comadm.standard_ordering
     show_full_result_count = True
@@ -41,10 +42,9 @@ class EmailAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': ['email', 'import_job']})
+        ('Details', {'fields': _email_fields})
     ]
     autocomplete_fields = ['import_job']
-    # inlines = [CompanyEmailInlineAdmin, PersonEmailInlineAdmin]
 
 @admin.register(mod.InvalidEmail)
 class InvalidEmailAdmin(admin.ModelAdmin):
