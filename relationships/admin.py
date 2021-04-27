@@ -331,54 +331,42 @@ _lead_quote_fields = ['entered', 'price', 'price_uom', 'currency',
     'delivery_interval_length', 'delivery_interval_uom',
     'commission_percentage_sales', 'commission_amount',
     'commission_amount_currency', 'commission_amount_uom']
+_lead_autocomplete_fields = ['price_uom', 'currency', 'incoterm_availability',
+    'location', 'total_quantity_uom', 'moq_quantity_uom',
+    'delivery_interval_quantity_uom', 'commission_amount_currency',
+    'commission_amount_uom']
 
 @admin.register(mod.SupplyQuote)
-class SupplyQuoteAdmin(admin.ModelAdmin):
+class SupplyQuoteAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _lead_quote_fields
     list_editable = comadm.standard_list_editable + _lead_quote_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['currency',
         'incoterm_availability', 'location', 'supply__product_type']
     search_fields = comadm.standard_search_fields + \
         ['supply__product_type__name']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _lead_quote_fields + ['supply']})
     ]
-    autocomplete_fields = ['price_uom', 'currency', 'incoterm_availability',
-        'location', 'total_quantity_uom', 'moq_quantity_uom',
-        'delivery_interval_quantity_uom', 'commission_amount_currency',
-        'commission_amount_uom', 'supply']
+    autocomplete_fields = _lead_autocomplete_fields + ['supply']
 
 @admin.register(mod.DemandQuote)
-class DemandQuoteAdmin(admin.ModelAdmin):
+class DemandQuoteAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _lead_quote_fields
     list_editable = comadm.standard_list_editable + _lead_quote_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['currency',
         'incoterm_availability', 'location', 'demand__product_type']
     search_fields = comadm.standard_search_fields + \
         ['demand__product_type__name']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _lead_quote_fields + ['demand']})
     ]
-    autocomplete_fields = ['price_uom', 'currency', 'incoterm_availability',
-        'location', 'total_quantity_uom', 'moq_quantity_uom',
-        'delivery_interval_quantity_uom', 'commission_amount_currency',
-        'commission_amount_uom', 'demand']
+    autocomplete_fields = _lead_autocomplete_fields + ['demand']
 
 _match_fields = ['buyer_sent', 'seller_sent', 'connected', 'supply_quote',
     'demand_quote']
