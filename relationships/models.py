@@ -340,7 +340,7 @@ class ProductType(Standard, Choice):
 class CompanyProductType(Standard):
     """Relationship between company and product type.
 
-    Last updated: 21 April 2021, 10:29 PM
+    Last updated: 27 April 2021, 1:11 PM
     """
 
     popularity = models.FloatField(
@@ -351,11 +351,15 @@ class CompanyProductType(Standard):
 
     company = models.ForeignKey(
         'Company',
+        related_name='company_product_types',
+        related_query_name='company_product_types',
         on_delete=models.PROTECT,
         db_index=True
     )
     product_type = models.ForeignKey(
         'ProductType',
+        related_name='company_product_types',
+        related_query_name='company_product_types',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -377,13 +381,6 @@ class Company(Standard):
     notes = models.TextField(
         null=True,
         blank=True,
-        db_index=True
-    )
-
-    company_product_types = models.ManyToManyField(
-        'CompanyProductType',
-        related_name='companies',
-        related_query_name='companies',
         db_index=True
     )
 
