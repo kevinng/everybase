@@ -271,7 +271,7 @@ class ProductSpecificationAdmin(admin.ModelAdmin):
         ('Details', {'fields': _product_specification_fields})
     ]
     autocomplete_fields = ['product_specification_type', 'product', 'supply',
-        'demand']\
+        'demand']
 
 _lead_fields = ['product_type', 'company', 'product', 'user']
 _lead_search_fields = ['product_type__name', 'product_type__description',
