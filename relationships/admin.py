@@ -135,20 +135,8 @@ class UserIPDeviceAdmin(admin.ModelAdmin):
     autocomplete_fields = ['user', 'accessed_urls']
 
 @admin.register(mod.ProductType)
-class ProductTypeAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = comadm.standard_choice_list_display
-    list_editable = comadm.standard_choice_list_editable
-    list_per_page = 50
-    list_filter = comadm.standard_choice_list_filter
-    search_fields = comadm.standard_choice_search_fields
-    ordering = comadm.standard_choice_ordering
-    show_full_result_count = True
-
-    # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_choice_readonly_fields
-    fieldsets = comadm.standard_choice_fieldsets
+class ProductTypeAdmin(comadm.StandardChoiceAdmin):
+    pass
 
 _company_fields = ['display_name', 'notes']
 @admin.register(mod.Company)
