@@ -324,6 +324,29 @@ class DemandAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['product_type', 'company', 'product', 'user']
 
+<<<<<<< HEAD
+=======
+_payment_term_fields = ['supply_quote', 'demand_quote']
+@admin.register(mod.PaymentTerm)
+class PaymentTermAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = comadm.standard_choice_list_display + _payment_term_fields
+    list_editable = comadm.standard_choice_list_editable + _payment_term_fields
+    list_per_page = 50
+    list_filter = comadm.standard_choice_list_filter
+    search_fields = comadm.standard_choice_search_fields
+    ordering = comadm.standard_ordering
+    show_full_result_count = True
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_choice_readonly_fields
+    fieldsets = comadm.standard_choice_fieldsets + [
+        ('Details', {'fields': _payment_term_fields})
+    ]
+    autocomplete_fields = _payment_term_fields
+
+>>>>>>> eb545df94d182a999de546f87693d1e80547a004
 _unit_of_measure_fields = ['plural_name', 'product_type']
 @admin.register(mod.UnitOfMeasure)
 class UnitOfMeasureAdmin(admin.ModelAdmin):
