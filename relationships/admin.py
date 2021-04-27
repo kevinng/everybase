@@ -273,6 +273,10 @@ class ProductSpecificationAdmin(admin.ModelAdmin):
     autocomplete_fields = ['product_specification_type', 'product', 'supply',
         'demand']
 
+@admin.register(mod.IncotermAvailability)
+class IncotermAvailabilityAdmin(comadm.StandardChoiceAdmin):
+    pass
+
 _lead_fields = ['product_type', 'company', 'product', 'user']
 _lead_search_fields = ['product_type__name', 'product_type__description',
     'company__display_name', 'company__notes', 'product__display_name',
@@ -315,22 +319,6 @@ class DemandAdmin(admin.ModelAdmin):
         ('Details', {'fields': _lead_fields})
     ]
     autocomplete_fields = ['product_type', 'company', 'product', 'user']
-
-@admin.register(mod.IncotermAvailability)
-class IncotermAvailabilityAdmin(admin.ModelAdmin):
-    # List page settings
-    list_display = comadm.standard_choice_list_display
-    list_editable = comadm.standard_choice_list_editable
-    list_per_page = 50
-    list_filter = comadm.standard_choice_list_filter
-    search_fields = comadm.standard_choice_search_fields
-    ordering = comadm.standard_choice_ordering
-    show_full_result_count = True
-
-    # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_choice_readonly_fields
-    fieldsets = comadm.standard_choice_fieldsets
 
 @admin.register(mod.Location)
 class LocationAdmin(admin.ModelAdmin):
