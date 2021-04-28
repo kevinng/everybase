@@ -136,3 +136,17 @@ class InboundMessageGroupRelationshipAdmin(comadm.StandardAdmin):
 @admin.register(mod.InboundMessageGroupRelationshipTag)
 class InboundMessageGroupRelationshipTagAdmin(comadm.StandardChoiceAdmin):
     pass
+
+_test_run_type_fields = ['setting']
+@admin.register(mod.TestRunType)
+class TestRunTypeAdmin(comadm.StandardChoiceAdmin):
+    # List page settings
+    list_display = comadm.standard_choice_list_display + _test_run_type_fields
+    list_editable = comadm.standard_choice_list_editable + _test_run_type_fields
+    list_filter = comadm.standard_choice_list_filter + ['setting']
+
+    # Details page settings
+    fieldsets = comadm.standard_choice_fieldsets + [
+        ('Details', {'fields': _test_run_type_fields + ['methods']})
+    ]
+    autocomplete_fields = ['methods']
