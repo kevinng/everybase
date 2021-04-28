@@ -4,7 +4,7 @@ from common.models import Standard, Choice, short_text
 class MessageTemplate(Standard):
     """Message template.
 
-    Last updated: 23 April 2021, 10:00 AM
+    Last updated: 28 April 2021, 3:29 PM
     """
 
     programmatic_key = models.CharField(
@@ -21,13 +21,11 @@ class MessageTemplate(Standard):
     )
     notes = models.TextField(
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
     body = models.TextField(
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
 
     def __str__(self):
@@ -36,7 +34,7 @@ class MessageTemplate(Standard):
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
 
-    Last updated: 23 April 2021, 9:24 AM
+    Last updated: 28 April 2021, 3:31 PM
     """
 
     message_template = models.ForeignKey(
@@ -88,8 +86,7 @@ class TwilioOutboundMessage(Standard):
     )
     body = models.TextField(
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
     uri = models.URLField(
         null=True,
@@ -252,7 +249,7 @@ class TwilioStatusCallback(Standard):
 class TwilioStatusCallbackLogEntry(Standard):
     """Twilio status callback log entry. 
 
-    Last updated: 27 April 2021, 5:10 PM
+    Last updated: 28 April 2021, 3:32 PM
     """
 
     payload = models.TextField(db_index=True)
@@ -262,8 +259,7 @@ class TwilioStatusCallbackLogEntry(Standard):
         related_query_name='log_entries',
         null=True,
         blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
+        on_delete=models.PROTECT
     )
 
     def __str__(self):
@@ -276,7 +272,7 @@ class TwilioStatusCallbackLogEntry(Standard):
 class TwilioInboundMessage(Standard):
     """Twilio inbound message.
 
-    Last updated: 23 April 2021, 10:55 AM
+    Last updated: 28 April 2021, 3:33 PM
     """
 
     # Request parameters
@@ -330,8 +326,7 @@ class TwilioInboundMessage(Standard):
     )
     body = models.TextField(
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
     num_media = models.CharField(
         max_length=200,
