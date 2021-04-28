@@ -25,13 +25,13 @@ class BaseTruth(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    # method = models.ForeignKey(
-    #     'Method',
-    #     related_name='base_truths',
-    #     related_query_name='base_truths',
-    #     on_delete=models.PROTECT,
-    #     db_index=True
-    # )
+    method = models.ForeignKey(
+        'Method',
+        related_name='base_truths',
+        related_query_name='base_truths',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
     text_output = models.CharField(
         max_length=200,
