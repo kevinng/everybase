@@ -91,6 +91,7 @@ class StandardChoiceAdmin(admin.ModelAdmin):
 
     # Details page settings
     save_on_top = True
+    save_as = True
     readonly_fields = standard_choice_readonly_fields
     fieldsets = standard_choice_fieldsets
 
