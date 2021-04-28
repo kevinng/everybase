@@ -16,7 +16,7 @@ class TestMessageGroup(Standard):
 class BaseTruth(Standard):
     """Base truth - i.e., what we expect when we run a function over a message.
 
-    Last updated: 26 April 2021, 10:51 AM
+    Last updated: 28 April 2021, 11:00 AM
     """
     message_group = models.ForeignKey(
         'TestMessageGroup',
@@ -32,23 +32,7 @@ class BaseTruth(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-
-    text_output = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    integer_output = models.IntegerField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    float_output = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+    expected_output = models.TextField()
 
     def clean(self):
         super(BaseTruth, self).clean()

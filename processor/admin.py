@@ -16,8 +16,7 @@ class TestMessageGroupAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _message_fields})
     ]
 
-_base_truth_fields = ['message_group', 'text_output', 'method',
-    'integer_output', 'float_output']
+_base_truth_fields = ['message_group', 'method', 'expected_output']
 @admin.register(mod.BaseTruth)
 class BaseTruthAdmin(comadm.StandardAdmin):
     # List page settings
@@ -25,7 +24,7 @@ class BaseTruthAdmin(comadm.StandardAdmin):
     list_editable = comadm.standard_list_editable + _base_truth_fields
     list_filter = comadm.standard_list_filter + ['method']
     search_fields = comadm.standard_search_fields + ['message_group__body',
-        'text_output', 'integer_output', 'float_output']
+        'expected_output']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
