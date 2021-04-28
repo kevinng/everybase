@@ -233,8 +233,8 @@ class InboundMessageGroupRelationshipTag(Standard, Choice):
     """
     pass
 
-class RunType(Standard, Choice):
-    """Type of run. A run is a test of a list of message groups against
+class TestRunType(Standard, Choice):
+    """Type of test run. A run is a test of a list of message groups against
     functions and each expected output (i.e., base truths).
 
     Last updated: 28 April 2021, 11:14 AM
@@ -249,8 +249,56 @@ class RunType(Standard, Choice):
     )
     methods = models.ManyToManyField(
         'Method',
-        related_name='run_types',
-        related_query_name='run_types',
+        related_name='test_run_types',
+        related_query_name='test_run_types',
         blank=True,
+        db_index=True
+    )
+
+class TestRun(Standard):
+    """A test run - i.e., a test of a list of message groups against functions
+    and each expected output (i.e., base truths).
+
+    Last updated: 28 April 2021, 11:24 AM
+    """
+    test_run_type = models.ForeignKey(
+        'TestRunType',
+        related_name='test_runs',
+        related_query_name='test_runs',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    ran = models.DateTimeField(db_index=True)
+
+class TestRunResult(Standard):
+    """Single test run result - i.e., of a test message group against its base
+    truth.
+
+    Last updated: 28 April 2021, 11:25 AM
+    """
+    test_message_group = models.ForeignKey(
+        'TestMessageGroup',
+        related_name='test_run_results',
+        related_query_name='test_run_results',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    
+    method = models.ForeignKey(
+        'Method',
+        related_name='test_run_results',
+        related_query_name='test_run_results',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    expected_output	= models.TextField(db_index=True)
+    actual_output = models.TextField(db_index=True)
+    matched = models.BooleanField(db_index=True)
+	
+    test_run = models.ForeignKey(
+        'TestRun',
+        related_name='test_run_results',
+        related_query_name='test_run_results',
+        on_delete=models.PROTECT,
         db_index=True
     )
