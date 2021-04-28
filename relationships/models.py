@@ -146,7 +146,7 @@ def get_user_key(length=_USER_KEY_LENGTH):
 class User(Standard):
     """User details.
 
-    Last updated: 27 April 2021, 12:20 PM
+    Last updated: 28 April 2021, 3:35 PM
     """
 
     key = models.CharField(
@@ -172,8 +172,7 @@ class User(Standard):
     )
     notes = models.TextField(
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
 
     email = models.OneToOneField(
@@ -371,7 +370,7 @@ class CompanyProductType(Standard):
 class Company(Standard):
     """Company selling products. Not companies of users.
 
-    Last updated: 27 April 2021, 1:00 PM
+    Last updated: 28 April 2021, 3:36 PM
     """
 
     display_name = models.CharField(
@@ -380,8 +379,7 @@ class Company(Standard):
     )
     notes = models.TextField(
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
 
     class Meta:
@@ -425,14 +423,14 @@ class CompanyProduct(Standard):
 class Product(Standard):
     """Product.
 
-    Last updated: 21 April 2021, 9:46 PM
+    Last updated: 28 April 2021, 3:38 PM
     """
 
     display_name = models.CharField(
         max_length=200,
         db_index=True
     )
-    notes = models.TextField(db_index=True)
+    notes = models.TextField()
     
     product_type = models.ForeignKey(
         'ProductType',
@@ -450,7 +448,7 @@ class ProductSpecificationType(Standard):
     is a 'type'. Whether a nitrile gloves supply has 501K or not - is defined in
     ProductSpecification.
 
-    Last updated: 21 April 2021, 9:33 PM
+    Last updated: 28 April 2021, 3:39 PM
     """
 
     display_name = models.CharField(
@@ -459,8 +457,7 @@ class ProductSpecificationType(Standard):
     )
     notes = models.TextField(
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
 	
     product_type = models.ForeignKey(
