@@ -270,6 +270,9 @@ class TestRun(Standard):
     )
     ran = models.DateTimeField(db_index=True)
 
+    def __str__(self):
+        return f'({self.ran} [{self.id}])'
+
 class TestRunResult(Standard):
     """Single test run result - i.e., of a test message group against its base
     truth.
@@ -302,3 +305,6 @@ class TestRunResult(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+
+    def __str__(self):
+        return f'({self.test_message_group}, [{self.id}])'
