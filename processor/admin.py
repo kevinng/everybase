@@ -71,21 +71,16 @@ class GroupingMethodAdmin(comadm.StandardAdmin):
 _operation_method_fields = ['applied', 'order', 'output_body',
     'inbound_message_group', 'method']
 @admin.register(mod.OperationMethod)
-class OperationMethodAdmin(admin.ModelAdmin):
+class OperationMethodAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _operation_method_fields
     list_editable = comadm.standard_list_editable + \
         _operation_method_fields
-    list_per_page = 50
     list_filter = comadm.standard_list_filter + ['applied', 'method']
     search_fields = comadm.standard_search_fields + ['output_body',
         'inbound_message_group__initial_body', 'method__title']
-    ordering = comadm.standard_ordering
-    show_full_result_count = True
 
     # Details page settings
-    save_on_top = True
-    readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _operation_method_fields})
     ]
