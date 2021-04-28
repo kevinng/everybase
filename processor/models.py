@@ -239,7 +239,7 @@ class TestRunType(Standard, Choice):
 
     Last updated: 28 April 2021, 11:14 AM
     """
-    settings = models.CharField(
+    setting = models.CharField(
         max_length=2,
         choices=[
             ('a', 'Run All Methods on All Message Groups'),
