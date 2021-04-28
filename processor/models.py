@@ -59,12 +59,12 @@ class InboundMessageGroup(Standard):
     """We operate on inbound messages one group at a time. This is a group of
     inbound messages.
 
-    Last updated: 23 April 2021, 11:52 AM
+    Last updated: 28 April 2021, 3:18 AM
     """
 
     is_disabled	= models.BooleanField(db_index=True)
     grouped = models.DateTimeField(db_index=True)
-    initial_body = models.TextField(db_index=True)
+    initial_body = models.TextField()
 
     twilio_inbound_messages = models.ManyToManyField(
         'chat.TwilioInboundMessage',
@@ -100,15 +100,14 @@ class GroupingMethod(Standard, Choice):
 class OperationMethod(Standard, Choice):
     """Method used to operate on an inbound message group.
 
-    Last updated: 23 April 2021, 1:36 PM
+    Last updated: 28 April 2021, 3:20 PM
     """
 
     applied = models.DateTimeField(db_index=True)
     order = models.IntegerField(db_index=True)
     output_body = models.TextField(
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
 
     inbound_message_group = models.ForeignKey(
@@ -261,7 +260,7 @@ class TestRunResult(Standard):
     """Single test run result - i.e., of a test message group against its base
     truth.
 
-    Last updated: 28 April 2021, 11:25 AM
+    Last updated: 28 April 2021, 3:22 AM
     """
     test_message_group = models.ForeignKey(
         'TestMessageGroup',
@@ -278,8 +277,8 @@ class TestRunResult(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    expected_output	= models.TextField(db_index=True)
-    actual_output = models.TextField(db_index=True)
+    expected_output	= models.TextField()
+    actual_output = models.TextField()
     matched = models.BooleanField(db_index=True)
 	
     test_run = models.ForeignKey(
