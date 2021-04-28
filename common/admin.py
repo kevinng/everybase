@@ -54,6 +54,7 @@ class StandardAdmin(admin.ModelAdmin):
 
     # Details page settings
     save_on_top = True
+    save_as = True
     readonly_fields = standard_readonly_fields
     fieldsets = standard_fieldsets
 
@@ -68,6 +69,7 @@ class ChoiceAdmin(admin.ModelAdmin):
 
     # Details page settings
     save_on_top = True
+    save_as = True
     readonly_fields = choice_readonly_fields
     fieldsets = choice_fieldsets
 
