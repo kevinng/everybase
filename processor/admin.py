@@ -150,3 +150,36 @@ class TestRunTypeAdmin(comadm.StandardChoiceAdmin):
         ('Details', {'fields': _test_run_type_fields + ['methods']})
     ]
     autocomplete_fields = ['methods']
+
+_test_run_fields = ['test_run_type', 'ran']
+@admin.register(mod.TestRun)
+class TestRunAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _test_run_fields
+    list_editable = comadm.standard_list_editable + _test_run_fields
+    list_filter = comadm.standard_list_filter + _test_run_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _test_run_fields})
+    ]
+    autocomplete_fields = ['test_run_type']
+
+_test_run_result_fields = ['test_message_group', 'method', 'expected_output',
+    'actual_output', 'matched', 'test_run']
+@admin.register(mod.TestRunResult)
+class TestRunResultAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _test_run_result_fields
+    list_editable = comadm.standard_list_editable + _test_run_result_fields
+    list_filter = comadm.standard_list_filter + ['matched']
+    search_fields = comadm.standard_search_fields + ['test_message_group__body',
+        'method__title', 'method__name', 'method__description']
+
+    # Details page settings
+    save_on_top = True
+    readonly_fields = comadm.standard_readonly_fields
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _test_run_result_fields})
+    ]
+    autocomplete_fields = ['test_message_group', 'method', 'test_run']
