@@ -3,6 +3,15 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
+# ----- Start: Inlines -----
+
+class BaseTruthInlineAdmin(admin.TabularInline):
+    model = mod.BaseTruth
+    extra = 1
+    autocomplete_fields = ['message_group', 'method']
+
+# ----- End: Inlines -----
+
 _message_fields = ['body']
 @admin.register(mod.TestMessageGroup)
 class TestMessageGroupAdmin(comadm.StandardAdmin):
@@ -15,6 +24,7 @@ class TestMessageGroupAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _message_fields})
     ]
+    inlines = [BaseTruthInlineAdmin]
 
 _base_truth_fields = ['message_group', 'method', 'expected_output']
 @admin.register(mod.BaseTruth)
