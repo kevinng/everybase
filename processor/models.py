@@ -232,3 +232,25 @@ class InboundMessageGroupRelationshipTag(Standard, Choice):
     Last updated: 23 April 2021, 2:18 PM
     """
     pass
+
+class RunType(Standard, Choice):
+    """Type of run. A run is a test of a list of message groups against
+    functions and each expected output (i.e., base truths).
+
+    Last updated: 28 April 2021, 11:14 AM
+    """
+    settings = models.CharField(
+        max_length=2,
+        choices=[
+            ('a', 'Run All Methods on All Message Groups'),
+            ('b', 'Run Base Truth Methods Only')
+        ],
+        db_index=True
+    )
+    methods = models.ManyToManyField(
+        'Method',
+        related_name='run_types',
+        related_query_name='run_types',
+        blank=True,
+        db_index=True
+    )
