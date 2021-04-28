@@ -6,9 +6,9 @@ class TestMessageGroup(Standard):
     """Message group (to ascertain base truths on). The unit of operation is a
     group of messages.
 
-    Last updated: 27 April 2021, 9:06 PM
+    Last updated: 28 April 2021, 3:05 PM
     """
-    body = models.TextField(db_index=True)
+    body = models.TextField()
 
     def __str__(self):
         return f'({short_text(self.body)} [{self.id}])'
