@@ -23,6 +23,7 @@ django-filter = "*"
 jsonlines = "*"
 pytz = "*"
 django-storages = "*"
+editdistance = "*"
 
 [requires]
 python_version = "3.7"
