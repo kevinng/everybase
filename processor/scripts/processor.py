@@ -28,12 +28,12 @@ _TXTMARK_EMAIL_SUSPICIOUS_START = '<email_suspicious>'
 _TXTMARK_EMAIL_SUSPICIOUS_END = '</email_suspicious>'
 
 
-import csv
-import editdistance
-import math
+# import csv
+# import editdistance
+# import math
 
 # Path to CSV file with a list of TLDs for matching
-_TLDS_PATH = './processor/scripts/tld.csv'
+# _TLDS_PATH = './processor/scripts/tld.csv'
 
 # def tlds():
 #     """Returns list of top-level domain (TLD) names.
@@ -234,36 +234,36 @@ def has_domain_dot_marker(text):
 
 #     return (string, start_pos, end_pos)
 
-def mark_string(string, start_pos, end_pos, start_tag, end_tag):
-    """Returns marked string with tags at the start_pos and end_pos. The
-    position of the character following the end_tag is also returned as part of
-    a tuple in the format:
+# def mark_string(string, start_pos, end_pos, start_tag, end_tag):
+#     """Returns marked string with tags at the start_pos and end_pos. The
+#     position of the character following the end_tag is also returned as part of
+#     a tuple in the format:
 
-    (new_string, next_pos)
+#     (new_string, next_pos)
 
-    Last updated/tested: 29 April 2021, 2:31 PM
+#     Last updated/tested: 29 April 2021, 2:31 PM
 
-    Parameters
-    ----------
-    string
-        String to parse and return
-    start_pos
-        Start position to tag
-    end_pos
-        End position to tag
-    start_tag
-        Start text marker tag to use
-    end_tag
-        End text marker tag to use
-    """
+#     Parameters
+#     ----------
+#     string
+#         String to parse and return
+#     start_pos
+#         Start position to tag
+#     end_pos
+#         End position to tag
+#     start_tag
+#         Start text marker tag to use
+#     end_tag
+#         End text marker tag to use
+#     """
 
-    new_string = string[:start_pos] + start_tag + string[start_pos:end_pos] + \
-        end_tag + string[end_pos:]
+#     new_string = string[:start_pos] + start_tag + string[start_pos:end_pos] + \
+#         end_tag + string[end_pos:]
 
-    next_pos = len(string[:start_pos]) + len(start_tag) + \
-        len(string[start_pos:end_pos]) + len(end_tag) + 1
+#     next_pos = len(string[:start_pos]) + len(start_tag) + \
+#         len(string[start_pos:end_pos]) + len(end_tag) + 1
 
-    return (new_string, next_pos)
+#     return (new_string, next_pos)
 
 def words_around_position(text, start_pos, end_pos):
     """Returns word as position pos, and the words before/after this word
