@@ -35,24 +35,24 @@ import math
 # Path to CSV file with a list of TLDs for matching
 _TLDS_PATH = './processor/scripts/tld.csv'
 
-def tlds():
-    """Returns list of top-level domain (TLD) names.
+# def tlds():
+#     """Returns list of top-level domain (TLD) names.
     
-    We store TLDs in a CSV file. The path to the file is configured via the
-    local constant _TLDS_PATH.
+#     We store TLDs in a CSV file. The path to the file is configured via the
+#     local constant _TLDS_PATH.
     
-    We use the TLD list for operations like identifying URLs.
+#     We use the TLD list for operations like identifying URLs.
 
-    Last updated/tested: 28 April 2021, 9:01 PM
-    """
+#     Last updated/tested: 28 April 2021, 9:01 PM
+#     """
 
-    tlds = []
-    with open (_TLDS_PATH) as f:
-        rows = csv.reader(f, delimiter=',')
-        next(rows, None) # Skip headers
-        for r in rows:
-            tlds.append(r[0][1:]) # Removes initial '.'
-    return tlds
+#     tlds = []
+#     with open (_TLDS_PATH) as f:
+#         rows = csv.reader(f, delimiter=',')
+#         next(rows, None) # Skip headers
+#         for r in rows:
+#             tlds.append(r[0][1:]) # Removes initial '.'
+#     return tlds
 
 # def match(a, b, t):
 #     """Returns True if the edit distance between input string a and input string
@@ -75,55 +75,55 @@ def tlds():
 
 #     return editdistance.eval(a, b) <= t
 
-def find_nearest(text, strings, start_pos=0):
-    """Returns position of the nearest (i.e., closest to 0) of any string in
-    input list strings.
+# def find_nearest(text, strings, start_pos=0):
+#     """Returns position of the nearest (i.e., closest to 0) of any string in
+#     input list strings.
 
-    Returns -1 if none of the strings are found in text.
+#     Returns -1 if none of the strings are found in text.
 
-    Last updated: 29 April 2021, 8:48 PM
+#     Last updated: 29 April 2021, 8:48 PM
 
-    Parameters
-    ----------
-    text
-        Text to search
-    strings
-        List of string to search in text
-    start_pos
-        Position to start searching for
-    """
+#     Parameters
+#     ----------
+#     text
+#         Text to search
+#     strings
+#         List of string to search in text
+#     start_pos
+#         Position to start searching for
+#     """
     
-    poss = []
-    for s in strings:
-        pos = text.find(s, start_pos)
-        if pos != -1:
-            poss.append(pos)
+#     poss = []
+#     for s in strings:
+#         pos = text.find(s, start_pos)
+#         if pos != -1:
+#             poss.append(pos)
 
-    return sorted(poss)[0] if len(poss) > 0 else -1
+#     return sorted(poss)[0] if len(poss) > 0 else -1
 
-def is_tld(text):
-    """Returns matching TLD if input text is a TLD.
+# def is_tld(text):
+#     """Returns matching TLD if input text is a TLD.
 
-    Returns None if input text is not a TLD.
+#     Returns None if input text is not a TLD.
     
-    We use edit distance with 20% difference in threshold (rounded down). E.g.,
-    for a 5 character-long TLD, matching 4 characters will trigger a match.
+#     We use edit distance with 20% difference in threshold (rounded down). E.g.,
+#     for a 5 character-long TLD, matching 4 characters will trigger a match.
 
-    The list of TLD is loaded in a separate function.
+#     The list of TLD is loaded in a separate function.
 
-    Last updated: 29 April 2021, 8:48 PM
+#     Last updated: 29 April 2021, 8:48 PM
 
-    Parameters
-    ----------
-    text
-        Text to test if its a TLD
-    """
+#     Parameters
+#     ----------
+#     text
+#         Text to test if its a TLD
+#     """
 
-    threshold = math.floor(len(text) * 0.2)
-    for tld in tlds():
-        if match(text, tld, threshold):
-            return tld
-    return None
+#     threshold = math.floor(len(text) * 0.2)
+#     for tld in tlds():
+#         if match(text, tld, threshold):
+#             return tld
+#     return None
 
 def has_domain_dot_marker(text):
     """Returns True if text contains a domain dot text marker.
@@ -182,57 +182,57 @@ def has_domain_dot_marker(text):
 #             break
 #     return None if string == '' else string
 
-def get_string_until_before_and_after_spaces(text, pos):
-    """Returns continuous string of text from previous space to next space at
-    text[pos] and start and positions in text where the string is found as a
-    tuple in the format:
+# def get_string_until_before_and_after_spaces(text, pos):
+#     """Returns continuous string of text from previous space to next space at
+#     text[pos] and start and positions in text where the string is found as a
+#     tuple in the format:
 
-    (string, start_pos, end_pos)
+#     (string, start_pos, end_pos)
     
-    A space may be a ' ', '\\n', '\\t' or end of text.
+#     A space may be a ' ', '\\n', '\\t' or end of text.
     
-    If text[pos] is a space or text is of length 0, return None.
+#     If text[pos] is a space or text is of length 0, return None.
     
-    E.g., 'hello there world' and pos 7 returns 'there'. The same string with
-    pos 3 returns 'hello'. The same string with pos 5 returns None.
+#     E.g., 'hello there world' and pos 7 returns 'there'. The same string with
+#     pos 3 returns 'hello'. The same string with pos 5 returns None.
 
-    Last updated/tested: 28 April 2021, 11:00 PM
+#     Last updated/tested: 28 April 2021, 11:00 PM
 
-    Parameters
-    ----------
-    text
-        Text to parse
-    pos
-        Position within text to return a continuous string of text around
-    """
+#     Parameters
+#     ----------
+#     text
+#         Text to parse
+#     pos
+#         Position within text to return a continuous string of text around
+#     """
 
-    if len(text) == 0 or pos >= len(text) or pos < 0 or is_space(text[pos]):
-        return None
+#     if len(text) == 0 or pos >= len(text) or pos < 0 or is_space(text[pos]):
+#         return None
 
-    string = ''
-    start_pos = pos
-    end_pos = -1
+#     string = ''
+#     start_pos = pos
+#     end_pos = -1
 
-    # Get non-space text before pos
-    for i in reversed(range(0, pos)):
-        c = text[i]
-        if not is_space(c):
-            string = c + string
-            start_pos = i
-        else:
-            break
+#     # Get non-space text before pos
+#     for i in reversed(range(0, pos)):
+#         c = text[i]
+#         if not is_space(c):
+#             string = c + string
+#             start_pos = i
+#         else:
+#             break
 
-    # Get non-space text at and after pos
-    for i in range(pos, len(text)):
-        c = text[i]
-        if not is_space(c):
-            string += c
-        else:
-            break
+#     # Get non-space text at and after pos
+#     for i in range(pos, len(text)):
+#         c = text[i]
+#         if not is_space(c):
+#             string += c
+#         else:
+#             break
 
-    end_pos = start_pos + len(string)
+#     end_pos = start_pos + len(string)
 
-    return (string, start_pos, end_pos)
+#     return (string, start_pos, end_pos)
 
 def mark_string(string, start_pos, end_pos, start_tag, end_tag):
     """Returns marked string with tags at the start_pos and end_pos. The
@@ -285,75 +285,75 @@ def words_around_position(text, start_pos, end_pos):
     
     pass
 
-def get_start_position_of_previous_word(text, pos):
-    """Returns position of the start of previous word after the immediately
-    previous space in text from position pos.
+# def get_start_position_of_previous_word(text, pos):
+#     """Returns position of the start of previous word after the immediately
+#     previous space in text from position pos.
 
-    We consider a continuous chain of 2 spaces as 1 space.
+#     We consider a continuous chain of 2 spaces as 1 space.
 
-    Returns -1 if position is not found.
+#     Returns -1 if position is not found.
 
-    E.g., 'aaa bbb ccc ddd eee'. If pos is pointing in 'ccc', we want to return
-    the start of 'bbb'. If pos is pointing to 'bbb', we want to return the start
-    of 'aaa'. If pos is pointing to 'aaa', we want to return the start of 'aaa'.
+#     E.g., 'aaa bbb ccc ddd eee'. If pos is pointing in 'ccc', we want to return
+#     the start of 'bbb'. If pos is pointing to 'bbb', we want to return the start
+#     of 'aaa'. If pos is pointing to 'aaa', we want to return the start of 'aaa'.
 
-    Last updated/tested: 29 April 2021, 3:50 PM
+#     Last updated/tested: 29 April 2021, 3:50 PM
 
-    Parameters
-    ----------
-    text
-        Text to parse
-    pos
-        Position to parse from
-    """
+#     Parameters
+#     ----------
+#     text
+#         Text to parse
+#     pos
+#         Position to parse from
+#     """
 
-    start_pos = pos
-    space_count = 0
-    for i in reversed(range(0, pos)):
-        if is_space(text[i]):
-            space_count += 1
+#     start_pos = pos
+#     space_count = 0
+#     for i in reversed(range(0, pos)):
+#         if is_space(text[i]):
+#             space_count += 1
         
-        if space_count >= 2:
-            break
+#         if space_count >= 2:
+#             break
 
-        start_pos = i
+#         start_pos = i
 
-    return start_pos
+#     return start_pos
 
-def get_end_position_of_next_word(text, pos):
-    """Returns position of the end of the next word after the immediate next
-    space in text from position pos.
+# def get_end_position_of_next_word(text, pos):
+#     """Returns position of the end of the next word after the immediate next
+#     space in text from position pos.
 
-    We consider a continuous chain of 2 spaces as 1 space.
+#     We consider a continuous chain of 2 spaces as 1 space.
 
-    Returns -1 if position is not found.
+#     Returns -1 if position is not found.
 
-    E.g., 'aaa bbb ccc ddd eee'. If pos is pointing in 'ccc', we want to return
-    the end of 'ddd'. If pos is pointing to 'ddd', we want to return the end
-    of 'eee'. If pos is pointing to 'eee', we want to return the end of 'eee'.
+#     E.g., 'aaa bbb ccc ddd eee'. If pos is pointing in 'ccc', we want to return
+#     the end of 'ddd'. If pos is pointing to 'ddd', we want to return the end
+#     of 'eee'. If pos is pointing to 'eee', we want to return the end of 'eee'.
 
-    Last updated/tested: 29 April 2021, 3:50 PM
+#     Last updated/tested: 29 April 2021, 3:50 PM
 
-    Parameters
-    ----------
-    text
-        Text to parse
-    pos
-        Position to parse from
-    """
+#     Parameters
+#     ----------
+#     text
+#         Text to parse
+#     pos
+#         Position to parse from
+#     """
 
-    end_pos = -1
-    space_count = 0
-    for i in range(pos, len(text)):
-        if is_space(text[i]):
-            space_count += 1
+#     end_pos = -1
+#     space_count = 0
+#     for i in range(pos, len(text)):
+#         if is_space(text[i]):
+#             space_count += 1
         
-        end_pos = i
+#         end_pos = i
         
-        if space_count >= 2:
-            break
+#         if space_count >= 2:
+#             break
     
-    return end_pos
+#     return end_pos
 
 def mark_around_symbol(symbol_pos, symbol_len, text, start_tag, end_tag):
     """Returns marked text with start_tag/end_tag applied around symbol and its
