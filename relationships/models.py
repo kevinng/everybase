@@ -373,6 +373,11 @@ class Company(Standard):
     Last updated: 28 April 2021, 3:36 PM
     """
 
+    url = models.URLField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     display_name = models.CharField(
         max_length=200,
         db_index=True
