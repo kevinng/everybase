@@ -24,7 +24,8 @@ choice_fieldsets = [
     ('Developer', {'fields': ['programmatic_key', 'programmatic_details']}),
 ]
 choice_ordering = ['id']
-choice_list_editable = ['name', 'programmatic_key']
+choice_list_editable = ['name', 'programmatic_key', 'description',
+    'programmatic_details']
 choice_search_fields = ['id', 'name', 'programmatic_key', 'description',
     'programmatic_details']
 
