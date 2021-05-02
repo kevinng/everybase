@@ -19,6 +19,7 @@ class TestMessageGroupAdmin(comadm.StandardAdmin):
     list_display = comadm.standard_list_display + _message_fields
     list_editable = comadm.standard_list_editable + _message_fields
     search_fields = comadm.standard_search_fields + _message_fields
+    list_per_page = 500
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
