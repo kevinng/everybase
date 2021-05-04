@@ -5,186 +5,68 @@ from common import admin as comadm
 
 # ----- Start: Inlines -----
 
-# class BaseTruthInlineAdmin(admin.TabularInline):
-#     model = mod.BaseTruth
-#     extra = 1
-#     autocomplete_fields = ['message_group', 'method']
+class MessageBodyMetaDataInlineAdmin(admin.TabularInline):
+    model = mod.MessageBodyMetaData
+    extra = 1
+    autocomplete_fields = ['twilio_inbound_message', 'test_message']
+
+class MessageBodyMetaDataEntityInlineAdmin(admin.TabularInline):
+    model = mod.MessageBodyMetaDataEntity
+    extra = 1
+    autocomplete_fields = ['meta_data']
 
 # ----- End: Inlines -----
 
-_message_fields = ['body']
+_test_message_fields = ['body']
 @admin.register(mod.TestMessage)
 class TestMessageAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _message_fields
-    list_editable = comadm.standard_list_editable + _message_fields
-    search_fields = comadm.standard_search_fields + _message_fields
+    list_display = comadm.standard_list_display + _test_message_fields
+    list_editable = comadm.standard_list_editable + _test_message_fields
+    search_fields = comadm.standard_search_fields + _test_message_fields
     list_per_page = 500
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _message_fields})
+        ('Details', {'fields': _test_message_fields})
     ]
-    # inlines = [BaseTruthInlineAdmin]
+    inlines = [MessageBodyMetaDataInlineAdmin]
 
-# _base_truth_fields = ['message_group', 'method', 'expected_output']
-# @admin.register(mod.BaseTruth)
-# class BaseTruthAdmin(comadm.StandardAdmin):
-#     # List page settings
-#     list_display = comadm.standard_list_display + _base_truth_fields
-#     list_editable = comadm.standard_list_editable + _base_truth_fields
-#     list_filter = comadm.standard_list_filter + ['method']
-#     search_fields = comadm.standard_search_fields + ['message_group__body',
-#         'expected_output']
+_message_body_meta_data_fields = ['group', 'ran', 'is_base_truth',
+    'is_enabled', 'version', 'body_copy', 'twilio_inbound_message',
+    'test_message']
+@admin.register(mod.MessageBodyMetaData)
+class MessageBodyMetaDataAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        _message_body_meta_data_fields
+    list_editable = comadm.standard_list_editable + \
+        _message_body_meta_data_fields
+    search_fields = comadm.standard_search_fields + \
+        _message_body_meta_data_fields
+    list_per_page = 500
 
-#     # Details page settings
-#     fieldsets = comadm.standard_fieldsets + [
-#         ('Details', {'fields': _base_truth_fields})
-#     ]
-#     autocomplete_fields = ['message_group', 'method']
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _message_body_meta_data_fields})
+    ]
+    inlines = [MessageBodyMetaDataEntityInlineAdmin]
 
-# _inbound_message_group_fields = ['is_disabled', 'grouped', 'initial_body']
-# @admin.register(mod.InboundMessageGroup)
-# class InboundMessageGroupAdmin(comadm.StandardAdmin):
-#     # List page settings
-#     list_display = comadm.standard_list_display + _inbound_message_group_fields
-#     list_editable = comadm.standard_list_editable + \
-#         _inbound_message_group_fields
-#     list_filter = comadm.standard_list_filter + ['grouped']
-#     search_fields = comadm.standard_search_fields + ['initial_body']
+_message_body_meta_data_entity_fields = ['start_position', 'end_position',
+    'boolean_value', 'numeric_value', 'string_value', 'substring',
+    'programmatic_key_1', 'programmatic_key_2']
+@admin.register(mod.MessageBodyMetaDataEntity)
+class MessageBodyMetaDataEntityAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        _message_body_meta_data_entity_fields
+    list_editable = comadm.standard_list_editable + \
+        _message_body_meta_data_entity_fields
+    search_fields = comadm.standard_search_fields + \
+        _message_body_meta_data_entity_fields
+    list_per_page = 500
 
-#     # Details page settings
-#     fieldsets = comadm.standard_fieldsets + [
-#         ('Details', {'fields': _inbound_message_group_fields + \
-#             ['twilio_inbound_messages']})
-#     ]
-#     autocomplete_fields = ['twilio_inbound_messages']
-
-# _grouping_method_fields = ['applied', 'order', 'inbound_message_group',
-#     'method']
-# @admin.register(mod.GroupingMethod)
-# class GroupingMethodAdmin(comadm.StandardAdmin):
-#     # List page settings
-#     list_display = comadm.standard_list_display + _grouping_method_fields
-#     list_editable = comadm.standard_list_editable + \
-#         _grouping_method_fields
-#     list_filter = comadm.standard_list_filter + ['applied', 'method']
-#     search_fields = comadm.standard_search_fields + [
-#         'inbound_message_group__initial_body', 'method__title']
-
-#     # Details page settings
-#     fieldsets = comadm.standard_fieldsets + [
-#         ('Details', {'fields': _grouping_method_fields})
-#     ]
-#     autocomplete_fields = ['inbound_message_group', 'method']
-
-# _operation_method_fields = ['applied', 'order', 'output_body',
-#     'inbound_message_group', 'method']
-# @admin.register(mod.OperationMethod)
-# class OperationMethodAdmin(comadm.StandardAdmin):
-#     # List page settings
-#     list_display = comadm.standard_list_display + _operation_method_fields
-#     list_editable = comadm.standard_list_editable + \
-#         _operation_method_fields
-#     list_filter = comadm.standard_list_filter + ['applied', 'method']
-#     search_fields = comadm.standard_search_fields + ['output_body',
-#         'inbound_message_group__initial_body', 'method__title']
-
-#     # Details page settings
-#     fieldsets = comadm.standard_fieldsets + [
-#         ('Details', {'fields': _operation_method_fields})
-#     ]
-#     autocomplete_fields = ['inbound_message_group', 'method']
-
-# _method_fields = ['title', 'version']
-# @admin.register(mod.Method)
-# class MethodAdmin(comadm.StandardChoiceAdmin):
-#     # List page settings
-#     list_display = comadm.standard_choice_list_display + _method_fields
-#     list_editable = comadm.standard_choice_list_editable + _method_fields
-#     list_filter = comadm.standard_choice_list_filter + ['tags']
-#     search_fields = comadm.standard_choice_search_fields + ['title', 'version']
-
-#     # Details page settings
-#     readonly_fields = comadm.standard_choice_readonly_fields
-#     fieldsets = comadm.standard_choice_fieldsets + [
-#         ('Details', {'fields': _method_fields + ['tags']})
-#     ]
-#     autocomplete_fields = ['tags']
-
-# @admin.register(mod.MethodTag)
-# class MethodTagAdmin(comadm.StandardChoiceAdmin):
-#     pass
-
-# _inbound_message_group_relationship_fields = ['associated', 'group']
-# _inbound_message_group_relationship_m2m_fields = ['tags', 'supplies', 'demands',
-#     'supply_quotes', 'demand_quotes']
-# @admin.register(mod.InboundMessageGroupRelationship)
-# class InboundMessageGroupRelationshipAdmin(comadm.StandardAdmin):
-#     # List page settings
-#     list_display = comadm.standard_list_display + \
-#         _inbound_message_group_relationship_fields
-#     list_editable = comadm.standard_list_editable + \
-#         _inbound_message_group_relationship_fields
-#     list_filter = comadm.standard_list_filter + \
-#         _inbound_message_group_relationship_fields + \
-#         _inbound_message_group_relationship_m2m_fields
-#     search_fields = comadm.standard_search_fields + ['group__initial_body']
-
-#     # Details page settings
-#     fieldsets = comadm.standard_fieldsets + [
-#         ('Details', {'fields': _inbound_message_group_relationship_fields +\
-#             _inbound_message_group_relationship_m2m_fields})
-#     ]
-#     autocomplete_fields = _inbound_message_group_relationship_m2m_fields
-
-# @admin.register(mod.InboundMessageGroupRelationshipTag)
-# class InboundMessageGroupRelationshipTagAdmin(comadm.StandardChoiceAdmin):
-#     pass
-
-# _test_run_type_fields = ['setting']
-# @admin.register(mod.TestRunType)
-# class TestRunTypeAdmin(comadm.StandardChoiceAdmin):
-#     # List page settings
-#     list_display = comadm.standard_choice_list_display + _test_run_type_fields
-#     list_editable = comadm.standard_choice_list_editable + _test_run_type_fields
-#     list_filter = comadm.standard_choice_list_filter + ['setting']
-
-#     # Details page settings
-#     fieldsets = comadm.standard_choice_fieldsets + [
-#         ('Details', {'fields': _test_run_type_fields + ['methods']})
-#     ]
-#     autocomplete_fields = ['methods']
-
-# _test_run_fields = ['test_run_type', 'ran']
-# @admin.register(mod.TestRun)
-# class TestRunAdmin(comadm.StandardAdmin):
-#     # List page settings
-#     list_display = comadm.standard_list_display + _test_run_fields
-#     list_editable = comadm.standard_list_editable + _test_run_fields
-#     list_filter = comadm.standard_list_filter + _test_run_fields
-
-#     # Details page settings
-#     fieldsets = comadm.standard_fieldsets + [
-#         ('Details', {'fields': _test_run_fields})
-#     ]
-#     autocomplete_fields = ['test_run_type']
-
-# _test_run_result_fields = ['test_message_group', 'method', 'expected_output',
-#     'actual_output', 'matched', 'test_run']
-# @admin.register(mod.TestRunResult)
-# class TestRunResultAdmin(comadm.StandardAdmin):
-#     # List page settings
-#     list_display = comadm.standard_list_display + _test_run_result_fields
-#     list_editable = comadm.standard_list_editable + _test_run_result_fields
-#     list_filter = comadm.standard_list_filter + ['matched']
-#     search_fields = comadm.standard_search_fields + ['test_message_group__body',
-#         'method__title', 'method__name', 'method__description']
-
-#     # Details page settings
-#     save_on_top = True
-#     readonly_fields = comadm.standard_readonly_fields
-#     fieldsets = comadm.standard_fieldsets + [
-#         ('Details', {'fields': _test_run_result_fields})
-#     ]
-#     autocomplete_fields = ['test_message_group', 'method', 'test_run']
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _message_body_meta_data_entity_fields})
+    ]

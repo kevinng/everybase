@@ -140,5 +140,9 @@ class MessageBodyMetaDataEntity(Standard):
     )
 
     def __str__(self):
-        return f'({self.entity_type}, {self.substring}, {short_text(self.meta_data)} \
-            [{self.id}])'
+        return f'({self.entity_type}, {self.substring}, \
+            {short_text(self.meta_data)} [{self.id}])'
+
+    class Meta:
+        verbose_name = 'Message body meta data entity'
+        verbose_name_plural = 'Message body meta data entities'
