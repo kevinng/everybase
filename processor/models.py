@@ -46,6 +46,88 @@ class MessageBodyMetaData(Standard):
         db_index=True
     )
 
+class MessageBodyMetaDataEntity(Standard):
+    """Entity of a message's body meta data.
+
+    Last updated: 4 May 2021, 5:30 PM
+    """
+    entity_type = models.CharField(
+        max_length=30,
+        choices=[
+            ('newline', 'Newline'),
+            ('domain_dot', 'Domain Dot'),
+            ('tld', 'TLD'),
+            ('url', 'URL'),
+            ('decimal_point', 'Decimal Point'),
+            ('number_separator', 'Number Separator'),
+            ('number_uom', 'Number UOM'),
+            ('number', 'Number'),
+            ('fullstop', 'Fullstop'),
+            ('exclamation_mark', 'Exclamation Mark'),
+            ('email', 'Email'),
+            ('currency', 'Currency'),
+            ('price', 'Price'),
+            ('excluded_pricing', 'Excluded Pricing'),
+            ('location', 'Location'),
+            ('incoterm_availability', 'Incoterm/Availability'),
+            ('application', 'Application'),
+            ('phone_number', 'Phone Number'),
+            ('company', 'Company'),
+            ('product_type', 'Product Type'),
+            ('product', 'Product'),
+            ('product_specification_type', 'Product Specification Type'),
+            ('uom', 'UOM'),
+            ('moq', 'MOQ'),
+            ('quantity', 'Quantity'),
+            ('packing', 'Packing')
+        ],
+        db_index=True
+    )
+    start_position = models.IntegerField(db_index=True)
+    end_position = models.IntegerField(db_index=True)
+    boolean_value = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    numeric_value = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    string_value = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    substring = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    programmatic_key_1 = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    programmatic_key_2 = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    meta_data = models.ForeignKey(
+        'MessageBodyMetaData',
+        related_name='message_body_meta_datas',
+        related_query_name='message_body_meta_datas',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
 # class BaseTruth(Standard):
 #     """Base truth - i.e., what we expect when we run a function over a message.
 
