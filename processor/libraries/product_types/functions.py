@@ -94,8 +94,6 @@ having user also helps - because if the user only deals with a certain set of pr
 unit of measure
 unit-of-measure to product-type
 
-location
-location - productspecificationtype
 
 incoterm availability
 

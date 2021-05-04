@@ -295,7 +295,137 @@ def has_tag_dot_domain(text):
 
     return text.find(TAGS['DOT__DOMAIN__STARTEND']) != -1
 
+# We'd likely need to deprecate this method - if we're going with marking
+# positions in the text instead of explicitly inserting tags
+def mark_string(string, start_pos, end_pos, start_tag, end_tag):
+    """Marks string at positions start_pos and end_pos with start_tag and
+    end_tag respectively. I.e., enclose the sub-string from start_pos and
+    end_pos with start_tag and end_tag.
 
+    Returns marked string, and position one after the end of end_tag as a tuple
+    in the format:
+    
+    (string, pos)
+
+    Last updated/tested: 29 April 2021, 11:19 PM
+
+    Parameters
+    ----------
+    string
+        String to parse and return
+    start_pos
+        Start position to tag
+    end_pos
+        End position to tag
+    start_tag
+        Start text marker tag to use
+    end_tag
+        End text marker tag to use
+    """
+
+    new_string = string[:start_pos] + start_tag + string[start_pos:end_pos] + \
+        end_tag + string[end_pos:]
+
+    next_pos = len(string[:start_pos]) + len(start_tag) + \
+        len(string[start_pos:end_pos]) + len(end_tag)
+
+    return (new_string, next_pos)
+
+# We'd likely need to deprecate this method - if we're going with marking
+# positions in the text instead of explicitly inserting tags
+def mark_around_symbol(symbol_pos, symbol_len, text, start_tag, end_tag,
+    space_tolerance=2):
+    """Marks symbol and its surrounding two words with start_tag and end_tag.
+    
+    Returns marked text with start_tag/end_tag applied around symbol and its
+    text; and the position after the end_tag as a tuple in the format:
+
+    (marked_text, next_pos)
+
+    If the symbol has a word immediately before it (i.e., there is no space
+    separting the symbol and that word) - insert start_tag before the start of
+    that word.
+
+    If there is a space separating a word before the - insert start_tag before
+    the start of that word.
+
+    If there is no word before symbol - insert start_tag before symbol. 
+
+    If the symbol has a word immediately after it (i.e., there is no space
+    separating the symbol and that word) - insert end_tag after the end of that
+    word.
+    
+    If there is a space separating a word after the symbol - insert _endtag after
+    that word.
+    
+    If there is no word after symbol - insert end_tag after symbol.
+
+    E.g.,
+    
+    'aaa bbb ccc'. Marking on 'bbb' yields '<x>aaa bbb ccc</x>'.
+    Marking on 'aaa' yields '<x>aaa bbb</x> ccc'. Marking on 'ccc' yields
+    'aaa <x>bbb ccc</x>'. 'aaa'. Marking on 'aaa' yields '<x>aaa</x>'.
+    
+    'aaa bbbcccddd eee'. Marking on 'ccc' yields 'aaa <x>bbbcccddd</x> eee'.
+    Marking on 'bbb' yields '<x>aaa bbbccc</x>ddd eee'.
+
+    We allow a tolerance for the number of consecutive spaces to be considered
+    as a single space. This lets us tolerate human errors where more than 1
+    spaces may be entered where the human meant to enter 1.
+
+    Parameters
+    ----------
+    symbol_pos
+        Start position of symbol in text
+    symbol_len
+        Length of symbol
+    text
+        Text to parse
+    start_tag
+        Start tag to insert
+    end_tag
+        End tag to insert
+    space_tolerance
+        Number of consecutive spaces to be considered as a single space.
+        Defaults to 2.
+    """
+
+    symbol = text[symbol_pos:symbol_pos+symbol_len]
+
+    # Get this word. If symbol is part of a longer word, we'd get the entire
+    # word.
+    (this_word, string_start_pos, string_end_pos) = get_this_word(
+        text, symbol_pos)
+
+    if this_word.startswith(symbol) and string_start_pos != 0:
+        # There is no word immediately before symbol and we're not at the start
+        # of text. Get start of previous word.
+        string_start_pos = \
+            get_start_position_of_previous_word(text, string_start_pos,
+                space_tolerance)
+    
+    if this_word.endswith(symbol) and string_end_pos != len(text):
+        # There is no word immediately after symbol. Get end of next word.
+        string_end_pos = get_end_position_of_next_word(text, string_end_pos,
+            space_tolerance)
+
+    return mark_string(text, string_start_pos, string_end_pos, start_tag,
+        end_tag)
+
+# We'd likely need to deprecate this method - if we're going with marking
+# positions in the text instead of explicitly inserting tags
+def mark_numbers(line, space_tolerance=1):
+# WE WANT TO MARK THE WHOLE NUMBER, and what we read
+    """
+We mark all the numbers, and then there's the unit of measure
+
+number must stand on its own
+
+we want to read the number last
+We want to mark as many attributes as possible before marking numeric values
+
+annotate original text, and the value read
+the original purpose is to actually
 
 
 
