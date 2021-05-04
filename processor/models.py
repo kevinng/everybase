@@ -13,6 +13,39 @@ class TestMessage(Standard):
     def __str__(self):
         return f'({short_text(self.body)} [{self.id}])'
 
+class MessageBodyMetaData(Standard):
+    """Meta data generated for a message body - test or production.
+
+    Last updated: 4 May 2021, 1:14 PM
+    """
+    group = models.CharField(
+        max_length=200,
+        db_index=True
+    )
+    ran = models.DateField(db_index=True)
+    is_base_truth = models.BooleanField(db_index=True)
+    is_enabled = models.BooleanField(db_index=True)
+    version = models.CharField(
+        max_length=200,
+        db_index=True
+    )
+    body_copy = models.TextField()
+	
+    twilio_inbound_message = models.ForeignKey(
+        'chat.TwilioInboundMessage',
+        related_name='message_body_meta_datas',
+        related_query_name='message_body_meta_datas',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    test_message = models.ForeignKey(
+        'TestMessage',
+        related_name='message_body_meta_datas',
+        related_query_name='message_body_meta_datas',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
 # class BaseTruth(Standard):
 #     """Base truth - i.e., what we expect when we run a function over a message.
 
