@@ -3,7 +3,7 @@ import math
 
 import editdistance
 
-import processor.libraries.constants as const
+from processor.libraries.constants import TAGS, TLDS_PATH
 
 def is_space(c):
     """Returns True if c is a space.
@@ -106,6 +106,9 @@ def get_end_position_of_next_word(text, pos, space_tolerance=2):
         Text to parse
     pos
         Position to parse from
+    space_tolerance
+        Number of consecutive spaces to be considered as a single space.
+        Defaults to 2.
     """
 
     end_pos = -1
@@ -136,7 +139,7 @@ def tlds():
     """
 
     tlds = []
-    with open (const._TLDS_PATH) as f:
+    with open (TLDS_PATH) as f:
         rows = csv.reader(f, delimiter=',')
         next(rows, None) # Skip headers
         for r in rows:
@@ -275,3 +278,210 @@ def get_this_word(text, pos):
     end_pos = start_pos + len(string)
 
     return (string, start_pos, end_pos)
+
+def has_tag_dot_domain(text):
+    """Returns true if text contains a tag for a dot domain.
+
+    Returns false otherwise.
+    
+    We use this as a simple check for various purposes - e.g., ascertaining if
+    text is a URL, email, etc.
+
+    Parameters
+    ----------
+    text
+        Text to parse
+    """
+
+    return text.find(TAGS['DOT__DOMAIN__STARTEND']) != -1
+
+
+
+
+
+
+
+
+And then there's the currency
+
+What makes a number a numebr?
+If it's 3M - it could be mistaken for 3 meters
+3m 1860 is the model number
+
+
+If there is a dot and comma, how do we treat them?
+We have to be sure that 
+
+Mark all decimal and thousand separators in input text line and return
+    marked text.
+
+    We EXPECT input text line to represent text in a single line - i.e.,
+    tokenized by the newline character '\n'.
+
+    The US standard annotates numbers as follows:
+
+    123,456.78
+
+    The European standard annotates numbers as follows:
+
+    123.456,78
+
+    We differentiate them as follows:
+
+    Where a symbol (i.e., '.' or ',') is found, we ascertain if it is used
+    between 2 numbers. If it follows 3 digits, it is a thousand separator, if it
+    follows 2 or less digits, it is a decimal.
+
+    We allow a space tolerance when ascertaining if a symbol sits between 2
+    digits. E.g., a space tolerance of 1 allows for up to 1 space between the
+    symbol and both numbers. E.g., '9. 1' and '9 .1' passes, but '9 . 1' fails.
+
+    We do NOT assume the usage of notation to be consistent throughout input
+    text.
+
+    We allow a tolerance for the number of consecutive spaces between '.' and
+    number to be considered as no-space. This lets us tolerate human errors
+    where 1 or more spaces may be entered between a '.' and a number.
+
+    We do not work with a number more than once. E.g., 123.456.000 - the '.'
+    between 123 and 456 will be considered a thousand separator. The '.' between
+    456 and 000 will be considered a fullstop (i.e., left unmarked).
+
+    E.g., <d/> is a decimal separator, <t/> is a thousand separator. Exact tags
+    used depends on constant value at runtime.
+
+    '123.00' -> '123<d/>00'
+    '123,00' -> '123<d/>00'
+    '123.000' -> '123<t/>000'
+    '123,000' -> '123<t/>000'
+    '123.456.789' -> '123<t/>456<t/>789'
+    '123.456.78' -> '123<t/>456<t/>78'
+    '123,456,78' -> '123<t/>456<t/>78'
+    '123.456,78' -> '123<t/>456<d/>78'
+    '123,456.78' -> '123<t/>456<d/>78'
+
+    Parameters
+    ----------
+    text
+        Text to parse
+    """
+    pass
+
+# def mark_domain_dots(text):
+#     """
+
+#     """
+
+def get_sentences(text):
+# CONSIDER IF WE REALLY WANT TO BREAK SENTENCES BY . and !
+
+
+    """Break input text into sentences and return a list of dictionaries.
+
+    Each dictionary in the list represents a sentence in text.
+    
+    List order follows sentence order in text. We call this the 'standard'
+    format.
+
+    E.g.,
+
+    [
+        {
+            'sentence': 'hello world a@b.com'
+        },
+        {
+            'sentence': 'foo bar a [at] b.com'
+        }
+    ]
+    
+    A sentence is not merely a newline. It may be terminated by a fullstop
+    ('.').
+    
+    However, we cannot simply split a line up by '.' because it's also used in
+    other contexts - e.g., decimal, domain.
+
+    Non-fullstop use of '.' is detected as follows:
+        - Decimal place, numeric character before and after '.'
+        - Domain name, top-level domain names after '.'
+
+    Non-fullstop use of '.' are marked accordingly.
+
+    Last updated/tested: 28 April 2021, 10:51 PM
+    UPDATE UPDATE
+
+    Parameters
+    ----------
+    text
+        Input text.
+    """
+
+
+
+
+
+    #### CAN BE SEPARATED BY ! ALSO
+
+
+
+    lines = [l.strip() for l in text.splitlines()]
+
+    # Replace '' with block break text marker
+    lines = map(lambda l: _TXTMARK_BLOCK_BREAK if l == '' else l, lines)
+
+    sentences = []
+
+    # If '.' is not used between 2 numbers, it is a fullstop - break line up
+    # into sentences.
+    for l in lines:
+        curr_pos = 0
+
+        # Replace all '.' used between two numeric values with decimal text
+        # markers
+        for i, c in enumerate(l):
+            if c == '.':
+                if i < len(l)-1:
+                    # '.' is not the last character (second-last is okay).
+                    if i != 0 and \
+                        l[i-1].isnumeric() and \
+                        l[i+1].isnumeric():
+                        # This is a decimal place, replace this '.' with decimal
+                        # text marker
+
+
+                        # If there are 2 numbers or less behind this '.' and no
+                        # more, then this is a decimal place.
+
+                        # If there are 3 numbers behind this, then this is a
+                        # thousands separator.
+
+
+# TODO improve this
+
+                        l = l[:i] + _TXTMARK_DECIMAL_DOT + l[i+1:]
+                    else:
+                        # A TLD is the last unit of text in a URL. E.g., for
+                        # google.com.sg, .sg is the TLD. So, we want to get the
+                        # full string to the next space, split it by '.', and
+                        # get the last chunk of text.
+                        s = get_first_string(l[i:])
+                        last_chunk = s.split('.')[-1]
+                        tld = is_tld(last_chunk)
+                        if tld != None:
+                            # Last chunk of text is a TLD, replace all instances
+                            # of '.' from position i to next space with text
+                            # marker.
+# TODO improve this
+                            l = l[:i] + s.replace('.', _TXTMARK_DOMAIN_DOT) + \
+                                l[i+len(s):]
+
+        # (Safely) tokenize line with '.'
+        line_sentences = [s for s in l.split('.') if len(s) > 0]
+
+        sentences += line_sentences
+
+        # Wrap sentences in dictionary to faciliate further processing
+        wrapped = []
+        for s in sentences:
+            wrapped.append({'sentence': s})
+
+    return wrapped

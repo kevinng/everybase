@@ -125,21 +125,21 @@ _TXTMARK_EMAIL_SUSPICIOUS_END = '</email_suspicious>'
 #             return tld
 #     return None
 
-def has_domain_dot_marker(text):
-    """Returns True if text contains a domain dot text marker.
+# def has_domain_dot_marker(text):
+#     """Returns True if text contains a domain dot text marker.
 
-    Returns False otherwise.
+#     Returns False otherwise.
     
-    We use this as a simple check for various purposes - e.g., ascertaining if
-    text is a URL, email, etc.
+#     We use this as a simple check for various purposes - e.g., ascertaining if
+#     text is a URL, email, etc.
 
-    Parameters
-    ----------
-    text
-        Text to parse
-    """
+#     Parameters
+#     ----------
+#     text
+#         Text to parse
+#     """
 
-    return text.find(_TXTMARK_DOMAIN_DOT) != -1
+#     return text.find(_TXTMARK_DOMAIN_DOT) != -1
 
 # def is_space(c):
 #     """Returns True if c is a space.
@@ -355,54 +355,54 @@ def words_around_position(text, start_pos, end_pos):
     
 #     return end_pos
 
-def mark_around_symbol(symbol_pos, symbol_len, text, start_tag, end_tag):
-    """Returns marked text with start_tag/end_tag applied around symbol and its
-    text; and the position after the end_tag as a tuple in the format:
+# def mark_around_symbol(symbol_pos, symbol_len, text, start_tag, end_tag):
+#     """Returns marked text with start_tag/end_tag applied around symbol and its
+#     text; and the position after the end_tag as a tuple in the format:
 
-    (marked_text, next_pos)
+#     (marked_text, next_pos)
 
-    If symbol has immediate text before it - mark the start of that text.
-    If not, but there is a word before symbol (separated by up to 2 spaces),
-    mark the start of that word.
+#     If symbol has immediate text before it - mark the start of that text.
+#     If not, but there is a word before symbol (separated by up to 2 spaces),
+#     mark the start of that word.
 
-    If symbol has immediate text after it - mark the end of that text. If
-    not, but there is a word after symbol (separated by up to 2 spaces),
-    mark the end of that word.
+#     If symbol has immediate text after it - mark the end of that text. If
+#     not, but there is a word after symbol (separated by up to 2 spaces),
+#     mark the end of that word.
 
-    In marking text, we have to be sure that we do not overlap
-    TODO complete this sentence
+#     In marking text, we have to be sure that we do not overlap
+#     TODO complete this sentence
 
-    Parameters:
-    symbol_pos
-        Start position of symbol in text
-    symbol_len
-        Length of symbol
-    text
-        Text to parse
-    start_tag
-        Start tag to insert
-    end_tag
-        End tag to insert
-    """
+#     Parameters:
+#     symbol_pos
+#         Start position of symbol in text
+#     symbol_len
+#         Length of symbol
+#     text
+#         Text to parse
+#     start_tag
+#         Start tag to insert
+#     end_tag
+#         End tag to insert
+#     """
     
-    (string, string_start_pos, string_end_pos) = \
-        get_string_until_before_and_after_spaces(text, symbol_pos)
+#     (string, string_start_pos, string_end_pos) = \
+#         get_string_until_before_and_after_spaces(text, symbol_pos)
 
-    if string_start_pos == symbol_pos:
-        # String obtained starts at symbol start position. So, we have no text
-        # immediately before '@'. Thus, 'absorb' the word before the immediate
-        # previous space into the start position.
-        string_start_pos = \
-            get_start_position_of_previous_word(text, string_start_pos)
+#     if string_start_pos == symbol_pos:
+#         # String obtained starts at symbol start position. So, we have no text
+#         # immediately before '@'. Thus, 'absorb' the word before the immediate
+#         # previous space into the start position.
+#         string_start_pos = \
+#             get_start_position_of_previous_word(text, string_start_pos)
     
-    if string_end_pos == symbol_pos + symbol_len:
-        # String obtained ends after symbol start position. So, we have no text
-        # immediately after the symbol. Thus, 'absorb' the word after the
-        # immediate next space into the end position.
-        string_end_pos = get_end_position_of_next_word(text, string_end_pos)
+#     if string_end_pos == symbol_pos + symbol_len:
+#         # String obtained ends after symbol start position. So, we have no text
+#         # immediately after the symbol. Thus, 'absorb' the word after the
+#         # immediate next space into the end position.
+#         string_end_pos = get_end_position_of_next_word(text, string_end_pos)
 
-    return mark_string(text, string_start_pos, string_end_pos, start_tag,
-        end_tag)
+#     return mark_string(text, string_start_pos, string_end_pos, start_tag,
+#         end_tag)
 
 def mark_emails(sentences):
     """Receives a list of dictionaries of sentences in get_sentence format.
@@ -514,105 +514,105 @@ def mark_number_separators(text):
 
     """
 
-def get_sentences(text):
-    """Break input text into sentences and return a list of dictionaries.
+# def get_sentences(text):
+#     """Break input text into sentences and return a list of dictionaries.
 
-    Each dictionary in the list represents a sentence of a text.
+#     Each dictionary in the list represents a sentence of a text.
     
-    List order represents sentence order in text.
+#     List order represents sentence order in text.
 
-    E.g.,
-    [
-        {
-            'sentence': 'hello world a@b.com'
-        },
-        {
-            'sentence': 'foo bar a [at] b.com'
-        }
-    ]
+#     E.g.,
+#     [
+#         {
+#             'sentence': 'hello world a@b.com'
+#         },
+#         {
+#             'sentence': 'foo bar a [at] b.com'
+#         }
+#     ]
 
-    We call this output format the 'get_sentences' format.
+#     We call this output format the 'get_sentences' format.
     
-    A sentence is not merely a newline. It may be terminated by a fullstop
-    ('.'). We cannot simply split a line up by '.' because '.' is also used in
-    other contexts - e.g., decimal, domain.
+#     A sentence is not merely a newline. It may be terminated by a fullstop
+#     ('.'). We cannot simply split a line up by '.' because '.' is also used in
+#     other contexts - e.g., decimal, domain.
 
-    Non-fullstop use of '.' is detected as follows:
-        - Decimal place, numeric character before and after '.'
-        - Domain name, top-level domain names after '.'
+#     Non-fullstop use of '.' is detected as follows:
+#         - Decimal place, numeric character before and after '.'
+#         - Domain name, top-level domain names after '.'
 
-    Non-fullstop use of '.' are marked with text markers.
+#     Non-fullstop use of '.' are marked with text markers.
 
-    Last updated/tested: 28 April 2021, 10:51 PM
+#     Last updated/tested: 28 April 2021, 10:51 PM
 
-    Parameters
-    ----------
-    text
-        Input text.
-    """
+#     Parameters
+#     ----------
+#     text
+#         Input text.
+#     """
 
-    lines = [l.strip() for l in text.splitlines()]
+#     lines = [l.strip() for l in text.splitlines()]
 
-    # Replace '' with block break text marker
-    lines = map(lambda l: _TXTMARK_BLOCK_BREAK if l == '' else l, lines)
+#     # Replace '' with block break text marker
+#     lines = map(lambda l: _TXTMARK_BLOCK_BREAK if l == '' else l, lines)
 
-    sentences = []
+#     sentences = []
 
-    # If '.' is not used between 2 numbers, it is a fullstop - break line up
-    # into sentences.
-    for l in lines:
-        curr_pos = 0
+#     # If '.' is not used between 2 numbers, it is a fullstop - break line up
+#     # into sentences.
+#     for l in lines:
+#         curr_pos = 0
 
-        # Replace all '.' used between two numeric values with decimal text
-        # markers
-        for i, c in enumerate(l):
-            if c == '.':
-                if i < len(l)-1:
-                    # '.' is not the last character (second-last is okay).
-                    if i != 0 and \
-                        l[i-1].isnumeric() and \
-                        l[i+1].isnumeric():
-                        # This is a decimal place, replace this '.' with decimal
-                        # text marker
-
-
-                        # If there are 2 numbers or less behind this '.' and no
-                        # more, then this is a decimal place.
-
-                        # If there are 3 numbers behind this, then this is a
-                        # thousands separator.
+#         # Replace all '.' used between two numeric values with decimal text
+#         # markers
+#         for i, c in enumerate(l):
+#             if c == '.':
+#                 if i < len(l)-1:
+#                     # '.' is not the last character (second-last is okay).
+#                     if i != 0 and \
+#                         l[i-1].isnumeric() and \
+#                         l[i+1].isnumeric():
+#                         # This is a decimal place, replace this '.' with decimal
+#                         # text marker
 
 
-# TODO improve this
+#                         # If there are 2 numbers or less behind this '.' and no
+#                         # more, then this is a decimal place.
 
-                        l = l[:i] + _TXTMARK_DECIMAL_DOT + l[i+1:]
-                    else:
-                        # A TLD is the last unit of text in a URL. E.g., for
-                        # google.com.sg, .sg is the TLD. So, we want to get the
-                        # full string to the next space, split it by '.', and
-                        # get the last chunk of text.
-                        s = get_first_string(l[i:])
-                        last_chunk = s.split('.')[-1]
-                        tld = is_tld(last_chunk)
-                        if tld != None:
-                            # Last chunk of text is a TLD, replace all instances
-                            # of '.' from position i to next space with text
-                            # marker.
-# TODO improve this
-                            l = l[:i] + s.replace('.', _TXTMARK_DOMAIN_DOT) + \
-                                l[i+len(s):]
+#                         # If there are 3 numbers behind this, then this is a
+#                         # thousands separator.
 
-        # (Safely) tokenize line with '.'
-        line_sentences = [s for s in l.split('.') if len(s) > 0]
 
-        sentences += line_sentences
+# # TODO improve this
 
-        # Wrap sentences in dictionary to faciliate further processing
-        wrapped = []
-        for s in sentences:
-            wrapped.append({'sentence': s})
+#                         l = l[:i] + _TXTMARK_DECIMAL_DOT + l[i+1:]
+#                     else:
+#                         # A TLD is the last unit of text in a URL. E.g., for
+#                         # google.com.sg, .sg is the TLD. So, we want to get the
+#                         # full string to the next space, split it by '.', and
+#                         # get the last chunk of text.
+#                         s = get_first_string(l[i:])
+#                         last_chunk = s.split('.')[-1]
+#                         tld = is_tld(last_chunk)
+#                         if tld != None:
+#                             # Last chunk of text is a TLD, replace all instances
+#                             # of '.' from position i to next space with text
+#                             # marker.
+# # TODO improve this
+#                             l = l[:i] + s.replace('.', _TXTMARK_DOMAIN_DOT) + \
+#                                 l[i+len(s):]
 
-    return wrapped
+#         # (Safely) tokenize line with '.'
+#         line_sentences = [s for s in l.split('.') if len(s) > 0]
+
+#         sentences += line_sentences
+
+#         # Wrap sentences in dictionary to faciliate further processing
+#         wrapped = []
+#         for s in sentences:
+#             wrapped.append({'sentence': s})
+
+#     return wrapped
 
 def get_most_likely_product_from_user(uom, incoterm_availability, location):
     """Where the user did not indicate the product he is selling, only the
