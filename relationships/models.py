@@ -440,22 +440,13 @@ class Product(Standard):
     def __str__(self):
         return f'({self.display_name} [{self.id}])'
 
-class ProductSpecificationType(Standard):
+class ProductSpecificationType(Standard, Choice):
     """Specification type of a product. E.g., 501K of nitrile gloves. Note: this
     is a 'type'. Whether a nitrile gloves supply has 501K or not - is defined in
     ProductSpecification.
 
-    Last updated: 28 April 2021, 3:39 PM
+    Last updated: 5 May 2021, 2:57 PM
     """
-
-    display_name = models.CharField(
-        max_length=200,
-        db_index=True
-    )
-    notes = models.TextField(
-        null=True,
-        blank=True
-    )
 	
     product_type = models.ForeignKey(
         'ProductType',

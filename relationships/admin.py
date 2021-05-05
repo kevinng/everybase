@@ -164,18 +164,21 @@ class ProductAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['product_type']
 
-_product_specification_type = ['display_name', 'notes', 'product_type']
+_product_specification_type = ['product_type']
 @admin.register(mod.ProductSpecificationType)
-class ProductSpecificationTypeAdmin(comadm.StandardAdmin):
+class ProductSpecificationTypeAdmin(comadm.StandardChoiceAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _product_specification_type
-    list_editable = comadm.standard_list_editable + _product_specification_type
-    list_filter = comadm.standard_list_filter + ['product_type']
-    search_fields = comadm.standard_search_fields + ['display_name', 'notes',
-        'product_type__name', 'product_type__description']
+    list_display = comadm.standard_choice_list_display + \
+        _product_specification_type
+    list_editable = comadm.standard_choice_list_editable + \
+        _product_specification_type
+    list_filter = comadm.standard_choice_list_filter + ['product_type']
+    search_fields = comadm.standard_choice_search_fields + \
+        ['display_name', 'notes', 'product_type__name',
+            'product_type__description']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
+    fieldsets = comadm.standard_choice_fieldsets + [
         ('Details', {'fields': _product_specification_type})
     ]
     autocomplete_fields = ['product_type']
