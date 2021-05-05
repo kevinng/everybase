@@ -154,17 +154,17 @@ class CompanyProductAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['company', 'product']
 
-_product_fields = ['display_name', 'notes', 'product_type']
+_product_fields = ['product_type']
 @admin.register(mod.Product)
-class ProductAdmin(comadm.StandardAdmin):
+class ProductAdmin(comadm.StandardChoiceAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _product_fields
-    list_editable = comadm.standard_list_editable + _product_fields
-    search_fields = comadm.standard_search_fields + ['display_name', 'notes',
+    list_display = comadm.standard_choice_list_display + _product_fields
+    list_editable = comadm.standard_choice_list_editable + _product_fields
+    search_fields = comadm.standard_choice_search_fields + [
         'product_type__name', 'product_type__description']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
+    fieldsets = comadm.standard_choice_fieldsets + [
         ('Details', {'fields': _product_fields})
     ]
     autocomplete_fields = ['product_type']

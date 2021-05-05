@@ -417,17 +417,11 @@ class CompanyProduct(Standard):
         return f'({self.company.display_name}, {self.product.display_name} \
             [{self.id}])'
 
-class Product(Standard):
+class Product(Standard, Choice):
     """Product.
 
-    Last updated: 28 April 2021, 3:38 PM
+    Last updated: 5 May 2021, 2:56 PM
     """
-
-    display_name = models.CharField(
-        max_length=200,
-        db_index=True
-    )
-    notes = models.TextField()
     
     product_type = models.ForeignKey(
         'ProductType',
