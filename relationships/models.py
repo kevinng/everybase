@@ -1067,3 +1067,19 @@ class LocationProductSpecificationType(Standard):
             raise ValidationError('Either is_exists or value must be set.')
         elif self.value is not None and self.operator is None:
             raise ValidationError('If value is set, operator must be set.')
+
+class TopLevelDomain(Choice):
+    """Top level domain. E.g., .com.
+
+    Last updated: 5 May 2021, 3:08 PM
+    """
+    domain_type = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
+    )
+    sponsoring_organization = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
+    )
