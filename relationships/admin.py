@@ -129,6 +129,11 @@ class CompanyProductTypeAdmin(comadm.StandardAdmin):
 _company_fields = ['url']
 @admin.register(mod.Company)
 class CompanyAdmin(comadm.StandardChoiceAdmin):
+    # List page settings
+    list_display = comadm.standard_choice_list_display + _company_fields
+    list_editable = comadm.standard_choice_list_editable + _company_fields
+    search_fields = comadm.standard_choice_search_fields + _company_fields
+
     # Details page settings
     fieldsets = comadm.standard_choice_fieldsets + [
         ('Details', {'fields': _company_fields})
