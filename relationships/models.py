@@ -465,7 +465,13 @@ class ProductSpecification(Standard):
         blank=True,
         db_index=True
     )
-    value = models.FloatField(
+    float_value = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    string_value = models.CharField(
+        max_length=200,
         null=True,
         blank=True,
         db_index=True

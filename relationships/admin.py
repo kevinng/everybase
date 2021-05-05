@@ -188,7 +188,7 @@ class ProductSpecificationTypeAdmin(comadm.StandardChoiceAdmin):
     ]
     autocomplete_fields = ['product_type']
 
-_product_specification_fields = ['is_exists', 'value',
+_product_specification_fields = ['is_exists', 'string_value', 'float_value',
     'product_specification_type', 'product', 'supply', 'demand']
 @admin.register(mod.ProductSpecification)
 class ProductSpecificationAdmin(comadm.StandardAdmin):
