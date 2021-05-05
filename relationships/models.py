@@ -1083,3 +1083,10 @@ class TopLevelDomain(Choice):
         null=True,
         blank=True
     )
+
+class Application(Choice):
+    """An application - e.g., WhatsApp, WeChat.
+
+    Last updated: 5 May 2021, 3:21 PM
+    """
+    pass
