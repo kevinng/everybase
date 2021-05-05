@@ -255,6 +255,40 @@ class MatchingKeyword(Standard):
     def clean(self):
         super(MatchingKeyword, self).clean()
 
-        if self.twilio_inbound_message is None and self.test_message is None:
-            raise ValidationError('Either twilio_inbound_message or \
-                test_message must be set.')
+        count = 0
+
+        if self.currency is not None:
+            count += 1
+
+        if self.excluded_price is not None:
+            count += 1
+
+        if self.location is not None:
+            count += 1
+
+        if self.incoterm_availability is not None:
+            count += 1
+
+        if self.application is not None:
+            count += 1
+
+        if self.company is not None:
+            count += 1
+
+        if self.product_type is not None:
+            count += 1
+
+        if self.product is not None:
+            count += 1
+
+        if self.product_specification_type is not None:
+            count += 1
+
+        if self.unit_of_measure is not None:
+            count += 1
+
+        if count != 1:
+            raise ValidationError('Either currency, excluded_price, location, \
+                incoterm_availability, application, company, product_type, \
+                product, product_specification_type or unit_of_measure must be \
+                set.')
