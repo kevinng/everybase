@@ -412,7 +412,7 @@ class LocationProductSpecificationTypeAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['location', 'product_specification_type']
 
-_top_level_domain_fields = ['domain_type', 'sponsoring_organizatiion']
+_top_level_domain_fields = ['domain_type', 'sponsoring_organization']
 @admin.register(mod.TopLevelDomain)
 class TopLevelDomainAdmin(comadm.ChoiceAdmin):
     # List page settings
