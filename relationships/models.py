@@ -557,7 +557,15 @@ class Location(Standard, Choice):
 
     Last updated: 21 April 2021, 3:24 PM
     """
-    pass
+    parent = models.ForeignKey(
+        'Location',
+        null=True,
+        blank=True,
+        related_name='children',
+        related_query_name='children',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
 class PaymentTerm(Standard, Choice):
     """Payment term.
