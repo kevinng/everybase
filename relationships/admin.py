@@ -411,3 +411,7 @@ class LocationProductSpecificationTypeAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _location_product_specification_type_fields})
     ]
     autocomplete_fields = ['location', 'product_specification_type']
+
+@admin.register(mod.Application)
+class ApplicationAdmin(comadm.ChoiceAdmin):
+    pass

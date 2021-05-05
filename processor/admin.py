@@ -70,3 +70,22 @@ class MessageBodyMetaDataEntityAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _message_body_meta_data_entity_fields})
     ]
+
+_matching_keyword_fields = ['keyword', 'edit_distance_tolerance', 'currency',
+    'excluded_price', 'location', 'incoterm_availability', 'application',
+    'company', 'product_type', 'product', 'product_specification_type',
+    'unit_of_measure']
+@admin.register(mod.MatchingKeyword)
+class MatchingKeywordAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _matching_keyword_fields
+    list_editable = comadm.standard_list_editable + _matching_keyword_fields
+    search_fields = comadm.standard_search_fields + _matching_keyword_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _matching_keyword_fields})
+    ]
+    autocomplete_fields = ['currency', 'excluded_price', 'location',
+        'incoterm_availability', 'application', 'company', 'product_type',
+        'product', 'product_specification_type', 'unit_of_measure']
