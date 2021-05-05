@@ -78,7 +78,7 @@ class MessageBodyMetaDataEntity(Standard):
             ('email', 'Email'),
             ('currency', 'Currency'),
             ('price', 'Price'),
-            ('excluded_pricing', 'Excluded Pricing'),
+            ('excluded_price', 'Excluded Price'),
             ('location', 'Location'),
             ('incoterm_availability', 'Incoterm/Availability'),
             ('application', 'Application'),
@@ -146,3 +146,115 @@ class MessageBodyMetaDataEntity(Standard):
     class Meta:
         verbose_name = 'Message body meta data entity'
         verbose_name_plural = 'Message body meta data entities'
+
+class MatchingKeyword(Standard):
+    """A keyword we need to match for a certain entity.
+
+    Last updated: 5 May 2021, 3:39 PM
+    """
+    keyword = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    edit_distance_tolerance = models.IntegerField(db_index=True)
+
+    # Set either 1
+    currency = models.ForeignKey(
+        'payments.Currency',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    excluded_price = models.ForeignKey(
+        'relationships.ExcludedPrice',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    location = models.ForeignKey(
+        'relationships.Location',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    incoterm_availability = models.ForeignKey(
+        'relationships.IncotermAvailability',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    application = models.ForeignKey(
+        'relationships.Application',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    company = models.ForeignKey(
+        'relationships.Company',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    product_type = models.ForeignKey(
+        'relationships.ProductType',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    product = models.ForeignKey(
+        'relationships.Product',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    product_specification_type = models.ForeignKey(
+        'relationships.ProductSpecificationType',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    unit_of_measure = models.ForeignKey(
+        'relationships.UnitOfMeasure',
+        related_name='matching_keywords',
+        related_query_name='matching_keywords',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def clean(self):
+        super(MatchingKeyword, self).clean()
+
+        if self.twilio_inbound_message is None and self.test_message is None:
+            raise ValidationError('Either twilio_inbound_message or \
+                test_message must be set.')
