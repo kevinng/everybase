@@ -126,16 +126,11 @@ class CompanyProductTypeAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['company', 'product_type']
 
-_company_fields = ['url', 'display_name', 'notes']
+_company_fields = ['url']
 @admin.register(mod.Company)
-class CompanyAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _company_fields
-    list_editable = comadm.standard_list_editable + _company_fields
-    search_fields = comadm.standard_search_fields + _company_fields
-
+class CompanyAdmin(comadm.StandardChoiceAdmin):
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
+    fieldsets = comadm.standard_choice_fieldsets + [
         ('Details', {'fields': _company_fields})
     ]
 

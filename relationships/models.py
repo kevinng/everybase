@@ -367,24 +367,16 @@ class CompanyProductType(Standard):
         return f'({self.company.display_name}, {self.product_type.name} \
             [{self.id}])'
 
-class Company(Standard):
+class Company(Standard, Choice):
     """Company selling products. Not companies of users.
 
-    Last updated: 28 April 2021, 3:36 PM
+    Last updated: 5 May 2021, 2:53 PM
     """
 
     url = models.URLField(
         null=True,
         blank=True,
         db_index=True
-    )
-    display_name = models.CharField(
-        max_length=200,
-        db_index=True
-    )
-    notes = models.TextField(
-        null=True,
-        blank=True
     )
 
     class Meta:
