@@ -383,9 +383,6 @@ class Company(Standard, Choice):
         verbose_name = 'Company'
         verbose_name_plural = 'Companies'
 
-    def __str__(self):
-        return f'({self.display_name} [{self.id}])'
-
 class CompanyProduct(Standard):
     """Relationship between company and product.
 
