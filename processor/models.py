@@ -162,7 +162,10 @@ class MatchingKeyword(Standard):
         default=False,
         db_index=True
     )
-    edit_distance_tolerance = models.IntegerField(db_index=True)
+    edit_distance_tolerance = models.IntegerField(
+        default=0,
+        db_index=True
+    )
 
     # Set either 1
     currency = models.ForeignKey(
