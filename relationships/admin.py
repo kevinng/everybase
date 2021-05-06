@@ -6,12 +6,12 @@ from common import admin as comadm
 
 # ----- Start: Inlines -----
 
-class MatchingKeywordInlineAdmin(admin.TabularInline):
+class CompanyMatchingKeywordInlineAdmin(admin.TabularInline):
     model = promod.MatchingKeyword
     extra = 1
-    autocomplete_fields = ['currency', 'excluded_price', 'location',
-    'incoterm_availability', 'application', 'company', 'product_type',
-    'product', 'product_specification_type', 'unit_of_measure']
+    exclude = ['currency', 'excluded_price', 'location',
+    'incoterm_availability', 'application', 'product_type', 'product',
+    'product_specification_type', 'unit_of_measure']
 
 # ----- End: Inlines -----
 
@@ -150,7 +150,7 @@ class CompanyAdmin(comadm.StandardChoiceAdmin):
     fieldsets = comadm.standard_choice_fieldsets + [
         ('Details', {'fields': _company_fields})
     ]
-    inlines = [MatchingKeywordInlineAdmin]
+    inlines = [CompanyMatchingKeywordInlineAdmin]
 
 _company_product_fields = ['popularity', 'company', 'product']
 @admin.register(mod.CompanyProduct)
