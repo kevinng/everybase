@@ -1,5 +1,7 @@
 from django.db import models
 
+from django.core.exceptions import ValidationError
+
 from common.models import Standard, short_text
 
 class TestMessage(Standard):
@@ -290,7 +292,12 @@ class MatchingKeyword(Standard):
             count += 1
 
         if count != 1:
-            raise ValidationError('Either currency, excluded_price, location, \
-                incoterm_availability, application, company, product_type, \
-                product, product_specification_type or unit_of_measure must be \
+            raise ValidationError('Either currency, excluded price, location, \
+                incoterm/availability, application, company, product type, \
+                product, product specification type or unit of measure must be \
                 set.')
+
+        # We don't use PositiveIntegerField because there's a debate on whether
+        # it should accept 0. It could change in the future.
+        if self.edit_distance_tolerance < 0:
+            raise ValidationError('Edit distance must be 0 or greater.')
