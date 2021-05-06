@@ -13,6 +13,44 @@ class CompanyMatchingKeywordInlineAdmin(admin.TabularInline):
     'incoterm_availability', 'application', 'product_type', 'product',
     'product_specification_type', 'unit_of_measure']
 
+class CompanyProductTypeInlineAdmin(admin.TabularInline):
+    model = mod.CompanyProductType
+    extra = 1
+    autocomplete_fields = ['product_type']
+
+class CompanyProductInlineAdmin(admin.TabularInline):
+    model = mod.CompanyProduct
+    extra = 1
+    autocomplete_fields = ['product']
+
+class ProductTypeMatchingKeywordInlineAdmin(admin.TabularInline):
+    model = promod.MatchingKeyword
+    extra = 1
+    exclude = ['currency', 'excluded_price', 'location',
+        'incoterm_availability', 'application', 'company', 'product',
+        'product_specification_type', 'unit_of_measure']
+
+class ProductTypeCompanyInlineAdmin(admin.TabularInline):
+    model = mod.CompanyProductType
+    extra = 1
+    autocomplete_fields = ['company']
+
+class ProductTypeProductInlineAdmin(admin.TabularInline):
+    model = mod.Product
+    extra = 1
+
+class ProductMatchingKeywordInlineAdmin(admin.TabularInline):
+    model = promod.MatchingKeyword
+    exclude = ['currency', 'excluded_price', 'location',
+        'incoterm_availability', 'application', 'company', 'product_type',
+        'product_specification_type', 'unit_of_measure']
+    extra = 1
+
+class ProductCompanyInlineAdmin(admin.TabularInline):
+    model = mod.CompanyProduct
+    extra = 1
+    autocomplete_fields = ['company']
+
 # ----- End: Inlines -----
 
 @admin.register(mod.PhoneNumberType)
@@ -118,7 +156,8 @@ class UserIPDeviceAdmin(comadm.StandardAdmin):
 
 @admin.register(mod.ProductType)
 class ProductTypeAdmin(comadm.StandardChoiceAdmin):
-    pass
+    inlines = [ProductTypeMatchingKeywordInlineAdmin,
+        ProductTypeCompanyInlineAdmin, ProductTypeProductInlineAdmin]
 
 _company_product_type_fields = ['popularity', 'company', 'product_type']
 @admin.register(mod.CompanyProductType)
@@ -150,7 +189,8 @@ class CompanyAdmin(comadm.StandardChoiceAdmin):
     fieldsets = comadm.standard_choice_fieldsets + [
         ('Details', {'fields': _company_fields})
     ]
-    inlines = [CompanyMatchingKeywordInlineAdmin]
+    inlines = [CompanyMatchingKeywordInlineAdmin, CompanyProductTypeInlineAdmin,
+        CompanyProductInlineAdmin]
 
 _company_product_fields = ['popularity', 'company', 'product']
 @admin.register(mod.CompanyProduct)
@@ -181,6 +221,7 @@ class ProductAdmin(comadm.StandardChoiceAdmin):
         ('Details', {'fields': _product_fields})
     ]
     autocomplete_fields = ['product_type']
+    inlines = [ProductMatchingKeywordInlineAdmin, ProductCompanyInlineAdmin]
 
 _product_specification_type = ['product_type']
 @admin.register(mod.ProductSpecificationType)
