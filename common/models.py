@@ -82,7 +82,10 @@ class Choice(models.Model):
     )
 
     def __str__(self):
-        return '(%s [%d])' % (self.name, self.id)
+        if self.id is not None:
+            return '(%s [%d])' % (self.name, self.id)
+        
+        return str(super(Choice, self))
 
     class Meta:
         abstract = True
