@@ -178,7 +178,7 @@ class CompanyProductAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['company', 'product']
 
-_product_fields = ['product_type']
+_product_fields = ['url', 'product_type']
 @admin.register(mod.Product)
 class ProductAdmin(comadm.StandardChoiceAdmin):
     # List page settings
