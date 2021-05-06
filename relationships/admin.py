@@ -10,8 +10,8 @@ class CompanyMatchingKeywordInlineAdmin(admin.TabularInline):
     model = promod.MatchingKeyword
     extra = 1
     exclude = ['currency', 'excluded_price', 'location',
-    'incoterm_availability', 'application', 'product_type', 'product',
-    'product_specification_type', 'unit_of_measure']
+        'incoterm_availability', 'application', 'product_type', 'product',
+        'product_specification_type', 'unit_of_measure']
 
 class CompanyProductTypeInlineAdmin(admin.TabularInline):
     model = mod.CompanyProductType
