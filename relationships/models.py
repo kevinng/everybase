@@ -389,6 +389,10 @@ class Product(Standard, Choice):
     Last updated: 6 May 2021, 1:35 PM
     """
     
+    url = models.URLField(
+        'URL',
+        db_index=True
+    )
     product_type = models.ForeignKey(
         'ProductType',
         related_name='products',
