@@ -364,7 +364,7 @@ class CompanyProductType(Standard):
     )
 
     def __str__(self):
-        return f'({self.company.display_name}, {self.product_type.name} \
+        return f'({self.company.name}, {self.product_type.name} \
             [{self.id}])'
 
 class Company(Standard, Choice):
