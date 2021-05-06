@@ -154,8 +154,10 @@ class MatchingKeyword(Standard):
     """
     keyword = models.CharField(
         max_length=200,
-        null=True,
-        blank=True,
+        db_index=True
+    )
+    case_sensitive = models.BooleanField(
+        default=False,
         db_index=True
     )
     edit_distance_tolerance = models.IntegerField(db_index=True)
