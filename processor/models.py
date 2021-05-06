@@ -299,5 +299,6 @@ class MatchingKeyword(Standard):
 
         # We don't use PositiveIntegerField because there's a debate on whether
         # it should accept 0. It could change in the future.
-        if self.edit_distance_tolerance < 0:
+        if self.edit_distance_tolerance is not None and \
+            self.edit_distance_tolerance < 0:
             raise ValidationError('Edit distance must be 0 or greater.')
