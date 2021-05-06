@@ -506,9 +506,9 @@ class ProductSpecification(Standard):
     )
 
     def __str__(self):
-        return f'({self.product_specification_type.display_name}, \
-            {self.product.display_name}, {self.is_exists}, {self.value}, \
-            [{self.id}])'
+        return f'({self.product_specification_type.name}, \
+            {self.product.name}, {self.is_exists}, {self.string_value}, \
+            {self.float_value}, [{self.id}])'
 
     def clean(self):
         super(ProductSpecification, self).clean()
