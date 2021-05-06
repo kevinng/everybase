@@ -417,7 +417,7 @@ class CompanyProduct(Standard):
 class Product(Standard, Choice):
     """Product.
 
-    Last updated: 5 May 2021, 2:56 PM
+    Last updated: 6 May 2021, 1:35 PM
     """
     
     product_type = models.ForeignKey(
@@ -433,7 +433,7 @@ class ProductSpecificationType(Standard, Choice):
     is a 'type'. Whether a nitrile gloves supply has 501K or not - is defined in
     ProductSpecification.
 
-    Last updated: 5 May 2021, 2:57 PM
+    Last updated: 6 May 2021, 1:34 PM
     """
 	
     product_type = models.ForeignKey(
@@ -443,9 +443,6 @@ class ProductSpecificationType(Standard, Choice):
         on_delete=models.PROTECT,
         db_index=True
     )
-
-    def __str__(self):
-        return f'({self.display_name} [{self.id}])'
 
 class ProductSpecification(Standard):
     """Details on specification existance or value of a
