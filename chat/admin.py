@@ -3,16 +3,16 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
-_message_template_fields = ['programmatic_key', 'is_active', 'internal_title',
-    'notes', 'body']
+_message_template_fields = ['chat_context_type']
 @admin.register(mod.MessageTemplate)
-class MessageTemplateAdmin(comadm.StandardAdmin):
+class MessageTemplateAdmin(comadm.StandardChoiceAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _message_template_fields
-    list_editable = comadm.standard_list_editable + _message_template_fields
-    list_filter = comadm.standard_list_filter + ['is_active']
-    search_fields = comadm.standard_search_fields + ['programmatic_key',
-        'internal_title', 'notes', 'body']
+    list_display = comadm.standard_choice_list_display + \
+        _message_template_fields
+    list_editable = comadm.standard_choice_list_editable + \
+        _message_template_fields
+    list_filter = comadm.standard_choice_list_filter + \
+        _message_template_fields
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
@@ -162,3 +162,25 @@ class TwilioInboundMessageLogEntryAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _twilio_inbound_message_log_entry})
     ]
     autocomplete_fields = ['message']
+
+_user_chat_context_fields = ['started', 'stopped', 'user', 'chat_context_type']
+@admin.register(mod.UserChatContext)
+class UserChatContextAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        _user_chat_context_fields
+    list_editable = comadm.standard_list_editable + \
+        _user_chat_context_fields
+    list_filter = comadm.standard_list_filter + ['started', 'stopped',
+        'chat_context_type']
+    search_fields = comadm.standard_search_fields + ['user__name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _user_chat_context_fields})
+    ]
+    autocomplete_fields = ['user', 'chat_context_type']
+
+@admin.register(mod.ChatContextType)
+class ChatContextTypeAdmin(comadm.ChoiceAdmin):
+    pass

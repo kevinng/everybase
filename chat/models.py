@@ -1,35 +1,21 @@
 from django.db import models
 from common.models import Standard, Choice, short_text
 
-class MessageTemplate(Standard):
+class MessageTemplate(Standard, Choice):
     """Message template.
 
-    Last updated: 28 April 2021, 3:29 PM
+    Last updated: 11 May 2021, 9:08 PM
     """
 
-    programmatic_key = models.CharField(
-        max_length=200,
-        db_index=True
-    )
-    is_active = models.BooleanField(
-        default=True,
-        db_index=True
-    )
-    internal_title = models.CharField(
-        max_length=200,
-        db_index=True
-    )
-    notes = models.TextField(
+    chat_context_type = models.ForeignKey(
+        'ChatContextType',
+        related_name='message_templates',
+        related_query_name='message_templates',
         null=True,
-        blank=True
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
     )
-    body = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    def __str__(self):
-        return f'({self.internal_title} [{self.id}])'
 
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
@@ -494,3 +480,44 @@ class TwilioInboundMessageLogEntry(Standard):
 
     def __str__(self):
         return f'({self.message} [{self.id}])'
+
+class UserChatContext(Standard):
+    """Tracks chat contexts of users.
+
+    Last updated: 23 April 2021, 11:47 AM
+    """
+
+    started = models.DateTimeField(
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    stopped = models.DateTimeField(
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='user_chat_contexts',
+        related_query_name='user_chat_contexts',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    chat_context_type = models.ForeignKey(
+        'ChatContextType',
+        related_name='user_chat_contexts',
+        related_query_name='user_chat_contexts',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def __str__(self):
+        return f'({self.message} [{self.id}])'
+
+class ChatContextType(Choice):
+    """Chat context types.
+
+    Last updated: 11 May 2021, 9:20 PM
+    """
+    pass
