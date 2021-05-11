@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('processor', '0002_remove_basetruth_method'),
+        # ('processor', '0002_remove_basetruth_method'),
         ('chat', '0008_method_is_function'),
     ]
 
