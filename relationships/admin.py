@@ -13,6 +13,11 @@ class CompanyMatchingKeywordInlineAdmin(admin.TabularInline):
         'incoterm_availability', 'application', 'product_type', 'product',
         'product_specification_type', 'unit_of_measure']
 
+class CompanyProductTypeInlineAdmin(admin.TabularInline):
+    model = mod.CompanyProductType
+    extra = 1
+    autocomplete_fields = ['product_type']
+
 class CompanyProductInlineAdmin(admin.TabularInline):
     model = mod.CompanyProduct
     extra = 1
@@ -24,6 +29,11 @@ class ProductTypeMatchingKeywordInlineAdmin(admin.TabularInline):
     exclude = ['currency', 'excluded_price', 'location',
         'incoterm_availability', 'application', 'company', 'product',
         'product_specification_type', 'unit_of_measure']
+
+class ProductTypeCompanyInlineAdmin(admin.TabularInline):
+    model = mod.CompanyProductType
+    extra = 1
+    autocomplete_fields = ['company']
 
 class ProductTypeProductInlineAdmin(admin.TabularInline):
     model = mod.Product
@@ -147,7 +157,25 @@ class UserIPDeviceAdmin(comadm.StandardAdmin):
 @admin.register(mod.ProductType)
 class ProductTypeAdmin(comadm.StandardChoiceAdmin):
     inlines = [ProductTypeMatchingKeywordInlineAdmin,
-        ProductTypeProductInlineAdmin]
+        ProductTypeCompanyInlineAdmin, ProductTypeProductInlineAdmin]
+
+_company_product_type_fields = ['popularity', 'company', 'product_type']
+@admin.register(mod.CompanyProductType)
+class CompanyProductTypeAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        _company_product_type_fields
+    list_editable = comadm.standard_list_editable + \
+        _company_product_type_fields
+    list_filter = comadm.standard_list_filter + ['product_type']
+    search_fields = comadm.standard_search_fields + ['company__display_name',
+        'company__notes', 'product_type__name', 'product_type__description']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _company_product_type_fields})
+    ]
+    autocomplete_fields = ['company', 'product_type']
 
 _company_fields = ['url']
 @admin.register(mod.Company)
@@ -161,7 +189,8 @@ class CompanyAdmin(comadm.StandardChoiceAdmin):
     fieldsets = comadm.standard_choice_fieldsets + [
         ('Details', {'fields': _company_fields})
     ]
-    inlines = [CompanyMatchingKeywordInlineAdmin, CompanyProductInlineAdmin]
+    inlines = [CompanyMatchingKeywordInlineAdmin, CompanyProductTypeInlineAdmin,
+        CompanyProductInlineAdmin]
 
 _company_product_fields = ['popularity', 'company', 'product']
 @admin.register(mod.CompanyProduct)

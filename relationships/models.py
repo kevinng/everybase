@@ -383,6 +383,37 @@ class CompanyProduct(Standard):
         return f'({self.company.name}, {self.product.name} \
             [{self.id}])'
 
+class CompanyProductType(Standard):
+    """Relationship between company and product type.
+
+    Last updated: 27 April 2021, 1:11 PM
+    """
+
+    popularity = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    company = models.ForeignKey(
+        'Company',
+        related_name='company_product_types',
+        related_query_name='company_product_types',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    product_type = models.ForeignKey(
+        'ProductType',
+        related_name='company_product_types',
+        related_query_name='company_product_types',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    def __str__(self):
+        return f'({self.company.name}, {self.product_type.name} \
+            [{self.id}])'
+
 class Product(Standard, Choice):
     """Product.
 
