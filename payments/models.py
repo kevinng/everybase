@@ -1,11 +1,59 @@
 from django.db import models
 from common.models import Standard, Choice
+import random
+
+_USER_KEY_LENGTH = 16
+def get_payment_key(length=_USER_KEY_LENGTH):
+    """Generates and returns a URL friendly key.
+
+    Parameters
+    ----------
+    length : int
+        The length of the key to generate
+
+    Returns
+    -------
+    key
+        URL friendly key
+    """
+
+    chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890'
+    key = ''
+    for i in range(0, length):
+        p = random.randint(0, len(chars)-1)
+        key += chars[p]
+    return key
+
 
 class PaymentLink(Standard):
     """Payment link sent to user.
 
     Last updated: 11 May 2021, 6:01 PM
     """
+
+    key = models.CharField(
+        max_length=_USER_KEY_LENGTH,
+        unique=True,
+        default=get_payment_key,
+        db_index=True
+    )
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='payment_links',
+        related_query_name='payment_links',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    match = models.ForeignKey(
+        'relationships.Match',
+        null=True,
+        blank=True,
+        related_name='payment_links',
+        related_query_name='payment_links',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    
 
     started = models.DateTimeField(
         null=True,
