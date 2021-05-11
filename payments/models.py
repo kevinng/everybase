@@ -1,10 +1,10 @@
 from django.db import models
 from common.models import Standard, Choice
 
-class StripeSession(Standard):
-    """Stripe session.
+class PaymentLink(Standard):
+    """Payment link sent to user.
 
-    Last updated: 27 April 2021, 9:00 PM
+    Last updated: 11 May 2021, 6:01 PM
     """
 
     started = models.DateTimeField(
@@ -32,8 +32,8 @@ class StripeSession(Standard):
         'Currency',
         null=True,
         blank=True,
-        related_name='stripe_sessions',
-        related_query_name='stripe_sessions',
+        related_name='payment_links',
+        related_query_name='payment_links',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -83,8 +83,8 @@ class PaymentEvent(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    session = models.ForeignKey(
-        'StripeSession',
+    payment_link = models.ForeignKey(
+        'PaymentLink',
         related_name='payment_events',
         related_query_name='payment_events',
         on_delete=models.PROTECT,
