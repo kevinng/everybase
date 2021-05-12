@@ -586,20 +586,20 @@ class Packing(Standard):
     """
 
     base_quantity = models.FloatField(db_index=True)
-    base_uom = models.ForeignKey(
-        'UnitOfMeasure',
-        related_name='packing_base_uoms',
-        related_query_name='packing_base_uoms',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    pack_uom = models.ForeignKey(
-        'UnitOfMeasure',
-        related_name='packing_pack_uom',
-        related_query_name='packing_pack_uom',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+    # base_uom = models.ForeignKey(
+    #     'UnitOfMeasure',
+    #     related_name='packing_base_uoms',
+    #     related_query_name='packing_base_uoms',
+    #     on_delete=models.PROTECT,
+    #     db_index=True
+    # )
+    # pack_uom = models.ForeignKey(
+    #     'UnitOfMeasure',
+    #     related_name='packing_pack_uom',
+    #     related_query_name='packing_pack_uom',
+    #     on_delete=models.PROTECT,
+    #     db_index=True
+    # )
 
     # At least one of the following must be set.
     # supply_quote = models.ForeignKey(
@@ -633,23 +633,23 @@ class Packing(Standard):
     def __str__(self):
         return f'({self.base_quantity} {self.base_uom} in 1 {self.pack_uom} [{self.id}])'
 
-class UnitOfMeasure(Standard, Choice):
-    """Unit of measure.
+# class UnitOfMeasure(Standard, Choice):
+#     """Unit of measure.
 
-    Last updated: 21 April 2021, 2:44 PM
-    """
+#     Last updated: 21 April 2021, 2:44 PM
+#     """
 
-    plural_name = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     plural_name = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    product_type = models.ForeignKey(
-        'ProductType',
-        related_name='unit_of_measures',
-        related_query_name='unit_of_measures',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     product_type = models.ForeignKey(
+#         'ProductType',
+#         related_name='unit_of_measures',
+#         related_query_name='unit_of_measures',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
