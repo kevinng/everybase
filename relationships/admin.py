@@ -217,26 +217,3 @@ class ProductSpecificationTypeAdmin(comadm.StandardChoiceAdmin):
         ('Details', {'fields': _product_specification_type})
     ]
     autocomplete_fields = ['product_type']
-
-_product_specification_fields = ['is_exists', 'string_value', 'float_value',
-    'product_specification_type', 'product']
-@admin.register(mod.ProductSpecification)
-class ProductSpecificationAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + \
-        _product_specification_fields
-    list_editable = comadm.standard_list_editable + \
-        _product_specification_fields
-    list_filter = comadm.standard_list_filter + \
-        ['is_exists', 'product_specification_type', 'product']
-    search_fields = comadm.standard_search_fields + [
-        'product_specification_type__display_name',
-        'product_specification_type__notes', 'product__display_name',
-        'product__notes', 'supply__display_name', 'supply__notes',
-        'demand__display_name', 'demand__notes']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _product_specification_fields})
-    ]
-    autocomplete_fields = ['product_specification_type', 'product']
