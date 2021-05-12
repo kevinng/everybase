@@ -219,7 +219,7 @@ class ProductSpecificationTypeAdmin(comadm.StandardChoiceAdmin):
     autocomplete_fields = ['product_type']
 
 _product_specification_fields = ['is_exists', 'string_value', 'float_value',
-    'product_specification_type', 'product', 'supply', 'demand']
+    'product_specification_type', 'product']
 @admin.register(mod.ProductSpecification)
 class ProductSpecificationAdmin(comadm.StandardAdmin):
     # List page settings
@@ -228,8 +228,7 @@ class ProductSpecificationAdmin(comadm.StandardAdmin):
     list_editable = comadm.standard_list_editable + \
         _product_specification_fields
     list_filter = comadm.standard_list_filter + \
-        ['is_exists', 'product_specification_type', 'product', 'supply',
-            'demand']
+        ['is_exists', 'product_specification_type', 'product']
     search_fields = comadm.standard_search_fields + [
         'product_specification_type__display_name',
         'product_specification_type__notes', 'product__display_name',
@@ -240,8 +239,7 @@ class ProductSpecificationAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _product_specification_fields})
     ]
-    autocomplete_fields = ['product_specification_type', 'product', 'supply',
-        'demand']
+    autocomplete_fields = ['product_specification_type', 'product']
 
 @admin.register(mod.IncotermAvailability)
 class IncotermAvailabilityAdmin(comadm.StandardChoiceAdmin):
@@ -313,36 +311,36 @@ class ExcludedPriceAdmin(comadm.StandardChoiceAdmin):
     ]
     autocomplete_fields = _excluded_price_fields
 
-_lead_fields = ['product_type', 'company', 'product', 'user']
-_lead_search_fields = ['product_type__name', 'product_type__description',
-    'company__display_name', 'company__notes', 'product__display_name',
-    'product__notes', 'user__name']
-_lead_autocomplete_fields = ['product_type', 'company', 'product', 'user']
+# _lead_fields = ['product_type', 'company', 'product', 'user']
+# _lead_search_fields = ['product_type__name', 'product_type__description',
+#     'company__display_name', 'company__notes', 'product__display_name',
+#     'product__notes', 'user__name']
+# _lead_autocomplete_fields = ['product_type', 'company', 'product', 'user']
 
-@admin.register(mod.Supply)
-class SupplyAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _lead_fields
-    list_editable = comadm.standard_list_editable + _lead_fields
-    list_filter = comadm.standard_list_filter + ['product_type']
-    search_fields = comadm.standard_search_fields + _lead_search_fields
+# @admin.register(mod.Supply)
+# class SupplyAdmin(comadm.StandardAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + _lead_fields
+#     list_editable = comadm.standard_list_editable + _lead_fields
+#     list_filter = comadm.standard_list_filter + ['product_type']
+#     search_fields = comadm.standard_search_fields + _lead_search_fields
 
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _lead_fields})
-    ]
-    autocomplete_fields = _lead_autocomplete_fields
+#     # Details page settings
+#     fieldsets = comadm.standard_fieldsets + [
+#         ('Details', {'fields': _lead_fields})
+#     ]
+#     autocomplete_fields = _lead_autocomplete_fields
 
-@admin.register(mod.Demand)
-class DemandAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _lead_fields
-    list_editable = comadm.standard_list_editable + _lead_fields
-    list_filter = comadm.standard_list_filter + ['product_type']
-    search_fields = comadm.standard_search_fields + _lead_search_fields
+# @admin.register(mod.Demand)
+# class DemandAdmin(comadm.StandardAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + _lead_fields
+#     list_editable = comadm.standard_list_editable + _lead_fields
+#     list_filter = comadm.standard_list_filter + ['product_type']
+#     search_fields = comadm.standard_search_fields + _lead_search_fields
 
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _lead_fields})
-    ]
-    autocomplete_fields = _lead_autocomplete_fields
+#     # Details page settings
+#     fieldsets = comadm.standard_fieldsets + [
+#         ('Details', {'fields': _lead_fields})
+#     ]
+#     autocomplete_fields = _lead_autocomplete_fields

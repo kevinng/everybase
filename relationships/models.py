@@ -490,35 +490,35 @@ class ProductSpecification(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    supply = models.ForeignKey(
-        'Supply',
-        related_name='product_specifications',
-        related_query_name='product_specifications',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    demand = models.ForeignKey(
-        'Demand',
-        related_name='product_specifications',
-        related_query_name='product_specifications',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+    # supply = models.ForeignKey(
+    #     'Supply',
+    #     related_name='product_specifications',
+    #     related_query_name='product_specifications',
+    #     null=True,
+    #     blank=True,
+    #     on_delete=models.PROTECT,
+    #     db_index=True
+    # )
+    # demand = models.ForeignKey(
+    #     'Demand',
+    #     related_name='product_specifications',
+    #     related_query_name='product_specifications',
+    #     null=True,
+    #     blank=True,
+    #     on_delete=models.PROTECT,
+    #     db_index=True
+    # )
 
-    def __str__(self):
-        return f'({self.product_specification_type.name}, \
-            {self.product.name}, {self.is_exists}, {self.string_value}, \
-            {self.float_value}, [{self.id}])'
+    # def __str__(self):
+    #     return f'({self.product_specification_type.name}, \
+    #         {self.product.name}, {self.is_exists}, {self.string_value}, \
+    #         {self.float_value}, [{self.id}])'
 
-    def clean(self):
-        super(ProductSpecification, self).clean()
+    # def clean(self):
+    #     super(ProductSpecification, self).clean()
 
-        if self.product is None and self.supply is None and self.demand:
-            raise ValidationError('Either product, supply, demand must be set.')
+    #     if self.product is None and self.supply is None and self.demand:
+    #         raise ValidationError('Either product, supply, demand must be set.')
 
 class IncotermAvailability(Standard, Choice):
     """Incoterm/availability - e.g., FOB, CIF, OTG, pre-order.
@@ -689,254 +689,66 @@ class ExcludedPrice(Standard, Choice):
     #         raise ValidationError('Either supply_quote or demand_quote must be \
     #             set.')
 
-class Lead(Standard):
-    """Abstract lead to be overriden by Supply and Demand.
+# class Lead(Standard):
+#     """Abstract lead to be overriden by Supply and Demand.
 
-    Last updated: 21 April 2021, 10:01 PM
-    """
-
-    product_type = models.ForeignKey(
-        'ProductType',
-        related_name='%(class)s_leads',
-        related_query_name='%(class)s_leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    company = models.ForeignKey(
-        'Company',
-        null=True,
-        blank=True,
-        related_name='%(class)s_leads',
-        related_query_name='%(class)s_leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    product = models.ForeignKey(
-        'Product',
-        null=True,
-        blank=True,
-        related_name='%(class)s_leads',
-        related_query_name='%(class)s_leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
-    user = models.ForeignKey(
-        'User',
-        related_name='%(class)s_leads',
-        related_query_name='%(class)s_leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    
-    def __str__(self):
-        return f'({self.product_type.name}, {self.user.name} [{self.id}])'
-    
-    class Meta:
-        abstract = True
-
-class Supply(Lead):
-    """Supply.
-
-    Last updated: 21 April 2021, 8:30 PM
-    """
-
-    class Meta:
-        verbose_name = 'Supply'
-        verbose_name_plural = 'Supplies'
-
-class Demand(Lead):
-    """Demand.
-
-    Last updated: 21 April 2021, 8:30 PM
-    """
-
-    pass
-
-# class LeadQuote(Standard):
-#     """Abstract lead quote class - to be extended by SupplyQuote and
-#     DemandQuote.
-
-#     Last updated: 21 April 2021, 10:06 PM
+#     Last updated: 21 April 2021, 10:01 PM
 #     """
 
-#     entered = models.DateTimeField(
-#         db_index=True
-#     )
-
-#     price = models.FloatField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     price_uom = models.ForeignKey(
-#         'UnitOfMeasure',
-#         null=True,
-#         blank=True,
-#         related_name='%(class)s_price_uoms',
-#         related_query_name='%(class)s_price_uoms',
+#     product_type = models.ForeignKey(
+#         'ProductType',
+#         related_name='%(class)s_leads',
+#         related_query_name='%(class)s_leads',
 #         on_delete=models.PROTECT,
 #         db_index=True
 #     )
-#     currency = models.ForeignKey(
-#         'payments.Currency',
+#     company = models.ForeignKey(
+#         'Company',
 #         null=True,
 #         blank=True,
-#         related_name='%(class)s_currencies',
-#         related_query_name='%(class)s_currencies',
+#         related_name='%(class)s_leads',
+#         related_query_name='%(class)s_leads',
 #         on_delete=models.PROTECT,
 #         db_index=True
 #     )
-
-#     incoterm_availability = models.ForeignKey(
-#         'IncotermAvailability',
+#     product = models.ForeignKey(
+#         'Product',
 #         null=True,
 #         blank=True,
-#         related_name='%(class)s_incoterm_availabilities',
-#         related_query_name='%(class)s_incoterm_availabilities',
-#         on_delete=models.PROTECT,
-#         db_index=True
-#     )
-#     location = models.ForeignKey(
-#         'Location',
-#         null=True,
-#         blank=True,
-#         related_name='%(class)s_locations',
-#         related_query_name='%(class)s_locations',
+#         related_name='%(class)s_leads',
+#         related_query_name='%(class)s_leads',
 #         on_delete=models.PROTECT,
 #         db_index=True
 #     )
 
-#     total_quantity = models.FloatField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     total_quantity_uom = models.ForeignKey(
-#         'UnitOfMeasure',
-#         null=True,
-#         blank=True,
-#         related_name='%(class)s_total_quantity_uoms',
-#         related_query_name='%(class)s_total_quantity_uoms',
+#     user = models.ForeignKey(
+#         'User',
+#         related_name='%(class)s_leads',
+#         related_query_name='%(class)s_leads',
 #         on_delete=models.PROTECT,
 #         db_index=True
 #     )
-
-#     moq_quantity = models.FloatField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     moq_quantity_uom = models.ForeignKey(
-#         'UnitOfMeasure',
-#         null=True,
-#         blank=True,
-#         related_name='%(class)s_moq_quantity_uoms',
-#         related_query_name='%(class)s_moq_quantity_uoms',
-#         on_delete=models.PROTECT,
-#         db_index=True
-#     )
-
-#     delivery_interval_quantity = models.FloatField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     delivery_interval_quantity_uom = models.ForeignKey(
-#         'UnitOfMeasure',
-#         null=True,
-#         blank=True,
-#         related_name='%(class)s_delivery_interval_quantity_uoms',
-#         related_query_name=\
-#             '%(class)s_delivery_interval_quantity_uoms',
-#         on_delete=models.PROTECT,
-#         db_index=True
-#     )
-#     delivery_interval_count = models.IntegerField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     delivery_interval_length = models.IntegerField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     delivery_interval_uom = models.CharField(
-#         max_length=2,
-#         null=True,
-#         blank=True,
-#         choices=[
-#             ('d', 'Day'),
-#             ('w', 'Week'),
-#             ('m', 'Month'),
-#             ('y', 'Year')
-#         ],
-#         db_index=True
-#     )
-
-#     commission_percentage_sales = models.FloatField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     commission_amount = models.FloatField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     commission_amount_currency = models.ForeignKey(
-#         'payments.Currency',
-#         null=True,
-#         blank=True,
-#         related_name='%(class)s_commission_amount_currencies',
-#         related_query_name='%(class)s_commission_amount_currencies',
-#         on_delete=models.PROTECT,
-#         db_index=True
-#     )
-#     commission_amount_uom = models.ForeignKey(
-#         'UnitOfMeasure',
-#         null=True,
-#         blank=True,
-#         related_name='%(class)s_commission_amount_uom',
-#         related_query_name='%(class)s_commission_amount_uom',
-#         on_delete=models.PROTECT,
-#         db_index=True
-#     )
-
+    
+#     def __str__(self):
+#         return f'({self.product_type.name}, {self.user.name} [{self.id}])'
+    
 #     class Meta:
 #         abstract = True
 
-# class SupplyQuote(LeadQuote):
-#     """Supply quote.
+# class Supply(Lead):
+#     """Supply.
 
-#     Last updated: 21 April 2021, 5:23 PM
+#     Last updated: 21 April 2021, 8:30 PM
 #     """
 
-#     supply = models.ForeignKey(
-#         'Supply',
-#         related_name='supply_quotes',
-#         related_query_name='supply_quotes',
-#         on_delete=models.PROTECT,
-#         db_index=True
-#     )
+#     class Meta:
+#         verbose_name = 'Supply'
+#         verbose_name_plural = 'Supplies'
 
-#     def __str__(self):
-#         return f'({self.supply.product_type.name}, [{self.id}])'
+# class Demand(Lead):
+#     """Demand.
 
-# class DemandQuote(LeadQuote):
-#     """Demand quote.
-
-#     Last updated: 21 April 2021, 5:23 PM
+#     Last updated: 21 April 2021, 8:30 PM
 #     """
 
-#     demand = models.ForeignKey(
-#         'Demand',
-#         related_name='demand_quotes',
-#         related_query_name='demand_quotes',
-#         on_delete=models.PROTECT,
-#         db_index=True
-#     )
-
-#     def __str__(self):
-#         return f'({self.demand.product_type.name}, [{self.id}])'
+#     pass
