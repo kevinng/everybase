@@ -543,9 +543,3 @@ class Location(Standard, Choice):
         on_delete=models.PROTECT,
         db_index=True
     )
-
-class PaymentTerm(Standard, Choice):
-    """Payment term.
-
-    Last updated: 21 April 2021, 3:21 PM
-    """

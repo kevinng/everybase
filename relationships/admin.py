@@ -248,16 +248,3 @@ class IncotermAvailabilityAdmin(comadm.StandardChoiceAdmin):
 @admin.register(mod.Location)
 class LocationAdmin(comadm.StandardChoiceAdmin):
     pass
-
-_payment_term_fields = []
-@admin.register(mod.PaymentTerm)
-class PaymentTermAdmin(comadm.StandardChoiceAdmin):
-    # List page settings
-    list_display = comadm.standard_choice_list_display + _payment_term_fields
-    list_editable = comadm.standard_choice_list_editable + _payment_term_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_choice_fieldsets + [
-        ('Quotes', {'fields': _payment_term_fields})
-    ]
-    autocomplete_fields = _payment_term_fields
