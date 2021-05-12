@@ -519,12 +519,3 @@ class ProductSpecification(Standard):
 
     #     if self.product is None and self.supply is None and self.demand:
     #         raise ValidationError('Either product, supply, demand must be set.')
-
-class IncotermAvailability(Standard, Choice):
-    """Incoterm/availability - e.g., FOB, CIF, OTG, pre-order.
-
-    Last updated: 21 April 2021, 4:34 PM
-    """
-    class Meta:
-        verbose_name = 'Incoterm/Availability'
-        verbose_name_plural = 'Incoterms/Availabilities'

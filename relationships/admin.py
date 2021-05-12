@@ -240,7 +240,3 @@ class ProductSpecificationAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _product_specification_fields})
     ]
     autocomplete_fields = ['product_specification_type', 'product']
-
-@admin.register(mod.IncotermAvailability)
-class IncotermAvailabilityAdmin(comadm.StandardChoiceAdmin):
-    pass
