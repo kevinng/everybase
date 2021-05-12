@@ -251,7 +251,7 @@ class IncotermAvailabilityAdmin(comadm.StandardChoiceAdmin):
 class LocationAdmin(comadm.StandardChoiceAdmin):
     pass
 
-_payment_term_fields = ['supply_quote', 'demand_quote']
+_payment_term_fields = []
 @admin.register(mod.PaymentTerm)
 class PaymentTermAdmin(comadm.StandardChoiceAdmin):
     # List page settings
@@ -264,8 +264,7 @@ class PaymentTermAdmin(comadm.StandardChoiceAdmin):
     ]
     autocomplete_fields = _payment_term_fields
 
-_packing_fields = ['base_quantity', 'base_uom', 'pack_uom', 'supply_quote',
-    'demand_quote']
+_packing_fields = ['base_quantity', 'base_uom', 'pack_uom']
 @admin.register(mod.Packing)
 class PackingAdmin(comadm.StandardAdmin):
     # List page settings
@@ -274,17 +273,13 @@ class PackingAdmin(comadm.StandardAdmin):
     list_filter = comadm.standard_list_filter + ['base_uom', 'pack_uom']
     search_fields = comadm.standard_search_fields + [
         'base_uom__name', 'base_uom__description', 'pack_uom__name',
-        'pack_uom__description', 'supply_quote__product_type__name',
-        'supply_quote__product_type__description',
-        'demand_quote__product_type__name',
-        'demand_quote__product_type__description']
+        'pack_uom__description']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _packing_fields})
     ]
-    autocomplete_fields = ['base_uom', 'pack_uom', 'supply_quote',
-        'demand_quote']
+    autocomplete_fields = ['base_uom', 'pack_uom']
 
 _unit_of_measure_fields = ['plural_name', 'product_type']
 @admin.register(mod.UnitOfMeasure)
@@ -303,7 +298,7 @@ class UnitOfMeasureAdmin(comadm.StandardChoiceAdmin):
     ]
     autocomplete_fields = ['product_type']
 
-_excluded_price_fields = ['supply_quote', 'demand_quote']
+_excluded_price_fields = []
 @admin.register(mod.ExcludedPrice)
 class ExcludedPriceAdmin(comadm.StandardChoiceAdmin):
     # list page settings
@@ -311,11 +306,6 @@ class ExcludedPriceAdmin(comadm.StandardChoiceAdmin):
     list_editable = comadm.standard_choice_list_editable + \
         _excluded_price_fields    
     list_filter = comadm.standard_choice_list_filter + _excluded_price_fields
-    search_fields = comadm.standard_choice_search_fields + \
-        ['supply_quote__supply__product_type__name',
-        'supply_quote__supply__product_type__description',
-        'demand_quote__demand__product_type__name',
-        'demand_quote__demand__product_type__description']
 
     # Details page settings
     fieldsets = comadm.standard_choice_fieldsets + [
@@ -356,47 +346,3 @@ class DemandAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _lead_fields})
     ]
     autocomplete_fields = _lead_autocomplete_fields
-
-_lead_quote_fields = ['entered', 'price', 'price_uom', 'currency',
-    'incoterm_availability', 'location', 'total_quantity', 'total_quantity_uom',
-    'moq_quantity', 'moq_quantity_uom', 'delivery_interval_quantity',
-    'delivery_interval_quantity_uom', 'delivery_interval_count',
-    'delivery_interval_length', 'delivery_interval_uom',
-    'commission_percentage_sales', 'commission_amount',
-    'commission_amount_currency', 'commission_amount_uom']
-_lead_autocomplete_fields = ['price_uom', 'currency', 'incoterm_availability',
-    'location', 'total_quantity_uom', 'moq_quantity_uom',
-    'delivery_interval_quantity_uom', 'commission_amount_currency',
-    'commission_amount_uom']
-
-@admin.register(mod.SupplyQuote)
-class SupplyQuoteAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _lead_quote_fields
-    list_editable = comadm.standard_list_editable + _lead_quote_fields
-    list_filter = comadm.standard_list_filter + ['currency',
-        'incoterm_availability', 'location', 'supply__product_type']
-    search_fields = comadm.standard_search_fields + \
-        ['supply__product_type__name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _lead_quote_fields + ['supply']})
-    ]
-    autocomplete_fields = _lead_autocomplete_fields + ['supply']
-
-@admin.register(mod.DemandQuote)
-class DemandQuoteAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _lead_quote_fields
-    list_editable = comadm.standard_list_editable + _lead_quote_fields
-    list_filter = comadm.standard_list_filter + ['currency',
-        'incoterm_availability', 'location', 'demand__product_type']
-    search_fields = comadm.standard_search_fields + \
-        ['demand__product_type__name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _lead_quote_fields + ['demand']})
-    ]
-    autocomplete_fields = _lead_autocomplete_fields + ['demand']
