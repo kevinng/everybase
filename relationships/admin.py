@@ -419,25 +419,3 @@ class MatchAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _match_fields})
     ]
     autocomplete_fields = ['supply_quote', 'demand_quote']
-
-_location_product_specification_type_fields = ['purpose', 'is_exists', 'value',
-    'operator', 'location', 'product_specification_type']
-@admin.register(mod.LocationProductSpecificationType)
-class LocationProductSpecificationTypeAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + \
-        _location_product_specification_type_fields
-    list_editable = comadm.standard_list_editable + \
-        _location_product_specification_type_fields
-    list_filter = comadm.standard_list_filter + ['purpose', 'location',
-        'product_specification_type']
-    search_fields = comadm.standard_search_fields + \
-        ['location__name', 'location__description',
-        'product_specification_type__display_name',
-        'product_specification_type__notes']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _location_product_specification_type_fields})
-    ]
-    autocomplete_fields = ['location', 'product_specification_type']
