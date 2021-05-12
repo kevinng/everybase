@@ -3,34 +3,6 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
-# ----- Start: Inlines -----
-
-class CompanyProductTypeInlineAdmin(admin.TabularInline):
-    model = mod.CompanyProductType
-    extra = 1
-    autocomplete_fields = ['product_type']
-
-class CompanyProductInlineAdmin(admin.TabularInline):
-    model = mod.CompanyProduct
-    extra = 1
-    autocomplete_fields = ['product']
-
-class ProductTypeCompanyInlineAdmin(admin.TabularInline):
-    model = mod.CompanyProductType
-    extra = 1
-    autocomplete_fields = ['company']
-
-class ProductTypeProductInlineAdmin(admin.TabularInline):
-    model = mod.Product
-    extra = 1
-
-class ProductCompanyInlineAdmin(admin.TabularInline):
-    model = mod.CompanyProduct
-    extra = 1
-    autocomplete_fields = ['company']
-
-# ----- End: Inlines -----
-
 @admin.register(mod.PhoneNumberType)
 class PhoneNumberTypeAdmin(comadm.ChoiceAdmin):
     pass
@@ -131,70 +103,3 @@ class UserIPDeviceAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _user_ip_device_fields + ['accessed_urls']})
     ]
     autocomplete_fields = ['user', 'accessed_urls']
-
-@admin.register(mod.ProductType)
-class ProductTypeAdmin(comadm.StandardChoiceAdmin):
-    inlines = [ProductTypeCompanyInlineAdmin, ProductTypeProductInlineAdmin]
-
-_company_product_type_fields = ['popularity', 'company', 'product_type']
-@admin.register(mod.CompanyProductType)
-class CompanyProductTypeAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + \
-        _company_product_type_fields
-    list_editable = comadm.standard_list_editable + \
-        _company_product_type_fields
-    list_filter = comadm.standard_list_filter + ['product_type']
-    search_fields = comadm.standard_search_fields + ['company__display_name',
-        'company__notes', 'product_type__name', 'product_type__description']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _company_product_type_fields})
-    ]
-    autocomplete_fields = ['company', 'product_type']
-
-_company_fields = ['url']
-@admin.register(mod.Company)
-class CompanyAdmin(comadm.StandardChoiceAdmin):
-    # List page settings
-    list_display = comadm.standard_choice_list_display + _company_fields
-    list_editable = comadm.standard_choice_list_editable + _company_fields
-    search_fields = comadm.standard_choice_search_fields + _company_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_choice_fieldsets + [
-        ('Details', {'fields': _company_fields})
-    ]
-    inlines = [CompanyProductTypeInlineAdmin, CompanyProductInlineAdmin]
-
-_company_product_fields = ['popularity', 'company', 'product']
-@admin.register(mod.CompanyProduct)
-class CompanyProductAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _company_product_fields
-    list_editable = comadm.standard_list_editable + _company_product_fields
-    search_fields = comadm.standard_search_fields + ['company__display_name',
-        'company__notes', 'product__display_name', 'product__notes']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _company_product_fields})
-    ]
-    autocomplete_fields = ['company', 'product']
-
-_product_fields = ['url', 'product_type']
-@admin.register(mod.Product)
-class ProductAdmin(comadm.StandardChoiceAdmin):
-    # List page settings
-    list_display = comadm.standard_choice_list_display + _product_fields
-    list_editable = comadm.standard_choice_list_editable + _product_fields
-    search_fields = comadm.standard_choice_search_fields + [
-        'product_type__name', 'product_type__description']
-
-    # Details page settings
-    fieldsets = comadm.standard_choice_fieldsets + [
-        ('Details', {'fields': _product_fields})
-    ]
-    autocomplete_fields = ['product_type']
-    inlines = [ProductCompanyInlineAdmin]
