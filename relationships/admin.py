@@ -442,19 +442,6 @@ class LocationProductSpecificationTypeAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['location', 'product_specification_type']
 
-_top_level_domain_fields = ['domain_type', 'sponsoring_organization']
-@admin.register(mod.TopLevelDomain)
-class TopLevelDomainAdmin(comadm.ChoiceAdmin):
-    # List page settings
-    list_display = comadm.choice_list_display + _top_level_domain_fields
-    list_editable = comadm.choice_list_editable + _top_level_domain_fields
-    search_fields = comadm.choice_search_fields + _top_level_domain_fields
-
-    # Details page settings
-    fieldsets = comadm.choice_fieldsets + [
-        ('Details', {'fields': _top_level_domain_fields})
-    ]
-
 @admin.register(mod.Application)
 class ApplicationAdmin(comadm.ChoiceAdmin):
     pass
