@@ -1053,10 +1053,3 @@ class LocationProductSpecificationType(Standard):
             raise ValidationError('Either is_exists or value must be set.')
         elif self.value is not None and self.operator is None:
             raise ValidationError('If value is set, operator must be set.')
-
-class Application(Choice):
-    """An application - e.g., WhatsApp, WeChat.
-
-    Last updated: 5 May 2021, 3:21 PM
-    """
-    pass
