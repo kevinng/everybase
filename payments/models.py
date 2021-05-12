@@ -44,15 +44,15 @@ class PaymentLink(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    match = models.ForeignKey(
-        'relationships.Match',
-        null=True,
-        blank=True,
-        related_name='payment_links',
-        related_query_name='payment_links',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+    # match = models.ForeignKey(
+    #     'relationships.Match',
+    #     null=True,
+    #     blank=True,
+    #     related_name='payment_links',
+    #     related_query_name='payment_links',
+    #     on_delete=models.PROTECT,
+    #     db_index=True
+    # )
     
 
     started = models.DateTimeField(
@@ -119,13 +119,6 @@ class PaymentEvent(Standard):
 	
     user = models.ForeignKey(
         'relationships.User',
-        related_name='payment_events',
-        related_query_name='payment_events',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    match = models.ForeignKey(
-        'relationships.Match',
         related_name='payment_events',
         related_query_name='payment_events',
         on_delete=models.PROTECT,

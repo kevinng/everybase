@@ -19,7 +19,7 @@ class PaymentLinkAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _payment_link_fields})
     ]
 
-_payment_event_fields = ['event_type', 'currency', 'amount', 'user', 'match',
+_payment_event_fields = ['event_type', 'currency', 'amount', 'user',
     'payment_link']
 @admin.register(mod.PaymentEvent)
 class PaymentEventAdmin(comadm.StandardAdmin):
@@ -33,8 +33,7 @@ class PaymentEventAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _payment_event_fields})
     ]
-    autocomplete_fields = ['event_type', 'currency', 'user', 'match',
-        'payment_link']
+    autocomplete_fields = ['event_type', 'currency', 'user', 'payment_link']
 
 @admin.register(mod.PaymentEventType)
 class PaymentEventTypeAdmin(comadm.ChoiceAdmin):
