@@ -528,18 +528,3 @@ class IncotermAvailability(Standard, Choice):
     class Meta:
         verbose_name = 'Incoterm/Availability'
         verbose_name_plural = 'Incoterms/Availabilities'
-
-class Location(Standard, Choice):
-    """Location.
-
-    Last updated: 21 April 2021, 3:24 PM
-    """
-    parent = models.ForeignKey(
-        'Location',
-        null=True,
-        blank=True,
-        related_name='children',
-        related_query_name='children',
-        on_delete=models.PROTECT,
-        db_index=True
-    )

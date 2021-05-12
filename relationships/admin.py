@@ -244,7 +244,3 @@ class ProductSpecificationAdmin(comadm.StandardAdmin):
 @admin.register(mod.IncotermAvailability)
 class IncotermAvailabilityAdmin(comadm.StandardChoiceAdmin):
     pass
-
-@admin.register(mod.Location)
-class LocationAdmin(comadm.StandardChoiceAdmin):
-    pass
