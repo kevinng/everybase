@@ -103,3 +103,136 @@ class UserIPDeviceAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _user_ip_device_fields + ['accessed_urls']})
     ]
     autocomplete_fields = ['user', 'accessed_urls']
+
+_unit_of_measure_fields = ['plural_name', 'product_type']
+@admin.register(mod.UnitOfMeasure)
+class UnitOfMeasureAdmin(comadm.StandardChoiceAdmin):
+    # List page settings
+    list_display = comadm.standard_choice_list_display + _unit_of_measure_fields
+    list_editable = comadm.standard_choice_list_editable + \
+        _unit_of_measure_fields
+    list_filter = comadm.standard_choice_list_filter + _unit_of_measure_fields
+    search_fields = comadm.standard_choice_search_fields + \
+        ['plural_name', 'product_type__name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _unit_of_measure_fields})
+    ]
+    autocomplete_fields = ['product_type']
+
+@admin.register(mod.Availability)
+class AvailabilityAdmin(comadm.ChoiceAdmin):
+    pass
+
+@admin.register(mod.Country)
+class CountryAdmin(comadm.ChoiceAdmin):
+    pass
+
+_state_fields = ['country']
+@admin.register(mod.State)
+class StateAdmin(comadm.ChoiceAdmin):
+    # List page settings
+    list_display = comadm.choice_list_display + _state_fields
+    list_editable = comadm.choice_list_editable + _state_fields
+    list_filter = _state_fields
+    search_fields = comadm.choice_search_fields + ['country__name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _state_fields})
+    ]
+    autocomplete_fields = _state_fields
+
+@admin.register(mod.ProductType)
+class ProductTypeAdmin(comadm.ChoiceAdmin):
+    pass
+
+_connection_fields = ['user_1', 'user_2']
+@admin.register(mod.Connection)
+class ConnectionAdmin(comadm.ChoiceAdmin):
+    # List page settings
+    list_display = comadm.choice_list_display + _connection_fields
+    list_editable = comadm.choice_list_editable + _connection_fields
+    list_filter = _connection_fields
+    search_fields = comadm.choice_search_fields + ['user_1__name',
+        'user_2__name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _connection_fields})
+    ]
+    autocomplete_fields = _connection_fields
+
+_time_frame_fields = ['duration_uom', 'duration', 'deadline']
+@admin.register(mod.TimeFrame)
+class TimeFrameAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _time_frame_fields
+    list_editable = comadm.standard_list_editable + _time_frame_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _time_frame_fields})
+    ]
+
+_match_fields = ['supply', 'demand']
+@admin.register(mod.Match)
+class MatchAdmin(comadm.ChoiceAdmin):
+    # List page settings
+    list_display = comadm.choice_list_display + _match_fields
+    list_editable = comadm.choice_list_editable + _match_fields
+    list_filter = _match_fields
+    search_fields = ['supply__product_type__name', 'demand__product_type__name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _match_fields})
+    ]
+    autocomplete_fields = _match_fields
+
+_supply_fields = ['product_type_captured', 'country_state_captured',
+    'availability_captured', 'packing_captured', 'quantity_captured',
+    'quantity', 'preorder_timeframe_captured', 'price_captured', 'price', 
+    'deposit_percentage_captured', 'deposit_percentage',
+    'accept_lc_captured', 'accept_lc']
+_supply_fk_fields = ['user', 'product_type', 'country', 'state', 'availability',
+    'packing', 'preorder_timeframe', 'currency', 'previous_version',
+    'next_version']
+@admin.register(mod.Supply)
+class SupplyAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _supply_fields + \
+        _supply_fk_fields
+    list_editable = comadm.standard_list_editable + _supply_fields + \
+        _supply_fk_fields
+    list_filter = comadm.standard_list_filter + _supply_fk_fields
+    search_fields = comadm.standard_search_fields + _supply_fields + \
+        ['user__name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _supply_fields + _supply_fk_fields})
+    ]
+    autocomplete_fields = _supply_fk_fields
+
+_demand_fields = ['product_type_captured', 'country_state_captured', 
+    'packing_captured', 'quantity_captured', 'price_captured', 'price']
+_demand_fk_fields = ['user', 'product_type', 'country', 'state',  'packing',
+    'currency', 'previous_version', 'next_version']
+@admin.register(mod.Demand)
+class DemandAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _demand_fields + \
+        _demand_fk_fields
+    list_editable = comadm.standard_list_editable + _demand_fields + \
+        _demand_fk_fields
+    list_filter = comadm.standard_list_filter + _demand_fk_fields
+    search_fields = comadm.standard_search_fields + _demand_fields + \
+        ['user__name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _demand_fields + _demand_fk_fields})
+    ]
+    autocomplete_fields = _demand_fk_fields

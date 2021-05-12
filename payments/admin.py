@@ -3,8 +3,8 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
-_payment_link_fields = ['started', 'succeeded', 'failed', 'session_id',
-    'currency', 'unit_amount']
+_payment_link_fields = ['key', 'user', 'match', 'started', 'succeeded',
+    'failed', 'session_id', 'currency', 'unit_amount']
 @admin.register(mod.PaymentLink)
 class PaymentLinkAdmin(comadm.StandardAdmin):
     # List page settings
@@ -12,12 +12,14 @@ class PaymentLinkAdmin(comadm.StandardAdmin):
     list_editable = comadm.standard_list_editable + _payment_link_fields
     list_filter = comadm.standard_list_filter + ['started', 'succeeded',
         'failed', 'currency']
-    search_fields = comadm.standard_search_fields + ['session_id']
+    search_fields = comadm.standard_search_fields + ['key', 'user__name',
+        'session_id']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _payment_link_fields})
     ]
+    autocomplete_fields = ['user', 'match']
 
 _payment_event_fields = ['event_type', 'currency', 'amount', 'user',
     'payment_link']

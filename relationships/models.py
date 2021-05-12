@@ -354,14 +354,17 @@ class Availability(Choice):
 
     Last updated: 12 May 2021, 1:27 PM
     """
-    pass
+    
+    class Meta:
+        verbose_name_plural = 'availabilities'
 
 class Country(Choice):
     """Country.
 
     Last updated: 12 May 2021, 1:28 PM
     """
-    pass
+    class Meta:
+        verbose_name_plural = 'countries'
 
 class State(Choice):
     """State.
@@ -456,6 +459,9 @@ class Match(Choice):
         on_delete=models.PROTECT,
         db_index=True
     )
+
+    class Meta:
+        verbose_name_plural = 'matches'
 
 class Supply(Standard):
     """Supply.
@@ -613,6 +619,9 @@ class Supply(Standard):
         blank=True,
         db_index=True
     )
+
+    class Meta:
+        verbose_name_plural = 'supplies'
 
 class Demand(Standard):
     """Demand.
