@@ -431,19 +431,3 @@ class Product(Standard, Choice):
         on_delete=models.PROTECT,
         db_index=True
     )
-
-class ProductSpecificationType(Standard, Choice):
-    """Specification type of a product. E.g., 501K of nitrile gloves. Note: this
-    is a 'type'. Whether a nitrile gloves supply has 501K or not - is defined in
-    ProductSpecification.
-
-    Last updated: 6 May 2021, 1:34 PM
-    """
-	
-    product_type = models.ForeignKey(
-        'ProductType',
-        related_name='product_specifications',
-        related_query_name='product_specifications',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
