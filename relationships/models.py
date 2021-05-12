@@ -979,10 +979,10 @@ class Match(Standard):
     #     db_index=True
     # )
 
-    class Meta:
-        verbose_name = 'Match'
-        verbose_name_plural = 'Matches'
+    # class Meta:
+    #     verbose_name = 'Match'
+    #     verbose_name_plural = 'Matches'
 
-    def __str__(self):
-        return f'({self.demand_quote.demand.product_type.name}, \
-            {self.supply_quote.supply.product_type.name}, [{self.id}])'
+    # def __str__(self):
+    #     return f'({self.demand_quote.demand.product_type.name}, \
+    #         {self.supply_quote.supply.product_type.name}, [{self.id}])'
