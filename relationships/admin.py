@@ -261,38 +261,3 @@ class PaymentTermAdmin(comadm.StandardChoiceAdmin):
         ('Quotes', {'fields': _payment_term_fields})
     ]
     autocomplete_fields = _payment_term_fields
-
-# _packing_fields = ['base_quantity']
-@admin.register(mod.Packing)
-class PackingAdmin(comadm.StandardAdmin):
-    pass
-    # List page settings
-    # list_display = comadm.standard_list_display + _packing_fields
-    # list_editable = comadm.standard_list_editable + _packing_fields
-    # list_filter = comadm.standard_list_filter + ['base_uom', 'pack_uom']
-    # search_fields = comadm.standard_search_fields + [
-    #     'base_uom__name', 'base_uom__description', 'pack_uom__name',
-    #     'pack_uom__description']
-
-    # Details page settings
-    # fieldsets = comadm.standard_fieldsets + [
-    #     ('Details', {'fields': _packing_fields})
-    # ]
-    # autocomplete_fields = ['base_uom', 'pack_uom']
-
-# _unit_of_measure_fields = ['plural_name', 'product_type']
-# @admin.register(mod.UnitOfMeasure)
-# class UnitOfMeasureAdmin(comadm.StandardChoiceAdmin):
-#     # List page settings
-#     list_display = comadm.standard_choice_list_display + _unit_of_measure_fields
-#     list_editable = comadm.standard_choice_list_editable + \
-#         _unit_of_measure_fields
-#     list_filter = comadm.standard_choice_list_filter + ['product_type']
-#     search_fields = comadm.standard_choice_search_fields + \
-#         ['product_type__name', 'product_type__description']
-
-#     # Details page settings
-#     fieldsets = comadm.standard_choice_fieldsets + [
-#         ('Details', {'fields': _unit_of_measure_fields})
-#     ]
-#     autocomplete_fields = ['product_type']
