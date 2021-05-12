@@ -401,8 +401,7 @@ class DemandQuoteAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = _lead_autocomplete_fields + ['demand']
 
-_match_fields = ['buyer_sent', 'seller_sent', 'connected', 'supply_quote',
-    'demand_quote']
+_match_fields = ['buyer_sent', 'seller_sent', 'connected']
 @admin.register(mod.Match)
 class MatchAdmin(comadm.StandardAdmin):
     # List page settings
@@ -410,12 +409,8 @@ class MatchAdmin(comadm.StandardAdmin):
     list_editable = comadm.standard_list_editable + _match_fields
     list_filter = comadm.standard_list_filter + ['buyer_sent', 'seller_sent',
         'connected']
-    search_fields = comadm.standard_search_fields + \
-        ['supply_quote__supply__product_type__name',
-        'demand_quote__demand__product_type__name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _match_fields})
     ]
-    autocomplete_fields = ['supply_quote', 'demand_quote']

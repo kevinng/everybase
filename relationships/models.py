@@ -964,20 +964,20 @@ class Match(Standard):
         db_index=True
     )
 
-    supply_quote = models.ForeignKey(
-        'SupplyQuote',
-        related_name='matches',
-        related_query_name='matches',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    demand_quote = models.ForeignKey(
-        'DemandQuote',
-        related_name='matches',
-        related_query_name='matches',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+    # supply_quote = models.ForeignKey(
+    #     'SupplyQuote',
+    #     related_name='matches',
+    #     related_query_name='matches',
+    #     on_delete=models.PROTECT,
+    #     db_index=True
+    # )
+    # demand_quote = models.ForeignKey(
+    #     'DemandQuote',
+    #     related_name='matches',
+    #     related_query_name='matches',
+    #     on_delete=models.PROTECT,
+    #     db_index=True
+    # )
 
     class Meta:
         verbose_name = 'Match'
