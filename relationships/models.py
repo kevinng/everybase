@@ -165,6 +165,8 @@ class User(Standard):
     )
     name = models.CharField(
         max_length=100,
+        null=True,
+        blank=True,
         db_index=True
     )
     is_banned = models.BooleanField(
