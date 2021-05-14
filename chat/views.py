@@ -17,7 +17,7 @@ class TwilioIncomingMessageView(APIView):
             num_media = request.data.get('NumMedia')
 
             # Create TwilioInboundMessage model
-            message = models.TwilioOutboundMessage(
+            message = models.TwilioInboundMessage(
                 # Request Parameters
                 api_version=request.data.get('ApiVersion'),
                 message_sid=request.data.get('MessageSid'),
