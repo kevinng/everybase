@@ -56,7 +56,7 @@ class TwilioIncomingMessageView(APIView):
             message.save()
 
             # Read media content-type and URL if num_media is > 0
-            if num_media.is_numeric():
+            if num_media.isnumeric():
                 for i in range(int(num_media)):
                     # Create TwilioInboundMessageMedia model
                     models.TwilioInboundMessageMedia(
