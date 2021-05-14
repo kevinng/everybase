@@ -24,6 +24,7 @@ jsonlines = "*"
 pytz = "*"
 django-storages = "*"
 editdistance = "*"
+twilio = "*"
 
 [requires]
 python_version = "3.7"
