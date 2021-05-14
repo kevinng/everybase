@@ -89,7 +89,7 @@ class TwilioStatusCallbackLogEntryAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['callback']
 
 _twilio_inbound_message_request_fields = ['api_version',
-    'message_sid', 'sms_sid', 'sms_message_sid', 'account_sid',
+    'message_sid', 'sms_sid', 'sms_message_sid', 'sms_status', 'account_sid',
     'message_service_sid', 'from_str', 'to_str', 'body', 'num_media',
     'num_segment']
 _twilio_inbound_message_geographic_fields = ['from_city', 'from_state',

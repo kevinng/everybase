@@ -286,6 +286,12 @@ class TwilioInboundMessage(Standard):
         blank=True,
         db_index=True
     )
+    sms_status = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     account_sid = models.CharField(
         max_length=200,
         null=True,
