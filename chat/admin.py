@@ -91,7 +91,7 @@ class TwilioStatusCallbackLogEntryAdmin(comadm.StandardAdmin):
 _twilio_inbound_message_request_fields = ['api_version',
     'message_sid', 'sms_sid', 'sms_message_sid', 'account_sid',
     'message_service_sid', 'from_str', 'to_str', 'body', 'num_media',
-    'num_segments']
+    'num_segment']
 _twilio_inbound_message_geographic_fields = ['from_city', 'from_state',
     'from_zip', 'from_country', 'to_city', 'to_state', 'to_zip', 'to_country']
 _twilio_inbound_message_whatsapp_fields = ['profile_name', 'wa_id', 'forwarded',

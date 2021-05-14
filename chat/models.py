@@ -320,7 +320,7 @@ class TwilioInboundMessage(Standard):
         blank=True,
         db_index=True
     )
-    num_segments = models.CharField(
+    num_segment = models.CharField(
         max_length=200,
         null=True,
         blank=True,
