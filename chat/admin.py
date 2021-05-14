@@ -3,6 +3,15 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
+# ----- Start: Inlines -----
+
+class TwilioInboundMessageMediaInlineAdmin(admin.TabularInline):
+    model = mod.TwilioInboundMessageMedia
+    extra = 1
+    autocomplete_fields = ['message']
+
+# ----- End: Inlines -----
+
 _message_template_fields = ['chat_context_type']
 @admin.register(mod.MessageTemplate)
 class MessageTemplateAdmin(comadm.StandardChoiceAdmin):
@@ -128,6 +137,7 @@ class TwilioInboundMessage(comadm.StandardAdmin):
         ('WhatsApp Location-Sharing Parameters',
             {'fields': _twilio_inbound_message_whatsapp_location_fields})
     ]
+    inlines = [TwilioInboundMessageMediaInlineAdmin]
 
 _twilio_inbound_message_media_fields = ['content_type', 'url', 'message']
 @admin.register(mod.TwilioInboundMessageMedia)

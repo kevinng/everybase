@@ -59,11 +59,12 @@ class TwilioIncomingMessageView(APIView):
             if num_media.isnumeric():
                 for i in range(int(num_media)):
                     # Create TwilioInboundMessageMedia model
-                    models.TwilioInboundMessageMedia(
+                    media = models.TwilioInboundMessageMedia(
                         content_type = request.data[f'MediaContentType{i}'],
-                        media_url = request.data[f'MediaUrl{i}'],
+                        url = request.data[f'MediaUrl{i}'],
                         message=message
-                    ).save()
+                    )
+                    media.save()
 
             return HttpResponse(status=HTTPStatus.OK)
 
