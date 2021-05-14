@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from http import HTTPStatus
 from rest_framework.views import APIView
 from rest_framework import status
+import traceback
 
 class TwilioIncomingMessageView(APIView):
     """Webhook to receiving incoming Twilio message via a POST request.
@@ -67,4 +68,5 @@ class TwilioIncomingMessageView(APIView):
             return HttpResponse(status=HTTPStatus.OK)
 
         except:
+            traceback.print_exc()
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
