@@ -25,6 +25,7 @@ pytz = "*"
 django-storages = "*"
 editdistance = "*"
 twilio = "*"
+phonenumbers = "*"
 
 [requires]
 python_version = "3.7"
