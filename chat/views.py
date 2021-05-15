@@ -3,15 +3,24 @@ from django.http import HttpResponse
 from http import HTTPStatus
 from rest_framework.views import APIView
 from rest_framework import status
+from twilio.request_validator import RequestValidator
+from everybase.settings import (TWILIO_AUTH_TOKEN,
+    TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
+    TWILIO_WEBHOOK_STATUS_UPDATE_URL)
 import traceback
 
 class TwilioIncomingMessageView(APIView):
     """Webhook to receiving incoming Twilio message via a POST request.
 
-    Last updated: 14 May 2021, 1:59 PM
+    Last updated: 15 May 2021, 12:50 PM
     """
     def post(self, request, format=None):
-        # TODO: Authenticate incoming request.
+        signature = request.headers.get('X-Twilio-Signature')
+        validator = RequestValidator(TWILIO_AUTH_TOKEN)
+        if not validator.validate(TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
+            request.data, signature):
+            # Authentication failed
+            return HttpResponse(status=HTTPStatus.UNAUTHORIZED)
 
         try:
             num_media = request.data.get('NumMedia')
@@ -55,6 +64,8 @@ class TwilioIncomingMessageView(APIView):
             )
             message.save()
 
+            # TODO: save log
+
             # Read media content-type and URL if num_media is > 0
             if num_media.isnumeric():
                 for i in range(int(num_media)):
@@ -65,6 +76,10 @@ class TwilioIncomingMessageView(APIView):
                         message=message
                     )
                     media.save()
+
+                    # TODO: save log
+
+            # TODO formulate reply in TwilML
 
             return HttpResponse(status=HTTPStatus.OK)
 

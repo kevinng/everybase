@@ -4,7 +4,7 @@ from . import views
 
 webhook_root = 'webhooks'
 urlpatterns = [
-    path(f'{webhook_root}/message_v1_a/',
+    path(f'{webhook_root}/message_v1/',
         views.TwilioIncomingMessageView.as_view()),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
