@@ -64,7 +64,24 @@ class TwilioIncomingMessageView(APIView):
             )
             message.save()
 
-            # TODO: save log
+            # Save message payload for audit and debugging
+            log_payload = 'request.stream\n'
+            log_payload += str(request.stream) + '\n\n'
+            log_payload += 'request.content_type\n'
+            log_payload += str(request.content_type) + '\n\n'
+            log_payload += 'request.method\n'
+            log_payload += str(request.method) + '\n\n'
+            log_payload += 'request.query_params\n'
+            log_payload += str(request.query_params) + '\n\n'
+            log_payload += 'request.headers\n'
+            log_payload += str(request.headers) + '\n\n'
+            log_payload += 'request.data\n'
+            log_payload += str(dict(request.data))
+            log_message = models.TwilioInboundMessageLogEntry(
+                payload=log_payload,
+                message=message
+            )
+            log_message.save()
 
             # Read media content-type and URL if num_media is > 0
             if num_media.isnumeric():
@@ -76,8 +93,6 @@ class TwilioIncomingMessageView(APIView):
                         message=message
                     )
                     media.save()
-
-                    # TODO: save log
 
             # TODO formulate reply in TwilML
 
