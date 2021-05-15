@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import BLANK_CHOICE_DASH
 from django.db.models.fields.related import ForeignKey
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
@@ -147,7 +148,7 @@ def get_user_key(length=_USER_KEY_LENGTH):
 class User(Standard):
     """User details.
 
-    Last updated: 28 April 2021, 3:35 PM
+    Last updated: 15 May 2021, 4:34 PM
     """
 
     key = models.CharField(
@@ -183,6 +184,8 @@ class User(Standard):
         related_name='user',
         related_query_name='user',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         db_index=True
     )
 
