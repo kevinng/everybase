@@ -258,7 +258,7 @@ class TwilioStatusCallbackLogEntry(Standard):
 class TwilioInboundMessage(Standard):
     """Twilio inbound message.
 
-    Last updated: 28 April 2021, 3:33 PM
+    Last updated: 15 May 2021, 2:26 PM
     """
 
     # Request parameters
@@ -433,6 +433,23 @@ class TwilioInboundMessage(Standard):
         null=True,
         blank=True,
         db_index=True
+    )
+
+    from_user = models.ForeignKey(
+        'relationships.User',
+        related_name='twilio_inbound_message_from_users',
+        related_query_name='twilio_inbound_message_from_users',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
+    to_user = models.ForeignKey(
+        'relationships.User',
+        related_name='twilio_inbound_message_to_users',
+        related_query_name='twilio_inbound_message_to_users',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
     )
 
     def __str__(self):
