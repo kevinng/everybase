@@ -3,7 +3,8 @@ from pytz import timezone
 
 from django.template.loader import render_to_string
 
-from . import models
+from chat import models
+from chat.libraries.utils import match
 from everybase import settings
 from relationships import models as relmods
 
@@ -70,7 +71,7 @@ def start_context(user, context):
     Parameters
     ----------
     user
-        Reference to user we're starting the context for
+        Reference to user model row we're starting the context for
     context
         Context key reference
     """
@@ -91,6 +92,27 @@ def start_context(user, context):
         )
 
     chat_context.save()
+
+def stop_context(user, context):
+    """Stop context for user - i.e., set context stopped time to now.
+
+    Parameters
+    ----------
+    message
+        Reference to user model row we're stopping the context for
+    context
+        Context key reference
+    """
+    try:
+        chat_context = models.UserChatContext.objects.get(
+            user=user,
+            context=context
+        )
+        # Start this context
+        chat_context.stopped = datetime.now(tz=timezone(settings.TIME_ZONE))
+        chat_context.save()
+    except models.UserChatContext.DoesNotExist:
+        pass
 
 def get_phone_number_string(twilio_phone_number):
     """Last updated: 17 May 2021, 3:32 PM
@@ -289,6 +311,26 @@ def reply(message, ph_is_new, usr_is_new):
         body = render_to_string('chat/menu.txt',
             {'name': message.from_user.name})
         # Stop user registration
+        stop_context(message.from_user, models.CHAT_CONTEXT__USER_REGISTRATION)
+
+    elif models.CHAT_CONTEXT__MENU in contexts:
+        # Get user's inputs
+        b = message.body
+        if b == '1' or match('find buyer', b, 3):
+            pass
+        elif b == '2' or match('find seller', b, 3):
+            pass
+        elif b == '3' or match('speak with a human', b, 7):
+            pass
+        elif b == '4' or match('learn more', b, 3):
+            pass
+        else:
+            pass
+        # Stop menu
+        stop_context(message.from_user, models.CHAT_CONTEXT__MENU)
+
+    
+
 
     # Return TwilML response string
     response = MessagingResponse()
