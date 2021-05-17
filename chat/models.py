@@ -497,6 +497,7 @@ class TwilioInboundMessageLogEntry(Standard):
         return f'({self.message} [{self.id}])'
 
 CHAT_CONTEXT__USER_REGISTRATION = 'ur'
+CHAT_CONTEXT__MENU = 'mn'
 class UserChatContext(Standard):
     """Tracks chat contexts of users.
 
@@ -524,7 +525,8 @@ class UserChatContext(Standard):
     context = models.CharField(
         max_length=2,
         choices=[
-            (CHAT_CONTEXT__USER_REGISTRATION, 'User Registration')
+            (CHAT_CONTEXT__USER_REGISTRATION, 'User Registration'),
+            (CHAT_CONTEXT__MENU, 'Menu')
         ],
         db_index=True
     )
