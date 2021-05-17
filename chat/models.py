@@ -532,7 +532,7 @@ class UserChatContext(Standard):
     )
 
     def __str__(self):
-        return f'({self.message} [{self.id}])'
+        return f'({self.user}, {self.context} [{self.id}])'
 
     class Meta:
         unique_together = ('user', 'context')
