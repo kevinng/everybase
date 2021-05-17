@@ -94,7 +94,7 @@ class TwilioOutboundMessage(Standard):
         null=True,
         blank=True,
         related_name='twilio_outbound_message_from_users',
-        related_query_name='twilio_outbound_from_users',
+        related_query_name='twilio_outbound_message_from_users',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -103,7 +103,26 @@ class TwilioOutboundMessage(Standard):
         null=True,
         blank=True,
         related_name='twilio_outbound_message_to_users',
-        related_query_name='twilio_outbound_to_users',
+        related_query_name='twilio_outbound_message_to_users',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    from_phone_number = models.ForeignKey(
+        'relationships.PhoneNumber',
+        null=True,
+        blank=True,
+        related_name='twilio_outbound_message_from_phone_numbers',
+        related_query_name='twilio_outbound_message_from_phone_numbers',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    to_phone_number = models.ForeignKey(
+        'relationships.PhoneNumber',
+        null=True,
+        blank=True,
+        related_name='twilio_outbound_message_to_phone_numbers',
+        related_query_name='twilio_outbound_message_to_phone_numbers',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -442,6 +461,26 @@ class TwilioInboundMessage(Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT
+    )
+
+    # Associated phone numbers
+    from_phone_number = models.ForeignKey(
+        'relationships.PhoneNumber',
+        null=True,
+        blank=True,
+        related_name='twilio_inbound_message_from_phone_numbers',
+        related_query_name='twilio_inbound_message_from_phone_numbers',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    to_phone_number = models.ForeignKey(
+        'relationships.PhoneNumber',
+        null=True,
+        blank=True,
+        related_name='twilio_inbound_message_to_phone_numbers',
+        related_query_name='twilio_inbound_message_to_phone_numbers',
+        on_delete=models.PROTECT,
+        db_index=True
     )
 
     def __str__(self):
