@@ -73,6 +73,7 @@ class Choice(models.Model):
         max_length=100,
         null=True,
         blank=True,
+        unique=True,
         db_index=True
     )
     programmatic_details = models.TextField(

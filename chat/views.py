@@ -1,13 +1,17 @@
-from . import models
+import traceback
 from django.http import HttpResponse
 from http import HTTPStatus
 from rest_framework.views import APIView
 from rest_framework import status
+
 from twilio.request_validator import RequestValidator
+from twilio.twiml.messaging_response import MessagingResponse
+
+from . import models
+from . import logics
 from everybase.settings import (TWILIO_AUTH_TOKEN,
     TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
     TWILIO_WEBHOOK_STATUS_UPDATE_URL)
-import traceback
 
 class TwilioIncomingMessageView(APIView):
     """Webhook to receiving incoming Twilio message via a POST request.
@@ -24,6 +28,7 @@ class TwilioIncomingMessageView(APIView):
 
         try:
             num_media = request.data.get('NumMedia')
+            from_str = request.data.get('From')
 
             # Create TwilioInboundMessage model
             message = models.TwilioInboundMessage(
@@ -34,7 +39,7 @@ class TwilioIncomingMessageView(APIView):
                 sms_message_sid=request.data.get('SmsMessageSid'),
                 sms_status = request.data.get('SmsStatus'),
                 account_sid=request.data.get('AccountSid'),
-                from_str=request.data.get('From'),
+                from_str=from_str,
                 to_str=request.data.get('To'),
                 body=request.data.get('Body'),
                 num_media=num_media,
@@ -94,9 +99,18 @@ class TwilioIncomingMessageView(APIView):
                     )
                     media.save()
 
-            # TODO formulate reply in TwilML
+            # print('hello')
+            # print(logics.get_user(from_str))
+            # print('world')
 
-            return HttpResponse(status=HTTPStatus.OK)
+            # Formulate reply as a TwilML response
+            # response = MessagingResponse()
+            # msg = response.message('hello world')
+
+            return HttpResponse(
+                logics.get_twilml_response_string(from_str),
+                status=HTTPStatus.OK,
+            )
 
         except:
             traceback.print_exc()
