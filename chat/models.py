@@ -4,18 +4,9 @@ from common.models import Standard, Choice, short_text
 class MessageTemplate(Standard, Choice):
     """Message template.
 
-    Last updated: 11 May 2021, 9:08 PM
+    Last updated: 17 May 2021, 9:29 PM
     """
-
-    chat_context_type = models.ForeignKey(
-        'ChatContextType',
-        related_name='message_templates',
-        related_query_name='message_templates',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+    pass
 
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
@@ -507,7 +498,7 @@ class TwilioInboundMessageLogEntry(Standard):
 class UserChatContext(Standard):
     """Tracks chat contexts of users.
 
-    Last updated: 23 April 2021, 11:47 AM
+    Last updated: 17 May 2021, 9:10 AM
     """
 
     started = models.DateTimeField(
@@ -520,6 +511,7 @@ class UserChatContext(Standard):
         null=True,
         blank=True
     )
+
     user = models.ForeignKey(
         'relationships.User',
         related_name='user_chat_contexts',
@@ -527,20 +519,16 @@ class UserChatContext(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    chat_context_type = models.ForeignKey(
-        'ChatContextType',
-        related_name='user_chat_contexts',
-        related_query_name='user_chat_contexts',
-        on_delete=models.PROTECT,
+    context = models.CharField(
+        max_length=2,
+        choices=[
+            ('ur', 'User Registration')
+        ],
         db_index=True
     )
 
     def __str__(self):
         return f'({self.message} [{self.id}])'
 
-class ChatContextType(Choice):
-    """Chat context types.
-
-    Last updated: 11 May 2021, 9:20 PM
-    """
-    pass
+    class Meta:
+        unique_together = ('user', 'context')

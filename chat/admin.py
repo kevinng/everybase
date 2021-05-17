@@ -12,21 +12,9 @@ class TwilioInboundMessageMediaInlineAdmin(admin.TabularInline):
 
 # ----- End: Inlines -----
 
-_message_template_fields = ['chat_context_type']
 @admin.register(mod.MessageTemplate)
 class MessageTemplateAdmin(comadm.StandardChoiceAdmin):
-    # List page settings
-    list_display = comadm.standard_choice_list_display + \
-        _message_template_fields
-    list_editable = comadm.standard_choice_list_editable + \
-        _message_template_fields
-    list_filter = comadm.standard_choice_list_filter + \
-        _message_template_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _message_template_fields})
-    ]
+    pass
 
 _twilio_outbound_message_fields = ['message_template', 'date_created',
     'date_sent', 'direction', 'account_sid', 'message_sid', 'from_str',
@@ -173,7 +161,7 @@ class TwilioInboundMessageLogEntryAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['message']
 
-_user_chat_context_fields = ['started', 'stopped', 'user', 'chat_context_type']
+_user_chat_context_fields = ['started', 'stopped', 'user', 'context']
 @admin.register(mod.UserChatContext)
 class UserChatContextAdmin(comadm.StandardAdmin):
     # List page settings
@@ -182,15 +170,11 @@ class UserChatContextAdmin(comadm.StandardAdmin):
     list_editable = comadm.standard_list_editable + \
         _user_chat_context_fields
     list_filter = comadm.standard_list_filter + ['started', 'stopped',
-        'chat_context_type']
+        'context']
     search_fields = comadm.standard_search_fields + ['user__name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _user_chat_context_fields})
     ]
-    autocomplete_fields = ['user', 'chat_context_type']
-
-@admin.register(mod.ChatContextType)
-class ChatContextTypeAdmin(comadm.ChoiceAdmin):
-    pass
+    autocomplete_fields = ['user']
