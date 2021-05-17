@@ -28,7 +28,6 @@ class TwilioIncomingMessageView(APIView):
 
         try:
             num_media = request.data.get('NumMedia')
-            from_str = request.data.get('From')
 
             # Create TwilioInboundMessage model
             message = models.TwilioInboundMessage(
@@ -39,7 +38,7 @@ class TwilioIncomingMessageView(APIView):
                 sms_message_sid=request.data.get('SmsMessageSid'),
                 sms_status = request.data.get('SmsStatus'),
                 account_sid=request.data.get('AccountSid'),
-                from_str=from_str,
+                from_str=request.data.get('From'),
                 to_str=request.data.get('To'),
                 body=request.data.get('Body'),
                 num_media=num_media,
@@ -66,6 +65,8 @@ class TwilioIncomingMessageView(APIView):
                 longitude=request.data.get('Longitude'),
                 address=request.data.get('Address'),
                 label=request.data.get('Label')
+
+                ### SET ASSOCIATED USERS
             )
             message.save()
 
@@ -108,7 +109,7 @@ class TwilioIncomingMessageView(APIView):
             # msg = response.message('hello world')
 
             return HttpResponse(
-                logics.get_twilml_response_string(from_str),
+                logics.reply(message),
                 status=HTTPStatus.OK,
             )
 
