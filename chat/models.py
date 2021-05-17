@@ -426,6 +426,7 @@ class TwilioInboundMessage(Standard):
         db_index=True
     )
 
+    # Associated users
     from_user = models.ForeignKey(
         'relationships.User',
         related_name='twilio_inbound_message_from_users',
