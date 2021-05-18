@@ -529,3 +529,75 @@ class TwilioInboundMessageLogEntry(Standard):
 
     def __str__(self):
         return f'({self.message} [{self.id}])'
+
+class IntentStep(Standard):
+    """A user's response of a step of an intent.
+
+    Last updated: 18 May 2021, 8:34 PM
+    """
+    intent_type = models.CharField(
+        max_length=200,
+        # TODO: Add choices
+        db_index=True
+    )
+    step_type = models.CharField(
+        max_length=200,
+        # TODO: Add choices
+        db_index=True
+    )
+
+    message = models.ForeignKey(
+        'TwilioInboundMessage',
+        related_name='intent_steps',
+        related_query_name='intent_steps',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+class IntentStepExtractedString(Standard):
+    """Extracted string value of an intent step.
+
+    Last updated: 18 May 2021, 8:34 PM
+    """
+    intent_step = models.ForeignKey(
+        'IntentStep',
+        related_name='intent_step_extracted_strings',
+        related_query_name='intent_step_extracted_strings',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    value = models.CharField(
+        max_length=200,
+        db_index=True
+    )
+    is_valid = models.BooleanField(db_index=True)
+
+class IntentStepExtractedFloat(Standard):
+    """Extracted float value of an intent step.
+
+    Last updated: 18 May 2021, 8:34 PM
+    """
+    intent_step = models.ForeignKey(
+        'IntentStep',
+        related_name='intent_step_extracted_floats',
+        related_query_name='intent_step_extracted_floats',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    value = models.FloatField(db_index=True)
+    is_valid = models.BooleanField(db_index=True)
+
+class IntentStepExtractedBoolean(Standard):
+    """Extracted boolean value of an intent step.
+
+    Last updated: 18 May 2021, 8:34 PM
+    """
+    intent_step = models.ForeignKey(
+        'IntentStep',
+        related_name='intent_step_extracted_booleans',
+        related_query_name='intent_step_extracted_booleans',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    value = models.BooleanField(db_index=True)
+    is_valid = models.BooleanField(db_index=True)
