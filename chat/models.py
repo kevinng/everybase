@@ -1,26 +1,21 @@
 from django.db import models
 from common.models import Standard, Choice, short_text
 
-class MessageTemplate(Standard, Choice):
-    """Message template.
-
-    Last updated: 17 May 2021, 9:29 PM
-    """
-    pass
-
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
 
-    Last updated: 28 April 2021, 3:31 PM
+    Last updated: 18 May 2021, 1:53 PM
     """
 
-    message_template = models.ForeignKey(
-        'MessageTemplate',
-        related_name='twilio_outbound_messages',
-        related_query_name='twilio_outbound_messages',
-        on_delete=models.PROTECT,
+    message_type = models.CharField(
+        max_length=200,
+        choices=[
+        ],
+        null=True,
+        blank=True,
         db_index=True
     )
+
     date_created = models.DateField(
         null=True,
         blank=True,
