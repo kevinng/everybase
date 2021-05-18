@@ -12,14 +12,10 @@ class TwilioInboundMessageMediaInlineAdmin(admin.TabularInline):
 
 # ----- End: Inlines -----
 
-@admin.register(mod.MessageTemplate)
-class MessageTemplateAdmin(comadm.StandardChoiceAdmin):
-    pass
-
-_twilio_outbound_message_fields = ['message_template', 'date_created',
-    'date_sent', 'direction', 'account_sid', 'message_sid', 'from_str',
-    'to_str', 'body', 'uri', 'error_message', 'error_code', 'api_version',
-    'from_user', 'to_user', 'twilml_response_to']
+_twilio_outbound_message_fields = ['date_created', 'date_sent', 'direction',
+    'account_sid', 'message_sid', 'from_str', 'to_str', 'body', 'uri',
+    'error_message', 'error_code', 'api_version', 'from_user', 'to_user',
+    'twilml_response_to']
 @admin.register(mod.TwilioOutboundMessage)
 class TwilioOutboundMessage(comadm.StandardAdmin):
     # List page settings
@@ -27,22 +23,18 @@ class TwilioOutboundMessage(comadm.StandardAdmin):
         _twilio_outbound_message_fields
     list_editable = comadm.standard_list_editable + \
         _twilio_outbound_message_fields
-    list_filter = comadm.standard_list_filter + ['message_template',
-        'date_created', 'date_sent', 'direction', 'error_message', 'error_code',
-        'api_version']
+    list_filter = comadm.standard_list_filter + ['date_created', 'date_sent',
+        'direction', 'error_message', 'error_code', 'api_version']
     search_fields = comadm.standard_search_fields + [
-        'message_template__programmatic_key',
-        'message_template__internal_title', 'notes', 'body', 'direction',
-        'account_sid', 'message_sid', 'from_str', 'to_str', 'uri',
-        'error_message', 'error_code', 'api_version', 'from_user', 'to_user',
-        'twilml_response_to__message_sid']
+        'notes', 'body', 'direction', 'account_sid', 'message_sid', 'from_str',
+        'to_str', 'uri', 'error_message', 'error_code', 'api_version',
+        'from_user', 'to_user', 'twilml_response_to__message_sid']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _twilio_outbound_message_fields})
     ]
-    autocomplete_fields = ['message_template', 'from_user', 'to_user',
-        'twilml_response_to']
+    autocomplete_fields = ['from_user', 'to_user', 'twilml_response_to']
 
 _twilio_status_callback_fields = ['from_str', 'to_str', 'account_sid',
     'api_version', 'channel_to_address', 'channel_install_sid',
@@ -160,21 +152,3 @@ class TwilioInboundMessageLogEntryAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _twilio_inbound_message_log_entry})
     ]
     autocomplete_fields = ['message']
-
-_user_chat_context_fields = ['started', 'stopped', 'user', 'context']
-@admin.register(mod.UserChatContext)
-class UserChatContextAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + \
-        _user_chat_context_fields
-    list_editable = comadm.standard_list_editable + \
-        _user_chat_context_fields
-    list_filter = comadm.standard_list_filter + ['started', 'stopped',
-        'context']
-    search_fields = comadm.standard_search_fields + ['user__name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _user_chat_context_fields})
-    ]
-    autocomplete_fields = ['user']
