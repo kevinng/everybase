@@ -4,7 +4,7 @@ from pytz import timezone
 from django.template.loader import render_to_string
 
 from chat import models
-from chat.libraries.utils import match
+from chat.libraries.nlp import match
 from everybase import settings
 from relationships import models as relmods
 
@@ -12,7 +12,7 @@ from twilio.twiml.messaging_response import MessagingResponse
 import phonenumbers
 
 def get_phone_number(raw_number):
-    """Last updated: 17 May 2021, 11:10 PM
+    """
 
     Parameters
     ----------
@@ -39,7 +39,7 @@ def get_phone_number(raw_number):
         return (number, True)
 
 def get_user(phone_number):
-    """Last updated: 17 May 2021, 2:19 PM
+    """
 
     Parameters
     ----------
@@ -115,7 +115,7 @@ def stop_context(user, context):
         pass
 
 def get_phone_number_string(twilio_phone_number):
-    """Last updated: 17 May 2021, 3:32 PM
+    """
 
     Parameters
     ----------
@@ -130,7 +130,11 @@ def get_phone_number_string(twilio_phone_number):
     return twilio_phone_number.split(':')[-1]
 
 def get_active_chat_contexts(user):
-    """Last updated: 17 May 2021, 3:33 PM
+    """Expire obsolete contexts and returns active contexts to the user.
+
+WE NEED TO EXPIRE OBSOLETE CONTEXTS
+WE CAN SET 
+
 
     Parameters
     ----------
@@ -152,8 +156,6 @@ def get_active_chat_contexts(user):
 
 def save_message(request):
     """Saves Twilio incoming message as a new model row from a HTTP request.
-    
-    Last updated: 17 May 2021, 3:07 PM
 
     Parameters
     ----------
@@ -253,8 +255,6 @@ def save_message_medias(request, message):
 
 def save_message_log(request, message):
     """Saves Twilio incoming message as a new log model row from a HTTP request.
-    
-    Last updated: 17 May 2021, 5:38 PM
 
     Parameters
     ----------
@@ -285,10 +285,14 @@ def save_message_log(request, message):
     except:
         return False
 
+def switch_context(from_, to_):
+    """
+STOP FROM AND START TO
+    """
+    pass
+
 def reply(message, ph_is_new, usr_is_new):
     """Returns TwilML response to a Twilio incoming message model row reference.
-
-    Last updated: 17 May 2021, 10:39 PM
 
     Parameters
     ----------
@@ -297,6 +301,7 @@ def reply(message, ph_is_new, usr_is_new):
     """
     contexts = get_active_chat_contexts(message.from_user)
 
+# What if, both booleans are not true, and the user has no context?
     if ph_is_new or usr_is_new:
         # User is new - register
         start_context(message.from_user, models.CHAT_CONTEXT__USER_REGISTRATION)
@@ -330,6 +335,12 @@ def reply(message, ph_is_new, usr_is_new):
         stop_context(message.from_user, models.CHAT_CONTEXT__MENU)
 
     
+
+
+    """I FORGOT TO UPDATE THE DATABASE WITH THE LAST MESSAGE SENT
+
+
+    """
 
 
     # Return TwilML response string

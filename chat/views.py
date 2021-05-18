@@ -8,7 +8,7 @@ from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
 
 from . import models
-from . import functions
+from .libraries import chat
 from everybase.settings import (TWILIO_AUTH_TOKEN,
     TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
     TWILIO_WEBHOOK_STATUS_UPDATE_URL)
@@ -28,12 +28,12 @@ class TwilioIncomingMessageView(APIView):
 
         try:
             (message, ph_is_new, usr_is_new, _, _) = \
-                functions.save_message(request)
-            functions.save_message_log(request, message)
-            functions.save_message_medias(request, message)
+                chat.save_message(request)
+            chat.save_message_log(request, message)
+            chat.save_message_medias(request, message)
 
             return HttpResponse(
-                functions.reply(message, ph_is_new, usr_is_new),
+                chat.reply(message, ph_is_new, usr_is_new),
                 status=HTTPStatus.OK,
             )
 

@@ -562,7 +562,7 @@ class UserChatContext(Standard):
         db_index=True
     )
     context = models.CharField(
-        max_length=2,
+        max_length=200,
         choices=[
             (CHAT_CONTEXT__USER_REGISTRATION, 'User Registration'),
             (CHAT_CONTEXT__MENU, 'Menu')
