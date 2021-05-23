@@ -530,17 +530,17 @@ class TwilioInboundMessageLogEntry(Standard):
     def __str__(self):
         return f'({self.message} [{self.id}])'
 
-class IntentStep(Standard):
-    """A user's response of a step of an intent.
+class Context(Standard):
+    """A context is a unique intent-message pair for an incoming Twilio message.
 
-    Last updated: 18 May 2021, 8:34 PM
+    Last updated: 23 May 2021, 12:09 PM
     """
-    intent_type = models.CharField(
+    intent_key = models.CharField(
         max_length=200,
         # TODO: Add choices
         db_index=True
     )
-    step_type = models.CharField(
+    message_key = models.CharField(
         max_length=200,
         # TODO: Add choices
         db_index=True
@@ -554,15 +554,15 @@ class IntentStep(Standard):
         db_index=True
     )
 
-class IntentStepExtractedString(Standard):
-    """Extracted string value of an intent step.
+class ContextString(Standard):
+    """String extracted from an incoming Twilio message in its context
 
-    Last updated: 18 May 2021, 8:34 PM
+    Last updated: 23 May 2021, 12:50 PM
     """
-    intent_step = models.ForeignKey(
-        'IntentStep',
-        related_name='intent_step_extracted_strings',
-        related_query_name='intent_step_extracted_strings',
+    context = models.ForeignKey(
+        'Context',
+        related_name='strings',
+        related_query_name='strings',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -572,30 +572,30 @@ class IntentStepExtractedString(Standard):
     )
     is_valid = models.BooleanField(db_index=True)
 
-class IntentStepExtractedFloat(Standard):
-    """Extracted float value of an intent step.
+class ContextFloat(Standard):
+    """Float extracted from an incoming Twilio message in its context
 
-    Last updated: 18 May 2021, 8:34 PM
+    Last updated: 23 May 2021, 1:03 PM
     """
-    intent_step = models.ForeignKey(
-        'IntentStep',
-        related_name='intent_step_extracted_floats',
-        related_query_name='intent_step_extracted_floats',
+    context = models.ForeignKey(
+        'Context',
+        related_name='floats',
+        related_query_name='floats',
         on_delete=models.PROTECT,
         db_index=True
     )
     value = models.FloatField(db_index=True)
     is_valid = models.BooleanField(db_index=True)
 
-class IntentStepExtractedBoolean(Standard):
-    """Extracted boolean value of an intent step.
+class ContextBoolean(Standard):
+    """Boolean extracted from an incoming Twilio message in its context
 
-    Last updated: 18 May 2021, 8:34 PM
+    Last updated: 23 May 2021, 1:22 PM
     """
-    intent_step = models.ForeignKey(
-        'IntentStep',
-        related_name='intent_step_extracted_booleans',
-        related_query_name='intent_step_extracted_booleans',
+    context = models.ForeignKey(
+        'Context',
+        related_name='booleans',
+        related_query_name='booleans',
         on_delete=models.PROTECT,
         db_index=True
     )
