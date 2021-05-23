@@ -7,10 +7,16 @@ class TwilioOutboundMessage(Standard):
     Last updated: 18 May 2021, 1:53 PM
     """
 
-    message_type = models.CharField(
+    intent_key = models.CharField(
         max_length=200,
-        choices=[
-        ],
+        # TODO: Add choices
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    message_key = models.CharField(
+        max_length=200,
+        # TODO: Add choices
         null=True,
         blank=True,
         db_index=True
