@@ -536,8 +536,9 @@ class TwilioInboundMessageLogEntry(Standard):
     def __str__(self):
         return f'({self.message} [{self.id}])'
 
-class Context(Standard):
-    """A context is a unique intent-message pair for an incoming Twilio message.
+class MessageDataset(Standard):
+    """A set of data extracted in-context for a message. A context is a unique
+    intent-message pair for an incoming Twilio message.
 
     Last updated: 23 May 2021, 12:09 PM
     """
@@ -560,13 +561,13 @@ class Context(Standard):
         db_index=True
     )
 
-class ContextString(Standard):
+class MessageDataString(Standard):
     """String extracted from an incoming Twilio message in its context
 
     Last updated: 23 May 2021, 12:50 PM
     """
-    context = models.ForeignKey(
-        'Context',
+    dataset = models.ForeignKey(
+        'MessageDataset',
         related_name='strings',
         related_query_name='strings',
         on_delete=models.PROTECT,
@@ -578,13 +579,13 @@ class ContextString(Standard):
     )
     is_valid = models.BooleanField(db_index=True)
 
-class ContextFloat(Standard):
+class MessageDataFloat(Standard):
     """Float extracted from an incoming Twilio message in its context
 
     Last updated: 23 May 2021, 1:03 PM
     """
-    context = models.ForeignKey(
-        'Context',
+    dataset = models.ForeignKey(
+        'MessageDataset',
         related_name='floats',
         related_query_name='floats',
         on_delete=models.PROTECT,
@@ -593,13 +594,13 @@ class ContextFloat(Standard):
     value = models.FloatField(db_index=True)
     is_valid = models.BooleanField(db_index=True)
 
-class ContextBoolean(Standard):
+class MessageDataBoolean(Standard):
     """Boolean extracted from an incoming Twilio message in its context
 
     Last updated: 23 May 2021, 1:22 PM
     """
-    context = models.ForeignKey(
-        'Context',
+    dataset = models.ForeignKey(
+        'MessageDataset',
         related_name='booleans',
         related_query_name='booleans',
         on_delete=models.PROTECT,
