@@ -1,5 +1,7 @@
 """Intent keys"""
 
+NO_INTENT = 'NO_INTENT' # Where user has no intent
+
 SPEAK_HUMAN = 'SPEAK_HUMAN'
 EXPLAIN_SERVICE = 'EXPLAIN_SERVICE'
 REGISTER = 'REGISTER'
