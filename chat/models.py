@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from common.models import Standard, Choice, short_text
 from chat.libraries import intents, messages
 
@@ -656,3 +657,23 @@ class UserContext(Standard):
 
     def __str__(self):
         return f'({self.user}, {self.intent_key}, {self.message_key} [{self.id}])'
+
+    def clean(self):
+        super(UserContext, self).clean()
+
+        # Get count of active contexts
+        a_count = UserContext.objects.filter(
+            user=self.user,
+            done__isnull=True,
+            paused__isnull=True,
+            expired__isnull=True
+        ).count()
+
+        if self.started is not None and (self.done is None or \
+            self.paused is None or self.expired is None) and a_count > 0:
+            # This context is active and there's at least 1 other active context
+            raise ValidationError('There can be only 1 active context for a \
+                user at one time')
+
+    class Meta:
+        unique_together = ['user', 'intent_key', 'message_key']
