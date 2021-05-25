@@ -1,24 +1,18 @@
 from django.db import models
 from common.models import Standard, Choice, short_text
+from chat.libraries import intents, messages
 
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
 
-    Last updated: 23 May 2021, 5:46 PM
+    Last updated: 25 May 2021, 11:53 PM
     """
 
-    intent_key = models.CharField(
-        max_length=200,
-        # TODO: Add choices
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    message_key = models.CharField(
-        max_length=200,
-        # TODO: Add choices
-        null=True,
-        blank=True,
+    context = models.ForeignKey(
+        'UserContext',
+        related_name='twilio_outbound_messages',
+        related_query_name='twilio_outbound_messages',
+        on_delete=models.PROTECT,
         db_index=True
     )
 
@@ -544,12 +538,12 @@ class MessageDataset(Standard):
     """
     intent_key = models.CharField(
         max_length=200,
-        # TODO: Add choices
+        choices=intents.choices,
         db_index=True
     )
     message_key = models.CharField(
         max_length=200,
-        # TODO: Add choices
+        choices=messages.choices,
         db_index=True
     )
     message = models.ForeignKey(
@@ -610,3 +604,55 @@ class MessageDataBoolean(Standard):
     )
     value = models.BooleanField(db_index=True)
     is_valid = models.BooleanField(db_index=True)
+
+class UserContext(Standard):
+    """User context
+
+    Last updated: 25 May 2021, 12:06 PM
+    """
+
+    # Only 1 active context at a time, the others should either be done, paused
+    # or expired
+    started = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    done = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    paused = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    expired = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    user = models.ForeignKey(
+        'relationships.User',
+        null=True,
+        blank=True,
+        related_name='user_contexts',
+        related_query_name='user_contexts',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    intent_key = models.CharField(
+        max_length=200,
+        choices=intents.choices,
+        db_index=True
+    )
+    message_key = models.CharField(
+        max_length=200,
+        choices=messages.choices,
+        db_index=True
+    )
+
+    def __str__(self):
+        return f'({self.user}, {self.intent_key}, {self.message_key} [{self.id}])'

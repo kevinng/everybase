@@ -12,9 +12,9 @@ class TwilioInboundMessageMediaInlineAdmin(admin.TabularInline):
 
 # ----- End: Inlines -----
 
-_twilio_outbound_message_fields = ['date_created', 'date_sent', 'direction',
-    'account_sid', 'message_sid', 'from_str', 'to_str', 'body', 'uri',
-    'error_message', 'error_code', 'api_version', 'from_user', 'to_user',
+_twilio_outbound_message_fields = ['context', 'date_created', 'date_sent',
+    'direction', 'account_sid', 'message_sid', 'from_str', 'to_str', 'body',
+    'uri', 'error_message', 'error_code', 'api_version', 'from_user', 'to_user',
     'twilml_response_to']
 @admin.register(mod.TwilioOutboundMessage)
 class TwilioOutboundMessage(comadm.StandardAdmin):
@@ -77,8 +77,8 @@ class TwilioStatusCallbackLogEntryAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['callback']
 
-_twilio_inbound_message_request_fields = ['api_version',
-    'message_sid', 'sms_sid', 'sms_message_sid', 'sms_status', 'account_sid',
+_twilio_inbound_message_request_fields = ['api_version', 'message_sid',
+    'sms_sid', 'sms_message_sid', 'sms_status', 'account_sid',
     'message_service_sid', 'from_str', 'to_str', 'body', 'num_media',
     'num_segments']
 _twilio_inbound_message_geographic_fields = ['from_city', 'from_state',
@@ -87,15 +87,22 @@ _twilio_inbound_message_whatsapp_fields = ['profile_name', 'wa_id', 'forwarded',
     'frequently_forwarded']
 _twilio_inbound_message_whatsapp_location_fields = ['latitude', 'longitude',
     'address', 'label']
+_twilio_inbound_message_associated_users = ['from_user', 'to_user']
+_twilio_inbound_message_associated_phone_numbers = ['from_phone_number',
+    'to_phone_number',]
 @admin.register(mod.TwilioInboundMessage)
 class TwilioInboundMessage(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + \
+        _twilio_inbound_message_associated_users + \
+        _twilio_inbound_message_associated_phone_numbers + \
         _twilio_inbound_message_request_fields + \
         _twilio_inbound_message_geographic_fields + \
         _twilio_inbound_message_whatsapp_fields + \
         _twilio_inbound_message_whatsapp_location_fields
     list_editable = comadm.standard_list_editable + \
+        _twilio_inbound_message_associated_users + \
+        _twilio_inbound_message_associated_phone_numbers + \
         _twilio_inbound_message_request_fields + \
         _twilio_inbound_message_geographic_fields + \
         _twilio_inbound_message_whatsapp_fields + \
@@ -115,7 +122,11 @@ class TwilioInboundMessage(comadm.StandardAdmin):
         ('WhatsApp-Specific Parameters',
             {'fields': _twilio_inbound_message_whatsapp_fields}),
         ('WhatsApp Location-Sharing Parameters',
-            {'fields': _twilio_inbound_message_whatsapp_location_fields})
+            {'fields': _twilio_inbound_message_whatsapp_location_fields}),
+        ('Associated Users',
+            {'fields': _twilio_inbound_message_associated_users}),
+        ('Associated Phone Numbers',
+            {'fields': _twilio_inbound_message_associated_phone_numbers})
     ]
     inlines = [TwilioInboundMessageMediaInlineAdmin]
 
@@ -152,3 +163,20 @@ class TwilioInboundMessageLogEntryAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _twilio_inbound_message_log_entry})
     ]
     autocomplete_fields = ['message']
+
+_user_context_log_entry = ['started', 'done', 'expired', 'paused', 'user',
+    'intent_key', 'message_key']
+@admin.register(mod.UserContext)
+class UserContextAdmin(comadm.StandardAdmin):
+        # List page settings
+    list_display = comadm.standard_list_display + \
+        _user_context_log_entry
+    list_editable = comadm.standard_list_editable + \
+        _user_context_log_entry
+    search_fields = comadm.standard_search_fields + \
+        _user_context_log_entry
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _user_context_log_entry})
+    ]
