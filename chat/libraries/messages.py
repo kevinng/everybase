@@ -1,5 +1,7 @@
 """Message keys"""
 
+NO_MESSAGE = 'NO_MESSAGE'
+
 MENU = 'MENU'
 
 # Minor menu options
