@@ -281,9 +281,6 @@ class REGISTER__REGISTER__GET_NAME(MessageHandler):
         # Menu
         return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})
 
-class REGISTER__MENU(MessageHandler):
-    pass
-
 # DISCUSS_W_BUYER intent
 
 class DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT(MessageHandler):

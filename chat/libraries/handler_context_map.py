@@ -10,8 +10,7 @@ handler_context_map = {
         messages.EXPLAIN_SERVICE: handlers.EXPLAIN_SERVICE__EXPLAIN_SERVICE
     },
     intents.REGISTER: {
-        messages.REGISTER__GET_NAME: handlers.REGISTER__REGISTER__GET_NAME,
-        messages.MENU: handlers.REGISTER__MENU
+        messages.REGISTER__GET_NAME: handlers.REGISTER__REGISTER__GET_NAME # DONE
     },
     intents.MENU: {
         messages.MENU: handlers.MENU__MENU
@@ -80,7 +79,7 @@ handler_context_map = {
         messages.YOUR_ANSWER: handlers.NO_INTENT__YOUR_ANSWER,
         messages.PAYEE_CONNECTED: handlers.NO_INTENT__PAYEE_CONNECTED,
         messages.NON_PAYEE_CONNECTED: handlers.NO_INTENT__NON_PAYEE_CONNECTED,
-        messages.NO_MESSAGE: handlers.NO_INTENT__NO_MESSAGE
+        messages.NO_MESSAGE: handlers.NO_INTENT__NO_MESSAGE # DONE
     }
 }
 
