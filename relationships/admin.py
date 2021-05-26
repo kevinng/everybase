@@ -116,7 +116,7 @@ class UnitOfMeasureAdmin(comadm.StandardChoiceAdmin):
         ['plural_name', 'product_type__name']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
+    fieldsets = comadm.standard_choice_fieldsets + [
         ('Details', {'fields': _unit_of_measure_fields})
     ]
     autocomplete_fields = ['product_type']
