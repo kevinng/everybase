@@ -561,7 +561,7 @@ class MessageDataset(Standard):
 class MessageDataString(Standard):
     """String extracted from an incoming Twilio message in its context
 
-    Last updated: 23 May 2021, 12:50 PM
+    Last updated: 26 May 2021, 11:45 PM
     """
     dataset = models.ForeignKey(
         'MessageDataset',
@@ -574,12 +574,16 @@ class MessageDataString(Standard):
         max_length=200,
         db_index=True
     )
-    is_valid = models.BooleanField(db_index=True)
+    is_valid = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
 class MessageDataFloat(Standard):
     """Float extracted from an incoming Twilio message in its context
 
-    Last updated: 23 May 2021, 1:03 PM
+    Last updated: 26 May 2021, 11:45 PM
     """
     dataset = models.ForeignKey(
         'MessageDataset',
@@ -589,12 +593,16 @@ class MessageDataFloat(Standard):
         db_index=True
     )
     value = models.FloatField(db_index=True)
-    is_valid = models.BooleanField(db_index=True)
+    is_valid = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
 class MessageDataBoolean(Standard):
     """Boolean extracted from an incoming Twilio message in its context
 
-    Last updated: 23 May 2021, 1:22 PM
+    Last updated: 26 May 2021, 11:45 PM
     """
     dataset = models.ForeignKey(
         'MessageDataset',
@@ -604,7 +612,11 @@ class MessageDataBoolean(Standard):
         db_index=True
     )
     value = models.BooleanField(db_index=True)
-    is_valid = models.BooleanField(db_index=True)
+    is_valid = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
 class UserContext(Standard):
     """User context
