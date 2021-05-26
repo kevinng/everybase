@@ -76,7 +76,6 @@ handler_context_map = {
         messages.PLEASE_PAY: handlers.CONNECT__PLEASE_PAY,
     },
     intents.NO_INTENT: {
-        messages.DO_NOT_UNDERSTAND: handlers.NO_INTENT__DO_NOT_UNDERSTAND,
         messages.YOUR_QUESTION: handlers.NO_INTENT__YOUR_QUESTION,
         messages.YOUR_ANSWER: handlers.NO_INTENT__YOUR_ANSWER,
         messages.PAYEE_CONNECTED: handlers.NO_INTENT__PAYEE_CONNECTED,

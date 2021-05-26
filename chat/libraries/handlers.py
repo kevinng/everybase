@@ -10,7 +10,7 @@ from datetime import datetime
 from everybase import settings
 import pytz
 from chat import models
-from chat.libraries import context_utils, intents, messages
+from chat.libraries import context_utils, intents, messages, nlp
 from relationships import models as relmods
 
 class MessageHandler:
@@ -43,6 +43,8 @@ class MessageHandler:
     intent_key = None
     message_key = None
 
+    options = []
+
     def __init__(self, message, intent_key, message_key):
         """
         Parameters
@@ -66,6 +68,72 @@ class MessageHandler:
         Override.
         """
         return None
+
+    def add_option(self, match_strs, intent_key, message_key, params):
+        """Add an option to this handler to be matched against the message body.
+        To be used with the reply_option method.
+
+        Options should be added in order of priority - i.e., more important
+        added first.
+
+        Parameters
+        ----------
+        match_strs : list of tuples
+            List of strings to match for this option in the format:
+            
+            [(string_to_match, edit_distance_tolerance), ...]
+            
+            A string will be matched against the text body with the
+            nlp.match_each_token function.
+        intent_key : string
+            Intent key for the context to set if this option is chosen
+        message_key : string
+            Message key for the context to set if this option is chosen
+        params : dictionary
+            Params to merge into the message body for this option
+        """
+        self.options.append((match_strs, intent_key, message_key, params))
+
+    def done_reply(self, intent_key, message_key, params):
+        """Convenience function to call self.done_to_context and
+        messages.get_body in 1 function.
+
+        Parameters
+        ----------
+        intent_key : string
+            Intent key for the context to set
+        message_key : string
+            Message key for the context to set and message body to return
+        """
+        self.done_to_context(intent_key, message_key)
+        return messages.get_body(message_key, params)
+
+    def reply_option(self):
+        """Run nlp.match_each_token against each option in this handler against
+        the message body.
+
+        Set context and return message body of the first matching option.
+
+        If no matching option is found - return reply_invalid_option value.
+        """
+        tokens = self.message.body.split()
+        for o in self.options:
+            for t in o[0]:
+                match_str = t[0]
+                tolerance = t[1]
+                if nlp.match_each_token(tokens, match_str, tolerance):
+                    intent_key = o[1]
+                    message_key = o[2]
+                    params = o[3]
+                    return self.done_reply(intent_key, message_key, params)
+
+        return self.reply_invalid_option()
+
+    def reply_invalid_option(self):
+        """Default reply when the user sends an invalid option.
+        """
+        # Note: we don't need to set a new context
+        return messages.get_body(messages.DO_NOT_UNDERSTAND, {})
 
     def done_to_context(self, intent_key, message_key):
         """Switch from the current context to the specified context. Set current
@@ -194,7 +262,12 @@ class EXPLAIN_SERVICE__EXPLAIN_SERVICE(MessageHandler):
 # Menu intent
 
 class MENU__MENU(MessageHandler):
-    pass
+    def run(self):
+        self.add_option([('1', 0), ('buyers', 2)], intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT, {})
+        self.add_option([('2', 0), ('sellers', 2)], intents.NEW_DEMAND, messages.DEMAND__GET_PRODUCT, {})
+        self.add_option([('3', 0), ('human', 1)], intents.SPEAK_HUMAN, messages.CONFIRM_HUMAN, {})
+        self.add_option([('4', 0), ('learn', 1)], intents.EXPLAIN_SERVICE, messages.EXPLAIN_SERVICE, {})
+        return self.reply_option()
 
 # REGISTER intent
 
@@ -205,9 +278,8 @@ class REGISTER__REGISTER__GET_NAME(MessageHandler):
         user.name = self.message.body.strip()
         user.save()
         
-        # Reply menu
-        self.done_to_context(intents.MENU, messages.MENU)
-        return messages.get_body(messages.MENU, { 'name': user.name })
+        # Menu
+        return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})
 
 class REGISTER__MENU(MessageHandler):
     pass
@@ -376,13 +448,6 @@ class CONNECT__PLEASE_PAY(MessageHandler):
 
 # No intent
 
-class NO_INTENT__DO_NOT_UNDERSTAND(MessageHandler):
-    pass
-    # The user needs to reply with menu option here
-    # If menu is the only context paused - respond with menu
-    # Other priotize response
-    # If multiple contexts are paused - prioritize them, or show a custom message
-
 class NO_INTENT__YOUR_QUESTION(MessageHandler):
     pass
 
@@ -401,9 +466,8 @@ class NO_INTENT__NO_MESSAGE(MessageHandler):
 
         if user.name is None:
             # User's name not set - register
-            self.done_to_context(intents.REGISTER, messages.REGISTER__GET_NAME)
-            return messages.get_body(messages.REGISTER__GET_NAME, {})
+            return self.done_reply(
+                intents.REGISTER, messages.REGISTER__GET_NAME, {})
 
         # No active context - menu
-        self.done_to_context(intents.MENU, messages.MENU)
-        return messages.get_body(messages.MENU, {'name': user.name})
+        return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})
