@@ -10,7 +10,7 @@ from datetime import datetime
 from everybase import settings
 import pytz
 from chat import models
-from chat.libraries import context_utils, intents, messages, nlp
+from chat.libraries import context_utils, intents, messages, model_utils, nlp
 from relationships import models as relmods
 
 class MessageHandler:
@@ -311,7 +311,19 @@ class DISCUSS_W_BUYER__SUPPLY__GET_PRICE(MessageHandler):
 # NEW_SUPPLY intent
 
 class NEW_SUPPLY__SUPPLY__GET_PRODUCT(MessageHandler):
-    pass
+    def run(self):
+        dataset, _ = models.MessageDataset.objects.get_or_create(
+            intent_key=self.intent_key,
+            message_key=self.message_key,
+            message=self.message
+        )
+
+        data_str = models.MessageDataString()
+        data_str.value = self.message.body.strip()
+        data_str.dataset = dataset
+        data_str.save()
+
+        return self.done_reply(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE, {})
 
 class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
     pass
