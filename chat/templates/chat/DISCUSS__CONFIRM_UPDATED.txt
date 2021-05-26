@@ -1,0 +1,7 @@
+*Your {% if supply %}supply{% else %}demand{% endif %}:*
+
+{{ lead_details }}
+
+*Details updated?*
+1. Yes
+2. No

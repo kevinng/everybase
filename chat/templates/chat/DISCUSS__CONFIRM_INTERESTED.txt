@@ -1,0 +1,7 @@
+*Hi {{ name }}, we have {% if supply %}supply{% else %}demand{% endif %} for:*
+
+{% lead_details %}
+
+*Interested to discuss?*
+1. Yes
+2. No

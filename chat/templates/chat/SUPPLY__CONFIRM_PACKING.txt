@@ -1,0 +1,7 @@
+Confirm packing:
+
+{{ packing_description }}
+
+Correct?
+1. Yes
+2. No

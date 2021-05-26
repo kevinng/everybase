@@ -1,0 +1,1 @@
+How {% if packing_right %}many {{ packing_plural }}{% else %}much quantity{% endif %} can you supply?

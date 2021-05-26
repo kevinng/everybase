@@ -1,0 +1,12 @@
+This {% if buying %}seller{% else %}buyer{% endif %} is already connected with you.
+
+*{% if buying %}Seller{% else %}Buyer{% endif %}'s contacts:*
+
+{{ contact_details }}
+
+Click this link to WhatsApp {% if buying %}seller{% else %}buyer{% endif %}:
+{{ whatsapp_url }}
+
+*{% if buying %}Supply{% else %}Demand{% endif %} details:*
+
+{{ lead_details }}

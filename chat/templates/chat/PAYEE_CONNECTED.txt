@@ -1,0 +1,23 @@
+Thank you. Here is the {% if buying %}seller{% else %}buyer{% endif %}'s contact.
+
+*{% if buying %}Seller{% else %}Buyer{% endif %}'s contacts:*
+
+{{ contact_details }}
+
+Click this link to WhatsApp {% if buying %}seller{% else %}buyer{% endif %}:
+{{ whatsapp_url }}
+
+*{% if buying %}Supply{% else %}Demand{% endif %} details*:
+
+{{ lead_details }}
+
+*Your questions & {% if buying %}seller{% else %}buyer{% endif %}'s answers*:
+
+{% for pair in qna_pairs %}
+{% if pair.asking %}
+*You*: {{ pair.question }}
+*{% if buying %}Seller{% else %}Buyer{% endif %}*: {{ pair.answer }}
+{% else %}
+*{% if buying %}Seller{% else %}Buyer{% endif %}*: {{ pair.question }}
+*You*: {{ pair.answer }}
+{% endif %}

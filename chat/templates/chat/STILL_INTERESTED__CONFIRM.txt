@@ -1,0 +1,4 @@
+Are you still interested in {{ product_type }}?
+
+1. Yes
+2. No

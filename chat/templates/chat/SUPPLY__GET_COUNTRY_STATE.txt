@@ -1,0 +1,1 @@
+Which country/state is your goods {% if ready %}in{% else %}from{% endif %}?

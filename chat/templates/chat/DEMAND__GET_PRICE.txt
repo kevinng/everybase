@@ -1,0 +1,3 @@
+Target price?
+
+Reply 'none' if no target price.
