@@ -549,11 +549,14 @@ class MessageDataset(Standard):
     )
     message = models.ForeignKey(
         'TwilioInboundMessage',
-        related_name='intent_steps',
-        related_query_name='intent_steps',
+        related_name='message_datasets',
+        related_query_name='message_datasets',
         on_delete=models.PROTECT,
         db_index=True
     )
+
+    def __str__(self):
+        return f'({self.intent_key}, {self.message_key}, {self.message} [{self.id}])'
 
     class Meta:
         unique_together = ('intent_key', 'message_key', 'message')
