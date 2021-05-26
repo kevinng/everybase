@@ -6,7 +6,12 @@ Classes are named in the format:
 <intent key>__<message key>
 """
 
+from datetime import datetime
+from everybase import settings
+import pytz
 from chat import models
+from chat.libraries import context_utils, intents, messages
+from relationships import models as relmods
 
 class MessageHandler:
     """A context is a unique pair of the user's intent, and the last message
@@ -62,6 +67,78 @@ class MessageHandler:
         """
         return None
 
+    def done_to_context(self, intent_key, message_key):
+        """Switch from the current context to the specified context. Set current
+        context's done time to now.
+
+        Parameters
+        ----------
+        intent_key : string
+            Intent key as defined in intents.py for next context
+        message_key : string
+            Message key as defined in messages.py for next context
+        """
+        # Done current context
+        now_intent_key, now_message_key = \
+            context_utils.get_context(self.message.from_user)
+
+        if now_message_key != messages.NO_MESSAGE and \
+            now_intent_key != intents.NO_INTENT:
+            # Only update current context if they're not 'no intent' and
+            # 'no message'
+            context_utils.done_context(self.message.from_user, now_intent_key,
+                now_message_key)
+
+        # Start next context
+        context_utils.start_context(self.message.from_user, intent_key,
+            message_key)
+        
+    def pause_to_context(self, intent_key, message_key):
+        """Switch from the current context to the specified context. Set current
+        context's paused time to now.
+
+        Parameters
+        ----------
+        intent_key : string
+            Intent key as defined in intents.py
+        message_key : string
+            Message key as defined in messages.py
+        """
+        # Pause current context
+        now_intent_key, now_message_key = \
+            context_utils.get_context(self.message.from_user)
+        if now_message_key != messages.NO_MESSAGE and \
+            now_intent_key != intents.NO_INTENT:
+            context_utils.pause_context(self.message.from_user, now_intent_key,
+                now_message_key)
+
+        # Start next context
+        context_utils.start_context(self.message.from_user, intent_key,
+            message_key)
+
+    def expire_to_context(self, intent_key, message_key):
+        """Switch from the current context to the specified context. Set current
+        context's expired time to now.
+
+        Parameters
+        ----------
+        intent_key : string
+            Intent key as defined in intents.py
+        message_key : string
+            Message key as defined in messages.py
+        """
+        # Expire current context
+        now_intent_key, now_message_key = \
+            context_utils.get_context(self.message.from_user)
+        if now_message_key != messages.NO_MESSAGE and \
+            now_intent_key != intents.NO_INTENT:
+            context_utils.expire_context(self.message.from_user, now_intent_key,
+                now_message_key)
+
+        # Start next context
+        context_utils.start_context(self.message.from_user, intent_key,
+            message_key)
+
     def get_or_create_dataset(self):
         """Read/create dataset for this message.
 
@@ -114,10 +191,23 @@ class EXPLAIN_SERVICE__EXPLAIN_SERVICE(MessageHandler):
     def run(self):
         pass
 
+# Menu intent
+
+class MENU__MENU(MessageHandler):
+    pass
+
 # REGISTER intent
 
 class REGISTER__REGISTER__GET_NAME(MessageHandler):
-    pass
+    def run(self):
+        # Store message body as user's name
+        user = self.message.from_user
+        user.name = self.message.body.strip()
+        user.save()
+        
+        # Reply menu
+        self.done_to_context(intents.MENU, messages.MENU)
+        return messages.get_body(messages.MENU, { 'name': user.name })
 
 class REGISTER__MENU(MessageHandler):
     pass
@@ -286,11 +376,12 @@ class CONNECT__PLEASE_PAY(MessageHandler):
 
 # No intent
 
-class NO_INTENT__MENU(MessageHandler):
-    pass
-
 class NO_INTENT__DO_NOT_UNDERSTAND(MessageHandler):
     pass
+    # The user needs to reply with menu option here
+    # If menu is the only context paused - respond with menu
+    # Other priotize response
+    # If multiple contexts are paused - prioritize them, or show a custom message
 
 class NO_INTENT__YOUR_QUESTION(MessageHandler):
     pass
@@ -306,7 +397,13 @@ class NO_INTENT__NON_PAYEE_CONNECTED(MessageHandler):
 
 class NO_INTENT__NO_MESSAGE(MessageHandler):
     def run(self):
-        # Check if user has name, if not - register him
+        user = relmods.User.objects.get(pk=self.message.from_user.id)
 
-        
-        pass
+        if user.name is None:
+            # User's name not set - register
+            self.done_to_context(intents.REGISTER, messages.REGISTER__GET_NAME)
+            return messages.get_body(messages.REGISTER__GET_NAME, {})
+
+        # No active context - menu
+        self.done_to_context(intents.MENU, messages.MENU)
+        return messages.get_body(messages.MENU, {'name': user.name})

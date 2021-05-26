@@ -13,6 +13,9 @@ handler_context_map = {
         messages.REGISTER__GET_NAME: handlers.REGISTER__REGISTER__GET_NAME,
         messages.MENU: handlers.REGISTER__MENU
     },
+    intents.MENU: {
+        messages.MENU: handlers.MENU__MENU
+    },
     intents.NEW_SUPPLY: {
         messages.SUPPLY__GET_PRODUCT: handlers.NEW_SUPPLY__SUPPLY__GET_PRODUCT,
         messages.SUPPLY__GET_AVAILABILITY: handlers.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY,
@@ -74,7 +77,6 @@ handler_context_map = {
     },
     intents.NO_INTENT: {
         messages.DO_NOT_UNDERSTAND: handlers.NO_INTENT__DO_NOT_UNDERSTAND,
-        messages.MENU: handlers.NO_INTENT__MENU,
         messages.YOUR_QUESTION: handlers.NO_INTENT__YOUR_QUESTION,
         messages.YOUR_ANSWER: handlers.NO_INTENT__YOUR_ANSWER,
         messages.PAYEE_CONNECTED: handlers.NO_INTENT__PAYEE_CONNECTED,
@@ -82,3 +84,22 @@ handler_context_map = {
         messages.NO_MESSAGE: handlers.NO_INTENT__NO_MESSAGE
     }
 }
+
+def get_handler(message, intent_key, message_key):
+    """Get handler for message and context (i.e., intent_key, message_key).
+
+    Parameters
+    ----------
+    message : TwilioInboundMessage
+        Message for which we're getting a MessageHandler for
+    intent_key : str
+        Intent key
+    message_key : str
+        Message key
+
+    Returns
+    -------
+    MessageHandler for message
+    """
+    return handler_context_map[intent_key]\
+        [message_key](message, intent_key, message_key)

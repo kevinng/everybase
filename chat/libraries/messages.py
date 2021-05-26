@@ -1,7 +1,7 @@
 """Message keys"""
 
 from chat.libraries.handlers import STOP_DISCUSSION__STOP_DISCUSSION__REASON
-
+from django.template.loader import render_to_string
 
 NO_MESSAGE = 'NO_MESSAGE'
 
@@ -63,6 +63,8 @@ PLEASE_PAY = 'PLEASE_PAY'
 PAYEE_CONNECTED = 'PAYEE_CONNECTED'
 NON_PAYEE_CONNECTED = 'NON_PAYEE_CONNECTED'
 
+# Choices for model fields
+# Note: remember to makemigrations when updating this list
 choices = [
     (NO_MESSAGE, NO_MESSAGE),
     (MENU, MENU),
@@ -101,3 +103,15 @@ choices = [
     (PAYEE_CONNECTED, PAYEE_CONNECTED),
     (NON_PAYEE_CONNECTED, NON_PAYEE_CONNECTED),
 ]
+
+def get_body(message_key, params):
+    """Get message body for a message key
+
+    Parameters
+    ----------
+    message_key : string
+        Message key as defined in messages.py for message body to get
+    params : dictionary
+        Parameters to be inserted in message body
+    """
+    return render_to_string('chat/%s.txt' % message_key, params)
