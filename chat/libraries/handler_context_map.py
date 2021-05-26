@@ -16,7 +16,7 @@ handler_context_map = {
         messages.MENU: handlers.MENU__MENU
     },
     intents.NEW_SUPPLY: {
-        messages.SUPPLY__GET_PRODUCT: handlers.NEW_SUPPLY__SUPPLY__GET_PRODUCT,
+        messages.SUPPLY__GET_PRODUCT: handlers.NEW_SUPPLY__SUPPLY__GET_PRODUCT, # Done
         messages.SUPPLY__GET_AVAILABILITY: handlers.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY,
         messages.SUPPLY__GET_COUNTRY_STATE: handlers.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE,
         messages.SUPPLY__CONFIRM_PACKING: handlers.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING,
