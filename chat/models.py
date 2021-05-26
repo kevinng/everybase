@@ -684,11 +684,11 @@ class UserContext(Standard):
             expired__isnull=True
         ).count()
 
-        if self.started is not None and (self.done is None or \
-            self.paused is None or self.expired is None) and a_count > 0:
+        if self.started is not None and (self.done is None and \
+            self.paused is None and self.expired is None) and a_count > 0:
             # This context is active and there's at least 1 other active context
             raise ValidationError('There can be only 1 active context for a \
-                user at one time')
+                user at one time.')
 
     class Meta:
         unique_together = ['user', 'intent_key', 'message_key']
