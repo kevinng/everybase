@@ -107,6 +107,9 @@ class TwilioInboundMessage(comadm.StandardAdmin):
         _twilio_inbound_message_geographic_fields + \
         _twilio_inbound_message_whatsapp_fields + \
         _twilio_inbound_message_whatsapp_location_fields
+    list_filter = comadm.standard_list_filter + \
+        _twilio_inbound_message_associated_users + \
+        _twilio_inbound_message_associated_phone_numbers
     search_fields = comadm.standard_search_fields + ['api_version',
         'message_sid', 'sms_sid', 'sms_message_sid', 'account_sid',
         'message_service_sid', 'from_str', 'to_str', 'body', 'from_city',
