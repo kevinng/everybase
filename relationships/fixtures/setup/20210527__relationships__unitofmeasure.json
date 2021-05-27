@@ -1,0 +1,17 @@
+[
+{
+    "model": "relationships.unitofmeasure",
+    "pk": 1,
+    "fields": {
+        "created": "2021-05-26T19:34:06.361Z",
+        "updated": "2021-05-26T19:34:30.333Z",
+        "deleted": null,
+        "name": "Box",
+        "description": "1 box = 200 pieces\r\n2 pieces = 1 pair",
+        "programmatic_key": "nitrile_gloves__box",
+        "programmatic_details": "",
+        "plural_name": "Boxes",
+        "product_type": 1
+    }
+}
+]

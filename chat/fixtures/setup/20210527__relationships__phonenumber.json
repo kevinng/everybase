@@ -1,0 +1,30 @@
+[
+{
+    "model": "relationships.phonenumber",
+    "pk": 1,
+    "fields": {
+        "created": "2021-04-19T03:26:11.857Z",
+        "updated": "2021-05-27T08:47:48.250Z",
+        "deleted": null,
+        "country_code": "1",
+        "national_number": "4152264655",
+        "types": [
+            1
+        ]
+    }
+},
+{
+    "model": "relationships.phonenumber",
+    "pk": 2,
+    "fields": {
+        "created": "2021-05-27T08:47:41.447Z",
+        "updated": "2021-05-27T08:47:41.447Z",
+        "deleted": null,
+        "country_code": "65",
+        "national_number": "88933466",
+        "types": [
+            1
+        ]
+    }
+}
+]
