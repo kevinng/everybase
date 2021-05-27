@@ -181,45 +181,18 @@ class MessageDatasetAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['message']
 
-_message_data_string = ['dataset', 'value', 'is_valid', 'data_key']
-@admin.register(mod.MessageDataString)
-class MessageDataStringAdmin(comadm.StandardAdmin):
-        # List page settings
-    list_display = comadm.standard_list_display + _message_data_string
-    list_editable = comadm.standard_list_editable + _message_data_string
-    search_fields = comadm.standard_search_fields + _message_data_string
+_message_data_value = ['dataset', 'value_string', 'value_float',
+    'value_boolean', 'is_valid', 'data_key']
+@admin.register(mod.MessageDataValue)
+class MessageDataValueAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _message_data_value
+    list_editable = comadm.standard_list_editable + _message_data_value
+    search_fields = comadm.standard_search_fields + _message_data_value
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _message_data_string})
-    ]
-    autocomplete_fields = ['dataset']
-
-_message_data_float = ['dataset', 'value', 'is_valid', 'data_key']
-@admin.register(mod.MessageDataFloat)
-class MessageDataFloatAdmin(comadm.StandardAdmin):
-        # List page settings
-    list_display = comadm.standard_list_display + _message_data_float
-    list_editable = comadm.standard_list_editable + _message_data_float
-    search_fields = comadm.standard_search_fields + _message_data_float
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _message_data_float})
-    ]
-    autocomplete_fields = ['dataset']
-
-_message_data_boolean = ['dataset', 'value', 'is_valid', 'data_key']
-@admin.register(mod.MessageDataBoolean)
-class MessageDataBooleanAdmin(comadm.StandardAdmin):
-        # List page settings
-    list_display = comadm.standard_list_display + _message_data_boolean
-    list_editable = comadm.standard_list_editable + _message_data_boolean
-    search_fields = comadm.standard_search_fields + _message_data_boolean
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _message_data_boolean})
+        ('Details', {'fields': _message_data_value})
     ]
     autocomplete_fields = ['dataset']
 

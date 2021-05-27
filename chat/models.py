@@ -561,10 +561,10 @@ class MessageDataset(Standard):
     class Meta:
         unique_together = ('intent_key', 'message_key', 'message')
 
-class MessageDataString(Standard):
-    """String extracted from an incoming Twilio message in its context
+class MessageDataValue(Standard):
+    """Data value extracted from an incoming Twilio message in its context
 
-    Last updated: 26 May 2021, 11:45 PM
+    Last updated: 27 May 2021, 9:00 PM
     """
     dataset = models.ForeignKey(
         'MessageDataset',
@@ -573,10 +573,15 @@ class MessageDataString(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    value = models.CharField(
+
+    # 1 of below must be set
+    value_string = models.CharField(
         max_length=200,
         db_index=True
     )
+    value_float = models.FloatField(db_index=True)
+    value_boolean = models.BooleanField(db_index=True)
+
     is_valid = models.BooleanField(
         null=True,
         blank=True,
@@ -588,53 +593,21 @@ class MessageDataString(Standard):
         db_index=True
     )
 
-class MessageDataFloat(Standard):
-    """Float extracted from an incoming Twilio message in its context
+    def clean(self):
+        super(MessageDataValue, self).clean()
 
-    Last updated: 26 May 2021, 11:45 PM
-    """
-    dataset = models.ForeignKey(
-        'MessageDataset',
-        related_name='floats',
-        related_query_name='floats',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    value = models.FloatField(db_index=True)
-    is_valid = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    data_key = models.CharField(
-        max_length=200,
-        choices=datas.choices,
-        db_index=True
-    )
+        count = 0
+        if self.value_string is None:
+            count += 1
+        
+        if self.value_float is None:
+            count += 1
 
-class MessageDataBoolean(Standard):
-    """Boolean extracted from an incoming Twilio message in its context
+        if self.value_boolean is None:
+            count += 1
 
-    Last updated: 26 May 2021, 11:45 PM
-    """
-    dataset = models.ForeignKey(
-        'MessageDataset',
-        related_name='booleans',
-        related_query_name='booleans',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    value = models.BooleanField(db_index=True)
-    is_valid = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    data_key = models.CharField(
-        max_length=200,
-        choices=datas.choices,
-        db_index=True
-    )
+        if count != 1:
+            raise ValidationError('Exactly 1 value must be set')
 
 class UserContext(Standard):
     """User context
