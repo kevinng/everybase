@@ -125,25 +125,6 @@ class UnitOfMeasureAdmin(comadm.StandardChoiceAdmin):
 class AvailabilityAdmin(comadm.ChoiceAdmin):
     pass
 
-@admin.register(mod.Country)
-class CountryAdmin(comadm.ChoiceAdmin):
-    pass
-
-_state_fields = ['country']
-@admin.register(mod.State)
-class StateAdmin(comadm.ChoiceAdmin):
-    # List page settings
-    list_display = comadm.choice_list_display + _state_fields
-    list_editable = comadm.choice_list_editable + _state_fields
-    list_filter = _state_fields
-    search_fields = comadm.choice_search_fields + ['country__name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _state_fields})
-    ]
-    autocomplete_fields = _state_fields
-
 @admin.register(mod.ProductType)
 class ProductTypeAdmin(comadm.ChoiceAdmin):
     pass

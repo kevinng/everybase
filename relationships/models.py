@@ -363,27 +363,6 @@ class Availability(Choice):
     class Meta:
         verbose_name_plural = 'availabilities'
 
-class Country(Choice):
-    """Country.
-
-    Last updated: 12 May 2021, 1:28 PM
-    """
-    class Meta:
-        verbose_name_plural = 'countries'
-
-class State(Choice):
-    """State.
-
-    Last updated: 12 May 2021, 1:38 PM
-    """
-    country = models.ForeignKey(
-        'Country',
-        related_name='states',
-        related_query_name='states',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
 class ProductType(Choice):
     """Product type.
 
@@ -500,7 +479,7 @@ class Supply(Standard):
         blank=True        
     )
     country = models.ForeignKey(
-        'Country',
+        'common.Country',
         related_name='supplies',
         related_query_name='supplies',
         on_delete=models.PROTECT,
@@ -509,7 +488,7 @@ class Supply(Standard):
         db_index=True
     )
     state = models.ForeignKey(
-        'State',
+        'common.State',
         related_name='supplies',
         related_query_name='supplies',
         on_delete=models.PROTECT,
@@ -660,7 +639,7 @@ class Demand(Standard):
         blank=True        
     )
     country = models.ForeignKey(
-        'Country',
+        'common.Country',
         related_name='demands',
         related_query_name='demands',
         on_delete=models.PROTECT,
@@ -669,7 +648,7 @@ class Demand(Standard):
         db_index=True
     )
     state = models.ForeignKey(
-        'State',
+        'common.State',
         related_name='demands',
         related_query_name='demands',
         on_delete=models.PROTECT,
