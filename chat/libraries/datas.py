@@ -1,0 +1,23 @@
+"""Data Keys
+
+Data keys are prefixed with the context - intent, message - in which they
+are captured, and postfixed by its type. I.e.,
+
+<Intent Key>__<Message Key>__<Data Name>__<Data Type>
+
+E.g.,
+
+NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
+"""
+
+UNKNOWN = 'UNKNOWN'
+NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING = 'NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING'
+NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING = 'NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING'
+
+# Choices for model fields
+# Note: remember to makemigrations when updating this list
+choices = [
+    (UNKNOWN, UNKNOWN),
+    (NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING, NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING),
+    (NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING, NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING)
+]

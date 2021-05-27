@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from common.models import Standard, Choice, short_text
-from chat.libraries import intents, messages
+from chat.libraries import intents, messages, datas
 
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
@@ -582,6 +582,11 @@ class MessageDataString(Standard):
         blank=True,
         db_index=True
     )
+    data_key = models.CharField(
+        max_length=200,
+        choices=datas.choices,
+        db_index=True
+    )
 
 class MessageDataFloat(Standard):
     """Float extracted from an incoming Twilio message in its context
@@ -601,6 +606,11 @@ class MessageDataFloat(Standard):
         blank=True,
         db_index=True
     )
+    data_key = models.CharField(
+        max_length=200,
+        choices=datas.choices,
+        db_index=True
+    )
 
 class MessageDataBoolean(Standard):
     """Boolean extracted from an incoming Twilio message in its context
@@ -618,6 +628,11 @@ class MessageDataBoolean(Standard):
     is_valid = models.BooleanField(
         null=True,
         blank=True,
+        db_index=True
+    )
+    data_key = models.CharField(
+        max_length=200,
+        choices=datas.choices,
         db_index=True
     )
 

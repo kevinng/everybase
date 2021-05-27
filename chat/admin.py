@@ -181,7 +181,7 @@ class MessageDatasetAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['message']
 
-_message_data_string = ['dataset', 'value', 'is_valid']
+_message_data_string = ['dataset', 'value', 'is_valid', 'data_key']
 @admin.register(mod.MessageDataString)
 class MessageDataStringAdmin(comadm.StandardAdmin):
         # List page settings
@@ -195,7 +195,7 @@ class MessageDataStringAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['dataset']
 
-_message_data_float = ['dataset', 'value', 'is_valid']
+_message_data_float = ['dataset', 'value', 'is_valid', 'data_key']
 @admin.register(mod.MessageDataFloat)
 class MessageDataFloatAdmin(comadm.StandardAdmin):
         # List page settings
@@ -209,7 +209,7 @@ class MessageDataFloatAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['dataset']
 
-_message_data_boolean = ['dataset', 'value', 'is_valid']
+_message_data_boolean = ['dataset', 'value', 'is_valid', 'data_key']
 @admin.register(mod.MessageDataBoolean)
 class MessageDataBooleanAdmin(comadm.StandardAdmin):
         # List page settings
