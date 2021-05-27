@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 import uuid
 
 # --- Start: Helper functions ---
@@ -179,5 +180,30 @@ class SystemTimestamp(Standard):
         blank=False,
         db_index=True
     )
+
+class MatchKeyword(Standard):
+    keyword = models.CharField(
+        max_length=200,
+        db_index=True
+    )
+    tolerance = models.IntegerField(db_index=True)
+
+    # 1 of the following must be set
+    product_type = models.ForeignKey(
+        'relationships.ProductType',
+        null=True,
+        blank=True,
+        related_name='match_keywords',
+        related_query_name='match_keywords',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    
+    def clean(self):
+        super(MatchKeyword, self).clean()
+
+        if self.product_type is None:
+            raise ValidationError('There must be 1 entity associated with this \
+                match keyword.')
 
 # --- End: Other models ---
