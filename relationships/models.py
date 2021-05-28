@@ -338,8 +338,12 @@ class UserIPDevice(Standard):
 class UnitOfMeasure(Standard, Choice):
     """Unit of measure. Description is displayed to user.
 
-    Last updated: 12 May 2021, 1:26 PM
+    Last updated: 27 May 2021, 10:14 PM
     """
+    priority = models.IntegerField(
+        default=0,
+        db_index=True
+    )
     plural_name = models.CharField(
         max_length=200,
         null=True,
