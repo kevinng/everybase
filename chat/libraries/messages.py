@@ -1,6 +1,5 @@
 """Message keys"""
 
-from chat.libraries.handlers import STOP_DISCUSSION__STOP_DISCUSSION__REASON
 from django.template.loader import render_to_string
 
 NO_MESSAGE = 'NO_MESSAGE'

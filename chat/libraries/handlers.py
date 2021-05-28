@@ -10,7 +10,8 @@ from datetime import datetime
 from everybase import settings
 import pytz
 from chat import models
-from chat.libraries import context_utils, intents, messages, model_utils, nlp
+from chat.libraries import (context_utils, intents, messages, datas,
+    model_utils, nlp)
 from relationships import models as relmods
 
 class MessageHandler:
@@ -94,7 +95,7 @@ class MessageHandler:
         """
         self.options.append((match_strs, intent_key, message_key, params))
 
-    def done_reply(self, intent_key, message_key, params):
+    def done_reply(self, intent_key, message_key, params={}):
         """Convenience function to call self.done_to_context and
         messages.get_body in 1 function.
 
@@ -312,24 +313,62 @@ class DISCUSS_W_BUYER__SUPPLY__GET_PRICE(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_PRODUCT(MessageHandler):
     def run(self):
-        dataset, _ = models.MessageDataset.objects.get_or_create(
-            intent_key=self.intent_key,
-            message_key=self.message_key,
-            message=self.message
+        model_utils.save_body_as_string(
+            self.message,
+            self.intent_key,
+            self.message_key,
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
         )
-
-        data_str = models.MessageDataString()
-        data_str.value = self.message.body.strip()
-        data_str.dataset = dataset
-        data_str.save()
-
-        return self.done_reply(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE, {})
+        return self.done_reply(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_COUNTRY_STATE
+        )
 
 class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
     pass
 
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE(MessageHandler):
-    pass
+    def run(self):
+        model_utils.save_body_as_string(
+            self.message,
+            self.intent_key,
+            self.message_key,
+            datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING
+        )
+
+        # Get product type
+        value = model_utils.get_latest_value(
+            messages.SUPPLY__GET_PRODUCT,
+            intents.NEW_SUPPLY,
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
+        )
+
+        product_type = model_utils.get_product_type_with_match(value.value_string)
+
+        if product_type is None:
+            # We're not able to find a matching product type - ask for packing
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__GET_PACKING
+            )
+
+        # We found a matching product type - confirm packing
+        try:
+            uom = relmods.UnitOfMeasure.objects.filter(
+                product_type=product_type
+            ).order_by('-priority').first()
+            print(uom)
+        except relmods.UnitOfMeasure.DoesNotExist:
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__GET_PACKING
+            )
+
+        return self.done_reply(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__CONFIRM_PACKING,
+            { 'packing_description': uom.description }
+        )
 
 class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
     pass
@@ -476,7 +515,7 @@ class NO_INTENT__NO_MESSAGE(MessageHandler):
         if user.name is None:
             # User's name not set - register
             return self.done_reply(
-                intents.REGISTER, messages.REGISTER__GET_NAME, {})
+                intents.REGISTER, messages.REGISTER__GET_NAME)
 
         # No active context - menu
         return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})

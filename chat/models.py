@@ -573,25 +573,38 @@ class MessageDataValue(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    data_key = models.CharField(
+        max_length=200,
+        choices=datas.choices,
+        db_index=True
+    )
 
     # 1 of below must be set
     value_string = models.CharField(
         max_length=200,
+        null=True,
+        blank=True,
         db_index=True
     )
-    value_float = models.FloatField(db_index=True)
-    value_boolean = models.BooleanField(db_index=True)
+    value_float = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    value_boolean = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     is_valid = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
     )
-    data_key = models.CharField(
-        max_length=200,
-        choices=datas.choices,
-        db_index=True
-    )
+    
+    def __str__(self):
+        return f'({self.dataset}, {self.data_key}, {self.value_string}, {self.value_float}, {self.value_boolean} [{self.id}])'
 
     def clean(self):
         super(MessageDataValue, self).clean()
@@ -609,6 +622,9 @@ class MessageDataValue(Standard):
         if count != 1:
             raise ValidationError('Exactly 1 value must be set')
 
+    class Meta:
+        unique_together = ['dataset', 'data_key']
+    
 class UserContext(Standard):
     """User context
 

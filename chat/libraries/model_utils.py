@@ -1,6 +1,90 @@
 from chat import models
+from chat.libraries import nlp
 from relationships import models as relmods
+from common import models as commods
 import phonenumbers
+
+def get_product_type_with_match(value):
+    """Match value against each match keyword with an associated product type
+    accounting for edit distance tolerance. If it matches - return the product
+    type. If no product type is found - return None.
+    
+    Parameters
+    ----------
+    value : string
+        Value to match against keywords
+    """
+    if value is None:
+        return None
+
+    match_keywords = commods.MatchKeyword.objects.filter(
+        product_type__isnull=False
+    )
+
+    for k in match_keywords:
+        if nlp.match(value, k.keyword, k.tolerance):
+            return k.product_type
+
+    return None
+
+def get_latest_value(message_key, intent_key, data_key):
+    """Get latest value captured in context - message_key, intent_key - of a
+    data type.
+
+    Parameters
+    ----------
+    message_key : string
+        Message key for context
+    intent_key : string
+        Intent key for context
+    data_key : string
+        Data key for data type
+    """
+    try:
+        # Get latest dataset in context
+        dataset = models.MessageDataset.objects.filter(
+            message_key=message_key,
+            intent_key=intent_key
+        ).order_by('-created').first()
+    except models.MessageDataset.DoesNotExist:
+        return None
+
+    try:
+        # Get value of dataset
+        return models.MessageDataValue.objects.get(
+            dataset=dataset,
+            data_key=data_key
+        )
+    except models.MessageDataValue.DoesNotExist:
+        return None
+
+def save_body_as_string(message, intent_key, message_key, data_key):
+    """Save message body as a dataset string.
+
+    Parameters
+    ----------
+    message : TwilioInboundMessage
+        Message whose body we're saving
+    intent_key : string
+        Intent for context we're saving in
+    message_key : string
+        Message for context we're saving in
+    """
+    # TODO: there is a bug there - where a message dataset gets created twice.
+    # Since there is a constraint on unique - intent_key/message_key/message,
+    # only 1 copy will be created. We'll get an error if we do not use
+    # get_or_create.
+    dataset, _ = models.MessageDataset.objects.get_or_create(
+        intent_key=intent_key,
+        message_key=message_key,
+        message=message
+    )
+
+    data_str = models.MessageDataValue()
+    data_str.value_string = message.body.strip()
+    data_str.dataset = dataset
+    data_str.data_key = data_key
+    data_str.save()
 
 def get_phone_number(raw_number):
     """
