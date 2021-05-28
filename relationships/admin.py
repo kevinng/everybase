@@ -104,7 +104,7 @@ class UserIPDeviceAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user', 'accessed_urls']
 
-_unit_of_measure_fields = ['plural_name', 'product_type']
+_unit_of_measure_fields = ['plural_name', 'product_type', 'priority']
 @admin.register(mod.UnitOfMeasure)
 class UnitOfMeasureAdmin(comadm.StandardChoiceAdmin):
     # List page settings
