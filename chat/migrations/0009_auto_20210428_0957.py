@@ -15,10 +15,10 @@ class Migration(migrations.Migration):
             model_name='inboundmessagegroup',
             name='twilio_inbound_messages',
         ),
-        migrations.RemoveField(
-            model_name='inboundmessagegrouprelationship',
-            name='demand_quotes',
-        ),
+        # migrations.RemoveField(
+        #     model_name='inboundmessagegrouprelationship',
+        #     name='demand_quotes',
+        # ),
         migrations.RemoveField(
             model_name='inboundmessagegrouprelationship',
             name='demands',
@@ -31,10 +31,10 @@ class Migration(migrations.Migration):
             model_name='inboundmessagegrouprelationship',
             name='supplies',
         ),
-        migrations.RemoveField(
-            model_name='inboundmessagegrouprelationship',
-            name='supply_quotes',
-        ),
+        # migrations.RemoveField(
+        #     model_name='inboundmessagegrouprelationship',
+        #     name='supply_quotes',
+        # ),
         migrations.RemoveField(
             model_name='inboundmessagegrouprelationship',
             name='tags',

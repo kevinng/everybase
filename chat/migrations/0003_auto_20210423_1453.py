@@ -122,11 +122,11 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField(auto_now=True, db_index=True, null=True)),
                 ('deleted', models.DateTimeField(blank=True, db_index=True, default=None, null=True)),
                 ('associated', models.DateTimeField(db_index=True)),
-                ('demand_quotes', models.ManyToManyField(db_index=True, related_name='inbound_message_group_relationships', related_query_name='inbound_message_group_relationships', to='relationships.DemandQuote')),
+                # ('demand_quotes', models.ManyToManyField(db_index=True, related_name='inbound_message_group_relationships', related_query_name='inbound_message_group_relationships', to='relationships.DemandQuote')),
                 ('demands', models.ManyToManyField(db_index=True, related_name='inbound_message_group_relationships', related_query_name='inbound_message_group_relationships', to='relationships.Demand')),
                 ('group', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='inbound_message_group_relationships', related_query_name='inbound_message_group_relationships', to='chat.inboundmessagegroup')),
                 ('supplies', models.ManyToManyField(db_index=True, related_name='inbound_message_group_relationships', related_query_name='inbound_message_group_relationships', to='relationships.Supply')),
-                ('supply_quotes', models.ManyToManyField(db_index=True, related_name='inbound_message_group_relationships', related_query_name='inbound_message_group_relationships', to='relationships.SupplyQuote')),
+                # ('supply_quotes', models.ManyToManyField(db_index=True, related_name='inbound_message_group_relationships', related_query_name='inbound_message_group_relationships', to='relationships.SupplyQuote')),
                 ('tags', models.ManyToManyField(db_index=True, related_name='inbound_message_group_relationships', related_query_name='inbound_message_group_relationships', to='chat.InboundMessageGroupRelationshipTag')),
             ],
             options={
