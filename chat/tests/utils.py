@@ -26,6 +26,9 @@ class ChatFlowTest(TestCase):
     phone_number = None
 
     def setup_user(self, name='Test User'):
+        """Set up user and its relevant models
+        """
+
         self.phone_number = relmods.PhoneNumber.objects.create(
             country_code='12345',
             national_number='12345678790'
@@ -37,6 +40,9 @@ class ChatFlowTest(TestCase):
         )
 
     def tear_down_user(self):
+        """Tear down user and its relevant models
+        """
+
         # Get all messages from this user
         messages = models.TwilioInboundMessage.objects.filter(
             from_user=self.user
@@ -62,12 +68,31 @@ class ChatFlowTest(TestCase):
         self.phone_number.delete()
 
     def assert_context(self, intent_key, message_key):
+        """Assert users context with input context
+
+        intent_key : String
+            Intent key for context to assert against user's context
+        message_key : String
+            Message key for context to assert against user's context
+        """
         user_intent_key, user_message_key = context_utils.get_context(self.user)
         self.assertEqual(user_intent_key, intent_key)
         self.assertEqual(user_message_key, message_key)
 
     def receive(self, body):
+        """Receive mock message
+
+        body : String
+            Message body
+        """
         return create_mock_message(self.user, body)
 
-    def reply(self, body):
-        return views.reply(body)
+    def reply(self, message):
+        """Reply message
+
+        Parameters
+        ----------
+        message : TwilioInboundMessage
+            Message to reply
+        """
+        return views.reply(message)
