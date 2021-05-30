@@ -2,7 +2,7 @@ from chat import models
 from chat.tests import utils
 from chat.libraries import intents, messages, datas, context_utils, model_utils
 
-class ChooseNewSupplyTestCase(utils.ChatFlowTest):
+class ChooseNewSupplyTest(utils.ChatFlowTest):
     def setUp(self):
         super().setUp()
         context_utils.start_context(self.user, intents.MENU, messages.MENU)
@@ -28,7 +28,7 @@ class GetProductTestCase(utils.ChatFlowTest):
             value_string=input
         )
 
-class GetAvailabilityTestCase(utils.ChatFlowTest):
+class GetAvailabilityTest(utils.ChatFlowTest):
     def setUp(self):
         super().setUp()
         context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_AVAILABILITY)
