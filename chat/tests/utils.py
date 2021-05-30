@@ -25,6 +25,12 @@ class ChatFlowTest(TestCase):
     user = None
     phone_number = None
 
+    def setUp(self):
+        self.setup_user(None)
+
+    def tearDown(self):
+        self.tear_down_user()
+
     def setup_user(self, name='Test User'):
         """Set up user and its relevant models
         """
