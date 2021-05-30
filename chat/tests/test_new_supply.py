@@ -21,9 +21,33 @@ class GetProductTestCase(utils.ChatFlowTest):
     def test_enter_product(self):
         input = 'nitrile gloves'
         self.receive_reply_assert(input, intents.NEW_SUPPLY, messages.SUPPLY__GET_AVAILABILITY)
-        data_value = model_utils.get_latest_value(
+        self.assert_latest_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            value_string=input
         )
-        self.assertEqual(data_value.value_string, input)
+
+# class GetAvailabilityTestCase(utils.ChatFlowTest):
+#     def setUp(self):
+#         super().setUp()
+#         context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_AVAILABILITY)
+    
+#     def test_choose_ready_otg_with_number(self):
+#         self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+
+#     def test_choose_ready_otg_with_text_1(self):
+#         self.receive_reply_assert('ready', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+
+#     def test_choose_ready_otg_with_text_2(self):
+#         self.receive_reply_assert('otg', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+
+
+#     def test_choose_ready_otg_with_number(self):
+#         self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+
+#     def test_choose_ready_otg_with_text_1(self):
+#         self.receive_reply_assert('ready', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+
+#     def test_choose_ready_otg_with_text_2(self):
+#         self.receive_reply_assert('otg', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)

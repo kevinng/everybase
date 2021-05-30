@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from chat import models, views
-from chat.libraries import context_utils
+from chat.libraries import context_utils, model_utils
 from relationships import models as relmods
 
 def create_mock_message(user, body):
@@ -114,9 +114,52 @@ class ChatFlowTest(TestCase):
     def receive_reply_assert(self, body, intent_key, message_key):
         """Receive mock message, reply and assert context
 
+        Parameters
+        ----------
         body : String
             Message body
-        
+        intent_key : String
+            Intent key for context to assert against user's context
+        message_key : String
+            Message key for context to assert against user's context
         """
         self.receive_reply(body)
         self.assert_context(intent_key, message_key)
+
+    def assert_latest_value(self, intent_key, message_key, data_key,
+        value_string=None, value_float=None, value_boolean=None):
+        """Assert latest data value for - intent_key, message_key, data_key -
+        against input
+
+        Parameters
+        ----------
+        intent_key : String
+            Intent key for data value's context
+        message_key : String
+            Message key for data value's context
+        data_key : String
+            Data key for data value
+        value_string : String
+            String value to assert against data value's string value
+        value_float : Float
+            Float value to assert against data value's float value
+        value_boolean : Boolean
+            Boolean value to assert against data value's boolean value
+        """
+        data_value = model_utils.get_latest_value(
+            intent_key,
+            message_key,
+            data_key
+        )
+
+        if value_string is not None:
+            self.assertEqual(data_value.value_string, value_string)
+            return
+        elif value_float is not None:
+            self.assertEqual(data_value.value_float, value_float)
+            return
+        elif value_boolean is not None:
+            self.assertEqual(data_value.value_boolean, value_boolean)
+            return
+
+        self.fail('Exactly 1 value must be provided')
