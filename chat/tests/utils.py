@@ -110,3 +110,13 @@ class ChatFlowTest(TestCase):
             Message body
         """
         return self.reply(self.receive(body))
+
+    def receive_reply_assert(self, body, intent_key, message_key):
+        """Receive mock message, reply and assert context
+
+        body : String
+            Message body
+        
+        """
+        self.receive_reply(body)
+        self.assert_context(intent_key, message_key)
