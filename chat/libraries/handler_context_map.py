@@ -1,6 +1,7 @@
 """Mapping of context to handler"""
 
-from chat.libraries import intents, messages, handlers
+from chat import handlers
+from chat.libraries import intents, messages
 
 handler_context_map = {
     intents.SPEAK_HUMAN: {
