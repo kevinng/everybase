@@ -28,26 +28,26 @@ class GetProductTestCase(utils.ChatFlowTest):
             value_string=input
         )
 
-# class GetAvailabilityTestCase(utils.ChatFlowTest):
-#     def setUp(self):
-#         super().setUp()
-#         context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_AVAILABILITY)
+class GetAvailabilityTestCase(utils.ChatFlowTest):
+    def setUp(self):
+        super().setUp()
+        context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_AVAILABILITY)
     
-#     def test_choose_ready_otg_with_number(self):
-#         self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+    def test_choose_ready_otg_with_number(self):
+        self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
 
-#     def test_choose_ready_otg_with_text_1(self):
-#         self.receive_reply_assert('ready', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+    def test_choose_ready_otg_with_text_1(self):
+        self.receive_reply_assert('ready', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
 
-#     def test_choose_ready_otg_with_text_2(self):
-#         self.receive_reply_assert('otg', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+    def test_choose_ready_otg_with_text_2(self):
+        self.receive_reply_assert('otg', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
 
 
-#     def test_choose_ready_otg_with_number(self):
-#         self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+    # def test_choose_ready_otg_with_number(self):
+    #     self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
 
-#     def test_choose_ready_otg_with_text_1(self):
-#         self.receive_reply_assert('ready', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+    # def test_choose_ready_otg_with_text_1(self):
+    #     self.receive_reply_assert('ready', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
 
-#     def test_choose_ready_otg_with_text_2(self):
-#         self.receive_reply_assert('otg', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+    # def test_choose_ready_otg_with_text_2(self):
+    #     self.receive_reply_assert('otg', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
