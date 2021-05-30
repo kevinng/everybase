@@ -321,11 +321,12 @@ class NEW_SUPPLY__SUPPLY__GET_PRODUCT(MessageHandler):
         )
         return self.done_reply(
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_COUNTRY_STATE
+            messages.SUPPLY__GET_AVAILABILITY
         )
 
 class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
-    pass
+    def run(self):
+        pass
 
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE(MessageHandler):
     def run(self):
