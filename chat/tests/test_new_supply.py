@@ -8,9 +8,7 @@ class ChooseNewSupplyTestCase(utils.ChatFlowTest):
         context_utils.start_context(self.user, intents.MENU, messages.MENU)
 
     def test_choose_with_number(self):
-        self.receive_reply('1')
-        self.assert_context(intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
+        self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
 
     def test_choose_with_text(self):
-        self.receive_reply('buyer')
-        self.assert_context(intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
+        self.receive_reply_assert('buyer', intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
