@@ -152,6 +152,9 @@ class ChatFlowTest(TestCase):
             data_key
         )
 
+        if data_value is None:
+            self.fail('Value does not exist')
+
         if value_string is not None:
             self.assertEqual(data_value.value_string, value_string)
             return

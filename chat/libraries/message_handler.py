@@ -31,7 +31,7 @@ class MessageHandler:
     intent_key = None
     message_key = None
 
-    options = []
+    options = None
 
     def __init__(self, message, intent_key, message_key):
         """
@@ -46,6 +46,7 @@ class MessageHandler:
         self.message = message
         self.intent_key = intent_key
         self.message_key = message_key
+        self.options = []
 
         self.get_or_create_dataset()
 
@@ -57,7 +58,8 @@ class MessageHandler:
         """
         return None
 
-    def add_option(self, match_strs, intent_key, message_key, params):
+    def add_option(self, match_strs, intent_key, message_key, params,
+        data_key=None, data_value=None):
         """Add an option to this handler to be matched against the message body.
         To be used with the reply_option method.
 
@@ -79,8 +81,13 @@ class MessageHandler:
             Message key for the context to set if this option is chosen
         params : dictionary
             Params to merge into the message body for this option
+        data_key : string, optional
+            If present, store user's input under context/data-key
+        data_value : string, optional
+            If present, store user's input under context/data-key with this value
         """
-        self.options.append((match_strs, intent_key, message_key, params))
+        self.options.append(
+            (match_strs, intent_key, message_key, params, data_key, data_value))
 
     def done_reply(self, intent_key, message_key, params={}):
         """Convenience function to call self.done_to_context and
@@ -102,6 +109,9 @@ class MessageHandler:
 
         Set context and return message body of the first matching option.
 
+        If optional data key/value is/are provided for an option, store them
+        when the user selects that option.
+
         If no matching option is found - return reply_invalid_option value.
         """
         tokens = self.message.body.split()
@@ -113,6 +123,25 @@ class MessageHandler:
                     intent_key = o[1]
                     message_key = o[2]
                     params = o[3]
+                    data_key = o[4]
+                    data_value = o[5]
+                    if data_key is not None:
+                        if data_value is not None:
+                            value = data_value
+                        else:
+                            value = data_key
+                        # Store user's choice
+                        dataset, _ = models.MessageDataset.objects.get_or_create(
+                            # Note: store current context not incoming context
+                            intent_key=self.intent_key,
+                            message_key=self.message_key,
+                            message=self.message
+                        )
+                        models.MessageDataValue.objects.create(
+                            dataset=dataset,
+                            data_key=data_key,
+                            value_string=value
+                        )
                     return self.done_reply(intent_key, message_key, params)
 
         return self.reply_invalid_option()
