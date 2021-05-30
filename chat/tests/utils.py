@@ -96,3 +96,11 @@ class ChatFlowTest(TestCase):
             Message to reply
         """
         return views.reply(message)
+
+    def receive_reply(self, body):
+        """Receive mock message and reply
+        
+        body : String
+            Message body
+        """
+        return self.reply(self.receive(body))
