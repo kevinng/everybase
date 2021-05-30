@@ -338,8 +338,8 @@ class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE(MessageHandler):
 
         # Get product type
         value = model_utils.get_latest_value(
-            messages.SUPPLY__GET_PRODUCT,
             intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRODUCT,
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
         )
 

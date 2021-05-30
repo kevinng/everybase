@@ -27,24 +27,24 @@ def get_product_type_with_match(value):
 
     return None
 
-def get_latest_value(message_key, intent_key, data_key):
+def get_latest_value(intent_key, message_key, data_key):
     """Get latest value captured in context - message_key, intent_key - of a
     data type.
 
     Parameters
     ----------
-    message_key : string
-        Message key for context
     intent_key : string
         Intent key for context
+    message_key : string
+        Message key for context
     data_key : string
         Data key for data type
     """
     try:
         # Get latest dataset in context
         dataset = models.MessageDataset.objects.filter(
-            message_key=message_key,
-            intent_key=intent_key
+            intent_key=intent_key,
+            message_key=message_key
         ).order_by('-created').first()
     except models.MessageDataset.DoesNotExist:
         return None
