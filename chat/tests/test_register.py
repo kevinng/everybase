@@ -20,6 +20,7 @@ class RegisterTestCase(TestCase):
         )
 
     def tearDown(self):
+        # Get all messages from this user
         messages = models.TwilioInboundMessage.objects.filter(
             from_user=self.user
         )
