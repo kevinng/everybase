@@ -114,12 +114,11 @@ class MessageHandler:
 
         If no matching option is found - return reply_invalid_option value.
         """
-        tokens = self.message.body.split()
         for o in self.options:
             for t in o[0]:
                 match_str = t[0]
                 tolerance = t[1]
-                if nlp.match_each_token(tokens, match_str, tolerance):
+                if nlp.match(self.message.body, match_str, tolerance):
                     intent_key = o[1]
                     message_key = o[2]
                     params = o[3]
