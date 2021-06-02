@@ -34,7 +34,7 @@ class GetAvailabilityTest(utils.ChatFlowTest):
         context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_AVAILABILITY)
     
     def test_choose_ready_otg_with_number(self):
-        self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+        self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
         self.assert_latest_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
@@ -43,7 +43,7 @@ class GetAvailabilityTest(utils.ChatFlowTest):
         )
 
     def test_choose_ready_otg_with_text_1(self):
-        self.receive_reply_assert('ready', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+        self.receive_reply_assert('ready', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
         self.assert_latest_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
@@ -52,7 +52,7 @@ class GetAvailabilityTest(utils.ChatFlowTest):
         )
 
     def test_choose_ready_otg_with_text_2(self):
-        self.receive_reply_assert('otg', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+        self.receive_reply_assert('otg', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
         self.assert_latest_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
@@ -61,7 +61,7 @@ class GetAvailabilityTest(utils.ChatFlowTest):
         )
 
     def test_choose_preorder_with_number(self):
-        self.receive_reply_assert('2', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+        self.receive_reply_assert('2', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER)
         self.assert_latest_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
@@ -70,10 +70,19 @@ class GetAvailabilityTest(utils.ChatFlowTest):
         )
 
     def test_choose_preorder_with_text(self):
-        self.receive_reply_assert('pre order', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+        self.receive_reply_assert('pre order', intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER)
         self.assert_latest_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
             value_string=datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
         )
+
+# class GetCountryStateTest(utils.ChatFlowTest):
+#     def setUp(self):
+#         super().setUp()
+#         context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE)
+# # HAVE A SPECIAL REQUEST FOR PRE-ORDER, and ONE FOR SOMETHING ELSE
+#     def test_enter_country_state(self):
+#         pass
+
