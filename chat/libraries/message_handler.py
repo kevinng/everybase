@@ -24,15 +24,6 @@ class MessageHandler:
     message : TwilioInboundMessage
         Twilio inbound message we're handling
     """
-    message = None
-    dataset = None
-
-    # Context
-    intent_key = None
-    message_key = None
-
-    options = None
-
     def __init__(self, message, intent_key, message_key):
         """
         Parameters
