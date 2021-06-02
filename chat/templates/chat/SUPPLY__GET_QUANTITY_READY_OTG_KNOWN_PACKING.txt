@@ -1,0 +1,1 @@
+How many {{ packing_plural }} can you supply ready-stock/OTG?

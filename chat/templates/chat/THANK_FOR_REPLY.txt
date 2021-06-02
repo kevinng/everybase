@@ -1,0 +1,1 @@
+Thanks. We'll let you know when the {% if buying %}seller{% else %}buyer{% endif %} responses.

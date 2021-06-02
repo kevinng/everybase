@@ -2,6 +2,6 @@
 
 {{ lead_details }}
 
-*Details updated?*
+*Are your {% if supply %}supply{% else %}demand{% endif %} details updated?*
 1. Yes
 2. No

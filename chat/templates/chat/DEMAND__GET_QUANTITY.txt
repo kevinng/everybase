@@ -1,3 +1,0 @@
-{% if product_type_found %}{{ packing_description }}
-
-How many {{ packing_plural }} do you need?{% else %}How much quantity do you need?{% endif %}

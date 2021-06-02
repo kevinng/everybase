@@ -1,4 +1,4 @@
-Please make a payment of {{ price }} at this link.
+Please make a payment of {{ currency }} {{ price }} at this link.
 
 {{ link }}
 

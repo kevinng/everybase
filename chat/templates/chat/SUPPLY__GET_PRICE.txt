@@ -1,1 +1,0 @@
-{% if ready %}Ready-stock/OTG{% else %}Ex-works (EXW){% endif %} price per {{ packing }}?

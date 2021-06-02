@@ -1,4 +1,4 @@
-{% if buying %}Seller{% else %}Buyer{% endif %} has connected with you. Here is the {% if buying %}seller{% else %}buyer{% endif %}'s contact.
+You've connected with the {% if buying %}seller{% else %}buyer{% endif %}.
 
 *{% if buying %}Seller{% else %}Buyer{% endif %}'s contacts:*
 
@@ -7,11 +7,11 @@
 Click this link to WhatsApp {% if buying %}seller{% else %}buyer{% endif %}:
 {{ whatsapp_url }}
 
-*{% if buying %}Supply{% else %}Demand{% endif %} details:*
+*{% if buying %}Supply{% else %}Demand{% endif %} details*:
 
 {{ lead_details }}
 
-*Your questions & {% if buying %}seller{% else %}buyer{% endif %}'s answers:*
+*Your questions & {% if buying %}seller{% else %}buyer{% endif %}'s answers*:
 
 {% for pair in qna_pairs %}
 {% if pair.asking %}

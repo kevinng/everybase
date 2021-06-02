@@ -1,0 +1,1 @@
+Please enter your reply to the {% if buying %}seller{% else %}buyer{% endif %}'s question.

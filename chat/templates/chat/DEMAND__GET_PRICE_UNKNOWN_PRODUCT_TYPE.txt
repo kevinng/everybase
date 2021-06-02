@@ -1,3 +1,5 @@
 Target price?
 
+E.g., USD 20 per box
+
 Reply 'none' if no target price.

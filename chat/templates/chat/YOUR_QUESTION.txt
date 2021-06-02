@@ -5,6 +5,6 @@ Hi {{ name }}, {% if buying %}seller{% else %}buyer{% endif %} asked:
 *Respond:*
 1. Answer question
 2. Speak with an Everybase human agent
-3. Connect with {% if buying %}seller{% else %}buyer{% endif %} ({{ price }})
+3. Connect with {% if buying %}seller{% else %}buyer{% endif %}
 4. Stop discussing with this {% if buying %}seller{% else %}buyer{% endif %}
 5. Learn about our service
