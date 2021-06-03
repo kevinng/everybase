@@ -4,29 +4,6 @@ from relationships import models as relmods
 from common import models as commods
 import phonenumbers
 
-def get_product_type_with_match(value):
-    """Match value against each match keyword with an associated product type
-    accounting for edit distance tolerance. If it matches - return the product
-    type. If no product type is found - return None.
-    
-    Parameters
-    ----------
-    value : string
-        Value to match against keywords
-    """
-    if value is None:
-        return None
-
-    match_keywords = commods.MatchKeyword.objects.filter(
-        product_type__isnull=False
-    )
-
-    for k in match_keywords:
-        if nlp.match(value, k.keyword, k.tolerance):
-            return k.product_type
-
-    return None
-
 def get_latest_value(intent_key, message_key, data_key):
     """Get latest value captured in context - message_key, intent_key - of a
     data type.
@@ -57,6 +34,61 @@ def get_latest_value(intent_key, message_key, data_key):
         )
     except models.MessageDataValue.DoesNotExist:
         return None
+
+def get_product_type_with_value(value):
+    """Match value against each match keyword with an associated product type
+    accounting for edit distance tolerance. If it matches - return the product
+    type. If no product type is found - return None.
+    
+    Parameters
+    ----------
+    value : string
+        Value to match against keywords
+    """
+    if value is None:
+        return None
+
+    match_keywords = commods.MatchKeyword.objects.filter(
+        product_type__isnull=False
+    )
+
+    for k in match_keywords:
+        if nlp.match(value, k.keyword, k.tolerance):
+            return k.product_type
+
+    return None
+
+def get_product_type_with_keys(intent_key, message_key, data_key):
+    """Convenience method to call get_latest_value with inputs for product type
+    value and use it to call get_product_type_with_value.
+
+    Parameters
+    ----------
+    intent_key : string
+        Intent key for context
+    message_key : string
+        Message key for context
+    data_key : string
+        Data key for data type
+    """
+    return get_product_type_with_value(
+        get_latest_value(intent_key, message_key, data_key).value_string)
+
+def get_uom_with_product_type_keys(intent_key, message_key, data_key):
+    """Convenience method to get product type with get_product_type_with_keys,
+    and if it's not null - use it to get the top-priority unit-of-measure
+
+    """
+    pt = get_product_type_with_keys(intent_key, message_key, data_key)
+    if pt is not None:
+        try:
+            return relmods.UnitOfMeasure.objects.filter(
+                product_type=pt
+            ).order_by('-priority').first()
+        except relmods.UnitOfMeasure.DoesNotExist:
+            pass
+    
+    return None
 
 def save_body_as_string(message, intent_key, message_key, data_key):
     """Save message body as a dataset string.

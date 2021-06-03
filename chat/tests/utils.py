@@ -22,16 +22,23 @@ def create_mock_message(user, body):
 class ChatFlowTest(TestCase):
     """Base class with helper functions for chat-flow tests.
     """
-    user = None
-    phone_number = None
 
     def setUp(self):
+        super().setUp()
+
+        self.user = None
+        self.phone_number = None
+        self.models_to_tear_down = []
+        
         self.setup_user(None)
-        return super().setUp()
 
     def tearDown(self):
+        super().tearDown()
         self.tear_down_user()
-        return super().tearDown()
+
+        if 'models_to_tear_down' in locals() and self.models_to_tear_down is not None:
+            for m in reversed(self.models_to_tear_down):
+                m.delete()
 
     def setup_user(self, name='Test User'):
         """Set up user and its relevant models

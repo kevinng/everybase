@@ -49,7 +49,8 @@ class DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY(MessageHandler):
     pass
 
 class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG(MessageHandler):
-    pass
+    def run(self):
+        pass
 
 class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(MessageHandler):
     pass
@@ -139,7 +140,31 @@ class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
         return self.reply_option()
 
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(MessageHandler):
-    pass
+    def run(self):
+        model_utils.save_body_as_string(
+            self.message,
+            self.intent_key,
+            self.message_key,
+            datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING
+        )
+
+        uom = model_utils.get_uom_with_product_type_keys(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRODUCT,
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
+        )
+
+        if uom is not None:
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__CONFIRM_PACKING,
+                params={ 'packing_description': uom.description }
+            )
+        else:
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__GET_PACKING
+            )
 
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(MessageHandler):
     pass
