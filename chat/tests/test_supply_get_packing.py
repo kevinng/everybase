@@ -3,8 +3,7 @@ from chat.libraries import intents, messages, datas, context_utils, model_utils
 
 class NewSupplyGetPacking_ReadyOTG_Test(utils.ChatFlowTest):
     def setUp(self):
-        super().setUp()
-        context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
+        super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
         self.set_up_data_value_string(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
@@ -24,8 +23,7 @@ class NewSupplyGetPacking_ReadyOTG_Test(utils.ChatFlowTest):
 
 class NewSupplyGetPacking_PreOrder_Test(utils.ChatFlowTest):
     def setUp(self):
-        super().setUp()
-        context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
+        super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
         self.set_up_data_value_string(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,

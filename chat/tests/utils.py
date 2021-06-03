@@ -24,14 +24,19 @@ class ChatFlowTest(TestCase):
     """Base class with helper functions for chat-flow tests.
     """
 
-    def setUp(self):
+    def setUp(self, intent_key=None, message_key=None, name='Test User'):
         super().setUp()
 
         self.user = None
         self.phone_number = None
         self.models_to_tear_down = []
+        self.intent_key = intent_key
+        self.message_key = message_key
         
-        self.setup_user(None)
+        self.setup_user(name)
+
+        if intent_key is not None and message_key is not None:
+            context_utils.start_context(self.user, intent_key, message_key)
 
     def tearDown(self):
         super().tearDown()

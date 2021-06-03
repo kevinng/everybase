@@ -19,8 +19,7 @@ class GetCountryStateTest():
 
 class GetCountryStateReadyOTG_KnownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
     def setUp(self):
-        super().setUp()
-        context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
+        super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
         self.set_up_known_product()
 
     def test_enter_country_state(self):
@@ -35,8 +34,7 @@ class GetCountryStateReadyOTG_KnownProduct_Test(utils.ChatFlowTest, GetCountrySt
 
 class GetCountryStateReadyOTG_UnknownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
     def setUp(self):
-        super().setUp()
-        context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
+        super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
         self.set_up_unknown_product()
 
     def test_enter_country_state(self):
@@ -51,8 +49,7 @@ class GetCountryStateReadyOTG_UnknownProduct_Test(utils.ChatFlowTest, GetCountry
 
 class GetCountryStatePreOrder_KnownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
     def setUp(self):
-        super().setUp()
-        context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER)
+        super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER)
         self.set_up_known_product()
 
     def test_enter_country_state(self):
@@ -67,8 +64,7 @@ class GetCountryStatePreOrder_KnownProduct_Test(utils.ChatFlowTest, GetCountrySt
 
 class GetCountryStatePreOrder_UnknownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
     def setUp(self):
-        super().setUp()
-        context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER)
+        super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER)
         self.set_up_unknown_product()
 
     def test_enter_country_state(self):

@@ -3,8 +3,7 @@ from chat.libraries import intents, messages, datas, context_utils
 
 class GetProductTestCase(utils.ChatFlowTest):
     def setUp(self):
-        super().setUp()
-        context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
+        super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
 
     def test_enter_product(self):
         input = 'nitrile gloves'
