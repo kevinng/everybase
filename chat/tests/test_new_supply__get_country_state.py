@@ -5,7 +5,7 @@ from relationships import models as relmods
 from common import models as commods
 
 class GetCountryStateTest():
-    def set_up_user_product_type_entry(self):
+    def set_up_known_product_type(self):
         # Create dummy inbound message
         msg = models.TwilioInboundMessage.objects.create()
         self.models_to_tear_down.append(msg)
@@ -51,7 +51,7 @@ class GetCountryStateReadyOTGProductFoundTest(utils.ChatFlowTest, GetCountryStat
         )
         self.models_to_tear_down.append(kw)
 
-        self.set_up_user_product_type_entry()
+        self.set_up_known_product_type()
 
     def test_enter_country_state(self):
         self.receive_reply_assert('singapore', intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
@@ -60,7 +60,7 @@ class GetCountryStatePreOrderTest(utils.ChatFlowTest, GetCountryStateTest):
     def setUp(self):
         super().setUp()
         context_utils.start_context(self.user, intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
-        self.set_up_user_product_type_entry()
+        self.set_up_known_product_type()
 
     def test_enter_country_state(self):
         self.receive_reply_assert('singapore', intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
