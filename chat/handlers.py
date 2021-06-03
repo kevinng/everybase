@@ -197,7 +197,25 @@ class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
         return self.reply_option()
 
 class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
-    pass
+    def run(self):
+        availability = model_utils.get_latest_value(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_AVAILABILITY,
+            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE
+        ).value_string
+
+        if availability == \
+            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG:
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
+            )
+        elif availability == \
+            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER:
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__GET_QUANTITY_PRE_ORDER
+            )
 
 class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING(MessageHandler):
     pass
@@ -225,50 +243,6 @@ class NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__THANK_YOU(MessageHandler):
     pass
-
-# class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE(MessageHandler):
-#     pass
-    # def run(self):
-    #     model_utils.save_body_as_string(
-    #         self.message,
-    #         self.intent_key,
-    #         self.message_key,
-    #         datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING
-    #     )
-
-    #     # Get product type
-    #     value = model_utils.get_latest_value(
-    #         intents.NEW_SUPPLY,
-    #         messages.SUPPLY__GET_PRODUCT,
-    #         datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
-    #     )
-
-    #     product_type = model_utils.get_product_type_with_match(value.value_string)
-
-    #     if product_type is None:
-    #         # We're not able to find a matching product type - ask for packing
-    #         return self.done_reply(
-    #             intents.NEW_SUPPLY,
-    #             messages.SUPPLY__GET_PACKING
-    #         )
-
-    #     # We found a matching product type - confirm packing
-    #     try:
-    #         uom = relmods.UnitOfMeasure.objects.filter(
-    #             product_type=product_type
-    #         ).order_by('-priority').first()
-    #         print(uom)
-    #     except relmods.UnitOfMeasure.DoesNotExist:
-    #         return self.done_reply(
-    #             intents.NEW_SUPPLY,
-    #             messages.SUPPLY__GET_PACKING
-    #         )
-
-    #     return self.done_reply(
-    #         intents.NEW_SUPPLY,
-    #         messages.SUPPLY__CONFIRM_PACKING,
-    #         { 'packing_description': uom.description }
-    #     )
 
 # NEW_DEMAND intent
 
