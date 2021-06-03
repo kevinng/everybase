@@ -178,7 +178,23 @@ class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(MessageHandler,
 
 class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
     def run(self):
-        pass
+        availability = model_utils.get_latest_value(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_AVAILABILITY,
+            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE
+        ).value_string
+
+        yes_intent = intents.NEW_SUPPLY
+        if availability == \
+            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG:
+            yes_message = messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
+        elif availability == \
+            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER:
+            yes_message = messages.SUPPLY__GET_QUANTITY_PRE_ORDER
+
+        self.add_option([('1', 0), ('yes', 0)], yes_intent, yes_message, {})
+        self.add_option([('2', 0), ('no', 0)], intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING, {})
+        return self.reply_option()
 
 class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
     pass
