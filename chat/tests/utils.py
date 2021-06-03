@@ -42,13 +42,14 @@ class ChatFlowTest(TestCase):
             for m in reversed(self.models_to_tear_down):
                 m.delete()
 
-    def setup_user(self, name='Test User'):
+    def setup_user(self, name='Test User', country_code='12345',
+        national_number='1234567890'):
         """Set up user and its relevant models
         """
 
         self.phone_number = relmods.PhoneNumber.objects.create(
-            country_code='12345',
-            national_number='12345678790'
+            country_code=country_code,
+            national_number=national_number
         )
 
         self.user = relmods.User.objects.create(
