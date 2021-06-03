@@ -1,5 +1,5 @@
 from chat.tests import utils
-from chat.libraries import intents, messages, datas, context_utils, model_utils
+from chat.libraries import intents, messages, datas, context_utils
 
 class NewSupplyConfirmPacking_ReadyOTG_Test(utils.ChatFlowTest):
     def setUp(self):

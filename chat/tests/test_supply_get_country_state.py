@@ -1,7 +1,5 @@
 from chat.tests import utils
 from chat.libraries import intents, messages, datas, context_utils
-from relationships import models as relmods
-from common import models as commods
 
 class GetCountryStateTest():
     def set_up_known_product(self):
