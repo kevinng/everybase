@@ -13,7 +13,14 @@ class NewSupplyGetPacking_ReadyOTG_Test(utils.ChatFlowTest):
         )
 
     def test_receive_packing(self):
-        self.receive_reply_assert('100 pieces in 1 box', intents.NEW_SUPPLY, messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING)
+        input = '100 pieces in 1 box'
+        self.receive_reply_assert(input, intents.NEW_SUPPLY, messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING)
+        self.assert_latest_value(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PACKING,
+            datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING,
+            value_string=input
+        )       
 
 class NewSupplyGetPacking_PreOrder_Test(utils.ChatFlowTest):
     def setUp(self):
@@ -27,4 +34,11 @@ class NewSupplyGetPacking_PreOrder_Test(utils.ChatFlowTest):
         )
 
     def test_receive_packing(self):
-        self.receive_reply_assert('100 pieces in 1 box', intents.NEW_SUPPLY, messages.SUPPLY__GET_QUANTITY_PRE_ORDER)
+        input = '100 pieces in 1 box'
+        self.receive_reply_assert(input, intents.NEW_SUPPLY, messages.SUPPLY__GET_QUANTITY_PRE_ORDER)
+        self.assert_latest_value(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PACKING,
+            datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING,
+            value_string=input
+        )

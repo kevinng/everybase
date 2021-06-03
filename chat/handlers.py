@@ -184,6 +184,8 @@ class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE
         ).value_string
 
+        # The first option directs to a different message depending on what the
+        # user enter for availability earlier on
         yes_intent = intents.NEW_SUPPLY
         if availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG:
@@ -198,6 +200,17 @@ class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
     def run(self):
+        # Store message body
+        model_utils.save_body_as_string(
+            self.message,
+            self.intent_key,
+            self.message_key,
+            datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING
+        )
+        
+        # Direct to the right message depending on what the user entered for
+        # availability earlier on
+
         availability = model_utils.get_latest_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,

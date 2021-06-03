@@ -24,6 +24,8 @@ NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER = 'NEW_SUPPLY__SUP
 # New Supply, Get Country/State
 NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING = 'NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING' # Country/State string
 
+# New Supply, Get Packing
+NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING = 'NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING' # Packing string
 
 # Choices for model fields
 # Note: remember to makemigrations when updating this list
