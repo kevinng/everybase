@@ -3,6 +3,7 @@ from django.test import TestCase
 from chat import models, views
 from chat.libraries import context_utils, model_utils
 from relationships import models as relmods
+from common import models as commods
 
 def create_mock_message(user, body):
     """Create mock TwilioInboundMessage for the purposes of testing.
@@ -36,7 +37,8 @@ class ChatFlowTest(TestCase):
         super().tearDown()
         self.tear_down_user()
 
-        if 'models_to_tear_down' in locals() and self.models_to_tear_down is not None:
+        if 'models_to_tear_down' in locals() and \
+            self.models_to_tear_down is not None:
             for m in reversed(self.models_to_tear_down):
                 m.delete()
 
@@ -175,3 +177,77 @@ class ChatFlowTest(TestCase):
             return
 
         self.fail('Exactly 1 value must be provided')
+
+    def set_up_data_value_string(self, intent_key, message_key, data_key,
+        value):
+        """Set up mock data value string in context.
+
+        Parameters
+        ----------
+        intent_key : String
+            Intent key for data value's context
+        message_key : String
+            Message key for data value's context
+        data_key : String
+            Data key for data value
+        value : String
+            data value string
+        """
+
+        # Create dummy inbound message
+        msg = models.TwilioInboundMessage.objects.create()
+        self.models_to_tear_down.append(msg)
+
+        # User previously entered product type matching keyword
+        ds = models.MessageDataset.objects.create(
+            intent_key=intent_key,
+            message_key=message_key,
+            message=msg
+        )
+        self.models_to_tear_down.append(ds)
+        dv = models.MessageDataValue.objects.create(
+            dataset=ds,
+            data_key=data_key,
+            value_string=value
+        )
+        self.models_to_tear_down.append(dv)
+
+    def set_up_user_entered_found_product(self, intent_key, message_key,
+        data_key):
+        """Set up a product type and corresponding match keywords. Then create
+        dataset/value to mock user's product-type matching input.
+
+        Parameters
+        ----------
+        intent_key : String
+            Intent key for context where user entered found product type
+        message_key : String
+            Message key for context where user entered found product type 
+        data_key : String
+            Data key for context where user entered found product type
+        """
+
+        # Create test product type
+        pt = relmods.ProductType.objects.create(
+            name='Product That Exists'
+        )
+        self.models_to_tear_down.append(pt)
+
+        # Create test unit-of-measure - required to ascertain if product type is found
+        uom = relmods.UnitOfMeasure.objects.create(
+            name='ProductThatExists UOM',
+            description='ProductThatExists UOM',
+            product_type=pt
+        )
+        self.models_to_tear_down.append(uom)
+
+        # Create match keyword for test product type
+        kw = commods.MatchKeyword.objects.create(
+            keyword='exists',
+            tolerance=0,
+            product_type=pt
+        )
+        self.models_to_tear_down.append(kw)
+
+        self.set_up_data_value_string(intent_key, message_key, data_key, \
+            'exists')
