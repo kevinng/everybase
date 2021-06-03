@@ -184,6 +184,31 @@ class ChatFlowTest(TestCase):
 
         self.fail('Exactly 1 value must be provided')
 
+    def assert_value(self, data_key, value_string=None, value_float=None,
+        value_boolean=None):
+        """Convenience method to call assert_latest_value with this' context
+        and the specified data_key.
+
+        Parameters
+        ----------
+        data_key : String
+            Data key for the value
+        value_string : String
+            String value to assert against data value's string value
+        value_float : Float
+            Float value to assert against data value's float value
+        value_boolean : Boolean
+            Boolean value to assert against data value's boolean value
+        """
+        self.assert_latest_value(
+            self.intent_key,
+            self.message_key,
+            data_key,
+            value_string,
+            value_float,
+            value_boolean
+        )
+
     def set_up_data_value_string(self, intent_key, message_key, data_key,
         value):
         """Set up mock data value string in context.

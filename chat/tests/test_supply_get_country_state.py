@@ -25,11 +25,9 @@ class GetCountryStateReadyOTG_KnownProduct_Test(utils.ChatFlowTest, GetCountrySt
     def test_enter_country_state(self):
         input = 'singapore'
         self.receive_reply_assert(input, intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
-        self.assert_latest_value(
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG,
+        self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            value_string=input
+            input
         )
 
 class GetCountryStateReadyOTG_UnknownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
@@ -40,11 +38,9 @@ class GetCountryStateReadyOTG_UnknownProduct_Test(utils.ChatFlowTest, GetCountry
     def test_enter_country_state(self):
         input = 'singapore'
         self.receive_reply_assert(input, intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
-        self.assert_latest_value(
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG,
+        self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            value_string=input
+            input
         )
 
 class GetCountryStatePreOrder_KnownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
@@ -55,11 +51,9 @@ class GetCountryStatePreOrder_KnownProduct_Test(utils.ChatFlowTest, GetCountrySt
     def test_enter_country_state(self):
         input = 'singapore'
         self.receive_reply_assert(input, intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
-        self.assert_latest_value(
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER,
+        self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            value_string=input
+            input
         )
 
 class GetCountryStatePreOrder_UnknownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
@@ -70,9 +64,7 @@ class GetCountryStatePreOrder_UnknownProduct_Test(utils.ChatFlowTest, GetCountry
     def test_enter_country_state(self):
         input = 'singapore'
         self.receive_reply_assert(input, intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
-        self.assert_latest_value(
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER,
+        self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            value_string=input
+            input
         )
