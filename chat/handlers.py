@@ -200,13 +200,7 @@ class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
     def run(self):
-        # Store message body
-        model_utils.save_body_as_string(
-            self.message,
-            self.intent_key,
-            self.message_key,
-            datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING
-        )
+        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING)
         
         # Direct to the right message depending on what the user entered for
         # availability earlier on
