@@ -1,5 +1,5 @@
 from chat.tests import utils
-from chat.libraries import intents, messages, datas, context_utils
+from chat.libraries import intents, messages, datas
 
 class NewSupplyGetDepositTestCase(utils.ChatFlowTest):
     def setUp(self):
