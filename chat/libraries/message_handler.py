@@ -140,7 +140,7 @@ class MessageHandler:
         """Default reply when the user sends an invalid option.
         """
         # Note: we don't need to set a new context
-        return messages.get_body(messages.DO_NOT_UNDERSTAND, {})
+        return messages.get_body(messages.DO_NOT_UNDERSTAND_OPTION, {})
 
     def done_to_context(self, intent_key, message_key):
         """Switch from the current context to the specified context. Set current
