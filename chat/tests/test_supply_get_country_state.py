@@ -1,7 +1,7 @@
 from chat.tests import utils
 from chat.libraries import intents, messages, datas, context_utils
 
-class GetCountryStateTest():
+class NewSupplyGetCountryStateTest():
     def set_up_known_product(self):
         self.set_up_user_entered_found_product(
             intents.NEW_SUPPLY,
@@ -17,7 +17,7 @@ class GetCountryStateTest():
             'unknown product'
         )
 
-class GetCountryStateReadyOTG_KnownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
+class NewSupplyGetCountryStateReadyOTG_KnownProduct_Test(utils.ChatFlowTest, NewSupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
         self.set_up_known_product()
@@ -30,7 +30,7 @@ class GetCountryStateReadyOTG_KnownProduct_Test(utils.ChatFlowTest, GetCountrySt
             input
         )
 
-class GetCountryStateReadyOTG_UnknownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
+class NewSupplyGetCountryStateReadyOTG_UnknownProduct_Test(utils.ChatFlowTest, NewSupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG)
         self.set_up_unknown_product()
@@ -43,7 +43,7 @@ class GetCountryStateReadyOTG_UnknownProduct_Test(utils.ChatFlowTest, GetCountry
             input
         )
 
-class GetCountryStatePreOrder_KnownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
+class NewSupplyGetCountryStatePreOrder_KnownProduct_Test(utils.ChatFlowTest, NewSupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER)
         self.set_up_known_product()
@@ -56,7 +56,7 @@ class GetCountryStatePreOrder_KnownProduct_Test(utils.ChatFlowTest, GetCountrySt
             input
         )
 
-class GetCountryStatePreOrder_UnknownProduct_Test(utils.ChatFlowTest, GetCountryStateTest):
+class NewSupplyGetCountryStatePreOrder_UnknownProduct_Test(utils.ChatFlowTest, NewSupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER)
         self.set_up_unknown_product()
