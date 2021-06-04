@@ -1,5 +1,5 @@
 from chat import models
-from chat.libraries import intents, messages, context_utils, nlp
+from chat.libraries import (intents, messages, context_utils, model_utils, nlp)
 
 class MessageHandler:
     """A context is a unique pair of the user's intent, and the last message
@@ -256,4 +256,19 @@ class MessageHandler:
             dataset=self.dataset,
             value=value,
             is_valid=is_valid
+        )
+
+    def save_body_as_string(self, data_key):
+        """Save message body in current context with specified data key
+
+        Parameters
+        ----------
+        data_key
+            Data key to store the message body against
+        """
+        model_utils.save_body_as_string(
+            self.message,
+            self.intent_key,
+            self.message_key,
+            data_key
         )
