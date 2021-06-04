@@ -118,6 +118,43 @@ def save_body_as_string(message, intent_key, message_key, data_key):
     v.data_key = data_key
     v.save()
 
+def save_body_as_float(message, intent_key, message_key, data_key):
+    """Save message body as a dataset float.
+
+    Parameters
+    ----------
+    message : TwilioInboundMessage
+        Message whose body we're saving
+    intent_key : string
+        Intent for context we're saving in
+    message_key : string
+        Message for context we're saving in
+
+    Returns
+    -------
+    Float value if successful, None if unable to convert body to float value
+    """
+    # TODO: there is a bug there - where a message dataset gets created twice.
+    # Since there is a constraint on unique - intent_key/message_key/message,
+    # only 1 copy will be created. We'll get an error if we do not use
+    # get_or_create.
+    dataset, _ = models.MessageDataset.objects.get_or_create(
+        intent_key=intent_key,
+        message_key=message_key,
+        message=message
+    )
+
+    v = models.MessageDataValue()
+    try:
+        v.value_float = float(message.body.strip())
+    except ValueError:
+        return None
+    v.dataset = dataset
+    v.data_key = data_key
+    v.save()
+
+    return v.value_float
+
 def get_phone_number(raw_number):
     """
     Parameters
