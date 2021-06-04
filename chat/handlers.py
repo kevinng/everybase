@@ -271,7 +271,20 @@ class NEW_SUPPLY__SUPPLY__GET_DEPOSIT(MessageHandler):
         )
 
 class NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC(MessageHandler):
-    pass
+    def run(self):
+        self.add_option([('1', 0), ('yes', 0)],
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__THANK_YOU, {},
+            datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
+            datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__YES
+        )
+        self.add_option([('2', 0), ('no', 0)],
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__THANK_YOU, {},
+            datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
+            datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__NO
+        )
+        return self.reply_option()
 
 class NEW_SUPPLY__SUPPLY__THANK_YOU(MessageHandler):
     pass
