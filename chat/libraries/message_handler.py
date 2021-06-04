@@ -142,6 +142,12 @@ class MessageHandler:
         # Note: we don't need to set a new context
         return messages.get_body(messages.DO_NOT_UNDERSTAND_OPTION, {})
 
+    def reply_invalid_number(self):
+        """Reply user entered an invalid number
+        """
+        # Note: we don't need to set a new context
+        return messages.get_body(messages.DO_NOT_UNDERSTAND_NUMBER, {})
+
     def done_to_context(self, intent_key, message_key):
         """Switch from the current context to the specified context. Set current
         context's done time to now.
@@ -259,7 +265,7 @@ class MessageHandler:
         )
 
     def save_body_as_string(self, data_key):
-        """Save message body in current context with specified data key
+        """Save message body in current context with specified data key as string
 
         Parameters
         ----------
@@ -267,6 +273,25 @@ class MessageHandler:
             Data key to store the message body against
         """
         model_utils.save_body_as_string(
+            self.message,
+            self.intent_key,
+            self.message_key,
+            data_key
+        )
+
+    def save_body_as_float(self, data_key):
+        """Save message body in current context with specified data key as float
+
+        Parameters
+        ----------
+        data_key
+            Data key to store the message body against
+
+        Returns
+        -------
+        Float value if successful, None if unable to convert body to float value
+        """
+        return model_utils.save_body_as_float(
             self.message,
             self.intent_key,
             self.message_key,
