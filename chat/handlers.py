@@ -294,7 +294,12 @@ class NEW_SUPPLY__SUPPLY__THANK_YOU(MessageHandler):
 # NEW_DEMAND intent
 
 class NEW_DEMAND__DEMAND__GET_PRODUCT(MessageHandler):
-    pass
+    def run(self):
+        self.save_body_as_string(datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING)
+        return self.done_reply(
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_COUNTRY_STATE
+        )
 
 class NEW_DEMAND__DEMAND__GET_COUNTRY_STATE(MessageHandler):
     pass
