@@ -139,15 +139,9 @@ class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
         )
         return self.reply_option()
 
-class GetCountryStateBaseHandler():
+class GetCountryStateBaseHandler(MessageHandler):
     def _run(self):
-        model_utils.save_body_as_string(
-            self.message,
-            self.intent_key,
-            self.message_key,
-            datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING
-        )
-
+        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING)
         uom = model_utils.get_uom_with_product_type_keys(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
@@ -166,13 +160,11 @@ class GetCountryStateBaseHandler():
                 messages.SUPPLY__GET_PACKING
             )
 
-class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(MessageHandler,
-    GetCountryStateBaseHandler):
+class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(GetCountryStateBaseHandler):
     def run(self):
         return self._run()
 
-class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(MessageHandler,
-    GetCountryStateBaseHandler):
+class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(GetCountryStateBaseHandler):
     def run(self):
         return self._run()
 
