@@ -231,7 +231,19 @@ class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
             )
 
 class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING(MessageHandler):
-    pass
+    def run(self):
+        # Store message body
+        model_utils.save_body_as_string(
+            self.message,
+            self.intent_key,
+            self.message_key,
+            datas.NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING__QUANTITY__STRING
+        )
+
+        return self.done_reply(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING
+        )
 
 class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING(MessageHandler):
     pass
