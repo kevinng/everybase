@@ -110,12 +110,7 @@ class DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_PRODUCT(MessageHandler):
     def run(self):
-        model_utils.save_body_as_string(
-            self.message,
-            self.intent_key,
-            self.message_key,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
-        )
+        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING)
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY
