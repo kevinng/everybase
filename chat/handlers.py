@@ -302,7 +302,29 @@ class NEW_DEMAND__DEMAND__GET_PRODUCT(MessageHandler):
         )
 
 class NEW_DEMAND__DEMAND__GET_COUNTRY_STATE(MessageHandler):
-    pass
+    def run(self):
+        self.save_body_as_string(datas.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING)
+
+        uom = model_utils.get_uom_with_product_type_keys(
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_PRODUCT,
+            datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING
+        )
+
+        if uom is not None:
+            return self.done_reply(
+                intents.NEW_DEMAND,
+                messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE,
+                params={
+                    'packing_description': uom.description,
+                    'packing_plural': uom.plural_name
+                }
+            )
+        else:
+            return self.done_reply(
+                intents.NEW_DEMAND,
+                messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
+            )
 
 class NEW_DEMAND__NEW_DEMAND__DEMAND__GET_QUANTITY(MessageHandler):
     pass
