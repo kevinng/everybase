@@ -260,7 +260,15 @@ class NEW_SUPPLY__SUPPLY__GET_PRICE_PRE_ORDER(MessageHandler):
         )
 
 class NEW_SUPPLY__SUPPLY__GET_DEPOSIT(MessageHandler):
-    pass
+    def run(self):
+        deposit = self.save_body_as_float(datas.NEW_SUPPLY__SUPPLY__GET_DEPOSIT__DEPOSIT__NUMBER)
+        if deposit is None:
+            return self.reply_invalid_number()
+        
+        return self.done_reply(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_ACCEPT_LC
+        )
 
 class NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC(MessageHandler):
     pass
