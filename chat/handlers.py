@@ -244,7 +244,12 @@ class NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING(MessageHandler):
         )
 
 class NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING(MessageHandler):
-    pass
+    def run(self):
+        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING__PRICE__STRING)
+        return self.done_reply(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__THANK_YOU
+        )
 
 class NEW_SUPPLY__SUPPLY__GET_PRICE_PRE_ORDER(MessageHandler):
     pass
