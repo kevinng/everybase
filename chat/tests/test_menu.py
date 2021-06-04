@@ -8,6 +8,9 @@ class ChooseNewSupplyTest(utils.ChatFlowTest):
     def test_choose_non_choice_with_number(self):
         self.receive_reply_assert('10', intents.MENU, messages.MENU)
 
+    def test_choose_non_choice_with_number(self):
+        self.receive_reply_assert('hello', intents.MENU, messages.MENU)
+
     def test_choose_new_supply_with_number(self):
         self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
 
