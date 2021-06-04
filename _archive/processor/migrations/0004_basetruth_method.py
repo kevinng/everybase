@@ -11,10 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='basetruth',
-            name='method',
-            field=models.ForeignKey(default=-1, on_delete=django.db.models.deletion.PROTECT, related_name='base_truths', related_query_name='base_truths', to='processor.method'),
-            preserve_default=False,
-        ),
+        # migrations.AddField(
+        #     model_name='basetruth',
+        #     name='method',
+        #     field=models.ForeignKey(default=-1, on_delete=django.db.models.deletion.PROTECT, related_name='base_truths', related_query_name='base_truths', to='processor.method'),
+        #     preserve_default=False,
+        # ),
     ]
