@@ -112,11 +112,11 @@ def save_body_as_string(message, intent_key, message_key, data_key):
         message=message
     )
 
-    data_str = models.MessageDataValue()
-    data_str.value_string = message.body.strip()
-    data_str.dataset = dataset
-    data_str.data_key = data_key
-    data_str.save()
+    v = models.MessageDataValue()
+    v.value_string = message.body.strip()
+    v.dataset = dataset
+    v.data_key = data_key
+    v.save()
 
 def get_phone_number(raw_number):
     """
