@@ -326,8 +326,16 @@ class NEW_DEMAND__DEMAND__GET_COUNTRY_STATE(MessageHandler):
                 messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
             )
 
-class NEW_DEMAND__NEW_DEMAND__DEMAND__GET_QUANTITY(MessageHandler):
-    pass
+class NEW_DEMAND__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE(MessageHandler):
+    def run(self):
+        quantity = self.save_body_as_float(datas.NEW_DEMAND__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE__QUANTITY__NUMBER)
+        if quantity is None:
+            return self.reply_invalid_number()
+        
+        return self.done_reply(
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE
+        )
 
 class NEW_DEMAND__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE(MessageHandler):
     pass
