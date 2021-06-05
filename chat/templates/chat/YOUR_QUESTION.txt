@@ -2,9 +2,8 @@ Hi {{ name }}, {% if buying %}seller{% else %}buyer{% endif %} asked:
 
 {{ question }}
 
-*Respond:*
+*Reply*:
 1. Answer question
-2. Speak with an Everybase human agent
-3. Connect with {% if buying %}seller{% else %}buyer{% endif %}
-4. Stop discussing with this {% if buying %}seller{% else %}buyer{% endif %}
-5. Learn about our service
+2. Buy {% if buying %}seller{% else %}buyer{% endif %}'s contact
+3. Stop discussing with this {% if buying %}seller{% else %}buyer{% endif %}
+4. Learn about our service
