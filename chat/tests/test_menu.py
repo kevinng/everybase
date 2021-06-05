@@ -15,4 +15,4 @@ class ChooseNewSupplyTest(utils.ChatFlowTest):
         self.receive_reply_assert('1', intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
 
     def test_choose_new_supply_with_text(self):
-        self.receive_reply_assert('buyer', intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
+        self.receive_reply_assert('find buyers', intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)

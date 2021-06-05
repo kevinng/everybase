@@ -34,10 +34,9 @@ class REGISTER__REGISTER__GET_NAME(MessageHandler):
 
 class MENU__MENU(MessageHandler):
     def run(self):
-        self.add_option([('1', 0), ('buyers', 2)], intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT, {})
-        self.add_option([('2', 0), ('sellers', 2)], intents.NEW_DEMAND, messages.DEMAND__GET_PRODUCT, {})
-        self.add_option([('3', 0), ('human', 1)], intents.SPEAK_HUMAN, messages.CONFIRM_HUMAN, {})
-        self.add_option([('4', 0), ('learn', 1)], intents.EXPLAIN_SERVICE, messages.EXPLAIN_SERVICE, {})
+        self.add_option([('1', 0), ('find buyers', 4)], intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT, {})
+        self.add_option([('2', 0), ('find sellers', 4)], intents.NEW_DEMAND, messages.DEMAND__GET_PRODUCT, {})
+        self.add_option([('3', 0)], intents.EXPLAIN_SERVICE, messages.EXPLAIN_SERVICE, {})
         return self.reply_option()
 
 # DISCUSS_W_BUYER intent
