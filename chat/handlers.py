@@ -368,7 +368,12 @@ class NEW_DEMAND__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE(MessageHandler):
         )
 
 class NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE(MessageHandler):
-    pass
+    def run(self):
+        self.save_body_as_string(datas.NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE__PRICE__STRING)
+        return self.done_reply(
+            intents.NEW_DEMAND,
+            messages.DEMAND__THANK_YOU
+        )
 
 class NEW_DEMAND__DEMAND__THANK_YOU(MessageHandler):
     pass
