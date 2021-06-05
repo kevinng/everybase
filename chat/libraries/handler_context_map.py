@@ -83,8 +83,8 @@ handler_context_map = {
     intents.QNA: {
         messages.YOUR_QUESTION: handlers.QNA__YOUR_QUESTION,
         messages.YOUR_ANSWER: handlers.QNA__YOUR_ANSWER,
-        messages.ASK_QUESTION: handlers.QNA__ASK_QUESTION,
-        messages.THANK_FOR_QUESTION: handlers.QNA__THANK_FOR_QUESTION,
+        messages.QUESTION: handlers.QNA__QUESTION,
+        messages.QUESTION_THANK_YOU: handlers.QNA__QUESTION_THANK_YOU,
         messages.ANSWER: handlers.QNA__ANSWER,
         messages.ANSWER_THANK_YOU: handlers.QNA__ANSWER_THANK_YOU,
         messages.STOP_DISCUSSION_REASON: handlers.QNA__STOP_DISCUSSION_REASON,

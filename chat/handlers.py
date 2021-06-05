@@ -418,10 +418,10 @@ class QNA__YOUR_QUESTION(MessageHandler):
 class QNA__YOUR_ANSWER(MessageHandler):
     pass
 
-class QNA__ASK_QUESTION(MessageHandler):
+class QNA__QUESTION(MessageHandler):
     pass
 
-class QNA__THANK_FOR_QUESTION(MessageHandler):
+class QNA__QUESTION_THANK_YOU(MessageHandler):
     pass
 
 class QNA__ANSWER(MessageHandler):

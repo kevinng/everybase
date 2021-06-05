@@ -1,1 +1,6 @@
 Thanks. We'll let you know when the {% if buying %}seller{% else %}buyer{% endif %} replies.
+
+*Reply*:
+1. Ask another question
+2. Buy {% if buying %}seller{% else %}buyer{% endif %}'s contact
+3. Learn about our service
