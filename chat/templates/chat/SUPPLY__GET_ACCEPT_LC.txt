@@ -1,4 +1,5 @@
 Do you accept LC?
 
+*Reply*:
 1. Yes
 2. No
