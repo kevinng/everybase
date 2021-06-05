@@ -1,7 +1,7 @@
-Confirm packing:
+Is this packing correct?
 
 {{ packing_description }}
 
-Correct?
+*Reply*:
 1. Yes
 2. No
