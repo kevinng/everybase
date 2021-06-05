@@ -1,0 +1,6 @@
+Thank you for your answer.
+
+Reply:
+Ask {% if buying %}seller{% else %}buyer{% endif %} a question
+Buy {% if buying %}seller{% else %}buyer{% endif %}'s contact
+Learn about our service

@@ -424,10 +424,10 @@ class QNA__ASK_QUESTION(MessageHandler):
 class QNA__THANK_FOR_QUESTION(MessageHandler):
     pass
 
-class QNA__REPLY(MessageHandler):
+class QNA__ANSWER(MessageHandler):
     pass
 
-class QNA__THANK_FOR_REPLY(MessageHandler):
+class QNA__ANSWER_THANK_YOU(MessageHandler):
     pass
 
 class QNA__STOP_DISCUSSION_REASON(MessageHandler):
