@@ -32,7 +32,7 @@ class REGISTER__REGISTER__GET_NAME(MessageHandler):
 
 # Menu intent
 
-class MENU__MENU(MessageHandler):
+class MenuHandler(MessageHandler):
     def run(self):
         self.add_option([('1', 0), ('find buyers', 4)],
             intents.NEW_SUPPLY,
@@ -53,6 +53,10 @@ class MENU__MENU(MessageHandler):
             datas.MENU__MENU__OPTION__LEARN_MORE
         )
         return self.reply_option()
+
+class MENU__MENU(MenuHandler):
+    def run(self):
+        super().run()
 
 # DISCUSS_W_BUYER intent
 
