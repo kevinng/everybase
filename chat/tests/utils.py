@@ -51,7 +51,6 @@ class ChatFlowTest(TestCase):
         national_number='1234567890'):
         """Set up user and its relevant models
         """
-
         self.phone_number = relmods.PhoneNumber.objects.create(
             country_code=country_code,
             national_number=national_number
@@ -65,7 +64,6 @@ class ChatFlowTest(TestCase):
     def tear_down_user(self):
         """Tear down user and its relevant models
         """
-
         # Get all inbound messages from this user
         in_messages = models.TwilioInboundMessage.objects.filter(
             from_user=self.user
@@ -232,7 +230,6 @@ class ChatFlowTest(TestCase):
             If true, set value for a mock inbound message. If false, set value
             for a mock outbound message
         """
-
         # Create dummy inbound/outbound message
         if inbound:
             msg = models.TwilioInboundMessage.objects.create()
@@ -264,7 +261,6 @@ class ChatFlowTest(TestCase):
             Tuple of product-type, unit-of-measure, matching-keyword model
             references created
         """
-
         # Create test product type
         pt = relmods.ProductType.objects.create(
             name='Product That Exists'
