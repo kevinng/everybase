@@ -4,7 +4,7 @@ from chat.libraries import intents, messages, datas, context_utils
 class NewSupplyConfirmPacking_ReadyOTG_Test(utils.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
-        self.set_up_in_data_value_string(
+        self.set_up_data_value_string(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
@@ -32,7 +32,7 @@ class NewSupplyConfirmPacking_ReadyOTG_Test(utils.ChatFlowTest):
 class NewSupplyConfirmPacking_PreOrder_Test(utils.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
-        self.set_up_in_data_value_string(
+        self.set_up_data_value_string(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,

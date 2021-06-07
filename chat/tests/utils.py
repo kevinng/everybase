@@ -214,9 +214,9 @@ class ChatFlowTest(TestCase):
             value_id
         )
 
-    def set_up_in_data_value_string(self, intent_key, message_key, data_key,
-        value):
-        """Set up mock data value string in context for an inbound message
+    def set_up_data_value_string(self, intent_key, message_key, data_key,
+        value, inbound=True):
+        """Set up mock data value string in context for a message
 
         Parameters
         ----------
@@ -228,10 +228,17 @@ class ChatFlowTest(TestCase):
             Data key for data value
         value : String
             data value string
+        inbound : Boolean
+            If true, set value for a mock inbound message. If false, set value
+            for a mock outbound message
         """
 
         # Create dummy inbound message
-        msg = models.TwilioInboundMessage.objects.create()
+        if inbound:
+            msg = models.TwilioInboundMessage.objects.create()
+        else:
+            msg = models.TwilioOutboundMessage.objects.create()
+        
         self.models_to_tear_down.append(msg)
 
         # User previously entered product type matching keyword
@@ -285,5 +292,5 @@ class ChatFlowTest(TestCase):
         )
         self.models_to_tear_down.append(kw)
 
-        self.set_up_in_data_value_string(intent_key, message_key, data_key, \
+        self.set_up_data_value_string(intent_key, message_key, data_key, \
             'exists')

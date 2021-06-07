@@ -10,7 +10,7 @@ class NewSupplyGetCountryStateTest():
         )
 
     def set_up_unknown_product(self):
-        self.set_up_in_data_value_string(
+        self.set_up_data_value_string(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
