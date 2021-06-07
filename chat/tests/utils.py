@@ -255,21 +255,9 @@ class ChatFlowTest(TestCase):
         )
         self.models_to_tear_down.append(dv)
 
-    def set_up_user_entered_known_product_type(self, intent_key, message_key,
-        data_key):
-        """Set up a product type and corresponding match keywords. Then create
-        dataset/value to mock user's product-type-matching input.
-
-        Parameters
-        ----------
-        intent_key : String
-            Intent key for context where user entered found product type
-        message_key : String
-            Message key for context where user entered found product type 
-        data_key : String
-            Data key for context where user entered found product type
+    def set_up_known_product_type(self):
+        """Set up a known product type.
         """
-
         # Create test product type
         pt = relmods.ProductType.objects.create(
             name='Product That Exists'
@@ -292,5 +280,20 @@ class ChatFlowTest(TestCase):
         )
         self.models_to_tear_down.append(kw)
 
+    def set_up_user_entered_known_product_type(self, intent_key, message_key,
+        data_key):
+        """Set up a product type and corresponding match keywords. Then create
+        dataset/value to mock user's product-type-matching input.
+
+        Parameters
+        ----------
+        intent_key : String
+            Intent key for context where user entered found product type
+        message_key : String
+            Message key for context where user entered found product type 
+        data_key : String
+            Data key for context where user entered found product type
+        """
+        self.set_up_known_product_type()
         self.set_up_data_value_string(intent_key, message_key, data_key, \
             'exists')
