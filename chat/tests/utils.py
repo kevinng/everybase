@@ -257,7 +257,14 @@ class ChatFlowTest(TestCase):
 
     def set_up_known_product_type(self):
         """Set up a known product type.
+
+        Returns
+        -------
+        (product_type, unit_of_measure, keyword) : Tuple
+            Tuple of product-type, unit-of-measure, matching-keyword model
+            references created
         """
+
         # Create test product type
         pt = relmods.ProductType.objects.create(
             name='Product That Exists'
@@ -280,6 +287,8 @@ class ChatFlowTest(TestCase):
         )
         self.models_to_tear_down.append(kw)
 
+        return (pt, uom, kw)
+
     def set_up_user_entered_known_product_type(self, intent_key, message_key,
         data_key):
         """Set up a product type and corresponding match keywords. Then create
@@ -294,6 +303,6 @@ class ChatFlowTest(TestCase):
         data_key : String
             Data key for context where user entered found product type
         """
-        self.set_up_known_product_type()
+        _, _, kw = self.set_up_known_product_type()
         self.set_up_data_value_string(intent_key, message_key, data_key, \
-            'exists')
+            kw.keyword)
