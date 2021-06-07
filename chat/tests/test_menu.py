@@ -1,7 +1,7 @@
 from chat.tests import utils
 from chat.libraries import intents, messages, datas
 
-class ChooseNewSupplyTest(utils.ChatFlowTest):
+class MenuTest(utils.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.MENU, messages.MENU, None)
 
