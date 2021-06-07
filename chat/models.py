@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from common.models import Standard, Choice, short_text
-from chat.libraries import intents, messages, datas
+from chat.libraries import intents, messages, datas, model_utils
 
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
@@ -535,7 +535,7 @@ class MessageDataset(Standard):
     """A set of data extracted in-context for a message. A context is a unique
     intent-message pair for an incoming Twilio message.
 
-    Last updated: 24 May 2021, 10:08 PM
+    Last updated: 7 June 2021, 3:15 PM
     """
     intent_key = models.CharField(
         max_length=200,
@@ -547,24 +547,53 @@ class MessageDataset(Standard):
         choices=messages.choices,
         db_index=True
     )
-    message = models.ForeignKey(
+    in_message = models.ForeignKey(
         'TwilioInboundMessage',
         related_name='message_datasets',
         related_query_name='message_datasets',
         on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        db_index=True
+    )
+    out_message = models.ForeignKey(
+        'TwilioOutboundMessage',
+        related_name='message_datasets',
+        related_query_name='message_datasets',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        db_index=True
+    )
+
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='message_datasets',
+        related_query_name='message_datasets',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
         db_index=True
     )
 
     def __str__(self):
-        return f'({self.intent_key}, {self.message_key}, {self.message} [{self.id}])'
+        return f'({self.intent_key}, {self.message_key}, {self.in_message}, {self.out_message} [{self.id}])'
+
+    def clean(self):
+        super(MessageDataset, self).clean()
+
+        if (self.in_message is None and self.out_message is None) or \
+            (self.in_message is not None and self.out_message is not None):
+            raise ValidationError('Either in_message or out_message must be set')
 
     class Meta:
-        unique_together = ('intent_key', 'message_key', 'message')
+        unique_together = ('intent_key', 'message_key', 'in_message',
+            'out_message')
 
 class MessageDataValue(Standard):
     """Data value extracted from an incoming Twilio message in its context
 
-    Last updated: 27 May 2021, 9:00 PM
+    Last updated: 7 June 2021, 3:15 PM
     """
     dataset = models.ForeignKey(
         'MessageDataset',
@@ -596,6 +625,11 @@ class MessageDataValue(Standard):
         blank=True,
         db_index=True
     )
+    value_id = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     is_valid = models.BooleanField(
         null=True,
@@ -617,6 +651,9 @@ class MessageDataValue(Standard):
             count += 1
 
         if self.value_boolean is None:
+            count += 1
+
+        if self.value_id is None:
             count += 1
 
         if count != 1:
