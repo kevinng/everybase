@@ -376,7 +376,7 @@ class NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE(MessageHandler):
             messages.DEMAND__THANK_YOU
         )
 
-class NEW_DEMAND__DEMAND__THANK_YOU(MessageHandler):
+class NEW_DEMAND__DEMAND__THANK_YOU(MenuHandler):
     pass
 
 
