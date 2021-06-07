@@ -255,10 +255,10 @@ class ChatFlowTest(TestCase):
         )
         self.models_to_tear_down.append(dv)
 
-    def set_up_user_entered_found_product(self, intent_key, message_key,
+    def set_up_user_entered_known_product(self, intent_key, message_key,
         data_key):
         """Set up a product type and corresponding match keywords. Then create
-        dataset/value to mock user's product-type matching input.
+        dataset/value to mock user's product-type-matching input.
 
         Parameters
         ----------
