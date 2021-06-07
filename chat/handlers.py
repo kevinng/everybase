@@ -304,10 +304,8 @@ class NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC(MessageHandler):
         )
         return self.reply_option()
 
-class NEW_SUPPLY__SUPPLY__THANK_YOU(MessageHandler):
-    def run(self):
-        user = relmods.User.objects.get(pk=self.message.from_user.id)
-        return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})
+class NEW_SUPPLY__SUPPLY__THANK_YOU(MenuHandler):
+    pass
 
 # NEW_DEMAND intent
 
