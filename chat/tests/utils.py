@@ -214,8 +214,8 @@ class ChatFlowTest(TestCase):
             value_id
         )
 
-    def set_up_data_value_string(self, intent_key, message_key, data_key,
-        value, inbound=True):
+    def set_up_data_value(self, intent_key, message_key, data_key,
+        value_string=None, inbound=True):
         """Set up mock data value string in context for a message
 
         Parameters
@@ -226,7 +226,7 @@ class ChatFlowTest(TestCase):
             Message key for data value's context
         data_key : String
             Data key for data value
-        value : String
+        value_string : String
             data value string
         inbound : Boolean
             If true, set value for a mock inbound message. If false, set value
@@ -251,7 +251,7 @@ class ChatFlowTest(TestCase):
         dv = models.MessageDataValue.objects.create(
             dataset=ds,
             data_key=data_key,
-            value_string=value
+            value_string=value_string
         )
         self.models_to_tear_down.append(dv)
 
@@ -304,5 +304,4 @@ class ChatFlowTest(TestCase):
             Data key for context where user entered found product type
         """
         _, _, kw = self.set_up_known_product_type()
-        self.set_up_data_value_string(intent_key, message_key, data_key, \
-            kw.keyword)
+        self.set_up_data_value(intent_key, message_key, data_key, kw.keyword)
