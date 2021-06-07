@@ -30,3 +30,23 @@ class ChooseNewSupplyTest(utils.ChatFlowTest):
             datas.MENU__MENU__OPTION__CHOICE,
             datas.MENU__MENU__OPTION__FIND_BUYER
         )
+
+    def test_choose_new_demand_with_number(self):
+        self.receive_reply_assert('2',
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_PRODUCT
+        )
+        self.assert_value(
+            datas.MENU__MENU__OPTION__CHOICE,
+            datas.MENU__MENU__OPTION__FIND_SELLER
+        )
+
+    def test_choose_new_demand_with_text(self):
+        self.receive_reply_assert('find sellers',
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_PRODUCT
+        )
+        self.assert_value(
+            datas.MENU__MENU__OPTION__CHOICE,
+            datas.MENU__MENU__OPTION__FIND_SELLER
+        )
