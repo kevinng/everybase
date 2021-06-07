@@ -4,12 +4,28 @@ from chat.libraries import intents, messages, datas
 class DemandConfirmInterestTest(utils.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.DISCUSS_W_SELLER, messages.DISCUSS__CONFIRM_INTEREST, None)
+        pt, _, _ = self.set_up_known_product_type()
+        self.set_up_data_value(
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            data_key=datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__PRODUCT_TYPE__ID,
+            value_id=pt.id
+        )
+        # self.set_up_data_value(
+        #     intents.DISCUSS_W_SELLER,
+        #     messages.DISCUSS__CONFIRM_INTEREST,
+        #     data_key=datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__USER_1__ID,
+        #     value_id=self.user.id
+        # )
+        # self.set_up_data_value(
+        #     intents.DISCUSS_W_SELLER,
+        #     messages.DISCUSS__CONFIRM_INTEREST,
+        #     data_key=datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__USER_2__ID,
+        #     value_id=
+        # )
 
     def test_choose_non_choice_with_number(self):
         self.receive_reply_assert('10', intents.DISCUSS_W_SELLER, messages.DISCUSS__CONFIRM_INTEREST)
-        pt, _, _ = self.set_up_known_product_type()
-
-        pt.id
 
     def test_choose_non_choice_with_number(self):
         self.receive_reply_assert('hello', intents.DISCUSS_W_SELLER, messages.DISCUSS__CONFIRM_INTEREST)

@@ -24,7 +24,23 @@ class ChatFlowTest(TestCase):
     """Base class with helper functions for chat-flow tests.
     """
 
-    def setUp(self, intent_key=None, message_key=None, name='Test User'):
+    def setUp(self, intent_key=None, message_key=None, name='Test User',
+        country_code='12345', national_number='1234567890'):
+        """TestCase setUp method with additonal parameters for overriding
+
+        Parameters
+        ----------
+        intent_key : String
+            Intent key of this context
+        message_key : String
+            Message key of this context
+        name : String
+            Name of the mock user
+        country_code : String
+            Country code of the mock user's phone number
+        national_number : String
+            National number of the mock user's phone number
+        """
         super().setUp()
 
         self.user = None
@@ -33,7 +49,8 @@ class ChatFlowTest(TestCase):
         self.intent_key = intent_key
         self.message_key = message_key
         
-        self.setup_user(name)
+        self.user, self.phone_number = self.set_up_user_phone_number(
+            name, country_code, national_number)
 
         if intent_key is not None and message_key is not None:
             context_utils.start_context(self.user, intent_key, message_key)
@@ -47,19 +64,30 @@ class ChatFlowTest(TestCase):
             for m in reversed(self.models_to_tear_down):
                 m.delete()
 
-    def setup_user(self, name='Test User', country_code='12345',
+    def set_up_user_phone_number(self, name='Test User', country_code='12345',
         national_number='1234567890'):
-        """Set up user and its relevant models
+        """Set up a user and its relevant models
+
+        Parameters
+        ----------
+        name : String
+            Name of the user
+        country_code : String
+            Country code of the user's phone number
+        national_number : String
+            National number of the user's phone number
         """
-        self.phone_number = relmods.PhoneNumber.objects.create(
+        phone_number = relmods.PhoneNumber.objects.create(
             country_code=country_code,
             national_number=national_number
         )
 
-        self.user = relmods.User.objects.create(
-            phone_number=self.phone_number,
+        user = relmods.User.objects.create(
+            phone_number=phone_number,
             name=name
         )
+
+        return (user, phone_number)
 
     def tear_down_user(self):
         """Tear down user and its relevant models
