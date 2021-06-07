@@ -377,7 +377,7 @@ class ProductType(Choice):
 class Connection(Choice):
     """Connection.
 
-    Last updated: 12 May 2021, 2:35 PM
+    Last updated: 7 June 2021, 9:36 PM
     """
     user_1 = models.ForeignKey(
         'User',
