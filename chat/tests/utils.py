@@ -33,7 +33,7 @@ class ChatFlowTest(TestCase):
         self.intent_key = intent_key
         self.message_key = message_key
         
-        self.setup_user(name)
+        self.user = self.set_up_user(name)
 
         if intent_key is not None and message_key is not None:
             context_utils.start_context(self.user, intent_key, message_key)
@@ -47,7 +47,7 @@ class ChatFlowTest(TestCase):
             for m in reversed(self.models_to_tear_down):
                 m.delete()
 
-    def setup_user(self, name='Test User', country_code='12345',
+    def set_up_user(self, name='Test User', country_code='12345',
         national_number='1234567890'):
         """Set up user and its relevant models
         """
@@ -56,7 +56,7 @@ class ChatFlowTest(TestCase):
             national_number=national_number
         )
 
-        self.user = relmods.User.objects.create(
+        return relmods.User.objects.create(
             phone_number=self.phone_number,
             name=name
         )
