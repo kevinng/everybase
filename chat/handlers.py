@@ -34,13 +34,13 @@ class REGISTER__REGISTER__GET_NAME(MessageHandler):
 
 class MenuHandler(MessageHandler):
     def run(self):
-        self.add_option([('1', 0), ('find buyers', 4)],
+        self.add_option([('1', 0), ('find buyers', 3)],
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT, {},
             datas.MENU__MENU__OPTION__CHOICE,
             datas.MENU__MENU__OPTION__FIND_BUYER
         )
-        self.add_option([('2', 0), ('find sellers', 4)],
+        self.add_option([('2', 0), ('find sellers', 3)],
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT, {},
             datas.MENU__MENU__OPTION__CHOICE,
