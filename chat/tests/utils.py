@@ -233,7 +233,7 @@ class ChatFlowTest(TestCase):
             for a mock outbound message
         """
 
-        # Create dummy inbound message
+        # Create dummy inbound/outbound message
         if inbound:
             msg = models.TwilioInboundMessage.objects.create()
         else:

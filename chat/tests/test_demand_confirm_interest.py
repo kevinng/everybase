@@ -7,6 +7,8 @@ class DemandConfirmInterestTest(utils.ChatFlowTest):
 
     def test_choose_non_choice_with_number(self):
         self.receive_reply_assert('10', intents.DISCUSS_W_SELLER, messages.DISCUSS__CONFIRM_INTEREST)
+        
+
         self.set_up_data_value_string(
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST,
