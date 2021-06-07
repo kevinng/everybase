@@ -66,20 +66,20 @@ class ChatFlowTest(TestCase):
         """Tear down user and its relevant models
         """
 
-        # Get all messages from this user
-        messages = models.TwilioInboundMessage.objects.filter(
+        # Get all inbound messages from this user
+        in_messages = models.TwilioInboundMessage.objects.filter(
             from_user=self.user
         )
 
-        # Delete dataset and values
-        for m in messages:
-            datasets = models.MessageDataset.objects.filter(message=m)
-            for d in datasets:
+        # Delete inbound dataset and values
+        for m in in_messages:
+            in_datasets = models.MessageDataset.objects.filter(in_message=m)
+            for d in in_datasets:
                 models.MessageDataValue.objects.filter(dataset=d).delete()
                 d.delete()
 
-        # Delete messages
-        messages.delete()
+        # Delete inbound messages
+        in_messages.delete()
 
         # Delete user contexts
         models.UserContext.objects.filter(
@@ -144,7 +144,8 @@ class ChatFlowTest(TestCase):
         self.assert_context(intent_key, message_key)
 
     def assert_latest_value(self, intent_key, message_key, data_key,
-        value_string=None, value_float=None, value_boolean=None):
+        value_string=None, value_float=None, value_boolean=None,
+        value_id=None):
         """Assert latest data value for - intent_key, message_key, data_key -
         against input
 
@@ -181,11 +182,14 @@ class ChatFlowTest(TestCase):
         elif value_boolean is not None:
             self.assertEqual(data_value.value_boolean, value_boolean)
             return
+        elif value_id is not None:
+            self.assertEqual(data_value.value_id, value_id)
+            return
 
         self.fail('Exactly 1 value must be provided')
 
     def assert_value(self, data_key, value_string=None, value_float=None,
-        value_boolean=None):
+        value_boolean=None, value_id=None):
         """Convenience method to call assert_latest_value with this' context
         and the specified data_key.
 
@@ -206,12 +210,13 @@ class ChatFlowTest(TestCase):
             data_key,
             value_string,
             value_float,
-            value_boolean
+            value_boolean,
+            value_id
         )
 
-    def set_up_data_value_string(self, intent_key, message_key, data_key,
+    def set_up_in_data_value_string(self, intent_key, message_key, data_key,
         value):
-        """Set up mock data value string in context.
+        """Set up mock data value string in context for an inbound message
 
         Parameters
         ----------
@@ -233,7 +238,7 @@ class ChatFlowTest(TestCase):
         ds = models.MessageDataset.objects.create(
             intent_key=intent_key,
             message_key=message_key,
-            message=msg
+            in_message=msg
         )
         self.models_to_tear_down.append(ds)
         dv = models.MessageDataValue.objects.create(
@@ -280,5 +285,5 @@ class ChatFlowTest(TestCase):
         )
         self.models_to_tear_down.append(kw)
 
-        self.set_up_data_value_string(intent_key, message_key, data_key, \
+        self.set_up_in_data_value_string(intent_key, message_key, data_key, \
             'exists')

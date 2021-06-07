@@ -109,7 +109,7 @@ def save_body_as_string(message, intent_key, message_key, data_key):
     dataset, _ = models.MessageDataset.objects.get_or_create(
         intent_key=intent_key,
         message_key=message_key,
-        message=message
+        in_message=message
     )
 
     v = models.MessageDataValue()
@@ -141,7 +141,7 @@ def save_body_as_float(message, intent_key, message_key, data_key):
     dataset, _ = models.MessageDataset.objects.get_or_create(
         intent_key=intent_key,
         message_key=message_key,
-        message=message
+        in_message=message
     )
 
     v = models.MessageDataValue()

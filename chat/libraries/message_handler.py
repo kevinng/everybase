@@ -125,7 +125,7 @@ class MessageHandler:
                             # Note: store current context not incoming context
                             intent_key=self.intent_key,
                             message_key=self.message_key,
-                            message=self.message
+                            in_message=self.message
                         )
                         models.MessageDataValue.objects.create(
                             dataset=dataset,
@@ -226,9 +226,9 @@ class MessageHandler:
         Do not override.
         """
         self.dataset, _ = models.MessageDataset.objects.get_or_create(
-            message=self.message,
-            intent_key=self.intent_key,
-            message_key=self.message_key
+            message_key=self.message_key,
+            in_message=self.message,
+            intent_key=self.intent_key
         )
 
     def save_string(self, value, is_valid):

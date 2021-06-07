@@ -400,8 +400,42 @@ class DISCUSS_W_SELLER__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE(MessageHandler):
 class DISCUSS_W_SELLER__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE(MessageHandler):
     pass
 
+"""
+If I add the option to the message handler
+When the user replies the message handler will pick the right one
+
+But the message handler is an app running on the server side
+
+If another user comes in, with the same option will it clash?
+
+"""
+
 class DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST(MessageHandler):
-    pass
+    def run(self):
+        pass
+
+        # How do I pass the product type in here?
+        # 
+        # self.add_option([('1', 0), ('yes', 0)],
+        #     intents.DISCUSS_W_SELLER,
+        #     messages.STILL_INTERESTED__CONFIRM,
+        #     {},
+        #     datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__CHOICE,
+        #     datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__YES
+        # )
+
+        # Direction depends on whether the 2 users are connected
+        # How do I know which 2 users are in question?
+        # I should pass reference to 2 users in data values
+
+        # self.add_option([('2', 0), ('no', 0)],
+        #     intents.DISCUSS_W_SELLER,
+        #     # FIND OUT which direction to go, connected or not
+        #     messages., {},
+        #     datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__CHOICE,
+        #     datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__NO
+        # )
+        # return self.reply_option()
 
 class DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM(MessageHandler):
     pass
