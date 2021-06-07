@@ -213,7 +213,8 @@ class ChatFlowTest(TestCase):
         )
 
     def set_up_data_value(self, intent_key, message_key, data_key,
-        value_string=None, inbound=True):
+        value_string=None, value_float=None, value_boolean=None, value_id=None,
+        inbound=True):
         """Set up mock data value string in context for a message
 
         Parameters
@@ -225,7 +226,13 @@ class ChatFlowTest(TestCase):
         data_key : String
             Data key for data value
         value_string : String
-            data value string
+            Data value string
+        value_float : Float
+            Data value float
+        value_boolean : Boolean
+            Data value boolean
+        value_id : Integer
+            Data value integer
         inbound : Boolean
             If true, set value for a mock inbound message. If false, set value
             for a mock outbound message
@@ -248,7 +255,10 @@ class ChatFlowTest(TestCase):
         dv = models.MessageDataValue.objects.create(
             dataset=ds,
             data_key=data_key,
-            value_string=value_string
+            value_string=value_string,
+            value_float=value_float,
+            value_boolean=value_boolean,
+            value_id=value_id
         )
         self.models_to_tear_down.append(dv)
 
