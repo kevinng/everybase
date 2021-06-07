@@ -568,8 +568,8 @@ class MessageDataValue(Standard):
     """
     dataset = models.ForeignKey(
         'MessageDataset',
-        related_name='strings',
-        related_query_name='strings',
+        related_name='values',
+        related_query_name='values',
         on_delete=models.PROTECT,
         db_index=True
     )
