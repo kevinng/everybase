@@ -394,6 +394,13 @@ class Connection(Choice):
         db_index=True
     )
 
+    def clean(self):
+        super(Connection, self).clean()
+
+        # user_1's ID must be smaller than user_2's
+        if self.user_1.id > self.user_2.id:
+            raise ValidationError('user_1.id must be smaller than user_2.id')
+
 class TimeFrame(Standard):
     """Time frame.
 
