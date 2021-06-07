@@ -3,7 +3,7 @@ from chat.libraries import intents, messages, datas, context_utils
 
 class NewSupplyGetCountryStateTest():
     def set_up_known_product(self):
-        self.set_up_user_entered_known_product(
+        self.set_up_user_entered_known_product_type(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
