@@ -167,10 +167,10 @@ class TwilioInboundMessageLogEntryAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['message']
 
-_message_dataset = ['intent_key', 'message_key', 'message']
+_message_dataset = ['intent_key', 'message_key', 'in_message', 'out_message']
 @admin.register(mod.MessageDataset)
 class MessageDatasetAdmin(comadm.StandardAdmin):
-        # List page settings
+    # List page settings
     list_display = comadm.standard_list_display + _message_dataset
     list_editable = comadm.standard_list_editable + _message_dataset
     search_fields = comadm.standard_search_fields + _message_dataset
@@ -179,10 +179,10 @@ class MessageDatasetAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _message_dataset})
     ]
-    autocomplete_fields = ['message']
+    autocomplete_fields = ['in_message', 'out_message']
 
 _message_data_value = ['dataset', 'value_string', 'value_float',
-    'value_boolean', 'is_valid', 'data_key']
+    'value_boolean', 'value_id', 'is_valid', 'data_key']
 @admin.register(mod.MessageDataValue)
 class MessageDataValueAdmin(comadm.StandardAdmin):
     # List page settings

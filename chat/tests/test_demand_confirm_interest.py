@@ -21,7 +21,7 @@ class DemandConfirmInterestTest(utils.ChatFlowTest):
             datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__YES
         )
 
-    def test_choose_new_supply_with_text(self):
+    def test_choose_yes_with_text(self):
         self.receive_reply_assert('yes',
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST
@@ -31,7 +31,7 @@ class DemandConfirmInterestTest(utils.ChatFlowTest):
             datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__YES
         )
 
-    def test_choose_new_demand_with_number(self):
+    def test_choose_no_with_number(self):
         self.receive_reply_assert('2',
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST
@@ -41,7 +41,7 @@ class DemandConfirmInterestTest(utils.ChatFlowTest):
             datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__NO
         )
 
-    def test_choose_new_demand_with_text(self):
+    def test_choose_no_with_text(self):
         self.receive_reply_assert('no',
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST
