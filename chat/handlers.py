@@ -55,8 +55,7 @@ class MenuHandler(MessageHandler):
         return self.reply_option()
 
 class MENU__MENU(MenuHandler):
-    def run(self):
-        super().run()
+    pass
 
 # DISCUSS_W_BUYER intent
 
