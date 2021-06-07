@@ -1,7 +1,7 @@
 from chat.tests import utils
 from chat.libraries import intents, messages, datas
 
-class SupplyThankYouTest(utils.ChatFlowTest):
+class DemandThankYouTest(utils.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.NEW_DEMAND, messages.DEMAND__THANK_YOU)
     
