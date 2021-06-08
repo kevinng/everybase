@@ -143,62 +143,13 @@ class MessageHandler:
         message_key : string
             Message key as defined in messages.py for next context
         """
+        # Get current context
+        now_intent_key, now_message_key = \
+            context_utils.get_context(self.message.from_user)
+
         # Done current context
-        now_intent_key, now_message_key = \
-            context_utils.get_context(self.message.from_user)
-
-        if now_message_key != messages.NO_MESSAGE and \
-            now_intent_key != intents.NO_INTENT:
-            # Only update current context if they're not 'no intent' and
-            # 'no message'
-            context_utils.done_context(self.message.from_user, now_intent_key,
-                now_message_key)
-
-        # Start next context
-        context_utils.start_context(self.message.from_user, intent_key,
-            message_key)
-        
-    def pause_to_context(self, intent_key, message_key):
-        """Switch from the current context to the specified context. Set current
-        context's paused time to now.
-
-        Parameters
-        ----------
-        intent_key : string
-            Intent key as defined in intents.py
-        message_key : string
-            Message key as defined in messages.py
-        """
-        # Pause current context
-        now_intent_key, now_message_key = \
-            context_utils.get_context(self.message.from_user)
-        if now_message_key != messages.NO_MESSAGE and \
-            now_intent_key != intents.NO_INTENT:
-            context_utils.pause_context(self.message.from_user, now_intent_key,
-                now_message_key)
-
-        # Start next context
-        context_utils.start_context(self.message.from_user, intent_key,
-            message_key)
-
-    def expire_to_context(self, intent_key, message_key):
-        """Switch from the current context to the specified context. Set current
-        context's expired time to now.
-
-        Parameters
-        ----------
-        intent_key : string
-            Intent key as defined in intents.py
-        message_key : string
-            Message key as defined in messages.py
-        """
-        # Expire current context
-        now_intent_key, now_message_key = \
-            context_utils.get_context(self.message.from_user)
-        if now_message_key != messages.NO_MESSAGE and \
-            now_intent_key != intents.NO_INTENT:
-            context_utils.expire_context(self.message.from_user, now_intent_key,
-                now_message_key)
+        context_utils.done_context(self.message.from_user, now_intent_key,
+            now_message_key)
 
         # Start next context
         context_utils.start_context(self.message.from_user, intent_key,
