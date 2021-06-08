@@ -39,13 +39,10 @@ class MessageHandler:
         self.message_key = message_key
         self.options = []
 
-        self.dataset = self.get_dataset()
+        self.dataset = self.get_or_create_dataset()
 
     def run(self):
-        """Extract/validate/store data, return reply message body, and set new
-        context.
-
-        Override.
+        """Message handling logic - to be overridden
         """
         return None
 
@@ -157,8 +154,8 @@ class MessageHandler:
         context_utils.start_context(self.message.from_user, intent_key,
             message_key)
 
-    def get_dataset(self):
-        """Get dataset for this message.
+    def get_or_create_dataset(self):
+        """Get/create dataset for this message
         """
         dataset, _ = models.MessageDataset.objects.get_or_create(
             intent_key=self.intent_key,
