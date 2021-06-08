@@ -482,7 +482,11 @@ If another user comes in, with the same option will it clash?
 
 class DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST(MessageHandler):
     def run(self):
-        pass
+        # Read product type
+        self.get_latest_value(
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_INTEREST
+        )
 
         # How do I pass the product type in here?
         # 
