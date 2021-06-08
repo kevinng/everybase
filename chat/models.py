@@ -594,7 +594,7 @@ class MessageDataset(Standard):
 
     class Meta:
         unique_together = ('intent_key', 'message_key', 'in_message',
-            'out_message')
+            'out_message', 'user')
 
 class MessageDataValue(Standard):
     """Data value extracted from an incoming Twilio message in its context
