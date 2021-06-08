@@ -78,19 +78,23 @@ class DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING(MessageHandler):
 class DISCUSS_W_BUYER__SUPPLY__GET_PACKING(MessageHandler):
     pass
 
-class DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING(MessageHandler):
+class DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING(
+    MessageHandler):
     pass
 
-class DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING(MessageHandler):
+class DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING(
+    MessageHandler):
     pass
 
 class DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_PRE_ORDER(MessageHandler):
     pass
 
-class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING(MessageHandler):
+class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING(
+    MessageHandler):
     pass
 
-class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING(MessageHandler):
+class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING(
+    MessageHandler):
     pass
 
 class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_PRE_ORDER(MessageHandler):
@@ -127,7 +131,9 @@ class DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_PRODUCT(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING)
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+            NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING)
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY
@@ -153,63 +159,77 @@ class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
 
 class GetCountryStateBaseHandler(MessageHandler):
     def _run(self):
-        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING)
-        uom = model_utils.get_uom_with_product_type_keys(
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+            NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING)
+
+        # Get TOP unit of measure for product type matching the latest data
+        # value string of this user with the given keys. UOM is None if user's
+        # input does not match any product type.
+        uom = self.get_uom_with_product_type_keys(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
         )
 
         if uom is not None:
+            # UOM found, confirm packing details
             return self.done_reply(
                 intents.NEW_SUPPLY,
                 messages.SUPPLY__CONFIRM_PACKING,
                 params={ 'packing_description': uom.description }
             )
         else:
+            # UOM not found, request packing details
             return self.done_reply(
                 intents.NEW_SUPPLY,
                 messages.SUPPLY__GET_PACKING
             )
 
-class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(GetCountryStateBaseHandler):
+class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
+    GetCountryStateBaseHandler):
     def run(self):
+        # Use base handler's logic
         return self._run()
 
-class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(GetCountryStateBaseHandler):
+class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(
+    GetCountryStateBaseHandler):
     def run(self):
+        # Use base handler's logic
         return self._run()
 
 class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
     def run(self):
-        availability = model_utils.get_latest_value(
+        # Get latest availability choice entered by user in context
+        availability = self.get_latest_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE
         ).value_string
 
-        # The first option directs to a different message depending on what the
-        # user enter for availability earlier on
         yes_intent = intents.NEW_SUPPLY
         if availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG:
+            # Goods are ready/OTG, get quantity of known packing
             yes_message = messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
         elif availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER:
+            # Goods are pre-order, get quantity and timeframe
             yes_message = messages.SUPPLY__GET_QUANTITY_PRE_ORDER
 
         self.add_option([('1', 0), ('yes', 0)], yes_intent, yes_message, {})
-        self.add_option([('2', 0), ('no', 0)], intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING, {})
+        self.add_option([('2', 0), ('no', 0)], intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PACKING, {})
         return self.reply_option()
 
 class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING)
+        # Save user input without validation
+        self.save_body_as_string(
+            datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING)
         
-        # Direct to the right message depending on what the user entered for
-        # availability earlier on
-
-        availability = model_utils.get_latest_value(
+        # Get latest availability choice entered by user in context
+        availability = self.get_latest_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE
@@ -217,12 +237,14 @@ class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
 
         if availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG:
+            # Goods are ready/OTG, get quantity of unknown packing
             return self.done_reply(
                 intents.NEW_SUPPLY,
                 messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
             )
         elif availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER:
+            # Goods are pre-order, get quantity and timeframe
             return self.done_reply(
                 intents.NEW_SUPPLY,
                 messages.SUPPLY__GET_QUANTITY_PRE_ORDER
@@ -230,7 +252,10 @@ class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING__QUANTITY__STRING)
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+    NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING__QUANTITY__STRING)
+
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING
@@ -238,7 +263,10 @@ class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING__QUANTITY__STRING)
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING__QUANTITY__STRING)
+
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING
@@ -246,7 +274,10 @@ class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING(MessageHandler)
 
 class NEW_SUPPLY__SUPPLY__GET_QUANTITY_PRE_ORDER(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_QUANTITY_PREORDER__QUANTITY__STRING)
+        # Save user input without validation
+        self.save_body_as_string(
+            datas.NEW_SUPPLY__SUPPLY__GET_QUANTITY_PREORDER__QUANTITY__STRING)
+
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRICE_PRE_ORDER
@@ -254,7 +285,10 @@ class NEW_SUPPLY__SUPPLY__GET_QUANTITY_PRE_ORDER(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING__PRICE__STRING)
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+        NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING__PRICE__STRING)
+
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__THANK_YOU
@@ -262,7 +296,10 @@ class NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING__PRICE__STRING)
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+        NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING__PRICE__STRING)
+
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__THANK_YOU
@@ -270,7 +307,10 @@ class NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_PRICE_PRE_ORDER(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_SUPPLY__SUPPLY__GET_PRICE_PREORDER__PRICE__STRING)
+        # Save user input without validation
+        self.save_body_as_string(
+            datas.NEW_SUPPLY__SUPPLY__GET_PRICE_PREORDER__PRICE__STRING)
+
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_DEPOSIT
@@ -278,8 +318,13 @@ class NEW_SUPPLY__SUPPLY__GET_PRICE_PRE_ORDER(MessageHandler):
 
 class NEW_SUPPLY__SUPPLY__GET_DEPOSIT(MessageHandler):
     def run(self):
-        deposit = self.save_body_as_float(datas.NEW_SUPPLY__SUPPLY__GET_DEPOSIT__DEPOSIT__NUMBER)
+        # Save user input, deposit is None if value cannot be converted from
+        # string to float
+        deposit = self.save_body_as_float(
+            datas.NEW_SUPPLY__SUPPLY__GET_DEPOSIT__DEPOSIT__NUMBER)
+
         if deposit is None:
+            # User input is invalid
             return self.reply_invalid_number()
         
         return self.done_reply(
@@ -310,7 +355,10 @@ class NEW_SUPPLY__SUPPLY__THANK_YOU(MenuHandler):
 
 class NEW_DEMAND__DEMAND__GET_PRODUCT(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING)
+        # Save user input without validation
+        self.save_body_as_string(
+            datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING)
+
         return self.done_reply(
             intents.NEW_DEMAND,
             messages.DEMAND__GET_COUNTRY_STATE
@@ -318,15 +366,21 @@ class NEW_DEMAND__DEMAND__GET_PRODUCT(MessageHandler):
 
 class NEW_DEMAND__DEMAND__GET_COUNTRY_STATE(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING)
+        # Save user input without validation
+        self.save_body_as_string(
+            datas.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING)
 
-        uom = model_utils.get_uom_with_product_type_keys(
+        # Get TOP unit of measure for product type matching the latest data
+        # value string of this user with the given keys. UOM is None if user's
+        # input does not match any product type.
+        uom = self.get_uom_with_product_type_keys(
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT,
             datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING
         )
 
         if uom is not None:
+            # UOM found, confirm packing details
             return self.done_reply(
                 intents.NEW_DEMAND,
                 messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE,
@@ -336,6 +390,7 @@ class NEW_DEMAND__DEMAND__GET_COUNTRY_STATE(MessageHandler):
                 }
             )
         else:
+            # UOM not found, request packing details
             return self.done_reply(
                 intents.NEW_DEMAND,
                 messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
@@ -343,8 +398,13 @@ class NEW_DEMAND__DEMAND__GET_COUNTRY_STATE(MessageHandler):
 
 class NEW_DEMAND__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE(MessageHandler):
     def run(self):
-        quantity = self.save_body_as_float(datas.NEW_DEMAND__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE__QUANTITY__NUMBER)
+        # Save user input, quantity is None if value cannot be converted from
+        # string to float
+        quantity = self.save_body_as_float(datas.\
+        NEW_DEMAND__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE__QUANTITY__NUMBER)
+
         if quantity is None:
+            # User input is invalid
             return self.reply_invalid_number()
         
         return self.done_reply(
@@ -354,7 +414,10 @@ class NEW_DEMAND__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE(MessageHandler):
 
 class NEW_DEMAND__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_DEMAND__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE__QUANTITY__STRING)
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+        NEW_DEMAND__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE__QUANTITY__STRING)
+
         return self.done_reply(
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE
@@ -362,7 +425,10 @@ class NEW_DEMAND__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE(MessageHandler):
 
 class NEW_DEMAND__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_DEMAND__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE__PRICE__STRING)
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+            NEW_DEMAND__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE__PRICE__STRING)
+
         return self.done_reply(
             intents.NEW_DEMAND,
             messages.DEMAND__THANK_YOU
@@ -370,7 +436,10 @@ class NEW_DEMAND__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE(MessageHandler):
 
 class NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE__PRICE__STRING)
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+            NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE__PRICE__STRING)
+
         return self.done_reply(
             intents.NEW_DEMAND,
             messages.DEMAND__THANK_YOU
@@ -391,7 +460,8 @@ class DISCUSS_W_SELLER__DEMAND__GET_COUNTRY_STATE(MessageHandler):
 class DISCUSS_W_SELLER__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE(MessageHandler):
     pass
 
-class DISCUSS_W_SELLER__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE(MessageHandler):
+class DISCUSS_W_SELLER__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE(
+    MessageHandler):
     pass
 
 class DISCUSS_W_SELLER__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE(MessageHandler):
@@ -496,7 +566,7 @@ class NO_INTENT__NO_MESSAGE(MessageHandler):
         user = relmods.User.objects.get(pk=self.message.from_user.id)
 
         if user.name is None:
-            # User's name not set - register
+            # User's name not set - register him/her
             return self.done_reply(
                 intents.REGISTER, messages.REGISTER__GET_NAME)
 

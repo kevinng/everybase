@@ -20,7 +20,7 @@ class NewSupplyGetPacking_ReadyOTG_Test(utils.ChatFlowTest):
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING,
-            input
+            value_string=input
         )
 
 class NewSupplyGetPacking_PreOrder_Test(utils.ChatFlowTest):
@@ -42,5 +42,5 @@ class NewSupplyGetPacking_PreOrder_Test(utils.ChatFlowTest):
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING,
-            input
+            value_string=input
         )

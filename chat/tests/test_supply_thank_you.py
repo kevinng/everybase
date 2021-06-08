@@ -25,7 +25,7 @@ class SupplyThankYouTest(utils.ChatFlowTest):
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,
-            datas.MENU__MENU__OPTION__FIND_BUYER
+            value_string=datas.MENU__MENU__OPTION__FIND_BUYER
         )
 
     def test_choose_new_supply_with_number(self):
@@ -42,7 +42,7 @@ class SupplyThankYouTest(utils.ChatFlowTest):
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,
-            datas.MENU__MENU__OPTION__FIND_SELLER
+            value_string=datas.MENU__MENU__OPTION__FIND_SELLER
         )
 
     def test_choose_new_demand_with_number(self):

@@ -198,7 +198,8 @@ class ChatFlowTest(TestCase):
         data_value = model_utils.get_latest_value(
             intent_key,
             message_key,
-            data_key
+            data_key,
+            self.user
         )
 
         if data_value is None:
@@ -239,10 +240,10 @@ class ChatFlowTest(TestCase):
             self.intent_key,
             self.message_key,
             data_key,
-            value_string,
-            value_float,
-            value_boolean,
-            value_id
+            value_string=value_string,
+            value_float=value_float,
+            value_boolean=value_boolean,
+            value_id=value_id
         )
 
     def set_up_data_value(self, intent_key, message_key, data_key,
@@ -282,7 +283,8 @@ class ChatFlowTest(TestCase):
         ds = models.MessageDataset.objects.create(
             intent_key=intent_key,
             message_key=message_key,
-            in_message=msg
+            in_message=msg,
+            user=self.user
         )
         self.models_to_tear_down.append(ds)
         dv = models.MessageDataValue.objects.create(

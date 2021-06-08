@@ -18,7 +18,7 @@ class NewDemandGetPrice_KnownProductType_Test(utils.ChatFlowTest):
         self.assert_value(
             datas.\
                 NEW_DEMAND__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE__PRICE__STRING,
-            input
+            value_string=input
         )
 
 class NewDemandGetPrice_UnknownProductType_Test(utils.ChatFlowTest):
@@ -38,5 +38,5 @@ class NewDemandGetPrice_UnknownProductType_Test(utils.ChatFlowTest):
         self.assert_value(
             datas.\
             NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE__PRICE__STRING,
-            input
+            value_string=input
         )

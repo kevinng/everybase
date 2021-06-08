@@ -35,7 +35,7 @@ class NewDemandGetCountryState_KnownProduct_TestCase(
         )
         self.assert_value(
             datas.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            input
+            value_string=input
         )
 
 class NewDemandGetCountryState_UnknownProduct_TestCase(
@@ -56,5 +56,5 @@ class NewDemandGetCountryState_UnknownProduct_TestCase(
         )
         self.assert_value(
             datas.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            input
+            value_string=input
         )

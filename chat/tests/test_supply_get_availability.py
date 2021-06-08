@@ -26,6 +26,7 @@ class NewSupplyGetAvailabilityTest(utils.ChatFlowTest):
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
+            value_string=\
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
         )
 
@@ -46,6 +47,7 @@ class NewSupplyGetAvailabilityTest(utils.ChatFlowTest):
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
+            value_string=\
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
         )
 

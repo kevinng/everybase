@@ -35,7 +35,7 @@ class NewSupplyGetCountryStateReadyOTG_KnownProduct_Test(
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            input
+            value_string=input
         )
 
 class NewSupplyGetCountryStateReadyOTG_UnknownProduct_Test(
@@ -56,7 +56,7 @@ class NewSupplyGetCountryStateReadyOTG_UnknownProduct_Test(
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            input
+            value_string=input
         )
 
 class NewSupplyGetCountryStatePreOrder_KnownProduct_Test(
@@ -77,7 +77,7 @@ class NewSupplyGetCountryStatePreOrder_KnownProduct_Test(
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            input
+            value_string=input
         )
 
 class NewSupplyGetCountryStatePreOrder_UnknownProduct_Test(
@@ -98,5 +98,5 @@ class NewSupplyGetCountryStatePreOrder_UnknownProduct_Test(
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
-            input
+            value_string=input
         )

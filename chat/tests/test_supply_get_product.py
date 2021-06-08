@@ -14,5 +14,5 @@ class NewSupplyGetProductTestCase(utils.ChatFlowTest):
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
-            input
+            value_string=input
         )

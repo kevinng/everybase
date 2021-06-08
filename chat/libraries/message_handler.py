@@ -39,7 +39,7 @@ class MessageHandler:
         self.message_key = message_key
         self.options = []
 
-        self.get_or_create_dataset()
+        self.dataset = self.get_dataset()
 
     def run(self):
         """Extract/validate/store data, return reply message body, and set new
@@ -107,31 +107,27 @@ class MessageHandler:
         """
         for o in self.options:
             for t in o[0]:
-                match_str = t[0]
-                tolerance = t[1]
+                match_str = t[0] # String to match
+                tolerance = t[1] # Edit distance tolerance
                 if nlp.match(self.message.body, match_str, tolerance):
-                    intent_key = o[1]
-                    message_key = o[2]
-                    params = o[3]
-                    data_key = o[4]
-                    data_value = o[5]
+                    # Unwrap option parameters tuple
+                    # intent_key = o[1]
+                    # message_key = o[2]
+                    # params = o[3]
+                    # data_key = o[4]
+                    # data_value = o[5]
+                    _, intent_key, message_key, params, data_key, data_value = o
                     if data_key is not None:
+                        # Data key is not none - store user's choice
                         if data_value is not None:
+                            # Data value is specified, store it as value to
+                            # data key
                             value = data_value
                         else:
+                            # Data value is not specified, use data key as
+                            # value
                             value = data_key
-                        # Store user's choice
-                        dataset, _ = models.MessageDataset.objects.get_or_create(
-                            # Note: store current context not incoming context
-                            intent_key=self.intent_key,
-                            message_key=self.message_key,
-                            in_message=self.message
-                        )
-                        models.MessageDataValue.objects.create(
-                            dataset=dataset,
-                            data_key=data_key,
-                            value_string=value
-                        )
+                        self.save_value(data_key, value_string=value)
                     return self.done_reply(intent_key, message_key, params)
 
         return self.reply_invalid_option()
@@ -220,48 +216,42 @@ class MessageHandler:
         context_utils.start_context(self.message.from_user, intent_key,
             message_key)
 
-    def get_or_create_dataset(self):
-        """Read/create dataset for this message.
-
-        Do not override.
+    def get_dataset(self):
+        """Get dataset for this message.
         """
-        self.dataset, _ = models.MessageDataset.objects.get_or_create(
+        dataset, _ = models.MessageDataset.objects.get_or_create(
             message_key=self.message_key,
             in_message=self.message,
-            intent_key=self.intent_key
+            intent_key=self.intent_key,
+            user=self.message.from_user
         )
 
-    def save_string(self, value, is_valid):
-        """Save extracted string for this message/context.
+        return dataset
 
-        Do not override.
+    def save_value(self, data_key, value_string=None, value_float=None,
+        value_boolean=None, value_id=None):
+        """Save data value in current context with specified data key
+
+        Parameters
+        ----------
+        data_key : String
+            Data key to save this value under
+        value_string : String
+            Set to value if value is of type string
+        value_float : Float
+            Set to value if value is of type float
+        value_boolean : Boolean
+            Set to value if value is of type boolean
+        value_id : Integer
+            Set to value if value is of type integer and is a model ID
         """
-        models.MessageDataString.objects.create(
+        models.MessageDataValue.objects.create(
             dataset=self.dataset,
-            value=value,
-            is_valid=is_valid
-        )
-
-    def save_float(self, value, is_valid):
-        """Save extracted float for this message/context.
-
-        Do not override.
-        """
-        models.MessageDataFloat.objects.create(
-            dataset=self.dataset,
-            value=value,
-            is_valid=is_valid
-        )
-
-    def save_boolean(self, value, is_valid):
-        """Save extracted boolean for this message/context.
-
-        Do not override.
-        """
-        models.MessageDataBoolean.objects.create(
-            dataset=self.dataset,
-            value=value,
-            is_valid=is_valid
+            data_key=data_key,
+            value_string=value_string,
+            value_float=value_float,
+            value_boolean=value_boolean,
+            value_id=value_id
         )
 
     def save_body_as_string(self, data_key):
@@ -276,7 +266,8 @@ class MessageHandler:
             self.message,
             self.intent_key,
             self.message_key,
-            data_key
+            data_key,
+            self.message.from_user
         )
 
     def save_body_as_float(self, data_key):
@@ -295,5 +286,23 @@ class MessageHandler:
             self.message,
             self.intent_key,
             self.message_key,
-            data_key
+            data_key,
+            self.message.from_user
+        )
+
+    def get_uom_with_product_type_keys(self, intent_key, message_key, data_key):
+        """Convenience method to call model_utils.get_uom_with_product_type_keys
+        with this message's sender
+        """
+        return model_utils.get_uom_with_product_type_keys(
+            intent_key,
+            message_key,
+            data_key,
+            self.message.from_user
+        )
+
+    def get_latest_value(self, intent_key, message_key, data_key):
+        return model_utils.get_latest_value(
+            intent_key, message_key, data_key,
+            self.message.from_user
         )

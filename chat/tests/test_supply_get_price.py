@@ -18,7 +18,7 @@ class NewSupplyGetPrice_ReadyOTG_KnownPacking_Test(utils.ChatFlowTest):
         self.assert_value(
             datas.\
         NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING__PRICE__STRING,
-            input
+            value_string=input
         )
     
 class NewSupplyGetPrice_ReadyOTG_UnknownPacking_Test(utils.ChatFlowTest):
@@ -38,7 +38,7 @@ class NewSupplyGetPrice_ReadyOTG_UnknownPacking_Test(utils.ChatFlowTest):
         self.assert_value(
             datas.\
         NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING__PRICE__STRING,
-            input
+            value_string=input
         )
 
 class NewSupplyGetPrice_PreOrder_Test(utils.ChatFlowTest):
@@ -54,5 +54,5 @@ class NewSupplyGetPrice_PreOrder_Test(utils.ChatFlowTest):
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_PRICE_PREORDER__PRICE__STRING,
-            input
+            value_string=input
         )

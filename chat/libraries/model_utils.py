@@ -4,7 +4,7 @@ from relationships import models as relmods
 from common import models as commods
 import phonenumbers
 
-def get_latest_value(intent_key, message_key, data_key):
+def get_latest_value(intent_key, message_key, data_key, user):
     """Get latest value captured in context - message_key, intent_key - of a
     data type.
 
@@ -16,12 +16,15 @@ def get_latest_value(intent_key, message_key, data_key):
         Message key for context
     data_key : string
         Data key for data type
+    user : relationships.User
+        User for whom we're getting a value for
     """
     try:
-        # Get latest dataset in context
+        # Get latest dataset in context for user
         dataset = models.MessageDataset.objects.filter(
             intent_key=intent_key,
-            message_key=message_key
+            message_key=message_key,
+            user=user.id
         ).order_by('-created').first()
     except models.MessageDataset.DoesNotExist:
         return None
@@ -58,7 +61,7 @@ def get_product_type_with_value(value):
 
     return None
 
-def get_product_type_with_keys(intent_key, message_key, data_key):
+def get_product_type_with_keys(intent_key, message_key, data_key, user):
     """Convenience method to call get_latest_value with inputs for product type
     value and use it to call get_product_type_with_value.
 
@@ -70,16 +73,18 @@ def get_product_type_with_keys(intent_key, message_key, data_key):
         Message key for context
     data_key : string
         Data key for data type
+    user : relationships.User
+        User for whom we're getting the latest value for
     """
     return get_product_type_with_value(
-        get_latest_value(intent_key, message_key, data_key).value_string)
+        get_latest_value(intent_key, message_key, data_key, user).\
+            value_string)
 
-def get_uom_with_product_type_keys(intent_key, message_key, data_key):
+def get_uom_with_product_type_keys(intent_key, message_key, data_key, user):
     """Convenience method to get product type with get_product_type_with_keys,
     and if it's not null - use it to get the top-priority unit-of-measure
-
     """
-    pt = get_product_type_with_keys(intent_key, message_key, data_key)
+    pt = get_product_type_with_keys(intent_key, message_key, data_key, user)
     if pt is not None:
         try:
             return relmods.UnitOfMeasure.objects.filter(
@@ -90,7 +95,7 @@ def get_uom_with_product_type_keys(intent_key, message_key, data_key):
     
     return None
 
-def save_body_as_string(message, intent_key, message_key, data_key):
+def save_body_as_string(message, intent_key, message_key, data_key, user):
     """Save message body as a dataset string.
 
     Parameters
@@ -101,6 +106,8 @@ def save_body_as_string(message, intent_key, message_key, data_key):
         Intent for context we're saving in
     message_key : string
         Message for context we're saving in
+    user : relationships.User
+        User for whom we're saving the body for
     """
     # TODO: there is a bug there - where a message dataset gets created twice.
     # Since there is a constraint on unique - intent_key/message_key/message,
@@ -109,7 +116,8 @@ def save_body_as_string(message, intent_key, message_key, data_key):
     dataset, _ = models.MessageDataset.objects.get_or_create(
         intent_key=intent_key,
         message_key=message_key,
-        in_message=message
+        in_message=message,
+        user=user
     )
 
     v = models.MessageDataValue()
@@ -118,7 +126,7 @@ def save_body_as_string(message, intent_key, message_key, data_key):
     v.data_key = data_key
     v.save()
 
-def save_body_as_float(message, intent_key, message_key, data_key):
+def save_body_as_float(message, intent_key, message_key, data_key, user):
     """Save message body as a dataset float.
 
     Parameters
@@ -129,6 +137,8 @@ def save_body_as_float(message, intent_key, message_key, data_key):
         Intent for context we're saving in
     message_key : string
         Message for context we're saving in
+    user : relationships.User
+        User for whom we're saving the body
 
     Returns
     -------
@@ -141,7 +151,8 @@ def save_body_as_float(message, intent_key, message_key, data_key):
     dataset, _ = models.MessageDataset.objects.get_or_create(
         intent_key=intent_key,
         message_key=message_key,
-        in_message=message
+        in_message=message,
+        user=user
     )
 
     v = models.MessageDataValue()
