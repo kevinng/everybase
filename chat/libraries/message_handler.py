@@ -161,9 +161,9 @@ class MessageHandler:
         """Get dataset for this message.
         """
         dataset, _ = models.MessageDataset.objects.get_or_create(
+            intent_key=self.intent_key,
             message_key=self.message_key,
             in_message=self.message,
-            intent_key=self.intent_key,
             user=self.message.from_user
         )
 
@@ -185,8 +185,12 @@ class MessageHandler:
             Set to value if value is of type boolean
         value_id : Integer
             Set to value if value is of type integer and is a model ID
+
+        Returns
+        -------
+        Data value reference created
         """
-        models.MessageDataValue.objects.create(
+        return models.MessageDataValue.objects.create(
             dataset=self.dataset,
             data_key=data_key,
             value_string=value_string,
@@ -196,20 +200,14 @@ class MessageHandler:
         )
 
     def save_body_as_string(self, data_key):
-        """Save message body in current context with specified data key as string
+        """Save message body as data value string in current context
 
         Parameters
         ----------
-        data_key
-            Data key to store the message body against
+        data_key : String
+            Data key for the data value string
         """
-        model_utils.save_body_as_string(
-            self.message,
-            self.intent_key,
-            self.message_key,
-            data_key,
-            self.message.from_user
-        )
+        return self.save_value(data_key, value_string=self.message.body)
 
     def save_body_as_float(self, data_key):
         """Save message body in current context with specified data key as float
@@ -223,13 +221,12 @@ class MessageHandler:
         -------
         Float value if successful, None if unable to convert body to float value
         """
-        return model_utils.save_body_as_float(
-            self.message,
-            self.intent_key,
-            self.message_key,
-            data_key,
-            self.message.from_user
-        )
+        try:
+            value = float(self.message.body.strip())
+        except ValueError:
+            return None
+
+        return self.save_value(data_key, value_float=value)
 
     def get_uom_with_product_type_keys(self, intent_key, message_key, data_key):
         """Convenience method to call model_utils.get_uom_with_product_type_keys
