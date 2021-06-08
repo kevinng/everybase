@@ -577,14 +577,20 @@ class MessageDataset(Standard):
     )
 
     def __str__(self):
-        return f'({self.intent_key}, {self.message_key}, {self.in_message}, {self.out_message} [{self.id}])'
+        return f'({self.intent_key}, {self.message_key}, {self.in_message}, \
+{self.out_message} [{self.id}])'
 
     def clean(self):
         super(MessageDataset, self).clean()
 
         if (self.in_message is None and self.out_message is None) or \
             (self.in_message is not None and self.out_message is not None):
-            raise ValidationError('Either in_message or out_message must be set')
+            raise ValidationError(
+                'Either in_message or out_message must be set')
+        
+        if self.in_message is not None and self.user is None:
+            raise ValidationError(
+                'user must be set if in_message is set')
 
     class Meta:
         unique_together = ('intent_key', 'message_key', 'in_message',
