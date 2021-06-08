@@ -38,63 +38,6 @@ def get_latest_value(intent_key, message_key, data_key, user):
     except models.MessageDataValue.DoesNotExist:
         return None
 
-def get_product_type_with_value(value):
-    """Match value against each match keyword with an associated product type
-    accounting for edit distance tolerance. If it matches - return the product
-    type. If no product type is found - return None.
-    
-    Parameters
-    ----------
-    value : string
-        Value to match against keywords
-    """
-    if value is None:
-        return None
-
-    match_keywords = commods.MatchKeyword.objects.filter(
-        product_type__isnull=False
-    )
-
-    for k in match_keywords:
-        if nlp.match(value, k.keyword, k.tolerance):
-            return k.product_type
-
-    return None
-
-def get_product_type_with_keys(intent_key, message_key, data_key, user):
-    """Convenience method to call get_latest_value with inputs for product type
-    value and use it to call get_product_type_with_value.
-
-    Parameters
-    ----------
-    intent_key : string
-        Intent key for context
-    message_key : string
-        Message key for context
-    data_key : string
-        Data key for data type
-    user : relationships.User
-        User for whom we're getting the latest value for
-    """
-    return get_product_type_with_value(
-        get_latest_value(intent_key, message_key, data_key, user).\
-            value_string)
-
-def get_uom_with_product_type_keys(intent_key, message_key, data_key, user):
-    """Convenience method to get product type with get_product_type_with_keys,
-    and if it's not null - use it to get the top-priority unit-of-measure
-    """
-    pt = get_product_type_with_keys(intent_key, message_key, data_key, user)
-    if pt is not None:
-        try:
-            return relmods.UnitOfMeasure.objects.filter(
-                product_type=pt
-            ).order_by('-priority').first()
-        except relmods.UnitOfMeasure.DoesNotExist:
-            pass
-    
-    return None
-
 def get_phone_number(raw_number):
     """
     Parameters

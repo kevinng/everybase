@@ -1,5 +1,7 @@
 from chat import models
-from chat.libraries import (intents, messages, context_utils, model_utils, nlp)
+from chat.libraries import messages, context_utils, model_utils, nlp
+from relationships import models as relmods
+from common import models as commods
 
 class MessageHandler:
     """A context is a unique pair of the user's intent, and the last message
@@ -218,6 +220,7 @@ class MessageHandler:
         -------
         Float value if successful, None if unable to convert body to float value
         """
+        # Validate message body is float
         try:
             value = float(self.message.body.strip())
         except ValueError:
@@ -225,19 +228,47 @@ class MessageHandler:
 
         return self.save_value(data_key, value_float=value)
 
-    def get_uom_with_product_type_keys(self, intent_key, message_key, data_key):
-        """Convenience method to call model_utils.get_uom_with_product_type_keys
-        with this message's sender
+    def get_uom_for_product_type_with_keys(self, intent_key, message_key,
+        data_key):
+        # Get latest user input data value string to match against a product type
+        value = self.get_latest_value(intent_key, message_key, data_key)
+
+        if value is None:
+            # Value does not exist
+            return None
+
+        value_string = value.value_string
+
+        # Get all match keywords for product types
+        match_keywords = commods.MatchKeyword.objects.filter(
+            product_type__isnull=False
+        )
+
+        # Match each keyword against user input
+        product_type = None
+        for k in match_keywords:
+            if nlp.match(value_string, k.keyword, k.tolerance):
+                # User input match a product type
+                product_type = k.product_type
+
+        if product_type is not None:
+            # Matching product type found - get its top UOM
+            try:
+                return relmods.UnitOfMeasure.objects.filter(
+                    product_type=product_type
+                ).order_by('-priority').first()
+            except relmods.UnitOfMeasure.DoesNotExist:
+                pass
+        
+        return None
+
+    def get_latest_value(self, intent_key, message_key, data_key):
+        """Convenience method to call model_utils.get_latest_value with this
+        message's sender
         """
-        return model_utils.get_uom_with_product_type_keys(
+        return model_utils.get_latest_value(
             intent_key,
             message_key,
             data_key,
-            self.message.from_user
-        )
-
-    def get_latest_value(self, intent_key, message_key, data_key):
-        return model_utils.get_latest_value(
-            intent_key, message_key, data_key,
             self.message.from_user
         )

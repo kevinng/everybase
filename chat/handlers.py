@@ -166,7 +166,7 @@ class GetCountryStateBaseHandler(MessageHandler):
         # Get TOP unit of measure for product type matching the latest data
         # value string of this user with the given keys. UOM is None if user's
         # input does not match any product type.
-        uom = self.get_uom_with_product_type_keys(
+        uom = self.get_uom_for_product_type_with_keys(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
@@ -373,7 +373,7 @@ class NEW_DEMAND__DEMAND__GET_COUNTRY_STATE(MessageHandler):
         # Get TOP unit of measure for product type matching the latest data
         # value string of this user with the given keys. UOM is None if user's
         # input does not match any product type.
-        uom = self.get_uom_with_product_type_keys(
+        uom = self.get_uom_for_product_type_with_keys(
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT,
             datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING
