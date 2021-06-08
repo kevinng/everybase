@@ -1,7 +1,7 @@
 from chat.tests import utils
 from chat.libraries import intents, messages, datas
 
-class NewDemandGetCountryStateTest():
+class NewDemandGetCountryStateTest(utils.ChatFlowTest):
     def set_up_known_product(self):
         self.set_up_user_entered_known_product_type(
             intents.NEW_DEMAND,
@@ -17,7 +17,7 @@ class NewDemandGetCountryStateTest():
             'unknown product'
         )
 
-class NewDemandGetCountryState_KnownProduct_TestCase(utils.ChatFlowTest,
+class NewDemandGetCountryState_KnownProduct_TestCase(
     NewDemandGetCountryStateTest):
     def setUp(self):
         super().setUp(
@@ -38,7 +38,7 @@ class NewDemandGetCountryState_KnownProduct_TestCase(utils.ChatFlowTest,
             input
         )
 
-class NewDemandGetCountryState_UnknownProduct_TestCase(utils.ChatFlowTest,
+class NewDemandGetCountryState_UnknownProduct_TestCase(
     NewDemandGetCountryStateTest):
     def setUp(self):
         super().setUp(
