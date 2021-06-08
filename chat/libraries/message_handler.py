@@ -95,13 +95,11 @@ class MessageHandler:
         return messages.get_body(message_key, params)
 
     def reply_option(self):
-        """Run nlp.match_each_token against each option in this handler against
-        the message body.
+        """Run nlp.match_each_token against each option in against message body.
 
-        Set context and return message body of the first matching option.
+        Set context and return message body of the FIRST matching option.
 
-        If optional data key/value is/are provided for an option, store them
-        when the user selects that option.
+        If data key/value is/are provided for an option, store user's choice.
 
         If no matching option is found - return reply_invalid_option value.
         """
