@@ -535,7 +535,7 @@ class MessageDataset(Standard):
     """A set of data extracted in-context for a message. A context is a unique
     intent-message pair for an incoming Twilio message.
 
-    Last updated: 7 June 2021, 3:15 PM
+    Last updated: 8 June 2021, 12:50 PM
     """
     intent_key = models.CharField(
         max_length=200,
