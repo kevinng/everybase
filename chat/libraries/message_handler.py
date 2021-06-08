@@ -106,26 +106,16 @@ class MessageHandler:
         If no matching option is found - return reply_invalid_option value.
         """
         for o in self.options:
-            for t in o[0]:
-                match_str = t[0] # String to match
-                tolerance = t[1] # Edit distance tolerance
+            match_strs, intent_key, message_key, params, data_key, data_value = o
+            for match_str, tolerance in match_strs:
                 if nlp.match(self.message.body, match_str, tolerance):
-                    # Unwrap option parameters tuple
-                    # intent_key = o[1]
-                    # message_key = o[2]
-                    # params = o[3]
-                    # data_key = o[4]
-                    # data_value = o[5]
-                    _, intent_key, message_key, params, data_key, data_value = o
                     if data_key is not None:
-                        # Data key is not none - store user's choice
+                        # Data key is specified - store user's choice
                         if data_value is not None:
-                            # Data value is specified, store it as value to
-                            # data key
+                            # Data value is specified, use it as data value
                             value = data_value
                         else:
-                            # Data value is not specified, use data key as
-                            # value
+                            # Data value is not specified, use key as data value
                             value = data_key
                         self.save_value(data_key, value_string=value)
                     return self.done_reply(intent_key, message_key, params)
