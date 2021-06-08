@@ -123,13 +123,15 @@ class MessageHandler:
     def reply_invalid_option(self):
         """Default reply when the user sends an invalid option.
         """
-        # Note: we don't need to set a new context
+        # Note: we don't need to set a new context. I.e. the user remains in
+        # the current context.
         return messages.get_body(messages.DO_NOT_UNDERSTAND_OPTION, {})
 
     def reply_invalid_number(self):
         """Reply user entered an invalid number
         """
-        # Note: we don't need to set a new context
+        # Note: we don't need to set a new context. I.e. the user remains in
+        # the current context.
         return messages.get_body(messages.DO_NOT_UNDERSTAND_NUMBER, {})
 
     def done_to_context(self, intent_key, message_key):
