@@ -49,24 +49,23 @@ class ChatFlowTest(TestCase):
         self.intent_key = intent_key
         self.message_key = message_key
         
-        self.user, self.phone_number = self.set_up_user_phone_number(
-            name, country_code, national_number)
+        self.user, self.phone_number = self.create_user_phone_number(
+            name, country_code, national_number, False)
 
         if intent_key is not None and message_key is not None:
             context_utils.start_context(self.user, intent_key, message_key)
 
     def tearDown(self):
         super().tearDown()
-        self.tear_down_user()
+        
+        for m in reversed(self.models_to_tear_down):
+            m.delete()
 
-        if 'models_to_tear_down' in locals() and \
-            self.models_to_tear_down is not None:
-            for m in reversed(self.models_to_tear_down):
-                m.delete()
+        self.tear_down_object_models()
 
-    def set_up_user_phone_number(self, name='Test User', country_code='12345',
-        national_number='1234567890'):
-        """Set up a user and its relevant models
+    def create_user_phone_number(self, name='Test User', country_code='12345',
+        national_number='1234567890', auto_tear_down=True):
+        """Create a user and his phone number
 
         Parameters
         ----------
@@ -76,21 +75,27 @@ class ChatFlowTest(TestCase):
             Country code of the user's phone number
         national_number : String
             National number of the user's phone number
+        auto_tear_down : Boolean
+            If true, will automatically delete the models created in tear down
         """
         phone_number = relmods.PhoneNumber.objects.create(
             country_code=country_code,
             national_number=national_number
         )
+        if auto_tear_down:
+            self.models_to_tear_down.append(phone_number)
 
         user = relmods.User.objects.create(
             phone_number=phone_number,
             name=name
         )
+        if auto_tear_down:
+            self.models_to_tear_down.append(user)
 
         return (user, phone_number)
 
-    def tear_down_user(self):
-        """Tear down user and its relevant models
+    def tear_down_object_models(self):
+        """Tear down object models
         """
         # Get all inbound messages from this user
         in_messages = models.TwilioInboundMessage.objects.filter(
