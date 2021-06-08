@@ -7,7 +7,11 @@ class NewSupplyGetProductTestCase(utils.ChatFlowTest):
 
     def test_enter_product(self):
         input = 'nitrile gloves'
-        self.receive_reply_assert(input, intents.NEW_SUPPLY, messages.SUPPLY__GET_AVAILABILITY)
+        self.receive_reply_assert(
+            input,
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_AVAILABILITY
+        )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
             input

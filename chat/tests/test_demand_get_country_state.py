@@ -20,12 +20,19 @@ class NewDemandGetCountryStateTest():
 class NewDemandGetCountryState_KnownProduct_TestCase(utils.ChatFlowTest,
     NewDemandGetCountryStateTest):
     def setUp(self):
-        super().setUp(intents.NEW_DEMAND, messages.DEMAND__GET_COUNTRY_STATE)
+        super().setUp(
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_COUNTRY_STATE
+        )
         self.set_up_known_product()
 
     def test_enter_country_state(self):
         input = 'canada vancouver'
-        self.receive_reply_assert(input, intents.NEW_DEMAND, messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE)
+        self.receive_reply_assert(
+            input,
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE
+        )
         self.assert_value(
             datas.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
             input
@@ -34,12 +41,19 @@ class NewDemandGetCountryState_KnownProduct_TestCase(utils.ChatFlowTest,
 class NewDemandGetCountryState_UnknownProduct_TestCase(utils.ChatFlowTest,
     NewDemandGetCountryStateTest):
     def setUp(self):
-        super().setUp(intents.NEW_DEMAND, messages.DEMAND__GET_COUNTRY_STATE)
+        super().setUp(
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_COUNTRY_STATE
+        )
         self.set_up_unknown_product()
 
     def test_enter_country_state(self):
         input = 'canada vancouver'
-        self.receive_reply_assert(input, intents.NEW_DEMAND, messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE)
+        self.receive_reply_assert(
+            input,
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
+        )
         self.assert_value(
             datas.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
             input

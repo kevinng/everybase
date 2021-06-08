@@ -4,49 +4,49 @@ from chat.libraries import intents, messages, datas
 class SupplyThankYouTest(utils.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__THANK_YOU)
+
+    def choose_non_choice(self, input):
+        self.receive_reply_assert(
+            input,
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__THANK_YOU
+        )
     
     def test_choose_non_choice_with_number(self):
-        self.receive_reply_assert('10', intents.NEW_SUPPLY, messages.SUPPLY__THANK_YOU)
+        self.choose_non_choice('10')
 
     def test_choose_non_choice_with_number(self):
-        self.receive_reply_assert('hello', intents.NEW_SUPPLY, messages.SUPPLY__THANK_YOU)
+        self.choose_non_choice('hello')
+
+    def choose_new_supply(self, input):
+        self.receive_reply_assert(input,
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRODUCT
+        )
+        self.assert_value(
+            datas.MENU__MENU__OPTION__CHOICE,
+            datas.MENU__MENU__OPTION__FIND_BUYER
+        )
 
     def test_choose_new_supply_with_number(self):
-        self.receive_reply_assert('1',
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PRODUCT
-        )
-        self.assert_value(
-            datas.MENU__MENU__OPTION__CHOICE,
-            datas.MENU__MENU__OPTION__FIND_BUYER
-        )
+        self.choose_new_supply('1')
 
     def test_choose_new_supply_with_text(self):
-        self.receive_reply_assert('find buyers',
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PRODUCT
+        self.choose_new_supply('find buyers')
+
+    def choose_new_demand(self, input):
+        self.receive_reply_assert(
+            input,
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_PRODUCT
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,
-            datas.MENU__MENU__OPTION__FIND_BUYER
+            datas.MENU__MENU__OPTION__FIND_SELLER
         )
 
     def test_choose_new_demand_with_number(self):
-        self.receive_reply_assert('2',
-            intents.NEW_DEMAND,
-            messages.DEMAND__GET_PRODUCT
-        )
-        self.assert_value(
-            datas.MENU__MENU__OPTION__CHOICE,
-            datas.MENU__MENU__OPTION__FIND_SELLER
-        )
+        self.choose_new_demand('2')
 
     def test_choose_new_demand_with_text(self):
-        self.receive_reply_assert('find sellers',
-            intents.NEW_DEMAND,
-            messages.DEMAND__GET_PRODUCT
-        )
-        self.assert_value(
-            datas.MENU__MENU__OPTION__CHOICE,
-            datas.MENU__MENU__OPTION__FIND_SELLER
-        )
+        self.choose_new_demand('find sellers')
