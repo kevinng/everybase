@@ -6,6 +6,8 @@ Classes are named in the format:
 <intent key>__<message key>
 """
 
+from chat import models
+from relationships import models as relmods
 from chat.libraries import (intents, messages, datas, model_utils)
 from chat.libraries.message_handler import MessageHandler
 from relationships import models as relmods
@@ -36,19 +38,19 @@ class MenuHandler(MessageHandler):
     def run(self):
         self.add_option([('1', 0), ('find buyers', 3)],
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PRODUCT, {},
+            messages.SUPPLY__GET_PRODUCT, None,
             datas.MENU__MENU__OPTION__CHOICE,
             datas.MENU__MENU__OPTION__FIND_BUYER
         )
         self.add_option([('2', 0), ('find sellers', 3)],
             intents.NEW_DEMAND,
-            messages.DEMAND__GET_PRODUCT, {},
+            messages.DEMAND__GET_PRODUCT, None,
             datas.MENU__MENU__OPTION__CHOICE,
             datas.MENU__MENU__OPTION__FIND_SELLER
         )
         self.add_option([('3', 0)],
             intents.EXPLAIN_SERVICE,
-            messages.EXPLAIN_SERVICE, {},
+            messages.EXPLAIN_SERVICE, None,
             datas.MENU__MENU__OPTION__CHOICE,
             datas.MENU__MENU__OPTION__LEARN_MORE
         )
@@ -144,14 +146,14 @@ class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
         self.add_option([('1', 0), ('otg', 0), ('ready', 1)],
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG,
-            {},
+            None,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
         )
         self.add_option([('2', 0), ('pre order', 3)],
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER,
-            {},
+            None,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
         )
@@ -217,9 +219,9 @@ class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
             # Goods are pre-order, get quantity and timeframe
             yes_message = messages.SUPPLY__GET_QUANTITY_PRE_ORDER
 
-        self.add_option([('1', 0), ('yes', 0)], yes_intent, yes_message, {})
+        self.add_option([('1', 0), ('yes', 0)], yes_intent, yes_message, None)
         self.add_option([('2', 0), ('no', 0)], intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PACKING, {})
+            messages.SUPPLY__GET_PACKING, None)
         return self.reply_option()
 
 class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
@@ -336,13 +338,13 @@ class NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC(MessageHandler):
     def run(self):
         self.add_option([('1', 0), ('yes', 0)],
             intents.NEW_SUPPLY,
-            messages.SUPPLY__THANK_YOU, {},
+            messages.SUPPLY__THANK_YOU, None,
             datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
             datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__YES
         )
         self.add_option([('2', 0), ('no', 0)],
             intents.NEW_SUPPLY,
-            messages.SUPPLY__THANK_YOU, {},
+            messages.SUPPLY__THANK_YOU, None,
             datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
             datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__NO
         )
@@ -470,42 +472,75 @@ class DISCUSS_W_SELLER__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE(MessageHandler):
 class DISCUSS_W_SELLER__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE(MessageHandler):
     pass
 
-"""
-If I add the option to the message handler
-When the user replies the message handler will pick the right one
-
-But the message handler is an app running on the server side
-
-If another user comes in, with the same option will it clash?
-
-"""
-
 class DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST(MessageHandler):
     def run(self):
-        # Read product type
-        self.get_latest_value(
-            intents.DISCUSS_W_SELLER,
-            messages.DISCUSS__CONFIRM_INTEREST
-        )
+        pass
 
-        # How do I pass the product type in here?
-        # 
+        # # Get user IDs to ascertain connection
+
+        # user_1_id = self.get_latest_value(
+        #     intents.DISCUSS_W_SELLER,
+        #     messages.DISCUSS__CONFIRM_INTEREST,
+        #     datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__USER_1__ID
+        # ).value_id
+
+        # user_2_id = self.get_latest_value(
+        #     intents.DISCUSS_W_SELLER,
+        #     messages.DISCUSS__CONFIRM_INTEREST,
+        #     datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__USER_2__ID
+        # ).value_id
+
+        # try:
+        #     connection = relmods.Connection.objects.get(
+        #         user_1=user_1_id,
+        #         user_2_id=user_2_id
+        #     )
+        # except relmods.Connection.DoesNotExist:
+        #     connection = None
+
+        # if connection is None:
+        #     # Users are not connected - show supply details
+
+        #     # I also need to pass in supply ID - in case they're not connected
+        #     # I already have both user's ID, I need to ascertain which of those is this user - I can actually set it
+
+        #     supply_id = self.get_latest_value(
+        #         intents.DISCUSS_W_SELLER,
+        #         messages.DISCUSS__CONFIRM_INTEREST,
+        #         datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID
+        #     ).value_id
+        #     supply = relmods.Supply.objects.get(pk=supply_id)
+        #     params = {
+        #         'buying': True,
+        #         'supply': supply
+        #     }
+
+        # else:
+        #     pass
+        #     # TODO: fill in contact details
+
         # self.add_option([('1', 0), ('yes', 0)],
         #     intents.DISCUSS_W_SELLER,
-        #     messages.STILL_INTERESTED__CONFIRM,
-        #     {},
+        #     messages.STILL_INTERESTED__CONFIRM, {},
         #     datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__CHOICE,
         #     datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__YES
         # )
 
-        # Direction depends on whether the 2 users are connected
-        # How do I know which 2 users are in question?
-        # I should pass reference to 2 users in data values
+        # # Read product type ID set by the system when sending out the confirm-
+        # # interest message
+        # product_type_id = self.get_latest_value(
+        #     intents.DISCUSS_W_SELLER,
+        #     messages.DISCUSS__CONFIRM_INTEREST,
+        #     datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__PRODUCT_TYPE__ID
+        # ).value_id
+
+        # # Get product type
+        # product_type = relmods.ProductType.objects.get(pk=product_type_id)
 
         # self.add_option([('2', 0), ('no', 0)],
         #     intents.DISCUSS_W_SELLER,
-        #     # FIND OUT which direction to go, connected or not
-        #     messages., {},
+        #     messages.STILL_INTERESTED__CONFIRM,
+        #     { 'product_type_name': product_type.name },
         #     datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__CHOICE,
         #     datas.DISCUSS_W_SELLER__CONFIRM_INTEREST__INTERESTED__NO
         # )

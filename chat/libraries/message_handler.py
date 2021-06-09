@@ -103,7 +103,7 @@ class MessageHandler:
         If no matching option is found - return reply_invalid_option value.
         """
         for o in self.options:
-            match_strs, intent_key, message_key, params, data_key, data_value = o
+            match_strs, intent_key, message_key, params_func, data_key, data_value = o
             for match_str, tolerance in match_strs:
                 if nlp.match(self.message.body, match_str, tolerance):
                     if data_key is not None:
@@ -115,6 +115,13 @@ class MessageHandler:
                             # Data value is not specified, use key as data value
                             value = data_key
                         self.save_value(data_key, value_string=value)
+
+                    # Get parameters for template
+                    if params_func is not None:
+                        params = params_func()
+                    else:
+                        params = {}
+
                     return self.done_reply(intent_key, message_key, params)
 
         return self.reply_invalid_option()
