@@ -1,4 +1,4 @@
-Are you still interested in {{ product_type }}?
+Are you still interested in {{ product_type_name }}?
 
 *Reply*:
 1. Yes
