@@ -644,7 +644,7 @@ class MessageDataValue(Standard):
     )
     
     def __str__(self):
-        return f'({self.dataset}, {self.data_key}, {self.value_string}, {self.value_float}, {self.value_boolean} [{self.id}])'
+        return f'({self.dataset}, {self.data_key}, {self.value_string}, {self.value_float}, {self.value_boolean}, {self.value_id} [{self.id}])'
 
     def clean(self):
         super(MessageDataValue, self).clean()
@@ -699,8 +699,6 @@ class UserContext(Standard):
 
     user = models.ForeignKey(
         'relationships.User',
-        null=True,
-        blank=True,
         related_name='user_contexts',
         related_query_name='user_contexts',
         on_delete=models.PROTECT,
