@@ -12,10 +12,10 @@ class TwilioInboundMessageMediaInlineAdmin(admin.TabularInline):
 
 # ----- End: Inlines -----
 
-_twilio_outbound_message_fields = ['context', 'date_created', 'date_sent',
-    'direction', 'account_sid', 'message_sid', 'from_str', 'to_str', 'body',
-    'uri', 'error_message', 'error_code', 'api_version', 'from_user', 'to_user',
-    'twilml_response_to']
+_twilio_outbound_message_fields = ['intent_key', 'message_key', 'date_created',
+    'date_sent', 'direction', 'account_sid', 'message_sid', 'from_str',
+    'to_str', 'body', 'uri', 'error_message', 'error_code', 'api_version',
+    'from_user', 'to_user', 'twilml_response_to']
 @admin.register(mod.TwilioOutboundMessage)
 class TwilioOutboundMessage(comadm.StandardAdmin):
     # List page settings
