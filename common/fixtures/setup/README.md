@@ -5,10 +5,10 @@ Updated: 27 May 2021, 2:40 PM
 
 # Fixtures
 
-common__country_with_pk.json
+common__country.json
     Country dump with primary keys for production only
 
-common__country_with_pk__stagingdevelopment.json
+common__country_stagingdevelopment.json
     Country dump with primary keys for staging and development. Subset
     of common__country_with_pk.json, so code that works on this will work on
     the larger dataset.
