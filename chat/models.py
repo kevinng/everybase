@@ -1,19 +1,23 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from common.models import Standard, Choice, short_text
-from chat.libraries import intents, messages, datas, model_utils
+from common.models import Standard, short_text
+from chat.libraries import intents, messages, datas
 
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
 
-    Last updated: 25 May 2021, 11:53 PM
+    Last updated: 9 June 2021, 8:06 PM
     """
-
-    context = models.ForeignKey(
-        'UserContext',
-        related_name='twilio_outbound_messages',
-        related_query_name='twilio_outbound_messages',
-        on_delete=models.PROTECT,
+    intent_key = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    message_key = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
         db_index=True
     )
 
