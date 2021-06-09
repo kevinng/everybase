@@ -159,8 +159,8 @@ class User(Standard):
     )
     phone_number = models.OneToOneField(
         'PhoneNumber',
-        related_name='users',
-        related_query_name='users',
+        related_name='user',
+        related_query_name='user',
         on_delete=models.PROTECT,
         db_index=True
     )
