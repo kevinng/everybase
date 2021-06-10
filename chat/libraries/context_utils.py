@@ -12,6 +12,14 @@ def get_context(user):
     ----------
     user : relationships.User
         User whom we're getting the context for
+
+    Returns
+    -------
+    (intent_key, message_key) : Tuple
+        intent_key
+            Context intent key
+        message_key
+            Context intent key
     """
     intent_key = intents.NO_INTENT
     message_key = messages.NO_MESSAGE
@@ -46,6 +54,10 @@ def start_context(user, intent_key, message_key):
         Intent key as defined in intents.py
     message_key : string
         Message key as defined in messages.py
+
+    Returns
+    -------
+    User context model reference
     """
     context, _ = models.UserContext.objects.get_or_create(
         user=user,
@@ -62,6 +74,7 @@ def start_context(user, intent_key, message_key):
     context.expired = None
 
     context.save()
+    return context
 
 def done_context(user, intent_key, message_key):
     """Set user context's 'done' timestamp to now
@@ -74,6 +87,10 @@ def done_context(user, intent_key, message_key):
         Intent key as defined in intents.py
     message_key : string
         Message key as defined in messages.py
+
+    Returns
+    -------
+    User context model reference
     """
     context, _ = models.UserContext.objects.get_or_create(
         user=user,
@@ -83,6 +100,7 @@ def done_context(user, intent_key, message_key):
     tz = pytz.timezone(settings.TIME_ZONE)
     context.done = datetime.now(tz=tz)
     context.save()
+    return context
 
 def pause_context(user, intent_key, message_key):
     """Set user context's 'done' timestamp to now
@@ -95,6 +113,10 @@ def pause_context(user, intent_key, message_key):
         Intent key as defined in intents.py
     message_key : string
         Message key as defined in messages.py
+
+    Returns
+    -------
+    User context model reference
     """
     context, _ = models.UserContext.objects.get_or_create(
         user=user,
@@ -104,6 +126,7 @@ def pause_context(user, intent_key, message_key):
     tz = pytz.timezone(settings.TIME_ZONE)
     context.paused = datetime.now(tz=tz)
     context.save()
+    return context
 
 def expire_context(user, intent_key, message_key):
     """Set user context's 'done' timestamp to now
@@ -116,6 +139,10 @@ def expire_context(user, intent_key, message_key):
         Intent key as defined in intents.py
     message_key : string
         Message key as defined in messages.py
+
+    Returns
+    -------
+    User context model reference
     """
     context, _ = models.UserContext.objects.get_or_create(
         user=user,
@@ -125,3 +152,4 @@ def expire_context(user, intent_key, message_key):
     tz = pytz.timezone(settings.TIME_ZONE)
     context.expired = datetime.now(tz=tz)
     context.save()
+    return context
