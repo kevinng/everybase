@@ -31,8 +31,8 @@ class DemandConfirmInterestTest(chat_flow_test.ChatFlowTest):
             value_id=self.user.id,
             inbound=False
         )
-        self.user_2, _ = self.create_user_phone_number('Test Seller', '23456',
-            '2345678901')
+        self.user_2, _ = self.create_user_phone_number(
+            'Test Seller', '23456', '2345678901')
         self.set_up_data_value(
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST,
@@ -41,14 +41,12 @@ class DemandConfirmInterestTest(chat_flow_test.ChatFlowTest):
             value_id=self.user_2.id,
             inbound=False
         )
-
-        supply = self.set_up_supply()
         self.set_up_data_value(
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST,
             data_key=\
                 datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
-            value_id=supply.id,
+            value_id=self.set_up_supply().id,
             inbound=False
         )
 
