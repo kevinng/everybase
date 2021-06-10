@@ -1,7 +1,8 @@
-from chat.libraries import intents, messages, datas, chat_flow_test
+from chat.libraries import intents, messages, datas
+from chat.libraries.message_handler_test import MessageHandlerTest
 from chat.tests import texts
 
-class NewSupplyConfirmPacking_ReadyOTG_Test(chat_flow_test.ChatFlowTest):
+class NewSupplyConfirmPacking_ReadyOTG_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
         self.set_up_data_value(
@@ -51,7 +52,7 @@ class NewSupplyConfirmPacking_ReadyOTG_Test(chat_flow_test.ChatFlowTest):
     def test_choose_no_with_text(self):
         self.choose_no('no')
 
-class NewSupplyConfirmPacking_PreOrder_Test(chat_flow_test.ChatFlowTest):
+class NewSupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
         self.set_up_data_value(
@@ -66,7 +67,7 @@ class NewSupplyConfirmPacking_PreOrder_Test(chat_flow_test.ChatFlowTest):
             input,
             intents.NEW_SUPPLY,
             messages.SUPPLY__CONFIRM_PACKING,
-            render_to_string('chat/DO_NOT_UNDERSTAND_OPTION.txt')
+            texts.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):

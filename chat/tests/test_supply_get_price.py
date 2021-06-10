@@ -1,6 +1,7 @@
-from chat.libraries import intents, messages, datas, chat_flow_test
+from chat.libraries import intents, messages, datas
+from chat.libraries.message_handler_test import MessageHandlerTest
 
-class NewSupplyGetPrice_ReadyOTG_KnownPacking_Test(chat_flow_test.ChatFlowTest):
+class NewSupplyGetPrice_ReadyOTG_KnownPacking_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
@@ -20,7 +21,7 @@ class NewSupplyGetPrice_ReadyOTG_KnownPacking_Test(chat_flow_test.ChatFlowTest):
             value_string=input
         )
     
-class NewSupplyGetPrice_ReadyOTG_UnknownPacking_Test(chat_flow_test.ChatFlowTest):
+class NewSupplyGetPrice_ReadyOTG_UnknownPacking_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
@@ -40,7 +41,7 @@ class NewSupplyGetPrice_ReadyOTG_UnknownPacking_Test(chat_flow_test.ChatFlowTest
             value_string=input
         )
 
-class NewSupplyGetPrice_PreOrder_Test(chat_flow_test.ChatFlowTest):
+class NewSupplyGetPrice_PreOrder_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PRICE_PRE_ORDER)
     

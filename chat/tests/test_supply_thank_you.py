@@ -1,7 +1,8 @@
-from chat.libraries import intents, messages, datas, chat_flow_test
+from chat.libraries import intents, messages, datas
+from chat.libraries.message_handler_test import MessageHandlerTest
 from chat.tests import texts
 
-class SupplyThankYouTest(chat_flow_test.ChatFlowTest):
+class SupplyThankYouTest(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__THANK_YOU)
 

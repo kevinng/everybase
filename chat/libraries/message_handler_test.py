@@ -6,8 +6,8 @@ from relationships import models as relmods
 from common import models as commods
 from payments import models as paymods
 
-class ChatFlowTest(TestCase):
-    """Base class with helper functions for chat-flow tests.
+class MessageHandlerTest(TestCase):
+    """Base test class for testing message handlers
     """
 
     def setUp(self, intent_key=None, message_key=None, name='Test User',
@@ -213,6 +213,10 @@ class ChatFlowTest(TestCase):
             start_pos = response.index('<Message>') + len('<Message>')
             end_pos = response.index('</Message>')
             response_body = response[start_pos:end_pos]
+            # print('RESPONSE BODY')
+            # print(response_body)
+            # print('REPLY')
+            # print(reply)
             self.assertEqual(response_body, reply)
         self.assert_context(intent_key, message_key)
 
@@ -340,7 +344,7 @@ class ChatFlowTest(TestCase):
         )
 
     def set_up_product_type(self, name=None, uom_name=None,
-        uom_description=None, keyword=None):
+        uom_plural_name=None, uom_description=None, keyword=None):
         """Set up mock product type and relevant models
 
         Returns
@@ -354,6 +358,9 @@ class ChatFlowTest(TestCase):
         
         if uom_name is None:
             uom_name = 'Product %d UOM' % len(self.product_types)
+        
+        if uom_plural_name is None:
+            uom_plural_name = 'Product %d UOMs' % len(self.product_types)
         
         if uom_description is None:
             uom_description = 'Product %d UOM description' % \
@@ -370,6 +377,7 @@ class ChatFlowTest(TestCase):
         # is found
         uom = relmods.UnitOfMeasure.objects.create(
             name=uom_name,
+            plural_name=uom_plural_name,
             description=uom_description,
             product_type=product_type)
         self.uoms.append(uom)
@@ -395,7 +403,7 @@ class ChatFlowTest(TestCase):
 
         # Set default values
 
-        if product_type is None or packing is None:
+        if product_type is None:
             product_type, packing, _ = self.set_up_product_type()
         
         if country is None:
@@ -405,7 +413,7 @@ class ChatFlowTest(TestCase):
             otg = relmods.Availability.objects.get(pk=1)
 
         if quantity is None:
-            quantity = 12
+            quantity = 12000
         
         if price is None:
             price = 15.15
@@ -423,13 +431,47 @@ class ChatFlowTest(TestCase):
             user=self.user,
             product_type=product_type,
             country=israel,
-            # state=state, # No override
             availability=otg,
             packing=packing,
             quantity=quantity,
-            # preorder_timeframe=preorder_timeframe, # No override
             price=price,
             currency=currency,
             deposit_percentage=deposit_percentage,
             accept_lc=accept_lc
+        )
+
+    def set_up_demand(self, product_type=None, country=None,
+        packing=None, quantity=None, price=None, currency=None):
+        """Set up mock demand
+
+        Returns
+        -------
+        Mock demand model reference
+        """
+
+        # Set default values
+
+        if product_type is None:
+            product_type, packing, _ = self.set_up_product_type()
+        
+        if country is None:
+            israel = commods.Country.objects.get(pk=601)
+
+        if quantity is None:
+            quantity = 12000
+        
+        if price is None:
+            price = 15.15
+
+        if currency is None:
+            currency = paymods.Currency.objects.get(pk=1)
+
+        return relmods.Demand.objects.create(
+            user=self.user,
+            product_type=product_type,
+            country=israel,
+            packing=packing,
+            quantity=quantity,
+            price=price,
+            currency=currency
         )

@@ -1,7 +1,8 @@
-from chat.libraries import intents, messages, datas, chat_flow_test
+from chat.libraries import intents, messages, datas
+from chat.libraries import MessageHandlerTest
 from chat.tests import texts
 
-class MenuTest(chat_flow_test.ChatFlowTest):
+class MenuTest(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.MENU, messages.MENU, None)
 

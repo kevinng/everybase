@@ -1,6 +1,7 @@
-from chat.libraries import intents, messages, datas, chat_flow_test
+from chat.libraries import intents, messages, datas
+from chat.libraries.message_handler_test import MessageHandlerTest
 
-class NewDemandGetProductTestCase(chat_flow_test.ChatFlowTest):
+class NewDemandGetProductTestCase(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_DEMAND, messages.DEMAND__GET_PRODUCT)
 

@@ -1,6 +1,7 @@
-from chat.libraries import intents, messages, datas, chat_flow_test
+from chat.libraries import intents, messages, datas
+from chat.libraries.message_handler_test import MessageHandlerTest
 
-class NewDemandGetCountryStateTest(chat_flow_test.ChatFlowTest):
+class NewDemandGetCountryStateTest(MessageHandlerTest):
     def set_up_known_product(self):
         _, _, kw = self.set_up_product_type()
         self.set_up_data_value(
