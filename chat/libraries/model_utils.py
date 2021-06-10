@@ -4,7 +4,7 @@ from relationships import models as relmods
 from common import models as commods
 import phonenumbers
 
-def get_latest_value(intent_key, message_key, data_key, user):
+def get_latest_value(intent_key, message_key, data_key, user, inbound=True):
     """Get latest value captured in context - message_key, intent_key - of a
     data type.
 
@@ -18,15 +18,25 @@ def get_latest_value(intent_key, message_key, data_key, user):
         Data key for data type
     user : relationships.User
         User for whom we're getting a value for
+    inbound : Boolean
+        If true, look for inbound values. Otherwise, look for outbound values.
     """
-    try:
-        # Get latest dataset in context for user
+    # Get latest inbound/outbound context
+    if inbound:
         dataset = models.MessageDataset.objects.filter(
             intent_key=intent_key,
             message_key=message_key,
-            user=user.id
+            user=user.id,
+            in_message__isnull=False
         ).order_by('-created').first()
-    except models.MessageDataset.DoesNotExist:
+    else:
+        dataset = models.MessageDataset.objects.filter(
+            intent_key=intent_key,
+            message_key=message_key,
+            out_message__isnull=False
+        ).order_by('-created').first()
+
+    if dataset is None:
         return None
 
     try:
@@ -88,6 +98,29 @@ def get_user(phone_number):
         )
         user.save()
         return (user, True)
+
+def connect(user_x, user_y):
+    """Connect two users - bearing in mind to set the one with the smaller ID
+    as Connection.user_1 and the other as Connection.user_2.
+
+    Parameters
+    ----------
+    user_x : relationships.User
+        User to connect
+    user_y : relationships.User
+        User to connect
+    """
+    if user_x.id < user_y.id:
+        user_1 = user_x
+        user_2 = user_y
+    else:
+        user_1 = user_x
+        user_2 = user_y
+
+    return relmods.Connection.objects.create(
+        user_1=user_1,
+        user_2=user_2
+    )
 
 def get_phone_number_string(twilio_phone_number):
     """
