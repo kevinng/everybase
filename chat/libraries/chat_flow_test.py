@@ -193,7 +193,7 @@ class ChatFlowTest(TestCase):
         )
         return views.reply(message)
 
-    def receive_reply_assert(self, body, intent_key, message_key):
+    def receive_reply_assert(self, body, intent_key, message_key, reply=None):
         """Receive mock message, reply and assert context after reply
 
         Parameters
@@ -204,9 +204,16 @@ class ChatFlowTest(TestCase):
             Intent key for after-reply context to assert against user's context
         message_key : String
             Message key for after-reply context to assert against user's context
+        reply : String
+            Text to assert against response body to user
         """
-        # TODO: we may assert for reply body TwilML in future implementations
-        self.receive_reply(body)
+        response = self.receive_reply(body)
+        if reply is not None:
+            # Assert target reply against TwilML response body
+            start_pos = response.index('<Message>') + len('<Message>')
+            end_pos = response.index('</Message>')
+            response_body = response[start_pos:end_pos]
+            self.assertEqual(response_body, reply)
         self.assert_context(intent_key, message_key)
 
     def assert_latest_value(self, intent_key, message_key, data_key,

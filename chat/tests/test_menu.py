@@ -1,14 +1,23 @@
+from django.template.loader import render_to_string
 from chat.libraries import intents, messages, datas, chat_flow_test
 
 class MenuTest(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.MENU, messages.MENU, None)
 
+    def choose_non_choice(self, input):
+        self.receive_reply_assert(
+            input,
+            intents.MENU,
+            messages.MENU,
+            render_to_string('chat/DO_NOT_UNDERSTAND_OPTION.txt')
+        )
+
     def test_choose_non_choice_with_number(self):
-        self.receive_reply_assert('10', intents.MENU, messages.MENU)
+        self.choose_non_choice('10')
 
     def test_choose_non_choice_with_text(self):
-        self.receive_reply_assert('hello', intents.MENU, messages.MENU)
+        self.choose_non_choice('hello')
 
     def choose_new_supply(self, input):
         self.receive_reply_assert(input,

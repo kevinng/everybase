@@ -1,3 +1,4 @@
+from django.template.loader import render_to_string
 from chat.libraries import intents, messages, datas, chat_flow_test
 
 class DemandThankYouTest(chat_flow_test.ChatFlowTest):
@@ -8,7 +9,8 @@ class DemandThankYouTest(chat_flow_test.ChatFlowTest):
         self.receive_reply_assert(
             input,
             intents.NEW_DEMAND,
-            messages.DEMAND__THANK_YOU
+            messages.DEMAND__THANK_YOU,
+            render_to_string('chat/DO_NOT_UNDERSTAND_OPTION.txt')
         )
     
     def test_choose_non_choice_with_number(self):
