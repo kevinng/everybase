@@ -96,4 +96,4 @@ class NewSupplyConfirmPacking_PreOrder_Test(chat_flow_test.ChatFlowTest):
         self.choose_no('2')
 
     def test_choose_no_with_text(self):
-        self.choose_no('2')
+        self.choose_no('no')
