@@ -1,7 +1,6 @@
-from chat.tests import utils
-from chat.libraries import intents, messages
+from chat.libraries import intents, messages, chat_flow_test
 
-class RegisterTestCase(utils.ChatFlowTest):
+class RegisterTestCase(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(name=None)
 

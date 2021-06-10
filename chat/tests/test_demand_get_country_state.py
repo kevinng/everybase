@@ -1,12 +1,13 @@
-from chat.tests import utils
-from chat.libraries import intents, messages, datas
+from chat.libraries import intents, messages, datas, chat_flow_test
 
-class NewDemandGetCountryStateTest(utils.ChatFlowTest):
+class NewDemandGetCountryStateTest(chat_flow_test.ChatFlowTest):
     def set_up_known_product(self):
-        self.set_up_user_entered_known_product_type(
+        _, _, kw = self.set_up_product_type()
+        self.set_up_data_value(
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT,
-            datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING
+            datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            kw.keyword
         )
 
     def set_up_unknown_product(self):

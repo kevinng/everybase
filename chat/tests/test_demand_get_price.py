@@ -1,7 +1,6 @@
-from chat.tests import utils
-from chat.libraries import intents, messages, datas
+from chat.libraries import intents, messages, datas, chat_flow_test
 
-class NewDemandGetPrice_KnownProductType_Test(utils.ChatFlowTest):
+class NewDemandGetPrice_KnownProductType_Test(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(
             intents.NEW_DEMAND,
@@ -21,7 +20,7 @@ class NewDemandGetPrice_KnownProductType_Test(utils.ChatFlowTest):
             value_string=input
         )
 
-class NewDemandGetPrice_UnknownProductType_Test(utils.ChatFlowTest):
+class NewDemandGetPrice_UnknownProductType_Test(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(
             intents.NEW_DEMAND,

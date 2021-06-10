@@ -1,8 +1,6 @@
-from chat.tests import utils
-from chat.libraries import intents, messages, datas, model_utils
-from relationships import models as relmods
+from chat.libraries import intents, messages, datas, model_utils, chat_flow_test
 
-class DemandConfirmInterestTest(utils.ChatFlowTest):
+class DemandConfirmInterestTest(chat_flow_test.ChatFlowTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',

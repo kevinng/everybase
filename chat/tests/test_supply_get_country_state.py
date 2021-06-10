@@ -1,12 +1,13 @@
-from chat.tests import utils
-from chat.libraries import intents, messages, datas, context_utils
+from chat.libraries import intents, messages, datas, chat_flow_test
 
 class NewSupplyGetCountryStateTest():
     def set_up_known_product(self):
-        self.set_up_user_entered_known_product_type(
+        _, _, kw = self.set_up_product_type()
+        self.set_up_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            kw.keyword
         )
 
     def set_up_unknown_product(self):
@@ -18,7 +19,7 @@ class NewSupplyGetCountryStateTest():
         )
 
 class NewSupplyGetCountryStateReadyOTG_KnownProduct_Test(
-    utils.ChatFlowTest, NewSupplyGetCountryStateTest):
+    chat_flow_test.ChatFlowTest, NewSupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
@@ -39,7 +40,7 @@ class NewSupplyGetCountryStateReadyOTG_KnownProduct_Test(
         )
 
 class NewSupplyGetCountryStateReadyOTG_UnknownProduct_Test(
-    utils.ChatFlowTest, NewSupplyGetCountryStateTest):
+    chat_flow_test.ChatFlowTest, NewSupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
@@ -60,7 +61,7 @@ class NewSupplyGetCountryStateReadyOTG_UnknownProduct_Test(
         )
 
 class NewSupplyGetCountryStatePreOrder_KnownProduct_Test(
-    utils.ChatFlowTest, NewSupplyGetCountryStateTest):
+    chat_flow_test.ChatFlowTest, NewSupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
@@ -81,7 +82,7 @@ class NewSupplyGetCountryStatePreOrder_KnownProduct_Test(
         )
 
 class NewSupplyGetCountryStatePreOrder_UnknownProduct_Test(
-    utils.ChatFlowTest, NewSupplyGetCountryStateTest):
+    chat_flow_test.ChatFlowTest, NewSupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,

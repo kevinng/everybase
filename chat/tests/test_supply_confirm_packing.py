@@ -1,7 +1,6 @@
-from chat.tests import utils
-from chat.libraries import intents, messages, datas, context_utils
+from chat.libraries import intents, messages, datas, chat_flow_test
 
-class NewSupplyConfirmPacking_ReadyOTG_Test(utils.ChatFlowTest):
+class NewSupplyConfirmPacking_ReadyOTG_Test(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
         self.set_up_data_value(
@@ -50,7 +49,7 @@ class NewSupplyConfirmPacking_ReadyOTG_Test(utils.ChatFlowTest):
     def test_choose_no_with_text(self):
         self.choose_no('no')
 
-class NewSupplyConfirmPacking_PreOrder_Test(utils.ChatFlowTest):
+class NewSupplyConfirmPacking_PreOrder_Test(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
         self.set_up_data_value(

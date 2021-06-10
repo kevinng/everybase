@@ -1,7 +1,6 @@
-from chat.tests import utils
-from chat.libraries import intents, messages, datas
+from chat.libraries import intents, messages, datas, chat_flow_test
 
-class NewSupplyGetDepositTestCase(utils.ChatFlowTest):
+class NewSupplyGetDepositTestCase(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_DEPOSIT)
 

@@ -1,7 +1,6 @@
-from chat.tests import utils
-from chat.libraries import intents, messages, datas, context_utils, model_utils
+from chat.libraries import intents, messages, datas, chat_flow_test
 
-class NewSupplyGetPacking_ReadyOTG_Test(utils.ChatFlowTest):
+class NewSupplyGetPacking_ReadyOTG_Test(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
         self.set_up_data_value(
@@ -23,7 +22,7 @@ class NewSupplyGetPacking_ReadyOTG_Test(utils.ChatFlowTest):
             value_string=input
         )
 
-class NewSupplyGetPacking_PreOrder_Test(utils.ChatFlowTest):
+class NewSupplyGetPacking_PreOrder_Test(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
         self.set_up_data_value(

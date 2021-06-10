@@ -1,7 +1,6 @@
-from chat.tests import utils
-from chat.libraries import intents, messages, datas
+from chat.libraries import intents, messages, datas, chat_flow_test
 
-class NewDemandGetQuantity_KnownProduct_TestCase(utils.ChatFlowTest):
+class NewDemandGetQuantity_KnownProduct_TestCase(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(
             intents.NEW_DEMAND,
@@ -33,7 +32,7 @@ class NewDemandGetQuantity_KnownProduct_TestCase(utils.ChatFlowTest):
     def test_enter_quantity_2(self):
         self.enter_quantity('10.5', 10.5)
 
-class NewDemandGetQuantity_UnknownProduct_TestCase(utils.ChatFlowTest):
+class NewDemandGetQuantity_UnknownProduct_TestCase(chat_flow_test.ChatFlowTest):
     def setUp(self):
         super().setUp(
             intents.NEW_DEMAND,
