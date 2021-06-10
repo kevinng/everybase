@@ -40,6 +40,8 @@ class MessageHandler:
         self.intent_key = intent_key
         self.message_key = message_key
         self.options = []
+        self.env_vars = {}
+        self.env_var_funcs = {}
 
         self.dataset = self.get_or_create_dataset()
 
@@ -48,8 +50,50 @@ class MessageHandler:
         """
         return None
 
+    def set_env_var(self, key, value=None, value_func=None):
+        """Set environment variable. If value is lazy-loaded, set value to None
+        and set a value_func and it will be used to lazy-load the value.
+        
+        An exception will be raised if both value and value_func are None.
+
+        Parameters
+        ----------
+        key : String, optional
+            Key
+        value : String, optional
+            Value
+        value_func : Function, optional
+            Value function which will be used to set value lazy-loaded. Value
+                must not be set if it is to be lazy-loaded.
+        """
+        if value is None and value_func is None:
+            raise Exception('value_func must be set if value is not set')
+        
+        self.env_vars[key] = value
+        self.env_var_funcs[key] = value_func
+
+    def get_env_var(self, key):
+        """Get environment variable. If it does not exist, will set with with
+        pre-defined environment variable function.
+
+        Parameters
+        ----------
+        key
+            Key for value/value-function
+        """
+        value = self.env_vars.get(key)
+        if value is None:
+            # Value does not exist for key, set it with the value function
+            # Note: if value is not set, value function MUST be set, or an error
+            #   will be raised
+            self.env_vars[key] = self.env_var_funcs[key]()
+            return self.env_vars[key]
+
+        return value
+        
     def add_option(self, match_strs, intent_key, message_key, params,
-        data_key=None, data_value=None):
+        data_key=None, data_value=None, intent_key_func=None,
+        message_key_func=None):
         """Add an option to this handler to be matched against the message body.
         To be used with the reply_option method.
 
@@ -75,9 +119,16 @@ class MessageHandler:
             If present, store user's input under context/data-key
         data_value : string, optional
             If present, store user's input under context/data-key with this value
+        intent_key_func : function, optional
+            If present, will be used to ascertain the intent key - ignoring
+            intent_key
+        message_key_func : function, optional
+            If present, will be used to ascertain the message key - ignoring
+            message_key
         """
         self.options.append(
-            (match_strs, intent_key, message_key, params, data_key, data_value))
+            (match_strs, intent_key, message_key, params, data_key, data_value,
+                intent_key_func, message_key_func))
 
     def done_reply(self, intent_key, message_key, params={}):
         """Convenience function to call self.done_to_context and
@@ -103,7 +154,8 @@ class MessageHandler:
         If no matching option is found - return reply_invalid_option value.
         """
         for o in self.options:
-            match_strs, intent_key, message_key, params_func, data_key, data_value = o
+            match_strs, intent_key, message_key, params_func, data_key, \
+                data_value, intent_key_func, message_key_func = o
             for match_str, tolerance in match_strs:
                 if nlp.match(self.message.body, match_str, tolerance):
                     if data_key is not None:
@@ -122,7 +174,19 @@ class MessageHandler:
                     else:
                         params = {}
 
-                    return self.done_reply(intent_key, message_key, params)
+                    # Get context keys
+                    if intent_key_func is not None:
+                        to_intent_key = intent_key_func()
+                    else:
+                        to_intent_key = intent_key
+                    
+                    if message_key_func is not None:
+                        to_message_key = message_key_func()
+                    else:
+                        to_message_key = message_key
+
+                    return self.done_reply(
+                        to_intent_key, to_message_key, params)
 
         return self.reply_invalid_option()
 
@@ -269,7 +333,7 @@ class MessageHandler:
         
         return None
 
-    def get_latest_value(self, intent_key, message_key, data_key):
+    def get_latest_value(self, intent_key, message_key, data_key, inbound=True):
         """Convenience method to call model_utils.get_latest_value with this
         message's sender
         """
@@ -277,5 +341,6 @@ class MessageHandler:
             intent_key,
             message_key,
             data_key,
-            self.message.from_user
+            self.message.from_user,
+            inbound
         )
