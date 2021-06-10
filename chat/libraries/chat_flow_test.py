@@ -339,7 +339,8 @@ class ChatFlowTest(TestCase):
             value_id=value_id
         )
 
-    def set_up_product_type(self):
+    def set_up_product_type(self, name=None, uom_name=None,
+        uom_description=None, keyword=None):
         """Set up mock product type and relevant models
 
         Returns
@@ -348,22 +349,34 @@ class ChatFlowTest(TestCase):
             Tuple of product-type, unit-of-measure, matching-keyword model
             references created
         """
+        if name is None:
+            name = 'Product %d' % len(self.product_types)
+        
+        if uom_name is None:
+            uom_name = 'Product %d UOM' % len(self.product_types)
+        
+        if uom_description is None:
+            uom_description = 'Product %d UOM description' % \
+                len(self.product_types)
+
+        if keyword is None:
+            keyword = 'product %d' % len(self.product_types)
+
         # Create test product type
-        product_type = relmods.ProductType.objects.create(
-            name='Product %d' % len(self.product_types))
+        product_type = relmods.ProductType.objects.create(name=name)
         self.product_types.append(product_type)
 
         # Create test unit-of-measure - required to ascertain if product type
         # is found
         uom = relmods.UnitOfMeasure.objects.create(
-            name='Product %d UOM' % len(self.product_types),
-            description='Product %d UOM description' % len(self.product_types),
+            name=uom_name,
+            description=uom_description,
             product_type=product_type)
         self.uoms.append(uom)
 
         # Create match keyword for test product type
         keyword = commods.MatchKeyword.objects.create(
-            keyword='product %d' % len(self.product_types),
+            keyword=keyword,
             tolerance=0,
             product_type=product_type)
         self.keywords.append(keyword)
