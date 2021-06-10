@@ -401,6 +401,11 @@ class Connection(Choice):
         if self.user_1.id > self.user_2.id:
             raise ValidationError('user_1.id must be smaller than user_2.id')
 
+TIMEFRAME_DURATION_UOM = [
+    ('d', 'Day'),
+    ('w', 'Week'),
+    ('m', 'Month')
+]
 class TimeFrame(Standard):
     """Time frame.
 
@@ -408,11 +413,7 @@ class TimeFrame(Standard):
     """
     duration_uom = models.CharField(
         max_length=2,
-        choices=[
-            ('d', 'Day'),
-            ('w', 'Week'),
-            ('m', 'Month')
-        ],
+        choices=TIMEFRAME_DURATION_UOM,
         db_index=True
     )
     duration = models.FloatField(
