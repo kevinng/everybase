@@ -1,5 +1,5 @@
-from django.template.loader import render_to_string
 from chat.libraries import intents, messages, datas, model_utils, chat_flow_test
+from chat.tests import texts
 
 class DemandConfirmInterestTest(chat_flow_test.ChatFlowTest):
     fixtures = [
@@ -56,7 +56,7 @@ class DemandConfirmInterest_NotConnected_Test(DemandConfirmInterestTest):
             input,
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST,
-            render_to_string('chat/DO_NOT_UNDERSTAND_OPTION.txt')
+            texts.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
