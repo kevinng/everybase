@@ -14,7 +14,7 @@ class SupplyThankYouTest(chat_flow_test.ChatFlowTest):
     def test_choose_non_choice_with_number(self):
         self.choose_non_choice('10')
 
-    def test_choose_non_choice_with_number(self):
+    def test_choose_non_choice_with_text(self):
         self.choose_non_choice('hello')
 
     def choose_new_supply(self, input):
