@@ -58,7 +58,7 @@ class DemandConfirmInterestTest(MessageHandlerTest):
             inbound=False
         )
 
-        # Demand and relevant models
+        # Supply and relevant models
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
             uom_name='Box',
@@ -79,66 +79,60 @@ class DemandConfirmInterestTest(MessageHandlerTest):
         )
 
 class DemandConfirmInterest_NotConnected_Test(DemandConfirmInterestTest):
-# TESTED
-    # def choose_non_choice(self, input):
-    #     self.receive_reply_assert(
-    #         input,
-    #         intents.DISCUSS_W_SELLER,
-    #         messages.DISCUSS__CONFIRM_INTEREST,
-    #         texts.DO_NOT_UNDERSTAND_OPTION
-    #     )
 
-# TESTED
-    # def test_choose_non_choice_with_number(self):
-    #     self.choose_non_choice('10')
+    def choose_non_choice(self, input):
+        self.receive_reply_assert(
+            input,
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            texts.DO_NOT_UNDERSTAND_OPTION
+        )
 
-    # def test_choose_non_choice_with_text(self):
-    #     self.choose_non_choice('hello')
+    def test_choose_non_choice_with_number(self):
+        self.choose_non_choice('10')
 
-# TESTED
-    # def choose_yes(self, input):
-    #     self.receive_reply_assert(
-    #         input,
-    #         intents.DISCUSS_W_SELLER,
-    #         messages.DISCUSS__CONFIRM_DETAILS,
-    #         texts.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS
-    #     )
-    #     self.assert_value(
-    #         datas.\
-    #             DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__CHOICE,
-    #         value_string=\
-    #         datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__YES
-    #     )
+    def test_choose_non_choice_with_text(self):
+        self.choose_non_choice('hello')
 
-# TESTED
-    # def test_choose_yes_with_number(self):
-    #     self.choose_yes('1')
-# TESTED
-    # def test_choose_yes_with_text(self):
-    #     self.choose_yes('yes')
+    def choose_yes(self, input):
+        self.receive_reply_assert(
+            input,
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_DETAILS,
+            texts.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS
+        )
+        self.assert_value(
+            datas.\
+                DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__CHOICE,
+            value_string=\
+            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__YES
+        )
 
-# TESTED
-    # def choose_no(self, input):
-    #     self.receive_reply_assert(
-    #         input,
-    #         intents.DISCUSS_W_SELLER,
-    #         messages.STILL_INTERESTED__CONFIRM,
-    #         texts.DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM
-    #     )
-    #     self.assert_value(
-    #         datas.\
-    #             DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__CHOICE,
-    #         value_string=\
-    #         datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__NO
-    #     )
+    def test_choose_yes_with_number(self):
+        self.choose_yes('1')
 
-# TESTED
-    # def test_choose_no_with_number(self):
-    #     self.choose_no('2')
+    def test_choose_yes_with_text(self):
+        self.choose_yes('yes')
 
-# TESTED
-    # def test_choose_no_with_text(self):
-    #     self.choose_no('no')
+    def choose_no(self, input):
+        self.receive_reply_assert(
+            input,
+            intents.DISCUSS_W_SELLER,
+            messages.STILL_INTERESTED__CONFIRM,
+            texts.DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM
+        )
+        self.assert_value(
+            datas.\
+                DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__CHOICE,
+            value_string=\
+            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__NO
+        )
+
+    def test_choose_no_with_number(self):
+        self.choose_no('2')
+
+    def test_choose_no_with_text(self):
+        self.choose_no('no')
     pass
 
 class DemandConfirmInterest_Connected_Test(DemandConfirmInterestTest):
@@ -152,7 +146,8 @@ class DemandConfirmInterest_Connected_Test(DemandConfirmInterestTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_SELLER,
-            messages.DISCUSS__ALREADY_CONNECTED
+            messages.DISCUSS__ALREADY_CONNECTED,
+            texts.DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED
         )
         self.assert_value(
             datas.\
@@ -161,8 +156,8 @@ class DemandConfirmInterest_Connected_Test(DemandConfirmInterestTest):
             datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__YES
         )
 
-    # def test_choose_yes_with_number(self):
-    #     self.choose_yes('1')
+    def test_choose_yes_with_number(self):
+        self.choose_yes('1')
 
-    # def test_choose_yes_with_text(self):
-    #     self.choose_yes('yes')
+    def test_choose_yes_with_text(self):
+        self.choose_yes('yes')

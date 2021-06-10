@@ -503,21 +503,25 @@ class DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST(MessageHandler):
     def _get_yes_not_connected_params(self):
         """Get template parameters for yes/not-connected outcome
         """
-        supply_id = self.get_latest_value(
+        demand_id = self.get_latest_value(
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST,
-            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
+            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__DEMAND__ID,
             False
         ).value_id
-        supply = relmods.Supply.objects.get(pk=supply_id)
+        demand = relmods.Demand.objects.get(pk=demand_id)
         return {
             'buying': True,
-            'supply': supply
+            'demand': demand
         }
     
     def _get_yes_connected_params(self):
         """Get template parameters for yes/connected outcome
         """
+
+        # Ascertain if user 1/2 is this user, then get the reference of the
+        # other user
+
         user_1_id = self.get_latest_value(
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST,
@@ -544,28 +548,40 @@ class DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST(MessageHandler):
 
         contact = relmods.User.objects.get(pk=contact_id)
 
+        # Get supply reference
+
+        supply_id = self.get_latest_value(
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
+            False
+        ).value_id
+        supply = relmods.Supply.objects.get(pk=supply_id)
+
         return {
             'buying': True,
-            'contact': contact
+            'contact': contact,
+            'supply': supply
         }
 
     def _get_no_params(self):
         """Get template parameters for no outcome
         """
-        product_type_id = self.get_latest_value(
+        demand_id = self.get_latest_value(
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST,
-            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__PRODUCT_TYPE__ID,
+            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__DEMAND__ID,
             False
         ).value_id
-
-        product_type = relmods.ProductType.objects.get(pk=product_type_id)
-
+        demand = relmods.Demand.objects.get(pk=demand_id)
         return {
-            'product_type_name': product_type.name
+            'demand': demand
         }
 
     def run(self):
+        # Set environment variable
+        # Test if users are connected, if so, set 'CONNECTED' in this message
+        # handler environment to True.
         self.set_env_var('CONNECTED', value_func=self._get_connected_env_var)
         connected = self.get_env_var('CONNECTED')
 

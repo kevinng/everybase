@@ -1,4 +1,4 @@
-Are you still interested in {{ product_type_name }}?
+Are you still interested in {{ demand.product_type.name|lower }}?
 
 *Reply*:
 1. Yes

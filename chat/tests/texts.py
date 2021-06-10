@@ -29,3 +29,23 @@ Target USD 15.15 per box
 *Are your demand details correct?*
 1. Yes
 2. No"""
+
+DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED = \
+"""This seller is already connected with you.
+
+*Seller's contacts*:
+
+Test Seller
++234562345678901
+
+Click this link to WhatsApp seller:
+https://wa.me/234562345678901
+
+*Supply details*:
+
+Nitrile Gloves
+Israel
+OTG/Ready Stock
+12000 Boxes
+200 pieces in 1 box
+USD 15.15 per box"""

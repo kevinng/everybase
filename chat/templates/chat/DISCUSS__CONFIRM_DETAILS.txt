@@ -1,7 +1,11 @@
-*Your {% if supply %}supply{% else %}demand{% endif %}:*
+*Your {% if buying %}demand{% else %}supply{% endif %}*:
 
-{{ lead_details }}
+{% if buying %}{{ demand.product_type.name }}
+{{ demand.country.name }}
+{{ demand.quantity|floatformat:0 }} {{ demand.packing.plural_name }}
+{{ demand.packing.description }}
+Target {{ demand.currency.name }} {{ demand.price|floatformat:2 }} per {{ demand.packing.name|lower }}{% else %}{% endif %}
 
-*Are your {% if supply %}supply{% else %}demand{% endif %} details updated?*
+*Are your {% if buying %}demand{% else %}supply{% endif %} details correct?*
 1. Yes
 2. No

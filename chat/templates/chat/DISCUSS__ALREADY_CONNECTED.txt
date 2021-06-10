@@ -1,12 +1,23 @@
 This {% if buying %}seller{% else %}buyer{% endif %} is already connected with you.
 
-*{% if buying %}Seller{% else %}Buyer{% endif %}'s contacts:*
+*{% if buying %}Seller{% else %}Buyer{% endif %}'s contacts*:
 
-{{ contact_details }}
+{{ contact.name }}
++{{ contact.phone_number.country_code }}{{ contact.phone_number.national_number }}
 
 Click this link to WhatsApp {% if buying %}seller{% else %}buyer{% endif %}:
-{{ whatsapp_url }}
+https://wa.me/{{ contact.phone_number.country_code }}{{ contact.phone_number.national_number }}
 
-*{% if buying %}Supply{% else %}Demand{% endif %} details:*
+*{% if buying %}Supply{% else %}Demand{% endif %} details*:
 
-{{ lead_details }}
+{% if buying %}{{ supply.product_type.name }}
+{{ supply.country.name }}
+{{ supply.availability.name }}
+{{ supply.quantity|floatformat:0 }} {{ supply.packing.plural_name }}
+{{ supply.packing.description }}
+{{ supply.currency.name }} {{ supply.price|floatformat:2 }} per {{ supply.packing.name|lower }}{% if supply.availability.programmatic_key == 'pre_order' %}{% if supply.preorder_timeframe.duration %}
+Duration: {{ supply.preorder_timeframe.duration|floatformat:0 }} {% if supply.preorder_timeframe.duration_uom == 'd' %}Days{% elif supply.preorder_timeframe.duration_uom == 'w' %}Weeks{% elif supply.preorder_timeframe.duration_uom == 'm' %}Months{% endif %}{% elif supply.preorder_timeframe.deadline %}
+By: {{ supply.preorder_timeframe|date:"jS F Y" }}{% endif %}{% if supply.deposit_percentage > 0 %}
+{% widthratio supply.deposit_percentage 1 100 %}% deposit{% endif %}
+{% if supply.accept_lc %}Accept LC{% else %}Do not accept LC{% endif %}{% endif %}{% comment %}demand details{% endcomment %}{% else %}
+{% endif %}
