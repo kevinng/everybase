@@ -1,7 +1,7 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
 
-class NewSupplyGetPacking_ReadyOTG_Test(MessageHandlerTest):
+class NewSupplySupplyGetPacking_ReadyOTG_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
         self.set_up_data_value(
@@ -23,7 +23,7 @@ class NewSupplyGetPacking_ReadyOTG_Test(MessageHandlerTest):
             value_string=input
         )
 
-class NewSupplyGetPacking_PreOrder_Test(MessageHandlerTest):
+class NewSupplySupplyGetPacking_PreOrder_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
         self.set_up_data_value(
