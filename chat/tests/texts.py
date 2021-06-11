@@ -5,6 +5,14 @@ text, because then - if the rendering technique breaks, the test cases will not
 be able to catch them.
 """
 
+MENU__MENU = \
+"""Hi Kevin Ng, Everybase can help you find buyers and sellers.
+
+*Reply*:
+1. Find buyers
+2. Find sellers
+3. Learn more about our service"""
+
 DO_NOT_UNDERSTAND_OPTION = \
 """Sorry I do not understand.
 
