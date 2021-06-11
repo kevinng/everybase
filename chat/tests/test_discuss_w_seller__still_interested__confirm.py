@@ -2,7 +2,7 @@ from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
 from chat.tests import texts
 
-class DemandStillInterestedConfirmTest(MessageHandlerTest):
+class DiscussWSellerStillInterestedConfirmTest(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.DISCUSS_W_SELLER,
