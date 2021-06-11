@@ -4,7 +4,7 @@ from chat.tests import texts
 
 class MenuTest(MessageHandlerTest):
     def setUp(self):
-        super().setUp(intents.MENU, messages.MENU, None)
+        super().setUp(intents.MENU, messages.MENU)
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
