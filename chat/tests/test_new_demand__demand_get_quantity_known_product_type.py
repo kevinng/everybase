@@ -1,7 +1,7 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
 
-class NewDemandGetQuantity_KnownProduct_TestCase(MessageHandlerTest):
+class NewDemandGetQuantityKnownProductTestCase(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.NEW_DEMAND,
@@ -32,23 +32,3 @@ class NewDemandGetQuantity_KnownProduct_TestCase(MessageHandlerTest):
 
     def test_enter_quantity_2(self):
         self.enter_quantity('10.5', 10.5)
-
-class NewDemandGetQuantity_UnknownProduct_TestCase(MessageHandlerTest):
-    def setUp(self):
-        super().setUp(
-            intents.NEW_DEMAND,
-            messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
-        )
-
-    def test_enter_quantity(self):
-        input = '200 MT'
-        self.receive_reply_assert(
-            input,
-            intents.NEW_DEMAND,
-            messages.DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE
-        )
-        self.assert_value(
-            datas.\
-        NEW_DEMAND__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE__QUANTITY__STRING,
-            value_string=input
-        )
