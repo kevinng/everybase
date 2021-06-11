@@ -2,7 +2,7 @@ from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
 from chat.tests import texts
 
-class NewSupplyConfirmPacking_ReadyOTG_Test(MessageHandlerTest):
+class NewSupplySupplyConfirmPacking_ReadyOTG_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
         self.set_up_data_value(
@@ -52,7 +52,7 @@ class NewSupplyConfirmPacking_ReadyOTG_Test(MessageHandlerTest):
     def test_choose_no_with_text(self):
         self.choose_no('no')
 
-class NewSupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
+class NewSupplySupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
         self.set_up_data_value(
