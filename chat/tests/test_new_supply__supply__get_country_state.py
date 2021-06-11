@@ -1,7 +1,7 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
 
-class NewSupplyGetCountryStateTest(MessageHandlerTest):
+class NewSupplySupplyGetCountryStateTest(MessageHandlerTest):
     def set_up_known_product(self):
         _, _, kw = self.set_up_product_type()
         self.set_up_data_value(
@@ -19,8 +19,8 @@ class NewSupplyGetCountryStateTest(MessageHandlerTest):
             'unknown product'
         )
 
-class NewSupplyGetCountryStateReadyOTG_KnownProduct_Test(
-    NewSupplyGetCountryStateTest):
+class NewSupplySupplyGetCountryStateReadyOTG_KnownProduct_Test(
+    NewSupplySupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
@@ -40,8 +40,8 @@ class NewSupplyGetCountryStateReadyOTG_KnownProduct_Test(
             value_string=input
         )
 
-class NewSupplyGetCountryStateReadyOTG_UnknownProduct_Test(
-    NewSupplyGetCountryStateTest):
+class NewSupplySupplyGetCountryStateReadyOTG_UnknownProduct_Test(
+    NewSupplySupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
@@ -61,8 +61,8 @@ class NewSupplyGetCountryStateReadyOTG_UnknownProduct_Test(
             value_string=input
         )
 
-class NewSupplyGetCountryStatePreOrder_KnownProduct_Test(
-    NewSupplyGetCountryStateTest):
+class NewSupplySupplyGetCountryStatePreOrder_KnownProduct_Test(
+    NewSupplySupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
@@ -82,8 +82,8 @@ class NewSupplyGetCountryStatePreOrder_KnownProduct_Test(
             value_string=input
         )
 
-class NewSupplyGetCountryStatePreOrder_UnknownProduct_Test(
-    NewSupplyGetCountryStateTest):
+class NewSupplySupplyGetCountryStatePreOrder_UnknownProduct_Test(
+    NewSupplySupplyGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
