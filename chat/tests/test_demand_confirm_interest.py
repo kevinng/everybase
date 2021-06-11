@@ -1,6 +1,9 @@
 from chat.libraries import intents, messages, datas, model_utils
 from chat.libraries.message_handler_test import MessageHandlerTest
 from chat.tests import texts
+from relationships import models as relmods
+from common import models as commods
+from payments import models as paymods
 
 class DemandConfirmInterestTest(MessageHandlerTest):
     fixtures = [
@@ -38,6 +41,10 @@ class DemandConfirmInterestTest(MessageHandlerTest):
             inbound=False
         )
 
+class DemandConfirmInterest_NotConnected_YesNo_Test(DemandConfirmInterestTest):
+    def setUp(self):
+        super().setUp()
+
         # Demand and relevant models
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
@@ -47,7 +54,11 @@ class DemandConfirmInterestTest(MessageHandlerTest):
         )
         demand = self.set_up_demand(
             product_type=product_type,
-            packing=packing
+            packing=packing,
+            country=commods.Country.objects.get(pk=601), # Israel
+            quantity=12000,
+            price=15.15,
+            currency=paymods.Currency.objects.get(pk=1) # USD
         )
         self.set_up_data_value(
             intents.DISCUSS_W_SELLER,
@@ -57,28 +68,6 @@ class DemandConfirmInterestTest(MessageHandlerTest):
             value_id=demand.id,
             inbound=False
         )
-
-        # Supply and relevant models
-        product_type, packing, _ = self.set_up_product_type(
-            name='Nitrile Gloves',
-            uom_name='Box',
-            uom_plural_name='Boxes',
-            uom_description='200 pieces in 1 box'
-        )
-        supply = self.set_up_supply(
-            product_type=product_type,
-            packing=packing
-        )
-        self.set_up_data_value(
-            intents.DISCUSS_W_SELLER,
-            messages.DISCUSS__CONFIRM_INTEREST,
-            data_key=\
-                datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
-            value_id=supply.id,
-            inbound=False
-        )
-
-class DemandConfirmInterest_NotConnected_Test(DemandConfirmInterestTest):
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
@@ -133,11 +122,38 @@ class DemandConfirmInterest_NotConnected_Test(DemandConfirmInterestTest):
 
     def test_choose_no_with_text(self):
         self.choose_no('no')
-    pass
 
-class DemandConfirmInterest_Connected_Test(DemandConfirmInterestTest):
+class DemandConfirmInterest_Connected_Yes_OTG_Test(DemandConfirmInterestTest):
+    """Supply use default OTG settings"""
     def setUp(self):
         super().setUp()
+
+        # Supply and relevant models
+        product_type, packing, _ = self.set_up_product_type(
+            name='Nitrile Gloves',
+            uom_name='Box',
+            uom_plural_name='Boxes',
+            uom_description='200 pieces in 1 box'
+        )
+        supply = self.set_up_supply(
+            product_type=product_type,
+            packing=packing,
+            country=commods.Country.objects.get(pk=601), # Israel
+            availability=relmods.Availability.objects.get(pk=1), # OTG
+            quantity=12000,
+            price=15.15,
+            currency=paymods.Currency.objects.get(pk=1), # USD
+            deposit_percentage=0.4,
+            accept_lc=False
+        )
+        self.set_up_data_value(
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            data_key=\
+                datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
+            value_id=supply.id,
+            inbound=False
+        )
 
         # Connect user
         model_utils.connect(self.user, self.user_2)

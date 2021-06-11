@@ -400,38 +400,11 @@ class MessageHandlerTest(TestCase):
         -------
         Mock supply model reference
         """
-
-        # Set default values
-
-        if product_type is None:
-            product_type, packing, _ = self.set_up_product_type()
-        
-        if country is None:
-            israel = commods.Country.objects.get(pk=601)
-
-        if availability is None:
-            otg = relmods.Availability.objects.get(pk=1)
-
-        if quantity is None:
-            quantity = 12000
-        
-        if price is None:
-            price = 15.15
-
-        if currency is None:
-            currency = paymods.Currency.objects.get(pk=1)
-
-        if deposit_percentage is None:
-            deposit_percentage = 0.4
-
-        if accept_lc is None:
-            accept_lc = False
-
         return relmods.Supply.objects.create(
             user=self.user,
             product_type=product_type,
-            country=israel,
-            availability=otg,
+            country=country,
+            availability=availability,
             packing=packing,
             quantity=quantity,
             price=price,
@@ -448,28 +421,10 @@ class MessageHandlerTest(TestCase):
         -------
         Mock demand model reference
         """
-
-        # Set default values
-
-        if product_type is None:
-            product_type, packing, _ = self.set_up_product_type()
-        
-        if country is None:
-            israel = commods.Country.objects.get(pk=601)
-
-        if quantity is None:
-            quantity = 12000
-        
-        if price is None:
-            price = 15.15
-
-        if currency is None:
-            currency = paymods.Currency.objects.get(pk=1)
-
         return relmods.Demand.objects.create(
             user=self.user,
             product_type=product_type,
-            country=israel,
+            country=country,
             packing=packing,
             quantity=quantity,
             price=price,
