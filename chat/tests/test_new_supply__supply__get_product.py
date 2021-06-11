@@ -1,7 +1,7 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
 
-class NewSupplyGetProductTestCase(MessageHandlerTest):
+class NewSupplySupplyGetProductTest(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PRODUCT)
 
