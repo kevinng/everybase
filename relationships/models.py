@@ -547,11 +547,11 @@ class Supply(Standard):
         db_index=True
     )
 
-    preorder_timeframe_captured = models.TextField(
+    pre_order_timeframe_captured = models.TextField(
         null=True,
         blank=True
     )
-    preorder_timeframe = models.ForeignKey(
+    pre_order_timeframe = models.ForeignKey(
         'TimeFrame',
         related_name='supplies',
         related_query_name='supplies',

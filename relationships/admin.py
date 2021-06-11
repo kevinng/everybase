@@ -174,11 +174,11 @@ class MatchAdmin(comadm.ChoiceAdmin):
 
 _supply_fields = ['product_type_captured', 'country_state_captured',
     'availability_captured', 'packing_captured', 'quantity_captured',
-    'quantity', 'preorder_timeframe_captured', 'price_captured', 'price', 
+    'quantity', 'pre_order_timeframe_captured', 'price_captured', 'price', 
     'deposit_percentage_captured', 'deposit_percentage',
     'accept_lc_captured', 'accept_lc']
 _supply_fk_fields = ['user', 'product_type', 'country', 'state', 'availability',
-    'packing', 'preorder_timeframe', 'currency', 'previous_version',
+    'packing', 'pre_order_timeframe', 'currency', 'previous_version',
     'next_version']
 @admin.register(mod.Supply)
 class SupplyAdmin(comadm.StandardAdmin):
