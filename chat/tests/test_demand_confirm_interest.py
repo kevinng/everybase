@@ -1,3 +1,4 @@
+import datetime, pytz
 from chat.libraries import intents, messages, datas, model_utils
 from chat.libraries.message_handler_test import MessageHandlerTest
 from chat.tests import texts
@@ -163,7 +164,128 @@ class DemandConfirmInterest_Connected_Yes_OTG_Test(DemandConfirmInterestTest):
             input,
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__ALREADY_CONNECTED,
-            texts.DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED
+            texts.DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED__OTG
+        )
+        self.assert_value(
+            datas.\
+                DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__CHOICE,
+            value_string=\
+            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__YES
+        )
+
+    def test_choose_yes_with_number(self):
+        self.choose_yes('1')
+
+    def test_choose_yes_with_text(self):
+        self.choose_yes('yes')
+
+class DemandConfirmInterest_Connected_Yes_PreOrderDuration_Test(
+    DemandConfirmInterestTest):
+    """Supply use default OTG settings"""
+    def setUp(self):
+        super().setUp()
+
+        # Supply and relevant models
+        product_type, packing, _ = self.set_up_product_type(
+            name='Nitrile Gloves',
+            uom_name='Box',
+            uom_plural_name='Boxes',
+            uom_description='200 pieces in 1 box'
+        )
+        pre_order_timeframe = relmods.TimeFrame.objects.create(
+            duration_uom='d',
+            duration=5
+        )
+        supply = self.set_up_supply(
+            product_type=product_type,
+            packing=packing,
+            country=commods.Country.objects.get(pk=601), # Israel
+            availability=relmods.Availability.objects.get(pk=2), # Pre-order
+            quantity=12000,
+            pre_order_timeframe=pre_order_timeframe, # 5 days
+            price=15.15,
+            currency=paymods.Currency.objects.get(pk=1), # USD
+            deposit_percentage=0.4,
+            accept_lc=False
+        )
+        self.set_up_data_value(
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            data_key=\
+                datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
+            value_id=supply.id,
+            inbound=False
+        )
+
+        # Connect user
+        model_utils.connect(self.user, self.user_2)
+
+    def choose_yes(self, input):
+        self.receive_reply_assert(
+            input,
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__ALREADY_CONNECTED,
+        texts.DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED__PRE_ORDER_DURATION
+        )
+        self.assert_value(
+            datas.\
+                DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__CHOICE,
+            value_string=\
+            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__INTERESTED__YES
+        )
+
+    def test_choose_yes_with_number(self):
+        self.choose_yes('1')
+
+    def test_choose_yes_with_text(self):
+        self.choose_yes('yes')
+
+class DemandConfirmInterest_Connected_Yes_PreOrderDeadline_Test(
+    DemandConfirmInterestTest):
+    """Supply use default OTG settings"""
+    def setUp(self):
+        super().setUp()
+
+        # Supply and relevant models
+        product_type, packing, _ = self.set_up_product_type(
+            name='Nitrile Gloves',
+            uom_name='Box',
+            uom_plural_name='Boxes',
+            uom_description='200 pieces in 1 box'
+        )
+        pre_order_timeframe = relmods.TimeFrame.objects.create(
+            deadline=datetime.datetime(2021, 2, 5, tzinfo=pytz.UTC)
+        )
+        supply = self.set_up_supply(
+            product_type=product_type,
+            packing=packing,
+            country=commods.Country.objects.get(pk=601), # Israel
+            availability=relmods.Availability.objects.get(pk=2), # Pre-order
+            quantity=12000,
+            pre_order_timeframe=pre_order_timeframe, # 5 Feb 2021
+            price=15.15,
+            currency=paymods.Currency.objects.get(pk=1), # USD
+            deposit_percentage=0.4,
+            accept_lc=False
+        )
+        self.set_up_data_value(
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            data_key=\
+                datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
+            value_id=supply.id,
+            inbound=False
+        )
+
+        # Connect user
+        model_utils.connect(self.user, self.user_2)
+
+    def choose_yes(self, input):
+        self.receive_reply_assert(
+            input,
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__ALREADY_CONNECTED,
+        texts.DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED__PRE_ORDER_DEADLINE
         )
         self.assert_value(
             datas.\

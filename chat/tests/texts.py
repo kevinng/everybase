@@ -30,7 +30,7 @@ Target USD 15.15 per box
 1. Yes
 2. No"""
 
-DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED = \
+DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED__OTG = \
 """This seller is already connected with you.
 
 *Seller's contacts*:
@@ -46,6 +46,50 @@ https://wa.me/234562345678901
 Nitrile Gloves
 Israel
 OTG/Ready Stock
+12000 Boxes
+200 pieces in 1 box
+USD 15.15 per box"""
+
+DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED__PRE_ORDER_DURATION = \
+"""This seller is already connected with you.
+
+*Seller's contacts*:
+
+Test Seller
++234562345678901
+
+Click this link to WhatsApp seller:
+https://wa.me/234562345678901
+
+*Supply details*:
+
+Nitrile Gloves
+Israel
+Pre-Order, 5 Days
+Do not accept LC
+40% Deposit
+12000 Boxes
+200 pieces in 1 box
+USD 15.15 per box"""
+
+DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED__PRE_ORDER_DEADLINE = \
+"""This seller is already connected with you.
+
+*Seller's contacts*:
+
+Test Seller
++234562345678901
+
+Click this link to WhatsApp seller:
+https://wa.me/234562345678901
+
+*Supply details*:
+
+Nitrile Gloves
+Israel
+Pre-Order, by 5th February 2021
+Do not accept LC
+40% Deposit
 12000 Boxes
 200 pieces in 1 box
 USD 15.15 per box"""

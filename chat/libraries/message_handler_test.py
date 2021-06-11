@@ -392,8 +392,8 @@ class MessageHandlerTest(TestCase):
         return (product_type, uom, keyword)
 
     def set_up_supply(self, product_type=None, country=None, availability=None,
-        packing=None, quantity=None, price=None, currency=None,
-        deposit_percentage=None, accept_lc=None):
+        packing=None, quantity=None, pre_order_timeframe=None, price=None,
+        currency=None, deposit_percentage=None, accept_lc=None):
         """Set up mock supply
 
         Returns
@@ -407,6 +407,7 @@ class MessageHandlerTest(TestCase):
             availability=availability,
             packing=packing,
             quantity=quantity,
+            pre_order_timeframe=pre_order_timeframe,
             price=price,
             currency=currency,
             deposit_percentage=deposit_percentage,
