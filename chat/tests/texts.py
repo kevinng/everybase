@@ -93,3 +93,13 @@ Do not accept LC
 12000 Boxes
 200 pieces in 1 box
 USD 15.15 per box"""
+
+DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU = \
+"""OK.
+
+Let us know if we may help you find buyers or sellers for other products.
+
+*Reply*:
+1. Find buyers
+2. Find sellers
+3. Learn more about our service"""
