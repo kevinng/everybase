@@ -1,7 +1,7 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
 
-class NewDemandGetCountryStateTest(MessageHandlerTest):
+class NewDemandDemandGetCountryStateTest(MessageHandlerTest):
     def set_up_known_product(self):
         _, _, kw = self.set_up_product_type()
         self.set_up_data_value(
@@ -19,8 +19,8 @@ class NewDemandGetCountryStateTest(MessageHandlerTest):
             'unknown product'
         )
 
-class NewDemandGetCountryState_KnownProduct_TestCase(
-    NewDemandGetCountryStateTest):
+class NewDemandGetCountryState_KnownProduct_Test(
+    NewDemandDemandGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_DEMAND,
@@ -40,8 +40,8 @@ class NewDemandGetCountryState_KnownProduct_TestCase(
             value_string=input
         )
 
-class NewDemandGetCountryState_UnknownProduct_TestCase(
-    NewDemandGetCountryStateTest):
+class NewDemandGetCountryState_UnknownProduct_Test(
+    NewDemandDemandGetCountryStateTest):
     def setUp(self):
         super().setUp(
             intents.NEW_DEMAND,
