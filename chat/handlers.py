@@ -627,7 +627,26 @@ class DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM(MessageHandler):
         return self.reply_option()
 
 class DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU(MessageHandler):
-    pass
+    def run(self):
+        self.add_option([('1', 0), ('find buyers', 3)],
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRODUCT, None,
+            datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__CHOICE,
+        datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__FIND_BUYER
+        )
+        self.add_option([('2', 0), ('find sellers', 3)],
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_PRODUCT, None,
+            datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__CHOICE,
+        datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__FIND_SELLER
+        )
+        self.add_option([('3', 0)],
+            intents.EXPLAIN_SERVICE,
+            messages.EXPLAIN_SERVICE, None,
+            datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__CHOICE,
+        datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__LEARN_MORE
+        )
+        return self.reply_option()
 
 class DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS(MessageHandler):
     pass
