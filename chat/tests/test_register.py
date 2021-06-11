@@ -1,5 +1,5 @@
 from chat.libraries import intents, messages
-from chat.libraries import MessageHandlerTest
+from chat.libraries.message_handler_test import MessageHandlerTest
 
 class RegisterTestCase(MessageHandlerTest):
     def setUp(self):

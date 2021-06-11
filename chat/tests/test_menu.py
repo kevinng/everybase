@@ -1,5 +1,5 @@
 from chat.libraries import intents, messages, datas
-from chat.libraries import MessageHandlerTest
+from chat.libraries.message_handler_test import MessageHandlerTest
 from chat.tests import texts
 
 class MenuTest(MessageHandlerTest):
