@@ -6,7 +6,7 @@ from relationships import models as relmods
 from common import models as commods
 from payments import models as paymods
 
-class DemandConfirmInterestTest(MessageHandlerTest):
+class DiscussWSellerDiscussConfirmInterestTest(MessageHandlerTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',
@@ -42,7 +42,8 @@ class DemandConfirmInterestTest(MessageHandlerTest):
             inbound=False
         )
 
-class DemandConfirmInterest_NotConnected_YesNo_Test(DemandConfirmInterestTest):
+class DiscussWSellerDiscussConfirmInterestTest_NotConnected_YesNo_Test(
+    DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
 
@@ -124,7 +125,8 @@ class DemandConfirmInterest_NotConnected_YesNo_Test(DemandConfirmInterestTest):
     def test_choose_no_with_text(self):
         self.choose_no('no')
 
-class DemandConfirmInterest_Connected_Yes_OTG_Test(DemandConfirmInterestTest):
+class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
+    DiscussWSellerDiscussConfirmInterestTest):
     """Supply use default OTG settings"""
     def setUp(self):
         super().setUp()
@@ -179,8 +181,9 @@ class DemandConfirmInterest_Connected_Yes_OTG_Test(DemandConfirmInterestTest):
     def test_choose_yes_with_text(self):
         self.choose_yes('yes')
 
-class DemandConfirmInterest_Connected_Yes_PreOrderDuration_Test(
-    DemandConfirmInterestTest):
+class \
+DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Test(
+    DiscussWSellerDiscussConfirmInterestTest):
     """Supply use default OTG settings"""
     def setUp(self):
         super().setUp()
@@ -240,8 +243,9 @@ class DemandConfirmInterest_Connected_Yes_PreOrderDuration_Test(
     def test_choose_yes_with_text(self):
         self.choose_yes('yes')
 
-class DemandConfirmInterest_Connected_Yes_PreOrderDeadline_Test(
-    DemandConfirmInterestTest):
+class \
+DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Test(
+    DiscussWSellerDiscussConfirmInterestTest):
     """Supply use default OTG settings"""
     def setUp(self):
         super().setUp()
