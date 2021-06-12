@@ -30,7 +30,7 @@ class DiscussWSellerStillInterestedThankYouTest(MessageHandlerTest):
         self.assert_value(
             datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__CHOICE,
             value_string=\
-        datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__FIND_BUYER
+                datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__FIND_BUYER
         )
 
     def test_choose_new_supply_with_number(self):
@@ -48,7 +48,7 @@ class DiscussWSellerStillInterestedThankYouTest(MessageHandlerTest):
         self.assert_value(
             datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__CHOICE,
             value_string=\
-        datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__FIND_SELLER
+                datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__FIND_SELLER
         )
 
     def test_choose_new_demand_with_number(self):
