@@ -17,11 +17,11 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
             texts.DO_NOT_UNDERSTAND_OPTION
         )
 
-    # def test_choose_non_choice_with_number(self):
-    #     self.choose_non_choice('10')
+    def test_choose_non_choice_with_number(self):
+        self.choose_non_choice('10')
 
-    # def test_choose_non_choice_with_text(self):
-    #     self.choose_non_choice('hello')
+    def test_choose_non_choice_with_text(self):
+        self.choose_non_choice('hello')
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -35,11 +35,11 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
             value_string=datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__YES
         )
     
-    # def test_choose_yes_with_number(self):
-    #     self.choose_yes('1')
+    def test_choose_yes_with_number(self):
+        self.choose_yes('1')
 
-    # def test_choose_yes_with_text(self):
-    #     self.choose_yes('yes')
+    def test_choose_yes_with_text(self):
+        self.choose_yes('yes')
 
     def choose_no(self, input):
         self.receive_reply_assert(

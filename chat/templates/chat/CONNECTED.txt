@@ -1,23 +1,23 @@
-You've connected with the {% if buying %}seller{% else %}buyer{% endif %}.
+You've connected with the {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}.
 
-*{% if buying %}Seller{% else %}Buyer{% endif %}'s contacts:*
+*{% if buying == True %}Seller{% elif buying == False %}Buyer{% endif %}'s contacts:*
 
 {{ contact_details }}
 
-Click this link to WhatsApp {% if buying %}seller{% else %}buyer{% endif %}:
+Click this link to WhatsApp {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}:
 {{ whatsapp_url }}
 
-*{% if buying %}Supply{% else %}Demand{% endif %} details*:
+*{% if buying == True %}Supply{% elif buying == False %}Demand{% endif %} details*:
 
 {{ lead_details }}
 
-*Your questions & {% if buying %}seller{% else %}buyer{% endif %}'s answers*:
+*Your questions & {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}'s answers*:
 
 {% for pair in qna_pairs %}
 {% if pair.asking %}
 *You*: {{ pair.question }}
-*{% if buying %}Seller{% else %}Buyer{% endif %}*: {{ pair.answer }}
+*{% if buying == True %}Seller{% elif buying == False %}Buyer{% endif %}*: {{ pair.answer }}
 {% else %}
-*{% if buying %}Seller{% else %}Buyer{% endif %}*: {{ pair.question }}
+*{% if buying == True %}Seller{% elif buying == False %}Buyer{% endif %}*: {{ pair.question }}
 *You*: {{ pair.answer }}
 {% endif %}

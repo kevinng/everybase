@@ -1,13 +1,13 @@
-Hi {{ name }}, {% if buying %}seller{% else %}buyer{% endif %} replied your question:
+Hi {{ name }}, {% if buying == True %}seller{% elif buying == False %}buyer{% endif %} replied your question:
 
 {{ question }}
 
-*{% if buying %}Seller{% else %}Buyer{% endif %}'s reply*:
+*{% if buying == True %}Seller{% elif buying == False %}Buyer{% endif %}'s reply*:
 
 {{ answer }}
 
 *Reply*:
 1. Answer question
-2. Buy {% if buying %}seller{% else %}buyer{% endif %}'s contact
-3. Stop discussing with this {% if buying %}seller{% else %}buyer{% endif %}
+2. Buy {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}'s contact
+3. Stop discussing with this {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}
 4. Learn about our service

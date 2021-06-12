@@ -1,4 +1,4 @@
-*Hi {{ name }}, we have {% if supply %}supply{% else %}demand{% endif %} for:*
+*Hi {{ name }}, we have {% if buying == True %}supply{% elif buying == False %}demand{% endif %} for:*
 
 {% lead_details %}
 

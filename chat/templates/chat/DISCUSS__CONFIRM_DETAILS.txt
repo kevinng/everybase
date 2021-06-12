@@ -1,11 +1,11 @@
-*Your {% if buying %}demand{% else %}supply{% endif %}*:
+*Your {% if buying == True %}demand{% elif buying == False %}supply{% endif %}*:
 
-{% if buying %}{{ demand.product_type.name }}
+{% if buying == True %}{{ demand.product_type.name }}
 {{ demand.country.name }}
 {{ demand.quantity|floatformat:0 }} {{ demand.packing.plural_name }}
 {{ demand.packing.description }}
-Target {{ demand.currency.name }} {{ demand.price|floatformat:2 }} per {{ demand.packing.name|lower }}{% else %}{% endif %}
+Target {{ demand.currency.name }} {{ demand.price|floatformat:2 }} per {{ demand.packing.name|lower }}{% elif buying == False %}{% endif %}
 
-*Are your {% if buying %}demand{% else %}supply{% endif %} details correct?*
+*Are your {% if buying == True %}demand{% elif buying == False %}supply{% endif %} details correct?*
 1. Yes
 2. No

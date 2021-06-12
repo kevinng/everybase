@@ -208,6 +208,7 @@ class MessageHandlerTest(TestCase):
             Text to assert against response body to user
         """
         response = self.receive_reply(body)
+        # print('FULL RESPONSE')
         # print(response)
         if reply is not None:
             # Assert target reply against TwilML response body
