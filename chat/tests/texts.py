@@ -149,4 +149,9 @@ DISCUSS_W_SELLER__DEMAND__GET_COUNTRY_STATE = \
 """What is the destination country/state?"""
 
 DISCUSS_W_SELLER__DISCUSS__THANK_YOU = \
-"""Thanks. We'll keep you updated."""
+"""Thanks. We'll keep you updated.
+
+*Reply*:
+1. Find buyers
+2. Find sellers
+3. Learn more about our service"""
