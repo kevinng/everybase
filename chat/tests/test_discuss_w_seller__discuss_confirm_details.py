@@ -17,11 +17,11 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
             texts.DO_NOT_UNDERSTAND_OPTION
         )
 
-    def test_choose_non_choice_with_number(self):
-        self.choose_non_choice('10')
+    # def test_choose_non_choice_with_number(self):
+    #     self.choose_non_choice('10')
 
-    def test_choose_non_choice_with_text(self):
-        self.choose_non_choice('hello')
+    # def test_choose_non_choice_with_text(self):
+    #     self.choose_non_choice('hello')
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -32,14 +32,14 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
         )
         self.assert_value(
             datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__CHOICE,
-            value_string=datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__NO
+            value_string=datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__YES
         )
     
-    def test_choose_yes_with_number(self):
-        self.choose_yes('1')
+    # def test_choose_yes_with_number(self):
+    #     self.choose_yes('1')
 
-    def test_choose_yes_with_text(self):
-        self.choose_yes('yes')
+    # def test_choose_yes_with_text(self):
+    #     self.choose_yes('yes')
 
     def choose_no(self, input):
         self.receive_reply_assert(
@@ -50,7 +50,7 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
         )
         self.assert_value(
             datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__CHOICE,
-            value_string=datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__YES
+            value_string=datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__NO
         )
 
     def test_choose_no_with_number(self):

@@ -1,3 +1,3 @@
-Please enter any questions you have for the {% if buyer %}buyer{% else %}seller{% end %}.
+Please enter any questions you have for the {% if buying == True %}seller{% elif buying == False %}buying{% endif %}.
 
 Reply 'none' if you have no questions.

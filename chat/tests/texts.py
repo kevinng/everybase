@@ -139,3 +139,11 @@ On making payment, you'd receive the contact for the seller/buyer.
 1. Find buyers
 2. Find sellers
 3. Speak with an Everybase human agent"""
+
+DISCUSS_W_SELLER__DISCUSS__ASK = \
+"""Please enter any questions you have for the seller.
+
+Reply 'none' if you have no questions."""
+
+DISCUSS_W_SELLER__DEMAND__GET_COUNTRY_STATE = \
+"""What is the destination country/state?"""
