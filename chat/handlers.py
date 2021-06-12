@@ -673,7 +673,15 @@ class DISCUSS_W_SELLER__DISCUSS__ALREADY_CONNECTED(MessageHandler):
         return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})
 
 class DISCUSS_W_SELLER__DISCUSS__ASK(MessageHandler):
-    pass
+    def run(self):
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+            DISCUSS_W_SELLER__DISCUSS__ASK__QUESTION__STRING)
+
+        return self.done_reply(
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__THANK_YOU
+        )
 
 class DISCUSS_W_SELLER__DISCUSS__THANK_YOU(MessageHandler):
     pass

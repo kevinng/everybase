@@ -147,3 +147,6 @@ Reply 'none' if you have no questions."""
 
 DISCUSS_W_SELLER__DEMAND__GET_COUNTRY_STATE = \
 """What is the destination country/state?"""
+
+DISCUSS_W_SELLER__DISCUSS__THANK_YOU = \
+"""Thanks. We'll keep you updated."""
