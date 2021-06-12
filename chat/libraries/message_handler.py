@@ -144,14 +144,28 @@ class MessageHandler:
         self.done_to_context(intent_key, message_key)
         return messages.get_body(message_key, params)
 
-    def reply_option(self):
+    def reply_option(self, invalid_option_intent_key=None,
+        invalid_option_message_key=None, invalid_option_params=None):
         """Run nlp.match_each_token against each option in against message body.
 
         Set context and return message body of the FIRST matching option.
 
         If data key/value is/are provided for an option, store user's choice.
 
-        If no matching option is found - return reply_invalid_option value.
+        If no matching option is found - return reply_invalid_option value,
+        passing in invalid_option_intent_key and invalid_option_message_key to set
+        the reply message if necessary.
+
+        Parameters
+        ----------
+        invalid_option_intent_key : String, optional
+            Intent key of the target context in the event of a invalid option. 
+            If set, will change the current context.
+        invalid_option_message_key : String, optional
+            Message key of the target context in the event of a invalid option.
+        invalid_option_params : String, optional
+            Template parameters for the template sent in the event of a
+            invalid option
         """
         for o in self.options:
             match_strs, intent_key, message_key, params_func, data_key, \
@@ -188,14 +202,39 @@ class MessageHandler:
                     return self.done_reply(
                         to_intent_key, to_message_key, params)
 
-        return self.reply_invalid_option()
+        return self.reply_invalid_option(invalid_option_intent_key,
+            invalid_option_message_key, invalid_option_params)
 
-    def reply_invalid_option(self):
+    def reply_invalid_option(self, invalid_option_intent_key=None,
+        invalid_option_message_key=None, invalid_option_params=None):
         """Default reply when the user sends an invalid option.
+
+        Parameters
+        ----------
+        invalid_option_intent_key : String, optional
+            Intent key of the target context in the event of a invalid option.
+            If set, will change the current context.
+        invalid_option_message_key : String, optional
+            Message key of the target context in the event of a invalid option.
+        invalid_option_params : String, optional
+            Template parameters for the template sent in the event of a
+            invalid option
         """
-        # Note: we don't need to set a new context. I.e. the user remains in
-        # the current context.
-        return messages.get_body(messages.DO_NOT_UNDERSTAND_OPTION, {})
+        if invalid_option_params is None:
+            invalid_option_params = {}
+
+        # If invalid_option_intent_key is set, change the current context. If not,
+        # the user stays in the current context.
+        if invalid_option_intent_key is None and \
+            invalid_option_message_key is None:
+            return messages.get_body(messages.DO_NOT_UNDERSTAND_OPTION, {})
+        elif invalid_option_intent_key is None and \
+            invalid_option_message_key is not None:
+            return messages.get_body(
+                invalid_option_message_key, invalid_option_params)
+
+        return self.done_reply(invalid_option_intent_key,
+            invalid_option_message_key, invalid_option_params)
 
     def reply_invalid_number(self):
         """Reply user entered an invalid number
