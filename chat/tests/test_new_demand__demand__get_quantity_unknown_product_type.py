@@ -1,5 +1,6 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
+from chat.tests import texts
 
 class NewDemandGetQuantityUnknownProductTest(MessageHandlerTest):
     def setUp(self):
@@ -13,7 +14,8 @@ class NewDemandGetQuantityUnknownProductTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_DEMAND,
-            messages.DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE
+            messages.DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE,
+            texts.NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE
         )
         self.assert_value(
             datas.\
