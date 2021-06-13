@@ -1,5 +1,6 @@
 from chat.libraries import intents, messages
 from chat.libraries.message_handler_test import MessageHandlerTest
+from chat.tests import texts
 
 class RegisterRegisterGetNameTest(MessageHandlerTest):
     def setUp(self):
@@ -9,7 +10,8 @@ class RegisterRegisterGetNameTest(MessageHandlerTest):
         self.receive_reply_assert(
             'Hi' ,
             intents.REGISTER,
-            messages.REGISTER__GET_NAME
+            messages.REGISTER__GET_NAME,
+            texts.REGISTER__REGISTER__GET_NAME
         )
         self.assertEqual(self.user.name, None)
         

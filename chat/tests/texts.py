@@ -299,3 +299,8 @@ NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE = \
 E.g., USD 20 per box
 
 Reply 'none' if no target price."""
+
+REGISTER__REGISTER__GET_NAME = \
+"""Thanks for contacting Everybase.
+
+May we know your name?"""
