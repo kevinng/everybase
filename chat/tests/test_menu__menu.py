@@ -62,11 +62,9 @@ class MenuMenuTest(MessageHandlerTest):
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,
-            value_string=datas.MENU__MENU__OPTION__FIND_SELLER
+            value_string=datas.MENU__MENU__OPTION__LEARN_MORE
         )
 
-    def test_choose_new_demand_with_number(self):
-        self.choose_new_demand('2')
-
-    def test_choose_new_demand_with_text(self):
-        self.choose_new_demand('find sellers')
+    def test_choose_learn_more(self):
+        # Note: only number option available
+        self.choose_learn_more('3')
