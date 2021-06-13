@@ -4,6 +4,7 @@ from chat.libraries.message_handler_test import MessageHandlerTest
 class NewSupplySupplyGetPacking_ReadyOTG_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
+        # User chose 'ready/OTG' in an earlier step
         self.set_up_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
@@ -26,6 +27,7 @@ class NewSupplySupplyGetPacking_ReadyOTG_Test(MessageHandlerTest):
 class NewSupplySupplyGetPacking_PreOrder_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
+        # User chose 'pre-order' in an earlier step
         self.set_up_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
