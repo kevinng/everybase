@@ -3,6 +3,8 @@ from chat.libraries.message_handler_test import MessageHandlerTest
 
 class NewDemandDemandGetCountryStateTest(MessageHandlerTest):
     def set_up_known_product(self):
+        # Set up a product, and have the user enter a term that matches the
+        # known product
         _, _, kw = self.set_up_product_type()
         self.set_up_data_value(
             intents.NEW_DEMAND,
@@ -12,11 +14,12 @@ class NewDemandDemandGetCountryStateTest(MessageHandlerTest):
         )
 
     def set_up_unknown_product(self):
+        # Have the user enter a term that does not match any known product
         self.set_up_data_value(
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT,
             datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING,
-            'unknown product'
+            'yWisrFJcMovxRwFyrHHH' # Unlikely term to match any known product
         )
 
 class NewDemandGetCountryState_KnownProduct_Test(
