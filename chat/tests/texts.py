@@ -230,3 +230,13 @@ NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING = \
 """Ready-stock/OTG price per carton?
 
 E.g., USD 20"""
+
+NEW_SUPPLY__SUPPLY__THANK_YOU = \
+"""Thank you.
+
+We'll contact our buyers and get back to you.
+
+*Reply*:
+1. Find buyers
+2. Find sellers
+3. Learn more about our service"""

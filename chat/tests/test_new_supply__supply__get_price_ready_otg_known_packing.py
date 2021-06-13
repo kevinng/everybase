@@ -1,5 +1,6 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
+from chat.tests import texts
 
 class NewSupplyGetPriceReadyOTGKnownPackingTest(MessageHandlerTest):
     def setUp(self):
@@ -13,7 +14,8 @@ class NewSupplyGetPriceReadyOTGKnownPackingTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__THANK_YOU
+            messages.SUPPLY__THANK_YOU,
+            texts.NEW_SUPPLY__SUPPLY__THANK_YOU
         )
         self.assert_value(
             datas.\
