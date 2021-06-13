@@ -189,3 +189,6 @@ NEW_SUPPLY__SUPPLY__GET_AVAILABILITY = \
 
 1. Ready-Stock / On-the-Ground (OTG)
 2. Pre-order"""
+
+NEW_DEMAND__DEMAND__GET_COUNTRY_STATE = \
+"""What is the destination country/state?"""

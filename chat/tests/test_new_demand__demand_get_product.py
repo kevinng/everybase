@@ -1,5 +1,6 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
+from chat.tests import texts
 
 class NewDemandDemandGetProductTest(MessageHandlerTest):
     def setUp(self):
@@ -10,7 +11,8 @@ class NewDemandDemandGetProductTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_DEMAND,
-            messages.DEMAND__GET_COUNTRY_STATE
+            messages.DEMAND__GET_COUNTRY_STATE,
+            texts.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE
         )
         self.assert_value(
             datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING,
