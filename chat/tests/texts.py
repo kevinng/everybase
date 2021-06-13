@@ -198,3 +198,17 @@ NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG = \
 
 NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER = \
 """Which country/state is your goods from?"""
+
+NEW_SUPPLY__SUPPLY__GET_PACKING = \
+"""Please describe packing.
+
+E.g., 100 pieces in 1 box."""
+
+NEW_SUPPLY__SUPPLY__CONFIRM_PACKING = \
+"""Is this packing correct?
+
+200 pieces in 1 box
+
+*Reply*:
+1. Yes
+2. No"""
