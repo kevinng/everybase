@@ -23,7 +23,8 @@ class MenuMenuTest(MessageHandlerTest):
     def choose_new_supply(self, input):
         self.receive_reply_assert(input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PRODUCT
+            messages.SUPPLY__GET_PRODUCT,
+            # texts.NEW_SUPPLY__SUPPLY__GET_PRODUCT
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,
@@ -39,7 +40,25 @@ class MenuMenuTest(MessageHandlerTest):
     def choose_new_demand(self, input):
         self.receive_reply_assert(input,
             intents.NEW_DEMAND,
-            messages.DEMAND__GET_PRODUCT
+            messages.DEMAND__GET_PRODUCT,
+            # texts.NEW_DEMAND__DEMAND__GET_PRODUCT
+        )
+        self.assert_value(
+            datas.MENU__MENU__OPTION__CHOICE,
+            value_string=datas.MENU__MENU__OPTION__FIND_SELLER
+        )
+
+    def test_choose_new_demand_with_number(self):
+        self.choose_new_demand('2')
+
+    def test_choose_new_demand_with_text(self):
+        self.choose_new_demand('find sellers')
+
+    def choose_learn_more(self, input):
+        self.receive_reply_assert(input,
+            intents.EXPLAIN_SERVICE,
+            messages.EXPLAIN_SERVICE,
+            # texts.EXPLAIN_SERVICE__EXPLAIN_SERVICE
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,
