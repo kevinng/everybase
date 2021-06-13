@@ -320,6 +320,13 @@ class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING(MessageHandler):
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
         )
 
+        if uom is None:
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING,
+                None
+            )
+
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING,
