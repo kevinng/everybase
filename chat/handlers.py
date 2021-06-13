@@ -314,9 +314,16 @@ class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING(MessageHandler):
         self.save_body_as_string(datas.\
     NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING__QUANTITY__STRING)
 
+        _, uom = self.get_product_type(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRODUCT,
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
+        )
+
         return self.done_reply(
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING
+            messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING,
+            { 'packing_singular' : uom.name }
         )
 
 class NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING(MessageHandler):

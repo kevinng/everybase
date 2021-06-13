@@ -225,3 +225,8 @@ NEW_SUPPLY__SUPPLY__GET_QUANTITY_PRE_ORDER = \
 """*Pre-order*: how much *quantity* and in what *timeframe* can you supply?
 
 E.g., 10000 boxes a month"""
+
+NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING = \
+"""Ready-stock/OTG price per carton?
+
+E.g., USD 20"""
