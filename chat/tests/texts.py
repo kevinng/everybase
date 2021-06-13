@@ -221,7 +221,7 @@ NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING = \
 
 E.g., 300 boxes"""
 
-NEW_SUPPLY__GET_QUANTITY_PRE_ORDER = \
+NEW_SUPPLY__SUPPLY__GET_QUANTITY_PRE_ORDER = \
 """*Pre-order*: how much *quantity* and in what *timeframe* can you supply?
 
 E.g., 10000 boxes a month"""

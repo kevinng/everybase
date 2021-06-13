@@ -187,7 +187,7 @@ class NewSupplySupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
             input,
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_QUANTITY_PRE_ORDER,
-            texts.NEW_SUPPLY__GET_QUANTITY_PRE_ORDER
+            texts.NEW_SUPPLY__SUPPLY__GET_QUANTITY_PRE_ORDER
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
