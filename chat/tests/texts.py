@@ -192,3 +192,9 @@ NEW_SUPPLY__SUPPLY__GET_AVAILABILITY = \
 
 NEW_DEMAND__DEMAND__GET_COUNTRY_STATE = \
 """What is the destination country/state?"""
+
+NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG = \
+"""Which country/state is your goods in?"""
+
+NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER = \
+"""Which country/state is your goods from?"""
