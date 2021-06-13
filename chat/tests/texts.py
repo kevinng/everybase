@@ -275,3 +275,10 @@ How many jars do you need?"""
 
 NEW_DEMAND__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE = \
 """How much quantity do you need?"""
+
+NEW_DEMAND__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE = \
+"""Target price per jar?
+
+E.g., USD 20
+
+Reply 'none' if no target price."""
