@@ -89,14 +89,11 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
 
         # User entered a product a product that's unknown in our database in
         # a previous step.
-        _, _, kw = self.set_up_product_type(
-            'Product X'
-        )
         self.set_up_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
-            'hello world' # Not matching product name
+            'mCGYaiIbemoD5R552EC0' # Unlikely string to match any known product
         )
 
     def choose_non_choice(self, input):
