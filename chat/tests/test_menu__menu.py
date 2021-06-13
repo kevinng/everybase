@@ -24,7 +24,7 @@ class MenuMenuTest(MessageHandlerTest):
         self.receive_reply_assert(input,
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
-            # texts.NEW_SUPPLY__SUPPLY__GET_PRODUCT
+            texts.NEW_SUPPLY__SUPPLY__GET_PRODUCT
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,
@@ -41,7 +41,7 @@ class MenuMenuTest(MessageHandlerTest):
         self.receive_reply_assert(input,
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT,
-            # texts.NEW_DEMAND__DEMAND__GET_PRODUCT
+            texts.NEW_DEMAND__DEMAND__GET_PRODUCT
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,
@@ -58,7 +58,7 @@ class MenuMenuTest(MessageHandlerTest):
         self.receive_reply_assert(input,
             intents.EXPLAIN_SERVICE,
             messages.EXPLAIN_SERVICE,
-            # texts.EXPLAIN_SERVICE__EXPLAIN_SERVICE
+            texts.EXPLAIN_SERVICE__EXPLAIN_SERVICE
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,

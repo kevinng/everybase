@@ -155,3 +155,31 @@ DISCUSS_W_SELLER__DISCUSS__THANK_YOU = \
 1. Find buyers
 2. Find sellers
 3. Learn more about our service"""
+
+NEW_SUPPLY__SUPPLY__GET_PRODUCT = \
+"""What do you sell?
+
+Enter 1 item only.
+
+E.g., nitrile gloves."""
+
+NEW_DEMAND__DEMAND__GET_PRODUCT = \
+"""What do you want to buy?
+
+Enter 1 item only.
+
+E.g., nitrile gloves"""
+
+EXPLAIN_SERVICE__EXPLAIN_SERVICE = \
+"""Everybase helps you find sellers and buyers.
+
+We charge a small connection fee.
+
+When you select the option to connect with a seller/buyer we referred to you, you'd be sent a payment link.
+
+On making payment, you'd receive the contact for the seller/buyer.
+
+*Reply*:
+1. Find buyers
+2. Find sellers
+3. Speak with an Everybase human agent"""
