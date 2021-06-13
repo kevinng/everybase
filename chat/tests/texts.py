@@ -245,3 +245,8 @@ We'll contact our buyers and get back to you.
 1. Find buyers
 2. Find sellers
 3. Learn more about our service"""
+
+NEW_SUPPLY__SUPPLY__GET_PRICE_PRE_ORDER = \
+"""Ex-works (EXW) price per box?
+
+E.g., USD 20 per box"""
