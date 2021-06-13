@@ -18,6 +18,11 @@ DO_NOT_UNDERSTAND_OPTION = \
 
 Please enter a valid option."""
 
+DO_NOT_UNDERSTAND_NUMBER = \
+"""Sorry I do not understand.
+
+Please enter a number."""
+
 DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM = \
 """Are you still interested in nitrile gloves?
 
@@ -255,3 +260,10 @@ NEW_SUPPLY__SUPPLY__GET_DEPOSIT = \
 """What % deposit do you require?
 
 Reply '0' if no deposit required."""
+
+NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC = \
+"""Do you accept LC?
+
+*Reply*:
+1. Yes
+2. No"""

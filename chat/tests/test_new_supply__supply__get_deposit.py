@@ -1,5 +1,6 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
+from chat.tests import texts
 
 class NewSupplySupplyGetDepositTestCase(MessageHandlerTest):
     def setUp(self):
@@ -9,14 +10,16 @@ class NewSupplySupplyGetDepositTestCase(MessageHandlerTest):
         self.receive_reply_assert(
             'hello',
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_DEPOSIT
+            messages.SUPPLY__GET_DEPOSIT,
+            texts.DO_NOT_UNDERSTAND_NUMBER
         )
 
     def enter_deposit(self, input, target):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_ACCEPT_LC
+            messages.SUPPLY__GET_ACCEPT_LC,
+            texts.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_DEPOSIT__DEPOSIT__NUMBER,
