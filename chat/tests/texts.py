@@ -183,3 +183,9 @@ On making payment, you'd receive the contact for the seller/buyer.
 1. Find buyers
 2. Find sellers
 3. Speak with an Everybase human agent"""
+
+NEW_SUPPLY__SUPPLY__GET_AVAILABILITY = \
+"""Availability?
+
+1. Ready-Stock / On-the-Ground (OTG)
+2. Pre-order"""
