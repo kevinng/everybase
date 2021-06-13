@@ -282,10 +282,24 @@ class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
         if availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG:
             # Goods are ready/OTG, get quantity of unknown packing
-            return self.done_reply(
+
+            product_type, uom = self.get_product_type(
                 intents.NEW_SUPPLY,
-                messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
+                messages.SUPPLY__GET_PRODUCT,
+                datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
             )
+
+            if product_type is None:
+                return self.done_reply(
+                    intents.NEW_SUPPLY,
+                    messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
+                )
+            else:
+                return self.done_reply(
+                    intents.NEW_SUPPLY,
+                    messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING,
+                    { 'packing_plural' : uom.plural_name }
+                )
         elif availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER:
             # Goods are pre-order, get quantity and timeframe
