@@ -179,7 +179,7 @@ class GetCountryStateBaseHandler(MessageHandler):
             return self.done_reply(
                 intents.NEW_SUPPLY,
                 messages.SUPPLY__CONFIRM_PACKING,
-                params={ 'packing_description': uom.description }
+                params={'packing_description': uom.description}
             )
         else:
             # UOM not found, request packing details
@@ -650,7 +650,7 @@ class DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU(MessageHandler):
 
 class DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS(MessageHandler):
     def _get_discuss_ask_params(self):
-        return { 'buying': True }
+        return {'buying': True}
 
     def run(self):
         self.add_option([('1', 0), ('yes', 0)],
@@ -684,7 +684,29 @@ class DISCUSS_W_SELLER__DISCUSS__ASK(MessageHandler):
         )
 
 class DISCUSS_W_SELLER__DISCUSS__THANK_YOU(MessageHandler):
-    pass
+    def run(self):
+        self.add_option([('1', 0), ('find buyers', 3)],
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRODUCT, None,
+            datas.MENU__MENU__OPTION__CHOICE,
+            datas.MENU__MENU__OPTION__FIND_BUYER
+        )
+        self.add_option([('2', 0), ('find sellers', 3)],
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_PRODUCT, None,
+            datas.MENU__MENU__OPTION__CHOICE,
+            datas.MENU__MENU__OPTION__FIND_SELLER
+        )
+        self.add_option([('3', 0)],
+            intents.EXPLAIN_SERVICE,
+            messages.EXPLAIN_SERVICE, None,
+            datas.MENU__MENU__OPTION__CHOICE,
+            datas.MENU__MENU__OPTION__LEARN_MORE
+        )
+
+        user = relmods.User.objects.get(pk=self.message.from_user.id)
+        return self.reply_option(
+            intents.MENU, messages.MENU, {'name': user.name})
 
 # Q&A intent
 
