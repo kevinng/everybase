@@ -18,11 +18,11 @@ class DiscussWSellerDiscussThankYouTest(MessageHandlerTest):
             texts.MENU__MENU
         )
     
-    # def test_choose_non_choice_with_number(self):
-    #     self.choose_non_choice('10')
+    def test_choose_non_choice_with_number(self):
+        self.choose_non_choice('10')
 
-    # def test_choose_non_choice_with_text(self):
-    #     self.choose_non_choice('hello')
+    def test_choose_non_choice_with_text(self):
+        self.choose_non_choice('hello')
 
     def choose_new_supply(self, input):
         self.receive_reply_assert(

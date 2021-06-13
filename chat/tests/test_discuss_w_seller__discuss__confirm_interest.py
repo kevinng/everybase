@@ -20,7 +20,7 @@ class DiscussWSellerDiscussConfirmInterestTest(MessageHandlerTest):
             None
         )
 
-        # User 1
+        # User 1 ID, set by system when sending this message to the user
         self.set_up_data_value(
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST,
@@ -30,7 +30,7 @@ class DiscussWSellerDiscussConfirmInterestTest(MessageHandlerTest):
             inbound=False
         )
 
-        # User 2
+        # User 2, set by system when sending this message to the user
         self.user_2, _ = self.create_user_phone_number(
             'Test Seller', '23456', '2345678901')
         self.set_up_data_value(
@@ -47,7 +47,8 @@ class DiscussWSellerDiscussConfirmInterestTest_NotConnected_YesNo_Test(
     def setUp(self):
         super().setUp()
 
-        # Demand and relevant models
+        # Demand and relevant models, and demand ID set by the system when
+        # sending this message to the user
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
             uom_name='Box',
@@ -131,7 +132,8 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
     def setUp(self):
         super().setUp()
 
-        # Supply and relevant models
+        # Supply and relevant models, and supply ID set by the system when
+        # sending this message to the user
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
             uom_name='Box',
@@ -188,7 +190,8 @@ DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Test(
     def setUp(self):
         super().setUp()
 
-        # Supply and relevant models
+        # Supply and relevant models, and supply ID set by the system when
+        # sending this message to the user
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
             uom_name='Box',
@@ -250,7 +253,8 @@ DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Test(
     def setUp(self):
         super().setUp()
 
-        # Supply and relevant models
+        # Supply and relevant models, and supply ID set by the system when
+        # sending this message to the user
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
             uom_name='Box',

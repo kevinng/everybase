@@ -4,8 +4,9 @@ from chat.tests import texts
 
 class DiscussWSellerStillInterestedThankYouTest(MessageHandlerTest):
     def setUp(self):
-        super().setUp(intents.DISCUSS_W_SELLER,
-        messages.STILL_INTERESTED__THANK_YOU)
+        super().setUp(
+            intents.DISCUSS_W_SELLER,
+            messages.STILL_INTERESTED__THANK_YOU)
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
