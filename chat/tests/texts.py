@@ -282,3 +282,13 @@ NEW_DEMAND__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE = \
 E.g., USD 20
 
 Reply 'none' if no target price."""
+
+NEW_DEMAND__DEMAND__THANK_YOU = \
+"""Thank you.
+
+We'll contact our sellers and get back to you.
+
+*Reply*:
+1. Find buyers
+2. Find sellers
+3. Learn more about our service"""
