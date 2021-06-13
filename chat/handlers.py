@@ -168,7 +168,7 @@ class GetCountryStateBaseHandler(MessageHandler):
         # Get TOP unit of measure for product type matching the latest data
         # value string of this user with the given keys. UOM is None if user's
         # input does not match any product type.
-        uom = self.get_uom_for_product_type_with_keys(
+        _, uom = self.get_product_type(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
@@ -201,7 +201,7 @@ class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(
         return self._run()
 
 class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
-    def run(self):
+    def _get_yes_message_key(self):
         # Get latest availability choice entered by user in context
         availability = self.get_latest_value(
             intents.NEW_SUPPLY,
@@ -209,19 +209,61 @@ class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE
         ).value_string
 
-        yes_intent = intents.NEW_SUPPLY
         if availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG:
             # Goods are ready/OTG, get quantity of known packing
-            yes_message = messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
+
+            _, uom = self.get_product_type(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__GET_PRODUCT,
+                datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
+            )
+
+            if uom is not None:
+                # Product type and packing is known
+                return messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
+            else:
+                # Product type and packing is not known
+                return messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
+
         elif availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER:
             # Goods are pre-order, get quantity and timeframe
-            yes_message = messages.SUPPLY__GET_QUANTITY_PRE_ORDER
+            return messages.SUPPLY__GET_QUANTITY_PRE_ORDER
+        
+        return None
 
-        self.add_option([('1', 0), ('yes', 0)], yes_intent, yes_message, None)
-        self.add_option([('2', 0), ('no', 0)], intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PACKING, None)
+    def _get_yes_params(self):
+        _, uom = self.get_product_type(
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRODUCT,
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
+        )
+
+        if uom is None:
+            return {}
+
+        return {
+            'packing_plural' : uom.plural_name
+        }
+
+    def run(self):
+        self.add_option([('1', 0), ('yes', 0)],
+            intents.NEW_SUPPLY, 
+            None,
+            self._get_yes_params,
+            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
+            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__YES,
+            None,
+            self._get_yes_message_key
+        )
+        self.add_option([('2', 0), ('no', 0)],
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PACKING,
+            None,
+            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
+            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__NO
+        )
         return self.reply_option()
 
 class NEW_SUPPLY__SUPPLY__GET_PACKING(MessageHandler):
@@ -375,7 +417,7 @@ class NEW_DEMAND__DEMAND__GET_COUNTRY_STATE(MessageHandler):
         # Get TOP unit of measure for product type matching the latest data
         # value string of this user with the given keys. UOM is None if user's
         # input does not match any product type.
-        uom = self.get_uom_for_product_type_with_keys(
+        _, uom = self.get_product_type(
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT,
             datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING

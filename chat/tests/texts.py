@@ -212,3 +212,16 @@ NEW_SUPPLY__SUPPLY__CONFIRM_PACKING = \
 *Reply*:
 1. Yes
 2. No"""
+
+NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING = \
+"""How many cartons can you supply ready-stock/OTG?"""
+
+NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING = \
+"""How much quantity can you supply ready-stock/OTG?
+
+E.g., 300 boxes"""
+
+NEW_SUPPLY__GET_QUANTITY_PRE_ORDER = \
+"""*Pre-order*: how much *quantity* and in what *timeframe* can you supply?
+
+E.g., 10000 boxes a month"""

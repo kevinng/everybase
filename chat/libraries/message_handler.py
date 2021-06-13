@@ -338,9 +338,9 @@ class MessageHandler:
 
         return self.save_value(data_key, value_float=value)
 
-    def get_uom_for_product_type_with_keys(self, intent_key, message_key,
-        data_key):
-        # Get latest user input data value string to match against a product type
+    def get_product_type(self, intent_key, message_key, data_key):
+        # Get latest user input data value string to match against a product
+        # type
         value = self.get_latest_value(intent_key, message_key, data_key)
 
         if value is None:
@@ -361,16 +361,17 @@ class MessageHandler:
                 # User input match a product type
                 product_type = k.product_type
 
+        uom = None
         if product_type is not None:
             # Matching product type found - get its top UOM
             try:
-                return relmods.UnitOfMeasure.objects.filter(
+                uom = relmods.UnitOfMeasure.objects.filter(
                     product_type=product_type
                 ).order_by('-priority').first()
             except relmods.UnitOfMeasure.DoesNotExist:
                 pass
         
-        return None
+        return (product_type, uom)
 
     def get_latest_value(self, intent_key, message_key, data_key, inbound=True):
         """Convenience method to call model_utils.get_latest_value with this
