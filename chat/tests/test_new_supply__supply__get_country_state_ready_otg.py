@@ -1,9 +1,11 @@
 from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler_test import MessageHandlerTest
+from chat.tests import texts
 
 class NewSupplySupplyGetCountryStateTest(MessageHandlerTest):
     def set_up_known_product(self):
-        _, _, kw = self.set_up_product_type()
+        _, _, kw = self.set_up_product_type(
+            uom_description='200 pieces in 1 box')
         self.set_up_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
@@ -33,7 +35,8 @@ class NewSupplySupplyGetCountryStateReadyOTG_KnownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__CONFIRM_PACKING
+            messages.SUPPLY__CONFIRM_PACKING,
+            texts.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
@@ -45,7 +48,8 @@ class NewSupplySupplyGetCountryStateReadyOTG_UnknownProduct_Test(
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG
+            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG,
+            texts.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG
         )
         self.set_up_unknown_product()
 
