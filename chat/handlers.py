@@ -6,11 +6,9 @@ Classes are named in the format:
 <intent key>__<message key>
 """
 
-from chat import models
 from relationships import models as relmods
-from chat.libraries import (intents, messages, datas, model_utils)
+from chat.libraries import intents, messages, datas
 from chat.libraries.message_handler import MessageHandler
-from relationships import models as relmods
 
 # Abstract handlers
 
@@ -318,7 +316,15 @@ class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING(
 
 class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING(
     MessageHandler):
-    pass
+    def run(self):
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+    DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING__PRICE__STRING)
+
+        return self.done_reply(
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__THANK_YOU
+        )
 
 class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_PRE_ORDER(MessageHandler):
     pass
