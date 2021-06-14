@@ -397,7 +397,15 @@ class DISCUSS_W_BUYER__STILL_INTERESTED__THANK_YOU(MenuHandler):
     pass
 
 class DISCUSS_W_BUYER__DISCUSS__ASK(MessageHandler):
-    pass
+    def run(self):
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+            DISCUSS_W_BUYER__DISCUSS__ASK__QUESTION__STRING)
+
+        return self.done_reply(
+            intents.DISCUSS_W_BUYER,
+            messages.DISCUSS__THANK_YOU
+        )
 
 class DISCUSS_W_BUYER__DISCUSS__THANK_YOU(MessageHandler):
     pass
