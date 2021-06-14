@@ -6,7 +6,7 @@ class NewSupplyGetQuantityReadyOTGUnknownPackingTest(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
+            messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
         )
         # User entered a product type string that does not match any product
         # in our product
@@ -27,6 +27,6 @@ class NewSupplyGetQuantityReadyOTGUnknownPackingTest(MessageHandlerTest):
         )
         self.assert_value(
             datas.\
-    NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING__QUANTITY__STRING,
+NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING__QUANTITY__STRING,
             value_string=input
         )
