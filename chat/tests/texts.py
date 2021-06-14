@@ -310,3 +310,9 @@ DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY = \
 
 1. Ready-Stock / On-the-Ground (OTG)
 2. Pre-order"""
+
+DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG = \
+"""Which country/state is your goods in?"""
+
+DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER = \
+"""Which country/state is your goods from?"""
