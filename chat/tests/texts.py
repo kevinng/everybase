@@ -363,3 +363,8 @@ DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING = \
 """Ready-stock/OTG price?
 
 E.g., USD 20 per box"""
+
+DISCUSS_W_BUYER__SUPPLY__GET_PRICE_PRE_ORDER = \
+"""Ex-works (EXW) price per box?
+
+E.g., USD 20 per box"""
