@@ -291,7 +291,15 @@ DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING__QUANTITY__STRING)
 
 class DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING(
     MessageHandler):
-    pass
+    def run(self):
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING__QUANTITY__STRING)
+
+        return self.done_reply(
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING
+        )
 
 class DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_PRE_ORDER(MessageHandler):
     pass

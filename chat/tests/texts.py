@@ -358,3 +358,8 @@ DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING = \
 """Ready-stock/OTG price per carton?
 
 E.g., USD 20"""
+
+DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING = \
+"""Ready-stock/OTG price?
+
+E.g., USD 20 per box"""
