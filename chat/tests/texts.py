@@ -380,3 +380,11 @@ DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC = \
 *Reply*:
 1. Yes
 2. No"""
+
+DISCUSS_W_SELLER__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE = \
+"""200 jams in 1 jar
+
+How many jars do you need?"""
+
+DISCUSS_W_SELLER__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE = \
+"""How much quantity do you need?"""

@@ -828,7 +828,36 @@ class DISCUSS_W_SELLER__DEMAND__GET_PRODUCT(MessageHandler):
         )
 
 class DISCUSS_W_SELLER__DEMAND__GET_COUNTRY_STATE(MessageHandler):
-    pass
+    def run(self):
+        # Save user input without validation
+        self.save_body_as_string(
+    datas.DISCUSS_W_SELLER__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING)
+
+        # Get TOP unit of measure for product type matching the latest data
+        # value string of this user with the given keys. UOM is None if user's
+        # input does not match any product type.
+        _, uom = self.get_product_type(
+            intents.DISCUSS_W_SELLER,
+            messages.DEMAND__GET_PRODUCT,
+            datas.DISCUSS_W_SELLER__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING
+        )
+
+        if uom is not None:
+            # UOM found, confirm packing details
+            return self.done_reply(
+                intents.DISCUSS_W_SELLER,
+                messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE,
+                params={
+                    'packing_description': uom.description,
+                    'packing_plural': uom.plural_name
+                }
+            )
+        else:
+            # UOM not found, request packing details
+            return self.done_reply(
+                intents.DISCUSS_W_SELLER,
+                messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
+            )
 
 class DISCUSS_W_SELLER__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE(MessageHandler):
     pass
