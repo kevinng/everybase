@@ -14,7 +14,7 @@ from relationships import models as relmods
 
 # Abstract handlers
 
-class SupplyGetCountryStateBaseHandler(MessageHandler):
+class SupplyGetCountryStateHandler(MessageHandler):
     """Handler to get country/state for a supply"""
 
     def run(self, save_data_key, pt_intent_key, pt_message_key, pt_data_key,
@@ -154,7 +154,7 @@ class DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY(MessageHandler):
         return self.reply_option()
 
 class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
-    SupplyGetCountryStateBaseHandler):
+    SupplyGetCountryStateHandler):
     def run(self):
         return super().run(
             # Save message body in this key
@@ -173,7 +173,7 @@ class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
         )
 
 class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(
-    SupplyGetCountryStateBaseHandler):
+    SupplyGetCountryStateHandler):
     def run(self):
         return super().run(
             # Save message body in this key
@@ -277,7 +277,7 @@ class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
         return self.reply_option()
 
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
-    SupplyGetCountryStateBaseHandler):
+    SupplyGetCountryStateHandler):
     def run(self):
         return super().run(
             # Save message body in this key
@@ -296,7 +296,7 @@ class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
         )
 
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(
-    SupplyGetCountryStateBaseHandler):
+    SupplyGetCountryStateHandler):
     def run(self):
         return super().run(
             # Save message body in this key
