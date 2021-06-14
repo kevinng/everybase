@@ -54,8 +54,9 @@ class NewSupplySupplyThankYouTest(MessageHandlerTest):
     def test_choose_new_demand_with_text(self):
         self.choose_new_demand('find sellers')
 
-    def choose_learn_more(self, input):
-        self.receive_reply_assert(input,
+    def test_learn_more(self):
+        self.receive_reply_assert(
+            '3', # Only number option available
             intents.EXPLAIN_SERVICE,
             messages.EXPLAIN_SERVICE,
             texts.EXPLAIN_SERVICE__EXPLAIN_SERVICE
@@ -64,7 +65,3 @@ class NewSupplySupplyThankYouTest(MessageHandlerTest):
             datas.MENU__MENU__OPTION__CHOICE,
             value_string=datas.MENU__MENU__OPTION__LEARN_MORE
         )
-
-    def test_choose_learn_more(self):
-        # Note: only number option available
-        self.choose_learn_more('3')

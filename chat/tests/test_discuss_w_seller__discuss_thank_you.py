@@ -57,3 +57,15 @@ class DiscussWSellerDiscussThankYouTest(MessageHandlerTest):
 
     def test_choose_new_demand_with_text(self):
         self.choose_new_demand('find sellers')
+
+    def test_learn_more(self):
+        self.receive_reply_assert(
+            '3', # Only number option available
+            intents.EXPLAIN_SERVICE,
+            messages.EXPLAIN_SERVICE,
+            texts.EXPLAIN_SERVICE__EXPLAIN_SERVICE
+        )
+        self.assert_value(
+            datas.MENU__MENU__OPTION__CHOICE,
+            value_string=datas.MENU__MENU__OPTION__LEARN_MORE
+        )
