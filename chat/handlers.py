@@ -62,7 +62,14 @@ class MENU__MENU(MenuHandler):
 # DISCUSS_W_BUYER intent
 
 class DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT(MessageHandler):
-    pass
+    def run(self):
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+            DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING)
+        return self.done_reply(
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__GET_AVAILABILITY
+        )
 
 class DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY(MessageHandler):
     pass

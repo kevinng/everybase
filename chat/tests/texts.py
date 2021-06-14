@@ -304,3 +304,9 @@ REGISTER__REGISTER__GET_NAME = \
 """Thanks for contacting Everybase.
 
 May we know your name?"""
+
+DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY = \
+"""Availability?
+
+1. Ready-Stock / On-the-Ground (OTG)
+2. Pre-order"""
