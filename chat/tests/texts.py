@@ -343,3 +343,13 @@ DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_PRE_ORDER = \
 """*Pre-order*: how much *quantity* and in what *timeframe* can you supply?
 
 E.g., 10000 boxes a month"""
+
+DISCUSS_W_BUYER__SUPPLY__THANK_YOU = \
+"""Thank you.
+
+We'll contact our buyers and get back to you.
+
+*Reply*:
+1. Find buyers
+2. Find sellers
+3. Learn more about our service"""
