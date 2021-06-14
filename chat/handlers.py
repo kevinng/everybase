@@ -407,7 +407,7 @@ class DISCUSS_W_BUYER__DISCUSS__ASK(MessageHandler):
             messages.DISCUSS__THANK_YOU
         )
 
-class DISCUSS_W_BUYER__DISCUSS__THANK_YOU(MessageHandler):
+class DISCUSS_W_BUYER__DISCUSS__THANK_YOU(MenuHandler):
     pass
 
 class DISCUSS_W_BUYER__DISCUSS__ALREADY_CONNECTED(MessageHandler):
