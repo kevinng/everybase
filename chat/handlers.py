@@ -378,7 +378,20 @@ class DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC(MessageHandler):
         return self.reply_option()
 
 class DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM(MessageHandler):
-    pass
+    def run(self):
+        self.add_option([('1', 0), ('yes', 0)],
+            intents.DISCUSS_W_BUYER,
+            messages.STILL_INTERESTED__THANK_YOU, None,
+            datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__CHOICE,
+            datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__YES
+        )
+        self.add_option([('2', 0), ('no', 0)],
+            intents.DISCUSS_W_BUYER,
+            messages.STILL_INTERESTED__THANK_YOU, None,
+            datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__CHOICE,
+            datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__NO
+        )
+        return self.reply_option()
 
 class DISCUSS_W_BUYER__STILL_INTERESTED__THANK_YOU(MessageHandler):
     pass
