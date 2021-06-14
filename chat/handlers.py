@@ -335,7 +335,15 @@ class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING(
         )
 
 class DISCUSS_W_BUYER__SUPPLY__GET_PRICE_PRE_ORDER(MessageHandler):
-    pass
+    def run(self):
+        # Save user input without validation
+        self.save_body_as_string(
+            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRICE_PREORDER__PRICE__STRING)
+
+        return self.done_reply(
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__GET_DEPOSIT
+        )
 
 class DISCUSS_W_BUYER__SUPPLY__GET_DEPOSIT(MessageHandler):
     pass

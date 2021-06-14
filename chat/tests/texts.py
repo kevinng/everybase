@@ -368,3 +368,8 @@ DISCUSS_W_BUYER__SUPPLY__GET_PRICE_PRE_ORDER = \
 """Ex-works (EXW) price per box?
 
 E.g., USD 20 per box"""
+
+DISCUSS_W_BUYER__SUPPLY__GET_DEPOSIT = \
+"""What % deposit do you require?
+
+Reply '0' if no deposit required."""
