@@ -316,3 +316,12 @@ DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG = \
 
 DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER = \
 """Which country/state is your goods from?"""
+
+DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING = \
+"""Is this packing correct?
+
+200 pieces in 1 box
+
+*Reply*:
+1. Yes
+2. No"""

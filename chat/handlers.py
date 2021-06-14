@@ -12,27 +12,67 @@ from chat.libraries import (intents, messages, datas, model_utils)
 from chat.libraries.message_handler import MessageHandler
 from relationships import models as relmods
 
-class SPEAK_HUMAN__CONFIRM_HUMAN(MessageHandler):
-    def run(self):
-        pass
+# Abstract handlers
 
-class EXPLAIN_SERVICE__EXPLAIN_SERVICE(MessageHandler):
-    def run(self):
-        pass
+class SupplyGetCountryStateBaseHandler(MessageHandler):
+    """Handler to get country/state for a supply"""
 
-# REGISTER intent
+    def run(self, save_data_key, pt_intent_key, pt_message_key, pt_data_key,
+        known_pt_intent_key, known_pt_message_key, unknown_pt_intent_key,
+        unknown_pt_message_key):
+        """
 
-class REGISTER__REGISTER__GET_NAME(MessageHandler):
-    def run(self):
-        # Store message body as user's name
-        user = self.message.from_user
-        user.name = self.message.body.strip()
-        user.save()
-        
-        # Menu
-        return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})
+        Parameters
+        ----------
+        save_data_key
+            Data key to save message body as
+        pt_intent_key
+            Intent key to get the product type string entered by the user - for
+            assessing if the user has entered a known product type
+        pt_message_key
+            Message key to get the product type string entered by the user - for
+            assessing if the user has entered a known product type
+        pt_data_key
+            Data key to get the product type string entered by the user - for
+            assessing if the user has entered a known data key
+        known_pt_intent_key
+            Intent key to direct the user to - if the user has entered a known
+            product type
+        known_pt_message_key
+            Message key to direct the user to - if the user has entered a known
+            product type
+        unknown_pt_intent_key
+            Intent key to direct the user to - if the user has entered an
+            unknown product type
+        unknown_pt_message_key
+            Message key to direct the user to - if the user has entered an
+            unknown product type
+        """
+        # Save user input without validation
+        self.save_body_as_string(save_data_key)
 
-# Menu intent
+        # Get TOP unit of measure for product type matching the latest data
+        # value string of this user with the given keys. UOM is None if user's
+        # input does not match any product type.
+        _, uom = self.get_product_type(
+            pt_intent_key,
+            pt_message_key,
+            pt_data_key
+        )
+
+        if uom is not None:
+            # UOM found, confirm packing details
+            return self.done_reply(
+                known_pt_intent_key,
+                known_pt_message_key,
+                params={ 'packing_description': uom.description }
+            )
+        else:
+            # UOM not found, request packing details
+            return self.done_reply(
+                unknown_pt_intent_key,
+                unknown_pt_message_key
+            )
 
 class MenuHandler(MessageHandler):
     def run(self):
@@ -55,6 +95,30 @@ class MenuHandler(MessageHandler):
             datas.MENU__MENU__OPTION__LEARN_MORE
         )
         return self.reply_option()
+
+# Speak to human, explain service
+
+class SPEAK_HUMAN__CONFIRM_HUMAN(MessageHandler):
+    def run(self):
+        pass
+
+class EXPLAIN_SERVICE__EXPLAIN_SERVICE(MessageHandler):
+    def run(self):
+        pass
+
+# Registration
+
+class REGISTER__REGISTER__GET_NAME(MessageHandler):
+    def run(self):
+        # Store message body as user's name
+        user = self.message.from_user
+        user.name = self.message.body.strip()
+        user.save()
+        
+        # Menu
+        return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})
+
+# Menu
 
 class MENU__MENU(MenuHandler):
     pass
@@ -89,9 +153,24 @@ class DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY(MessageHandler):
         )
         return self.reply_option()
 
-class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG(MessageHandler):
+class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
+    SupplyGetCountryStateBaseHandler):
     def run(self):
-        pass
+        return super().run(
+            # Save message body in this key
+            datas.\
+    DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,
+            # Get product type from string user entered in this context
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__GET_PRODUCT,
+            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            # Direct user to this context - if product type is known
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__CONFIRM_PACKING,
+            # Direct user to this context - if product type is not known
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__GET_PACKING
+        )
 
 class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(MessageHandler):
     pass
@@ -181,45 +260,43 @@ class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
         )
         return self.reply_option()
 
-class SupplyGetCountryStateBaseHandler(MessageHandler):
-    def run(self, data_key):
-        # Save user input without validation
-        self.save_body_as_string(data_key)
-
-        # Get TOP unit of measure for product type matching the latest data
-        # value string of this user with the given keys. UOM is None if user's
-        # input does not match any product type.
-        _, uom = self.get_product_type(
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PRODUCT,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
-        )
-
-        if uom is not None:
-            # UOM found, confirm packing details
-            return self.done_reply(
-                intents.NEW_SUPPLY,
-                messages.SUPPLY__CONFIRM_PACKING,
-                params={'packing_description': uom.description}
-            )
-        else:
-            # UOM not found, request packing details
-            return self.done_reply(
-                intents.NEW_SUPPLY,
-                messages.SUPPLY__GET_PACKING
-            )
-
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
     SupplyGetCountryStateBaseHandler):
     def run(self):
-        return super().run(datas.\
-        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING)
+        return super().run(
+            # Save message body in this key
+            datas.\
+        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,
+            # Get product type from string user entered in this context
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRODUCT,
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            # Direct user to this context - if product type is known
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__CONFIRM_PACKING,
+            # Direct user to this context - if product type is not known
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PACKING
+        )
 
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(
     SupplyGetCountryStateBaseHandler):
     def run(self):
-        return super().run(datas.\
-        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING)
+        return super().run(
+            # Save message body in this key
+            datas.\
+        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING,
+            # Get product type from string user entered in this context
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PRODUCT,
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            # Direct user to this context - if product type is known
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__CONFIRM_PACKING,
+            # Direct user to this context - if product type is not known
+            intents.NEW_SUPPLY,
+            messages.SUPPLY__GET_PACKING
+        )
 
 class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
     def _get_yes_message_key(self):
@@ -733,7 +810,6 @@ class DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM(MessageHandler):
         return self.reply_option()
 
 class DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU(MenuHandler):
-    # TODO: test implemented
     pass
 
 class DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS(MessageHandler):
