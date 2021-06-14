@@ -403,7 +403,9 @@ class DISCUSS_W_BUYER__DISCUSS__THANK_YOU(MessageHandler):
     pass
 
 class DISCUSS_W_BUYER__DISCUSS__ALREADY_CONNECTED(MessageHandler):
-    pass
+    def run(self):
+        user = relmods.User.objects.get(pk=self.message.from_user.id)
+        return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})
 
 class DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST(MessageHandler):
     def _get_connected_env_var(self):
