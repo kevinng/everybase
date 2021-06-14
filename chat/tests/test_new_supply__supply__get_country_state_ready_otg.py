@@ -62,7 +62,8 @@ class NewSupplySupplyGetCountryStateReadyOTG_UnknownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING,
+            texts.NEW_SUPPLY__SUPPLY__GET_PACKING
         )
         self.assert_value(
 datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,

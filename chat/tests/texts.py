@@ -325,3 +325,8 @@ DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING = \
 *Reply*:
 1. Yes
 2. No"""
+
+DISCUSS_W_BUYER__SUPPLY__GET_PACKING = \
+"""Please describe packing.
+
+E.g., 100 pieces in 1 box."""
