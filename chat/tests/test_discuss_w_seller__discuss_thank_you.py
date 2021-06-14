@@ -13,9 +13,9 @@ class DiscussWSellerDiscussThankYouTest(MessageHandlerTest):
     def choose_non_choice(self, input):
         self.receive_reply_assert(
             input,
-            intents.MENU,
-            messages.MENU,
-            texts.MENU__MENU
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__THANK_YOU,
+            texts.DO_NOT_UNDERSTAND_OPTION
         )
     
     def test_choose_non_choice_with_number(self):

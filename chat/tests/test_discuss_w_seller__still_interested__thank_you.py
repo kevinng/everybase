@@ -6,7 +6,8 @@ class DiscussWSellerStillInterestedThankYouTest(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.DISCUSS_W_SELLER,
-            messages.STILL_INTERESTED__THANK_YOU)
+            messages.STILL_INTERESTED__THANK_YOU
+        )
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
@@ -29,9 +30,8 @@ class DiscussWSellerStillInterestedThankYouTest(MessageHandlerTest):
             texts.SUPPLY__GET_PRODUCT
         )
         self.assert_value(
-            datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__FIND_BUYER
+            datas.MENU__MENU__OPTION__CHOICE,
+            value_string=datas.MENU__MENU__OPTION__FIND_BUYER
         )
 
     def test_choose_new_supply_with_number(self):
@@ -47,9 +47,8 @@ class DiscussWSellerStillInterestedThankYouTest(MessageHandlerTest):
             texts.DEMAND__GET_PRODUCT
         )
         self.assert_value(
-            datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__OPTION__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU__FIND_SELLER
+            datas.MENU__MENU__OPTION__CHOICE,
+            value_string=datas.MENU__MENU__OPTION__FIND_SELLER
         )
 
     def test_choose_new_demand_with_number(self):
