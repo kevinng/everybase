@@ -353,3 +353,8 @@ We'll contact our buyers and get back to you.
 1. Find buyers
 2. Find sellers
 3. Learn more about our service"""
+
+DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING = \
+"""Ready-stock/OTG price per carton?
+
+E.g., USD 20"""
