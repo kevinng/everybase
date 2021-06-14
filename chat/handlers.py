@@ -393,7 +393,7 @@ class DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM(MessageHandler):
         )
         return self.reply_option()
 
-class DISCUSS_W_BUYER__STILL_INTERESTED__THANK_YOU(MessageHandler):
+class DISCUSS_W_BUYER__STILL_INTERESTED__THANK_YOU(MenuHandler):
     pass
 
 class DISCUSS_W_BUYER__DISCUSS__ASK(MessageHandler):
