@@ -906,7 +906,15 @@ class DISCUSS_W_SELLER__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE(MessageHandler):
         )
 
 class DISCUSS_W_SELLER__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE(MessageHandler):
-    pass
+    def run(self):
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+        DISCUSS_W_SELLER__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE__PRICE__STRING)
+
+        return self.done_reply(
+            intents.DISCUSS_W_SELLER,
+            messages.DEMAND__THANK_YOU
+        )
 
 class DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST(MessageHandler):
     def _get_connected_env_var(self):
