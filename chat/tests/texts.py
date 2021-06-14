@@ -373,3 +373,10 @@ DISCUSS_W_BUYER__SUPPLY__GET_DEPOSIT = \
 """What % deposit do you require?
 
 Reply '0' if no deposit required."""
+
+DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC = \
+"""Do you accept LC?
+
+*Reply*:
+1. Yes
+2. No"""
