@@ -43,7 +43,7 @@ class NewSupplySupplyGetCountryStateReadyOTG_KnownProduct_Test(
             texts.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
+datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,
             value_string=input
         )
 
@@ -65,6 +65,6 @@ class NewSupplySupplyGetCountryStateReadyOTG_UnknownProduct_Test(
             messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
+datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,
             value_string=input
         )

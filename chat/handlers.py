@@ -181,11 +181,10 @@ class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
         )
         return self.reply_option()
 
-class GetCountryStateBaseHandler(MessageHandler):
-    def _run(self):
+class SupplyGetCountryStateBaseHandler(MessageHandler):
+    def run(self, data_key):
         # Save user input without validation
-        self.save_body_as_string(datas.\
-            NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE__COUNTRY_STATE__STRING)
+        self.save_body_as_string(data_key)
 
         # Get TOP unit of measure for product type matching the latest data
         # value string of this user with the given keys. UOM is None if user's
@@ -211,16 +210,16 @@ class GetCountryStateBaseHandler(MessageHandler):
             )
 
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
-    GetCountryStateBaseHandler):
+    SupplyGetCountryStateBaseHandler):
     def run(self):
-        # Use base handler's logic
-        return self._run()
+        return super().run(datas.\
+        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING)
 
 class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(
-    GetCountryStateBaseHandler):
+    SupplyGetCountryStateBaseHandler):
     def run(self):
-        # Use base handler's logic
-        return self._run()
+        return super().run(datas.\
+        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING)
 
 class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
     def _get_yes_message_key(self):
@@ -734,6 +733,7 @@ class DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM(MessageHandler):
         return self.reply_option()
 
 class DISCUSS_W_SELLER__STILL_INTERESTED__THANK_YOU(MenuHandler):
+    # TODO: test implemented
     pass
 
 class DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS(MessageHandler):
@@ -800,7 +800,7 @@ class QNA__STOP_DISCUSSION_REASON(MessageHandler):
 class QNA__STOP_DISCUSSION__STOP_DISCUSSION__THANK_YOU(MessageHandler):
     pass
 
-# CONNECT intent
+# Connect intent
 
 class CONNECT__PLEASE_PAY(MessageHandler):
     pass
