@@ -538,7 +538,15 @@ class NEW_DEMAND__DEMAND__THANK_YOU(MenuHandler):
 # DISCUSS_W_SELLER intent
 
 class DISCUSS_W_SELLER__DEMAND__GET_PRODUCT(MessageHandler):
-    pass
+    def run(self):
+        # Save user input without validation
+        self.save_body_as_string(
+            datas.DISCUSS_W_SELLER__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING)
+
+        return self.done_reply(
+            intents.DISCUSS_W_SELLER,
+            messages.DEMAND__GET_COUNTRY_STATE
+        )
 
 class DISCUSS_W_SELLER__DEMAND__GET_COUNTRY_STATE(MessageHandler):
     pass
