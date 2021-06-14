@@ -14,66 +14,6 @@ from relationships import models as relmods
 
 # Abstract handlers
 
-class SupplyGetCountryStateHandler(MessageHandler):
-    """Handler to get country/state for a supply"""
-
-    def run(self, save_data_key, pt_intent_key, pt_message_key, pt_data_key,
-        known_pt_intent_key, known_pt_message_key, unknown_pt_intent_key,
-        unknown_pt_message_key):
-        """
-
-        Parameters
-        ----------
-        save_data_key
-            Data key to save message body as
-        pt_intent_key
-            Intent key to get the product type string entered by the user - for
-            assessing if the user has entered a known product type
-        pt_message_key
-            Message key to get the product type string entered by the user - for
-            assessing if the user has entered a known product type
-        pt_data_key
-            Data key to get the product type string entered by the user - for
-            assessing if the user has entered a known data key
-        known_pt_intent_key
-            Intent key to direct the user to - if the user has entered a known
-            product type
-        known_pt_message_key
-            Message key to direct the user to - if the user has entered a known
-            product type
-        unknown_pt_intent_key
-            Intent key to direct the user to - if the user has entered an
-            unknown product type
-        unknown_pt_message_key
-            Message key to direct the user to - if the user has entered an
-            unknown product type
-        """
-        # Save user input without validation
-        self.save_body_as_string(save_data_key)
-
-        # Get TOP unit of measure for product type matching the latest data
-        # value string of this user with the given keys. UOM is None if user's
-        # input does not match any product type.
-        _, uom = self.get_product_type(
-            pt_intent_key,
-            pt_message_key,
-            pt_data_key
-        )
-
-        if uom is not None:
-            # UOM found, confirm packing details
-            return self.done_reply(
-                known_pt_intent_key,
-                known_pt_message_key,
-                params={ 'packing_description': uom.description }
-            )
-        else:
-            # UOM not found, request packing details
-            return self.done_reply(
-                unknown_pt_intent_key,
-                unknown_pt_message_key
-            )
-
 class MenuHandler(MessageHandler):
     def run(self):
         self.add_option([('1', 0), ('find buyers', 3)],
@@ -153,43 +93,63 @@ class DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY(MessageHandler):
         )
         return self.reply_option()
 
-class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
-    SupplyGetCountryStateHandler):
+class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG(MessageHandler):
     def run(self):
-        return super().run(
-            # Save message body in this key
-            datas.\
-    DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,
-            # Get product type from string user entered in this context
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+    DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING)
+
+        # Get TOP unit of measure for product type matching the latest data
+        # value string of this user with the given keys. UOM is None if user's
+        # input does not match any product type.
+        _, uom = self.get_product_type(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_PRODUCT,
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
-            # Direct user to this context - if product type is known
-            intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__CONFIRM_PACKING,
-            # Direct user to this context - if product type is not known
-            intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PACKING
+            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
         )
 
-class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(
-    SupplyGetCountryStateHandler):
+        if uom is not None:
+            # UOM found, confirm packing details
+            return self.done_reply(
+                intents.DISCUSS_W_BUYER,
+                messages.SUPPLY__CONFIRM_PACKING,
+                params={ 'packing_description': uom.description }
+            )
+        else:
+            # UOM not found, request packing details
+            return self.done_reply(
+                intents.DISCUSS_W_BUYER,
+                messages.SUPPLY__GET_PACKING
+            )
+
+class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(MessageHandler):
     def run(self):
-        return super().run(
-            # Save message body in this key
-            datas.\
-    DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING,
-            # Get product type from string user entered in this context
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+    DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING)
+
+        # Get TOP unit of measure for product type matching the latest data
+        # value string of this user with the given keys. UOM is None if user's
+        # input does not match any product type.
+        _, uom = self.get_product_type(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_PRODUCT,
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
-            # Direct user to this context - if product type is known
-            intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__CONFIRM_PACKING,
-            # Direct user to this context - if product type is not known
-            intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PACKING
+            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
         )
+
+        if uom is not None:
+            # UOM found, confirm packing details
+            return self.done_reply(
+                intents.DISCUSS_W_BUYER,
+                messages.SUPPLY__CONFIRM_PACKING,
+                params={ 'packing_description': uom.description }
+            )
+        else:
+            # UOM not found, request packing details
+            return self.done_reply(
+                intents.DISCUSS_W_BUYER,
+                messages.SUPPLY__GET_PACKING
+            )
 
 class DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING(MessageHandler):
     pass
@@ -276,43 +236,63 @@ class NEW_SUPPLY__SUPPLY__GET_AVAILABILITY(MessageHandler):
         )
         return self.reply_option()
 
-class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
-    SupplyGetCountryStateHandler):
+class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG(MessageHandler):
     def run(self):
-        return super().run(
-            # Save message body in this key
-            datas.\
-        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,
-            # Get product type from string user entered in this context
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING)
+
+        # Get TOP unit of measure for product type matching the latest data
+        # value string of this user with the given keys. UOM is None if user's
+        # input does not match any product type.
+        _, uom = self.get_product_type(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
-            # Direct user to this context - if product type is known
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__CONFIRM_PACKING,
-            # Direct user to this context - if product type is not known
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PACKING
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
         )
 
-class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(
-    SupplyGetCountryStateHandler):
+        if uom is not None:
+            # UOM found, confirm packing details
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__CONFIRM_PACKING,
+                params={ 'packing_description': uom.description }
+            )
+        else:
+            # UOM not found, request packing details
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__GET_PACKING
+            )
+
+class NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(MessageHandler):
     def run(self):
-        return super().run(
-            # Save message body in this key
-            datas.\
-        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING,
-            # Get product type from string user entered in this context
+        # Save user input without validation
+        self.save_body_as_string(datas.\
+        NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING)
+
+        # Get TOP unit of measure for product type matching the latest data
+        # value string of this user with the given keys. UOM is None if user's
+        # input does not match any product type.
+        _, uom = self.get_product_type(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
-            # Direct user to this context - if product type is known
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__CONFIRM_PACKING,
-            # Direct user to this context - if product type is not known
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PACKING
+            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING
         )
+
+        if uom is not None:
+            # UOM found, confirm packing details
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__CONFIRM_PACKING,
+                params={ 'packing_description': uom.description }
+            )
+        else:
+            # UOM not found, request packing details
+            return self.done_reply(
+                intents.NEW_SUPPLY,
+                messages.SUPPLY__GET_PACKING
+            )
 
 class NEW_SUPPLY__SUPPLY__CONFIRM_PACKING(MessageHandler):
     def _get_yes_message_key(self):
