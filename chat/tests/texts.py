@@ -506,3 +506,11 @@ Let us know if we may help you find buyers or sellers for other products.
 1. Find buyers
 2. Find sellers
 3. Learn more about our service"""
+
+DISCUSS_W_BUYER__DISCUSS__ASK = \
+"""Please enter any questions you have for the seller.
+
+Reply 'none' if you have no questions."""
+
+DISCUSS_W_BUYER__DEMAND__GET_COUNTRY_STATE = \
+"""What is the destination country/state?"""

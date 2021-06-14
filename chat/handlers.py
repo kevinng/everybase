@@ -544,7 +544,23 @@ class DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST(MessageHandler):
         return self.reply_option()
 
 class DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS(MessageHandler):
-    pass
+    def _get_discuss_ask_params(self):
+        return {'buying': True}
+
+    def run(self):
+        self.add_option([('1', 0), ('yes', 0)],
+            intents.DISCUSS_W_BUYER,
+            messages.DISCUSS__ASK, self._get_discuss_ask_params,
+            datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS__CHOICE,
+            datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS__YES
+        )
+        self.add_option([('2', 0), ('no', 0)],
+            intents.DISCUSS_W_BUYER,
+            messages.DEMAND__GET_COUNTRY_STATE, None,
+            datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS__CHOICE,
+            datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS__NO
+        )
+        return self.reply_option()
 
 # NEW_SUPPLY intent
 
