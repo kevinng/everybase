@@ -62,7 +62,8 @@ class DiscussWBuyerSupplyGetCountryStateReadyOTG_UnknownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING,
+            texts.DISCUSS_W_BUYER__SUPPLY__GET_PACKING
         )
         self.assert_value(datas.\
     DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,

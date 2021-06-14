@@ -172,8 +172,24 @@ class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG(
             messages.SUPPLY__GET_PACKING
         )
 
-class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(MessageHandler):
-    pass
+class DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER(
+    SupplyGetCountryStateBaseHandler):
+    def run(self):
+        return super().run(
+            # Save message body in this key
+            datas.\
+    DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING,
+            # Get product type from string user entered in this context
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__GET_PRODUCT,
+            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            # Direct user to this context - if product type is known
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__CONFIRM_PACKING,
+            # Direct user to this context - if product type is not known
+            intents.DISCUSS_W_BUYER,
+            messages.SUPPLY__GET_PACKING
+        )
 
 class DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING(MessageHandler):
     pass
