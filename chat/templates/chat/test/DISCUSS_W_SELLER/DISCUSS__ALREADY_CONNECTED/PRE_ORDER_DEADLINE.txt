@@ -6,7 +6,7 @@ Test Seller
 +234562345678901
 
 Click this link to WhatsApp seller:
-https://wa.me/234562345678901
+{{ whatsapp_url }}
 
 *Supply details*:
 

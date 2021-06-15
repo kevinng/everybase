@@ -6,15 +6,13 @@ Test Seller
 +234562345678901
 
 Click this link to WhatsApp seller:
-https://wa.me/234562345678901
+{{ whatsapp_url }}
 
 *Supply details*:
 
 Nitrile Gloves
 Israel
-Pre-Order, 5 Days
-Do not accept LC
-40% Deposit
+OTG/Ready Stock
 12000 Boxes
 200 pieces in 1 box
 USD 15.15 per box
