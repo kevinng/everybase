@@ -6,7 +6,7 @@ Test Seller
 +234562345678901
 
 Click this link to WhatsApp seller:
-{{ whatsapp_url }}
+{% if whatsapp_url %}{{ whatsapp_url }}{% else %}URL IS MISSING{% endif %}
 
 *Supply details*:
 
