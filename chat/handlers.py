@@ -505,10 +505,21 @@ class DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST(MessageHandler):
         ).value_id
         supply = relmods.Supply.objects.get(pk=supply_id)
 
+        # Create a WhatsApp phone-number hash for this user
+        whatsapp_type = relmods.PhoneNumberType.objects.get(id=1) # WhatsApp
+        wa_hash = relmods.PhoneNumberHash.objects.create(
+            user=self.message.from_user,
+            phone_number_type=whatsapp_type,
+            phone_number=contact.phone_number
+        )
+        whatsapp_url = urljoin(settings.BASE_URL,
+            reverse('chat:whatsapp', kwargs={ 'id': wa_hash.id }))
+
         return {
             'buying': True,
             'contact': contact,
-            'supply': supply
+            'supply': supply,
+            'whatsapp_url': whatsapp_url
         }
 
     def _get_no_params(self):
