@@ -14,7 +14,8 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
             input,
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_DETAILS,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -27,8 +28,7 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_SELLER,
-            messages.DISCUSS__ASK,
-            texts.DISCUSS_W_SELLER__DISCUSS__ASK
+            messages.DISCUSS__ASK
         )
         self.assert_value(
             datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__CHOICE,
@@ -45,8 +45,7 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_SELLER,
-            messages.DEMAND__GET_COUNTRY_STATE,
-            texts.DISCUSS_W_SELLER__DEMAND__GET_COUNTRY_STATE
+            messages.DEMAND__GET_COUNTRY_STATE
         )
         self.assert_value(
             datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__CHOICE,

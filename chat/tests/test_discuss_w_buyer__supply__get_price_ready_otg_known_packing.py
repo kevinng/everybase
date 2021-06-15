@@ -14,8 +14,7 @@ class DiscussWBuyerGetPriceReadyOTGKnownPackingTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__THANK_YOU,
-            texts.DISCUSS_W_BUYER__SUPPLY__THANK_YOU
+            messages.SUPPLY__THANK_YOU
         )
         self.assert_value(
             datas.\

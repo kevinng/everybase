@@ -10,7 +10,8 @@ class DiscussWSellerDiscussConfirmInterestTest(MessageHandlerTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',
-        'setup/20210527__relationships__availability.json'
+        'setup/20210527__relationships__availability.json',
+        'setup/20210527__relationships__phonenumbertype.json'
     ]
 
     def setUp(self):

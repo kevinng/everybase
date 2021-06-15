@@ -11,8 +11,7 @@ class DiscussWBuyerSupplyGetProductTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_AVAILABILITY,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY
+            messages.SUPPLY__GET_AVAILABILITY
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,

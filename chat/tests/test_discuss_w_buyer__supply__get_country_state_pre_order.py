@@ -39,8 +39,7 @@ class DiscussWBuyerSupplyGetCountryStatePreOrder_KnownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__CONFIRM_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING
+            messages.SUPPLY__CONFIRM_PACKING
         )
         self.assert_value(datas.\
     DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING,
@@ -61,8 +60,7 @@ class DiscussWBuyerSupplyGetCountryStatePreOrder_UnknownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING
         )
         self.assert_value(datas.\
     DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING,

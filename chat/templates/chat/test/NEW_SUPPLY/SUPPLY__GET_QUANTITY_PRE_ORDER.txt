@@ -1,0 +1,3 @@
+*Pre-order*: how much *quantity* and in what *timeframe* can you supply?
+
+E.g., 10000 boxes a month

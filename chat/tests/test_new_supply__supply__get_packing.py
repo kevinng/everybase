@@ -26,8 +26,7 @@ class NewSupplySupplyGetPacking_ReadyOTG_UnknownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
+            messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING,
@@ -61,8 +60,7 @@ class NewSupplySupplyGetPacking_ReadyOTG_KnownPacking_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
+            messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING,
@@ -86,8 +84,7 @@ class NewSupplySupplyGetPacking_PreOrder_UnknownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_QUANTITY_PRE_ORDER,
-            texts.NEW_SUPPLY__SUPPLY__GET_QUANTITY_PRE_ORDER
+            messages.SUPPLY__GET_QUANTITY_PRE_ORDER
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_PACKING__PACKING__STRING,

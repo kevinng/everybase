@@ -11,7 +11,8 @@ class NewSupplySupplyGetAcceptLCTest(MessageHandlerTest):
             input,
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_ACCEPT_LC,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -24,8 +25,7 @@ class NewSupplySupplyGetAcceptLCTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__THANK_YOU,
-            texts.NEW_SUPPLY__SUPPLY__THANK_YOU
+            messages.SUPPLY__THANK_YOU
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
@@ -42,8 +42,7 @@ class NewSupplySupplyGetAcceptLCTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__THANK_YOU,
-            texts.NEW_SUPPLY__SUPPLY__THANK_YOU
+            messages.SUPPLY__THANK_YOU
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,

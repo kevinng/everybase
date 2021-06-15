@@ -28,9 +28,7 @@ class DiscussWBuyerSupplyGetPacking_ReadyOTG_UnknownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING,
-            texts.\
-                DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
+            messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__GET_PACKING__PACKING__STRING,
@@ -67,8 +65,7 @@ class DiscussWBuyerSupplyGetPacking_ReadyOTG_KnownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
+            messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__GET_PACKING__PACKING__STRING,
@@ -94,8 +91,7 @@ class DiscussWBuyerSupplyGetPacking_PreOrder_UnknownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_QUANTITY_PRE_ORDER,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_PRE_ORDER
+            messages.SUPPLY__GET_QUANTITY_PRE_ORDER
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__GET_PACKING__PACKING__STRING,

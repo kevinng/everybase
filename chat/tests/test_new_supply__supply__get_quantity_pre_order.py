@@ -14,8 +14,7 @@ class NewSupplySupplyGetQuantityPreOrderTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PRICE_PRE_ORDER,
-            texts.NEW_SUPPLY__SUPPLY__GET_PRICE_PRE_ORDER
+            messages.SUPPLY__GET_PRICE_PRE_ORDER
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_QUANTITY_PREORDER__QUANTITY__STRING,

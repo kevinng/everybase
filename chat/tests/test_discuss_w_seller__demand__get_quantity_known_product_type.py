@@ -24,15 +24,15 @@ class DiscussWSellerGetQuantityKnownProductTest(MessageHandlerTest):
             'hello',
             intents.DISCUSS_W_SELLER,
             messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE,
-            texts.DO_NOT_UNDERSTAND_NUMBER
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_NUMBER
         )
 
     def enter_quantity(self, input, target):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_SELLER,
-            messages.DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE,
-            texts.DISCUSS_W_SELLER__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE
+            messages.DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE
         )
         self.assert_value(
             datas.\

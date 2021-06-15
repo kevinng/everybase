@@ -32,7 +32,8 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             input,
             intents.DISCUSS_W_BUYER, 
             messages.SUPPLY__CONFIRM_PACKING,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -45,8 +46,7 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
+            messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -64,8 +64,7 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -107,7 +106,8 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
             input,
             intents.DISCUSS_W_BUYER, 
             messages.SUPPLY__CONFIRM_PACKING,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -120,9 +120,7 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING,
-            texts.\
-                DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
+            messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -140,8 +138,7 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -182,7 +179,8 @@ class DisucssWBuyerSupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
             input,
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__CONFIRM_PACKING,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -195,8 +193,7 @@ class DisucssWBuyerSupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_QUANTITY_PRE_ORDER,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_PRE_ORDER
+            messages.SUPPLY__GET_QUANTITY_PRE_ORDER
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -214,8 +211,7 @@ class DisucssWBuyerSupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,

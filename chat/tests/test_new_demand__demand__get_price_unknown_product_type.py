@@ -14,8 +14,7 @@ class NewDemandGetPriceUnknownProductTypeTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_DEMAND,
-            messages.DEMAND__THANK_YOU,
-            texts.NEW_DEMAND__DEMAND__THANK_YOU
+            messages.DEMAND__THANK_YOU
         )
         self.assert_value(
             datas.\

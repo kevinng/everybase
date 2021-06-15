@@ -11,7 +11,8 @@ class NewSupplySupplyThankYouTest(MessageHandlerTest):
             input,
             intents.NEW_SUPPLY,
             messages.SUPPLY__THANK_YOU,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
     
     def test_choose_non_choice_with_number(self):
@@ -58,8 +59,7 @@ class NewSupplySupplyThankYouTest(MessageHandlerTest):
         self.receive_reply_assert(
             '3', # Only number option available
             intents.EXPLAIN_SERVICE,
-            messages.EXPLAIN_SERVICE,
-            texts.EXPLAIN_SERVICE__EXPLAIN_SERVICE
+            messages.EXPLAIN_SERVICE
         )
         self.assert_value(
             datas.MENU__MENU__OPTION__CHOICE,

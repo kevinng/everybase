@@ -14,8 +14,7 @@ class DiscussWBuyerDiscussAskTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.DISCUSS__THANK_YOU,
-            texts.DISCUSS_W_BUYER__DISCUSS__THANK_YOU
+            messages.DISCUSS__THANK_YOU
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__DISCUSS__ASK__QUESTION__STRING,

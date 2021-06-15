@@ -39,8 +39,7 @@ class NewSupplySupplyGetCountryStatePreOrder_KnownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__CONFIRM_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING
+            messages.SUPPLY__CONFIRM_PACKING
         )
         self.assert_value(
 datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING,
@@ -61,8 +60,7 @@ class NewSupplySupplyGetCountryStatePreOrder_UnknownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
 datas.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER__COUNTRY_STATE__STRING,

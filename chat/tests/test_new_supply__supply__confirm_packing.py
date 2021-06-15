@@ -30,7 +30,8 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             input,
             intents.NEW_SUPPLY, 
             messages.SUPPLY__CONFIRM_PACKING,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -43,8 +44,7 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
+            messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -61,8 +61,7 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -101,7 +100,8 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
             input,
             intents.NEW_SUPPLY, 
             messages.SUPPLY__CONFIRM_PACKING,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -114,8 +114,7 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
+            messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -132,8 +131,7 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -173,7 +171,8 @@ class NewSupplySupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
             input,
             intents.NEW_SUPPLY,
             messages.SUPPLY__CONFIRM_PACKING,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -186,8 +185,7 @@ class NewSupplySupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_QUANTITY_PRE_ORDER,
-            texts.NEW_SUPPLY__SUPPLY__GET_QUANTITY_PRE_ORDER
+            messages.SUPPLY__GET_QUANTITY_PRE_ORDER
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
@@ -204,8 +202,7 @@ class NewSupplySupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,

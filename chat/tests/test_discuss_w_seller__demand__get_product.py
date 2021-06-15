@@ -11,8 +11,7 @@ class DiscussWSellerDemandGetProductTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_SELLER,
-            messages.DEMAND__GET_COUNTRY_STATE,
-            texts.DISCUSS_W_SELLER__DEMAND__GET_COUNTRY_STATE
+            messages.DEMAND__GET_COUNTRY_STATE
         )
         self.assert_value(
             datas.DISCUSS_W_SELLER__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING,

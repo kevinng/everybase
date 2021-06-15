@@ -11,15 +11,15 @@ class NewSupplySupplyGetDepositTestCase(MessageHandlerTest):
             'hello',
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_DEPOSIT,
-            texts.DO_NOT_UNDERSTAND_NUMBER
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_NUMBER
         )
 
     def enter_deposit(self, input, target):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_ACCEPT_LC,
-            texts.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC
+            messages.SUPPLY__GET_ACCEPT_LC
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_DEPOSIT__DEPOSIT__NUMBER,

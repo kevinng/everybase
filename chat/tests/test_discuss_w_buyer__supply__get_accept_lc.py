@@ -11,7 +11,8 @@ class DiscussWBuyerSupplyGetAcceptLCTest(MessageHandlerTest):
             input,
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_ACCEPT_LC,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -24,8 +25,7 @@ class DiscussWBuyerSupplyGetAcceptLCTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__THANK_YOU,
-            texts.DISCUSS_W_BUYER__SUPPLY__THANK_YOU
+            messages.SUPPLY__THANK_YOU
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
@@ -43,8 +43,7 @@ class DiscussWBuyerSupplyGetAcceptLCTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__THANK_YOU,
-            texts.DISCUSS_W_BUYER__SUPPLY__THANK_YOU
+            messages.SUPPLY__THANK_YOU
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,

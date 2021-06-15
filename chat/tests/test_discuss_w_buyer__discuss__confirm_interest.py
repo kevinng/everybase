@@ -77,7 +77,8 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_YesNo_Test(
             input,
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__CONFIRM_INTEREST,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -90,8 +91,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_YesNo_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.DISCUSS__CONFIRM_DETAILS,
-            texts.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS
+            messages.DISCUSS__CONFIRM_DETAILS
         )
         self.assert_value(
             datas.\
@@ -110,8 +110,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_YesNo_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.STILL_INTERESTED__CONFIRM,
-            texts.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM
+            messages.STILL_INTERESTED__CONFIRM
         )
         self.assert_value(
             datas.\
@@ -168,7 +167,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
             input,
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__ALREADY_CONNECTED,
-            texts.DISCUSS_W_BUYER__DISCUSS__ALREADY_CONNECTED__OTG
+            target_body_variation_key='OTG'
         )
         self.assert_value(
             datas.\
@@ -231,7 +230,7 @@ DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Test(
             input,
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__ALREADY_CONNECTED,
-        texts.DISCUSS_W_BUYER__DISCUSS__ALREADY_CONNECTED__PRE_ORDER_DURATION
+            target_body_variation_key='PRE_ORDER_DURATION'
         )
         self.assert_value(
             datas.\
@@ -293,7 +292,7 @@ DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Test(
             input,
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__ALREADY_CONNECTED,
-        texts.DISCUSS_W_BUYER__DISCUSS__ALREADY_CONNECTED__PRE_ORDER_DEADLINE
+            target_body_variation_key='PRE_ORDER_DEADLINE'
         )
         self.assert_value(
             datas.\

@@ -39,8 +39,7 @@ class DiscussWBuyerSupplyGetCountryStateReadyOTG_KnownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__CONFIRM_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING
+            messages.SUPPLY__CONFIRM_PACKING
         )
         self.assert_value(datas.\
     DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,
@@ -52,8 +51,7 @@ class DiscussWBuyerSupplyGetCountryStateReadyOTG_UnknownProduct_Test(
     def setUp(self):
         super().setUp(
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG
+            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG
         )
         self.set_up_unknown_product()
 
@@ -62,8 +60,7 @@ class DiscussWBuyerSupplyGetCountryStateReadyOTG_UnknownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_PACKING
+            messages.SUPPLY__GET_PACKING
         )
         self.assert_value(datas.\
     DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG__COUNTRY_STATE__STRING,

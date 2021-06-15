@@ -40,8 +40,7 @@ class NewDemandGetCountryState_KnownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_DEMAND,
-            messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE,
-            texts.NEW_DEMAND__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE
+            messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE
         )
         self.assert_value(
             datas.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,
@@ -62,8 +61,7 @@ class NewDemandGetCountryState_UnknownProduct_Test(
         self.receive_reply_assert(
             input,
             intents.NEW_DEMAND,
-            messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE,
-            texts.NEW_DEMAND__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
+            messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
         )
         self.assert_value(
             datas.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE__COUNTRY_STATE__STRING,

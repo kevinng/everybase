@@ -10,10 +10,13 @@ class RegisterRegisterGetNameTest(MessageHandlerTest):
         self.receive_reply_assert(
             'Hi' ,
             intents.REGISTER,
-            messages.REGISTER__GET_NAME,
-            texts.REGISTER__REGISTER__GET_NAME
+            messages.REGISTER__GET_NAME
         )
         self.assertEqual(self.user.name, None)
         
-        self.receive_reply_assert('Kevin', intents.MENU, messages.MENU)
-        self.assertEqual(self.user.name, 'Kevin')
+        self.receive_reply_assert(
+            'Kevin Ng',
+            intents.MENU,
+            messages.MENU
+        )
+        self.assertEqual(self.user.name, 'Kevin Ng')

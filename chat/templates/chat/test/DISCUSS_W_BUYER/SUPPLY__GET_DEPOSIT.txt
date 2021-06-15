@@ -1,0 +1,3 @@
+What % deposit do you require?
+
+Reply '0' if no deposit required.

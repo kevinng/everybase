@@ -14,8 +14,7 @@ class DiscussWBuyerSupplyGetQuantityPreOrderTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PRICE_PRE_ORDER,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_PRICE_PRE_ORDER
+            messages.SUPPLY__GET_PRICE_PRE_ORDER
         )
         self.assert_value(
         datas.DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_PREORDER__QUANTITY__STRING,

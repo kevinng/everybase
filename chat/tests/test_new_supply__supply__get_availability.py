@@ -11,7 +11,8 @@ class NewSupplySupplyGetAvailabilityTest(MessageHandlerTest):
             input,
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -24,8 +25,7 @@ class NewSupplySupplyGetAvailabilityTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG,
-            texts.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_READY_OTG
+            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
@@ -46,8 +46,7 @@ class NewSupplySupplyGetAvailabilityTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER,
-            texts.NEW_SUPPLY__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER
+            messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,

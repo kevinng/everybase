@@ -1,0 +1,20 @@
+This seller is already connected with you.
+
+*Seller's contacts*:
+
+Test Seller
++234562345678901
+
+Click this link to WhatsApp seller:
+{{ whatsapp_url }}
+
+*Supply details*:
+
+Nitrile Gloves
+Israel
+Pre-Order, by 5th February 2021
+Do not accept LC
+40% Deposit
+12000 Boxes
+200 pieces in 1 box
+USD 15.15 per box

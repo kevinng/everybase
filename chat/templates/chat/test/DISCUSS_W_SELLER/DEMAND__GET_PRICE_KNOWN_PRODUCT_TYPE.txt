@@ -1,0 +1,5 @@
+Target price per jar?
+
+E.g., USD 20
+
+Reply 'none' if no target price.

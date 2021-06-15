@@ -11,15 +11,15 @@ class DiscussWBuyerSupplyGetDepositTestCase(MessageHandlerTest):
             'hello',
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_DEPOSIT,
-            texts.DO_NOT_UNDERSTAND_NUMBER
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_NUMBER
         )
 
     def enter_deposit(self, input, target):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_ACCEPT_LC,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC
+            messages.SUPPLY__GET_ACCEPT_LC
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__SUPPLY__GET_DEPOSIT__DEPOSIT__NUMBER,

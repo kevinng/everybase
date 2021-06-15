@@ -1,10 +1,10 @@
 from django.test import TestCase
+from django.template.loader import render_to_string
 
 from chat import models, views
 from chat.libraries import context_utils, model_utils
 from relationships import models as relmods
 from common import models as commods
-from payments import models as paymods
 
 class MessageHandlerTest(TestCase):
     """Base test class for testing message handlers
@@ -193,33 +193,72 @@ class MessageHandlerTest(TestCase):
         )
         return views.reply(message)
 
-    def receive_reply_assert(self, body, intent_key, message_key, reply=None):
-        """Receive mock message, reply and assert context after reply
+    def receive_reply_assert(self, body, intent_key, message_key,
+        target_body_intent_key=None, target_body_message_key=None,
+        target_body_params_func=None, target_body_variation_key=None):
+        """Receive mock message, run reply over and assert after-reply context
+        and response body.
 
         Parameters
         ----------
         body : String
             Message body
         intent_key : String
-            Intent key for after-reply context to assert against user's context
+            Intent key for after-reply context to assert against user's context.
+            The target body template will be read in-context.
         message_key : String
             Message key for after-reply context to assert against user's context
-        reply : String
-            Text to assert against response body to user
+            The target body template will be read in-context.
+        target_body_intent_key : String
+            If specified, we will use this intent key intead of intent_key to
+            render the target body template.
+        target_body_message_key : String
+            If specified, we will use this message key instead of message_key
+            to render the target body template.
+        target_body_params_func : Function
+            Function returning the parameters for the target body template
+        target_body_variation_key : String
+            Variation key of the target body template - to pick up specific
+            variation of the target body template
         """
         response = self.receive_reply(body)
         # print('FULL RESPONSE')
         # print(response)
-        if reply is not None:
-            # Assert target reply against TwilML response body
-            start_pos = response.index('<Message>') + len('<Message>')
-            end_pos = response.index('</Message>')
-            response_body = response[start_pos:end_pos]
-            # print('RESPONSE BODY')
-            # print(response_body)
-            # print('REPLY')
-            # print(reply)
-            self.assertEqual(response_body, reply)
+
+        # Render target body
+        if target_body_intent_key is None:
+            render_intent_key = intent_key
+        else:
+            render_intent_key = target_body_intent_key
+        
+        if target_body_message_key is None:
+            render_message_key = message_key
+        else:
+            render_message_key = target_body_message_key
+
+        target_path = 'chat/test/%s/%s' % \
+            (render_intent_key, render_message_key)
+        if target_body_variation_key is None:
+            target_path += '.txt'
+        else:
+            target_path += '/%s.txt' % target_body_variation_key
+
+        if target_body_params_func is None:
+            target_params = {}
+        else:
+            target_params = target_body_params_func()
+        target_body = render_to_string(target_path, target_params)
+        print('TARGET BODY')
+        print(target_body)
+
+        # Get body from response TwilML
+        start_pos = response.index('<Message>') + len('<Message>')
+        end_pos = response.index('</Message>')
+        response_body = response[start_pos:end_pos]
+        print('RESPONSE BODY')
+        print(response_body)
+
+        self.assertEqual(response_body, target_body)
         self.assert_context(intent_key, message_key)
 
     def assert_latest_value(self, intent_key, message_key, data_key,

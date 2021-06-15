@@ -23,8 +23,7 @@ class NewSupplySupplyGetQuantityReadyOTGKnownPackingTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING,
-            texts.NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING
+            messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING
         )
         self.assert_value(
             datas.\

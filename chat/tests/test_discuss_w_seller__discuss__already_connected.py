@@ -14,6 +14,5 @@ class DiscussWSellerDiscussAlreadyConnectedTest(MessageHandlerTest):
         self.receive_reply_assert(
             'hello',
             intents.MENU,
-            messages.MENU,
-            texts.MENU__MENU
+            messages.MENU
         )

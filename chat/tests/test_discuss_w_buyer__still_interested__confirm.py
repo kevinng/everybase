@@ -14,7 +14,8 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
             input,
             intents.DISCUSS_W_BUYER,
             messages.STILL_INTERESTED__CONFIRM,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -27,8 +28,7 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.STILL_INTERESTED__THANK_YOU,
-            texts.DISCUSS_W_BUYER__STILL_INTERESTED__THANK_YOU
+            messages.STILL_INTERESTED__THANK_YOU
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__CHOICE,
@@ -45,8 +45,7 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.STILL_INTERESTED__THANK_YOU,
-            texts.DISCUSS_W_BUYER__STILL_INTERESTED__THANK_YOU
+            messages.STILL_INTERESTED__THANK_YOU
         )
         self.assert_value(
             datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__CHOICE,

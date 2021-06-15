@@ -22,8 +22,7 @@ class DiscussWBuyerGetQuantityReadyOTGUnknownPackingTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING
+            messages.SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING
         )
         self.assert_value(
             datas.\

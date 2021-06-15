@@ -12,7 +12,8 @@ class DiscussWBuyerSupplyGetAvailabilityTest(MessageHandlerTest):
             input,
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_AVAILABILITY,
-            texts.DO_NOT_UNDERSTAND_OPTION
+            target_body_intent_key=intents.NO_INTENT,
+            target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
     def test_choose_non_choice_with_number(self):
@@ -25,8 +26,7 @@ class DiscussWBuyerSupplyGetAvailabilityTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_READY_OTG
+            messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG
         )
         self.assert_value(
         datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
@@ -47,8 +47,7 @@ class DiscussWBuyerSupplyGetAvailabilityTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER,
-            texts.DISCUSS_W_BUYER__SUPPLY__GET_COUNTRY_STATE_PRE_ORDER
+            messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER
         )
         self.assert_value(
         datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,

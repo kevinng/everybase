@@ -11,8 +11,7 @@ class NewDemandDemandGetProductTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_DEMAND,
-            messages.DEMAND__GET_COUNTRY_STATE,
-            texts.NEW_DEMAND__DEMAND__GET_COUNTRY_STATE
+            messages.DEMAND__GET_COUNTRY_STATE
         )
         self.assert_value(
             datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING,

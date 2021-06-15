@@ -11,8 +11,7 @@ class NewSupplySupplyGetProductTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_AVAILABILITY,
-            texts.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY
+            messages.SUPPLY__GET_AVAILABILITY
         )
         self.assert_value(
             datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
