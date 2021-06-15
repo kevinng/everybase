@@ -302,6 +302,12 @@ class PhoneNumberURLAccess(Standard):
         blank=True,
         db_index=True
     )
+    os_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     os_version = models.CharField(
         max_length=200,
         null=True,
