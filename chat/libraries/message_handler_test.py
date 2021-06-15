@@ -83,6 +83,9 @@ class MessageHandlerTest(TestCase):
             relmods.Connection.objects.filter(user_1=user).delete()
             relmods.Connection.objects.filter(user_2=user).delete()
 
+            # Delete ALL user's phone number hashes
+            relmods.PhoneNumberHash.objects.filter(user=user).delete()
+
             # Get ALL user's phone numbers - to be deleted after user
             phone_numbers = relmods.PhoneNumber.objects.filter(user=user)
             
@@ -248,15 +251,15 @@ class MessageHandlerTest(TestCase):
         else:
             target_params = target_body_params_func()
         target_body = render_to_string(target_path, target_params)
-        print('TARGET BODY')
-        print(target_body)
+        # print('TARGET BODY')
+        # print(target_body)
 
         # Get body from response TwilML
         start_pos = response.index('<Message>') + len('<Message>')
         end_pos = response.index('</Message>')
         response_body = response[start_pos:end_pos]
-        print('RESPONSE BODY')
-        print(response_body)
+        # print('RESPONSE BODY')
+        # print(response_body)
 
         self.assertEqual(response_body, target_body)
         self.assert_context(intent_key, message_key)
