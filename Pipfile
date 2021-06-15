@@ -26,6 +26,7 @@ django-storages = "*"
 editdistance = "*"
 twilio = "*"
 phonenumbers = "*"
+django-hashid-field = "*"
 
 [requires]
 python_version = "3.7"

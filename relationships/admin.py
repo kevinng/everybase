@@ -67,42 +67,39 @@ class UserAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['phone_number', 'email']
 
-# _accessed_url_fields = ['user', 'first_accessed', 'last_accessed', 'url',
-#     'count']
-# @admin.register(mod.AccessedURL)
-# class AccessedURLAdmin(comadm.StandardAdmin):
-#     # List page settings
-#     list_display = comadm.standard_list_display + _accessed_url_fields
-#     list_editable = comadm.standard_list_editable + _accessed_url_fields
-#     list_filter = comadm.standard_list_filter + ['first_accessed',
-#         'last_accessed']
-#     search_fields = comadm.standard_search_fields + ['user__id', 'url']
+_phone_number_hash_fields = ['user', 'phone_number_type', 'phone_number']
+@admin.register(mod.PhoneNumberHash)
+class PhoneNumberHashAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _phone_number_hash_fields
+    list_editable = comadm.standard_list_editable + _phone_number_hash_fields
+    list_filter = comadm.standard_list_filter + ['phone_number_type']
+    search_fields = comadm.standard_search_fields + ['user__id',
+        'phone_number__country_code', 'phone_number__national_number']
 
-#     # Details page settings
-#     fieldsets = comadm.standard_fieldsets + [
-#         ('Details', {'fields': _accessed_url_fields})
-#     ]
-#     autocomplete_fields = ['user']
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _phone_number_hash_fields})
+    ]
+    autocomplete_fields = ['user', 'phone_number']
 
-# _user_ip_device_fields = ['user', 'first_accessed', 'last_accessed', 'count',
-#     'ip_address', 'is_mobile', 'is_tablet', 'is_touch_capable', 'is_pc',
-#     'is_bot', 'browser', 'browser_family', 'browser_version',
-#     'browser_version_string', 'os', 'os_version', 'os_version_string', 'device',
-#     'device_family']
-# @admin.register(mod.UserIPDevice)
-# class UserIPDeviceAdmin(comadm.StandardAdmin):
-#     # List page settings
-#     list_display = comadm.standard_list_display + _user_ip_device_fields
-#     list_editable = comadm.standard_list_editable + _user_ip_device_fields
-#     search_fields = comadm.standard_search_fields + ['user__id', 'ip_address',
-#         'browser', 'browser_family', 'browser_version_string', 'os',
-#         'os_version_string', 'device', 'device_family']
+_phone_number_access_fields = ['accessed', 'ip_address', 'is_mobile',
+    'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot', 'browser',
+    'browser_family', 'browser_version', 'browser_version_string', 'os',
+    'os_version', 'os_version_string', 'device', 'device_family', 'hash']
+@admin.register(mod.PhoneNumberURLAccess)
+class PhoneNumberAccessAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _phone_number_access_fields
+    list_editable = comadm.standard_list_editable + _phone_number_access_fields
+    search_fields = comadm.standard_search_fields + ['ip_address',
+        'browser', 'browser_family', 'browser_version_string', 'os',
+        'os_version_string', 'device', 'device_family']
 
-#     # Details page settings
-#     fieldsets = comadm.standard_fieldsets + [
-#         ('Details', {'fields': _user_ip_device_fields + ['accessed_urls']})
-#     ]
-#     autocomplete_fields = ['user', 'accessed_urls']
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _phone_number_access_fields})
+    ]
 
 _unit_of_measure_fields = ['plural_name', 'product_type', 'priority']
 @admin.register(mod.UnitOfMeasure)

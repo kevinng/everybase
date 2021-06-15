@@ -1,3 +1,4 @@
+import random
 from django.db import models
 from django.db.models.fields import BLANK_CHOICE_DASH
 from django.db.models.fields.related import ForeignKey
@@ -5,7 +6,7 @@ from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-import random
+from hashid_field import HashidAutoField
 
 class PhoneNumberType(Choice):
     """Phone number type.
@@ -192,148 +193,151 @@ class User(Standard):
     def __str__(self):
         return f'({self.name} [{self.id}])'
 
-# class AccessedURL(Standard):
-#     """Accessed URL.
+class PhoneNumberHash(Standard):
+    """A URL sent to a user of a phone number. A URL has a standard base, and a
+    unique hash, and each URL is unique to auser-phone-number, so we may track
+    access of the URL. We use a hash and not the ID straight to prevent users
+    from iterating the IDs in the URL.
 
-#     Last updated: 21 April 2021, 10:57 PM
-#     """
+    Last updated: 15 June 2021, 2:44 PM
+    """
 
-#     user = models.ForeignKey(
-#         'User',
-#         related_name='accessed_urls',
-#         related_query_name='accessed_urls',
-#         on_delete=models.PROTECT,
-#         db_index=True
-#     )
-#     first_accessed = models.DateTimeField(db_index=True)
-#     last_accessed = models.DateTimeField(db_index=True)
-#     url = models.URLField(
-#         'URL',
-#         db_index=True
-#     )
-#     count = models.IntegerField(db_index=True)
+    id = HashidAutoField(primary_key=True)
 
-#     class Meta:
-#         verbose_name = 'Accessed URL'
-#         verbose_name_plural = 'Accessed URLs'
-#         unique_together = ['user', 'url']
-#         index_together = ['user', 'url']
+    user = models.ForeignKey(
+        'User',
+        related_name='phone_number_hashes',
+        related_query_name='phone_number_hashes',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    phone_number_type = models.ForeignKey(
+        'PhoneNumberType',
+        related_name='phone_number_hashes',
+        related_query_name='phone_number_hashes',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        related_name='phone_number_hashes',
+        related_query_name='phone_number_hashes',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Phone Number Hash'
+        verbose_name_plural = 'Phone Number Hashes'
+        unique_together = ['user', 'phone_number_type', 'phone_number']
+        index_together = ['user', 'phone_number_type', 'phone_number']
     
-#     def __str__(self):
-#         return f'({self.url} [{self.id}])'
+    def __str__(self):
+        return f'({self.url} [{self.id}])'
 
-# class UserIPDevice(Standard):
-#     """IP address and device user used to access our system.
+class PhoneNumberURLAccess(Standard):
+    """A single access of a phone number hash/URL.
 
-#     Last updated: 21 April 2021, 10:56 PM
-#     """
-
-#     user = models.ForeignKey(
-#         'User',
-#         related_name='ip_devices',
-#         related_query_name='ip_devices',
-#         on_delete=models.PROTECT,
-#         db_index=True
-#     )
-#     first_accessed = models.DateTimeField(db_index=True)
-#     last_accessed = models.DateTimeField(db_index=True)
-#     count = models.IntegerField(db_index=True)
+    Last updated: 15 June 2021, 2:44 PM
+    """
+    accessed = models.DateTimeField(db_index=True)
         
-#     ip_address = models.GenericIPAddressField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     is_mobile = models.BooleanField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     is_tablet = models.BooleanField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     is_touch_capable = models.BooleanField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     is_pc = models.BooleanField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     is_bot = models.BooleanField(
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     browser = models.CharField(
-#         max_length=200,
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     browser_family = models.CharField(
-#         max_length=200,
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     browser_version = models.CharField(
-#         max_length=200,
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     browser_version_string = models.CharField(
-#         max_length=200,
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     os = models.CharField(
-#         max_length=200,
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     os_version = models.CharField(
-#         max_length=200,
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     os_version_string = models.CharField(
-#         max_length=200,
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     device = models.CharField(
-#         max_length=200,
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
-#     device_family = models.CharField(
-#         max_length=200,
-#         null=True,
-#         blank=True,
-#         db_index=True
-#     )
+    ip_address = models.GenericIPAddressField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_mobile = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_tablet = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_touch_capable = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_pc = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_bot = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_version = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_version_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_version = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_version_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    device = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    device_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
         
-#     accessed_urls = models.ManyToManyField(
-#         'AccessedURL',
-#         related_name='user_ip_devices',
-#         related_query_name='user_ip_devices',
-#         db_index=True
-#     )
+    hash = models.ForeignKey(
+        'PhoneNumberHash',
+        related_name='accesses',
+        related_query_name='accesses',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
-#     class Meta:
-#         verbose_name = 'User IP-Device'
-#         verbose_name_plural = 'User IP-Devices'
+    class Meta:
+        verbose_name = 'Phone Number URL Access'
+        verbose_name_plural = 'Phone Number URL Accesses'
 
 class UnitOfMeasure(Standard, Choice):
     """Unit of measure. Description is displayed to user.
