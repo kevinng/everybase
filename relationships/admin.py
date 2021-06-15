@@ -83,10 +83,10 @@ class PhoneNumberHashAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user', 'phone_number']
 
-_phone_number_access_fields = ['accessed', 'ip_address', 'is_mobile',
-    'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot', 'browser',
-    'browser_family', 'browser_version', 'browser_version_string', 'os',
-    'os_version', 'os_version_string', 'device', 'device_family', 'hash']
+_phone_number_access_fields = ['ip_address', 'is_mobile', 'is_tablet',
+    'is_touch_capable', 'is_pc', 'is_bot', 'browser', 'browser_family',
+    'browser_version', 'browser_version_string', 'os', 'os_version',
+    'os_version_string', 'device', 'device_family', 'hash']
 @admin.register(mod.PhoneNumberURLAccess)
 class PhoneNumberAccessAdmin(comadm.StandardAdmin):
     # List page settings

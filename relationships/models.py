@@ -227,20 +227,23 @@ class PhoneNumberHash(Standard):
     )
 
     class Meta:
-        verbose_name = 'Phone Number Hash'
-        verbose_name_plural = 'Phone Number Hashes'
+        verbose_name = 'Phone number hash'
+        verbose_name_plural = 'Phone number hashes'
         unique_together = ['user', 'phone_number_type', 'phone_number']
         index_together = ['user', 'phone_number_type', 'phone_number']
     
     def __str__(self):
-        return f'({self.url} [{self.id}])'
+        return f'({self.user}, {self.phone_number_type}, {self.phone_number} [{self.id}])'
 
 class PhoneNumberURLAccess(Standard):
     """A single access of a phone number hash/URL.
 
     Last updated: 15 June 2021, 2:44 PM
     """
-    accessed = models.DateTimeField(db_index=True)
+    accessed = models.DateTimeField(
+        db_index=True,
+        auto_now=True
+    )
         
     ip_address = models.GenericIPAddressField(
         null=True,
@@ -342,8 +345,8 @@ class PhoneNumberURLAccess(Standard):
     )
 
     class Meta:
-        verbose_name = 'Phone Number URL Access'
-        verbose_name_plural = 'Phone Number URL Accesses'
+        verbose_name = 'Phone Number URL access'
+        verbose_name_plural = 'Phone Number URL accesses'
 
 class UnitOfMeasure(Standard, Choice):
     """Unit of measure. Description is displayed to user.

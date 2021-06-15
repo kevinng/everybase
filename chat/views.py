@@ -2,13 +2,12 @@ import traceback
 from django.http import HttpResponse
 from http import HTTPStatus
 from rest_framework.views import APIView
-from rest_framework import status
 
-from chat import models
-from chat.libraries import model_utils, context_utils, handler_context_map
 from everybase.settings import (TWILIO_AUTH_TOKEN,
-    TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
-    TWILIO_WEBHOOK_STATUS_UPDATE_URL)
+    TWILIO_WEBHOOK_INCOMING_MESSAGES_URL, EVERYBASE_WA_NUMBER_COUNTRY_CODE,
+    EVERYBASE_WA_NUMBER_NATIONAL_NUMBER)
+from chat.libraries import model_utils, context_utils, handler_context_map
+from relationships import models as relmods
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -62,3 +61,52 @@ class TwilioIncomingMessageView(APIView):
         except:
             traceback.print_exc()
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
+
+def redirect_whatsapp_phone_number(request, id):
+    # Note: we use temporary redirects so search engines do not associate our
+    # URLs with WhatsApp phone number links
+    response = HttpResponse(status=302) # Temporary redirect
+
+    try:
+        hash = relmods.PhoneNumberHash.objects.get(pk=id)
+    except relmods.PhoneNumberHash.DoesNotExist:
+        traceback.print_exc()
+        # Direct the user to my phone number, so I'll know if the URL is bad
+        response['Location'] = 'https://wa.me/' + \
+            EVERYBASE_WA_NUMBER_COUNTRY_CODE + \
+            EVERYBASE_WA_NUMBER_NATIONAL_NUMBER
+        return response
+
+    # Get user IP address
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+
+    if x_forwarded_for:
+        ip_address = x_forwarded_for.split(',')[0]
+    else:
+        ip_address = request.META.get('REMOTE_ADDR')
+
+    # Log access
+    ua = request.user_agent
+    relmods.PhoneNumberURLAccess.objects.create(
+        ip_address=ip_address,
+        is_mobile=ua.is_mobile,
+        is_tablet=ua.is_tablet,
+        is_touch_capable=ua.is_touch_capable,
+        is_pc=ua.is_pc,
+        is_bot=ua.is_bot,
+        browser=ua.browser,
+        browser_family=ua.browser.family,
+        browser_version=ua.browser.version,
+        browser_version_string=ua.browser.version_string,
+        os=ua.os,
+        os_family=ua.os.family,
+        os_version=ua.os.version,
+        os_version_string=ua.os.version_string,
+        device=ua.device,
+        device_family=ua.device.family,
+        hash=hash
+    )
+
+    response['Location'] = 'https://wa.me/' + hash.phone_number.country_code + \
+        hash.phone_number.national_number
+    return response

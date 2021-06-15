@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
+app_name = 'chat_system'
 webhook_root = 'webhooks'
 urlpatterns = [
     path(f'{webhook_root}/message_v1/',

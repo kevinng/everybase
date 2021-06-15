@@ -27,6 +27,10 @@ editdistance = "*"
 twilio = "*"
 phonenumbers = "*"
 django-hashid-field = "*"
+pyyaml = "*"
+ua-parser = "*"
+user-agents = "*"
+django-user-agents = "*"
 
 [requires]
 python_version = "3.7"

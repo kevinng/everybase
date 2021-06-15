@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'widget_tweaks',
     'rest_framework',
-    'storages'
+    'storages',
+    'django_user_agents'
 ]
 
 MIDDLEWARE = [
@@ -61,7 +62,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware'
 ]
 
 ROOT_URLCONF = 'everybase.urls'
@@ -239,3 +241,11 @@ TWILIO_WEBHOOK_STATUS_UPDATE_URL = \
 # Hash ID Field
 HASHID_FIELD_SALT = config('HASHID_FIELD_SALT')
 HASHID_FIELD_MIN_LENGTH = 7
+
+# System phone numbers
+EVERYBASE_WA_NUMBER_COUNTRY_CODE = config('EVERYBASE_WA_NUMBER_COUNTRY_CODE')
+EVERYBASE_WA_NUMBER_NATIONAL_NUMBER = \
+    config('EVERYBASE_WA_NUMBER_NATIONAL_NUMBER')
+
+# System base URL
+BASE_URL = config('BASE_URL')

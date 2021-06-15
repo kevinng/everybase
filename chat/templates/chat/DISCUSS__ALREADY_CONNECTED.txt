@@ -6,7 +6,7 @@ This {% if buying == True %}seller{% elif buying == False %}buyer{% endif %} is 
 +{{ contact.phone_number.country_code }}{{ contact.phone_number.national_number }}
 
 Click this link to WhatsApp {% if buying == True %}seller{% elif buying == True %}buyer{% endif %}:
-https://wa.me/{{ contact.phone_number.country_code }}{{ contact.phone_number.national_number }}
+{{ whatsapp_url }}
 
 *{% if buying == True %}Supply{% elif buying == True %}Demand{% endif %} details*:
 
