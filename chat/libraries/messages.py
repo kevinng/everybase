@@ -1,7 +1,5 @@
 """Message keys"""
 
-from django.template.loader import render_to_string
-
 NO_MESSAGE = 'NO_MESSAGE'
 
 MENU = 'MENU'
@@ -113,15 +111,3 @@ choices = [
     (PLEASE_PAY, PLEASE_PAY),
     (CONNECTED, CONNECTED),
 ]
-
-def get_body(message_key, params):
-    """Get message body for a message key
-
-    Parameters
-    ----------
-    message_key : string
-        Message key as defined in messages.py for message body to get
-    params : dictionary
-        Parameters to be inserted in message body
-    """
-    return render_to_string('chat/%s.txt' % message_key, params)

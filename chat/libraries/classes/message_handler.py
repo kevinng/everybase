@@ -6,6 +6,7 @@ from chat.libraries.utilities.get_context import get_context
 from chat.libraries.utilities.start_context import start_context
 from chat.libraries.utilities.done_context import done_context
 from chat.libraries.utilities.match import match
+from chat.libraries.utilities.render_message import render_message
 
 from relationships import models as relmods
 from common import models as commods
@@ -149,7 +150,7 @@ class MessageHandler:
             Message key for the context to set and message body to return
         """
         self.done_to_context(intent_key, message_key)
-        return messages.get_body(message_key, params)
+        return render_message(message_key, params)
 
     def reply_option(self, invalid_option_intent_key=None,
         invalid_option_message_key=None, invalid_option_params=None):
@@ -234,10 +235,10 @@ class MessageHandler:
         # the user stays in the current context.
         if invalid_option_intent_key is None and \
             invalid_option_message_key is None:
-            return messages.get_body(messages.DO_NOT_UNDERSTAND_OPTION, {})
+            return render_message(messages.DO_NOT_UNDERSTAND_OPTION, {})
         elif invalid_option_intent_key is None and \
             invalid_option_message_key is not None:
-            return messages.get_body(
+            return render_message(
                 invalid_option_message_key, invalid_option_params)
 
         return self.done_reply(invalid_option_intent_key,
@@ -248,7 +249,7 @@ class MessageHandler:
         """
         # Note: we don't need to set a new context. I.e. the user remains in
         # the current context.
-        return messages.get_body(messages.DO_NOT_UNDERSTAND_NUMBER, {})
+        return render_message(messages.DO_NOT_UNDERSTAND_NUMBER, {})
 
     def done_to_context(self, intent_key, message_key):
         """Switch from the current context to the specified context. Set current
