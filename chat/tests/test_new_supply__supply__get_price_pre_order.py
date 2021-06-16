@@ -1,5 +1,5 @@
 from chat.libraries import intents, messages, datas
-from chat.libraries.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
 
 class NewSupplyGetPricePreOrderTest(MessageHandlerTest):
     def setUp(self):

@@ -1,5 +1,5 @@
 from chat.libraries import intents, messages, datas
-from chat.libraries.message_handler import MessageHandler
+from chat.libraries.classes.message_handler import MessageHandler
 
 class Handler(MessageHandler):
     def _get_yes_message_key(self):

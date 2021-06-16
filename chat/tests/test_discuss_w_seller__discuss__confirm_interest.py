@@ -3,8 +3,11 @@ from urllib.parse import urljoin
 from django.urls import reverse
 
 from everybase import settings
-from chat.libraries import intents, messages, datas, model_utils
-from chat.libraries.message_handler_test import MessageHandlerTest
+
+from chat.libraries import intents, messages, datas
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.utilities.connect import connect
+
 from relationships import models as relmods
 from common import models as commods
 from payments import models as paymods
@@ -175,7 +178,7 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
         )
 
         # Connect user
-        model_utils.connect(self.user, self.user_2)
+        connect(self.user, self.user_2)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -239,7 +242,7 @@ DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Test(
         )
 
         # Connect user
-        model_utils.connect(self.user, self.user_2)
+        connect(self.user, self.user_2)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -302,7 +305,7 @@ DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Test(
         )
 
         # Connect user
-        model_utils.connect(self.user, self.user_2)
+        connect(self.user, self.user_2)
 
     def choose_yes(self, input):
         self.receive_reply_assert(

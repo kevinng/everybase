@@ -1,5 +1,5 @@
 from chat.libraries import intents, messages, datas
-from chat.libraries.message_handler import MessageHandler
+from chat.libraries.classes.message_handler import MessageHandler
 
 class MenuHandler(MessageHandler):
     def run(self):

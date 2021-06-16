@@ -1,14 +1,20 @@
 import traceback
-from django.http import HttpResponse
 from http import HTTPStatus
+
+from django.http import HttpResponse
 from rest_framework.views import APIView
 
 from everybase.settings import (TWILIO_AUTH_TOKEN,
     TWILIO_WEBHOOK_INCOMING_MESSAGES_URL, EVERYBASE_WA_NUMBER_COUNTRY_CODE,
     EVERYBASE_WA_NUMBER_NATIONAL_NUMBER)
-from chat.libraries import model_utils, context_utils
-from chat.handlers.get_handler import get_handler
+
 from relationships import models as relmods
+
+from chat.libraries.utilities.save_message_log import save_message_log
+from chat.libraries.utilities.save_message_medias import save_message_medias
+from chat.libraries.utilities.save_message import save_message
+from chat.libraries.utilities.get_context import get_context
+from chat.handlers.get_handler import get_handler
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -26,7 +32,7 @@ def reply(message):
     """
 
     # Get user's context
-    intent_key, message_key = context_utils.get_context(message.from_user)
+    intent_key, message_key = get_context(message.from_user)
     
     # Get handler for context
     handler = get_handler(message, intent_key, message_key)
@@ -50,9 +56,9 @@ class TwilioIncomingMessageView(APIView):
             return HttpResponse(status=HTTPStatus.UNAUTHORIZED)
 
         try:
-            message, _, _, _, _ = model_utils.save_message(request)
-            model_utils.save_message_log(request, message)
-            model_utils.save_message_medias(request, message)
+            message, _, _, _, _ = save_message(request)
+            save_message_log(request, message)
+            save_message_medias(request, message)
 
             return HttpResponse(
                 reply(message),

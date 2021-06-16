@@ -4,7 +4,7 @@ from django.urls import reverse
 from everybase import settings
 from relationships import models as relmods
 from chat.libraries import intents, messages, datas
-from chat.libraries.message_handler import MessageHandler
+from chat.libraries.classes.message_handler import MessageHandler
 
 class Handler(MessageHandler):
     def _get_connected_env_var(self):

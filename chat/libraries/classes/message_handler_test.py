@@ -2,7 +2,10 @@ from django.test import TestCase
 from django.template.loader import render_to_string
 
 from chat import models, views
-from chat.libraries import context_utils, model_utils
+from chat.libraries.utilities.get_latest_value import get_latest_value
+from chat.libraries.utilities.get_context import get_context
+from chat.libraries.utilities.start_context import start_context
+
 from relationships import models as relmods
 from common import models as commods
 
@@ -51,8 +54,7 @@ class MessageHandlerTest(TestCase):
             'Everybase Default', '65', '88933466')
 
         if intent_key is not None and message_key is not None:
-            context = context_utils.start_context(
-                self.user, intent_key, message_key)
+            context = start_context(self.user, intent_key, message_key)
 
     def tearDown(self):
         super().tearDown()
@@ -179,7 +181,7 @@ class MessageHandlerTest(TestCase):
         message_key : String
             Message key for context to assert against user's context
         """
-        user_intent_key, user_message_key = context_utils.get_context(self.user)
+        user_intent_key, user_message_key = get_context(self.user)
         self.assertEqual(user_intent_key, intent_key)
         self.assertEqual(user_message_key, message_key)
 
@@ -285,7 +287,7 @@ class MessageHandlerTest(TestCase):
         value_boolean : Boolean
             Boolean value to assert against data value's boolean value
         """
-        data_value = model_utils.get_latest_value(
+        data_value = get_latest_value(
             intent_key,
             message_key,
             data_key,

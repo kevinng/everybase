@@ -1,5 +1,5 @@
 from chat.libraries import intents, messages
-from chat.libraries.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
 
 class RegisterRegisterGetNameTest(MessageHandlerTest):
     def setUp(self):

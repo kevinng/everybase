@@ -1,5 +1,11 @@
 from chat import models
-from chat.libraries import messages, context_utils, model_utils, nlp
+
+from chat.libraries import messages, nlp
+from chat.libraries.utilities.get_latest_value import get_latest_value
+from chat.libraries.utilities.get_context import get_context
+from chat.libraries.utilities.start_context import start_context
+from chat.libraries.utilities.done_context import done_context
+
 from relationships import models as relmods
 from common import models as commods
 
@@ -255,16 +261,13 @@ class MessageHandler:
             Message key as defined in messages.py for next context
         """
         # Get current context
-        now_intent_key, now_message_key = \
-            context_utils.get_context(self.message.from_user)
+        now_intent_key, now_message_key = get_context(self.message.from_user)
 
         # Done current context
-        context_utils.done_context(self.message.from_user, now_intent_key,
-            now_message_key)
+        done_context(self.message.from_user, now_intent_key, now_message_key)
 
         # Start next context
-        context_utils.start_context(self.message.from_user, intent_key,
-            message_key)
+        start_context(self.message.from_user, intent_key, message_key)
 
     def get_or_create_dataset(self):
         """Get/create dataset for this message
@@ -374,10 +377,10 @@ class MessageHandler:
         return (product_type, uom)
 
     def get_latest_value(self, intent_key, message_key, data_key, inbound=True):
-        """Convenience method to call model_utils.get_latest_value with this
-        message's sender
+        """Convenience method to call get_latest_value with this message's
+        sender.
         """
-        return model_utils.get_latest_value(
+        return get_latest_value(
             intent_key,
             message_key,
             data_key,
