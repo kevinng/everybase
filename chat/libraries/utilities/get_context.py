@@ -1,5 +1,5 @@
 from chat import models
-from chat.libraries import intents, messages
+from chat.libraries.constants import intents, messages
 
 def get_context(user):
     """Get user context - i.e., intent and message key

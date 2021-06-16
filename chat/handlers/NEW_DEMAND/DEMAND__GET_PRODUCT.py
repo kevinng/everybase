@@ -1,5 +1,5 @@
 from chat.libraries.classes.message_handler import MessageHandler
-from chat.libraries import intents, messages, datas
+from chat.libraries.constants import intents, messages, datas
 
 class Handler(MessageHandler):
     def run(self):

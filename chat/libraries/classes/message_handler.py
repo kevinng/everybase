@@ -1,6 +1,6 @@
 from chat import models
 
-from chat.libraries import messages
+from chat.libraries.constants import messages
 from chat.libraries.utilities.get_latest_value import get_latest_value
 from chat.libraries.utilities.get_context import get_context
 from chat.libraries.utilities.start_context import start_context

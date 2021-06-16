@@ -1,4 +1,4 @@
-from chat.libraries import intents, messages
+from chat.libraries.constants import intents, messages
 from chat.libraries.classes.message_handler import MessageHandler
 
 class Handler(MessageHandler):

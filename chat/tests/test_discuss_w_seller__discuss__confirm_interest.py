@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from everybase import settings
 
-from chat.libraries import intents, messages, datas
+from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest
 from chat.libraries.utilities.connect import connect
 

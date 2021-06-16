@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from common.models import Standard, short_text
-from chat.libraries import intents, messages, datas
+from chat.libraries.constants import intents, messages, datas
 
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
