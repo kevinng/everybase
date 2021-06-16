@@ -1,4 +1,4 @@
-"""URLs to be mapped to the root of the application"""
+"""URLs to be mapped to URL root"""
 
 from django.urls import path
 from . import views
