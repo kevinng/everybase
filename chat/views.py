@@ -14,7 +14,7 @@ from chat.libraries.utilities.save_message_log import save_message_log
 from chat.libraries.utilities.save_message_medias import save_message_medias
 from chat.libraries.utilities.save_message import save_message
 from chat.libraries.utilities.get_context import get_context
-from chat.handlers.get_handler import get_handler
+from chat.libraries.utilities.get_handler import get_handler
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
