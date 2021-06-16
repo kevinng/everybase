@@ -5,7 +5,6 @@ from django.urls import reverse
 from everybase import settings
 from chat.libraries import intents, messages, datas, model_utils
 from chat.libraries.message_handler_test import MessageHandlerTest
-from chat.tests import texts
 from relationships import models as relmods
 from common import models as commods
 from payments import models as paymods
