@@ -1,10 +1,11 @@
 from chat import models
 
-from chat.libraries import messages, nlp
+from chat.libraries import messages
 from chat.libraries.utilities.get_latest_value import get_latest_value
 from chat.libraries.utilities.get_context import get_context
 from chat.libraries.utilities.start_context import start_context
 from chat.libraries.utilities.done_context import done_context
+from chat.libraries.utilities.match import match
 
 from relationships import models as relmods
 from common import models as commods
@@ -113,8 +114,8 @@ class MessageHandler:
             
             [(string_to_match, edit_distance_tolerance), ...]
             
-            A string will be matched against the text body with the
-            nlp.match_each_token function.
+            A string will be matched against the text body with the match
+            function.
         intent_key : string
             Intent key for the context to set if this option is chosen
         message_key : string
@@ -152,7 +153,7 @@ class MessageHandler:
 
     def reply_option(self, invalid_option_intent_key=None,
         invalid_option_message_key=None, invalid_option_params=None):
-        """Run nlp.match_each_token against each option in against message body.
+        """Run the match function against each option in against message body.
 
         Set context and return message body of the FIRST matching option.
 
@@ -177,7 +178,7 @@ class MessageHandler:
             match_strs, intent_key, message_key, params_func, data_key, \
                 data_value, intent_key_func, message_key_func = o
             for match_str, tolerance in match_strs:
-                if nlp.match(self.message.body, match_str, tolerance):
+                if match(self.message.body, match_str, tolerance):
                     if data_key is not None:
                         # Data key is specified - store user's choice
                         if data_value is not None:
@@ -360,7 +361,7 @@ class MessageHandler:
         # Match each keyword against user input
         product_type = None
         for k in match_keywords:
-            if nlp.match(value_string, k.keyword, k.tolerance):
+            if match(value_string, k.keyword, k.tolerance):
                 # User input match a product type
                 product_type = k.product_type
 
