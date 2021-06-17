@@ -23,5 +23,5 @@ DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING__QUANTITY__STRING)
         return self.done_reply(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING,
-            { 'packing_singular' : uom.name }
+            { 'packing_singular': uom.name }
         )

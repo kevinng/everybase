@@ -23,5 +23,5 @@ class Handler(MessageHandler):
         return self.done_reply(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING,
-            { 'packing_singular' : uom.name }
+            { 'packing_singular': uom.name }
         )

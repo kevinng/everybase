@@ -33,7 +33,7 @@ class Handler(MessageHandler):
                 return self.done_reply(
                     intents.NEW_SUPPLY,
                     messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING,
-                    { 'packing_plural' : uom.plural_name }
+                    { 'packing_plural': uom.plural_name }
                 )
         elif availability == \
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER:

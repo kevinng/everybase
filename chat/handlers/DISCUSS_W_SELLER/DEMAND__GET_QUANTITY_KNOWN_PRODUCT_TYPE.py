@@ -21,5 +21,5 @@ class Handler(MessageHandler):
         return self.done_reply(
             intents.DISCUSS_W_SELLER,
             messages.DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE,
-            { 'packing_single' : uom.name }
+            { 'packing_single': uom.name }
         )

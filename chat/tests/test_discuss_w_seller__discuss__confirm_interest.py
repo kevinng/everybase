@@ -58,7 +58,7 @@ class DiscussWSellerDiscussConfirmInterestTest(MessageHandlerTest):
         whatsapp_url = urljoin(settings.BASE_URL,
             reverse('chat:whatsapp', kwargs={ 'id': hash.id }))
 
-        return { 'whatsapp_url' : whatsapp_url }
+        return { 'whatsapp_url': whatsapp_url }
 
 class DiscussWSellerDiscussConfirmInterestTest_NotConnected_YesNo_Test(
     DiscussWSellerDiscussConfirmInterestTest):

@@ -44,9 +44,7 @@ class Handler(MessageHandler):
         if uom is None:
             return {}
 
-        return {
-            'packing_plural' : uom.plural_name
-        }
+        return { 'packing_plural': uom.plural_name }
 
     def run(self):
         self.add_option([('1', 0), ('yes', 0)],
