@@ -6,7 +6,7 @@ from hashid_field import HashidAutoField
 class PaymentLink(Standard):
     """Payment link sent to user.
 
-    Last updated: 11 May 2021, 6:01 PM
+    Last updated: 17 June 2021, 2:00 PM
     """
 
     id = HashidAutoField(primary_key=True)
@@ -27,7 +27,6 @@ class PaymentLink(Standard):
         db_index=True
     )
     
-
     started = models.DateTimeField(
         null=True,
         blank=True,
