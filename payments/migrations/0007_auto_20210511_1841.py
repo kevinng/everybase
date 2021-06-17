@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import payments.models
+import random
 
 _USER_KEY_LENGTH = 16
 def get_payment_key(length=_USER_KEY_LENGTH):
