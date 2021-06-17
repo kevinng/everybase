@@ -4,6 +4,27 @@ from django.db import migrations, models
 import django.db.models.deletion
 import payments.models
 
+_USER_KEY_LENGTH = 16
+def get_payment_key(length=_USER_KEY_LENGTH):
+    """Generates and returns a URL friendly key.
+
+    Parameters
+    ----------
+    length : int
+        The length of the key to generate
+
+    Returns
+    -------
+    key
+        URL friendly key
+    """
+
+    chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890'
+    key = ''
+    for i in range(0, length):
+        p = random.randint(0, len(chars)-1)
+        key += chars[p]
+    return key
 
 class Migration(migrations.Migration):
 
@@ -16,7 +37,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='paymentlink',
             name='key',
-            field=models.CharField(db_index=True, default=payments.models.get_payment_key, max_length=16, unique=True),
+            field=models.CharField(db_index=True, default=get_payment_key, max_length=16, unique=True),
         ),
         migrations.AddField(
             model_name='paymentlink',
