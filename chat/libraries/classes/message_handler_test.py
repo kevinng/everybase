@@ -7,6 +7,7 @@ from chat.libraries.utilities.get_context import get_context
 from chat.libraries.utilities.start_context import start_context
 
 from relationships import models as relmods
+from payments import models as paymods
 from common import models as commods
 
 class MessageHandlerTest(TestCase):
@@ -87,6 +88,9 @@ class MessageHandlerTest(TestCase):
 
             # Delete ALL user's phone number hashes
             relmods.PhoneNumberHash.objects.filter(user=user).delete()
+
+            # Delete ALL user's payment links
+            paymods.PaymentLink.objects.filter(user=user).delete()
 
             # Get ALL user's phone numbers - to be deleted after user
             phone_numbers = relmods.PhoneNumber.objects.filter(user=user)
