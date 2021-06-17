@@ -125,3 +125,116 @@ class Currency(Choice):
     class Meta:
         verbose_name = 'Currency'
         verbose_name_plural = 'Currencies'
+
+class PaymentLinkAccess(Standard):
+    """A single access of a payment hash/URL.
+
+    Last updated: 17 June 2021, 6:14 PM
+    """
+    accessed = models.DateTimeField(
+        db_index=True,
+        auto_now=True
+    )
+        
+    ip_address = models.GenericIPAddressField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_mobile = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_tablet = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_touch_capable = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_pc = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_bot = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_version = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_version_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_version = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_version_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    device = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    device_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+        
+    hash = models.ForeignKey(
+        'PaymentHash',
+        related_name='accesses',
+        related_query_name='accesses',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'Phone hash access'
+        verbose_name_plural = 'Phone hash accesses'
