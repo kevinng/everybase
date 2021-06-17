@@ -48,6 +48,7 @@ class PaymentLink(Standard):
         blank=True,
         db_index=True        
     )
+    
     currency = models.ForeignKey(
         'Currency',
         null=True,
