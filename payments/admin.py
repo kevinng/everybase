@@ -3,20 +3,20 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
-_payment_link_fields = ['user', 'match', 'started', 'succeeded', 'failed',
+_payment_hash_fields = ['user', 'match', 'started', 'succeeded', 'failed',
     'session_id', 'currency', 'unit_amount']
-@admin.register(mod.PaymentLink)
-class PaymentLinkAdmin(comadm.StandardAdmin):
+@admin.register(mod.PaymentHash)
+class PaymentHashAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _payment_link_fields
-    list_editable = comadm.standard_list_editable + _payment_link_fields
+    list_display = comadm.standard_list_display + _payment_hash_fields
+    list_editable = comadm.standard_list_editable + _payment_hash_fields
     list_filter = comadm.standard_list_filter + ['started', 'succeeded',
         'failed', 'currency']
     search_fields = comadm.standard_search_fields + ['user__name', 'session_id']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _payment_link_fields})
+        ('Details', {'fields': _payment_hash_fields})
     ]
     autocomplete_fields = ['user', 'match']
 

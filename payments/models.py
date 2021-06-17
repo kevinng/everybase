@@ -3,8 +3,8 @@ from common.models import Standard, Choice
 import random
 from hashid_field import HashidAutoField
 
-class PaymentLink(Standard):
-    """Payment link sent to user.
+class PaymentHash(Standard):
+    """Hash of payment link sent to user.
 
     Last updated: 17 June 2021, 2:00 PM
     """
@@ -53,8 +53,8 @@ class PaymentLink(Standard):
         'Currency',
         null=True,
         blank=True,
-        related_name='payment_links',
-        related_query_name='payment_links',
+        related_name='payment_hashes',
+        related_query_name='payment_hashes',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -71,7 +71,7 @@ class PaymentLink(Standard):
 class PaymentEvent(Standard):
     """Payment event.
 
-    Last updated: 27 April 2021, 9:03 PM
+    Last updated: 17 June 2021, 5:55 PM
     """
 
     event_type = models.ForeignKey(
@@ -98,7 +98,7 @@ class PaymentEvent(Standard):
         db_index=True
     )
     payment_link = models.ForeignKey(
-        'PaymentLink',
+        'PaymentHash',
         related_name='payment_events',
         related_query_name='payment_events',
         on_delete=models.PROTECT,
