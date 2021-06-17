@@ -94,7 +94,7 @@ def redirect_whatsapp_phone_number(request, id):
 
     # Log access
     ua = request.user_agent
-    relmods.PhoneNumberURLAccess.objects.create(
+    relmods.PhoneNumberLinkAccess.objects.create(
         ip_address=ip_address,
         is_mobile=ua.is_mobile,
         is_tablet=ua.is_tablet,
