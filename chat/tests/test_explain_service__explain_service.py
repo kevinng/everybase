@@ -39,7 +39,8 @@ class ExplainService__ExplainService__Test(MessageHandlerTest):
         self.choose_new_supply('find buyers')
 
     def choose_new_demand(self, input):
-        self.receive_reply_assert(input,
+        self.receive_reply_assert(
+            input,
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT
         )

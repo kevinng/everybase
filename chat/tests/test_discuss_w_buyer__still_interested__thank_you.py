@@ -24,7 +24,8 @@ class DiscussWBuyerStillInterestedThankYouTest(MessageHandlerTest):
         self.choose_non_choice('hello')
 
     def choose_new_supply(self, input):
-        self.receive_reply_assert(input,
+        self.receive_reply_assert(
+            input,
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT
         )
@@ -40,7 +41,8 @@ class DiscussWBuyerStillInterestedThankYouTest(MessageHandlerTest):
         self.choose_new_supply('find buyers')
 
     def choose_new_demand(self, input):
-        self.receive_reply_assert(input,
+        self.receive_reply_assert(
+            input,
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT
         )
