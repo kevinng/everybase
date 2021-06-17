@@ -99,7 +99,7 @@ class MessageHandler:
 
         return value
         
-    def add_option(self, match_strs, intent_key, message_key, params,
+    def add_option(self, match_strs, intent_key, message_key, param_func,
         data_key=None, data_value=None, intent_key_func=None,
         message_key_func=None):
         """Add an option to this handler to be matched against the message body.
@@ -110,19 +110,20 @@ class MessageHandler:
 
         Parameters
         ----------
-        match_strs : list of tuples
+        match_strs : List of tuples
             List of strings to match for this option in the format:
             
             [(string_to_match, edit_distance_tolerance), ...]
             
             A string will be matched against the text body with the match
             function.
-        intent_key : string
+        intent_key : String
             Intent key for the context to set if this option is chosen
-        message_key : string
+        message_key : String
             Message key for the context to set if this option is chosen
-        params : dictionary
-            Params to merge into the message body for this option
+        param_func : Function, optional
+            Function that returns the parameters for the message if this option
+            is chosen
         data_key : string, optional
             If present, store user's input under context/data-key
         data_value : string, optional
@@ -134,9 +135,8 @@ class MessageHandler:
             If present, will be used to ascertain the message key - ignoring
             message_key
         """
-        self.options.append(
-            (match_strs, intent_key, message_key, params, data_key, data_value,
-                intent_key_func, message_key_func))
+        self.options.append((match_strs, intent_key, message_key, param_func,
+            data_key, data_value, intent_key_func, message_key_func))
 
     def done_reply(self, intent_key, message_key, params={}):
         """Convenience function to call self.done_to_context and
