@@ -89,8 +89,8 @@ class MessageHandlerTest(TestCase):
             # Delete ALL user's phone number hashes
             relmods.PhoneNumberHash.objects.filter(user=user).delete()
 
-            # Delete ALL user's payment links
-            paymods.PaymentLink.objects.filter(user=user).delete()
+            # Delete ALL user's payment hashes
+            paymods.PaymentHash.objects.filter(user=user).delete()
 
             # Get ALL user's phone numbers - to be deleted after user
             phone_numbers = relmods.PhoneNumber.objects.filter(user=user)
@@ -245,7 +245,7 @@ class MessageHandlerTest(TestCase):
         else:
             render_message_key = target_body_message_key
 
-        target_path = 'chat/test/%s/%s' % \
+        target_path = 'chat/messages/test/%s/%s' % \
             (render_intent_key, render_message_key)
         if target_body_variation_key is None:
             target_path += '.txt'

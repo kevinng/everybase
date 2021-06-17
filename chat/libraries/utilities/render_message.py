@@ -10,4 +10,4 @@ def render_message(message_key, params):
     params : dictionary
         Parameters to be inserted in message body
     """
-    return render_to_string('chat/%s.txt' % message_key, params)
+    return render_to_string('chat/messages/%s.txt' % message_key, params)
