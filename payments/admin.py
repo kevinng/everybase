@@ -21,7 +21,7 @@ class PaymentHashAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['user', 'match']
 
 _payment_event_fields = ['event_type', 'currency', 'amount', 'user',
-    'payment_link']
+    'payment_hash']
 @admin.register(mod.PaymentEvent)
 class PaymentEventAdmin(comadm.StandardAdmin):
     # List page settings
@@ -34,7 +34,7 @@ class PaymentEventAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _payment_event_fields})
     ]
-    autocomplete_fields = ['event_type', 'currency', 'user', 'payment_link']
+    autocomplete_fields = ['event_type', 'currency', 'user', 'payment_hash']
 
 @admin.register(mod.PaymentEventType)
 class PaymentEventTypeAdmin(comadm.ChoiceAdmin):

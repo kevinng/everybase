@@ -97,7 +97,7 @@ class PaymentEvent(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    payment_link = models.ForeignKey(
+    payment_hash = models.ForeignKey(
         'PaymentHash',
         related_name='payment_events',
         related_query_name='payment_events',
