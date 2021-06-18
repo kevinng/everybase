@@ -198,7 +198,7 @@ class PhoneNumberHash(Standard):
     access of the URL. We use a hash and not the ID straight to prevent users
     from iterating the IDs in the URL.
 
-    Last updated: 18 June 2021, 10:17
+    Last updated: 18 June 2021, 3:53 PM
     """
 
     id = HashidAutoField(primary_key=True)
