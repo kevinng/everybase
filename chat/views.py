@@ -106,10 +106,7 @@ def redirect_whatsapp_phone_number(request, id):
         access.save()
     except relmods.PhoneNumberHash.DoesNotExist:
         traceback.print_exc()
-        # Direct the user to my phone number, so I'll know if the URL is bad
-        response['Location'] = 'https://wa.me/' + \
-            EVERYBASE_WA_NUMBER_COUNTRY_CODE + \
-            EVERYBASE_WA_NUMBER_NATIONAL_NUMBER
+        # TODO: redirect to error page, and send me a notification
         
         # Update log status
         access.outcome = relmods.PHONE_NUMBER_ACCESS_FAILED
