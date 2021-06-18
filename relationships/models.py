@@ -1,7 +1,5 @@
 import random
 from django.db import models
-from django.db.models.fields import BLANK_CHOICE_DASH
-from django.db.models.fields.related import ForeignKey
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
 from django.core.exceptions import ValidationError
@@ -235,14 +233,26 @@ class PhoneNumberHash(Standard):
     def __str__(self):
         return f'({self.user}, {self.phone_number_type}, {self.phone_number} [{self.id}])'
 
+PHONE_NUMBER_ACCESS_SUCCESSFUL = 'PHONE_NUMBER_ACCESS_SUCCESSFUL'
+PHONE_NUMBER_ACCESS_FAILED = 'PHONE_NUMBER_ACCESS'
 class PhoneNumberLinkAccess(Standard):
     """A single access of a phone number hash/URL.
 
-    Last updated: 17 June 2021, 6:14 PM
+    Last updated: 18 June 2021, 2:51 PM
     """
     accessed = models.DateTimeField(
         db_index=True,
         auto_now=True
+    )
+    outcome = models.CharField(
+        max_length=200,
+        choices=[
+            (PHONE_NUMBER_ACCESS_SUCCESSFUL, PHONE_NUMBER_ACCESS_SUCCESSFUL),
+            (PHONE_NUMBER_ACCESS_FAILED, PHONE_NUMBER_ACCESS_FAILED),
+        ],
+        null=True,
+        blank=True,
+        db_index=True
     )
         
     ip_address = models.GenericIPAddressField(
