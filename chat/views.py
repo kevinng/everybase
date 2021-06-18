@@ -2,6 +2,7 @@ import traceback
 from http import HTTPStatus
 
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from rest_framework.views import APIView
 
 from everybase.settings import (TWILIO_AUTH_TOKEN,
@@ -101,7 +102,10 @@ def redirect_whatsapp_phone_number(request, id):
     response = HttpResponse(status=302) # Temporary redirect
 
     try:
-        hash = relmods.PhoneNumberHash.objects.get(pk=id)
+        hash = relmods.PhoneNumberHash.objects.get(
+            pk=id,
+            expired__isnull=False
+        )
         access.hash = hash
         access.save()
     except relmods.PhoneNumberHash.DoesNotExist:
