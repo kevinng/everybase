@@ -1,4 +1,5 @@
 import random
+from django import db
 from django.db import models
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
@@ -197,10 +198,15 @@ class PhoneNumberHash(Standard):
     access of the URL. We use a hash and not the ID straight to prevent users
     from iterating the IDs in the URL.
 
-    Last updated: 15 June 2021, 2:44 PM
+    Last updated: 18 June 2021, 10:17
     """
 
     id = HashidAutoField(primary_key=True)
+    expired = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     user = models.ForeignKey(
         'User',
