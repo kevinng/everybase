@@ -147,6 +147,16 @@ class PaymentLinkAccess(Standard):
         db_index=True,
         auto_now=True
     )
+    outcome = models.CharField(
+        max_length=200,
+        choices=[
+            ('successful', 'Successful'),
+            ('failed', 'Failed'),
+        ],
+        null=True,
+        blank=True,
+        db_index=True
+    )
         
     ip_address = models.GenericIPAddressField(
         null=True,
