@@ -3,7 +3,7 @@
 from django.urls import path
 from . import views
 
-app_name = 'chat'
+app_name = 'chat_root'
 urlpatterns = [
     path('wa/<str:id>/', views.redirect_whatsapp_phone_number, name='whatsapp'),
 ]

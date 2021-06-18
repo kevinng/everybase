@@ -56,7 +56,7 @@ class DiscussWSellerDiscussConfirmInterestTest(MessageHandlerTest):
         # There should be only 1 hash
         hash = relmods.PhoneNumberHash.objects.get(user=self.user)
         whatsapp_url = urljoin(settings.BASE_URL,
-            reverse('chat:whatsapp', kwargs={ 'id': hash.id }))
+            reverse('chat_root:whatsapp', kwargs={ 'id': hash.id }))
 
         return { 'whatsapp_url': whatsapp_url }
 

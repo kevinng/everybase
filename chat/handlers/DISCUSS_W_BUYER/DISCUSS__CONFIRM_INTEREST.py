@@ -100,7 +100,7 @@ class Handler(MessageHandler):
             phone_number=contact.phone_number
         )
         whatsapp_url = urljoin(settings.BASE_URL,
-            reverse('chat:whatsapp', kwargs={ 'id': wa_hash.id }))
+            reverse('chat_root:whatsapp', kwargs={ 'id': wa_hash.id }))
 
         return {
             'buying': True,
