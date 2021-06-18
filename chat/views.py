@@ -11,6 +11,7 @@ from everybase.settings import (TWILIO_AUTH_TOKEN,
 from common.libraries.get_ip_address import get_ip_address
 
 from relationships import models as relmods
+from payments import models as paymods
 
 from chat.libraries.utilities.save_message_log import save_message_log
 from chat.libraries.utilities.save_message_medias import save_message_medias
@@ -92,8 +93,7 @@ def redirect_whatsapp_phone_number(request, id):
         os_version=ua.os.version,
         os_version_string=ua.os.version_string,
         device=ua.device,
-        device_family=ua.device.family,
-        hash=hash
+        device_family=ua.device.family
     )
 
     # Note: we use temporary redirects so search engines do not associate our
@@ -102,6 +102,8 @@ def redirect_whatsapp_phone_number(request, id):
 
     try:
         hash = relmods.PhoneNumberHash.objects.get(pk=id)
+        access.hash = hash
+        access.save()
     except relmods.PhoneNumberHash.DoesNotExist:
         traceback.print_exc()
         # Direct the user to my phone number, so I'll know if the URL is bad
