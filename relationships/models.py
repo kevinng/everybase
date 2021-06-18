@@ -235,10 +235,10 @@ class PhoneNumberHash(Standard):
     def __str__(self):
         return f'({self.user}, {self.phone_number_type}, {self.phone_number} [{self.id}])'
 
-class PhoneNumberURLAccess(Standard):
+class PhoneNumberLinkAccess(Standard):
     """A single access of a phone number hash/URL.
 
-    Last updated: 15 June 2021, 2:44 PM
+    Last updated: 17 June 2021, 6:14 PM
     """
     accessed = models.DateTimeField(
         db_index=True,
