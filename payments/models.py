@@ -138,6 +138,8 @@ class Currency(Choice):
         verbose_name = 'Currency'
         verbose_name_plural = 'Currencies'
 
+PAYMENT_LINK_ACCESS_SUCCESSFUL = 'PAYMENT_LINK_ACCESS_SUCCESSFUL'
+PAYMENT_LINK_ACCESS_FAILED = 'PAYMENT_LINK_ACCESS_FAILED'
 class PaymentLinkAccess(Standard):
     """A single access of a payment hash/URL.
 
@@ -150,8 +152,8 @@ class PaymentLinkAccess(Standard):
     outcome = models.CharField(
         max_length=200,
         choices=[
-            ('successful', 'Successful'),
-            ('failed', 'Failed'),
+            (PAYMENT_LINK_ACCESS_SUCCESSFUL, PAYMENT_LINK_ACCESS_SUCCESSFUL),
+            (PAYMENT_LINK_ACCESS_FAILED, PAYMENT_LINK_ACCESS_FAILED),
         ],
         null=True,
         blank=True,
