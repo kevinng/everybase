@@ -141,7 +141,7 @@ class Currency(Choice):
 class PaymentLinkAccess(Standard):
     """A single access of a payment hash/URL.
 
-    Last updated: 17 June 2021, 6:14 PM
+    Last updated: 18 June 2021, 2:35 PM
     """
     accessed = models.DateTimeField(
         db_index=True,
