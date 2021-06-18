@@ -8,6 +8,8 @@ from everybase.settings import (TWILIO_AUTH_TOKEN,
     TWILIO_WEBHOOK_INCOMING_MESSAGES_URL, EVERYBASE_WA_NUMBER_COUNTRY_CODE,
     EVERYBASE_WA_NUMBER_NATIONAL_NUMBER)
 
+from common.libraries.get_ip_address import get_ip_address
+
 from relationships import models as relmods
 
 from chat.libraries.utilities.save_message_log import save_message_log
@@ -18,6 +20,8 @@ from chat.libraries.utilities.get_handler import get_handler
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
+
+import stripe
 
 def reply(message):
     """Returns TwilML response to a Twilio incoming message model row reference.
@@ -84,13 +88,7 @@ def redirect_whatsapp_phone_number(request, id):
             EVERYBASE_WA_NUMBER_NATIONAL_NUMBER
         return response
 
-    # Get user IP address
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-
-    if x_forwarded_for:
-        ip_address = x_forwarded_for.split(',')[0]
-    else:
-        ip_address = request.META.get('REMOTE_ADDR')
+    ip_address = get_ip_address(request)
 
     # Log access
     ua = request.user_agent
