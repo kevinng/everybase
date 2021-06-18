@@ -55,6 +55,12 @@ class PaymentHash(Standard):
         db_index=True        
     )
     
+    product_name = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     currency = models.ForeignKey(
         'Currency',
         null=True,
