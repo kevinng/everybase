@@ -6,10 +6,16 @@ from hashid_field import HashidAutoField
 class PaymentHash(Standard):
     """Hash of payment link sent to user.
 
-    Last updated: 17 June 2021, 2:00 PM
+    Last updated: 18 June 2021, 10:17
     """
 
     id = HashidAutoField(primary_key=True)
+    expired = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     user = models.ForeignKey(
         'relationships.User',
         related_name='payment_links',
