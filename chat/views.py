@@ -74,26 +74,10 @@ class TwilioIncomingMessageView(APIView):
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
 def redirect_whatsapp_phone_number(request, id):
-    # Note: we use temporary redirects so search engines do not associate our
-    # URLs with WhatsApp phone number links
-    response = HttpResponse(status=302) # Temporary redirect
-
-    try:
-        hash = relmods.PhoneNumberHash.objects.get(pk=id)
-    except relmods.PhoneNumberHash.DoesNotExist:
-        traceback.print_exc()
-        # Direct the user to my phone number, so I'll know if the URL is bad
-        response['Location'] = 'https://wa.me/' + \
-            EVERYBASE_WA_NUMBER_COUNTRY_CODE + \
-            EVERYBASE_WA_NUMBER_NATIONAL_NUMBER
-        return response
-
-    ip_address = get_ip_address(request)
-
     # Log access
     ua = request.user_agent
-    relmods.PhoneNumberLinkAccess.objects.create(
-        ip_address=ip_address,
+    access = relmods.PhoneNumberLinkAccess.objects.create(
+        ip_address=get_ip_address(request),
         is_mobile=ua.is_mobile,
         is_tablet=ua.is_tablet,
         is_touch_capable=ua.is_touch_capable,
@@ -112,6 +96,30 @@ def redirect_whatsapp_phone_number(request, id):
         hash=hash
     )
 
+    # Note: we use temporary redirects so search engines do not associate our
+    # URLs with WhatsApp phone number links
+    response = HttpResponse(status=302) # Temporary redirect
+
+    try:
+        hash = relmods.PhoneNumberHash.objects.get(pk=id)
+    except relmods.PhoneNumberHash.DoesNotExist:
+        traceback.print_exc()
+        # Direct the user to my phone number, so I'll know if the URL is bad
+        response['Location'] = 'https://wa.me/' + \
+            EVERYBASE_WA_NUMBER_COUNTRY_CODE + \
+            EVERYBASE_WA_NUMBER_NATIONAL_NUMBER
+        
+        # Update log status
+        access.outcome = relmods.PHONE_NUMBER_ACCESS_FAILED
+        access.save()
+
+        return response
+
     response['Location'] = 'https://wa.me/' + hash.phone_number.country_code + \
         hash.phone_number.national_number
+    
+    # Update log status
+    access.outcome = relmods.PHONE_NUMBER_ACCESS_SUCCESSFUL
+    access.save()
+
     return response
