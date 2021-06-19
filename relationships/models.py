@@ -468,8 +468,14 @@ class TimeFrame(Standard):
 class Match(Choice):
     """Match between supply and demand.
 
-    Last updated: 12 May 2021, 2:40 PM
+    Last updated: 19 June 2021, 8:51 PM
     """
+    closed = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     supply = models.ForeignKey(
         'Supply',
         related_name='matches',
