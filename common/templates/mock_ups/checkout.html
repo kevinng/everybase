@@ -1,0 +1,37 @@
+{% extends 'extendables/base.html' %}
+
+{% block subtitle %}Payment{% endblock %}
+
+{% block otherheadtags %}
+<meta name="robots" content="noindex">
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+{% block contents %}
+<div class="card card-custom gutter-b">
+	<div class="card-body">
+		<div class="d-flex">
+			<div class="flex-grow-1">
+				<div>
+					Loading payment page...
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block local_script %}
+<script type="text/javascript">
+	var stripe = Stripe('{{ stripe_publishable_api_key }}');
+	stripe.redirectToCheckout({
+		sessionId: '{{ session_id }}'
+	}).then(function(result) {
+		if (result.error) {
+			console.log(result.error.message);
+		}
+	}).catch(function(error) {
+		console.error('Error: ', error);
+	});
+</script>
+{% endblock %}
