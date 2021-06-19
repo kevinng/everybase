@@ -16,6 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import include
+from django.shortcuts import render
+import sentry_sdk
+
+def trigger_error(request):
+    """View to test the logging of unhandled errors in Sentry"""
+    division_by_zero = 1 / 0
+
+def trigger_handled_error(request):
+    """View to test the logging of handled errors in Sentry"""
+    try:
+        division_by_zero = 1 / 0
+    except Exception as err:
+        sentry_sdk.capture_exception(err)
+    return render(request, 'chat/pages/error.html', {})
 
 urlpatterns = [
     path('common/', include('common.urls')),
@@ -23,6 +37,11 @@ urlpatterns = [
     path('growth/', include('growth.urls')),
     path('chat/', include('chat.urls')),
     path('', include('chat.urls_root')),
+
+    # Sentry debug URL
+    # Calling this link will trigger an error
+    path('sentry-debug/', trigger_error),
+    path('sentry-debug-handled/', trigger_handled_error),
 
     # Django admin, with obfuscated URL
     path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),

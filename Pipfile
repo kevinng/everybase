@@ -32,6 +32,7 @@ ua-parser = "*"
 user-agents = "*"
 django-user-agents = "*"
 stripe = "*"
+sentry-sdk = "*"
 
 [requires]
 python_version = "3.7"

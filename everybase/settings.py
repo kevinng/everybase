@@ -16,6 +16,8 @@ import django_heroku
 import dj_database_url
 from django.contrib.messages import constants as messages
 from django.conf.locale.en import formats as en_formats
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -241,12 +243,7 @@ TWILIO_WEBHOOK_STATUS_UPDATE_URL = \
 
 # Hash ID Field
 HASHID_FIELD_SALT = config('HASHID_FIELD_SALT')
-HASHID_FIELD_MIN_LENGTH = 7
-
-# System phone numbers
-EVERYBASE_WA_NUMBER_COUNTRY_CODE = config('EVERYBASE_WA_NUMBER_COUNTRY_CODE')
-EVERYBASE_WA_NUMBER_NATIONAL_NUMBER = \
-    config('EVERYBASE_WA_NUMBER_NATIONAL_NUMBER')
+HASHID_FIELD_MIN_LENGTH = config('HASHID_FIELD_MIN_LENGTH')
 
 # System base URL
 BASE_URL = config('BASE_URL')
@@ -255,5 +252,25 @@ BASE_URL = config('BASE_URL')
 STRIPE_SECRET_API_KEY = config('STRIPE_SECRET_API_KEY')
 STRIPE_PUBLISHABLE_API_KEY = config('STRIPE_PUBLISHABLE_API_KEY')
 STRIPE_PAYMENT_METHOD_TYPES = config('STRIPE_PAYMENT_METHOD_TYPES').split(';')
-STRIPE_SUCCESS_URL = config('STRIPE_SUCCESS_URL')
-STRIPE_CANCEL_URL = config('STRIPE_CANCEL_URL')
+
+# System phone numbers
+## User-facing chatbot
+CHATBOT_PHONE_NUMBER_PK = config('CHATBOT_PHONE_NUMBER_PK')
+## Standard sender for system messages
+MESSAGE_SENDER_PHONE_NUMBER_PK = config('MESSAGE_SENDER_PHONE_NUMBER_PK')
+## Standard receiver for system messages
+MESSAGE_RECEIVER_PHONE_NUMBER_PK = config('MESSAGE_RECEIVER_PHONE_NUMBER_PK')
+
+sentry_sdk.init(
+    dsn="https://b66301735a0345b3b7c6bee436d28bb7@o870163.ingest.sentry.io/5824419",
+    integrations=[DjangoIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
