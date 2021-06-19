@@ -69,12 +69,14 @@ class MessageHandlerTest(TestCase):
 
             # Delete ALL user's datasets
             models.MessageDataset.objects.filter(user=user).delete()
+            
+            # Delete ALL user's outbound messages
+            models.TwilioOutboundMessage.objects.filter(from_user=user).delete()
+            models.TwilioOutboundMessage.objects.filter(to_user=user).delete()
 
             # Delete ALL user's inbound messages
             models.TwilioInboundMessage.objects.filter(from_user=user).delete()
-
-            # Delete ALL user's outbound messages
-            models.TwilioOutboundMessage.objects.filter(from_user=user).delete()
+            models.TwilioInboundMessage.objects.filter(to_user=user).delete()
 
             # Delete ALL user's supplies
             relmods.Supply.objects.filter(user=user).delete()
