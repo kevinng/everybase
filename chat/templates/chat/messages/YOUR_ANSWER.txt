@@ -10,4 +10,3 @@ Hi {{ name }}, {% if buying == True %}seller{% elif buying == False %}buyer{% en
 1. Answer question
 2. Buy {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}'s contact
 3. Stop discussing with this {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}
-4. Learn about our service
