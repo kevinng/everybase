@@ -15,10 +15,4 @@ class Handler(MessageHandler):
             datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__CHOICE,
             datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__FIND_SELLER
         )
-        self.add_option([('3', 0)],
-            intents.SPEAK_HUMAN,
-            messages.CONFIRM_HUMAN, None,
-            datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__CHOICE,
-            datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__SPEAK_HUMAN
-        )
         return self.reply_option()

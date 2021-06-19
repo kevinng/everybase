@@ -55,15 +55,3 @@ class ExplainService__ExplainService__Test(MessageHandlerTest):
 
     def test_choose_new_demand_with_text(self):
         self.choose_new_demand('find sellers')
-
-    def test_speak_human(self):
-        self.receive_reply_assert(
-            '3', # Only number option available
-            intents.SPEAK_HUMAN,
-            messages.CONFIRM_HUMAN
-        )
-        self.assert_value(
-            datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__CHOICE,
-            value_string=\
-                datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__SPEAK_HUMAN
-        )
