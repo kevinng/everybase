@@ -1,10 +1,13 @@
 import random
-from django import db
+
 from django.db import models
-from common.models import (Standard, Choice, LowerCaseCharField,
-    LowerCaseEmailField)
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+
+from common.models import (Standard, Choice, LowerCaseCharField,
+    LowerCaseEmailField)
+from chat.libraries.constants import methods
+
 from hashid_field import HashidAutoField
 
 class PhoneNumberType(Choice):
@@ -497,7 +500,7 @@ class Match(Choice):
 class Supply(Standard):
     """Supply.
 
-    Last updated: 12 May 2021, 6:14 PM
+    Last updated: 20 June 2021, 4:28 PM
     """
     user = models.ForeignKey(
         'User',
@@ -507,9 +510,21 @@ class Supply(Standard):
         db_index=True
     )
 
-    product_type_captured = models.TextField(
+    product_type_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_product_type_values',
+        related_query_name='supply_product_type_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
+    )
+    product_type_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     product_type = models.ForeignKey(
         'ProductType',
@@ -521,15 +536,43 @@ class Supply(Standard):
         db_index=True
     )
 
-    country_state_captured = models.TextField(
+    country_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_country_values',
+        related_query_name='supply_country_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True        
+        blank=True,
+        db_index=True
+    )
+    country_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     country = models.ForeignKey(
         'common.Country',
         related_name='supplies',
         related_query_name='supplies',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    state_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_state_values',
+        related_query_name='supply_state_values',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    state_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
         null=True,
         blank=True,
         db_index=True
@@ -544,9 +587,21 @@ class Supply(Standard):
         db_index=True
     )
 
-    availability_captured = models.TextField(
+    availability_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_availability_values',
+        related_query_name='supply_availability_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True        
+        blank=True,
+        db_index=True
+    )
+    availability_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     availability = models.ForeignKey(
         'Availability',
@@ -558,9 +613,21 @@ class Supply(Standard):
         db_index=True
     )
 
-    packing_captured = models.TextField(
+    packing_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_packing_values',
+        related_query_name='supply_packing_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True        
+        blank=True,
+        db_index=True
+    )
+    packing_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     packing = models.ForeignKey(
         'UnitOfMeasure',
@@ -572,9 +639,21 @@ class Supply(Standard):
         db_index=True
     )
 
-    quantity_captured = models.TextField(
+    quantity_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_quantity_values',
+        related_query_name='supply_quantity_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
+    )
+    quantity_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     quantity = models.FloatField(
         null=True,
@@ -582,9 +661,21 @@ class Supply(Standard):
         db_index=True
     )
 
-    pre_order_timeframe_captured = models.TextField(
+    pre_order_timeframe_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_pre_order_timeframe_values',
+        related_query_name='supply_pre_order_timeframe_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
+    )
+    pre_order_timeframe_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     pre_order_timeframe = models.ForeignKey(
         'TimeFrame',
@@ -596,14 +687,42 @@ class Supply(Standard):
         db_index=True
     )
 
-    price_captured = models.TextField(
+    price_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_price_values',
+        related_query_name='supply_price_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
+    price_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
+    )    
     price = models.FloatField(
         null=True,
         blank=True
     )
+    currency_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_currency_values',
+        related_query_name='supply_currency_values',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    currency_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
+    )  
     currency = models.ForeignKey(
         'payments.Currency',
         related_name='supplies',
@@ -614,19 +733,43 @@ class Supply(Standard):
         db_index=True
     )
 
-    deposit_percentage_captured = models.TextField(
+    deposit_percentage_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_deposit_percentage_values',
+        related_query_name='supply_deposit_percentage_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
+    deposit_percentage_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
+    )  
     deposit_percentage = models.FloatField(
         null=True,
         blank=True
     )
 
-    accept_lc_captured = models.TextField(
+    accept_lc_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='supply_accept_lc_values',
+        related_query_name='supply_accept_lc_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
+    accept_lc_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
+    )  
     accept_lc = models.BooleanField(
         null=True,
         blank=True
@@ -657,7 +800,7 @@ class Supply(Standard):
 class Demand(Standard):
     """Demand.
 
-    Last updated: 12 May 2021, 4:12 PM
+    Last updated: 20 June 2021, 5:49 PM
     """
     user = models.ForeignKey(
         'User',
@@ -667,9 +810,21 @@ class Demand(Standard):
         db_index=True
     )
 
-    product_type_captured = models.TextField(
+    product_type_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='demand_product_type_values',
+        related_query_name='demand_product_type_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
+    )
+    product_type_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     product_type = models.ForeignKey(
         'ProductType',
@@ -681,15 +836,43 @@ class Demand(Standard):
         db_index=True
     )
 
-    country_state_captured = models.TextField(
+    country_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='demand_country_values',
+        related_query_name='demand_country_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True        
+        blank=True,
+        db_index=True
+    )
+    country_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     country = models.ForeignKey(
         'common.Country',
         related_name='demands',
         related_query_name='demands',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    state_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='demand_state_values',
+        related_query_name='demand_state_values',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    state_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
         null=True,
         blank=True,
         db_index=True
@@ -704,9 +887,21 @@ class Demand(Standard):
         db_index=True
     )
 
-    packing_captured = models.TextField(
+    packing_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='demand_packing_values',
+        related_query_name='demand_packing_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True        
+        blank=True,
+        db_index=True
+    )
+    packing_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     packing = models.ForeignKey(
         'UnitOfMeasure',
@@ -718,9 +913,21 @@ class Demand(Standard):
         db_index=True
     )
 
-    quantity_captured = models.TextField(
+    quantity_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='demand_quantity_values',
+        related_query_name='demand_quantity_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
+    )
+    quantity_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     quantity = models.FloatField(
         null=True,
@@ -728,13 +935,41 @@ class Demand(Standard):
         db_index=True
     )
 
-    price_captured = models.TextField(
+    price_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='demand_price_values',
+        related_query_name='demand_price_values',
+        on_delete=models.PROTECT,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
+    )
+    price_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     price = models.FloatField(
         null=True,
         blank=True
+    )
+    currency_data_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='demand_currency_values',
+        related_query_name='demand_currency_values',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    currency_method = models.CharField(
+        max_length=200,
+        choices=methods.choices,
+        null=True,
+        blank=True,
+        db_index=True
     )
     currency = models.ForeignKey(
         'payments.Currency',

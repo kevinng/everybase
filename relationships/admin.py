@@ -171,48 +171,64 @@ class MatchAdmin(comadm.ChoiceAdmin):
     ]
     autocomplete_fields = _match_fields
 
-_supply_fields = ['product_type_captured', 'country_state_captured',
-    'availability_captured', 'packing_captured', 'quantity_captured',
-    'quantity', 'pre_order_timeframe_captured', 'price_captured', 'price', 
-    'deposit_percentage_captured', 'deposit_percentage',
-    'accept_lc_captured', 'accept_lc']
+_supply_fields = ['quantity', 'price', 'deposit_percentage', 'accept_lc']
 _supply_fk_fields = ['user', 'product_type', 'country', 'state', 'availability',
     'packing', 'pre_order_timeframe', 'currency', 'previous_version',
     'next_version']
+
+
+_supply_fields = [ 'user', 'product_type_data_value', 'product_type_method',
+'product_type', 'country_data_value', 'country_method', 'country',
+'state_data_value', 'state_method', 'state', 'availability_data_value',
+'availability_method', 'availability', 'packing_data_value', 'packing_method',
+'packing', 'quantity_data_value', 'quantity_method', 'quantity',
+'pre_order_timeframe_data_value', 'pre_order_timeframe_method',
+'pre_order_timeframe', 'price_data_value', 'price_method', 'price',
+'currency_data_value', 'currency_method', 'currency',
+'deposit_percentage_data_value', 'deposit_percentage_method',
+'deposit_percentage', 'accept_lc_data_value', 'accept_lc_method', 'accept_lc',
+'previous_version', 'next_version']
 @admin.register(mod.Supply)
 class SupplyAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _supply_fields + \
-        _supply_fk_fields
-    list_editable = comadm.standard_list_editable + _supply_fields + \
-        _supply_fk_fields
-    list_filter = comadm.standard_list_filter + _supply_fk_fields
-    search_fields = comadm.standard_search_fields + _supply_fields + \
-        ['user__name']
+    list_display = comadm.standard_list_display + _supply_fields
+    list_editable = comadm.standard_list_editable + _supply_fields
+    list_filter = comadm.standard_list_filter + ['product_type', 'country',
+    'state', 'availability', 'packing', 'accept_lc']
+    search_fields = comadm.standard_search_fields + ['user__name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _supply_fields + _supply_fk_fields})
+        ('Details', {'fields': _supply_fields})
     ]
-    autocomplete_fields = _supply_fk_fields
+    autocomplete_fields = [ 'user', 'product_type_data_value', 'product_type',
+    'country_data_value', 'country', 'state_data_value', 'state',
+    'availability_data_value', 'availability', 'packing_data_value', 'packing',
+    'quantity_data_value', 'pre_order_timeframe_data_value',
+    'pre_order_timeframe', 'price_data_value', 'currency_data_value',
+    'currency', 'deposit_percentage_data_value', 'accept_lc_data_value',
+    'previous_version', 'next_version']
 
-_demand_fields = ['product_type_captured', 'country_state_captured', 
-    'packing_captured', 'quantity_captured', 'price_captured', 'price']
-_demand_fk_fields = ['user', 'product_type', 'country', 'state',  'packing',
-    'currency', 'previous_version', 'next_version']
+_demand_fields = ['user', 'product_type_data_value', 'product_type_method',
+'product_type', 'country_data_value', 'country_method', 'country',
+'state_data_value', 'state_method', 'state', 'packing_data_value',
+'packing_method', 'packing', 'quantity_data_value', 'quantity_method',
+'quantity', 'price_data_value', 'price_method', 'price', 'currency_data_value',
+'currency_method', 'currency', 'previous_version', 'next_version']
 @admin.register(mod.Demand)
 class DemandAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _demand_fields + \
-        _demand_fk_fields
-    list_editable = comadm.standard_list_editable + _demand_fields + \
-        _demand_fk_fields
-    list_filter = comadm.standard_list_filter + _demand_fk_fields
-    search_fields = comadm.standard_search_fields + _demand_fields + \
-        ['user__name']
+    list_display = comadm.standard_list_display + _demand_fields
+    list_editable = comadm.standard_list_editable + _demand_fields
+    list_filter = comadm.standard_list_filter + ['product_type', 'country',
+    'state', 'packing']
+    search_fields = comadm.standard_search_fields + ['user__name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _demand_fields + _demand_fk_fields})
+        ('Details', {'fields': _demand_fields})
     ]
-    autocomplete_fields = _demand_fk_fields
+    autocomplete_fields = ['user', 'product_type_data_value', 'product_type',
+    'country_data_value', 'country', 'state_data_value', 'state',
+    'packing_data_value', 'packing', 'quantity_data_value', 'price_data_value',
+    'currency_data_value', 'currency', 'previous_version', 'next_version']
