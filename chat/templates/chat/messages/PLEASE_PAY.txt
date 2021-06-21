@@ -1,5 +1,5 @@
-Please make a payment of {{ currency }} {{ price }} at this link.
+Please make a payment of {{ currency|upper }} {{ price|floatformat:2 }} at this link.
 
-{{ link }}
+{{ payment_link }}
 
 We'll send you the {% if buying %}seller{% else %}buyer{% endif %}'s contact once payment is made.
