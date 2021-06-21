@@ -55,7 +55,7 @@ class MessageHandlerTest(TestCase):
             'Everybase Default', '65', '88933466')
 
         if intent_key is not None and message_key is not None:
-            context = start_context(self.user, intent_key, message_key)
+            start_context(self.user, intent_key, message_key)
 
     def tearDown(self):
         super().tearDown()
