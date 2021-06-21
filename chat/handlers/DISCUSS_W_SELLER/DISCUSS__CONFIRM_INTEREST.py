@@ -7,6 +7,18 @@ from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 
 class Handler(MessageHandler):
+    def _get_match(self):
+        if not hasattr(self, '_match') or self._match is None:
+            match_id = self.get_latest_value(
+                intents.DISCUSS_W_SELLER,
+                messages.DISCUSS__CONFIRM_INTEREST,
+                datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__MATCH_ID__ID,
+                False
+            ).value_id
+            self._match = relmods.Match.objects.get(pk=match_id)
+        
+        return self._match
+
     def _get_connected_env_var(self):
         """Returns true if both users are connected, false otherwise.
         """
@@ -37,13 +49,7 @@ class Handler(MessageHandler):
     def _get_yes_not_connected_params(self):
         """Get template parameters for yes/not-connected outcome
         """
-        demand_id = self.get_latest_value(
-            intents.DISCUSS_W_SELLER,
-            messages.DISCUSS__CONFIRM_INTEREST,
-            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__DEMAND__ID,
-            False
-        ).value_id
-        demand = relmods.Demand.objects.get(pk=demand_id)
+        demand = self._get_match().demand
         return {
             'buying': True,
             'demand': demand
@@ -83,14 +89,7 @@ class Handler(MessageHandler):
         contact = relmods.User.objects.get(pk=contact_id)
 
         # Get supply reference
-
-        supply_id = self.get_latest_value(
-            intents.DISCUSS_W_SELLER,
-            messages.DISCUSS__CONFIRM_INTEREST,
-            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
-            False
-        ).value_id
-        supply = relmods.Supply.objects.get(pk=supply_id)
+        supply = self._get_match().supply
 
         # Create a WhatsApp phone-number hash for this user
         whatsapp_type = relmods.PhoneNumberType.objects.get(id=1) # WhatsApp
@@ -112,18 +111,21 @@ class Handler(MessageHandler):
     def _get_no_params(self):
         """Get template parameters for no outcome
         """
-        demand_id = self.get_latest_value(
-            intents.DISCUSS_W_SELLER,
-            messages.DISCUSS__CONFIRM_INTEREST,
-            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_INTEREST__DEMAND__ID,
-            False
-        ).value_id
-        demand = relmods.Demand.objects.get(pk=demand_id)
+        demand = self._get_match().demand
         return {
             'demand': demand
         }
 
     def run(self):
+        if self._get_match().closed is not None:
+            # Match is closed - return menu
+            user = relmods.User.objects.get(pk=self.message.from_user.id)
+            return self.done_reply(
+                intents.MENU,
+                messages.MENU,
+                {'name': user.name}
+            )
+
         # Set environment variable
         # Test if users are connected, if so, set 'CONNECTED' in this message
         # handler environment to True.

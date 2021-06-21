@@ -1,6 +1,7 @@
 import datetime, pytz
 from urllib.parse import urljoin
 from django.urls import reverse
+from django.utils import timezone
 
 from everybase import settings
 
@@ -65,8 +66,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_YesNo_Test(
     def setUp(self):
         super().setUp()
 
-        # Demand and relevant models, and demand ID set by the system when
-        # sending this message to the user
+        # Demand and relevant models
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
             uom_name='Box',
@@ -81,12 +81,22 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_YesNo_Test(
             price=15.15,
             currency=paymods.Currency.objects.get(pk=1) # USD
         )
+
+        # Dummy supply
+        supply = self.set_up_supply()
+
+        # Match ID, set by system when sending message
+        match = relmods.Match.objects.create(
+            supply=supply,
+            demand=demand
+        )
+
         self.set_up_data_value(
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__CONFIRM_INTEREST,
             data_key=\
-                datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__DEMAND__ID,
-            value_id=demand.id,
+                datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__MATCH_ID__ID,
+            value_id=match.id,
             inbound=False
         )
 
@@ -149,8 +159,10 @@ class DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
     def setUp(self):
         super().setUp()
 
-        # Supply and relevant models, and supply ID set by the system when
-        # sending this message to the user
+        # Dummy demand
+        demand = self.set_up_demand()
+
+        # Supply and relevant models
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
             uom_name='Box',
@@ -168,12 +180,20 @@ class DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
             deposit_percentage=0.4,
             accept_lc=False
         )
+
+        # Match
+        match = relmods.Match.objects.create(
+            supply=supply,
+            demand=demand
+        )
+
+        # Match ID, set by system when sending message
         self.set_up_data_value(
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__CONFIRM_INTEREST,
             data_key=\
-                datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
-            value_id=supply.id,
+                datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__MATCH_ID__ID,
+            value_id=match.id,
             inbound=False
         )
 
@@ -208,8 +228,10 @@ DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Test(
     def setUp(self):
         super().setUp()
 
-        # Supply and relevant models, and supply ID set by the system when
-        # sending this message to the user
+        # Dummy demand
+        demand = self.set_up_demand()
+
+        # Supply and relevant models
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
             uom_name='Box',
@@ -232,12 +254,20 @@ DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Test(
             deposit_percentage=0.4,
             accept_lc=False
         )
+
+        # Match
+        match = relmods.Match.objects.create(
+            supply=supply,
+            demand=demand
+        )
+
+        # Match ID, set by system when sending message
         self.set_up_data_value(
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__CONFIRM_INTEREST,
             data_key=\
-                datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
-            value_id=supply.id,
+                datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__MATCH_ID__ID,
+            value_id=match.id,
             inbound=False
         )
 
@@ -272,8 +302,10 @@ DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Test(
     def setUp(self):
         super().setUp()
 
-        # Supply and relevant models, and supply ID set by the system when
-        # sending this message to the user
+        # Dummy demand
+        demand = self.set_up_demand()
+
+        # Supply and relevant models
         product_type, packing, _ = self.set_up_product_type(
             name='Nitrile Gloves',
             uom_name='Box',
@@ -295,12 +327,20 @@ DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Test(
             deposit_percentage=0.4,
             accept_lc=False
         )
+
+        # Match
+        match = relmods.Match.objects.create(
+            supply=supply,
+            demand=demand
+        )
+
+        # Match ID, set by system when sending message
         self.set_up_data_value(
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__CONFIRM_INTEREST,
             data_key=\
-                datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__SUPPLY__ID,
-            value_id=supply.id,
+                datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__MATCH_ID__ID,
+            value_id=match.id,
             inbound=False
         )
 
@@ -327,3 +367,42 @@ DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Test(
 
     def test_choose_yes_with_text(self):
         self.choose_yes('yes')
+
+class DiscussWBuyerDiscussConfirmInterestTest_MatchClosed_Test(
+    DiscussWBuyerDiscussConfirmInterestTest):
+    def setUp(self):
+        super().setUp()
+
+        # Set user's name
+        self.user.name = 'Kevin Ng'
+        self.user.save()
+
+        # Dummy supply
+        supply = self.set_up_supply()
+
+        # Dummy demand
+        demand = self.set_up_demand()
+
+        # Match - closed
+        match = relmods.Match.objects.create(
+            supply=supply,
+            demand=demand,
+            closed=timezone.now()
+        )
+
+        # Match ID, set by system when sending message
+        self.set_up_data_value(
+            intents.DISCUSS_W_BUYER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            data_key=\
+                datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__MATCH_ID__ID,
+            value_id=match.id,
+            inbound=False
+        )
+
+    def test_choose_any_option(self):
+        self.receive_reply_assert(
+            '1',
+            intents.MENU,
+            messages.MENU
+        )
