@@ -78,21 +78,34 @@ class MessageHandlerTest(TestCase):
             models.TwilioInboundMessage.objects.filter(from_user=user).delete()
             models.TwilioInboundMessage.objects.filter(to_user=user).delete()
 
-            # Delete ALL user's supplies
-            relmods.Supply.objects.filter(user=user).delete()
+            # Get ALL user's supplies
+            supplies = relmods.Supply.objects.filter(user=user)
 
-            # Delete ALL user's demands
-            relmods.Demand.objects.filter(user=user).delete()
-
-            # Delete ALL user's connections
-            relmods.Connection.objects.filter(user_1=user).delete()
-            relmods.Connection.objects.filter(user_2=user).delete()
+            # Get ALL user's demands
+            demands = relmods.Demand.objects.filter(user=user)
 
             # Delete ALL user's phone number hashes
             relmods.PhoneNumberHash.objects.filter(user=user).delete()
 
             # Delete ALL user's payment hashes
             paymods.PaymentHash.objects.filter(user=user).delete()
+            
+            # Delete ALL user's matches
+            for supply in supplies:
+                relmods.Match.objects.filter(supply=supply).delete()
+            
+            for demand in demands:
+                relmods.Match.objects.filter(demand=demand).delete()
+                
+            # Delete ALL user's supplies
+            supplies.delete()
+
+            # Delete ALL user's demands
+            demands.delete()
+
+            # Delete ALL user's connections
+            relmods.Connection.objects.filter(user_1=user).delete()
+            relmods.Connection.objects.filter(user_2=user).delete()
 
             # Get ALL user's phone numbers - to be deleted after user
             phone_numbers = relmods.PhoneNumber.objects.filter(user=user)
