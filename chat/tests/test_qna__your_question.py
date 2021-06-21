@@ -84,7 +84,7 @@ class QNAYourQuestion_Buying_Test(MessageHandlerTest):
     def test_choose_buy_contact(self):
         self.receive_reply_assert(
             '2',
-            intents.QNA,
+            intents.CONNECT,
             messages.PLEASE_PAY,
             target_body_variation_key='BUYING',
             target_body_params_func=self._get_please_pay_params
@@ -183,7 +183,7 @@ class QNAYourQuestion_Selling_Test(MessageHandlerTest):
     def test_choose_buy_contact(self):
         self.receive_reply_assert(
             '2',
-            intents.QNA,
+            intents.CONNECT,
             messages.PLEASE_PAY,
             target_body_variation_key='SELLING',
             target_body_params_func=self._get_please_pay_params
