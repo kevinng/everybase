@@ -21,7 +21,7 @@ class QNAYourQuestion_Buying_Test(MessageHandlerTest):
         supply = relmods.Supply.objects.create(user=self.sys_user)
 
         # Set up demand - from this user.
-        demand = relmods.Demand.objects.create(user=self.user)
+        demand = self.set_up_demand()
 
         # Set up match
         match = relmods.Match.objects.create(
@@ -103,7 +103,6 @@ class QNAYourQuestion_Buying_Test(MessageHandlerTest):
             datas.QNA__YOUR_QUESTION__OPTION__CHOICE,
             value_string=datas.QNA__YOUR_QUESTION__OPTION__STOP_DISCUSSION
         )
-
 
 
 
