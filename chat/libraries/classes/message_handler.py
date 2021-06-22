@@ -1,6 +1,6 @@
 from chat import models
 
-from chat.libraries.constants import messages
+from chat.libraries.constants import datas, messages
 from chat.libraries.utilities.get_latest_value import get_latest_value
 from chat.libraries.utilities.get_context import get_context
 from chat.libraries.utilities.start_context import start_context
@@ -152,9 +152,9 @@ class MessageHandler:
         self.done_to_context(intent_key, message_key)
         return render_message(message_key, params)
 
-    def reply_option(self, invalid_option_intent_key=None,
-        invalid_option_message_key=None, invalid_option_params=None,
-        data_key=None):
+    def reply_option(self, invalid_option_data_key=None,
+        invalid_option_intent_key=None, invalid_option_message_key=None,
+        invalid_option_params=None):
         """Run the match function against each option in against message body.
 
         Set context and return message body of the FIRST matching option.
@@ -167,6 +167,9 @@ class MessageHandler:
 
         Parameters
         ----------
+        invalid_option_data_key : String, optional
+            If specified, will save message body with this key in current
+            context if the input is invalid
         invalid_option_intent_key : String, optional
             Intent key of the target context in the event of a invalid option. 
             If set, will change the current context.
@@ -175,9 +178,6 @@ class MessageHandler:
         invalid_option_params : String, optional
             Template parameters for the template sent in the event of a
             invalid option
-        data_key : String, optional
-            If specified, will save message body with this key in current
-            context if the input is invalid
         """
         for o in self.options:
             match_strs, intent_key, message_key, params_func, data_key, \
@@ -214,16 +214,19 @@ class MessageHandler:
                     return self.done_reply(
                         to_intent_key, to_message_key, params)
 
-        return self.reply_invalid_option(invalid_option_intent_key,
-            invalid_option_message_key, invalid_option_params, data_key)
+        return self.reply_invalid_option(invalid_option_data_key,
+            invalid_option_intent_key, invalid_option_message_key,
+            invalid_option_params)
 
-    def reply_invalid_option(self, invalid_option_intent_key=None,
-        invalid_option_message_key=None, invalid_option_params=None,
-        data_key=None):
+    def reply_invalid_option(self, data_key=None,
+        invalid_option_intent_key=None, invalid_option_message_key=None,
+        invalid_option_params=None):
         """Default reply when the user sends an invalid option.
 
         Parameters
         ----------
+        data_key : String, optional
+            If specified, will save message body in current context
         invalid_option_intent_key : String, optional
             Intent key of the target context in the event of a invalid option.
             If set, will change the current context.
@@ -232,11 +235,13 @@ class MessageHandler:
         invalid_option_params : String, optional
             Template parameters for the template sent in the event of a
             invalid option
-        data_key : String, optional
-            If specified, will save message body in current context
         """
         if invalid_option_params is None:
             invalid_option_params = {}
+
+        if data_key is not None:
+            # Save input in current context
+            self.save_body_as_string(data_key)
 
         # If invalid_option_intent_key is set, change the current context. If
         # not, the user stays in the current context.
@@ -247,10 +252,6 @@ class MessageHandler:
             invalid_option_message_key is not None:
             return render_message(
                 invalid_option_message_key, invalid_option_params)
-
-        if data_key is not None:
-            # Save input in current context
-            self.save_body_as_string(data_key)
 
         return self.done_reply(invalid_option_intent_key,
             invalid_option_message_key, invalid_option_params)
