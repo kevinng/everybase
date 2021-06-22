@@ -2,6 +2,11 @@ from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 
 class MenuHandler(MessageHandler):
+    def __init__(self, message, intent_key, message_key,
+        invalid_option_data_key=None):
+        super().__init__(message, intent_key, message_key)
+        self._invalid_option_data_key = invalid_option_data_key
+
     def run(self):
         self.add_option([('1', 0), ('find buyers', 3)],
             intents.NEW_SUPPLY,
@@ -21,4 +26,4 @@ class MenuHandler(MessageHandler):
             datas.MENU__MENU__OPTION__CHOICE,
             datas.MENU__MENU__OPTION__LEARN_MORE
         )
-        return self.reply_option()
+        return self.reply_option(self._invalid_option_data_key)
