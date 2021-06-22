@@ -64,4 +64,5 @@ class Handler(MessageHandler):
             datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
             datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__NO
         )
-        return self.reply_option()
+        return self.reply_option(
+        datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__INVALID_CHOICE__STRING)

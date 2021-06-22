@@ -63,4 +63,5 @@ class Handler(MessageHandler):
             datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
             datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__NO
         )
-        return self.reply_option()
+        return self.reply_option(
+            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__INVALID_CHOICE__STRING)
