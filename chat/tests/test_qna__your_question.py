@@ -57,6 +57,10 @@ class QNAYourQuestion_Buying_Test(MessageHandlerTest):
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
+        self.assert_value(
+            datas.QNA__YOUR_QUESTION__INVALID_CHOICE__STRING,
+            value_string=input
+        )
 
     def test_choose_non_choice_with_number(self):
         self.choose_non_choice('10')
@@ -155,6 +159,10 @@ class QNAYourQuestion_Selling_Test(MessageHandlerTest):
             messages.YOUR_QUESTION,
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
+        )
+        self.assert_value(
+            datas.QNA__YOUR_QUESTION__INVALID_CHOICE__STRING,
+            value_string=input
         )
 
     def test_choose_non_choice_with_number(self):

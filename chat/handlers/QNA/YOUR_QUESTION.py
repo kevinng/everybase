@@ -75,4 +75,5 @@ class Handler(MessageHandler):
             datas.QNA__YOUR_QUESTION__OPTION__CHOICE,
             datas.QNA__YOUR_QUESTION__OPTION__STOP_DISCUSSION
         )
-        return self.reply_option()
+        return self.reply_option(
+            datas.QNA__YOUR_QUESTION__INVALID_CHOICE__STRING)
