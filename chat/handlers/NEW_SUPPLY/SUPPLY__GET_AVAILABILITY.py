@@ -17,4 +17,5 @@ class Handler(MessageHandler):
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
             datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
         )
-        return self.reply_option()
+        return self.reply_option(
+            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__INVALID_CHOICE__STRING)

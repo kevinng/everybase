@@ -13,6 +13,11 @@ class NewSupplySupplyGetAvailabilityTest(MessageHandlerTest):
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
+        self.assert_value(
+            datas.\
+    NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__INVALID_CHOICE__STRING,
+            value_string=input
+        )
 
     def test_choose_non_choice_with_number(self):
         self.choose_non_choice('3')
