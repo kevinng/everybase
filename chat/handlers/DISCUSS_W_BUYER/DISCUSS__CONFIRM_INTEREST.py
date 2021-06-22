@@ -155,4 +155,5 @@ class Handler(MessageHandler):
             datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__INTERESTED__CHOICE,
             datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__INTERESTED__NO
         )
-        return self.reply_option()
+        return self.reply_option(
+    datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_INTEREST__INVALID_CHOICE__STRING)
