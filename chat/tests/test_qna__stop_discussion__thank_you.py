@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest
 
-class StopDiscussionThankYouTest(MessageHandlerTest):
+class QNAStopDiscussionThankYouTest(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.QNA,
@@ -15,6 +15,10 @@ class StopDiscussionThankYouTest(MessageHandlerTest):
             messages.STOP_DISCUSSION__THANK_YOU,
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
+        )
+        self.assert_value(
+            datas.QNA__STOP_DISCUSSION__THANK_YOU__INVALID_CHOICE__STRING,
+            value_string=input
         )
 
     def test_choose_non_choice_with_number(self):
