@@ -13,6 +13,10 @@ class MenuMenuTest(MessageHandlerTest):
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
+        self.assert_value(
+            datas.MENU__MENU__OPTION__INVALID_CHOICE__STRING,
+            value_string=input
+        )
 
     def test_choose_non_choice_with_number(self):
         self.choose_non_choice('10')
