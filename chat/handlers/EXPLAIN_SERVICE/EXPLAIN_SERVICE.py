@@ -15,4 +15,5 @@ class Handler(MessageHandler):
             datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__CHOICE,
             datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__FIND_SELLER
         )
-        return self.reply_option()
+        return self.reply_option(
+            datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__INVALID_OPTION__STRING)

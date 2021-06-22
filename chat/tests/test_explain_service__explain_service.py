@@ -13,6 +13,10 @@ class ExplainService__ExplainService__Test(MessageHandlerTest):
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
+        self.assert_value(
+            datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__INVALID_OPTION__STRING,
+            value_string=input
+        )
 
     def test_choose_non_choice_with_number(self):
         self.choose_non_choice('10')
