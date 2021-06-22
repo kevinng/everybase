@@ -57,6 +57,10 @@ class QNAAnswerThankYou_Buying_Test(MessageHandlerTest):
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
+        self.assert_value(
+            datas.QNA__ANSWER_THANK_YOU__INVALID_CHOICE__STRING,
+            value_string=input
+        )
 
     def test_choose_non_choice_with_number(self):
         self.choose_non_choice('10')
@@ -68,12 +72,12 @@ class QNAAnswerThankYou_Buying_Test(MessageHandlerTest):
         self.receive_reply_assert(
             '1',
             intents.QNA,
-            messages.ANSWER,
+            messages.QUESTION,
             target_body_variation_key='BUYING'
         )
         self.assert_value(
             datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__ANSWER_QUESTION
+            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__ASK_QUESTION
         )
 
     def _get_please_pay_params(self):
@@ -156,6 +160,10 @@ class QNAAnswerThankYou_Selling_Test(MessageHandlerTest):
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
+        self.assert_value(
+            datas.QNA__ANSWER_THANK_YOU__INVALID_CHOICE__STRING,
+            value_string=input
+        )
 
     def test_choose_non_choice_with_number(self):
         self.choose_non_choice('10')
@@ -167,12 +175,12 @@ class QNAAnswerThankYou_Selling_Test(MessageHandlerTest):
         self.receive_reply_assert(
             '1',
             intents.QNA,
-            messages.ANSWER,
+            messages.QUESTION,
             target_body_variation_key='SELLING'
         )
         self.assert_value(
             datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__ANSWER_QUESTION
+            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__ASK_QUESTION
         )
 
     def _get_please_pay_params(self):

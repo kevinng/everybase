@@ -28,7 +28,7 @@ class Handler(MessageHandler):
             return True
         return None
 
-    def _get_answer_question_params(self):
+    def _get_ask_question_params(self):
         return { 'buying': self._get_buying_boolean() }
 
     def _get_please_pay_params(self):
@@ -56,10 +56,10 @@ class Handler(MessageHandler):
 
         self.add_option([('1', 0)],
             intents.QNA,
-            messages.ANSWER,
-            self._get_answer_question_params,
+            messages.QUESTION,
+            self._get_ask_question_params,
             datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            datas.QNA__ANSWER_THANK_YOU__OPTION__ANSWER_QUESTION
+            datas.QNA__ANSWER_THANK_YOU__OPTION__ASK_QUESTION
         )
         self.add_option([('2', 0)],
             intents.CONNECT,
@@ -75,4 +75,5 @@ class Handler(MessageHandler):
             datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
             datas.QNA__ANSWER_THANK_YOU__OPTION__STOP_DISCUSSION
         )
-        return self.reply_option()
+        return self.reply_option(
+            datas.QNA__ANSWER_THANK_YOU__INVALID_CHOICE__STRING)
