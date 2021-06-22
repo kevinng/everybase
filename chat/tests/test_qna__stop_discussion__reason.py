@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest
 
-class StopDiscussionReasonTest(MessageHandlerTest):
+class QNAStopDiscussionReasonTest(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.QNA,
