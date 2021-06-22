@@ -3,10 +3,9 @@ from chat.libraries.classes.message_handler import MessageHandler
 
 class Handler(MessageHandler):
     def run(self):
-        # Save user input, quantity is None if value cannot be converted from
-        # string to float
-        quantity = self.save_body_as_float(datas.\
-    DISCUSS_W_SELLER__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE__QUANTITY__NUMBER)
+        # Save user input without validation
+        quantity = self.save_body_as_string(datas.\
+    DISCUSS_W_SELLER__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE__QUANTITY__STRING)
 
         if quantity is None:
             # User input is invalid
