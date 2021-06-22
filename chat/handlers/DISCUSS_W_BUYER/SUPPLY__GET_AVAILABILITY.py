@@ -17,4 +17,5 @@ class Handler(MessageHandler):
         datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
         datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
         )
-        return self.reply_option()
+        return self.reply_option(datas.\
+DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__INVALID_STRING__STRING)
