@@ -153,7 +153,8 @@ class MessageHandler:
         return render_message(message_key, params)
 
     def reply_option(self, invalid_option_intent_key=None,
-        invalid_option_message_key=None, invalid_option_params=None):
+        invalid_option_message_key=None, invalid_option_params=None,
+        data_key=None):
         """Run the match function against each option in against message body.
 
         Set context and return message body of the FIRST matching option.
@@ -174,6 +175,9 @@ class MessageHandler:
         invalid_option_params : String, optional
             Template parameters for the template sent in the event of a
             invalid option
+        data_key : String, optional
+            If specified, will save message body with this key in current
+            context if the input is invalid
         """
         for o in self.options:
             match_strs, intent_key, message_key, params_func, data_key, \
@@ -211,10 +215,11 @@ class MessageHandler:
                         to_intent_key, to_message_key, params)
 
         return self.reply_invalid_option(invalid_option_intent_key,
-            invalid_option_message_key, invalid_option_params)
+            invalid_option_message_key, invalid_option_params, data_key)
 
     def reply_invalid_option(self, invalid_option_intent_key=None,
-        invalid_option_message_key=None, invalid_option_params=None):
+        invalid_option_message_key=None, invalid_option_params=None,
+        data_key=None):
         """Default reply when the user sends an invalid option.
 
         Parameters
@@ -227,12 +232,14 @@ class MessageHandler:
         invalid_option_params : String, optional
             Template parameters for the template sent in the event of a
             invalid option
+        data_key : String, optional
+            If specified, will save message body in current context
         """
         if invalid_option_params is None:
             invalid_option_params = {}
 
-        # If invalid_option_intent_key is set, change the current context. If not,
-        # the user stays in the current context.
+        # If invalid_option_intent_key is set, change the current context. If
+        # not, the user stays in the current context.
         if invalid_option_intent_key is None and \
             invalid_option_message_key is None:
             return render_message(messages.DO_NOT_UNDERSTAND_OPTION, {})
@@ -240,6 +247,10 @@ class MessageHandler:
             invalid_option_message_key is not None:
             return render_message(
                 invalid_option_message_key, invalid_option_params)
+
+        if data_key is not None:
+            # Save input in current context
+            self.save_body_as_string(data_key)
 
         return self.done_reply(invalid_option_intent_key,
             invalid_option_message_key, invalid_option_params)
