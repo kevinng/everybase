@@ -49,10 +49,10 @@ class Handler(MessageHandler):
     def _get_yes_not_connected_params(self):
         """Get template parameters for yes/not-connected outcome
         """
-        demand = self._get_match().demand
+        supply = self._get_match().supply
         return {
-            'buying': True,
-            'demand': demand
+            'buying': False,
+            'supply': supply
         }
     
     def _get_yes_connected_params(self):
@@ -88,23 +88,23 @@ class Handler(MessageHandler):
 
         contact = relmods.User.objects.get(pk=contact_id)
 
-        # Get supply reference
-        supply = self._get_match().supply
+        # Get demand reference
+        demand = self._get_match().demand
 
         # Create a WhatsApp phone-number hash for this user
-        whatsapp_type = relmods.PhoneNumberType.objects.get(id=1) # WhatsApp
+        whatsapp = relmods.PhoneNumberType.objects.get(id=1)
         wa_hash = relmods.PhoneNumberHash.objects.create(
             user=self.message.from_user,
-            phone_number_type=whatsapp_type,
+            phone_number_type=whatsapp,
             phone_number=contact.phone_number
         )
         whatsapp_url = urljoin(settings.BASE_URL,
             reverse('chat_root:whatsapp', kwargs={ 'id': wa_hash.id }))
 
         return {
-            'buying': True,
+            'buying': False,
             'contact': contact,
-            'supply': supply,
+            'demand': demand,
             'whatsapp_url': whatsapp_url
         }
 

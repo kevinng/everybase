@@ -4,7 +4,14 @@
 {{ demand.country.name }}
 {{ demand.quantity|floatformat:0 }} {{ demand.packing.plural_name }}
 {{ demand.packing.description }}
-Target {{ demand.currency.name }} {{ demand.price|floatformat:2 }} per {{ demand.packing.name|lower }}{% elif buying == False %}{% endif %}
+Target {{ demand.currency.name }} {{ demand.price|floatformat:2 }} per {{ demand.packing.name|lower }}{% elif buying == False %}{{ supply.product_type.name }}
+{{ supply.country.name }}
+{{ supply.availability.name }}{% if supply.availability.programmatic_key == 'pre_order' %}, {% if supply.pre_order_timeframe.duration %}{{ supply.pre_order_timeframe.duration|floatformat:0 }} {% if supply.pre_order_timeframe.duration_uom == 'd' %}Days{% elif supply.pre_order_timeframe.duration_uom == 'w' %}Weeks{% elif supply.pre_order_timeframe.duration_uom == 'm' %}Months{% endif %}{% elif supply.pre_order_timeframe.deadline %}by {{ supply.pre_order_timeframe.deadline|date:"jS F Y" }}{% endif %}
+{% if supply.accept_lc == True %}Accept LC{% elif supply.accept_lc == False %}Do not accept LC{% endif %}
+{% if supply.deposit_percentage > 0 %}{% widthratio supply.deposit_percentage 1 100 %}% Deposit{% else %}No deposit{% endif %}{% endif %}
+{{ supply.quantity|floatformat:0 }} {{ supply.packing.plural_name }}
+{{ supply.packing.description }}
+{{ supply.currency.name }} {{ supply.price|floatformat:2 }} per {{ supply.packing.name|lower }}{% endif %}
 
 *Are your {% if buying == True %}demand{% elif buying == False %}supply{% endif %} details correct?*
 1. Yes
