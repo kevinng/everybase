@@ -15,7 +15,7 @@ class NewSupplySupplyGetAvailabilityTest(MessageHandlerTest):
         )
         self.assert_value(
             datas.\
-    NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__INVALID_CHOICE__STRING,
+            NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__INVALID_CHOICE__STRING,
             value_string=input
         )
 
