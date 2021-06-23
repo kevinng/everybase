@@ -37,7 +37,7 @@ class QNAAnswer_Buying_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.ANSWER_THANK_YOU,
+            messages.ANSWER__THANK_YOU,
             target_body_variation_key='BUYING'
         )
         self.assert_value(
@@ -79,7 +79,7 @@ class QNAAnswer_Selling_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.ANSWER_THANK_YOU,
+            messages.ANSWER__THANK_YOU,
             target_body_variation_key='SELLING'
         )
         self.assert_value(

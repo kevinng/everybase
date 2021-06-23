@@ -58,22 +58,22 @@ class Handler(MessageHandler):
             intents.QNA,
             messages.QUESTION,
             self._get_ask_question_params,
-            datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            datas.QNA__ANSWER_THANK_YOU__OPTION__ASK_QUESTION
+            datas.QNA__ANSWER__THANK_YOU__OPTION__CHOICE,
+            datas.QNA__ANSWER__THANK_YOU__OPTION__ASK_QUESTION
         )
         self.add_option([('2', 0)],
             intents.CONNECT,
             messages.PLEASE_PAY,
             self._get_please_pay_params,
-            datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            datas.QNA__ANSWER_THANK_YOU__OPTION__BUY_CONTACT
+            datas.QNA__ANSWER__THANK_YOU__OPTION__CHOICE,
+            datas.QNA__ANSWER__THANK_YOU__OPTION__BUY_CONTACT
         )
         self.add_option([('3', 0)],
             intents.QNA,
             messages.STOP_DISCUSSION__REASON,
             self._get_stop_discussion__reason_params,
-            datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            datas.QNA__ANSWER_THANK_YOU__OPTION__STOP_DISCUSSION
+            datas.QNA__ANSWER__THANK_YOU__OPTION__CHOICE,
+            datas.QNA__ANSWER__THANK_YOU__OPTION__STOP_DISCUSSION
         )
         return self.reply_option(
-            datas.QNA__ANSWER_THANK_YOU__INVALID_CHOICE__STRING)
+            datas.QNA__ANSWER__THANK_YOU__INVALID_CHOICE__STRING)

@@ -32,6 +32,6 @@ class Handler(MessageHandler):
             QNA__ANSWER__INPUT__STRING)
         return self.done_reply(
             intents.QNA,
-            messages.ANSWER_THANK_YOU,
+            messages.ANSWER__THANK_YOU,
             { 'buying': self._get_buying_boolean() }
         )

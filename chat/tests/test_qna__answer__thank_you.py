@@ -15,7 +15,7 @@ class QNAAnswerThankYou_Buying_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.QNA,
-            messages.ANSWER_THANK_YOU
+            messages.ANSWER__THANK_YOU
         )
         
         # Set up supply - from seller. We use system user to stand-in for the
@@ -53,12 +53,12 @@ class QNAAnswerThankYou_Buying_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.ANSWER_THANK_YOU,
+            messages.ANSWER__THANK_YOU,
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-            datas.QNA__ANSWER_THANK_YOU__INVALID_CHOICE__STRING,
+            datas.QNA__ANSWER__THANK_YOU__INVALID_CHOICE__STRING,
             value_string=input
         )
 
@@ -76,8 +76,8 @@ class QNAAnswerThankYou_Buying_Test(MessageHandlerTest):
             target_body_variation_key='BUYING'
         )
         self.assert_value(
-            datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__ASK_QUESTION
+            datas.QNA__ANSWER__THANK_YOU__OPTION__CHOICE,
+            value_string=datas.QNA__ANSWER__THANK_YOU__OPTION__ASK_QUESTION
         )
 
     def _get_please_pay_params(self):
@@ -94,8 +94,8 @@ class QNAAnswerThankYou_Buying_Test(MessageHandlerTest):
             target_body_params_func=self._get_please_pay_params
         )
         self.assert_value(
-            datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__BUY_CONTACT
+            datas.QNA__ANSWER__THANK_YOU__OPTION__CHOICE,
+            value_string=datas.QNA__ANSWER__THANK_YOU__OPTION__BUY_CONTACT
         )
 
     def test_choose_stop_discussion(self):
@@ -106,8 +106,8 @@ class QNAAnswerThankYou_Buying_Test(MessageHandlerTest):
             target_body_variation_key='BUYING'
         )
         self.assert_value(
-            datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__STOP_DISCUSSION
+            datas.QNA__ANSWER__THANK_YOU__OPTION__CHOICE,
+            value_string=datas.QNA__ANSWER__THANK_YOU__OPTION__STOP_DISCUSSION
         )
 
 class QNAAnswerThankYou_Selling_Test(MessageHandlerTest):
@@ -118,7 +118,7 @@ class QNAAnswerThankYou_Selling_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.QNA,
-            messages.ANSWER_THANK_YOU
+            messages.ANSWER__THANK_YOU
         )
         
         # Set up supply - from this user.        
@@ -156,12 +156,12 @@ class QNAAnswerThankYou_Selling_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.ANSWER_THANK_YOU,
+            messages.ANSWER__THANK_YOU,
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-            datas.QNA__ANSWER_THANK_YOU__INVALID_CHOICE__STRING,
+            datas.QNA__ANSWER__THANK_YOU__INVALID_CHOICE__STRING,
             value_string=input
         )
 
@@ -179,8 +179,8 @@ class QNAAnswerThankYou_Selling_Test(MessageHandlerTest):
             target_body_variation_key='SELLING'
         )
         self.assert_value(
-            datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__ASK_QUESTION
+            datas.QNA__ANSWER__THANK_YOU__OPTION__CHOICE,
+            value_string=datas.QNA__ANSWER__THANK_YOU__OPTION__ASK_QUESTION
         )
 
     def _get_please_pay_params(self):
@@ -197,8 +197,8 @@ class QNAAnswerThankYou_Selling_Test(MessageHandlerTest):
             target_body_params_func=self._get_please_pay_params
         )
         self.assert_value(
-            datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__BUY_CONTACT
+            datas.QNA__ANSWER__THANK_YOU__OPTION__CHOICE,
+            value_string=datas.QNA__ANSWER__THANK_YOU__OPTION__BUY_CONTACT
         )
 
     def test_choose_stop_discussion(self):
@@ -209,8 +209,8 @@ class QNAAnswerThankYou_Selling_Test(MessageHandlerTest):
             target_body_variation_key='SELLING'
         )
         self.assert_value(
-            datas.QNA__ANSWER_THANK_YOU__OPTION__CHOICE,
-            value_string=datas.QNA__ANSWER_THANK_YOU__OPTION__STOP_DISCUSSION
+            datas.QNA__ANSWER__THANK_YOU__OPTION__CHOICE,
+            value_string=datas.QNA__ANSWER__THANK_YOU__OPTION__STOP_DISCUSSION
         )
 
 class QNAAnswerThankYou_MatchClosed_Test(MessageHandlerTest):
