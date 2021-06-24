@@ -1003,12 +1003,12 @@ class Demand(Standard):
 class QuestionAnswerPair(Standard):
     """Question-answer pair.
 
-    Last updated: 12 May 2021, 5:27 PM
+    Last updated: 24 June 2021, 11:28 PM
     """
-    asker = models.ForeignKey(
+    questioner = models.ForeignKey(
         'User',
-        related_name='question_answer_pair_askers',
-        related_query_name='question_answer_pair_askers',
+        related_name='question_answer_pair_questioner',
+        related_query_name='question_answer_pair_questioner',
         on_delete=models.PROTECT,
         db_index=True
     )
