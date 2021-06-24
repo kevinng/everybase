@@ -1,4 +1,3 @@
-from chat.tests.test_connect_question__please_pay import ConnectQuestionPleasePay_Answered_Buying_Test
 from django.contrib import admin
 
 from . import models as mod
