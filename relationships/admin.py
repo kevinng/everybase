@@ -1,3 +1,4 @@
+from chat.tests.test_connect_question__please_pay import ConnectQuestionPleasePay_Answered_Buying_Test
 from django.contrib import admin
 
 from . import models as mod
@@ -156,26 +157,45 @@ class TimeFrameAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _time_frame_fields})
     ]
 
-_match_fields = ['supply', 'demand']
+_match_fields = ['closed', 'ready', 'sent_buyer_confirm_interest',
+'sent_buyer_confirm_interest_message', 'sent_seller_confirm_interest',
+'sent_seller_confirm_interest_message', 'buyer_confirmed_interest',
+'buyer_interested', 'buyer_confirmed_interest_value',
+'seller_confirmed_interest', 'seller_interested',
+'seller_confirmed_interest_value', 'buyer_confirmed_details',
+'buyer_confirmed_details_correct', 'buyer_confirmed_details_correct_value',
+'seller_confirmed_details', 'seller_confirmed_details_correct',
+'seller_confirmed_details_correct_value', 'buyer_stopped_discussion',
+'buyer_stopped_discussion_value', 'seller_stopped_discussion',
+'seller_stopped_discussion_value', 'buyer_bought_contact', 'buyer_payment_hash',
+'seller_bought_contact', 'seller_payment_hash', 'sent_contact_to_buyer',
+'sent_contact_to_seller', 'supply', 'demand']
 @admin.register(mod.Match)
 class MatchAdmin(comadm.ChoiceAdmin):
     # List page settings
     list_display = comadm.choice_list_display + _match_fields
     list_editable = comadm.choice_list_editable + _match_fields
-    list_filter = _match_fields
+    list_filter = ['closed', 'ready', 'sent_buyer_confirm_interest',
+        'sent_seller_confirm_interest', 'buyer_confirmed_interest',
+        'buyer_interested', 'seller_confirmed_interest',
+        'seller_interested', 'buyer_confirmed_details',
+        'buyer_confirmed_details_correct', 'seller_confirmed_details',
+        'seller_confirmed_details_correct', 'buyer_stopped_discussion',
+        'seller_stopped_discussion', 'buyer_bought_contact',
+        'seller_bought_contact', 'sent_contact_to_buyer',
+        'sent_contact_to_seller']
     search_fields = ['supply__product_type__name', 'demand__product_type__name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _match_fields})
     ]
-    autocomplete_fields = _match_fields
-
-_supply_fields = ['quantity', 'price', 'deposit_percentage', 'accept_lc']
-_supply_fk_fields = ['user', 'product_type', 'country', 'state', 'availability',
-    'packing', 'pre_order_timeframe', 'currency', 'previous_version',
-    'next_version']
-
+    autocomplete_fields = ['sent_buyer_confirm_interest_message',
+    'sent_seller_confirm_interest_message', 'buyer_confirmed_interest_value',
+    'seller_confirmed_interest_value', 'buyer_confirmed_details_correct_value',
+    'seller_confirmed_details_correct_value', 'buyer_stopped_discussion_value',
+    'seller_stopped_discussion_value', 'buyer_payment_hash',
+    'seller_payment_hash']
 
 _supply_fields = [ 'user', 'product_type_data_value', 'product_type_method',
 'product_type', 'country_data_value', 'country_method', 'country',
@@ -232,3 +252,32 @@ class DemandAdmin(comadm.StandardAdmin):
     'country_data_value', 'country', 'state_data_value', 'state',
     'packing_data_value', 'packing', 'quantity_data_value', 'price_data_value',
     'currency_data_value', 'currency', 'previous_version', 'next_version']
+
+_question_and_answer_fields = ['questioner', 'answerer', 'asked',
+'question_auto_cleaned', 'question_ready', 'question_forwarded', 'answered',
+'answer_auto_cleaned', 'answer_ready', 'answer_forwarded',
+'question_captured_value', 'question_forwarded_message',
+'auto_cleaned_question', 'auto_cleaned_question_w_mark_up',
+'manual_cleaned_question', 'use_auto_cleaned_question', 'answer_captured_value',
+'answer_forwarded_message', 'auto_cleaned_answer_w_mark_up',
+'auto_cleaned_answer', 'manual_cleaned_answer', 'use_auto_cleaned_answer',
+'match']
+@admin.register(mod.QuestionAnswerPair)
+class QuestionAnswerPairAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _question_and_answer_fields
+    list_editable = comadm.standard_list_editable + _question_and_answer_fields
+    list_filter = comadm.standard_list_filter + ['asked',
+    'question_auto_cleaned', 'question_ready', 'question_forwarded', 'answered',
+    'answer_auto_cleaned', 'answer_ready', 'answer_forwarded',
+    'use_auto_cleaned_question', 'match']
+    search_fields = comadm.standard_search_fields + ['auto_cleaned_question',
+    'manual_cleaned_question', 'auto_cleaned_answer', 'manual_cleaned_answer']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _question_and_answer_fields})
+    ]
+    autocomplete_fields = ['questioner', 'answerer', 'question_captured_value',
+        'question_forwarded_message', 'answer_captured_value',
+        'answer_forwarded_message', 'match']

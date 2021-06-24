@@ -471,9 +471,197 @@ class TimeFrame(Standard):
 class Match(Choice):
     """Match between supply and demand.
 
-    Last updated: 19 June 2021, 8:51 PM
+    Last updated: 24 June 2021, 10:05 PM
     """
     closed = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    ready = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    sent_buyer_confirm_interest = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sent_buyer_confirm_interest_message = models.ForeignKey(
+        'chat.TwilioOutboundMessage',
+        related_name='matches_w_this_buyer_confirm_interest_value',
+        related_query_name='matches_w_this_buyer_confirm_interest_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    sent_seller_confirm_interest = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sent_seller_confirm_interest_message = models.ForeignKey(
+        'chat.TwilioOutboundMessage',
+        related_name='matches_w_this_seller_confirm_interest_message',
+        related_query_name='matches_w_this_seller_confirm_interest_message',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    buyer_confirmed_interest = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buyer_interested = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buyer_confirmed_interest_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='matches_w_this_buyer_confirmed_interest_value',
+        related_query_name='matches_w_this_buyer_confirmed_interest_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    seller_confirmed_interest = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    seller_interested = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    seller_confirmed_interest_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='matches_w_this_seller_confirmed_value',
+        related_query_name='matches_w_this_seller_confirmed_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    buyer_confirmed_details = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buyer_confirmed_details_correct = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buyer_confirmed_details_correct_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='matches_w_this_buyer_confirmed_details_correct_value',
+        related_query_name=\
+            'matches_w_this_buyer_confirmed_details_correct_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    seller_confirmed_details = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    seller_confirmed_details_correct = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    seller_confirmed_details_correct_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='matches_w_this_seller_confirmed_details_correct_value',
+        related_query_name=\
+            'matches_w_this_seller_confirmed_details_correct_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    buyer_stopped_discussion = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buyer_stopped_discussion_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='matches_w_this_buyer_stopped_discussion_value',
+        related_query_name='matches_w_this_buyer_stopped_discussion_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    seller_stopped_discussion = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    seller_stopped_discussion_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='matches_w_this_seller_stopped_discussion_value',
+        related_query_name='matches_w_this_seller_stopped_discussion_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    buyer_bought_contact = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buyer_payment_hash = models.ForeignKey(
+        'payments.PaymentHash',
+        related_name='matches_w_this_buyer_payment_hash',
+        related_query_name='matches_w_this_buyer_payment_hash',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    seller_bought_contact = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    seller_payment_hash = models.ForeignKey(
+        'payments.PaymentHash',
+        related_name='matches_w_this_seller_payment_hash',
+        related_query_name='matches_w_this_seller_payment_hash',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    sent_contact_to_buyer = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sent_contact_to_seller = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
