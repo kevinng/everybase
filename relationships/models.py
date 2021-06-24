@@ -1025,31 +1025,10 @@ class QuestionAnswerPair(Standard):
         blank=True,
         db_index=True
     )
-    sent_answerer = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
     answered = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
-    )
-
-    question_captured = models.TextField()
-    question_rewrote = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    answer_captured = models.TextField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    answer_rewrote = models.TextField(
-        null=True,
-        blank=True
     )
 
     match = models.ForeignKey(
