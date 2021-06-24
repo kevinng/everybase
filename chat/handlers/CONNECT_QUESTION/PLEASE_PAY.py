@@ -84,7 +84,7 @@ class Handler(MessageHandler):
     def run(self):
         # Save stray input
         self.save_body_as_string(datas.\
-            CONNECT__PLEASE_PAY__STRAY_INPUT__STRING)
+            CONNECT_QUESTION__PLEASE_PAY__STRAY_INPUT__STRING)
 
         if self._is_answered():
             return self.done_reply(

@@ -62,7 +62,7 @@ class ConnectQuestionPleasePay_Unanswered_Buying_Test(MessageHandlerTest):
             target_body_variation_key='BUYING'
         )
         self.assert_value(
-            datas.CONNECT__PLEASE_PAY__STRAY_INPUT__STRING,
+            datas.CONNECT_QUESTION__PLEASE_PAY__STRAY_INPUT__STRING,
             value_string=input
         )
 
@@ -120,7 +120,7 @@ class ConnectQuestionPleasePay_Unanswered_Selling_Test(MessageHandlerTest):
             target_body_variation_key='SELLING'
         )
         self.assert_value(
-            datas.CONNECT__PLEASE_PAY__STRAY_INPUT__STRING,
+            datas.CONNECT_QUESTION__PLEASE_PAY__STRAY_INPUT__STRING,
             value_string=input
         )
 
@@ -198,7 +198,7 @@ class ConnectQuestionPleasePay_Answered_Buying_OTG_Test(MessageHandlerTest):
             target_body_variation_key='BUYING__OTG'
         )
         self.assert_value(
-            datas.CONNECT__PLEASE_PAY__STRAY_INPUT__STRING,
+            datas.CONNECT_QUESTION__PLEASE_PAY__STRAY_INPUT__STRING,
             value_string=input
         )
 
@@ -281,7 +281,7 @@ class ConnectQuestionPleasePay_Answered_Buying_PreOrderDeadline_Test(
             target_body_variation_key='BUYING__PRE_ORDER_DEADLINE'
         )
         self.assert_value(
-            datas.CONNECT__PLEASE_PAY__STRAY_INPUT__STRING,
+            datas.CONNECT_QUESTION__PLEASE_PAY__STRAY_INPUT__STRING,
             value_string=input
         )
 
@@ -365,7 +365,7 @@ class ConnectQuestionPleasePay_Answered_Buying_PreOrderDeadline_Test(
             target_body_variation_key='BUYING__PRE_ORDER_DURATION'
         )
         self.assert_value(
-            datas.CONNECT__PLEASE_PAY__STRAY_INPUT__STRING,
+            datas.CONNECT_QUESTION__PLEASE_PAY__STRAY_INPUT__STRING,
             value_string=input
         )
 
@@ -440,6 +440,6 @@ class ConnectQuestionPleasePay_Answered_Selling_Test(MessageHandlerTest):
             target_body_variation_key='SELLING'
         )
         self.assert_value(
-            datas.CONNECT__PLEASE_PAY__STRAY_INPUT__STRING,
+            datas.CONNECT_QUESTION__PLEASE_PAY__STRAY_INPUT__STRING,
             value_string=input
         )
