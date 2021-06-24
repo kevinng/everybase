@@ -1007,15 +1007,15 @@ class QuestionAnswerPair(Standard):
     """
     questioner = models.ForeignKey(
         'User',
-        related_name='question_answer_pair_questioner',
-        related_query_name='question_answer_pair_questioner',
+        related_name='qnas_w_this_questioner',
+        related_query_name='qnas_w_this_questioner',
         on_delete=models.PROTECT,
         db_index=True
     )
     answerer = models.ForeignKey(
         'User',
-        related_name='question_answer_pair_answerers',
-        related_query_name='question_answer_pair_answerers',
+        related_name='qnas_w_this_answerer',
+        related_query_name='qnas_w_this_answerer',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -1025,10 +1025,110 @@ class QuestionAnswerPair(Standard):
         blank=True,
         db_index=True
     )
+    question_auto_cleaned = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    question_ready = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    question_forwarded = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     answered = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
+    )
+    answer_auto_cleaned = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    answer_ready = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    answer_forwarded = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    question_captured_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='qnas_w_this_question_captured_value',
+        related_query_name='qnas_w_this_question_captured_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    question_forwarded_message = models.ForeignKey(
+        'chat.TwilioOutboundMessage',
+        related_name='qnas_w_this_question_forwarded_message',
+        related_query_name='qnas_w_this_question_forwarded_message',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    auto_cleaned_question_w_mark_up = models.TextField(
+        null=True,
+        blank=True
+    )
+    auto_cleaned_question = models.TextField(
+        null=True,
+        blank=True
+    )
+    manual_cleaned_question = models.TextField(
+        null=True,
+        blank=True
+    )
+    use_auto_cleaned_question = models.BooleanField(
+        null=True,
+        blank=True
+    )
+
+    answer_captured_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='qnas_w_this_answer_captured_value',
+        related_query_name='qnas_w_this_answer_captured_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    answer_forwarded_message = models.ForeignKey(
+        'chat.TwilioOutboundMessage',
+        related_name='qnas_w_this_answer_forwarded_message',
+        related_query_name='qnas_w_this_answer_forwarded_message',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    auto_cleaned_answer_w_mark_up = models.TextField(
+        null=True,
+        blank=True
+    )
+    auto_cleaned_answer = models.TextField(
+        null=True,
+        blank=True
+    )
+    manual_cleaned_answer = models.TextField(
+        null=True,
+        blank=True
+    )
+    use_auto_cleaned_answer = models.BooleanField(
+        null=True,
+        blank=True
     )
 
     match = models.ForeignKey(
