@@ -89,6 +89,10 @@ class MessageHandlerTest(TestCase):
 
             # Delete ALL user's payment hashes
             paymods.PaymentHash.objects.filter(user=user).delete()
+
+            # Delete ALL user's QNA pairs
+            relmods.QuestionAnswerPair.objects.filter(questioner=user).delete()
+            relmods.QuestionAnswerPair.objects.filter(answerer=user).delete()
             
             # Delete ALL user's matches
             for supply in supplies:
