@@ -62,7 +62,7 @@ class Handler(MessageHandler):
             datas.QNA__YOUR_QUESTION__OPTION__ANSWER_QUESTION
         )
         self.add_option([('2', 0)],
-            intents.CONNECT,
+            intents.CONNECT_QUESTION,
             messages.PLEASE_PAY,
             self._get_please_pay_params,
             datas.QNA__YOUR_QUESTION__OPTION__CHOICE,
