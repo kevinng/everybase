@@ -1,4 +1,4 @@
-Hi {{ name }}, {% if buying == True %}seller{% elif buying == False %}buyer{% endif %} replied your question:
+Hi {{ name }}, on your question:
 
 {{ question }}
 
@@ -7,6 +7,6 @@ Hi {{ name }}, {% if buying == True %}seller{% elif buying == False %}buyer{% en
 {{ answer }}
 
 *Reply*:
-1. Answer question
+1. Ask another question
 2. Buy {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}'s contact
 3. Stop discussing with this {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}
