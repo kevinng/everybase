@@ -130,7 +130,8 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
             uom_plural_name='Boxes',
             uom_description='200 pieces in 1 box'
         )
-        supply = self.set_up_supply(
+        supply = relmods.Supply.objects.create(
+            user=self.user_2,
             product_type=product_type,
             packing=packing,
             country=commods.Country.objects.get(pk=601), # Israel
@@ -200,7 +201,8 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Te
         pre_order_timeframe = relmods.TimeFrame.objects.create(
             deadline=datetime.datetime(2021, 2, 5, tzinfo=pytz.UTC)
         )
-        supply = self.set_up_supply(
+        supply = relmods.Supply.objects.create(
+            user=self.user_2,
             product_type=product_type,
             packing=packing,
             country=commods.Country.objects.get(pk=601), # Israel
@@ -272,7 +274,8 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Te
             duration_uom='d',
             duration=5
         )
-        supply = self.set_up_supply(
+        supply = relmods.Supply.objects.create(
+            user=self.user_2,
             product_type=product_type,
             packing=packing,
             country=commods.Country.objects.get(pk=601), # Israel
