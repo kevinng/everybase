@@ -1,6 +1,0 @@
-Thanks. We'll let you know when the {% if buying == True %}seller{% elif buying == False %}buyer{% endif %} replies.
-
-*Reply*:
-1. Ask another question
-2. Buy {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}'s contact
-3. Learn about our service
