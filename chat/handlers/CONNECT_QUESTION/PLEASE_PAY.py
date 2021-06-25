@@ -53,7 +53,7 @@ class Handler(MessageHandler):
     def _is_answered(self):
         return self._get_qna().answered is not None
 
-    def _get_qna_in_progress_params(self):
+    def _get_answer_thank_you_params(self):
         buying = self._get_buying_boolean()
         match = self._get_match()
         params = {
@@ -89,8 +89,8 @@ class Handler(MessageHandler):
         if self._is_answered():
             return self.done_reply(
                 intents.QNA,
-                messages.QNA__IN_PROGRESS,
-                self._get_qna_in_progress_params()
+                messages.ANSWER__THANK_YOU,
+                self._get_answer_thank_you_params()
             )
 
         return self.done_reply(

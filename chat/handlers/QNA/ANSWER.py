@@ -16,6 +16,27 @@ class Handler(MessageHandler):
         
         return self._match_id
 
+    def _get_match(self):
+        if not hasattr(self, '_match') or self._match is None:
+            self._match = relmods.Match.objects.get(pk=self._get_match_id())
+
+        return self._match
+
+    def _get_answer_thank_you_params(self):
+        buying = self._get_buying_boolean()
+        match = self._get_match()
+        params = {
+            'initial': True,
+            'buying': buying
+        }
+
+        if buying:
+            params['supply'] = match.supply
+        else:
+            params['demand'] = match.demand
+
+        return params
+
     def _get_buying_boolean(self):
         match = relmods.Match.objects.get(pk=self._get_match_id())
         if match.supply.user == self.message.from_user:
@@ -33,5 +54,5 @@ class Handler(MessageHandler):
         return self.done_reply(
             intents.QNA,
             messages.ANSWER__THANK_YOU,
-            { 'buying': self._get_buying_boolean() }
+            self._get_answer_thank_you_params()
         )

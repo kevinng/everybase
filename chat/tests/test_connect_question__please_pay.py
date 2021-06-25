@@ -194,7 +194,7 @@ class ConnectQuestionPleasePay_Answered_Buying_OTG_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.QNA__IN_PROGRESS,
+            messages.ANSWER__THANK_YOU,
             target_body_variation_key='BUYING__OTG'
         )
         self.assert_value(
@@ -277,7 +277,7 @@ class ConnectQuestionPleasePay_Answered_Buying_PreOrderDeadline_Test(
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.QNA__IN_PROGRESS,
+            messages.ANSWER__THANK_YOU,
             target_body_variation_key='BUYING__PRE_ORDER_DEADLINE'
         )
         self.assert_value(
@@ -361,7 +361,7 @@ class ConnectQuestionPleasePay_Answered_Buying_PreOrderDeadline_Test(
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.QNA__IN_PROGRESS,
+            messages.ANSWER__THANK_YOU,
             target_body_variation_key='BUYING__PRE_ORDER_DURATION'
         )
         self.assert_value(
@@ -436,7 +436,7 @@ class ConnectQuestionPleasePay_Answered_Selling_Test(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.QNA__IN_PROGRESS,
+            messages.ANSWER__THANK_YOU,
             target_body_variation_key='SELLING'
         )
         self.assert_value(
