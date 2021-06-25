@@ -83,7 +83,7 @@ class ConnectQuestionPleasePay_Unanswered_Selling_Test(MessageHandlerTest):
         # Buying - sys_user stands in as seller/questioner
         demand = relmods.Demand.objects.create(user=self.sys_user)
 
-        # Set up match ID from your-question
+        # Set up match ID for your-question
         match = relmods.Match.objects.create(
             supply=supply,
             demand=demand
