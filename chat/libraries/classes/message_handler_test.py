@@ -276,15 +276,15 @@ class MessageHandlerTest(TestCase):
         else:
             target_params = target_body_params_func()
         target_body = render_to_string(target_path, target_params)
-        print('TARGET BODY')
-        print(target_body)
+        # print('TARGET BODY')
+        # print(target_body)
 
         # Get body from response TwilML
         start_pos = response.index('<Message>') + len('<Message>')
         end_pos = response.index('</Message>')
         response_body = response[start_pos:end_pos]
-        print('RESPONSE BODY')
-        print(response_body)
+        # print('RESPONSE BODY')
+        # print(response_body)
 
         self.assertEqual(response_body, target_body)
         self.assert_context(intent_key, message_key)
