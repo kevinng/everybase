@@ -1,6 +1,6 @@
 Thank you for your answer.
 
 Reply:
-1. Ask {% if buying == True %}seller{% elif buying == False %}buyer{% endif %} a question
+1. Ask question
 2. Buy {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}'s contact
 3. Learn about our service
