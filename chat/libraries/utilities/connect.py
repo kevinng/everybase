@@ -1,4 +1,5 @@
 from relationships import models
+from chat.libraries.utilities.sort_users import sort_users
 
 def connect(user_x, user_y):
     """Connect two users - bearing in mind to set the one with the smaller ID
@@ -11,14 +12,7 @@ def connect(user_x, user_y):
     user_y : relationships.User
         User to connect
     """
-    if user_x.id < user_y.id:
-        user_1 = user_x
-        user_2 = user_y
-    else:
-        user_1 = user_x
-        user_2 = user_y
-
+    user_1, user_2 = sort_users(user_x, user_y)
     return models.Connection.objects.create(
         user_1=user_1,
-        user_2=user_2
-    )
+        user_2=user_2)
