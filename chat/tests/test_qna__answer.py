@@ -1,13 +1,7 @@
-import datetime, pytz
-
-from relationships import models as relmods
-from common import models as commods
-from payments import models as paymods
-
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.message_handler_test import MessageHandlerTest, SupplyAvailabilityOption
 
-class QNAAnswer_Buying_OTG_Test(MessageHandlerTest):
+class QNAAnswerTest(MessageHandlerTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',
@@ -16,235 +10,59 @@ class QNAAnswer_Buying_OTG_Test(MessageHandlerTest):
 
     def setUp(self):
         super().setUp(intents.QNA, messages.ANSWER)
+        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_qna()
 
-        # Supply and relevant models
-        product_type, packing, _ = self.set_up_product_type(
-            name='Nitrile Gloves',
-            uom_name='Box',
-            uom_plural_name='Boxes',
-            uom_description='200 pieces in 1 box'
-        )
-        supply = relmods.Supply.objects.create(
-            user=self.sys_user, # sys_user stands in for seller
-            product_type=product_type,
-            packing=packing,
-            country=commods.Country.objects.get(pk=601), # Israel
-            availability=relmods.Availability.objects.get(pk=1), # OTG
-            quantity=12000,
-            price=15.15,
-            currency=paymods.Currency.objects.get(pk=1), # USD
-            deposit_percentage=0.4,
-            accept_lc=False
-        )
-
-        # Buying
-        demand = self.set_up_demand()
-
-        # Set up match ID from your-question
-        match = relmods.Match.objects.create(
-            supply=supply,
-            demand=demand
-        )
-        self.set_up_data_value(
-            intents.QNA,
-            messages.YOUR_QUESTION,
-            datas.QNA__YOUR_QUESTION__MATCH_ID__ID,
-            value_id=match.id,
-            inbound=False
-        )
-
-    def test_any_input(self):
-        input = 'hello world'
+    def test_enter_answer(self):
+        input = 'Yes, we can.'
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.ANSWER__THANK_YOU,
-            target_body_variation_key='BUYING__OTG__INITIAL'
+            messages.ANSWER__THANK_YOU
         )
         self.assert_value(
-            datas.QNA__ANSWER__INPUT__STRING,
+            datas.ANSWER,
             value_string=input
         )
 
-class QNAAnswer_Buying_PreOrderDeadline_Test(MessageHandlerTest):
-    fixtures = [
-        'setup/common__country.json',
-        'setup/20210528__payments__currency.json',
-        'setup/20210527__relationships__availability.json'
-    ]
+        # TODO: be sure that QNA's timestamp has been updated
 
-    def setUp(self):
-        super().setUp(intents.QNA, messages.ANSWER)
+# class QNAAnswer_Buying_OTG_Test(QNAAnswerTest):
+#     def setUp(self):
+#         super().setUp()
 
-        # Supply and relevant models
-        product_type, packing, _ = self.set_up_product_type(
-            name='Nitrile Gloves',
-            uom_name='Box',
-            uom_plural_name='Boxes',
-            uom_description='200 pieces in 1 box'
-        )
-        pre_order_timeframe = relmods.TimeFrame.objects.create(
-            deadline=datetime.datetime(2021, 2, 5, tzinfo=pytz.UTC)
-        )
-        supply = relmods.Supply.objects.create(
-            user=self.sys_user, # sys_user stands in for seller
-            product_type=product_type,
-            packing=packing,
-            country=commods.Country.objects.get(pk=601), # Israel
-            availability=relmods.Availability.objects.get(pk=2), # Pre-order
-            quantity=12000,
-            pre_order_timeframe=pre_order_timeframe, # 5 Feb 2021
-            price=15.15,
-            currency=paymods.Currency.objects.get(pk=1), # USD
-            deposit_percentage=0.4,
-            accept_lc=False
-        )
+#         # TODO Setup functions should be in message handlers
+#         match = setup_buyer(self, supply_type=OTG)
+#         setup_qna(self, match, answering=True, answered=False)
 
-        # Buying
-        demand = self.set_up_demand()
+#     def test_enter_answer(self):
 
-        # Set up match ID from your-question
-        match = relmods.Match.objects.create(
-            supply=supply,
-            demand=demand
-        )
-        self.set_up_data_value(
-            intents.QNA,
-            messages.YOUR_QUESTION,
-            datas.QNA__YOUR_QUESTION__MATCH_ID__ID,
-            value_id=match.id,
-            inbound=False
-        )
+#         # TODO this function call seems to be wrong
+#         self._test_enter_answer('BUYING__OTG__INITIAL')
 
-    def test_any_input(self):
-        input = 'hello world'
-        self.receive_reply_assert(
-            input,
-            intents.QNA,
-            messages.ANSWER__THANK_YOU,
-            target_body_variation_key='BUYING__PRE_ORDER_DEADLINE__INITIAL'
-        )
-        self.assert_value(
-            datas.QNA__ANSWER__INPUT__STRING,
-            value_string=input
-        )
+# class QNAAnswer_Buying_PreOrderDeadline_Test(QNAAnswerTest):
+#     def setUp(self):
+#         super().setUp()
+#         match = setup_buyer(self, supply_type=PRE_ORDER_DEADLINE)
+#         setup_qna(self, match, answering=True, answered=False)
 
-class QNAAnswer_Buying_PreOrderDuration_Test(MessageHandlerTest):
-    fixtures = [
-        'setup/common__country.json',
-        'setup/20210528__payments__currency.json',
-        'setup/20210527__relationships__availability.json'
-    ]
+#     def test_enter_answer(self):
+#         self._test_enter_answer('BUYING__PRE_ORDER_DEADLINE__INITIAL')
 
-    def setUp(self):
-        super().setUp(intents.QNA, messages.ANSWER)
+# class QNAAnswer_Buying_PreOrderDuration_Test(QNAAnswerTest):
+#     def setUp(self):
+#         super().setUp()
+#         match = setup_buyer(self, supply_type=PRE_ORDER_DURATION)
+#         setup_qna(self, match, answering=True, answered=False)
 
-        # Supply and relevant models
-        product_type, packing, _ = self.set_up_product_type(
-            name='Nitrile Gloves',
-            uom_name='Box',
-            uom_plural_name='Boxes',
-            uom_description='200 pieces in 1 box'
-        )
-        pre_order_timeframe = relmods.TimeFrame.objects.create(
-            duration_uom='d',
-            duration=5
-        )
-        supply = relmods.Supply.objects.create(
-            user=self.sys_user, # sys_user stands in for seller
-            product_type=product_type,
-            packing=packing,
-            country=commods.Country.objects.get(pk=601), # Israel
-            availability=relmods.Availability.objects.get(pk=2), # Pre-order
-            quantity=12000,
-            pre_order_timeframe=pre_order_timeframe, # 5 days
-            price=15.15,
-            currency=paymods.Currency.objects.get(pk=1), # USD
-            deposit_percentage=0.4,
-            accept_lc=False
-        )
+#     def test_enter_answer(self):
+#         self._test_enter_answer('BUYING__PRE_ORDER_DURATION__INITIAL')
 
-        # Buying
-        demand = self.set_up_demand()
+# class QNAAnswer_Selling_Test(QNAAnswerTest):
+#     def setUp(self):
+#         super().setUp()
+#         match = setup_seller(self)
+#         setup_qna(self, match, answering=True, answered=False)
 
-        # Set up match ID from your-question
-        match = relmods.Match.objects.create(
-            supply=supply,
-            demand=demand
-        )
-        self.set_up_data_value(
-            intents.QNA,
-            messages.YOUR_QUESTION,
-            datas.QNA__YOUR_QUESTION__MATCH_ID__ID,
-            value_id=match.id,
-            inbound=False
-        )
-
-    def test_any_input(self):
-        input = 'hello world'
-        self.receive_reply_assert(
-            input,
-            intents.QNA,
-            messages.ANSWER__THANK_YOU,
-            target_body_variation_key='BUYING__PRE_ORDER_DURATION__INITIAL'
-        )
-        self.assert_value(
-            datas.QNA__ANSWER__INPUT__STRING,
-            value_string=input
-        )
-
-class QNAAnswer_Selling_Test(MessageHandlerTest):
-    fixtures = [
-        'setup/common__country.json',
-        'setup/20210528__payments__currency.json',
-        'setup/20210527__relationships__availability.json'
-    ]
-
-    def setUp(self):
-        super().setUp(intents.QNA, messages.ANSWER)
-
-        # Supply and relevant models
-        supply = self.set_up_supply()
-
-        # Demand and relevant models
-        product_type, packing, _ = self.set_up_product_type(
-            name='Nitrile Gloves',
-            uom_name='Box',
-            uom_plural_name='Boxes',
-            uom_description='200 pieces in 1 box'
-        )
-        demand = relmods.Demand.objects.create(
-            user=self.sys_user, # sys_user stands in for buyer
-            product_type=product_type,
-            packing=packing,
-            country=commods.Country.objects.get(pk=601), # Israel
-            quantity=12000,
-            price=15.15,
-            currency=paymods.Currency.objects.get(pk=1) # USD
-        )
-
-        # Set up match ID from your-question
-        match = relmods.Match.objects.create(
-            supply=supply,
-            demand=demand
-        )
-        self.set_up_data_value(
-            intents.QNA,
-            messages.YOUR_QUESTION,
-            datas.QNA__YOUR_QUESTION__MATCH_ID__ID,
-            value_id=match.id,
-            inbound=False
-        )
-
-    def test_any_input(self):
-        input = 'hello world'
-        self.receive_reply_assert(
-            input,
-            intents.QNA,
-            messages.ANSWER__THANK_YOU,
-            target_body_variation_key='SELLING__INITIAL'
-        )
-        self.assert_value(
-            datas.QNA__ANSWER__INPUT__STRING,
-            value_string=input
-        )
+#     def test_enter_answer(self):
+#         self._test_enter_answer('SELLING__INITIAL')
