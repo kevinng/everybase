@@ -1,6 +1,12 @@
+import typing
+from abc import abstractmethod
+
 from chat import models
+from relationships import models as relmods
+from common import models as commods
 
 from chat.libraries.constants import datas, messages
+from chat.libraries.utilities.get_parameters import get_parameters
 from chat.libraries.utilities.get_latest_value import get_latest_value
 from chat.libraries.utilities.get_context import get_context
 from chat.libraries.utilities.start_context import start_context
@@ -8,10 +14,7 @@ from chat.libraries.utilities.done_context import done_context
 from chat.libraries.utilities.match import match
 from chat.libraries.utilities.render_message import render_message
 
-from relationships import models as relmods
-from common import models as commods
-
-class MessageHandler:
+class MessageHandler():
     """A context is a unique pair of the user's intent, and the last message
     sent by the system. A user's context may be ascertained by reading the
     intent_key and message_key of the last outbound Twilio message sent by the
@@ -34,173 +37,235 @@ class MessageHandler:
     message : TwilioInboundMessage
         Twilio inbound message we're handling
     """
-    def __init__(self, message, intent_key, message_key):
-        """
+    def __init__(
+            self,
+            message: models.TwilioInboundMessage,
+            intent_key: str,
+            message_key: str
+        ):
+        """Initializes the message handler for an incoming message and the
+        context the message is received in.
+
+        The context the message is received in depends (mostly) on the last
+        message sent to the user.
+        
+        E.g., we've sent the menu to the user, and received the user's input to
+        the menu - so, the context is menu and the message is the user's
+        selection from the menu options.
+
         Parameters
         ----------
-        message : TwilioInboundMessage
+        message
             Twilio inbound message we're handling
+        intent_key
+            Intent key for the context this message is received in
+        message_key
+            Message key for the context this message is received in
         """
-        if message == None:
-            raise Exception('message cannot be null')
-
         self.message = message
         self.intent_key = intent_key
         self.message_key = message_key
+
+        # Options for the message handler to work with - if applicable
         self.options = []
-        self.env_vars = {}
-        self.env_var_funcs = {}
-
-        self.dataset = self.get_or_create_dataset()
-
-    def run(self):
-        """Message handling logic - to be overridden
-        """
-        return None
-
-    def set_env_var(self, key, value=None, value_func=None):
-        """Set environment variable. If value is lazy-loaded, set value to None
-        and set a value_func and it will be used to lazy-load the value.
         
-        An exception will be raised if both value and value_func are None.
+        # Values for parameterizer to work with - if applicable
+        self.params = {}
+
+        self.dataset, _ = models.MessageDataset.objects.get_or_create(
+            intent_key=self.intent_key,
+            message_key=self.message_key,
+            in_message=self.message,
+            user=self.message.from_user
+        )
+
+    @abstractmethod
+    def run(self) -> str:
+        """Message handling code. To be overridden by sub-class. Returns message
+        body to reply the user with.
+        """
+        pass
+        
+    def add_option(
+            self,
+            match_strs: typing.List[typing.Tuple[str, int]],
+            intent_key: str = None,
+            message_key: str = None,
+            data_key: str = None,
+            data_value: str = None,
+            params_func: typing.Callable = None,
+            intent_key_func: typing.Callable = None,
+            message_key_func: typing.Callable = None,
+            chosen_func: typing.Callable = None
+        ):
+        """Add an option to be matched against the message body. To be used with
+        reply_option.
+
+        Options are matched against the body text in the order they are added.
+        i.e., the first matching option wins.
 
         Parameters
         ----------
-        key : String, optional
-            Key
-        value : String, optional
-            Value
-        value_func : Function, optional
-            Value function which will be used to set value lazy-loaded. Value
-                must not be set if it is to be lazy-loaded.
-        """
-        if value is None and value_func is None:
-            raise Exception('value_func must be set if value is not set')
-        
-        self.env_vars[key] = value
-        self.env_var_funcs[key] = value_func
-
-    def get_env_var(self, key):
-        """Get environment variable. If it does not exist, will set with with
-        pre-defined environment variable function.
-
-        Parameters
-        ----------
-        key
-            Key for value/value-function
-        """
-        value = self.env_vars.get(key)
-        if value is None:
-            # Value does not exist for key, set it with the value function
-            # Note: if value is not set, value function MUST be set, or an error
-            #   will be raised
-            self.env_vars[key] = self.env_var_funcs[key]()
-            return self.env_vars[key]
-
-        return value
-        
-    def add_option(self, match_strs, intent_key, message_key, param_func,
-        data_key=None, data_value=None, intent_key_func=None,
-        message_key_func=None):
-        """Add an option to this handler to be matched against the message body.
-        To be used with the reply_option method.
-
-        Options should be added in order of priority - i.e., more important
-        added first.
-
-        Parameters
-        ----------
-        match_strs : List of tuples
-            List of strings to match for this option in the format:
+        match_strs
+            List of strings-to-match for this option in the format:
             
             [(string_to_match, edit_distance_tolerance), ...]
             
-            A string will be matched against the text body with the match
-            function.
-        intent_key : String
-            Intent key for the context to set if this option is chosen
-        message_key : String
-            Message key for the context to set if this option is chosen
-        param_func : Function, optional
-            Function that returns the parameters for the message if this option
-            is chosen
-        data_key : string, optional
-            If present, store user's input under context/data-key
-        data_value : string, optional
-            If present, store user's input under context/data-key with this value
-        intent_key_func : function, optional
-            If present, will be used to ascertain the intent key - ignoring
-            intent_key
-        message_key_func : function, optional
-            If present, will be used to ascertain the message key - ignoring
-            message_key
-        """
-        self.options.append((match_strs, intent_key, message_key, param_func,
-            data_key, data_value, intent_key_func, message_key_func))
+            A string will be matched against the text body with the
+            chat.libraries.utilities.match function.
+        intent_key
+            Intent key for the context to set if this option is chosen. If
+            intent_key_func is specified, intent_key will be ignored.
+        message_key
+            Message key for the context to set if this option is chosen. If
+            message_key_func is specified, message_key will be ignored.
+        params_func
+            If specified, run this function to compute the parameters for the
+            message if this option is chosen.
+        data_key
+            If specified, store either message body or data_value as data value
+            to the data key specified by data_key.
+        data_value
+            Data key to be stored as user's input if data_key is specified.
+            If not specified, the message body will be stored as data value.
+            If specified, store this data key as the data value to data_key.
+        intent_key_func
+            If specified, this function will be ran to compute the intent key
+            for the context to set.
+        message_key_func
+            If specified, this function will be ran to compute the message key
+            for the context to set. If message_key_func is specified,
+            message_key will be ignored.
+        chosen_func
+            If specified, this function will run after the user has chosen this
+            option. chosen_func gets called with 2 parameters - i.e.,
 
-    def done_reply(self, intent_key, message_key, params={}):
-        """Convenience function to call self.done_to_context and
-        messages.get_body in 1 function.
+            chosen_func(msg_handler, data_value)
+
+            msg_handler is the message handler processing the options and
+            running the function, and data_value is a reference to the data
+            value created to store the data key/value pair.
+        """
+        self.options.append((match_strs, intent_key, message_key, params_func,
+            data_key, data_value, intent_key_func, message_key_func,
+            chosen_func))
+
+    def done_reply(
+            self,
+            intent_key: str,
+            message_key: str,
+            params_func: typing.Callable=None
+        ) -> str:
+        """Convenience function to call done_to_context and messages.get_body in
+        one call - with support for get_parameters use to get parameters for
+        the message body
 
         Parameters
         ----------
-        intent_key : string
+        intent_key
             Intent key for the context to set
-        message_key : string
+        message_key
             Message key for the context to set and message body to return
+        params_func
+            Optional function to compute parameters for the message body.
+            intent_key, message_key and params_func will be passed to
+            get_parameters to get parameters for the message body.
         """
+        params = get_parameters(self, intent_key, message_key, params_func)
         self.done_to_context(intent_key, message_key)
         return render_message(message_key, params)
 
-    def reply_option(self, invalid_option_data_key=None,
-        invalid_option_intent_key=None, invalid_option_message_key=None,
-        invalid_option_params=None):
-        """Run the match function against each option in against message body.
+    def reply_option(self,
+            invalid_option_data_key: str = datas.INVALID_CHOICE,
+            invalid_option_intent_key: str = None,
+            invalid_option_message_key: str = None,
+            invalid_option_params_func: str = None
+        ) -> str:
+        """Ascertain the option that first matches the message body. Options
+        are added with the add_option function, and matched in the order they're
+        added.
 
-        Set context and return message body of the FIRST matching option.
-
-        If data key/value is/are provided for an option, store user's choice.
-
-        If no matching option is found - return reply_invalid_option value,
-        passing in invalid_option_intent_key and invalid_option_message_key to set
-        the reply message if necessary.
+        Where an invalid option has been input - i.e., the message body does not
+        match any option:
+            - The message body may be saved as a data value if
+                invalid_option_data_key is specified
+            - The user's context may be changed if BOTH
+                invalid_option_intent_key and invalid_option_message_key are
+                specified, thus returning a different message body from the
+                default do-not-understand message body. In this case,
+                invalid_option_params_func may be specified to set the parameters of
+                the user's next context message.
 
         Parameters
         ----------
-        invalid_option_data_key : String, optional
-            If specified, will save message body with this key in current
-            context if the input is invalid
-        invalid_option_intent_key : String, optional
-            Intent key of the target context in the event of a invalid option. 
-            If set, will change the current context.
-        invalid_option_message_key : String, optional
-            Message key of the target context in the event of a invalid option.
-        invalid_option_params : String, optional
-            Template parameters for the template sent in the event of a
-            invalid option
+        invalid_option_data_key
+            If the user has input an invalid option and this parameter is
+            specified, save the user's input (i.e., message body) under this
+            key in the user's current context.
+        invalid_option_intent_key
+            Must be specified if invalid_option_message_key is set. This
+            parameter is optional and is the intent key of the user's next
+            context if the user has input an invalid option.
+        invalid_option_message_key
+            Must be specified if invalid_option_intent_key is set. This
+            parameter is optional and is the message key of the user's next
+            context if the user has input an invalid option.
+        invalid_option_params_func
+            If both invalid_option_intent_key and invalid_option_message_key
+            are set, this optional parameter function provides the parameters
+            to the user's next context message if no parameterizer is set for
+            the invalid_option_intent_key/invalid_option_message_key context.
+
+        Returns
+        -------
+        Message body to reply the user with
         """
+        # Iterate options
         for o in self.options:
-            match_strs, intent_key, message_key, params_func, data_key, \
-                data_value, intent_key_func, message_key_func = o
+
+            # Unwrap this option
+            match_strs, \
+            intent_key, \
+            message_key, \
+            params_func, \
+            data_key, \
+            data_value, \
+            intent_key_func, \
+            message_key_func, \
+            chosen_func = o
+
+            # Iterate each match string in the option
             for match_str, tolerance in match_strs:
                 if match(self.message.body, match_str, tolerance):
+                    # Message body matches this option
+                    
+                    ##### Save value #####
+
+                    # If data key is specified for the option, we store the
+                    # user's choice. If data_value is specified, that is,
+                    # a custom value to be store is specified - we store this
+                    # value under the data key in the current context. If not,
+                    # we store the data key itself as value.
+
                     if data_key is not None:
-                        # Data key is specified - store user's choice
                         if data_value is not None:
-                            # Data value is specified, use it as data value
                             value = data_value
                         else:
-                            # Data value is not specified, use key as data value
                             value = data_key
-                        self.save_value(data_key, value_string=value)
+                        dv_ref = self.save_value(data_key, value_string=value)
 
-                    # Get parameters for template
-                    if params_func is not None:
-                        params = params_func()
-                    else:
-                        params = {}
+                    ##### Get keys for the user's next context #####
+                    
+                    # If intent_key_func is specified, run it to get the intent
+                    # key of the next context. If not, use intent_key as the
+                    # intent_key of the next function. intent_key_func takes
+                    # precedence over intent_key.
 
-                    # Get context keys
+                    # If message_key_func is specified, run it to get the
+                    # message key of the next context. If not, use message_key
+                    # as the intent_key of the next function. message_key_func
+                    # takes precedence over message_key.
+
                     if intent_key_func is not None:
                         to_intent_key = intent_key_func()
                     else:
@@ -210,60 +275,131 @@ class MessageHandler:
                         to_message_key = message_key_func()
                     else:
                         to_message_key = message_key
+                    
+                    ##### Get parameters for the message ####
+                    params = get_parameters(
+                        self, to_intent_key, to_message_key, params_func)
+
+                    ##### Run chosen function if it is specified #####
+                    if chosen_func is not None:
+                        chosen_func(self, dv_ref)
 
                     return self.done_reply(
                         to_intent_key, to_message_key, params)
 
-        return self.reply_invalid_option(invalid_option_data_key,
-            invalid_option_intent_key, invalid_option_message_key,
-            invalid_option_params)
+        # No matching option found - reply invalid-option
+        return self.reply_invalid_option(
+            invalid_option_data_key,
+            invalid_option_intent_key,
+            invalid_option_message_key,
+            invalid_option_params_func)
 
-    def reply_invalid_option(self, data_key=None,
-        invalid_option_intent_key=None, invalid_option_message_key=None,
-        invalid_option_params=None):
-        """Default reply when the user sends an invalid option.
+    def reply_bad_input(self,
+            data_key: str = None,
+            intent_key: str = None,
+            message_key: str = None,
+            params_func: typing.Callable = None
+        ) -> str:
+        """Return message body when the user enters a bad input.
+
+        If params_func is specified, run it to get the parameters for the
+        message body. Otherwise, attempt to get the parameterizer for the
+        context. If the parameterizer is not specified (i.e., found), set no
+        parameters.
+
+        If data_key is specified, save message body under it in the current
+        context.
+
+        If intent_key and message_key are both specified, change the user's
+        context.
+
+        If only the message_key is specified, do not change the user's context,
+        but reply with that message.
+
+        If both intent_key and message_key are not specified, do not change the
+        user's context, and reply with the default do-not-understand message.
+
+        If only the intent_key is specified, we treat it as if both it and the
+        message_key are not specified.
 
         Parameters
         ----------
-        data_key : String, optional
+        data_key
             If specified, will save message body in current context
-        invalid_option_intent_key : String, optional
-            Intent key of the target context in the event of a invalid option.
-            If set, will change the current context.
-        invalid_option_message_key : String, optional
-            Message key of the target context in the event of a invalid option.
-        invalid_option_params : String, optional
-            Template parameters for the template sent in the event of a
-            invalid option
+        intent_key
+            Intent key of the target context in the event of a bad input. If
+            set, will change the current context.
+        message_key
+            Message key of the target context in the event of a bad input.
+        params_func
+            Template parameters for the template sent in the event of a bad
+            input
+
+        Returns
+        -------
+        Message body to reply the user with
         """
-        if invalid_option_params is None:
-            invalid_option_params = {}
+        # Get parameters for message
+        params = get_parameters(self, intent_key, message_key, params_func)
+
+        ##### Save message body (optional) #####
+
+        # If data_key is specified, save message body under it in the current
+        # context.
 
         if data_key is not None:
-            # Save input in current context
             self.save_body_as_string(data_key)
 
-        # If invalid_option_intent_key is set, change the current context. If
-        # not, the user stays in the current context.
-        if invalid_option_intent_key is None and \
-            invalid_option_message_key is None:
-            return render_message(messages.DO_NOT_UNDERSTAND_OPTION, {})
-        elif invalid_option_intent_key is None and \
-            invalid_option_message_key is not None:
-            return render_message(
-                invalid_option_message_key, invalid_option_params)
+        ##### Change context (optional) #####
 
-        return self.done_reply(invalid_option_intent_key,
-            invalid_option_message_key, invalid_option_params)
+        # If intent_key and message_key are both specified, change the user's
+        # context. Otherwise return default do-not-understand message.
 
-    def reply_invalid_number(self):
-        """Reply user entered an invalid number
-        """
-        # Note: we don't need to set a new context. I.e. the user remains in
-        # the current context.
-        return render_message(messages.DO_NOT_UNDERSTAND_NUMBER, {})
+        if intent_key is None and message_key is None:
+            # Return default do-not-understand message.
+            # Do not change context.
+            return render_message(messages.DO_NOT_UNDERSTAND_OPTION, params)
+        elif intent_key is None and message_key is not None:
+            # Return custom message.
+            # Do not change context.
+            return render_message(message_key, params)
 
-    def done_to_context(self, intent_key, message_key):
+        # Change context and return new context's message
+        return self.done_reply(intent_key, message_key, params)
+
+    def reply_invalid_option(
+            self,
+            data_key: str = None,
+            intent_key: str = None,
+            message_key: str = None,
+            params_func: typing.Callable = None
+        ) -> str:
+        """Call reply_bad_input with a default bad/invalid option message."""
+        if message_key is None:
+            message_key = messages.DO_NOT_UNDERSTAND_OPTION
+
+        return self.reply_bad_input(
+            data_key, intent_key, message_key, params_func)
+
+    def reply_invalid_numeric_value(
+            self,
+            data_key: str = None,
+            intent_key: str = None,
+            message_key: str = None,
+            params_func: typing.Callable = None
+        ) -> str:
+        """Call reply_bad_input with a default bad/invalid option message."""
+        if message_key is None:
+            message_key = messages.DO_NOT_UNDERSTAND_NUMBER
+
+        return self.reply_bad_input(
+            data_key, intent_key, message_key, params_func)
+
+    def done_to_context(
+            self,
+            intent_key: str,
+            message_key: str
+        ):
         """Switch from the current context to the specified context. Set current
         context's done time to now.
 
@@ -283,20 +419,14 @@ class MessageHandler:
         # Start next context
         start_context(self.message.from_user, intent_key, message_key)
 
-    def get_or_create_dataset(self):
-        """Get/create dataset for this message
-        """
-        dataset, _ = models.MessageDataset.objects.get_or_create(
-            intent_key=self.intent_key,
-            message_key=self.message_key,
-            in_message=self.message,
-            user=self.message.from_user
-        )
-
-        return dataset
-
-    def save_value(self, data_key, value_string=None, value_float=None,
-        value_boolean=None, value_id=None):
+    def save_value(
+            self,
+            data_key: str,
+            value_string: str = None,
+            value_float: float = None,
+            value_boolean: bool = None,
+            value_id: int = None
+        ):
         """Save data value in current context with specified data key
 
         Parameters
@@ -322,10 +452,12 @@ class MessageHandler:
             value_string=value_string,
             value_float=value_float,
             value_boolean=value_boolean,
-            value_id=value_id
-        )
+            value_id=value_id)
 
-    def save_body_as_string(self, data_key):
+    def save_body_as_string(
+            self,
+            data_key: str
+        ):
         """Save message body as data value string in current context
 
         Parameters
@@ -335,7 +467,10 @@ class MessageHandler:
         """
         return self.save_value(data_key, value_string=self.message.body)
 
-    def save_body_as_float(self, data_key):
+    def save_body_as_float(
+            self,
+            data_key: str
+        ):
         """Save message body in current context with specified data key as float
 
         Parameters
@@ -355,7 +490,28 @@ class MessageHandler:
 
         return self.save_value(data_key, value_float=value)
 
-    def get_product_type(self, intent_key, message_key, data_key):
+    def get_product_type(
+            self,
+            intent_key: str,
+            message_key: str,
+            data_key: str
+        ) -> typing.Tuple[relmods.ProductType, relmods.UnitOfMeasure]:
+        """Get latest value entered by the user with
+        intent_key/message_key/data_key, and look up product type with the
+        value. If found, return tuple (product_type, uom) - where product_type
+        is reference to the product type model, and uomm is reference to its
+        unit of measure model.
+
+        Parameters
+        ----------
+        intent_key
+            Intent key for user's latest value for looking up product type
+        message_key
+            Message key for user's latest value for looking up product type
+        data_key
+            Data key for user's latest value for looking up product type
+        """
+
         # Get latest user input data value string to match against a product
         # type
         value = self.get_latest_value(intent_key, message_key, data_key)
@@ -390,9 +546,15 @@ class MessageHandler:
         
         return (product_type, uom)
 
-    def get_latest_value(self, intent_key, message_key, data_key, inbound=True):
+    def get_latest_value(
+            self,
+            intent_key: str,
+            message_key: str,
+            data_key: str,
+            inbound: str = True
+        ):
         """Convenience method to call get_latest_value with this message's
-        sender.
+        sender and inbound=True as default.
         """
         return get_latest_value(
             intent_key,
