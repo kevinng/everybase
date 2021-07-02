@@ -15,8 +15,7 @@ class DiscussWBuyerSupplyGetAvailabilityTest(MessageHandlerTest):
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-            datas.\
-DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__INVALID_STRING__STRING,
+            datas.INVALID_CHOICE,
             value_string=input
         )
 
@@ -33,9 +32,8 @@ DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__INVALID_STRING__STRING,
             messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG
         )
         self.assert_value(
-        datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            value_string=\
-        datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
+            datas.AVAILABILITY,
+            value_string=datas.AVAILABILITY__READY_OTG
         )
 
     def test_choose_ready_otg_with_number(self):
@@ -54,9 +52,8 @@ DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__INVALID_STRING__STRING,
             messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER
         )
         self.assert_value(
-        datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            value_string=\
-        datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
+            datas.AVAILABILITY,
+            value_string=datas.AVAILABILITY__PRE_ORDER
         )
 
     def test_choose_preorder_with_number(self):
