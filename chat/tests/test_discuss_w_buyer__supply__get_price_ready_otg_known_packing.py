@@ -7,16 +7,16 @@ class DiscussWBuyerGetPriceReadyOTGKnownPackingTest(MessageHandlerTest):
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING
         )
-    
+
     def test_get_price(self):
         input = 'USD 20'
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__THANK_YOU
+            messages.DISCUSS__ASK,
+            target_body_variation_key='SELLING'
         )
         self.assert_value(
-            datas.\
-    DISCUSS_W_BUYER__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING__PRICE__STRING,
+            datas.PRICE,
             value_string=input
         )
