@@ -6,21 +6,21 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
         # User chose ready/OTG in a previous step.
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
+            datas.AVAILABILITY,
+            datas.AVAILABILITY__READY_OTG
         )
         # User entered a product a product that's known in our database in
         # a previous step. Plural name is used in response template body of a
         # yes outcome.
-        _, _, kw = self.set_up_product_type(
+        _, _, kw = self.setup_product_type(
             uom_plural_name='cartons')
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             kw.keyword
         )
 
@@ -33,15 +33,15 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__INVALID_CHOICE__STRING,
+            datas.INVALID_CHOICE,
             value_string=input
         )
 
-    def test_choose_non_choice_with_number(self):
-        self.choose_non_choice('3')
+    # def test_choose_non_choice_with_number(self):
+    #     self.choose_non_choice('3')
 
-    def test_choose_non_choice_with_text(self):
-        self.choose_non_choice('hello')
+    # def test_choose_non_choice_with_text(self):
+    #     self.choose_non_choice('hello')
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -50,15 +50,15 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__YES
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__YES
         )
 
-    def test_choose_yes_with_number(self):
-        self.choose_yes('1')
+    # def test_choose_yes_with_number(self):
+    #     self.choose_yes('1')
 
-    def test_choose_yes_with_text(self):
-        self.choose_yes('yes')
+    # def test_choose_yes_with_text(self):
+    #     self.choose_yes('yes')
 
     def choose_no(self, input):
         self.receive_reply_assert(
@@ -67,34 +67,34 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__NO
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__NO
         )
 
-    def test_choose_no_with_number(self):
-        self.choose_no('2')
+    # def test_choose_no_with_number(self):
+    #     self.choose_no('2')
 
-    def test_choose_no_with_text(self):
-        self.choose_no('no')
+    # def test_choose_no_with_text(self):
+    #     self.choose_no('no')
 
 class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
     MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
         # User chose ready/OTG in a previous step.
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
+            datas.AVAILABILITY,
+            datas.AVAILABILITY__READY_OTG
         )
 
         # User entered a product a product that's unknown in our database in
         # a previous step.
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             'mCGYaiIbemoD5R552EC0' # Unlikely string to match any known product
         )
 
@@ -107,11 +107,11 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
-    def test_choose_non_choice_with_number(self):
-        self.choose_non_choice('3')
+    # def test_choose_non_choice_with_number(self):
+    #     self.choose_non_choice('3')
 
-    def test_choose_non_choice_with_text(self):
-        self.choose_non_choice('hello')
+    # def test_choose_non_choice_with_text(self):
+    #     self.choose_non_choice('hello')
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -120,8 +120,8 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
             messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__YES
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__YES
         )
 
     def test_choose_yes_with_number(self):
@@ -137,8 +137,8 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
             messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__NO
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__NO
         )
 
     def test_choose_no_with_number(self):
@@ -151,21 +151,21 @@ class NewSupplySupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__CONFIRM_PACKING)
         # User chose pre-order in a previous step.
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_AVAILABILITY,
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
+            datas.AVAILABILITY,
+            datas.AVAILABILITY__PRE_ORDER
         )
         # User entered a product a product that's unknown in our database in
         # a previous step.
-        _, _, kw = self.set_up_product_type(
+        _, _, kw = self.setup_product_type(
             'Product X'
         )
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             'hello world' # Not matching product name
         )
 
@@ -191,8 +191,8 @@ class NewSupplySupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
             messages.SUPPLY__GET_QUANTITY_PRE_ORDER
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__YES
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__YES
         )
 
     def test_choose_yes_with_number(self):
@@ -208,8 +208,8 @@ class NewSupplySupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
             messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=datas.NEW_SUPPLY__SUPPLY__CONFIRM_PACKING__CORRECT__NO
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__NO
         )
 
     def test_choose_no_with_number(self):
