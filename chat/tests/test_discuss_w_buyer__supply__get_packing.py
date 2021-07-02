@@ -6,19 +6,17 @@ class DiscussWBuyerSupplyGetPacking_ReadyOTG_UnknownPacking_Test(
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__GET_PACKING)
         # User chose 'ready/OTG' in an earlier step
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_AVAILABILITY,
-            datas.\
-                DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            datas.\
-            DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
+            datas.AVAILABILITY,
+            datas.AVAILABILITY__READY_OTG
         )
         # User entered a string that does not match any known product
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_PRODUCT,
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             'BWwVWfauU29canbQmTcV' # String unlikely to match a known product
         )
 
@@ -30,7 +28,7 @@ class DiscussWBuyerSupplyGetPacking_ReadyOTG_UnknownPacking_Test(
             messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PACKING__PACKING__STRING,
+            datas.PACKING,
             value_string=input
         )
 
@@ -39,23 +37,21 @@ class DiscussWBuyerSupplyGetPacking_ReadyOTG_KnownPacking_Test(
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__GET_PACKING)
         # User chose 'ready/OTG' in an earlier step
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_AVAILABILITY,
-            datas.\
-                DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            datas.\
-            DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
+            datas.AVAILABILITY,
+            datas.AVAILABILITY__READY_OTG
         )
         # User entered a product a product that's known in our database in
         # a previous step. Plural name is used in response template body of a
         # yes outcome.
-        _, _, kw = self.set_up_product_type(
+        _, _, kw = self.setup_product_type(
             uom_plural_name='cartons')
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_PRODUCT,
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             kw.keyword
         )
 
@@ -67,7 +63,7 @@ class DiscussWBuyerSupplyGetPacking_ReadyOTG_KnownPacking_Test(
             messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PACKING__PACKING__STRING,
+            datas.PACKING,
             value_string=input
         )
 
@@ -76,13 +72,11 @@ class DiscussWBuyerSupplyGetPacking_PreOrder_UnknownPacking_Test(
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__GET_PACKING)
         # User chose 'pre-order' in an earlier step
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_AVAILABILITY,
-            datas.
-            DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            datas.\
-            DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
+            datas.AVAILABILITY,
+            datas.AVAILABILITY__PRE_ORDER
         )
 
     def test_receive_packing(self):
@@ -93,6 +87,6 @@ class DiscussWBuyerSupplyGetPacking_PreOrder_UnknownPacking_Test(
             messages.SUPPLY__GET_QUANTITY_PRE_ORDER
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PACKING__PACKING__STRING,
+            datas.PACKING,
             value_string=input
         )
