@@ -1,3 +1,5 @@
+# TODO: good-to-go
+
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest
 
@@ -16,6 +18,6 @@ class QNAStopDiscussionReasonTest(MessageHandlerTest):
             messages.STOP_DISCUSSION__THANK_YOU
         )
         self.assert_value(
-            datas.QNA__STOP_DISCUSSION__REASON__INPUT__STRING,
+            datas.STOP_DISCUSSION__REASON,
             value_string=input
         )
