@@ -1,6 +1,6 @@
 *Hi {{ name }}, we have {% if buying == True %}supply{% elif buying == False %}demand{% endif %} for:*
 
-{% lead_details %}
+{% include 'chat/messages/includes/lead_details.txt' %}
 
 *Interested to discuss?*
 1. Yes
