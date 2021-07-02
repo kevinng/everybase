@@ -1,4 +1,3 @@
-from chat.tests.test_qna__answer import QNAAnswerTest
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest, \
     SupplyAvailabilityOption
@@ -30,7 +29,7 @@ class QNAQuestionTest(MessageHandlerTest):
         self.assertNotEqual(qna.answerer, None)
         self.assertNotEqual(qna.questioner, None)
 
-class QNAQuestion_Buying_Test(QNAAnswerTest):
+class QNAQuestion_Buying_Test(QNAQuestionTest):
     def setUp(self):
         super().setUp()
         self.setup_buyer(SupplyAvailabilityOption.OTG)
@@ -39,7 +38,7 @@ class QNAQuestion_Buying_Test(QNAAnswerTest):
     def test_enter_question(self):
         self._test_enter_answer('QUESTIONING__BUYING__INITIAL')
 
-class QNAQuestion_Buying_Test(QNAAnswerTest):
+class QNAQuestion_Selling_Test(QNAQuestionTest):
     def setUp(self):
         super().setUp()
         self.setup_seller()
@@ -47,3 +46,16 @@ class QNAQuestion_Buying_Test(QNAAnswerTest):
 
     def test_enter_question(self):
         self._test_enter_answer('QUESTIONING__SELLING__INITIAL')
+
+class QNAQuestion_MatchClosed_Test(QNAQuestionTest):
+    def setUp(self):
+        super().setUp()
+        self.setup_seller(closed=True)
+        self.setup_qna()
+
+    def test_stray_input(self):
+        self.receive_reply_assert(
+            'Yes, we can.',
+            intents.MENU,
+            messages.MENU
+        )
