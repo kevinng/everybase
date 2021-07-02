@@ -6,7 +6,8 @@ from chat.libraries.utilities.chosen_funcs.update_match__stopped_discussion \
 
 class Handler(MessageHandler):
     def run(self):
-        if ContextLogic(self).get_match().closed is not None:
+        match = ContextLogic(self).get_match()
+        if match is not None and match.closed is not None:
             return self.done_reply(intents.MENU, messages.MENU)
 
         self.add_option([('1', 0)],

@@ -22,7 +22,8 @@ class Handler(MessageHandler):
         
         A user may have only one Q&A in discussion at one time.
         """
-        if ContextLogic(self).get_match().closed is not None:
+        match = ContextLogic(self).get_match()
+        if match is not None and match.closed is not None:
             return self.done_reply(intents.MENU, messages.MENU)
 
         self.save_body_as_string(datas.STRAY_INPUT)

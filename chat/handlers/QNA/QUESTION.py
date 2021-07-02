@@ -9,7 +9,8 @@ class Handler(MessageHandler):
     def run(self):
         self.save_body_as_string(datas.QUESTION)
 
-        if ContextLogic(self).get_match().closed is not None:
+        match = ContextLogic(self).get_match()
+        if match is not None and match.closed is not None:
             return self.done_reply(intents.MENU, messages.MENU)
 
         # Create new QNA
