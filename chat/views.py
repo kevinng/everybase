@@ -21,7 +21,8 @@ from chat.libraries.utilities.save_message_medias import save_message_medias
 from chat.libraries.utilities.save_message import save_message
 from chat.libraries.utilities.get_context import get_context
 from chat.libraries.utilities.get_handler import get_handler
-from chat.libraries.utilities.get_whatsapp_link import get_whatsapp_link
+from chat.libraries.utilities.get_non_tracking_whatsapp_link import \
+    get_non_tracking_whatsapp_link
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -48,6 +49,11 @@ def reply(message):
 
     # Run handler and get message body
     body = handler.run()
+
+    # Capture error - if any
+    if body is None:
+        sentry_sdk.capture_message('Handler %s %s for message %d failed' %
+            (intent_key, message_key, message.id))
 
     # Log
     models.TwilioOutboundMessage.objects.create(
@@ -129,7 +135,8 @@ def redirect_whatsapp_phone_number(request, id):
     # Note: we use temporary redirects so search engines do not associate our
     # URLs with WhatsApp phone number links
     response = HttpResponse(status=302) # Temporary redirect
-    response['Location'] = get_whatsapp_link(hash.phone_number.country_code,
+    response['Location'] = get_non_tracking_whatsapp_link(
+        hash.phone_number.country_code,
         hash.phone_number.national_number)
     
     # Update log status
@@ -178,7 +185,8 @@ def redirect_checkout_page(request, id):
 
     # Chatbot phone number - for success/cancel URL
     chatbot_ph = relmods.PhoneNumber.objects.get(pk=CHATBOT_PHONE_NUMBER_PK)
-    end_url = get_whatsapp_link(chatbot_ph.country_code,
+    end_url = get_non_tracking_whatsapp_link(
+        chatbot_ph.country_code,
         chatbot_ph.national_number)
 
     # Create session
