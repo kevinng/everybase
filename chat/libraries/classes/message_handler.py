@@ -275,17 +275,13 @@ class MessageHandler():
                         to_message_key = message_key_func()
                     else:
                         to_message_key = message_key
-                    
-                    ##### Get parameters for the message ####
-                    params = get_parameters(
-                        self, to_intent_key, to_message_key, params_func)
 
                     ##### Run chosen function if it is specified #####
                     if chosen_func is not None:
                         chosen_func(self, dv_ref)
 
                     return self.done_reply(
-                        to_intent_key, to_message_key, params)
+                        to_intent_key, to_message_key, params_func)
 
         # No matching option found - reply invalid-option
         return self.reply_invalid_option(
