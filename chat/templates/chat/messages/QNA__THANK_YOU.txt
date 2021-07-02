@@ -1,4 +1,4 @@
-{% if initial == True %}Thanks for your answer.
+{% if initial == True %}Thanks for your {% if answering == True %}answer{% elif answering == False %}question{% endif %}.
 
 {% endif %}*Reply*:
 1. Ask question
