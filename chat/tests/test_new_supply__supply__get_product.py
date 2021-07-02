@@ -13,6 +13,6 @@ class NewSupplySupplyGetProductTest(MessageHandlerTest):
             messages.SUPPLY__GET_AVAILABILITY
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             value_string=input
         )
