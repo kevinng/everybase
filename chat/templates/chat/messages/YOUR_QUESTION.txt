@@ -1,6 +1,10 @@
-Hi {{ name }}, {% if buying == True %}seller{% elif buying == False %}buyer{% endif %} asked:
+*Hi {{ name }}, {% if buying == True %}seller{% elif buying == False %}buyer{% endif %} asked*:
 
 {{ question }}
+
+*{% if buying == True %}Supply{% elif buying == False %}Demand{% endif %} details*:
+
+{% include 'chat/messages/includes/lead_details.txt' %}
 
 *Reply*:
 1. Answer question
