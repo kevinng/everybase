@@ -1,14 +1,24 @@
-# TODO: good-to-go
-
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest
 
 class QNAStopDiscussionReasonTest(MessageHandlerTest):
+    fixtures = [
+        'setup/common__country.json',
+        'setup/20210528__payments__currency.json',
+        'setup/20210527__relationships__availability.json'
+    ]
+
     def setUp(self):
         super().setUp(
             intents.QNA,
             messages.STOP_DISCUSSION__REASON
         )
+
+class QNAStopDiscussionReason_Normal_Test(QNAStopDiscussionReasonTest):
+    def setUp(self):
+        super().setUp()
+        self.setup_seller()
+        self.setup_qna()
 
     def test_any_input(self):
         input = 'hello world'
@@ -20,4 +30,17 @@ class QNAStopDiscussionReasonTest(MessageHandlerTest):
         self.assert_value(
             datas.STOP_DISCUSSION__REASON,
             value_string=input
+        )
+
+class QNAStopDiscussionReason_MatchClosed_Test(QNAStopDiscussionReasonTest):
+    def setUp(self):
+        super().setUp()
+        self.setup_seller(closed=True)
+        self.setup_qna()
+
+    def test_any_input(self):
+        self.receive_reply_assert(
+            '1',
+            intents.MENU,
+            messages.MENU
         )
