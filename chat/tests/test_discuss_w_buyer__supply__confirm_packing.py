@@ -6,23 +6,21 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__CONFIRM_PACKING)
         # User chose ready/OTG in a previous step.
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_AVAILABILITY,
-            datas.\
-                DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            datas.\
-            DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
+            datas.AVAILABILITY,
+            datas.AVAILABILITY__READY_OTG
         )
         # User entered a product a product that's known in our database in
         # a previous step. Plural name is used in response template body of a
         # yes outcome.
-        _, _, kw = self.set_up_product_type(
+        _, _, kw = self.setup_product_type(
             uom_plural_name='cartons')
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_PRODUCT,
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             kw.keyword
         )
 
@@ -35,7 +33,7 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-        datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__INVALID_CHOICE__STRING,
+            datas.INVALID_CHOICE,
             value_string=input
         )
 
@@ -52,9 +50,8 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             messages.SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__YES
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__YES
         )
 
     def test_choose_yes_with_number(self):
@@ -70,9 +67,8 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__NO
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__NO
         )
 
     def test_choose_no_with_number(self):
@@ -86,21 +82,19 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__CONFIRM_PACKING)
         # User chose ready/OTG in a previous step.
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_AVAILABILITY,
-            datas.\
-                DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            datas.\
-            DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
+            datas.AVAILABILITY,
+            datas.AVAILABILITY__READY_OTG
         )
 
         # User entered a product a product that's unknown in our database in
         # a previous step.
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_PRODUCT,
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             'mCGYaiIbemoD5R552EC0' # Unlikely string to match any known product
         )
 
@@ -126,9 +120,8 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
             messages.SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__YES
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__YES
         )
 
     def test_choose_yes_with_number(self):
@@ -144,9 +137,8 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
             messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__NO
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__NO
         )
 
     def test_choose_no_with_number(self):
@@ -159,21 +151,21 @@ class DisucssWBuyerSupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__CONFIRM_PACKING)
         # User chose pre-order in a previous step.
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_AVAILABILITY,
-        datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-        datas.DISCUSS_W_BUYER__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
+            datas.AVAILABILITY,
+            datas.AVAILABILITY__PRE_ORDER
         )
         # User entered a product a product that's unknown in our database in
         # a previous step.
-        _, _, kw = self.set_up_product_type(
+        _, _, kw = self.setup_product_type(
             'Product X'
         )
-        self.set_up_data_value(
+        self.setup_data_value(
             intents.DISCUSS_W_BUYER,
             messages.SUPPLY__GET_PRODUCT,
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             'hello world' # Not matching product name
         )
 
@@ -199,9 +191,8 @@ class DisucssWBuyerSupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
             messages.SUPPLY__GET_QUANTITY_PRE_ORDER
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__YES
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__YES
         )
 
     def test_choose_yes_with_number(self):
@@ -217,9 +208,8 @@ class DisucssWBuyerSupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
             messages.SUPPLY__GET_PACKING
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_BUYER__SUPPLY__CONFIRM_PACKING__CORRECT__NO
+            datas.CONFIRM_PACKING,
+            value_string=datas.CONFIRM_PACKING__NO
         )
 
     def test_choose_no_with_number(self):
