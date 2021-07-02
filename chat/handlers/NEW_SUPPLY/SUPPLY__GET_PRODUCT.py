@@ -1,12 +1,5 @@
-from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler import MessageHandler
+from chat.libraries.sub_classes.message_handlers.supply__get_product_handler \
+    import SupplyGetProductHandler
 
-class Handler(MessageHandler):
-    def run(self):
-        # Save user input without validation
-        self.save_body_as_string(datas.\
-            NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING)
-        return self.done_reply(
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_AVAILABILITY
-        )
+class Handler(SupplyGetProductHandler):
+    pass
