@@ -10,59 +10,32 @@ class QNAAnswerTest(MessageHandlerTest):
 
     def setUp(self):
         super().setUp(intents.QNA, messages.ANSWER)
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
-        self.setup_qna()
 
-    def test_enter_answer(self):
+    def _test_enter_answer(self, target_body_variation_key: str):
         input = 'Yes, we can.'
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.ANSWER__THANK_YOU
+            messages.QNA__THANK_YOU,
+            target_body_variation_key=target_body_variation_key
         )
-        self.assert_value(
-            datas.ANSWER,
-            value_string=input
-        )
+        self.assert_value(datas.ANSWER, value_string=input)
+        self.assertNotEqual(self.qna.answered, None)
 
-        # TODO: be sure that QNA's timestamp has been updated
+class QNAAnswer_Buying_Test(QNAAnswerTest):
+    def setUp(self):
+        super().setUp()
+        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_qna()
 
-# class QNAAnswer_Buying_OTG_Test(QNAAnswerTest):
-#     def setUp(self):
-#         super().setUp()
+    def test_enter_answer(self):
+        self._test_enter_answer('ANSWERING__BUYING__INITIAL')
 
-#         # TODO Setup functions should be in message handlers
-#         match = setup_buyer(self, supply_type=OTG)
-#         setup_qna(self, match, answering=True, answered=False)
+class QNAAnswer_Selling_Test(QNAAnswerTest):
+    def setUp(self):
+        super().setUp()
+        self.setup_seller()
+        self.setup_qna()
 
-#     def test_enter_answer(self):
-
-#         # TODO this function call seems to be wrong
-#         self._test_enter_answer('BUYING__OTG__INITIAL')
-
-# class QNAAnswer_Buying_PreOrderDeadline_Test(QNAAnswerTest):
-#     def setUp(self):
-#         super().setUp()
-#         match = setup_buyer(self, supply_type=PRE_ORDER_DEADLINE)
-#         setup_qna(self, match, answering=True, answered=False)
-
-#     def test_enter_answer(self):
-#         self._test_enter_answer('BUYING__PRE_ORDER_DEADLINE__INITIAL')
-
-# class QNAAnswer_Buying_PreOrderDuration_Test(QNAAnswerTest):
-#     def setUp(self):
-#         super().setUp()
-#         match = setup_buyer(self, supply_type=PRE_ORDER_DURATION)
-#         setup_qna(self, match, answering=True, answered=False)
-
-#     def test_enter_answer(self):
-#         self._test_enter_answer('BUYING__PRE_ORDER_DURATION__INITIAL')
-
-# class QNAAnswer_Selling_Test(QNAAnswerTest):
-#     def setUp(self):
-#         super().setUp()
-#         match = setup_seller(self)
-#         setup_qna(self, match, answering=True, answered=False)
-
-#     def test_enter_answer(self):
-#         self._test_enter_answer('SELLING__INITIAL')
+    def test_enter_answer(self):
+        self._test_enter_answer('ANSWERING__SELLING__INITIAL')
