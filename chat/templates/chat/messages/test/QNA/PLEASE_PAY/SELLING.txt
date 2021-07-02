@@ -1,0 +1,5 @@
+Please make a payment of USD 5.67 at this link.
+
+{{ payment_link }}
+
+We'll send you the buyer's contact once payment is made.
