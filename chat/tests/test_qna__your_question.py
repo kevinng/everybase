@@ -1,4 +1,3 @@
-from chat.libraries.classes.context_logic import ContextLogic
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest, SupplyAvailabilityOption
 from chat.libraries.utilities.get_payment_link import get_payment_link
