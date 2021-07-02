@@ -1,58 +1,19 @@
-from relationships import models as relmods
-
+import pytz, datetime
+from everybase.settings import TIME_ZONE
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
+from chat.libraries.classes.context_logic import ContextLogic
 
 class Handler(MessageHandler):
-    def _get_match_id(self):
-        if not hasattr(self, '_match_id') or self._match_id is None:
-            # Lazy-instantiate, once-only
-            self._match_id = self.get_latest_value(
-                intents.QNA,
-                messages.YOUR_QUESTION,
-                datas.QNA__YOUR_QUESTION__MATCH_ID__ID,
-                False
-            ).value_id
-        
-        return self._match_id
-
-    def _get_match(self):
-        if not hasattr(self, '_match') or self._match is None:
-            self._match = relmods.Match.objects.get(pk=self._get_match_id())
-
-        return self._match
-
-    def _get_answer_thank_you_params(self):
-        buying = self._get_buying_boolean()
-        match = self._get_match()
-        params = {
-            'initial': True,
-            'buying': buying
-        }
-
-        if buying:
-            params['supply'] = match.supply
-        else:
-            params['demand'] = match.demand
-
-        return params
-
-    def _get_buying_boolean(self):
-        match = relmods.Match.objects.get(pk=self._get_match_id())
-        if match.supply.user == self.message.from_user:
-            # User is seller
-            return False
-        elif match.demand.user == self.message.from_user:
-            # User is buyer
-            return True
-        return None
-
     def run(self):
-        # Save user input without validation
-        self.save_body_as_string(datas.\
-            QNA__ANSWER__INPUT__STRING)
-        return self.done_reply(
-            intents.QNA,
-            messages.ANSWER__THANK_YOU,
-            self._get_answer_thank_you_params()
-        )
+        self.save_body_as_string(datas.ANSWER)
+
+        # Update QNA
+        logic = ContextLogic(self)
+        sgtz = pytz.timezone(TIME_ZONE)
+        qna = logic.get_qna()
+        qna.answered = datetime.datetime.now(tz=sgtz)
+        qna.save()
+
+        self.params['initial'] = True
+        return self.done_reply(intents.QNA, messages.QNA__THANK_YOU)
