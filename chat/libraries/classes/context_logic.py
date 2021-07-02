@@ -8,7 +8,7 @@ from everybase import settings
 from relationships import models as relmods
 from payments import models as paymods
 
-from chat.libraries.constants import messages, datas
+from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 from chat.libraries.utilities.sort_users import sort_users
 
@@ -74,12 +74,28 @@ class ContextLogic():
         ).value_string
 
     def is_buying(self) -> bool:
-        """Returns True is user is buying, False otherwise."""
-        match = self.get_match()
-        if match.supply.user == self.message_handler.message.from_user:
-            return False
+        """Returns True is user is buying, False otherwise. Return None if we're
+        not able to ascertain if the user is buying or selling.
+        
+        To do so, we'll first attempt to get the match the user is currently
+        involved in via the get_match function.
 
-        return True
+        If it returns None, we'll then attempt to ascertain if the user is
+        buying or selling from the context.
+        """
+        match = self.get_match()
+        if match is not None:
+            if match.supply.user == self.message_handler.message.from_user:
+                return False
+        else:
+            intent_key = self.message_handler.intent_key
+            if intent_key == intents.NEW_SUPPLY or \
+                intent_key == intents.DISCUSS_W_BUYER:
+                return False
+            elif intent_key == intents.NEW_DEMAND or \
+                intent_key == intents.DISCUSS_W_SELLER:
+                return True
+        return None
 
     def is_connected(self) -> bool:
         """Returns True if user is connected with the counter-party, False
