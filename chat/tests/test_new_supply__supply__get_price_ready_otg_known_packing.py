@@ -16,7 +16,6 @@ class NewSupplyGetPriceReadyOTGKnownPackingTest(MessageHandlerTest):
             messages.SUPPLY__THANK_YOU
         )
         self.assert_value(
-            datas.\
-        NEW_SUPPLY__SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING__PRICE__STRING,
+            datas.PRICE,
             value_string=input
         )
