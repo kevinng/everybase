@@ -17,7 +17,7 @@ class SupplyConfirmPackingHandler(MessageHandler):
 
         self.add_option([('1', 0), ('yes', 0)],
             self.intent_key,
-            params_func=yes_message_key,
+            message_key_func=yes_message_key,
             data_key=datas.CONFIRM_PACKING,
             data_value=datas.CONFIRM_PACKING__YES)
         self.add_option([('2', 0), ('no', 0)],
