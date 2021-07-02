@@ -14,8 +14,7 @@ class NewSupplySupplyGetAvailabilityTest(MessageHandlerTest):
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-            datas.\
-            NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__INVALID_CHOICE__STRING,
+            datas.INVALID_CHOICE,
             value_string=input
         )
 
@@ -32,9 +31,8 @@ class NewSupplySupplyGetAvailabilityTest(MessageHandlerTest):
             messages.SUPPLY__GET_COUNTRY_STATE_READY_OTG
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            value_string=\
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__READY_OTG
+            datas.AVAILABILITY,
+            value_string=datas.AVAILABILITY__READY_OTG
         )
 
     def test_choose_ready_otg_with_number(self):
@@ -53,9 +51,8 @@ class NewSupplySupplyGetAvailabilityTest(MessageHandlerTest):
             messages.SUPPLY__GET_COUNTRY_STATE_PRE_ORDER
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__CHOICE,
-            value_string=\
-            datas.NEW_SUPPLY__SUPPLY__GET_AVAILABILITY__AVAILABILITY__PRE_ORDER
+            datas.AVAILABILITY,
+            value_string=datas.AVAILABILITY__PRE_ORDER
         )
 
     def test_choose_preorder_with_number(self):
