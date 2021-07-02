@@ -42,3 +42,16 @@ class QNAAnswer_Selling_Test(QNAAnswerTest):
 
     def test_enter_answer(self):
         self._test_enter_answer('ANSWERING__SELLING__INITIAL')
+
+class QNAAnswer_MatchClosed_Test(QNAAnswerTest):
+    def setUp(self):
+        super().setUp()
+        self.setup_seller(closed=True)
+        self.setup_qna()
+
+    def test_enter_answer(self):
+        self.receive_reply_assert(
+            'Yes, we can.',
+            intents.MENU,
+            messages.MENU
+        )
