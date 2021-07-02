@@ -13,6 +13,6 @@ class NewDemandDemandGetProductTest(MessageHandlerTest):
             messages.DEMAND__GET_COUNTRY_STATE
         )
         self.assert_value(
-            datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             value_string=input
         )
