@@ -8,6 +8,9 @@ class Handler(MessageHandler):
     def run(self):
         self.save_body_as_string(datas.ANSWER)
 
+        if ContextLogic(self).get_match().closed is not None:
+            return self.done_reply(intents.MENU, messages.MENU)
+
         # Update QNA
         logic = ContextLogic(self)
         sgtz = pytz.timezone(TIME_ZONE)
