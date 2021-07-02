@@ -1,3 +1,5 @@
+# todo: good to go
+
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest
 
@@ -17,7 +19,7 @@ class QNAStopDiscussionThankYouTest(MessageHandlerTest):
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-            datas.QNA__STOP_DISCUSSION__THANK_YOU__INVALID_CHOICE__STRING,
+            datas.INVALID_CHOICE,
             value_string=input
         )
 
@@ -34,15 +36,15 @@ class QNAStopDiscussionThankYouTest(MessageHandlerTest):
             messages.SUPPLY__GET_PRODUCT
         )
         self.assert_value(
-            datas.MENU__MENU__OPTION__CHOICE,
-            value_string=datas.MENU__MENU__OPTION__FIND_BUYER
+            datas.MENU,
+            value_string=datas.MENU__FIND_BUYERS
         )
 
     def test_choose_new_supply_with_number(self):
         self.choose_new_supply('1')
 
     def test_choose_new_supply_with_text(self):
-        self.choose_new_supply('find buyers')
+        self.choose_new_supply('buyers')
 
     def choose_new_demand(self, input):
         self.receive_reply_assert(
@@ -51,15 +53,15 @@ class QNAStopDiscussionThankYouTest(MessageHandlerTest):
             messages.DEMAND__GET_PRODUCT
         )
         self.assert_value(
-            datas.MENU__MENU__OPTION__CHOICE,
-            value_string=datas.MENU__MENU__OPTION__FIND_SELLER
+            datas.MENU,
+            value_string=datas.MENU__FIND_SELLERS
         )
 
     def test_choose_new_demand_with_number(self):
         self.choose_new_demand('2')
 
     def test_choose_new_demand_with_text(self):
-        self.choose_new_demand('find sellers')
+        self.choose_new_demand('sellers')
 
     def test_learn_more(self):
         self.receive_reply_assert(
@@ -68,6 +70,6 @@ class QNAStopDiscussionThankYouTest(MessageHandlerTest):
             messages.EXPLAIN_SERVICE
         )
         self.assert_value(
-            datas.MENU__MENU__OPTION__CHOICE,
-            value_string=datas.MENU__MENU__OPTION__LEARN_MORE
+            datas.MENU,
+            value_string=datas.MENU__LEARN_MORE
         )
