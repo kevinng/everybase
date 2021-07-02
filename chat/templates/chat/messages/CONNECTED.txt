@@ -6,18 +6,3 @@ You've connected with the {% if buying == True %}seller{% elif buying == False %
 
 Click this link to WhatsApp {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}:
 {{ whatsapp_url }}
-
-*{% if buying == True %}Supply{% elif buying == False %}Demand{% endif %} details*:
-
-{{ lead_details }}
-
-*Your questions & {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}'s answers*:
-
-{% for pair in qna_pairs %}
-{% if pair.asking %}
-*You*: {{ pair.question }}
-*{% if buying == True %}Seller{% elif buying == False %}Buyer{% endif %}*: {{ pair.answer }}
-{% else %}
-*{% if buying == True %}Seller{% elif buying == False %}Buyer{% endif %}*: {{ pair.question }}
-*You*: {{ pair.answer }}
-{% endif %}
