@@ -14,7 +14,7 @@ class ExplainService__ExplainService__Test(MessageHandlerTest):
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-            datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__INVALID_OPTION__STRING,
+            datas.INVALID_CHOICE,
             value_string=input
         )
 
@@ -31,9 +31,8 @@ class ExplainService__ExplainService__Test(MessageHandlerTest):
             messages.SUPPLY__GET_PRODUCT
         )
         self.assert_value(
-            datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__CHOICE,
-            value_string=\
-                datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__FIND_BUYER
+            datas.MENU,
+            value_string=datas.MENU__FIND_BUYERS
         )
 
     def test_choose_new_supply_with_number(self):
@@ -49,9 +48,8 @@ class ExplainService__ExplainService__Test(MessageHandlerTest):
             messages.DEMAND__GET_PRODUCT
         )
         self.assert_value(
-            datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__CHOICE,
-            value_string=\
-                datas.EXPLAIN_SERVICE__EXPLAIN_SERVICE__OPTION__FIND_SELLER
+            datas.MENU,
+            value_string=datas.MENU__FIND_SELLERS
         )
 
     def test_choose_new_demand_with_number(self):
