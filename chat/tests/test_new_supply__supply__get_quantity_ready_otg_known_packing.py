@@ -9,11 +9,11 @@ class NewSupplySupplyGetQuantityReadyOTGKnownPackingTest(MessageHandlerTest):
         )
         # Set up a product, and have user enter a search phrase that matches
         # this product exactly
-        _, _, kw = self.set_up_product_type(uom_name='Carton')
-        self.set_up_data_value(
+        _, _, kw = self.setup_product_type(uom_name='Carton')
+        self.setup_data_value(
             intents.NEW_SUPPLY,
             messages.SUPPLY__GET_PRODUCT,
-            datas.NEW_SUPPLY__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             kw.keyword
         )
     
@@ -25,7 +25,6 @@ class NewSupplySupplyGetQuantityReadyOTGKnownPackingTest(MessageHandlerTest):
             messages.SUPPLY__GET_PRICE_READY_OTG_KNOWN_PACKING
         )
         self.assert_value(
-            datas.\
-    NEW_SUPPLY__SUPPLY__GET_QUANTITY_READY_OTG_KNOWN_PACKING__QUANTITY__STRING,
+            datas.QUANTITY,
             value_string=input
         )
