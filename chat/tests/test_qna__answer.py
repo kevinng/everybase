@@ -20,7 +20,10 @@ class QNAAnswerTest(MessageHandlerTest):
             target_body_variation_key=target_body_variation_key
         )
         self.assert_value(datas.ANSWER, value_string=input)
-        self.assertNotEqual(self.qna.answered, None)
+        qna = self.user.current_qna
+        self.assertNotEqual(qna.answered, None)
+        self.assertNotEqual(qna.answerer, None)
+        self.assertNotEqual(qna.questioner, None)
 
 class QNAAnswer_Buying_Test(QNAAnswerTest):
     def setUp(self):
