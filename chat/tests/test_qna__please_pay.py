@@ -91,3 +91,16 @@ class QNAPleasePay_NotAnsweredNoFollowUpQuestion_Selling_Test(QNAPleasePayTest):
             messages.YOUR_QUESTION,
             target_body_variation_key='SELLING'
         )
+
+class QNAPleasePay_MatchClosed_Test(QNAPleasePayTest):
+    def setUp(self):
+        super().setUp()
+        self.setup_seller(closed=True)
+        self.setup_qna()
+
+    def test_stray_input(self):
+        self.receive_reply_assert(
+            'Yes, we can.',
+            intents.MENU,
+            messages.MENU
+        )
