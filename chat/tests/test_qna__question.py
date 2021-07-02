@@ -1,3 +1,4 @@
+from chat.tests.test_qna__answer import QNAAnswerTest
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest, \
     SupplyAvailabilityOption
@@ -11,15 +12,14 @@ class QNAQuestionTest(MessageHandlerTest):
 
     def setUp(self):
         super().setUp(intents.QNA, messages.QUESTION)
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
-        self.setup_qna(answered=True)
 
-    def test_enter_question(self):
+    def _test_enter_answer(self, target_body_variation_key: str):
         input = 'Can you do OEM?'
         self.receive_reply_assert(
             input,
             intents.QNA,
-            messages.QUESTION__THANK_YOU
+            messages.QNA__THANK_YOU,
+            target_body_variation_key=target_body_variation_key
         )
         self.assert_value(
             datas.QUESTION,
@@ -29,3 +29,21 @@ class QNAQuestionTest(MessageHandlerTest):
         self.assertNotEqual(qna.asked, None)
         self.assertNotEqual(qna.answerer, None)
         self.assertNotEqual(qna.questioner, None)
+
+class QNAQuestion_Buying_Test(QNAAnswerTest):
+    def setUp(self):
+        super().setUp()
+        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_qna(answered=True)
+
+    def test_enter_question(self):
+        self._test_enter_answer('QUESTIONING__BUYING__INITIAL')
+
+class QNAQuestion_Buying_Test(QNAAnswerTest):
+    def setUp(self):
+        super().setUp()
+        self.setup_seller()
+        self.setup_qna(answered=True)
+
+    def test_enter_question(self):
+        self._test_enter_answer('QUESTIONING__SELLING__INITIAL')
