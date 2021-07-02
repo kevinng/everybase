@@ -13,6 +13,6 @@ class DiscussWBuyerSupplyGetProductTest(MessageHandlerTest):
             messages.SUPPLY__GET_AVAILABILITY
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             value_string=input
         )
