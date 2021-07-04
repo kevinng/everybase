@@ -12,11 +12,11 @@ class NewDemandGetQuantityKnownProductTest(MessageHandlerTest):
         # a previous step. Plural name is used in response template body of a
         # yes outcome.
         # Note: we're not performing numeric validation for now
-        _, _, kw = self.set_up_product_type(uom_name='jar')
-        self.set_up_data_value(
+        _, _, kw = self.setup_product_type(uom_name='jar')
+        self.setup_data_value(
             intents.NEW_DEMAND,
             messages.DEMAND__GET_PRODUCT,
-            datas.NEW_DEMAND__DEMAND__GET_PRODUCT__PRODUCT_TYPE__STRING,
+            datas.PRODUCT,
             kw.keyword
         )
 
@@ -28,8 +28,7 @@ class NewDemandGetQuantityKnownProductTest(MessageHandlerTest):
             messages.DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE
         )
         self.assert_value(
-            datas.\
-        NEW_DEMAND__DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE__QUANTITY__STRING,
+            datas.QUANTITY,
             target
         )
 
