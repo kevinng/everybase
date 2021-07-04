@@ -16,7 +16,6 @@ class DiscussWSellerGetQuantityUnknownProductTest(MessageHandlerTest):
             messages.DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE
         )
         self.assert_value(
-            datas.\
-DISCUSS_W_SELLER__DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE__QUANTITY__STRING,
+            datas.QUANTITY,
             value_string=input
         )
