@@ -13,6 +13,6 @@ class NewSupplyGetPricePreOrderTest(MessageHandlerTest):
             messages.SUPPLY__GET_DEPOSIT
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__GET_PRICE_PREORDER__PRICE__STRING,
+            datas.PRICE,
             value_string=input
         )
