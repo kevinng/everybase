@@ -21,7 +21,7 @@ class NewSupplySupplyGetDepositTestCase(MessageHandlerTest):
             messages.SUPPLY__GET_ACCEPT_LC
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__GET_DEPOSIT__DEPOSIT__NUMBER,
+            datas.DEPOSIT,
             value_float=target
         )
 
