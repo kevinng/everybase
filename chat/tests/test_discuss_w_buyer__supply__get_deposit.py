@@ -21,7 +21,7 @@ class DiscussWBuyerSupplyGetDepositTestCase(MessageHandlerTest):
             messages.SUPPLY__GET_ACCEPT_LC
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_DEPOSIT__DEPOSIT__NUMBER,
+            datas.DEPOSIT,
             value_float=target
         )
 
