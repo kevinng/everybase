@@ -24,12 +24,12 @@ class DiscussWBuyerSupplyGetAcceptLCTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__THANK_YOU
+            messages.DISCUSS__ASK,
+            target_body_variation_key='SELLING' # We only need test as seller
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__YES
+            datas.ACCEPT_LC,
+            value_string=datas.ACCEPT_LC__YES
         )
     
     def test_choose_yes_with_number(self):
@@ -42,12 +42,12 @@ class DiscussWBuyerSupplyGetAcceptLCTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__THANK_YOU
+            messages.DISCUSS__ASK,
+            target_body_variation_key='SELLING' # We only need test as seller
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
-            value_string=\
-                datas.DISCUSS_W_BUYER__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__NO
+            datas.ACCEPT_LC,
+            value_string=datas.ACCEPT_LC__NO
         )
 
     def test_choose_no_with_number(self):
