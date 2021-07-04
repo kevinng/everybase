@@ -14,6 +14,6 @@ class DiscussWBuyerGetPricePreOrderTest(MessageHandlerTest):
             messages.SUPPLY__GET_DEPOSIT
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRICE_PREORDER__PRICE__STRING,
+            datas.PRICE,
             value_string=input
         )
