@@ -27,8 +27,8 @@ class NewSupplySupplyGetAcceptLCTest(MessageHandlerTest):
             messages.SUPPLY__THANK_YOU
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
-            value_string=datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__YES
+            datas.ACCEPT_LC,
+            value_string=datas.ACCEPT_LC__YES
         )
     
     def test_choose_yes_with_number(self):
@@ -44,8 +44,8 @@ class NewSupplySupplyGetAcceptLCTest(MessageHandlerTest):
             messages.SUPPLY__THANK_YOU
         )
         self.assert_value(
-            datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__CHOICE,
-            value_string=datas.NEW_SUPPLY__SUPPLY__GET_ACCEPT_LC__ACCEPT_LC__NO
+            datas.ACCEPT_LC,
+            value_string=datas.ACCEPT_LC__NO
         )
 
     def test_choose_no_with_number(self):
