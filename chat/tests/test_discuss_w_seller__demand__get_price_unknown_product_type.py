@@ -13,9 +13,9 @@ class DiscussWSellerGetPriceUnknownProductTypeTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_SELLER,
-            messages.DEMAND__THANK_YOU
+            messages.DISCUSS__ASK
         )
         self.assert_value(
-datas.DISCUSS_W_SELLER__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE__PRICE__STRING,
+            datas.PRICE,
             value_string=input
         )
