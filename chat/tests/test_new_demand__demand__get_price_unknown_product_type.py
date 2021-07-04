@@ -16,7 +16,6 @@ class NewDemandGetPriceUnknownProductTypeTest(MessageHandlerTest):
             messages.DEMAND__THANK_YOU
         )
         self.assert_value(
-            datas.\
-            NEW_DEMAND__DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE__PRICE__STRING,
+            datas.PRICE,
             value_string=input
         )
