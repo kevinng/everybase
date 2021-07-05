@@ -1,4 +1,4 @@
-Are you still interested in {{ demand.product_type.name|lower }}?
+Are you still interested {% if buying == True %}in{% elif buying == False%}to supply{% endif %} {{ demand.product_type.name|lower }}?
 
 *Reply*:
 1. Yes
