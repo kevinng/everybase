@@ -44,14 +44,14 @@ class DiscussWSellerStillInterestedConfirmTest(MessageHandlerTest):
             datas.STILL_INTERESTED,
             value_string=datas.STILL_INTERESTED__YES
         )
-        # self.assertNotEqual(
-        #     self.user.current_match.buyer_still_interested,
-        #     None
-        # )
-        # self.assertNotEqual(
-        #     self.user.current_match.buyer_still_interested_value,
-        #     None
-        # )
+        self.assertNotEqual(
+            self.user.current_match.buyer_still_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_still_interested_value,
+            None
+        )
     
     def test_choose_yes_with_number(self):
         self.choose_yes('1')

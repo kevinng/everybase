@@ -1,22 +1,12 @@
-from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler import MessageHandler
+from chat import models
+from chat.libraries.constants import messages
+from chat.libraries.sub_classes.message_handlers.\
+    discuss__confirm_details_handler import \
+    DiscussConfirmDetailsHandler
 
-class Handler(MessageHandler):
-    def _get_discuss_ask_params(self):
-        return {'buying': True}
+class Handler(DiscussConfirmDetailsHandler):
+    def __init__(self, message: models.TwilioInboundMessage, intent_key: str,
+        message_key: str):
+        super().__init__(message, intent_key, message_key)
 
-    def run(self):
-        self.add_option([('1', 0), ('yes', 0)],
-            intents.DISCUSS_W_BUYER,
-            messages.DISCUSS__ASK, self._get_discuss_ask_params,
-            datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS__CHOICE,
-            datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS__YES
-        )
-        self.add_option([('2', 0), ('no', 0)],
-            intents.DISCUSS_W_BUYER,
-            messages.DEMAND__GET_COUNTRY_STATE, None,
-            datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS__CHOICE,
-            datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS__NO
-        )
-        return self.reply_option(
-    datas.DISCUSS_W_BUYER__DISCUSS__CONFIRM_DETAILS__INVALID_CHOICE__STRING)
+        self._no_message_key = messages.SUPPLY__GET_AVAILABILITY

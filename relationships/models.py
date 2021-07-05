@@ -151,7 +151,7 @@ def get_user_key(length=_USER_KEY_LENGTH):
 class User(Standard):
     """User details.
 
-    Last updated: 15 May 2021, 4:34 PM
+    Last updated: 1 July 2021, 5:57 PM
     """
 
     key = models.CharField(
@@ -186,6 +186,25 @@ class User(Standard):
         'Email',
         related_name='user',
         related_query_name='user',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    current_match = models.ForeignKey(
+        'Match',
+        related_name='users_w_this_as_current_match',
+        related_query_name='users_w_this_as_current_match',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    current_qna = models.ForeignKey(
+        'QuestionAnswerPair',
+        related_name='users_w_this_as_current_qna',
+        related_query_name='users_w_this_as_current_qna',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -590,6 +609,46 @@ class Match(Choice):
         related_name='matches_w_this_seller_confirmed_details_correct_value',
         related_query_name=\
             'matches_w_this_seller_confirmed_details_correct_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    buyer_confirmed_still_interested = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buyer_still_interested = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buyer_still_interested_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='matches_w_this_buyer_still_interested_value',
+        related_query_name='matches_w_this_buyer_still_interested_value',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    seller_confirmed_still_interested = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    seller_still_interested = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    seller_still_interested_value = models.ForeignKey(
+        'chat.MessageDataValue',
+        related_name='matches_w_this_seller_still_interested_value',
+        related_query_name='matches_w_this_seller_still_interested_value',
         null=True,
         blank=True,
         on_delete=models.PROTECT,

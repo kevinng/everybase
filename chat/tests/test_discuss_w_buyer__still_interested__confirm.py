@@ -15,8 +15,6 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
         )
         self.setup_seller()
 
-        # We need to test still interested timestamp and value
-
     def choose_non_choice(self, input):
         self.receive_reply_assert(
             input,

@@ -6,10 +6,11 @@ class StillInterestedConfirmParameterizer(MessageParameterizer):
         logic = ContextLogic(self.message_handler)
         
         buying = logic.is_buying()
+        match = logic.get_match()
         params = { 'buying': buying }
         if buying:
-            params['demand'] = logic.get_match().demand
+            params['demand'] = match.demand
         else:
-            params['supply'] = logic.get_match().supply
+            params['supply'] = match.supply
 
         return params

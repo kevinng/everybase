@@ -47,7 +47,7 @@ class ContextLogic():
         if match.supply.user == self.message_handler.message.from_user:
             return match.demand.user
         
-        return match.demand.user
+        return match.supply.user
 
     def get_product_type(self) -> relmods.ProductType:
         if self.is_buying():
@@ -87,7 +87,7 @@ class ContextLogic():
         if match is not None:
             if match.supply.user == self.message_handler.message.from_user:
                 return False
-            else:
+            elif match.demand.user == self.message_handler.message.from_user:
                 return True
         else:
             intent_key = self.message_handler.intent_key
@@ -147,8 +147,8 @@ class ContextLogic():
         return a formatted WhatsApp URL."""
         whatsapp = relmods.PhoneNumberType.objects.get(id=1)
 
-        hash = relmods.PhoneNumberHash.objects.get_or_create(
-            user=self.message.from_user,
+        hash, _ = relmods.PhoneNumberHash.objects.get_or_create(
+            user=self.message_handler.message.from_user,
             phone_number_type=whatsapp,
             phone_number=self.get_counter_party().phone_number)
 

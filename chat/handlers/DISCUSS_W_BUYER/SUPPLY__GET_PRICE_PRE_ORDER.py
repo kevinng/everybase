@@ -1,13 +1,6 @@
-from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler import MessageHandler
+from chat.libraries.sub_classes.message_handlers.\
+    supply__get_price_pre_order_handler import \
+    SupplyGetPricePreOrderHandler
 
-class Handler(MessageHandler):
-    def run(self):
-        # Save user input without validation
-        self.save_body_as_string(
-            datas.DISCUSS_W_BUYER__SUPPLY__GET_PRICE_PREORDER__PRICE__STRING)
-
-        return self.done_reply(
-            intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_DEPOSIT
-        )
+class Handler(SupplyGetPricePreOrderHandler):
+    pass

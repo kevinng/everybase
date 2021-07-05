@@ -28,16 +28,17 @@ class Handler(MessageHandler):
 
         self.save_body_as_string(datas.STRAY_INPUT)
         logic = ContextLogic(self)
+        answered = logic.is_answered()
         if logic.is_answering():
-            if logic.is_answered():
+            if answered == True:
                 self.params['initial'] = False
                 return self.done_reply(intents.QNA, messages.QNA__THANK_YOU)
-            else:
+            elif answered == False:
                 return self.done_reply(intents.QNA, messages.YOUR_QUESTION)
         elif not logic.is_answering():
-            if logic.is_answered():
+            if answered == True:
                 return self.done_reply(intents.QNA, messages.YOUR_ANSWER)
-            else:
+            elif answered == False:
                 self.params['initial'] = False
                 return self.done_reply(intents.QNA, messages.QNA__THANK_YOU)
 

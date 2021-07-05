@@ -3,11 +3,7 @@ from chat.libraries.classes.message_handler import MessageHandler
 
 class Handler(MessageHandler):
     def run(self):
-        # Save user input without validation
-        self.save_body_as_string(datas.\
-        DISCUSS_W_SELLER__DEMAND__GET_PRICE_KNOWN_PRODUCT_TYPE__PRICE__STRING)
-
+        self.save_body_as_string(datas.PRICE)
         return self.done_reply(
             intents.DISCUSS_W_SELLER,
-            messages.DEMAND__THANK_YOU
-        )
+            messages.DISCUSS__ASK)

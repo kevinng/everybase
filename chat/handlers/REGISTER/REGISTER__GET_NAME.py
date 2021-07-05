@@ -8,5 +8,4 @@ class Handler(MessageHandler):
         user.name = self.message.body.strip()
         user.save()
         
-        # Menu
-        return self.done_reply(intents.MENU, messages.MENU, {'name': user.name})
+        return self.done_reply(intents.MENU, messages.MENU)

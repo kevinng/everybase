@@ -1,6 +1,6 @@
 *Your {% if buying == True %}demand{% elif buying == False %}supply{% endif %}*:
 
-{% include 'chat/messages/includes/lead_details.txt' %}
+{% include 'chat/messages/includes/lead_details.txt' with buying=flipped_buying %}
 
 *Are your {% if buying == True %}demand{% elif buying == False %}supply{% endif %} details correct?*
 1. Yes

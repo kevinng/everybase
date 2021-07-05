@@ -1,13 +1,6 @@
-from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler import MessageHandler
+from chat.libraries.sub_classes.message_handlers.\
+    supply__get_quantity_ready_otg_unknown_packing import \
+    SupplyGetQuantityReadyOTGUnknownPackingHandler
 
-class Handler(MessageHandler):
-    def run(self):
-        # Save user input without validation
-        self.save_body_as_string(datas.\
-DISCUSS_W_BUYER__SUPPLY__GET_QUANTITY_READY_OTG_UNKNOWN_PACKING__QUANTITY__STRING)
-
-        return self.done_reply(
-            intents.DISCUSS_W_BUYER,
-            messages.SUPPLY__GET_PRICE_READY_OTG_UNKNOWN_PACKING
-        )
+class Handler(SupplyGetQuantityReadyOTGUnknownPackingHandler):
+    pass
