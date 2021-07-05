@@ -5,8 +5,7 @@ class DiscussWBuyerDiscussAlreadyConnectedTest(MessageHandlerTest):
     def setUp(self):
         super().setUp(
             intents.DISCUSS_W_BUYER,
-            messages.DISCUSS__ALREADY_CONNECTED,
-            name='Kevin Ng'
+            messages.DISCUSS__ALREADY_CONNECTED
         )
 
     def test_any_input(self):
@@ -17,6 +16,6 @@ class DiscussWBuyerDiscussAlreadyConnectedTest(MessageHandlerTest):
             messages.MENU
         )
         self.assert_value(
-    datas.DISCUSS_W_BUYER__DISCUSS__ALREADY_CONNECTED__INVALID_CHOICE__STRING,
+            datas.STRAY_INPUT,
             target
         )
