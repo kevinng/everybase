@@ -12,8 +12,6 @@ from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 from chat.libraries.utilities.sort_users import sort_users
 
-import sentry_sdk
-
 class ContextLogic():
     """Business logic to a context (i.e., a unique intent/message pair).
     """
@@ -87,12 +85,6 @@ class ContextLogic():
         """
         match = self.get_match()
         if match is not None:
-            if match.supply.user is None or \
-                self.message_handler.message.from_user is None:
-                sentry_sdk.capture_message('Both match.supply.user and \
-self.message_handler.message.from_user are None, unable to compute is_buying.')
-                return None
-
             if match.supply.user == self.message_handler.message.from_user:
                 return False
             else:
