@@ -24,11 +24,11 @@ class DiscussWBuyerDiscussConfirmInterestTest(MessageHandlerTest):
             messages.DISCUSS__CONFIRM_INTEREST
         )
 
-class DiscussWBuyerDiscussConfirmInterestTest_No_Buying_Test(
+class DiscussWBuyerDiscussConfirmInterestTest_No_Test(
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
 
     def choose_no(self, input):
         self.receive_reply_assert(
@@ -52,7 +52,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_Yes_OTG_Test(
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -76,7 +76,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_Yes_PreOrderDeadline_
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller(SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
+        self.setup_user_lead(False, SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -100,7 +100,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_Yes_PreOrderDuration_
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller(SupplyAvailabilityOption.PRE_ORDER_DURATION)
+        self.setup_user_lead(False, SupplyAvailabilityOption.PRE_ORDER_DURATION)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -124,7 +124,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_Test(
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
         connect(self.user, self.user_2)
 
     def choose_yes(self, input):
