@@ -1,12 +1,19 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.message_handler_test import MessageHandlerTest, SupplyAvailabilityOption
 
 class DiscussWSellerStillInterestedConfirmTest(MessageHandlerTest):
+    fixtures = [
+        'setup/common__country.json',
+        'setup/20210528__payments__currency.json',
+        'setup/20210527__relationships__availability.json'
+    ]
+
     def setUp(self):
         super().setUp(
             intents.DISCUSS_W_SELLER,
             messages.STILL_INTERESTED__CONFIRM
         )
+        self.setup_buyer(SupplyAvailabilityOption.OTG)
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
@@ -17,10 +24,9 @@ class DiscussWSellerStillInterestedConfirmTest(MessageHandlerTest):
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-    datas.DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM__INVALID_CHOICE__STRING,
+            datas.INVALID_CHOICE,
             value_string=input
         )
-
 
     def test_choose_non_choice_with_number(self):
         self.choose_non_choice('10')
@@ -35,9 +41,17 @@ class DiscussWSellerStillInterestedConfirmTest(MessageHandlerTest):
             messages.STILL_INTERESTED__THANK_YOU
         )
         self.assert_value(
-            datas.DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM__CHOICE,
-            value_string=datas.DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM__YES
+            datas.STILL_INTERESTED,
+            value_string=datas.STILL_INTERESTED__YES
         )
+        # self.assertNotEqual(
+        #     self.user.current_match.buyer_still_interested,
+        #     None
+        # )
+        # self.assertNotEqual(
+        #     self.user.current_match.buyer_still_interested_value,
+        #     None
+        # )
     
     def test_choose_yes_with_number(self):
         self.choose_yes('1')
@@ -52,8 +66,16 @@ class DiscussWSellerStillInterestedConfirmTest(MessageHandlerTest):
             messages.STILL_INTERESTED__THANK_YOU
         )
         self.assert_value(
-            datas.DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM__CHOICE,
-            value_string=datas.DISCUSS_W_SELLER__STILL_INTERESTED__CONFIRM__NO
+            datas.STILL_INTERESTED,
+            value_string=datas.STILL_INTERESTED__NO
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_still_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_still_interested_value,
+            None
         )
 
     def test_choose_no_with_number(self):
