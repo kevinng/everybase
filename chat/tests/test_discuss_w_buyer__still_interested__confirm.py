@@ -1,11 +1,12 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.message_handler_test import MessageHandlerTest, SupplyAvailabilityOption
 
 class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',
-        'setup/20210527__relationships__availability.json'
+        'setup/20210527__relationships__availability.json',
+        'setup/20210527__relationships__phonenumbertype.json'
     ]
 
     def setUp(self):
@@ -13,7 +14,7 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
             intents.DISCUSS_W_BUYER,
             messages.STILL_INTERESTED__CONFIRM
         )
-        self.setup_seller()
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
