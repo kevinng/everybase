@@ -1,12 +1,19 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.message_handler_test import MessageHandlerTest, SupplyAvailabilityOption
 
 class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
+    fixtures = [
+        'setup/common__country.json',
+        'setup/20210528__payments__currency.json',
+        'setup/20210527__relationships__availability.json'
+    ]
+    
     def setUp(self):
         super().setUp(
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_DETAILS
         )
+        self.setup_buyer(SupplyAvailabilityOption.OTG)
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
@@ -17,7 +24,7 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-    datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__INVALID_CHOICE__STRING,
+            datas.INVALID_CHOICE,
             value_string=input
         )
         
@@ -34,8 +41,8 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
             messages.DISCUSS__ASK
         )
         self.assert_value(
-            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__CHOICE,
-            value_string=datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__YES
+            datas.CONFIRM_DETAILS,
+            value_string=datas.CONFIRM_DETAILS__YES
         )
     
     def test_choose_yes_with_number(self):
@@ -48,11 +55,11 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
         self.receive_reply_assert(
             input,
             intents.DISCUSS_W_SELLER,
-            messages.DEMAND__GET_COUNTRY_STATE
+            messages.DEMAND__GET_PRODUCT
         )
         self.assert_value(
-            datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__CHOICE,
-            value_string=datas.DISCUSS_W_SELLER__DISCUSS__CONFIRM_DETAILS__NO
+            datas.CONFIRM_DETAILS,
+            value_string=datas.CONFIRM_DETAILS__NO
         )
 
     def test_choose_no_with_number(self):
