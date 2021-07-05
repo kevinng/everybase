@@ -16,6 +16,6 @@ class DiscussWBuyerDiscussAskTest(MessageHandlerTest):
             messages.DISCUSS__THANK_YOU
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__DISCUSS__ASK__QUESTION__STRING,
+            datas.QUESTION,
             value_string=input
         )
