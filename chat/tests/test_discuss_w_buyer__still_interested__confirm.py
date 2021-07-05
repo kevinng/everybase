@@ -2,11 +2,20 @@ from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest
 
 class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
+    fixtures = [
+        'setup/common__country.json',
+        'setup/20210528__payments__currency.json',
+        'setup/20210527__relationships__availability.json'
+    ]
+
     def setUp(self):
         super().setUp(
             intents.DISCUSS_W_BUYER,
             messages.STILL_INTERESTED__CONFIRM
         )
+        self.setup_seller()
+
+        # We need to test still interested timestamp and value
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
@@ -17,7 +26,7 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
         self.assert_value(
-        datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__INVALID_CHOICE__STRING,
+            datas.INVALID_CHOICE,
             value_string=input
         )
 
@@ -34,8 +43,16 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
             messages.STILL_INTERESTED__THANK_YOU
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__CHOICE,
-            value_string=datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__YES
+            datas.STILL_INTERESTED,
+            value_string=datas.STILL_INTERESTED__YES
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_still_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_still_interested_value,
+            None
         )
     
     def test_choose_yes_with_number(self):
@@ -51,8 +68,16 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
             messages.STILL_INTERESTED__THANK_YOU
         )
         self.assert_value(
-            datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__CHOICE,
-            value_string=datas.DISCUSS_W_BUYER__STILL_INTERESTED__CONFIRM__NO
+            datas.STILL_INTERESTED,
+            value_string=datas.STILL_INTERESTED__NO
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_still_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_still_interested_value,
+            None
         )
 
     def test_choose_no_with_number(self):
