@@ -63,13 +63,13 @@ def save_message(request):
 
     # Get users and phone numbers
 
-    from_raw_number = parse_twilio_phone_number(message.from_str)
+    _, from_raw_number = parse_twilio_phone_number(message.from_str)
     (from_phone_number, from_ph_is_new) = \
         get_or_create_phone_number(from_raw_number)
     (from_user, from_usr_is_new) = relmods.User.objects.\
         get_or_create(phone_number=from_phone_number)
 
-    to_raw_number = parse_twilio_phone_number(message.to_str)
+    _, to_raw_number = parse_twilio_phone_number(message.to_str)
     (to_phone_number, to_ph_is_new) = \
         get_or_create_phone_number(to_raw_number)
     (to_user, to_usr_is_new) = relmods.User.objects.\
