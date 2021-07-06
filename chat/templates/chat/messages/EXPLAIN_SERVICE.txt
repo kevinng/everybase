@@ -1,10 +1,6 @@
 Everybase helps you find sellers and buyers.
 
-We charge a small connection fee.
-
-When you select the option to connect with a seller/buyer we referred to you, you'd be sent a payment link.
-
-On making payment, you'd receive the contact for the seller/buyer.
+We charge an upfront connection fee and a commission fee on the sale.
 
 *Reply*:
 1. Find buyers

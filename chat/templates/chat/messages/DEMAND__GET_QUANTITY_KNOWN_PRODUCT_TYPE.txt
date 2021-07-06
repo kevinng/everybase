@@ -1,3 +1,3 @@
 {{ packing_description }}
 
-How many {{ packing_plural }} do you need?
+How many {{ packing_plural|lower }} do you need?

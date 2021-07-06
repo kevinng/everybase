@@ -39,13 +39,17 @@ def capture_demand(last_message):
 # ===== Start: Confirm-Interest =====
 
 @shared_task
-def send_confirm_interest(match):
+def send_confirm_interest(match, no_external_calls=False):
     """Send confirm-interest to both seller and buyer of a match
 
     Parameters
     ----------
     match
         Match we're working on
+    no_external_calls
+        If True, will not make external API calls - e.g., send Twilio WhatsApp
+        messages. Useful for automated testing, to ascertain model updates are
+        made correctly.
 
     Returns
     -------
@@ -56,7 +60,7 @@ def send_confirm_interest(match):
 @shared_task
 def re_capture_supply(match):
     """Re-capture supply for a match - following a user's indication that the
-    previous one was not accurate.
+    previous one was not correct.
 
     Parameters
     ----------
@@ -72,7 +76,7 @@ def re_capture_supply(match):
 @shared_task
 def re_capture_demand(match):
     """Re-capture demand for a match - following a user's indication that the
-    previous one was not accurate.
+    previous one was not correct.
 
     Parameters
     ----------
