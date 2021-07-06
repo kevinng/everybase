@@ -12,7 +12,8 @@ def send_message(
         to_ph: relmods.PhoneNumber,
         intent_key: str = None,
         message_key: str = None,
-        media_url: List[str] = None
+        media_url: List[str] = None,
+        no_external_calls: bool = False
     ):
     """Send Twilio WhatsApp message
 
@@ -30,16 +31,21 @@ def send_message(
         Message key of message's context
     media_url
         List of media URLs we're sending with this message
+    no_external_calls
+        If True, will not make external API calls - e.g., send Twilio WhatsApp
+        messages. Useful for automated testing, to ascertain model updates are
+        made correctly.
     """
     # Send message
-    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    message = client.messages.create(
-        body=body,
-        from_='whatsapp:+%s%s' % (from_ph.country_code,
-            from_ph.national_number),
-        to='whatsapp:+%s%s' % (to_ph.country_code, to_ph.national_number),
-        media_url=media_url
-    )
+    if no_external_calls == False:
+        client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+        message = client.messages.create(
+            body=body,
+            from_='whatsapp:+%s%s' % (from_ph.country_code,
+                from_ph.national_number),
+            to='whatsapp:+%s%s' % (to_ph.country_code, to_ph.national_number),
+            media_url=media_url
+        )
 
     # Log and return
     return models.TwilioOutboundMessage.objects.create(
