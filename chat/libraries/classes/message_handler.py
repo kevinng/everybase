@@ -8,9 +8,7 @@ from common import models as commods
 from chat.libraries.constants import datas, messages
 from chat.libraries.utilities.get_parameters import get_parameters
 from chat.libraries.utilities.get_latest_value import get_latest_value
-from chat.libraries.utilities.get_context import get_context
-from chat.libraries.utilities.start_context import start_context
-from chat.libraries.utilities.done_context import done_context
+from chat.libraries.utilities.done_to_context import done_to_context
 from chat.libraries.utilities.match import match
 from chat.libraries.utilities.render_message import render_message
 
@@ -396,24 +394,16 @@ class MessageHandler():
             intent_key: str,
             message_key: str
         ):
-        """Switch from the current context to the specified context. Set current
-        context's done time to now.
+        """Switch user's current context to the specified context
 
         Parameters
         ----------
         intent_key : string
-            Intent key as defined in intents.py for next context
+            Intent key for next context
         message_key : string
-            Message key as defined in messages.py for next context
+            Message key for next context
         """
-        # Get current context
-        now_intent_key, now_message_key = get_context(self.message.from_user)
-
-        # Done current context
-        done_context(self.message.from_user, now_intent_key, now_message_key)
-
-        # Start next context
-        start_context(self.message.from_user, intent_key, message_key)
+        done_to_context(self.message.from_user, intent_key, message_key)
 
     def save_value(
             self,
