@@ -32,7 +32,7 @@ class MessageParameterizer(ABC):
     @abstractmethod
     def run(self) -> dict:
         """Computes and returns parameters for its associated message template.
-        This method is designed to be overwrittened.
+        This method is designed to be overwritten.
 
         Returns
         -------
