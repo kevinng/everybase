@@ -1,27 +1,34 @@
-from sys import api_version
+from typing import List
 from everybase.settings import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 
 from chat import models
+from relationships import models as relmods
+
 from twilio.rest import Client
 
-def send_message(body, from_ph, to_ph, intent_key=None, message_key=None,
-    media_url=None):
+def send_message(
+        body: str,
+        from_ph: relmods.PhoneNumber,
+        to_ph: relmods.PhoneNumber,
+        intent_key: str = None,
+        message_key: str = None,
+        media_url: List[str] = None
+    ):
     """Send Twilio WhatsApp message
 
     Parameters
     ----------
-    body: String
+    body
         Message body
-    from_ph: relationships.PhoneNumber
-        Model reference of phone number from which we're sending this message
-        from
-    to_ph: relationships.PhoneNumber
-        Model reference of phone number to which we're sending this message to
-    intent_key: String, optional
-        Intent key of this message's context
-    message_key: String, optional
-        Message key of this message's context
-    media_url: String, optional
+    from_ph
+        Phone number we're sending this message from
+    to_ph
+        Phone number we're sending this message to
+    intent_key
+        Intent key of message's context
+    message_key
+        Message key of message's context
+    media_url
         List of media URLs we're sending with this message
     """
     # Send message
@@ -34,8 +41,8 @@ def send_message(body, from_ph, to_ph, intent_key=None, message_key=None,
         media_url=media_url
     )
 
-    # Log
-    models.TwilioOutboundMessage.objects.create(
+    # Log and return
+    return models.TwilioOutboundMessage.objects.create(
         intent_key=intent_key,
         message_key=message_key,
 
@@ -58,5 +65,3 @@ def send_message(body, from_ph, to_ph, intent_key=None, message_key=None,
         from_phone_number=from_ph,
         to_phone_number=to_ph
     )
-
-    return message.sid
