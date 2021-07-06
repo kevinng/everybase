@@ -10,7 +10,6 @@ class DiscussConfirmInterestParameterizer(MessageParameterizer):
             'name': self.message_handler.message.from_user.name,
             'buying': buying
         }
-        print(params)
         
         if buying:
             params['demand'] = lead

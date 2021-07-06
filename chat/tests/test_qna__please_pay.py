@@ -36,7 +36,7 @@ class QNAPleasePay_AnsweredNoFollowUpQuestion_Buying_Test(QNAPleasePayTest):
 
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
         self.setup_qna(answering=True, answered=True)
 
     def test_stray_input(self):
@@ -51,7 +51,7 @@ class QNAPleasePay_AnsweredNoFollowUpQuestion_Selling_Test(QNAPleasePayTest):
     question to the seller."""
     def setUp(self):
         super().setUp()
-        self.setup_seller()
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
         self.setup_qna(answering=True, answered=True)
 
     def test_stray_input(self):
@@ -67,7 +67,7 @@ class QNAPleasePay_NotAnsweredNoFollowUpQuestion_Buying_Test(QNAPleasePayTest):
 
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
         self.setup_qna(answering=True, answered=False)
 
     def test_stray_input(self):
@@ -82,7 +82,7 @@ class QNAPleasePay_NotAnsweredNoFollowUpQuestion_Selling_Test(QNAPleasePayTest):
     question to the seller."""
     def setUp(self):
         super().setUp()
-        self.setup_seller()
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
         self.setup_qna(answering=True, answered=False)
 
     def test_stray_input(self):
@@ -95,7 +95,7 @@ class QNAPleasePay_NotAnsweredNoFollowUpQuestion_Selling_Test(QNAPleasePayTest):
 class QNAPleasePay_MatchClosed_Test(QNAPleasePayTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller(closed=True)
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG, True)
         self.setup_qna()
 
     def test_stray_input(self):

@@ -37,11 +37,11 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             value_string=input
         )
 
-    # def test_choose_non_choice_with_number(self):
-    #     self.choose_non_choice('3')
+    def test_choose_non_choice_with_number(self):
+        self.choose_non_choice('3')
 
-    # def test_choose_non_choice_with_text(self):
-    #     self.choose_non_choice('hello')
+    def test_choose_non_choice_with_text(self):
+        self.choose_non_choice('hello')
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -54,11 +54,11 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             value_string=datas.CONFIRM_PACKING__YES
         )
 
-    # def test_choose_yes_with_number(self):
-    #     self.choose_yes('1')
+    def test_choose_yes_with_number(self):
+        self.choose_yes('1')
 
-    # def test_choose_yes_with_text(self):
-    #     self.choose_yes('yes')
+    def test_choose_yes_with_text(self):
+        self.choose_yes('yes')
 
     def choose_no(self, input):
         self.receive_reply_assert(
@@ -71,11 +71,11 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
             value_string=datas.CONFIRM_PACKING__NO
         )
 
-    # def test_choose_no_with_number(self):
-    #     self.choose_no('2')
+    def test_choose_no_with_number(self):
+        self.choose_no('2')
 
-    # def test_choose_no_with_text(self):
-    #     self.choose_no('no')
+    def test_choose_no_with_text(self):
+        self.choose_no('no')
 
 class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
     MessageHandlerTest):
@@ -107,11 +107,11 @@ class NewSupplySupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
 
-    # def test_choose_non_choice_with_number(self):
-    #     self.choose_non_choice('3')
+    def test_choose_non_choice_with_number(self):
+        self.choose_non_choice('3')
 
-    # def test_choose_non_choice_with_text(self):
-    #     self.choose_non_choice('hello')
+    def test_choose_non_choice_with_text(self):
+        self.choose_non_choice('hello')
 
     def choose_yes(self, input):
         self.receive_reply_assert(

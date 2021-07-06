@@ -46,6 +46,10 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
             value_string=datas.STILL_INTERESTED__YES
         )
         self.assertNotEqual(
+            self.user.current_match.seller_confirmed_still_interested,
+            None
+        )
+        self.assertNotEqual(
             self.user.current_match.seller_still_interested,
             None
         )
@@ -69,6 +73,10 @@ class DiscussWBuyerStillInterestedConfirmTest(MessageHandlerTest):
         self.assert_value(
             datas.STILL_INTERESTED,
             value_string=datas.STILL_INTERESTED__NO
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_still_interested,
+            None
         )
         self.assertNotEqual(
             self.user.current_match.seller_still_interested,

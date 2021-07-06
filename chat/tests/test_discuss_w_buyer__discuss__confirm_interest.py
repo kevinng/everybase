@@ -41,6 +41,18 @@ class DiscussWBuyerDiscussConfirmInterestTest_No_Test(
             datas.CONFIRM_INTEREST,
             value_string=datas.CONFIRM_INTEREST__NO
         )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest_value,
+            None
+        )
 
     def test_choose_no_with_number(self):
         self.choose_no('2')
@@ -64,6 +76,18 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_Yes_OTG_Test(
         self.assert_value(
             datas.CONFIRM_INTEREST,
             value_string=datas.CONFIRM_INTEREST__YES
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest_value,
+            None
         )
 
     def test_choose_yes_with_number(self):
@@ -89,6 +113,18 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_Yes_PreOrderDeadline_
             datas.CONFIRM_INTEREST,
             value_string=datas.CONFIRM_INTEREST__YES
         )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest_value,
+            None
+        )
 
     def test_choose_yes_with_number(self):
         self.choose_yes('1')
@@ -112,6 +148,18 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_Yes_PreOrderDuration_
         self.assert_value(
             datas.CONFIRM_INTEREST,
             value_string=datas.CONFIRM_INTEREST__YES
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest_value,
+            None
         )
 
     def test_choose_yes_with_number(self):
@@ -152,6 +200,18 @@ class DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_Test(
         self.assert_value(
             datas.CONFIRM_INTEREST,
             value_string=datas.CONFIRM_INTEREST__YES
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_interest_value,
+            None
         )
 
     def test_choose_yes_with_number(self):

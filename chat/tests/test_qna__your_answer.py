@@ -53,11 +53,20 @@ class QNAYourAnswerTest(MessageHandlerTest):
             target_body_variation_key=target_body_variation_key
         )
         self.assert_value(datas.QNA, value_string=datas.QNA__STOP_DISCUSSION)
+        self.assertTrue(
+            self.user.current_match.seller_stopped_discussion is not None or \
+            self.user.current_match.buyer_stopped_discussion is not None
+        )
+        self.assertTrue(
+            self.user.current_match.seller_stopped_discussion_value is not None or \
+            self.user.current_match.buyer_stopped_discussion_value is not None
+        )
+
 
 class QNAYourAnswer_Buying_Test(QNAYourAnswerTest):
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
         self.setup_payment_hash()
         self.setup_qna(answered=True)
 
@@ -82,7 +91,7 @@ class QNAYourAnswer_Buying_Test(QNAYourAnswerTest):
 class QNAYourAnswer_Selling_Test(QNAYourAnswerTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller()
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
         self.setup_payment_hash()
         self.setup_qna()
 
@@ -107,7 +116,7 @@ class QNAYourAnswer_Selling_Test(QNAYourAnswerTest):
 class QNAYourAnswer_MatchClosed_Test(QNAYourAnswerTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller(closed=True)
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG, True)
         self.setup_qna(answered=True)
 
     def test_choose_any_option(self):

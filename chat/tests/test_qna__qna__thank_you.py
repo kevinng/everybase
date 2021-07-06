@@ -48,7 +48,7 @@ class QNAThankYouTest(MessageHandlerTest):
 class QNAThankYou_Buying_Test(QNAThankYouTest):
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
         self.setup_payment_hash()
         self.setup_qna(answered=True)
 
@@ -70,7 +70,7 @@ class QNAThankYou_Buying_Test(QNAThankYouTest):
 class QNAThankYou_Selling_Test(QNAThankYouTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller()
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
         self.setup_payment_hash()
         self.setup_qna()
 
@@ -92,7 +92,7 @@ class QNAThankYou_Selling_Test(QNAThankYouTest):
 class QNAThankYou_MatchClosed_Test(QNAThankYouTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller(closed=True)
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG, True)
         self.setup_qna(answered=True)
 
     def test_choose_any_option(self):

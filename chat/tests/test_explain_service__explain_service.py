@@ -39,7 +39,7 @@ class ExplainService__ExplainService__Test(MessageHandlerTest):
         self.choose_new_supply('1')
 
     def test_choose_new_supply_with_text(self):
-        self.choose_new_supply('find buyers')
+        self.choose_new_supply('buyers')
 
     def choose_new_demand(self, input):
         self.receive_reply_assert(
@@ -56,4 +56,4 @@ class ExplainService__ExplainService__Test(MessageHandlerTest):
         self.choose_new_demand('2')
 
     def test_choose_new_demand_with_text(self):
-        self.choose_new_demand('find sellers')
+        self.choose_new_demand('sellers')

@@ -28,7 +28,7 @@ class QNAAnswerTest(MessageHandlerTest):
 class QNAAnswer_Buying_Test(QNAAnswerTest):
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
         self.setup_qna()
 
     def test_enter_answer(self):
@@ -37,7 +37,7 @@ class QNAAnswer_Buying_Test(QNAAnswerTest):
 class QNAAnswer_Selling_Test(QNAAnswerTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller()
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
         self.setup_qna()
 
     def test_enter_answer(self):
@@ -46,7 +46,7 @@ class QNAAnswer_Selling_Test(QNAAnswerTest):
 class QNAAnswer_MatchClosed_Test(QNAAnswerTest):
     def setUp(self):
         super().setUp()
-        self.setup_seller(closed=True)
+        self.setup_user_lead(False, SupplyAvailabilityOption.OTG, True)
         self.setup_qna()
 
     def test_enter_answer(self):

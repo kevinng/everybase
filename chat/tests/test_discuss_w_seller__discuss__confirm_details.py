@@ -13,7 +13,7 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_DETAILS
         )
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
@@ -44,6 +44,18 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
             datas.CONFIRM_DETAILS,
             value_string=datas.CONFIRM_DETAILS__YES
         )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_details,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_details_correct,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_details_correct_value,
+            None
+        )
     
     def test_choose_yes_with_number(self):
         self.choose_yes('1')
@@ -60,6 +72,18 @@ class DiscussWSellerDiscussConfirmDetailsTest(MessageHandlerTest):
         self.assert_value(
             datas.CONFIRM_DETAILS,
             value_string=datas.CONFIRM_DETAILS__NO
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_details,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_details_correct,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_details_correct_value,
+            None
         )
 
     def test_choose_no_with_number(self):

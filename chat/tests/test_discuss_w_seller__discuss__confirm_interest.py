@@ -28,7 +28,7 @@ class DiscussWSellerDiscussConfirmInterestTest_No_Buying_Test(
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
 
     def choose_no(self, input):
         self.receive_reply_assert(
@@ -51,7 +51,7 @@ class DiscussWSellerDiscussConfirmInterestTest_NotConnected_Yes_Test(
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -68,7 +68,7 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
         connect(self.user, self.user_2)
 
     def choose_yes(self, input):
@@ -98,6 +98,18 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
             datas.CONFIRM_INTEREST,
             value_string=datas.CONFIRM_INTEREST__YES
         )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_interest,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_interest_value,
+            None
+        )
 
     def test_choose_yes_with_number(self):
         self.choose_yes('1')
@@ -109,7 +121,7 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Te
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.PRE_ORDER_DURATION)
+        self.setup_user_lead(True, SupplyAvailabilityOption.PRE_ORDER_DURATION)
         connect(self.user, self.user_2)
 
     def choose_yes(self, input):
@@ -139,6 +151,18 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Te
             datas.CONFIRM_INTEREST,
             value_string=datas.CONFIRM_INTEREST__YES
         )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_interest,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_interested,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_interest_value,
+            None
+        )
 
     def test_choose_yes_with_number(self):
         self.choose_yes('1')
@@ -150,7 +174,7 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Te
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_buyer(SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
+        self.setup_user_lead(True, SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
         connect(self.user, self.user_2)
 
     def choose_yes(self, input):

@@ -13,7 +13,7 @@ class DiscussWSellerStillInterestedConfirmTest(MessageHandlerTest):
             intents.DISCUSS_W_SELLER,
             messages.STILL_INTERESTED__CONFIRM
         )
-        self.setup_buyer(SupplyAvailabilityOption.OTG)
+        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
@@ -45,6 +45,10 @@ class DiscussWSellerStillInterestedConfirmTest(MessageHandlerTest):
             value_string=datas.STILL_INTERESTED__YES
         )
         self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_still_interested,
+            None
+        )
+        self.assertNotEqual(
             self.user.current_match.buyer_still_interested,
             None
         )
@@ -68,6 +72,10 @@ class DiscussWSellerStillInterestedConfirmTest(MessageHandlerTest):
         self.assert_value(
             datas.STILL_INTERESTED,
             value_string=datas.STILL_INTERESTED__NO
+        )
+        self.assertNotEqual(
+            self.user.current_match.buyer_confirmed_still_interested,
+            None
         )
         self.assertNotEqual(
             self.user.current_match.buyer_still_interested,

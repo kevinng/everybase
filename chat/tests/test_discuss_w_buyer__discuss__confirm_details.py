@@ -6,8 +6,7 @@ class DiscussWBuyerDiscussConfirmDetailsTest(MessageHandlerTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',
-        'setup/20210527__relationships__availability.json',
-        'setup/20210527__relationships__phonenumbertype.json'
+        'setup/20210527__relationships__availability.json'
     ]
 
     def setUp(self):
@@ -47,6 +46,18 @@ class DiscussWBuyerDiscussConfirmDetailsTest(MessageHandlerTest):
             datas.CONFIRM_DETAILS,
             value_string=datas.CONFIRM_DETAILS__YES
         )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_details,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_details_correct,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_details_correct_value,
+            None
+        )
     
     def test_choose_yes_with_number(self):
         self.choose_yes('1')
@@ -63,6 +74,18 @@ class DiscussWBuyerDiscussConfirmDetailsTest(MessageHandlerTest):
         self.assert_value(
             datas.CONFIRM_DETAILS,
             value_string=datas.CONFIRM_DETAILS__NO
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_details,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_details_correct,
+            None
+        )
+        self.assertNotEqual(
+            self.user.current_match.seller_confirmed_details_correct_value,
+            None
         )
 
     def test_choose_no_with_number(self):

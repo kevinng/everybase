@@ -15,7 +15,5 @@ class DiscussAlreadyConnectedParameterizer(MessageParameterizer):
             params['supply'] = match.supply
         else:
             params['demand'] = match.demand
-
-        print(params)
         
         return params

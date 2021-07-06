@@ -16,20 +16,15 @@ class StillInterestedConfirmHandler(MessageHandler):
             # Update match
             buying = logic.is_buying()
             if buying == True:
-                print('is buying...')
                 match.buyer_confirmed_still_interested = \
                     datetime.datetime.now(sgtz)
                 match.buyer_still_interested = interested
                 match.buyer_still_interested_value = data_value
             elif buying == False:
-                print('is selling...')
                 match.seller_confirmed_still_interested = \
                     datetime.datetime.now(sgtz)
                 match.seller_still_interested = interested
                 match.seller_still_interested_value = data_value
-            else:
-                print("buying is bad ")
-                print(buying)
             match.save()
 
         self.add_option([('1', 0), ('yes', 0)],

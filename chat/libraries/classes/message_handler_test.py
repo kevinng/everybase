@@ -114,77 +114,6 @@ class MessageHandlerTest(TestCase):
         commods.MatchKeyword.objects.all().delete()
         relmods.UnitOfMeasure.objects.all().delete()
         relmods.ProductType.objects.all().delete()
-        
-        
-
-        # for user in self.users:
-        #     # Delete ALL user's contexts
-        #     models.UserContext.objects.filter(user=user).delete()
-
-        #     # Delete ALL user's data values
-        #     models.MessageDataValue.objects.filter(dataset__user=user).delete()
-
-        #     # Delete ALL user's datasets
-        #     models.MessageDataset.objects.filter(user=user).delete()
-            
-        #     # Delete ALL user's outbound messages
-        #     models.TwilioOutboundMessage.objects.filter(from_user=user).delete()
-        #     models.TwilioOutboundMessage.objects.filter(to_user=user).delete()
-
-        #     # Delete ALL user's inbound messages
-        #     models.TwilioInboundMessage.objects.filter(from_user=user).delete()
-        #     models.TwilioInboundMessage.objects.filter(to_user=user).delete()
-
-        #     # Get ALL user's supplies
-        #     supplies = relmods.Supply.objects.filter(user=user)
-
-        #     # Get ALL user's demands
-        #     demands = relmods.Demand.objects.filter(user=user)
-
-        #     # Delete ALL user's phone number hashes
-        #     relmods.PhoneNumberHash.objects.filter(user=user).delete()
-
-        #     # Delete ALL user's payment hashes
-        #     paymods.PaymentHash.objects.filter(user=user).delete()
-
-        #     # Delete ALL user's QNA pairs
-        #     relmods.QuestionAnswerPair.objects.filter(questioner=user).delete()
-        #     relmods.QuestionAnswerPair.objects.filter(answerer=user).delete()
-            
-        #     # Delete ALL user's matches
-        #     for supply in supplies:
-        #         relmods.Match.objects.filter(supply=supply).delete()
-            
-        #     for demand in demands:
-        #         relmods.Match.objects.filter(demand=demand).delete()
-                
-        #     # Delete ALL user's supplies
-        #     supplies.delete()
-
-        #     # Delete ALL user's demands
-        #     demands.delete()
-
-        #     # Delete ALL user's connections
-        #     relmods.Connection.objects.filter(user_1=user).delete()
-        #     relmods.Connection.objects.filter(user_2=user).delete()
-
-        #     # Get ALL user's phone numbers - to be deleted after user
-        #     phone_numbers = relmods.PhoneNumber.objects.filter(user=user)
-            
-        #     # Delete user
-        #     user.delete()
-
-        #     # Delete ALL user's phone numbers
-        #     phone_numbers.delete()
-
-        # for keyword in self.keywords:
-        #     keyword.delete()
-        
-        # for uom in self.uoms:
-        #     uom.delete()
-        
-        # for product_type in self.product_types:
-        #     product_type.delete()
 
     ##### Assert #####
 
@@ -280,16 +209,16 @@ class MessageHandlerTest(TestCase):
             target_params = target_body_params_func()
         target_body = render_to_string(target_path, target_params)
 
-        print('TARGET BODY')
-        print(target_body)
+        # print('TARGET BODY')
+        # print(target_body)
 
         # Get body from response TwilML
         start_pos = response.index('<Message>') + len('<Message>')
         end_pos = response.index('</Message>')
         response_body = response[start_pos:end_pos]
 
-        print('RESPONSE BODY')
-        print(response_body)
+        # print('RESPONSE BODY')
+        # print(response_body)
 
         self.assertEqual(response_body, target_body)
         self.assert_context(intent_key, message_key)
@@ -559,80 +488,28 @@ class MessageHandlerTest(TestCase):
 
         return (product_type, uom, keyword)
 
-    def setup_supply(
-            self,
-            # Supply details
-            product_type: relmods.ProductType = None,
-            country: commods.Country = None,
-            availability: relmods.Availability = None,
-            packing: relmods.UnitOfMeasure = None,
-            quantity: float = None,
-            pre_order_timeframe: relmods.TimeFrame = None,
-            price: float = None,
-            currency: paymods.Currency = None,
-            deposit_percentage: float = None,
-            accept_lc: bool = None
-        ):
-        """Set up mock supply
+    def setup_user_lead(
+        self,
+        buying: bool,
+        supply_type: SupplyAvailabilityOptions,
+        closed: bool = False
+    ) -> relmods.Match:
+        """Set up a user as either a buyer or a seller, and user_2 as the
+        counter-party (i.e., seller if user is buyer, vice versa).
 
-        Returns
-        -------
-        Mock supply model reference
+        Parameters
+        ----------
+        buying
+            If true, set up user as the buyer, otherwise - set him up as the
+            seller.
+        supply_type
+            The type of supply either the user/user_2 is selling - depending
+            on who's the buyer.
+        closed
+            Close the match immediately.
         """
-        return relmods.Supply.objects.create(
-            user=self.user,
-            product_type=product_type,
-            country=country,
-            availability=availability,
-            packing=packing,
-            quantity=quantity,
-            pre_order_timeframe=pre_order_timeframe,
-            price=price,
-            currency=currency,
-            deposit_percentage=deposit_percentage,
-            accept_lc=accept_lc
-        )
 
-    def setup_demand(
-            self,
-            # Demand details
-            product_type: relmods.ProductType = None,
-            country: commods.Country = None,
-            packing: relmods.UnitOfMeasure = None,
-            quantity: float = None,
-            price: float = None,
-            currency: paymods.Currency = None
-        ):
-        """Set up demand for this user
-
-        Returns
-        -------
-        Demand model reference set up
-        """
-        return relmods.Demand.objects.create(
-            user=self.user,
-            product_type=product_type,
-            country=country,
-            packing=packing,
-            quantity=quantity,
-            price=price,
-            currency=currency
-        )
-
-    def setup_buyer(
-            self,
-            supply_type: SupplyAvailabilityOptions,
-            closed: bool = False
-        ) -> relmods.Match:
-        """Set up user as buyer
-        
-        Returns
-        -------
-        Match model reference between user and seller
-        """
-        
-        # Set up supply
-
+        # Product type and packing for both supply and demand
         product_type, packing, _ = self.setup_product_type(
             name='Nitrile Gloves',
             uom_name='Box',
@@ -640,12 +517,14 @@ class MessageHandlerTest(TestCase):
             uom_description='200 pieces in 1 box'
         )
 
+        # Supply availability
         if supply_type == SupplyAvailabilityOption.OTG:
             availability = relmods.Availability.objects.get(pk=1)
         elif supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE or \
             supply_type == SupplyAvailabilityOption.PRE_ORDER_DURATION:
             availability = relmods.Availability.objects.get(pk=2)
 
+        # Supply timeframe
         pre_order_timeframe = None
         sgtz = pytz.timezone(TIME_ZONE)
         if supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE:
@@ -657,8 +536,9 @@ class MessageHandlerTest(TestCase):
                 duration=5
             )
 
+        # Supply
         supply = relmods.Supply.objects.create(
-            user=self.user_2,
+            user=self.user if not buying else self.user_2,
             product_type=product_type,
             packing=packing,
             country=commods.Country.objects.get(pk=601), # Israel
@@ -671,9 +551,9 @@ class MessageHandlerTest(TestCase):
             accept_lc=False
         )
 
-        # Set up demand from user
-
-        demand = self.setup_demand(
+        # Demand
+        demand = relmods.Demand.objects.create(
+            user=self.user if buying else self.user_2,
             product_type=product_type,
             packing=packing,
             country=commods.Country.objects.get(pk=601), # Israel
@@ -683,89 +563,14 @@ class MessageHandlerTest(TestCase):
         )
 
         # Set up match
-
-        sgtz = pytz.timezone(TIME_ZONE)
         self.match = relmods.Match.objects.create(
             supply=supply,
             demand=demand,
-            closed=datetime.datetime.now(tz=sgtz) if closed else None
+            closed=datetime.datetime.now(tz=pytz.timezone(TIME_ZONE)) \
+                if closed else None
         )
 
-        self.user.current_match = self.match
-        self.user.save()
-
-        return self.match
-
-    def setup_seller(
-            self,
-            supply_type: SupplyAvailabilityOptions,
-            closed: bool = False
-        ) -> relmods.Match:
-        """Set up user as seller
-        
-        Returns
-        -------
-        Match model reference between user and seller
-        """
-
-        product_type, packing, _ = self.setup_product_type(
-            name='Nitrile Gloves',
-            uom_name='Box',
-            uom_plural_name='Boxes',
-            uom_description='200 pieces in 1 box'
-        )
-
-        # Set up supply from user
-
-        if supply_type == SupplyAvailabilityOption.OTG:
-            availability = relmods.Availability.objects.get(pk=1)
-        elif supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE or \
-            supply_type == SupplyAvailabilityOption.PRE_ORDER_DURATION:
-            availability = relmods.Availability.objects.get(pk=2)
-
-        pre_order_timeframe = None
-        sgtz = pytz.timezone(TIME_ZONE)
-        if supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE:
-            pre_order_timeframe = relmods.TimeFrame.objects.create(
-                deadline=datetime.datetime(2021, 2, 5, tzinfo=sgtz))
-        elif supply_type == SupplyAvailabilityOption.PRE_ORDER_DURATION:
-            pre_order_timeframe = relmods.TimeFrame.objects.create(
-                duration_uom='d',
-                duration=5
-            )
-
-        supply = self.setup_supply(
-            product_type=product_type,
-            packing=packing,
-            country=commods.Country.objects.get(pk=601), # Israel
-            availability=availability,
-            pre_order_timeframe=pre_order_timeframe,
-            quantity=12000,
-            price=15.15,
-            currency=paymods.Currency.objects.get(pk=1), # USD
-            deposit_percentage=0.4,
-            accept_lc=False
-        )
-
-        # Set up demand
-
-        demand = relmods.Demand.objects.create(
-            user=self.user_2,
-            product_type=product_type,
-            packing=packing,
-            country=commods.Country.objects.get(pk=601), # Israel
-            quantity=12000,
-            price=15.15,
-            currency=paymods.Currency.objects.get(pk=1) # USD
-        )
-
-        sgtz = pytz.timezone(TIME_ZONE)
-        self.match = relmods.Match.objects.create(
-            supply=supply,
-            demand=demand,
-            closed=datetime.datetime.now(tz=sgtz) if closed else None
-        )
-
+        # Set up user's current_match
         self.user.current_match = self.match
         self.user.save()
 
@@ -786,7 +591,8 @@ class MessageHandlerTest(TestCase):
     def setup_qna(
             self,
             answering: bool = True,
-            answered: bool = False):
+            answered: bool = False
+        ) -> relmods.QuestionAnswerPair:
         """Set up QNA model and associated data key/value for this user, user_2
         and match.
         
@@ -802,6 +608,7 @@ class MessageHandlerTest(TestCase):
         Q&A model reference set up
         """
 
+        # Dataset/value for question
         qns_ds = models.MessageDataset.objects.create(
             intent_key=intents.QNA,
             message_key=messages.QUESTION
@@ -811,6 +618,7 @@ class MessageHandlerTest(TestCase):
             value_string='Can you do OEM?'
         )
 
+        # Dataset/value for answer
         if answered:
             ans_ds = models.MessageDataset.objects.create(
                 intent_key=intents.QNA,
@@ -823,6 +631,7 @@ class MessageHandlerTest(TestCase):
         else:
             ans_dv = None
 
+        # Question/answer pair
         sgtz = pytz.timezone(TIME_ZONE)
         qna = relmods.QuestionAnswerPair.objects.create(
             questioner=self.user_2 if answering else self.user,
@@ -836,47 +645,11 @@ class MessageHandlerTest(TestCase):
             match=self.match
         )
 
+        # Set up user's current_qna
         self.user.current_qna = qna
         self.user.save()
 
         return qna
-
-    # def setup_user_name(self):
-    #     """Set up the user's name"""
-    #     self.user.name = 'Kevin Ng'
-    #     self.user.save()
-
-    # def setup_user_lead_question(
-    #     self,
-    #     buying: bool,
-    #     answering: bool,
-    #     answered: bool,
-    #     supply_type: SupplyAvailabilityOptions = None):
-    #     """Convenience method to set up user's name, supply/demand, and Q&A
-    #     in one call.
-        
-    #     Parameters
-    #     ----------
-    #     buying
-    #         True if user is buying, False otherwise. Supply/demand will be set
-    #         up depending on whether the user is buying or selling.
-    #     answering
-    #         True if user is the answerer of the Q&A to be set up, False
-    #         otherwise.
-    #     answered
-    #         True if Q&A has been answered
-    #     supply_type
-    #         Type of supply we're creating
-    #     """
-        
-    #     if buying:
-    #         match = self.setup_buyer(supply_type)
-    #     else:
-    #         match = self.setup_seller()
-
-    #     self.setup_qna(match, answering, answered)
-
-    #     return match
 
     ##### Actions #####
 
