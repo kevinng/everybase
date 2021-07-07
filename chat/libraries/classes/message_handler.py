@@ -10,6 +10,7 @@ from chat.libraries.utilities.get_parameters import get_parameters
 from chat.libraries.utilities.get_latest_value import get_latest_value
 from chat.libraries.utilities.done_to_context import done_to_context
 from chat.libraries.utilities.render_message import render_message
+from chat.libraries.utilities.get_product_type import get_product_type
 from chat.libraries.utilities.match import match
 
 class MessageHandler():
@@ -506,31 +507,7 @@ class MessageHandler():
             # Value does not exist
             return None
 
-        value_string = value.value_string
-
-        # Get all match keywords for product types
-        match_keywords = commods.MatchKeyword.objects.filter(
-            product_type__isnull=False
-        )
-
-        # Match each keyword against user input
-        product_type = None
-        for k in match_keywords:
-            if match(value_string, k.keyword, k.tolerance):
-                # User input match a product type
-                product_type = k.product_type
-
-        uom = None
-        if product_type is not None:
-            # Matching product type found - get its top UOM
-            try:
-                uom = relmods.UnitOfMeasure.objects.filter(
-                    product_type=product_type
-                ).order_by('-priority').first()
-            except relmods.UnitOfMeasure.DoesNotExist:
-                pass
-        
-        return (product_type, uom)
+        return get_product_type(value.value_string)
 
     def get_latest_value(
             self,
