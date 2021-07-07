@@ -9,8 +9,8 @@ from chat.libraries.constants import datas, messages
 from chat.libraries.utilities.get_parameters import get_parameters
 from chat.libraries.utilities.get_latest_value import get_latest_value
 from chat.libraries.utilities.done_to_context import done_to_context
-from chat.libraries.utilities.match import match
 from chat.libraries.utilities.render_message import render_message
+from chat.libraries.utilities.match import match
 
 class MessageHandler():
     """A context is a unique pair of the user's intent, and the last message
@@ -537,11 +537,10 @@ class MessageHandler():
             intent_key: str,
             message_key: str,
             data_key: str,
-            inbound: str = True
+            inbound: bool = True
         ):
         """Convenience method to call get_latest_value with this message's
-        sender and inbound=True as default.
-        """
+        sender"""
         return get_latest_value(
             intent_key,
             message_key,
