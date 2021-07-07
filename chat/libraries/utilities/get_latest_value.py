@@ -36,6 +36,9 @@ def get_latest_value(
         If true, look for values associated with inbound messages. Otherwise,
         look for values associated with outbound messages.
     """
+    if user is None and inbound is True:
+        raise Exception('User must be specified for values of inbound messages')
+
     dataset = models.MessageDataset.objects.filter(
         intent_key=intent_key,
         message_key=message_key
