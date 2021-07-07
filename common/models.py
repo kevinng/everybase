@@ -182,6 +182,10 @@ class SystemTimestamp(Standard):
     )
 
 class MatchKeyword(Standard):
+    """Keyword to match to identify an entity - e.g., product type, country.
+
+    Last updated: 7 July 2021, 4:00 PM
+    """
     keyword = models.CharField(
         max_length=200,
         db_index=True
@@ -198,11 +202,20 @@ class MatchKeyword(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    country = models.ForeignKey(
+        'Country',
+        null=True,
+        blank=True,
+        related_name='match_keywords',
+        related_query_name='match_keywords',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     
     def clean(self):
         super(MatchKeyword, self).clean()
 
-        if self.product_type is None:
+        if self.product_type is None and self.country is None:
             raise ValidationError('There must be 1 entity associated with this \
                 match keyword.')
 
