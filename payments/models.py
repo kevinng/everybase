@@ -1,6 +1,5 @@
 from django.db import models
 from common.models import Standard, Choice
-import random
 from hashid_field import HashidAutoField
 
 class PaymentHash(Standard):
