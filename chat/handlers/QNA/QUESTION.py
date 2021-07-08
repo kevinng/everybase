@@ -7,7 +7,7 @@ from chat.libraries.classes.message_handler import MessageHandler
 
 class Handler(MessageHandler):
     def run(self):
-        self.save_body_as_string(datas.QUESTION)
+        value = self.save_body_as_string(datas.QUESTION)
 
         match = ContextLogic(self).get_match()
         if match is not None and match.closed is not None:
@@ -20,6 +20,7 @@ class Handler(MessageHandler):
             asked=datetime.datetime.now(tz=sgtz),
             questioner=self.message.from_user,
             answerer=logic.get_counter_party(),
+            question_captured_value=value,
             match=logic.get_match()
         )
 

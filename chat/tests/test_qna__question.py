@@ -26,8 +26,10 @@ class QNAQuestionTest(MessageHandlerTest):
         )
         qna = self.user.current_qna
         self.assertNotEqual(qna.asked, None)
-        self.assertNotEqual(qna.answerer, None)
         self.assertNotEqual(qna.questioner, None)
+        self.assertNotEqual(qna.answerer, None)
+        self.assertNotEqual(qna.question_captured_value, None)
+        self.assertNotEqual(qna.match, None)
 
 class QNAQuestion_Buying_Test(QNAQuestionTest):
     def setUp(self):
