@@ -10,4 +10,5 @@ class Parameterizer(MessageParameterizer):
         return {
             'buying': buying,
             'contact': user,
-            'whatsapp_link': logic.get_create_whatsapp_link() }
+            'whatsapp_link': logic.get_create_whatsapp_link()
+        }
