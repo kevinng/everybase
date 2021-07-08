@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 from chat.libraries.classes.context_logic import ContextLogic
-from chat.libraries.utilities.chosen_funcs.update_match__stopped_discussion \
+from chat.libraries.chosen_funcs.update_match__stopped_discussion \
     import update_match__stopped_discussion
 
 class Handler(MessageHandler):
