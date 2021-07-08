@@ -1,16 +1,13 @@
 import typing
 
-from urllib.parse import urljoin
-from django.urls import reverse
-
-from everybase import settings
-
 from relationships import models as relmods
 from payments import models as paymods
 
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 from chat.libraries.utilities.sort_users import sort_users
+from chat.libraries.utilities.get_create_whatsapp_link import \
+    get_create_whatsapp_link
 
 class ContextLogic():
     """Business logic to a context (i.e., a unique intent/message pair).
@@ -145,15 +142,10 @@ class ContextLogic():
         """Get/create WhatsApp URL for the counter-party. Get/create phone
         number hash of WhatsApp-type for the user on the counter-party and
         return a formatted WhatsApp URL."""
-        whatsapp = relmods.PhoneNumberType.objects.get(id=1)
-
-        hash, _ = relmods.PhoneNumberHash.objects.get_or_create(
-            user=self.message_handler.message.from_user,
-            phone_number_type=whatsapp,
-            phone_number=self.get_counter_party().phone_number)
-
-        return urljoin(settings.BASE_URL,
-            reverse('chat_root:whatsapp', kwargs={ 'id': hash.id }))
+        return get_create_whatsapp_link(
+            self.message_handler.message.from_user,
+            self.get_counter_party()
+        )
 
     ##### Q&A #####
 
