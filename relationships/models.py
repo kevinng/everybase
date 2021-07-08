@@ -1024,8 +1024,8 @@ class Supply(Standard):
 
     previous_version = models.ForeignKey(
         'Supply',
-        related_name='supply_previous_versions',
-        related_query_name='supply_previous_versions',
+        related_name='next_versions_of_this_supply',
+        related_query_name='next_versions_of_this_supply',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -1033,8 +1033,8 @@ class Supply(Standard):
     )
     next_version = models.ForeignKey(
         'Supply',
-        related_name='supply_next_versions',
-        related_query_name='supply_next_versions',
+        related_name='previous_versions_of_this_supply',
+        related_query_name='previous_versions_of_this_supply',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -1230,8 +1230,8 @@ class Demand(Standard):
 
     previous_version = models.ForeignKey(
         'Demand',
-        related_name='demand_previous_versions',
-        related_query_name='demand_previous_versions',
+        related_name='next_versions_of_this_demand',
+        related_query_name='next_versions_of_this_demand',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -1239,8 +1239,8 @@ class Demand(Standard):
     )
     next_version = models.ForeignKey(
         'Demand',
-        related_name='demand_next_versions',
-        related_query_name='demand_next_versions',
+        related_name='previous_versions_of_this_demand',
+        related_query_name='previous_versions_of_this_demand',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
