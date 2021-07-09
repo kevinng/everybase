@@ -2,7 +2,7 @@ import traceback
 from http import HTTPStatus
 
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from rest_framework.views import APIView
 import sentry_sdk
 
@@ -16,12 +16,12 @@ from chat import models
 from relationships import models as relmods
 from payments import models as paymods
 
-from chat.libraries.utilities.save_message_log import save_message_log
-from chat.libraries.utilities.save_message_medias import save_message_medias
-from chat.libraries.utilities.save_message import save_message
-from chat.libraries.utilities.get_context import get_context
-from chat.libraries.utilities.get_handler import get_handler
-from chat.libraries.utilities.get_non_tracking_whatsapp_link import \
+from chat.libraries.utility_funcs.save_message_log import save_message_log
+from chat.libraries.utility_funcs.save_message_medias import save_message_medias
+from chat.libraries.utility_funcs.save_message import save_message
+from chat.libraries.utility_funcs.get_context import get_context
+from chat.libraries.utility_funcs.get_handler import get_handler
+from chat.libraries.utility_funcs.get_non_tracking_whatsapp_link import \
     get_non_tracking_whatsapp_link
 
 from twilio.request_validator import RequestValidator
@@ -53,7 +53,7 @@ def reply(message):
     # Capture error - if any
     if body is None:
         sentry_sdk.capture_message('Handler %s %s for message %d failed' %
-            (intent_key, message_key, message.id))
+            (intent_key, message_key, message.id), 'fatal')
 
     # Log
     models.TwilioOutboundMessage.objects.create(
@@ -95,6 +95,7 @@ class TwilioIncomingMessageView(APIView):
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
 def redirect_whatsapp_phone_number(request, id):
+    """Redirects user from our short tracking URL to WhatsApp"""
     # Log access
     ua = request.user_agent
     access = relmods.PhoneNumberLinkAccess.objects.create(
@@ -146,6 +147,7 @@ def redirect_whatsapp_phone_number(request, id):
     return response
 
 def redirect_checkout_page(request, id):
+    """Redirect user to the Stripe checkout page"""
     # Log access
     ua = request.user_agent
     access = paymods.PaymentLinkAccess.objects.create(
@@ -215,3 +217,7 @@ def redirect_checkout_page(request, id):
     }
 
     return render(request, 'chat/pages/checkout.html', context)
+
+class StripeFulfilmentCallbackView(APIView):
+    """Webhook to receive Stripe fuilfilment callback."""
+    # TODO
