@@ -1,5 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest, SupplyAvailabilityOption
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.test_funcs.supply_availability_options import \
+    SupplyAvailabilityOption
 
 class QNAStopDiscussionReasonTest(MessageHandlerTest):
     fixtures = [
@@ -17,7 +19,7 @@ class QNAStopDiscussionReasonTest(MessageHandlerTest):
 class QNAStopDiscussionReason_Normal_Test(QNAStopDiscussionReasonTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
         self.setup_qna()
 
     def test_any_input(self):
@@ -35,7 +37,7 @@ class QNAStopDiscussionReason_Normal_Test(QNAStopDiscussionReasonTest):
 class QNAStopDiscussionReason_MatchClosed_Test(QNAStopDiscussionReasonTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG, True)
+        self.setup_match(False, SupplyAvailabilityOption.OTG, True)
         self.setup_qna()
 
     def test_any_input(self):

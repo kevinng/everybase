@@ -1,7 +1,7 @@
 import pytz, datetime
 from everybase.settings import TIME_ZONE
 from chat import models
-from chat.libraries.constants import intents, messages, datas
+from chat.libraries.constants import intents, messages
 from relationships import models as relmods
 
 def setup_qna(

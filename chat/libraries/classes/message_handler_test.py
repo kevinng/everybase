@@ -1,13 +1,8 @@
-import typing
-from enum import Enum
-
-import pytz, datetime
-from everybase.settings import TIME_ZONE
+from chat.libraries.test_funcs.setup_product_type import setup_product_type
 from django.test import TestCase
 from django.template.loader import render_to_string
 
 from chat import models, views
-from chat.libraries.constants import intents, messages
 from chat.libraries.utility_funcs.get_latest_value import get_latest_value
 from chat.libraries.utility_funcs.get_context import get_context
 from chat.libraries.utility_funcs.start_context import start_context
@@ -15,18 +10,13 @@ from chat.libraries.utility_funcs.start_context import start_context
 from chat.libraries.test_funcs.setup_user_phone_number import \
     setup_user_phone_number
 from chat.libraries.test_funcs.setup_qna import setup_qna
+from chat.libraries.test_funcs.setup_match import setup_match
+from chat.libraries.test_funcs.supply_availability_options import \
+    SupplyAvailabilityOptions
 
 from relationships import models as relmods
 from payments import models as paymods
 from common import models as commods
-
-class SupplyAvailabilityOption(Enum):
-    OTG = 1
-    PRE_ORDER_DEADLINE = 2
-    PRE_ORDER_DURATION = 3
-
-SupplyAvailabilityOptions = typing.NewType(
-    'SupplyAvailabilityOptions', SupplyAvailabilityOption)
 
 class MessageHandlerTest(TestCase):
     """Base class for message handler test cases"""
@@ -466,28 +456,18 @@ class MessageHandlerTest(TestCase):
 
         if keyword is None:
             keyword = 'product %d' % len(self.product_types)
+
+        product_type, uom, keyword = setup_product_type(
+            name, uom_name, uom_plural_name, uom_description, keyword)
         
-        product_type = relmods.ProductType.objects.create(name=name)
         self.product_types.append(product_type)
-
-        uom = relmods.UnitOfMeasure.objects.create(
-            name=uom_name,
-            plural_name=uom_plural_name,
-            description=uom_description,
-            product_type=product_type)
-        
         self.uoms.append(uom)
-
-        # Create match keyword for test product type
-        keyword = commods.MatchKeyword.objects.create(
-            keyword=keyword,
-            tolerance=0,
-            product_type=product_type)
         self.keywords.append(keyword)
 
         return (product_type, uom, keyword)
 
-    def setup_user_lead(
+    # def setup_user_lead(
+    def setup_match(
         self,
         buying: bool,
         supply_type: SupplyAvailabilityOptions,
@@ -508,66 +488,69 @@ class MessageHandlerTest(TestCase):
             Close the match immediately.
         """
 
-        # Product type and packing for both supply and demand
-        product_type, packing, _ = self.setup_product_type(
-            name='Nitrile Gloves',
-            uom_name='Box',
-            uom_plural_name='Boxes',
-            uom_description='200 pieces in 1 box'
-        )
+        self.match = setup_match(
+            buying, supply_type, self.user, self.user_2, closed)
 
-        # Supply availability
-        if supply_type == SupplyAvailabilityOption.OTG:
-            availability = relmods.Availability.objects.get(pk=1)
-        elif supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE or \
-            supply_type == SupplyAvailabilityOption.PRE_ORDER_DURATION:
-            availability = relmods.Availability.objects.get(pk=2)
+        # # Product type and packing for both supply and demand
+        # product_type, packing, _ = self.setup_product_type(
+        #     name='Nitrile Gloves',
+        #     uom_name='Box',
+        #     uom_plural_name='Boxes',
+        #     uom_description='200 pieces in 1 box'
+        # )
 
-        # Supply timeframe
-        pre_order_timeframe = None
-        sgtz = pytz.timezone(TIME_ZONE)
-        if supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE:
-            pre_order_timeframe = relmods.TimeFrame.objects.create(
-                deadline=datetime.datetime(2021, 2, 5, tzinfo=sgtz))
-        elif supply_type == SupplyAvailabilityOption.PRE_ORDER_DURATION:
-            pre_order_timeframe = relmods.TimeFrame.objects.create(
-                duration_uom='d',
-                duration=5
-            )
+        # # Supply availability
+        # if supply_type == SupplyAvailabilityOption.OTG:
+        #     availability = relmods.Availability.objects.get(pk=1)
+        # elif supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE or \
+        #     supply_type == SupplyAvailabilityOption.PRE_ORDER_DURATION:
+        #     availability = relmods.Availability.objects.get(pk=2)
 
-        # Supply
-        supply = relmods.Supply.objects.create(
-            user=self.user if not buying else self.user_2,
-            product_type=product_type,
-            packing=packing,
-            country=commods.Country.objects.get(pk=601), # Israel
-            availability=availability,
-            pre_order_timeframe=pre_order_timeframe,
-            quantity=12000,
-            price=15.15,
-            currency=paymods.Currency.objects.get(pk=1), # USD
-            deposit_percentage=0.4,
-            accept_lc=False
-        )
+        # # Supply timeframe
+        # pre_order_timeframe = None
+        # sgtz = pytz.timezone(TIME_ZONE)
+        # if supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE:
+        #     pre_order_timeframe = relmods.TimeFrame.objects.create(
+        #         deadline=datetime.datetime(2021, 2, 5, tzinfo=sgtz))
+        # elif supply_type == SupplyAvailabilityOption.PRE_ORDER_DURATION:
+        #     pre_order_timeframe = relmods.TimeFrame.objects.create(
+        #         duration_uom='d',
+        #         duration=5
+        #     )
 
-        # Demand
-        demand = relmods.Demand.objects.create(
-            user=self.user if buying else self.user_2,
-            product_type=product_type,
-            packing=packing,
-            country=commods.Country.objects.get(pk=601), # Israel
-            quantity=12000,
-            price=15.15,
-            currency=paymods.Currency.objects.get(pk=1) # USD
-        )
+        # # Supply
+        # supply = relmods.Supply.objects.create(
+        #     user=self.user if not buying else self.user_2,
+        #     product_type=product_type,
+        #     packing=packing,
+        #     country=commods.Country.objects.get(pk=601), # Israel
+        #     availability=availability,
+        #     pre_order_timeframe=pre_order_timeframe,
+        #     quantity=12000,
+        #     price=15.15,
+        #     currency=paymods.Currency.objects.get(pk=1), # USD
+        #     deposit_percentage=0.4,
+        #     accept_lc=False
+        # )
 
-        # Set up match
-        self.match = relmods.Match.objects.create(
-            supply=supply,
-            demand=demand,
-            closed=datetime.datetime.now(tz=pytz.timezone(TIME_ZONE)) \
-                if closed else None
-        )
+        # # Demand
+        # demand = relmods.Demand.objects.create(
+        #     user=self.user if buying else self.user_2,
+        #     product_type=product_type,
+        #     packing=packing,
+        #     country=commods.Country.objects.get(pk=601), # Israel
+        #     quantity=12000,
+        #     price=15.15,
+        #     currency=paymods.Currency.objects.get(pk=1) # USD
+        # )
+
+        # # Set up match
+        # self.match = relmods.Match.objects.create(
+        #     supply=supply,
+        #     demand=demand,
+        #     closed=datetime.datetime.now(tz=pytz.timezone(TIME_ZONE)) \
+        #         if closed else None
+        # )
 
         # Set up user's current_match
         self.user.current_match = self.match

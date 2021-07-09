@@ -1,7 +1,8 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import (MessageHandlerTest,
-    SupplyAvailabilityOption)
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
 from chat.libraries.utility_funcs.get_payment_link import get_payment_link
+from chat.libraries.test_funcs.supply_availability_options import \
+    SupplyAvailabilityOption
 
 class QNAYourAnswerTest(MessageHandlerTest):
     fixtures = [
@@ -66,7 +67,7 @@ class QNAYourAnswerTest(MessageHandlerTest):
 class QNAYourAnswer_Buying_Test(QNAYourAnswerTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
+        self.setup_match(True, SupplyAvailabilityOption.OTG)
         self.setup_payment_hash()
         self.setup_qna(answered=True)
 
@@ -91,7 +92,7 @@ class QNAYourAnswer_Buying_Test(QNAYourAnswerTest):
 class QNAYourAnswer_Selling_Test(QNAYourAnswerTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
         self.setup_payment_hash()
         self.setup_qna()
 
@@ -116,7 +117,7 @@ class QNAYourAnswer_Selling_Test(QNAYourAnswerTest):
 class QNAYourAnswer_MatchClosed_Test(QNAYourAnswerTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG, True)
+        self.setup_match(False, SupplyAvailabilityOption.OTG, True)
         self.setup_qna(answered=True)
 
     def test_choose_any_option(self):

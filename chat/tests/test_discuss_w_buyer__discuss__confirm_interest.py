@@ -4,9 +4,10 @@ from django.urls import reverse
 from everybase import settings
 
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import (MessageHandlerTest,
-    SupplyAvailabilityOption)
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
 from chat.libraries.utility_funcs.connect import connect
+from chat.libraries.test_funcs.supply_availability_options import \
+    SupplyAvailabilityOption
 
 from relationships import models as relmods
 
@@ -28,7 +29,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_No_Test(
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
 
     def choose_no(self, input):
         self.receive_reply_assert(
@@ -64,7 +65,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_Yes_OTG_Test(
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -100,7 +101,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_Yes_PreOrderDeadline_
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
+        self.setup_match(False, SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -136,7 +137,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_NotConnected_Yes_PreOrderDuration_
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.PRE_ORDER_DURATION)
+        self.setup_match(False, SupplyAvailabilityOption.PRE_ORDER_DURATION)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -172,7 +173,7 @@ class DiscussWBuyerDiscussConfirmInterestTest_Connected_Yes_Test(
     DiscussWBuyerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
         connect(self.user, self.user_2)
 
     def choose_yes(self, input):

@@ -1,5 +1,6 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest, \
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
 
 class QNAQuestionTest(MessageHandlerTest):
@@ -34,7 +35,7 @@ class QNAQuestionTest(MessageHandlerTest):
 class QNAQuestion_Buying_Test(QNAQuestionTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
+        self.setup_match(True, SupplyAvailabilityOption.OTG)
         self.setup_qna(answered=True)
 
     def test_enter_question(self):
@@ -43,7 +44,7 @@ class QNAQuestion_Buying_Test(QNAQuestionTest):
 class QNAQuestion_Selling_Test(QNAQuestionTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
         self.setup_qna(answered=True)
 
     def test_enter_question(self):
@@ -52,7 +53,7 @@ class QNAQuestion_Selling_Test(QNAQuestionTest):
 class QNAQuestion_MatchClosed_Test(QNAQuestionTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG, True)
+        self.setup_match(False, SupplyAvailabilityOption.OTG, True)
         self.setup_qna()
 
     def test_stray_input(self):

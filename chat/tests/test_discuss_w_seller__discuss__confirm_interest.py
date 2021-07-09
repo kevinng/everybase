@@ -4,9 +4,10 @@ from django.urls import reverse
 from everybase import settings
 
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import (MessageHandlerTest,
-    SupplyAvailabilityOption)
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
 from chat.libraries.utility_funcs.connect import connect
+from chat.libraries.test_funcs.supply_availability_options import \
+    SupplyAvailabilityOption
 
 from relationships import models as relmods
 
@@ -28,7 +29,7 @@ class DiscussWSellerDiscussConfirmInterestTest_No_Buying_Test(
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
+        self.setup_match(True, SupplyAvailabilityOption.OTG)
 
     def choose_no(self, input):
         self.receive_reply_assert(
@@ -51,7 +52,7 @@ class DiscussWSellerDiscussConfirmInterestTest_NotConnected_Yes_Test(
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
+        self.setup_match(True, SupplyAvailabilityOption.OTG)
 
     def choose_yes(self, input):
         self.receive_reply_assert(
@@ -68,7 +69,7 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_OTG_Test(
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
+        self.setup_match(True, SupplyAvailabilityOption.OTG)
         connect(self.user, self.user_2)
 
     def choose_yes(self, input):
@@ -121,7 +122,7 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDuration_Te
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(True, SupplyAvailabilityOption.PRE_ORDER_DURATION)
+        self.setup_match(True, SupplyAvailabilityOption.PRE_ORDER_DURATION)
         connect(self.user, self.user_2)
 
     def choose_yes(self, input):
@@ -174,7 +175,7 @@ class DiscussWSellerDiscussConfirmInterestTest_Connected_Yes_PreOrderDeadline_Te
     DiscussWSellerDiscussConfirmInterestTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(True, SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
+        self.setup_match(True, SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
         connect(self.user, self.user_2)
 
     def choose_yes(self, input):

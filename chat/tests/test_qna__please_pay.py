@@ -1,6 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import (MessageHandlerTest,
-    SupplyAvailabilityOption)
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.test_funcs.supply_availability_options import \
+    SupplyAvailabilityOption
 
 class QNAPleasePayTest(MessageHandlerTest):
     fixtures = [
@@ -36,7 +37,7 @@ class QNAPleasePay_AnsweredNoFollowUpQuestion_Buying_Test(QNAPleasePayTest):
 
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
+        self.setup_match(True, SupplyAvailabilityOption.OTG)
         self.setup_qna(answering=True, answered=True)
 
     def test_stray_input(self):
@@ -51,7 +52,7 @@ class QNAPleasePay_AnsweredNoFollowUpQuestion_Selling_Test(QNAPleasePayTest):
     question to the seller."""
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
         self.setup_qna(answering=True, answered=True)
 
     def test_stray_input(self):
@@ -67,7 +68,7 @@ class QNAPleasePay_NotAnsweredNoFollowUpQuestion_Buying_Test(QNAPleasePayTest):
 
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(True, SupplyAvailabilityOption.OTG)
+        self.setup_match(True, SupplyAvailabilityOption.OTG)
         self.setup_qna(answering=True, answered=False)
 
     def test_stray_input(self):
@@ -82,7 +83,7 @@ class QNAPleasePay_NotAnsweredNoFollowUpQuestion_Selling_Test(QNAPleasePayTest):
     question to the seller."""
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG)
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
         self.setup_qna(answering=True, answered=False)
 
     def test_stray_input(self):
@@ -95,7 +96,7 @@ class QNAPleasePay_NotAnsweredNoFollowUpQuestion_Selling_Test(QNAPleasePayTest):
 class QNAPleasePay_MatchClosed_Test(QNAPleasePayTest):
     def setUp(self):
         super().setUp()
-        self.setup_user_lead(False, SupplyAvailabilityOption.OTG, True)
+        self.setup_match(False, SupplyAvailabilityOption.OTG, True)
         self.setup_qna()
 
     def test_stray_input(self):
