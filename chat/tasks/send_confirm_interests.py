@@ -1,11 +1,11 @@
-from everybase.settings import TIME_ZONE
 import pytz, datetime
+from everybase.settings import TIME_ZONE
 from celery import shared_task
 from chat.libraries.constants import intents, messages
-from chat.libraries.utilities.send_message import send_message
-from chat.libraries.utilities.done_to_context import done_to_context
-from chat.libraries.utilities.get_chatbot import get_chatbot
-from chat.libraries.utilities.render_message import render_message
+from chat.libraries.utility_funcs.send_message import send_message
+from chat.libraries.utility_funcs.done_to_context import done_to_context
+from chat.libraries.utility_funcs.get_chatbot import get_chatbot
+from chat.libraries.utility_funcs.render_message import render_message
 
 @shared_task
 def send_confirm_interests(
@@ -55,7 +55,8 @@ def send_confirm_interests(
             get_chatbot().phone_number,
             buyer.phone_number,
             intents.DISCUSS_W_SELLER,
-            messages.DISCUSS__CONFIRM_INTEREST, None,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            None,
             no_external_calls
         )
 
@@ -81,6 +82,7 @@ def send_confirm_interests(
             get_chatbot().phone_number,
             seller.phone_number,
             intents.DISCUSS_W_BUYER,
-            messages.DISCUSS__CONFIRM_INTEREST, None,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            None,
             no_external_calls
         )
