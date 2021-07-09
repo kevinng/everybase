@@ -10,22 +10,7 @@
 
 # from processor.libraries.constants import TAGS, TLDS_PATH
 
-# def is_space(c):
-#     """Returns True if c is a space.
 
-#     Returns False otherwise.
-
-#     A space may be a ' ' or '\\t' or '\\n'.
-
-#     Last updated/tested: 29 April 2021, 8:51 PM
-
-#     Parameters
-#     ----------
-#     c
-#         Character to test
-#     """
-
-#     return c is ' ' or c is '\t' or c is '\n'
 
 
 
@@ -211,59 +196,7 @@
 #             break
 #     return None if string == '' else string
 
-# def get_this_word(text, pos):
-#     """If text[pos] points to a character of a word (i.e., a string separated
-#     from the strings on its left and right by a space), return the word.
 
-#     The word, along with its start and end positions are returned in a tuple in
-#     the format:
-
-#     (string, start_pos, end_pos)
-    
-#     A space may be a ' ', '\\n', '\\t' or end of text.
-    
-#     If text[pos] is a space or text is of length 0, return None.
-
-#     E.g., 'aaa bbb ccc'. If points to 'bbb', return 'bbb'. If points to 'aaa',
-#     return 'aaa'. If points to 'ccc', return 'ccc'.
-
-#     Last updated/tested: 28 April 2021, 11:00 PM
-
-#     Parameters
-#     ----------
-#     text
-#         Text to parse
-#     pos
-#         Position within text to return a continuous string of text around
-#     """
-
-#     if len(text) == 0 or pos >= len(text) or pos < 0 or is_space(text[pos]):
-#         return None
-
-#     string = ''
-#     start_pos = pos
-#     end_pos = -1
-
-#     # Get non-space text before pos
-#     for i in reversed(range(0, pos)):
-#         c = text[i]
-#         if not is_space(c):
-#             string = c + string
-#             start_pos = i
-#         else:
-#             break
-
-#     # Get non-space text at and after pos
-#     for i in range(pos, len(text)):
-#         c = text[i]
-#         if not is_space(c):
-#             string += c
-#         else:
-#             break
-
-#     end_pos = start_pos + len(string)
-
-#     return (string, start_pos, end_pos)
 
 # def has_tag_dot_domain(text):
 #     """Returns true if text contains a tag for a dot domain.
@@ -281,41 +214,11 @@
 
 #     return text.find(TAGS['DOT__DOMAIN__STARTEND']) != -1
 
-# # We'd likely need to deprecate this method - if we're going with marking
-# # positions in the text instead of explicitly inserting tags
-# def mark_string(string, start_pos, end_pos, start_tag, end_tag):
-#     """Marks string at positions start_pos and end_pos with start_tag and
-#     end_tag respectively. I.e., enclose the sub-string from start_pos and
-#     end_pos with start_tag and end_tag.
 
-#     Returns marked string, and position one after the end of end_tag as a tuple
-#     in the format:
-    
-#     (string, pos)
 
-#     Last updated/tested: 29 April 2021, 11:19 PM
 
-#     Parameters
-#     ----------
-#     string
-#         String to parse and return
-#     start_pos
-#         Start position to tag
-#     end_pos
-#         End position to tag
-#     start_tag
-#         Start text marker tag to use
-#     end_tag
-#         End text marker tag to use
-#     """
 
-#     new_string = string[:start_pos] + start_tag + string[start_pos:end_pos] + \
-#         end_tag + string[end_pos:]
 
-#     next_pos = len(string[:start_pos]) + len(start_tag) + \
-#         len(string[start_pos:end_pos]) + len(end_tag)
-
-#     return (new_string, next_pos)
 
 # # We'd likely need to deprecate this method - if we're going with marking
 # # positions in the text instead of explicitly inserting tags
