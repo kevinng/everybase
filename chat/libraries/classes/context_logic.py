@@ -5,8 +5,8 @@ from payments import models as paymods
 
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
-from chat.libraries.utilities.sort_users import sort_users
-from chat.libraries.utilities.get_create_whatsapp_link import \
+from chat.libraries.utility_funcs.sort_users import sort_users
+from chat.libraries.utility_funcs.get_create_whatsapp_link import \
     get_create_whatsapp_link
 
 class ContextLogic():

@@ -1,5 +1,5 @@
 from relationships import models
-from chat.libraries.utilities.sort_users import sort_users
+from chat.libraries.utility_funcs.sort_users import sort_users
 
 def connect(user_x, user_y):
     """Connect two users - bearing in mind to set the one with the smaller ID

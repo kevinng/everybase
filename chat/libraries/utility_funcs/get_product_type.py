@@ -1,7 +1,7 @@
 import typing
 from relationships import models as relmods
 from common import models as commods
-from chat.libraries.utilities.match import match
+from chat.libraries.utility_funcs.match import match
 
 def get_product_type(match_string: str)\
     -> typing.Tuple[relmods.ProductType, relmods.UnitOfMeasure]:

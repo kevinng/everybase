@@ -1,7 +1,7 @@
 from relationships import models as relmods
-from chat.libraries.utilities.get_context import get_context
-from chat.libraries.utilities.done_context import done_context
-from chat.libraries.utilities.start_context import start_context
+from chat.libraries.utility_funcs.get_context import get_context
+from chat.libraries.utility_funcs.done_context import done_context
+from chat.libraries.utility_funcs.start_context import start_context
 
 def done_to_context(
         user: relmods.User,

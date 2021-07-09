@@ -1,5 +1,5 @@
 from common import models as commods
-from chat.libraries.utilities.match import match
+from chat.libraries.utility_funcs.match import match
 
 def get_country(match_string: str)\
     -> commods.Country:

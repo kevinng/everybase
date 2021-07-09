@@ -1,8 +1,8 @@
 from relationships import models as relmods
 from chat import models
-from chat.libraries.utilities.parse_twilio_phone_number import \
+from chat.libraries.utility_funcs.parse_twilio_phone_number import \
     parse_twilio_phone_number
-from chat.libraries.utilities.get_or_create_phone_number import \
+from chat.libraries.utility_funcs.get_or_create_phone_number import \
     get_or_create_phone_number
 
 def save_message(request):

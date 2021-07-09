@@ -6,7 +6,7 @@ from everybase import settings
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import (MessageHandlerTest,
     SupplyAvailabilityOption)
-from chat.libraries.utilities.connect import connect
+from chat.libraries.utility_funcs.connect import connect
 
 from relationships import models as relmods
 

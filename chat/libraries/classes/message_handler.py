@@ -6,12 +6,12 @@ from relationships import models as relmods
 from common import models as commods
 
 from chat.libraries.constants import datas, messages
-from chat.libraries.utilities.get_parameters import get_parameters
-from chat.libraries.utilities.get_latest_value import get_latest_value
-from chat.libraries.utilities.done_to_context import done_to_context
-from chat.libraries.utilities.render_message import render_message
-from chat.libraries.utilities.get_product_type import get_product_type
-from chat.libraries.utilities.match import match
+from chat.libraries.utility_funcs.get_parameters import get_parameters
+from chat.libraries.utility_funcs.get_latest_value import get_latest_value
+from chat.libraries.utility_funcs.done_to_context import done_to_context
+from chat.libraries.utility_funcs.render_message import render_message
+from chat.libraries.utility_funcs.get_product_type import get_product_type
+from chat.libraries.utility_funcs.match import match
 
 class MessageHandler():
     """A context is a unique pair of the user's intent, and the last message
@@ -111,7 +111,7 @@ class MessageHandler():
             [(string_to_match, edit_distance_tolerance), ...]
             
             A string will be matched against the text body with the
-            chat.libraries.utilities.match function.
+            chat.libraries.utility_funcs.match function.
         intent_key
             Intent key for the context to set if this option is chosen. If
             intent_key_func is specified, intent_key will be ignored.

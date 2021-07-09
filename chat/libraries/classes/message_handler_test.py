@@ -8,9 +8,9 @@ from django.template.loader import render_to_string
 
 from chat import models, views
 from chat.libraries.constants import intents, messages
-from chat.libraries.utilities.get_latest_value import get_latest_value
-from chat.libraries.utilities.get_context import get_context
-from chat.libraries.utilities.start_context import start_context
+from chat.libraries.utility_funcs.get_latest_value import get_latest_value
+from chat.libraries.utility_funcs.get_context import get_context
+from chat.libraries.utility_funcs.start_context import start_context
 
 from relationships import models as relmods
 from payments import models as paymods

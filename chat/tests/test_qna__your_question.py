@@ -1,6 +1,6 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler_test import MessageHandlerTest, SupplyAvailabilityOption
-from chat.libraries.utilities.get_payment_link import get_payment_link
+from chat.libraries.utility_funcs.get_payment_link import get_payment_link
 
 class QNAYourQuestion(MessageHandlerTest):
     fixtures = [

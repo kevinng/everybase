@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Tuple
 from chat import models
-from chat.libraries.utilities.get_latest_value import get_latest_value
+from chat.libraries.utility_funcs.get_latest_value import get_latest_value
 import sentry_sdk
 
 if TYPE_CHECKING:
