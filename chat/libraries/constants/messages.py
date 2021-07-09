@@ -1,8 +1,5 @@
 """Message keys"""
 
-from chat.libraries.constants.intents import QNA
-
-
 NO_MESSAGE = 'NO_MESSAGE'
 
 MENU = 'MENU'
