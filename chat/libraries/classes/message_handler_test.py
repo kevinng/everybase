@@ -1,4 +1,3 @@
-from chat.libraries.test_funcs.setup_user_phone_number import setup_user_phone_number
 import typing
 from enum import Enum
 
@@ -12,6 +11,10 @@ from chat.libraries.constants import intents, messages
 from chat.libraries.utility_funcs.get_latest_value import get_latest_value
 from chat.libraries.utility_funcs.get_context import get_context
 from chat.libraries.utility_funcs.start_context import start_context
+
+from chat.libraries.test_funcs.setup_user_phone_number import \
+    setup_user_phone_number
+from chat.libraries.test_funcs.setup_qna import setup_qna
 
 from relationships import models as relmods
 from payments import models as paymods
@@ -291,7 +294,7 @@ class MessageHandlerTest(TestCase):
             value_id: int = None
         ):
         """Convenience method to call assert_latest_value in this context
-        against the valeu at the specified data_key.
+        against the value at the specified data_key.
 
         Parameters
         ----------
@@ -335,14 +338,6 @@ class MessageHandlerTest(TestCase):
         national_number
             National number of the user's phone number
         """
-        # phone_number = relmods.PhoneNumber.objects.create(
-        #     country_code=country_code,
-        #     national_number=national_number)
-
-        # user = relmods.User.objects.create(
-        #     phone_number=phone_number,
-        #     name=name)
-
         user, phone_number = setup_user_phone_number(
             name, country_code, national_number)
         
@@ -612,41 +607,16 @@ class MessageHandlerTest(TestCase):
         Q&A model reference set up
         """
 
-        # Dataset/value for question
-        qns_ds = models.MessageDataset.objects.create(
-            intent_key=intents.QNA,
-            message_key=messages.QUESTION
-        )
-        qns_dv = models.MessageDataValue.objects.create(
-            dataset=qns_ds,
-            value_string='Can you do OEM?'
-        )
-
-        # Dataset/value for answer
-        if answered:
-            ans_ds = models.MessageDataset.objects.create(
-                intent_key=intents.QNA,
-                message_key=messages.ANSWER
-            )
-            ans_dv = models.MessageDataValue.objects.create(
-                dataset=ans_ds,
-                value_string='Yes, we can.'
-            )
-        else:
-            ans_dv = None
-
-        # Question/answer pair
-        sgtz = pytz.timezone(TIME_ZONE)
-        qna = relmods.QuestionAnswerPair.objects.create(
-            questioner=self.user_2 if answering else self.user,
-            answerer=self.user if answering else self.user_2,
-            question_captured_value=qns_dv,
-            answer_captured_value=ans_dv,
-            manual_cleaned_question='Can you do OEM?',
-            asked=datetime.datetime.now(tz=sgtz),
-            manual_cleaned_answer='Yes, we can.' if answered else None,
-            answered=datetime.datetime.now(tz=sgtz) if answered else None,
-            match=self.match
+        qna = setup_qna(
+            self.user,
+            self.user_2,
+            self.match,
+            answering,
+            answered, 
+            'Can you do OEM?',
+            'Yes, we can.',
+            'Can you do OEM?',
+            'Yes, we can.'
         )
 
         # Set up user's current_qna
