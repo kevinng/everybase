@@ -1,3 +1,4 @@
+from chat.libraries.test_funcs.setup_user_phone_number import setup_user_phone_number
 import typing
 from enum import Enum
 
@@ -334,13 +335,16 @@ class MessageHandlerTest(TestCase):
         national_number
             National number of the user's phone number
         """
-        phone_number = relmods.PhoneNumber.objects.create(
-            country_code=country_code,
-            national_number=national_number)
+        # phone_number = relmods.PhoneNumber.objects.create(
+        #     country_code=country_code,
+        #     national_number=national_number)
 
-        user = relmods.User.objects.create(
-            phone_number=phone_number,
-            name=name)
+        # user = relmods.User.objects.create(
+        #     phone_number=phone_number,
+        #     name=name)
+
+        user, phone_number = setup_user_phone_number(
+            name, country_code, national_number)
         
         # Add reference to aid tear down
         self.users.append(user)
