@@ -8,7 +8,7 @@ def mark_clean_text(
         start_tag: str,
         end_tag: str,
         replacement: str
-    ) -> Tuple[str, str, str]:
+    ) -> Tuple[str, str, List[Tuple[int, int]]]:
     """positions is a list of tuple - each with the start and end positions of
     a string to 'mark'. Each string in text is marked by being enclosed with
     the start_tag and end_tag. 2 versions of the original input text is
@@ -30,9 +30,9 @@ def mark_clean_text(
     cleaned_text = '%s' % text # Copy
     # Positions are sorted, start from the largest position
     for start_pos, end_pos in reversed(positions):
-        marked_text = mark_string(
+        marked_text, _ = mark_string(
             marked_text, start_pos, end_pos, start_tag, end_tag)
-        cleaned_text = replace_string(
+        cleaned_text, _ = replace_string(
             cleaned_text, start_pos, end_pos, replacement)
 
     return (cleaned_text, marked_text, positions)

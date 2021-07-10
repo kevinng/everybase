@@ -6,4 +6,6 @@ def replace_string(
     ):
     """Replace string specified by start_pos and end_pos with replacement
     string."""
-    text[:start_pos] + replacement + text[end_pos:]
+    new_text = text[:start_pos] + replacement + text[end_pos:]
+    new_pos = start_pos + len(replacement)
+    return (new_text, new_pos)

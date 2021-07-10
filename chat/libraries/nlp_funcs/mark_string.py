@@ -32,7 +32,6 @@ def mark_string(
     
         (text, pos)
     """
-
     new_text = text[:start_pos] + start_tag + text[start_pos:end_pos] + \
         end_tag + text[end_pos:]
 
