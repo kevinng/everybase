@@ -1,48 +1,34 @@
+from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.test_funcs.supply_availability_options import \
+    SupplyAvailabilityOption
+from chat.tasks.auto_clean_answer import auto_clean_answer
 
-from django.test import TestCase
+class TasksAutoCleanAnswerTest(MessageHandlerTest):
+    fixtures = [
+        'setup/common__country.json',
+        'setup/20210528__payments__currency.json',
+        'setup/20210527__relationships__availability.json'
+    ]
 
-from chat import models
-from relationships import models as relmods
-
-from chat.libraries.constants import datas, intents, messages
-
-class TasksAutoCleanAnswerTest(TestCase):
-    def setUp(self) -> None:
-        return super().setUp()
-
-    def _test_run(self):
-        # Set up QNA
-        ds = models.MessageDataset.objects.create(
-            intent_key=intents.NO_INTENT, # Not required for test
-            message_key=messages.NO_MESSAGE # Not required for test
-        )
-        dv = models.MessageDataValue.objects.create(
-            dataset=ds,
-            data_key=datas.NO_DATA, # Not required for test
-            value_string=\
+    def test_run(self):
+        # Set up models
+        self.setup_match(True, SupplyAvailabilityOption.OTG)
+        qna = self.setup_qna(
+            answered=True,
+            answer_captured=\
                 'My email is kevin@everybase.co and friend@everybase.co'
         )
-        questioner = relmods.User.objects.create()
-        relmods.QuestionAnswerPair.objects.create(
-            question_captured_value=dv,
+        
+        # Run task
+        auto_clean_answer(qna, True)
 
+        # Assert
+        self.assertEqual(
+            qna.auto_cleaned_answer,
+            'My email is * and *'
         )
-
-        # Run function
-        # Test QNA params
-
-        pass
-        
-        # self.receive_reply_assert(
-        #     'Hi' ,
-        #     intents.REGISTER,
-        #     messages.REGISTER__GET_NAME
-        # )
-        # self.assertEqual(self.user.name, None)
-        
-        # self.receive_reply_assert(
-        #     'Kevin Ng',
-        #     intents.MENU,
-        #     messages.MENU
-        # )
-        # self.assertEqual(self.user.name, 'Kevin Ng')
+        self.assertEqual(
+            qna.auto_cleaned_answer_w_mark_up,
+            'My email is <email>kevin@everybase.co</email>\
+ and <email>friend@everybase.co</email>'
+        )
