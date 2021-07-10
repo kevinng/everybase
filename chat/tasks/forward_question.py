@@ -1,9 +1,12 @@
+import pytz, datetime
+from everybase.settings import TIME_ZONE
 from celery import shared_task
 from relationships import models as relmods
 from chat.libraries.constants import intents, messages
 from chat.libraries.utility_funcs.send_message import send_message
 from chat.libraries.utility_funcs.get_chatbot import get_chatbot
 from chat.libraries.utility_funcs.render_message import render_message
+from chat.libraries.utility_funcs.done_to_context import done_to_context
 
 @shared_task
 def forward_question(
@@ -46,6 +49,15 @@ def forward_question(
         params['supply'] = qna.match.supply
     else:
         params['demand'] = qna.match.demand
+
+    # Update timestamps
+    sgtz = pytz.timezone(TIME_ZONE)
+    qna.question_forwarded = datetime.datetime.now(tz=sgtz)
+    qna.save()
+
+    # Update user's context
+    user = qna.match.demand.user if buying else qna.match.supply.user
+    done_to_context(user, intents.QNA, messages.YOUR_QUESTION)
 
     return send_message(
         render_message(messages.YOUR_QUESTION, params),

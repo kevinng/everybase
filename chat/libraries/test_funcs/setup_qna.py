@@ -16,7 +16,8 @@ def setup_qna(
         manual_cleaned_answer: str = None,
         auto_cleaned_question: str = None,
         auto_cleaned_answer: str = None,
-        answer_readied: bool = None
+        answer_readied: bool = None,
+        question_readied: bool = None
     ) -> relmods.QuestionAnswerPair:
     """Set up QNA model and associated data key/value for user.
 
@@ -62,6 +63,8 @@ def setup_qna(
         manual_cleaned_answer=manual_cleaned_answer if answered else None,
         answered=datetime.datetime.now(tz=sgtz) if answered else None,
         answer_ready=datetime.datetime.now(tz=sgtz) if answer_readied else None,
+        question_ready=datetime.datetime.now(tz=sgtz) if question_readied else \
+            None,
         match=match
     )
 
