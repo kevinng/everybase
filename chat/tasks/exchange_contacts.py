@@ -11,6 +11,7 @@ from chat.libraries.utility_funcs.get_create_whatsapp_link import \
 from chat.libraries.utility_funcs.get_chatbot import get_chatbot
 from chat.libraries.utility_funcs.render_message import render_message
 from chat.libraries.utility_funcs.send_message import send_message
+from chat.libraries.utility_funcs.done_to_context import done_to_context
 
 def exchange_contacts(
         match: relmods.Match,
@@ -35,6 +36,8 @@ def exchange_contacts(
     """
 
     chatbot_ph = get_chatbot().phone_number
+    buyer = match.demand.user
+    seller = match.supply.user
 
     # Send buyer
     buyer_msg = send_message(
@@ -42,20 +45,23 @@ def exchange_contacts(
             messages.CONNECTED,
             {
                 'buying': True,
-                'contact': match.supply.user,
-                'whatsapp_link': get_create_whatsapp_link(
-                    match.demand.user,
-                    match.supply.user
+                'contact': seller,
+                'whatsapp_url': get_create_whatsapp_link(
+                    buyer,
+                    seller
                 )
             }
         ),
         chatbot_ph,
-        match.demand.user.phone_number,
+        buyer.phone_number,
         intents.QNA,
         messages.CONNECTED,
         None,
         no_external_calls
     )
+
+    # Switch buyer's context
+    done_to_context(buyer, intents.QNA, messages.CONNECTED)
 
     # Update sent-buyer timestamp
     sgtz = pytz.timezone(TIME_ZONE)
@@ -67,15 +73,15 @@ def exchange_contacts(
             messages.CONNECTED,
             {
                 'buying': False,
-                'contact': match.demand.user,
-                'whatsapp_link': get_create_whatsapp_link(
-                    match.supply.user,
-                    match.demand.user
+                'contact': buyer,
+                'whatsapp_url': get_create_whatsapp_link(
+                    seller,
+                    buyer
                 )
             }
         ),
         chatbot_ph,
-        match.supply.user.phone_number,
+        seller.phone_number,
         intents.QNA,
         messages.CONNECTED,
         None,
@@ -84,5 +90,8 @@ def exchange_contacts(
 
     # Update sent_seller timestamp
     match.sent_contact_to_seller = datetime.datetime.now(tz=sgtz)
+
+    # Switch buyer's context
+    done_to_context(seller, intents.QNA, messages.CONNECTED)
 
     return (buyer_msg, seller_msg)
