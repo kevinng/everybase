@@ -1,0 +1,9 @@
+You've connected with the buyer.
+
+*Buyer's contacts*:
+
+Kevin Ng
++123451234567890
+
+Click this link to WhatsApp buyer:
+{% if whatsapp_url %}{{ whatsapp_url }}{% else %}URL IS MISSING{% endif %}

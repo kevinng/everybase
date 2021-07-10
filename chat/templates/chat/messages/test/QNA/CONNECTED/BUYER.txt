@@ -1,0 +1,9 @@
+You've connected with the seller.
+
+*Seller's contacts*:
+
+Test User 2
++234562345678901
+
+Click this link to WhatsApp seller:
+{% if whatsapp_url %}{{ whatsapp_url }}{% else %}URL IS MISSING{% endif %}
