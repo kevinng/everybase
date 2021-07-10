@@ -21,7 +21,7 @@ def auto_clean_answer(
         made correctly.
     """
 
-    text = qna.question_captured_value.value_string
+    text = qna.answer_captured_value.value_string
 
     # Clean
     cleaned_text, marked_text, _ = remove_email(text)
