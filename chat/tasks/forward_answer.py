@@ -57,7 +57,6 @@ def forward_answer(
     # Update timestamps
     sgtz = pytz.timezone(TIME_ZONE)
     qna.answer_forwarded = datetime.datetime.now(tz=sgtz)
-    qna.question_forwarded = datetime.datetime.now(tz=sgtz)
     qna.save()
 
     # Update user's context

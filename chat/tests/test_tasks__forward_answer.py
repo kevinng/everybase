@@ -1,17 +1,10 @@
-from chat.tasks.forward_answer import forward_answer
-from urllib.parse import urljoin
-from django.urls import reverse
-
-from everybase import settings
-
-from relationships import models as relmods
-
 from chat.libraries.classes.message_handler_test import MessageHandlerTest
 from chat.libraries.constants import intents, messages
 
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
-from chat.tasks.exchange_contacts import exchange_contacts
+
+from chat.tasks.forward_answer import forward_answer
 
 class TasksForwardAnswerTest(MessageHandlerTest):
     fixtures = [
@@ -52,10 +45,6 @@ class TasksForwardAnswerTest(MessageHandlerTest):
             qna.answer_forwarded,
             None
         )
-        self.assertNotEqual(
-            qna.question_forwarded,
-            None
-        )
 
     def test_run_buying(self):
         self.setup_match(True, SupplyAvailabilityOption.OTG)
@@ -78,9 +67,5 @@ class TasksForwardAnswerTest(MessageHandlerTest):
         )
         self.assertNotEqual(
             qna.answer_forwarded,
-            None
-        )
-        self.assertNotEqual(
-            qna.question_forwarded,
             None
         )
