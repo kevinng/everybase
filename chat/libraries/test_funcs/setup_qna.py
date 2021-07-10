@@ -13,17 +13,13 @@ def setup_qna(
         question_captured: str = None,
         answer_captured: str = None,
         manual_cleaned_question: str = None,
-        manual_cleaned_answer: str = None
+        manual_cleaned_answer: str = None,
+        auto_cleaned_question: str = None,
+        auto_cleaned_answer: str = None,
+        answer_readied: bool = None
     ) -> relmods.QuestionAnswerPair:
     """Set up QNA model and associated data key/value for user.
-    
-    Parameters
-    ----------
-    answering
-        True if this user is answering the Q&A, False otherwise.
-    answered
-        True if Q&A is answered, False otherwise.
-    
+
     Returns
     -------
     Q&A model reference set up
@@ -59,10 +55,13 @@ def setup_qna(
         answerer=user_1 if answering else user_2,
         question_captured_value=qns_dv,
         answer_captured_value=ans_dv,
+        auto_cleaned_question=auto_cleaned_question,
         manual_cleaned_question=manual_cleaned_question,
         asked=datetime.datetime.now(tz=sgtz),
+        auto_cleaned_answer=auto_cleaned_answer,
         manual_cleaned_answer=manual_cleaned_answer if answered else None,
         answered=datetime.datetime.now(tz=sgtz) if answered else None,
+        answer_ready=datetime.datetime.now(tz=sgtz) if answer_readied else None,
         match=match
     )
 
