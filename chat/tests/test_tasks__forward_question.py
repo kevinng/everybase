@@ -15,11 +15,11 @@ class TasksForwardQuestionTest(MessageHandlerTest):
         'setup/20210527__relationships__phonenumbertype.json'
     ]
 
-    # def test_answer_not_ready(self):
-    #     self.setup_match(False, SupplyAvailabilityOption.OTG)
-    #     qna = self.setup_qna(question_readied=False)
-    #     msg = forward_question(qna, True)
-    #     self.assertEqual(msg, None)
+    def test_answer_not_ready(self):
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
+        qna = self.setup_qna(question_readied=False)
+        msg = forward_question(qna, True)
+        self.assertEqual(msg, None)
 
     def test_run_selling(self):
         self.setup_match(False, SupplyAvailabilityOption.OTG)
@@ -68,65 +68,3 @@ class TasksForwardQuestionTest(MessageHandlerTest):
             qna.question_forwarded,
             None
         )
-
-
-
-        
-
-
-
-    # def test_run_selling(self):
-    #     self.setup_match(False, SupplyAvailabilityOption.OTG)
-
-    #     # answering=False because I'm asking the question (as a seller), so I'm
-    #     # being forwarded (i.e., receiving) the message.
-    #     qna = self.setup_qna(
-    #         answering=False,
-    #         answered=True,
-    #         answer_readied=True
-    #     )
-
-    #     msg = forward_answer(qna, True)
-
-    #     self.send_assert(
-    #         msg.body,
-    #         intents.QNA,
-    #         messages.YOUR_ANSWER,
-    #         target_body_variation_key='SELLING'
-    #     )
-    #     self.assertNotEqual(
-    #         qna.answer_forwarded,
-    #         None
-    #     )
-    #     self.assertNotEqual(
-    #         qna.question_forwarded,
-    #         None
-    #     )
-
-    # def test_run_buying(self):
-    #     self.setup_match(True, SupplyAvailabilityOption.OTG)
-
-    #     # answering=False because I'm asking the question (as a buyer), so I'm
-    #     # being forwarded (i.e., receiving) the message.
-    #     qna = self.setup_qna(
-    #         answering=False,
-    #         answered=True,
-    #         answer_readied=True
-    #     )
-
-    #     msg = forward_answer(qna, True)
-
-    #     self.send_assert(
-    #         msg.body,
-    #         intents.QNA,
-    #         messages.YOUR_ANSWER,
-    #         target_body_variation_key='BUYING'
-    #     )
-    #     self.assertNotEqual(
-    #         qna.answer_forwarded,
-    #         None
-    #     )
-    #     self.assertNotEqual(
-    #         qna.question_forwarded,
-    #         None
-    #     )
