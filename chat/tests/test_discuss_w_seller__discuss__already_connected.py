@@ -1,7 +1,7 @@
 from chat.libraries.constants import datas, intents, messages
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 
-class DiscussWSellerDiscussAlreadyConnectedTest(MessageHandlerTest):
+class DiscussWSellerDiscussAlreadyConnectedTest(ChatTest):
     def setUp(self):
         super().setUp(
             intents.DISCUSS_W_SELLER,

@@ -1,8 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 
-class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
-    MessageHandlerTest):
+class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(ChatTest):
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__CONFIRM_PACKING)
         # User chose ready/OTG in a previous step.
@@ -77,8 +76,7 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_KnownPacking_Test(
     def test_choose_no_with_text(self):
         self.choose_no('no')
 
-class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
-    MessageHandlerTest):
+class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(ChatTest):
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__CONFIRM_PACKING)
         # User chose ready/OTG in a previous step.
@@ -147,7 +145,7 @@ class DisucssWBuyerSupplyConfirmPacking_ReadyOTG_UnknownPacking_Test(
     def test_choose_no_with_text(self):
         self.choose_no('no')
 
-class DisucssWBuyerSupplyConfirmPacking_PreOrder_Test(MessageHandlerTest):
+class DisucssWBuyerSupplyConfirmPacking_PreOrder_Test(ChatTest):
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__CONFIRM_PACKING)
         # User chose pre-order in a previous step.

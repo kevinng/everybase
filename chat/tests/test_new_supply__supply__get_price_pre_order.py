@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 
-class NewSupplyGetPricePreOrderTest(MessageHandlerTest):
+class NewSupplyGetPricePreOrderTest(ChatTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PRICE_PRE_ORDER)
     

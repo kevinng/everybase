@@ -1,9 +1,7 @@
-# todo: good to go
-
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 
-class QNAStopDiscussionThankYouTest(MessageHandlerTest):
+class QNAStopDiscussionThankYouTest(ChatTest):
     def setUp(self):
         super().setUp(
             intents.QNA,

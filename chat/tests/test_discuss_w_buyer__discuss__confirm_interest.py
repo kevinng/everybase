@@ -4,14 +4,14 @@ from django.urls import reverse
 from everybase import settings
 
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 from chat.libraries.utility_funcs.connect import connect
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
 
 from relationships import models as relmods
 
-class DiscussWBuyerDiscussConfirmInterestTest(MessageHandlerTest):
+class DiscussWBuyerDiscussConfirmInterestTest(ChatTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',

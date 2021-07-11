@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 
-class RegisterRegisterGetNameTest(MessageHandlerTest):
+class RegisterRegisterGetNameTest(ChatTest):
     def setUp(self):
         super().setUp(name=None)
 

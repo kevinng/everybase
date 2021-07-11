@@ -1,9 +1,9 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
 
-class QNAQuestionTest(MessageHandlerTest):
+class QNAQuestionTest(ChatTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',

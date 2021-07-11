@@ -5,14 +5,14 @@ from everybase import settings
 
 from relationships import models as relmods
 
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 from chat.libraries.constants import intents, messages
 
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
 from chat.tasks.exchange_contacts import exchange_contacts
 
-class TasksExchangeContactsTest(MessageHandlerTest):
+class TasksExchangeContactsTest(ChatTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',

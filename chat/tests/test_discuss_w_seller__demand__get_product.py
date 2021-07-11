@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 
-class DiscussWSellerDemandGetProductTest(MessageHandlerTest):
+class DiscussWSellerDemandGetProductTest(ChatTest):
     def setUp(self):
         super().setUp(intents.DISCUSS_W_SELLER, messages.DEMAND__GET_PRODUCT)
 

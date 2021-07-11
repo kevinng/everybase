@@ -1,9 +1,9 @@
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
 from chat.tasks.auto_clean_question import auto_clean_question
 
-class TasksAutoCleanQuestionTest(MessageHandlerTest):
+class TasksAutoCleanQuestionTest(ChatTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',

@@ -1,8 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 
-class NewSupplySupplyGetPacking_ReadyOTG_UnknownPacking_Test(
-    MessageHandlerTest):
+class NewSupplySupplyGetPacking_ReadyOTG_UnknownPacking_Test(ChatTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
         # User chose 'ready/OTG' in an earlier step
@@ -32,7 +31,7 @@ class NewSupplySupplyGetPacking_ReadyOTG_UnknownPacking_Test(
             value_string=input
         )
 
-class NewSupplySupplyGetPacking_ReadyOTG_KnownPacking_Test(MessageHandlerTest):
+class NewSupplySupplyGetPacking_ReadyOTG_KnownPacking_Test(ChatTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
         # User chose 'ready/OTG' in an earlier step
@@ -66,8 +65,7 @@ class NewSupplySupplyGetPacking_ReadyOTG_KnownPacking_Test(MessageHandlerTest):
             value_string=input
         )
 
-class NewSupplySupplyGetPacking_PreOrder_UnknownPacking_Test(
-    MessageHandlerTest):
+class NewSupplySupplyGetPacking_PreOrder_UnknownPacking_Test(ChatTest):
     def setUp(self):
         super().setUp(intents.NEW_SUPPLY, messages.SUPPLY__GET_PACKING)
         # User chose 'pre-order' in an earlier step

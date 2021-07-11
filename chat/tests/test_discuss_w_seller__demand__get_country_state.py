@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 
-class DiscussWSellerDemandGetCountryStateTest(MessageHandlerTest):
+class DiscussWSellerDemandGetCountryStateTest(ChatTest):
     def set_up_known_product(self):
         # Set up a product, and have the user enter a term that matches the
         # known product

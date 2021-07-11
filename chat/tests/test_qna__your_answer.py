@@ -1,10 +1,10 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 from chat.libraries.utility_funcs.get_payment_link import get_payment_link
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
 
-class QNAYourAnswerTest(MessageHandlerTest):
+class QNAYourAnswerTest(ChatTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',

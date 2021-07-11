@@ -1,11 +1,16 @@
-from chat.libraries.test_funcs.setup_product_type import setup_product_type
 from django.test import TestCase
-from django.template.loader import render_to_string
-
 from chat import models, views
+
+from relationships import models as relmods
+from payments import models as paymods
+from common import models as commods
+
+from chat.libraries.test_funcs.get_target_body import get_target_body
+from chat.libraries.test_funcs.setup_product_type import setup_product_type
 from chat.libraries.utility_funcs.get_latest_value import get_latest_value
 from chat.libraries.utility_funcs.get_context import get_context
 from chat.libraries.utility_funcs.start_context import start_context
+from chat.libraries.utility_funcs.get_twilml_body import get_twilml_body
 
 from chat.libraries.test_funcs.setup_user_phone_number import \
     setup_user_phone_number
@@ -14,12 +19,8 @@ from chat.libraries.test_funcs.setup_match import setup_match
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOptions
 
-from relationships import models as relmods
-from payments import models as paymods
-from common import models as commods
-
-class MessageHandlerTest(TestCase):
-    """Base class for message handler test cases"""
+class ChatTest(TestCase):
+    """Base class for chat test cases"""
 
     def setUp(
             self,
@@ -71,7 +72,7 @@ class MessageHandlerTest(TestCase):
 
         # System user
         self.sys_user, self.sys_user_ph = self.setup_user_phone_number(
-            'Everybase System', '65', '88933466')
+            'Everybase System', '34567', '3456789012')
 
         self.match = None
         self.payment_hash = None
@@ -114,7 +115,8 @@ class MessageHandlerTest(TestCase):
     def assert_context(
             self,
             intent_key: str,
-            message_key: str
+            message_key: str,
+            counter_party: bool = False
         ):
         """Assert user's current context with input context
 
@@ -122,10 +124,81 @@ class MessageHandlerTest(TestCase):
             Intent key for context to assert against user's context
         message_key
             Message key for context to assert against user's context
+        counter_party
+            If True, will assert the context of the counter-party instead
         """
-        user_intent_key, user_message_key = get_context(self.user)
+        user_to_test = self.user if not counter_party else self.user_2
+        user_intent_key, user_message_key = get_context(user_to_test)
         self.assertEqual(user_intent_key, intent_key)
         self.assertEqual(user_message_key, message_key)
+
+    def send_assert(
+            self,
+            response_body: str,
+            intent_key: str,
+            message_key: str,
+            target_body_intent_key: str = None,
+            target_body_message_key: str = None,
+            target_body_params_func: str = None,
+            target_body_variation_key: str = None,
+            counter_party: bool = False
+        ):
+        """Send message to user, and assert - after-send context and target
+        message body.
+
+        Target response text is how the message should look like. We store
+        these texts at chat.templates.test.
+
+        If a template has no variations, it is stored in a file with its
+        message key and the .txt extension. E.g., MENU.txt.
+
+        If a template has variations, it is stored in a folder with its message
+        key, with each variation of the template stored in the folder with
+        its variation key and the .txt extension. E.g., YOUR_QUESTION/OTG.txt.
+        
+        Parameters
+        ----------
+        response_body
+            Response body to assert against the target body
+        intent_key
+            Intent key for after-reply context. User's context after-reply will
+            be asserted against this key. Further, the after-reply message
+            target response text will be determined with this key.
+        message_key
+            Message key for after-reply context. User's context after-reply will
+            be asserted against this key. Further, the after-reply message
+            target response text will be determined with this key.
+        target_body_intent_key
+            If specified, this intent key will be used intead of intent_key to
+            render the after-reply target response text.
+        target_body_message_key
+            If specified, this message key will be used instead of message_key
+            to render the after-reply target response text.
+        target_body_params_func
+            If specified, we will run this function to compute the parameters
+            for the after-reply target response text.
+        target_body_variation_key
+            If specified, we will use this key to pick-up specific variation
+            of the after-reply target response text.
+        counter_party
+            If True, will assert the context of the counter-party instead
+        """
+        # print('RESPONSE BODY')
+        # print(response_body)
+
+        target_body = get_target_body(
+            intent_key,
+            message_key,
+            target_body_intent_key,
+            target_body_message_key,
+            target_body_params_func,
+            target_body_variation_key
+        )
+        # print('TARGET BODY')
+        # print(target_body)
+
+        self.assertEqual(response_body, target_body)
+        self.assert_context(intent_key, message_key, counter_party)
 
     def receive_reply_assert(
             self,
@@ -138,22 +211,12 @@ class MessageHandlerTest(TestCase):
             target_body_variation_key: str = None
         ):
         """Receive inbound message, reply, assert - after-reply context and
-        target response text.
-
-        Target response text is how the message should look like. We store
-        these texts at chat.templates.test.
-
-        If a template has no variations, it is stored in a file with its
-        message key and the .txt extension. E.g., MENU.txt.
-
-        If a template has variations, it is stored in a folder with its message
-        key, with each variation of the template stored in the folder with
-        its variation key and the .txt extension. E.g., YOUR_QUESTION/OTG.txt.
+        target message text.
 
         Parameters
         ----------
         body
-            Message body
+            Message body of message we receive from user
         intent_key
             Intent key for after-reply context. User's context after-reply will
             be asserted against this key. Further, the after-reply message
@@ -176,46 +239,17 @@ class MessageHandlerTest(TestCase):
             of the after-reply target response text.
         """
         response = self.receive_reply(body)
-        # print('FULL RESPONSE')
-        # print(response)
+        response_body = get_twilml_body(response)
 
-        if target_body_intent_key is None:
-            render_intent_key = intent_key
-        else:
-            render_intent_key = target_body_intent_key
-        
-        if target_body_message_key is None:
-            render_message_key = message_key
-        else:
-            render_message_key = target_body_message_key
-
-        # Render body from target path
-        target_path = 'chat/messages/test/%s/%s' % \
-            (render_intent_key, render_message_key)
-        if target_body_variation_key is None:
-            target_path += '.txt'
-        else:
-            target_path += '/%s.txt' % target_body_variation_key
-
-        if target_body_params_func is None:
-            target_params = {}
-        else:
-            target_params = target_body_params_func()
-        target_body = render_to_string(target_path, target_params)
-
-        # print('TARGET BODY')
-        # print(target_body)
-
-        # Get body from response TwilML
-        start_pos = response.index('<Message>') + len('<Message>')
-        end_pos = response.index('</Message>')
-        response_body = response[start_pos:end_pos]
-
-        # print('RESPONSE BODY')
-        # print(response_body)
-
-        self.assertEqual(response_body, target_body)
-        self.assert_context(intent_key, message_key)
+        self.send_assert(
+            response_body,
+            intent_key,
+            message_key,
+            target_body_intent_key,
+            target_body_message_key,
+            target_body_params_func,
+            target_body_variation_key
+        )
 
     def assert_latest_value(
             self,
@@ -308,8 +342,6 @@ class MessageHandlerTest(TestCase):
             value_boolean=value_boolean,
             value_id=value_id
         )
-
-    ##### Set up #####
 
     def setup_user_phone_number(
             self,
@@ -466,7 +498,6 @@ class MessageHandlerTest(TestCase):
 
         return (product_type, uom, keyword)
 
-    # def setup_user_lead(
     def setup_match(
         self,
         buying: bool,
@@ -491,70 +522,11 @@ class MessageHandlerTest(TestCase):
         self.match = setup_match(
             buying, supply_type, self.user, self.user_2, closed)
 
-        # # Product type and packing for both supply and demand
-        # product_type, packing, _ = self.setup_product_type(
-        #     name='Nitrile Gloves',
-        #     uom_name='Box',
-        #     uom_plural_name='Boxes',
-        #     uom_description='200 pieces in 1 box'
-        # )
-
-        # # Supply availability
-        # if supply_type == SupplyAvailabilityOption.OTG:
-        #     availability = relmods.Availability.objects.get(pk=1)
-        # elif supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE or \
-        #     supply_type == SupplyAvailabilityOption.PRE_ORDER_DURATION:
-        #     availability = relmods.Availability.objects.get(pk=2)
-
-        # # Supply timeframe
-        # pre_order_timeframe = None
-        # sgtz = pytz.timezone(TIME_ZONE)
-        # if supply_type == SupplyAvailabilityOption.PRE_ORDER_DEADLINE:
-        #     pre_order_timeframe = relmods.TimeFrame.objects.create(
-        #         deadline=datetime.datetime(2021, 2, 5, tzinfo=sgtz))
-        # elif supply_type == SupplyAvailabilityOption.PRE_ORDER_DURATION:
-        #     pre_order_timeframe = relmods.TimeFrame.objects.create(
-        #         duration_uom='d',
-        #         duration=5
-        #     )
-
-        # # Supply
-        # supply = relmods.Supply.objects.create(
-        #     user=self.user if not buying else self.user_2,
-        #     product_type=product_type,
-        #     packing=packing,
-        #     country=commods.Country.objects.get(pk=601), # Israel
-        #     availability=availability,
-        #     pre_order_timeframe=pre_order_timeframe,
-        #     quantity=12000,
-        #     price=15.15,
-        #     currency=paymods.Currency.objects.get(pk=1), # USD
-        #     deposit_percentage=0.4,
-        #     accept_lc=False
-        # )
-
-        # # Demand
-        # demand = relmods.Demand.objects.create(
-        #     user=self.user if buying else self.user_2,
-        #     product_type=product_type,
-        #     packing=packing,
-        #     country=commods.Country.objects.get(pk=601), # Israel
-        #     quantity=12000,
-        #     price=15.15,
-        #     currency=paymods.Currency.objects.get(pk=1) # USD
-        # )
-
-        # # Set up match
-        # self.match = relmods.Match.objects.create(
-        #     supply=supply,
-        #     demand=demand,
-        #     closed=datetime.datetime.now(tz=pytz.timezone(TIME_ZONE)) \
-        #         if closed else None
-        # )
-
-        # Set up user's current_match
         self.user.current_match = self.match
         self.user.save()
+
+        self.user_2.current_match = self.match
+        self.user_2.save()
 
         return self.match
 
@@ -573,18 +545,19 @@ class MessageHandlerTest(TestCase):
     def setup_qna(
             self,
             answering: bool = True,
-            answered: bool = False
+            answered: bool = False,
+            question_captured: str = 'Can you do OEM?',
+            answer_captured: str = 'Yes, we can.',
+            manual_cleaned_question: str = 'Can you do OEM? (Manual-Cleaned)',
+            manual_cleaned_answer: str = 'Yes, we can. (Manual-Cleaned)',
+            auto_cleaned_question: str = 'Can you do OEM? (Auto-Cleaned)',
+            auto_cleaned_answer: str = 'Yes, we can. (Auto-Cleaned)',
+            answer_readied: bool = None,
+            question_readied: bool = None
         ) -> relmods.QuestionAnswerPair:
         """Set up QNA model and associated data key/value for this user, user_2
         and match.
-        
-        Parameters
-        ----------
-        answering
-            True if this user is answering the Q&A, False otherwise.
-        answered
-            True if Q&A is answered, False otherwise.
-        
+
         Returns
         -------
         Q&A model reference set up
@@ -596,10 +569,14 @@ class MessageHandlerTest(TestCase):
             self.match,
             answering,
             answered, 
-            'Can you do OEM?',
-            'Yes, we can.',
-            'Can you do OEM?',
-            'Yes, we can.'
+            question_captured,
+            answer_captured,
+            manual_cleaned_question,
+            manual_cleaned_answer,
+            auto_cleaned_question,
+            auto_cleaned_answer,
+            answer_readied,
+            question_readied
         )
 
         # Set up user's current_qna
@@ -607,8 +584,6 @@ class MessageHandlerTest(TestCase):
         self.user.save()
 
         return qna
-
-    ##### Actions #####
 
     def get_message(
             self,

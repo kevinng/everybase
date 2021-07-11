@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler_test import MessageHandlerTest
+from chat.libraries.classes.chat_test import ChatTest
 
-class ExplainService__ExplainService__Test(MessageHandlerTest):
+class ExplainService__ExplainService__Test(ChatTest):
     def setUp(self):
         super().setUp(intents.EXPLAIN_SERVICE, messages.EXPLAIN_SERVICE)
 

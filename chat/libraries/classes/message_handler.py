@@ -3,7 +3,6 @@ from abc import abstractmethod
 
 from chat import models
 from relationships import models as relmods
-from common import models as commods
 
 from chat.libraries.constants import datas, messages
 from chat.libraries.utility_funcs.get_parameters import get_parameters
