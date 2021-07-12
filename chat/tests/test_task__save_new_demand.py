@@ -46,8 +46,8 @@ class TaskSaveNewDemandTest_ProductTypeFound(ChatTest):
         dmd = save_new_demand(msg)
 
         # Product type
-        self.assertEqual(dmd.product_type_data_value.id, ptype_dv.id)
         self.assertEqual(dmd.product_type.id, 1) # Nitrile gloves
+        self.assertEqual(dmd.product_type_data_value.id, ptype_dv.id)
         self.assertEqual(dmd.product_type_method, methods.FREE_TEXT_INPUT)
         
         # Country
@@ -101,6 +101,7 @@ class TasksSaveNewDemandTest_ProductTypeNotFound(ChatTest):
         dmd = save_new_demand(msg)
 
         # Product type
+        self.assertEqual(dmd.product_type, None)
         self.assertEqual(dmd.product_type_data_value.id, ptype_dv.id)
         self.assertEqual(dmd.product_type_method, methods.FREE_TEXT_INPUT)
         
