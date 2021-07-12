@@ -4,11 +4,11 @@ from relationships import models as relmods
 from chat.tasks.save_new_demand import save_new_demand
 
 @shared_task
-def save_new_supply_version(
+def save_new_demand_version(
         match: relmods.Match,
         last_message: models.TwilioInboundMessage
     ):
-    """Save a new version of the supply
+    """Save a new version of the demand
 
     Parameters
     ----------
