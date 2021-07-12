@@ -3,7 +3,7 @@ from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
 from chat.tasks.auto_clean_answer import auto_clean_answer
 
-class TasksAutoCleanAnswerTest(ChatTest):
+class TaskAutoCleanAnswerTest(ChatTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',

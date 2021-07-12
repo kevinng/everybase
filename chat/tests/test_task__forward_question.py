@@ -5,7 +5,7 @@ from chat.libraries.constants import intents, messages
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
 
-class TasksForwardQuestionTest(ChatTest):
+class TaskForwardQuestionTest(ChatTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',

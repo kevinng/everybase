@@ -6,7 +6,7 @@ from chat.libraries.test_funcs.supply_availability_options import \
 
 from chat.tasks.forward_answer import forward_answer
 
-class TasksForwardAnswerTest(ChatTest):
+class TaskForwardAnswerTest(ChatTest):
     fixtures = [
         'setup/common__country.json',
         'setup/20210528__payments__currency.json',
