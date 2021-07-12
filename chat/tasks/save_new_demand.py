@@ -1,3 +1,4 @@
+from chat.models import TwilioInboundMessage
 from celery import shared_task
 from relationships import models as relmods
 from chat.libraries.constants import intents, messages, datas, methods
@@ -6,7 +7,10 @@ from chat.libraries.utility_funcs.get_country import get_country
 from chat.libraries.utility_funcs.get_value_string import get_value_string
 
 @shared_task
-def save_new_demand(last_message, new_version=False):
+def save_new_demand(
+        last_message: TwilioInboundMessage,
+        new_version: bool = False
+    ) -> relmods.Demand:
     """Save new demand entered by the user. Triggered at the end of the 'new
     demand's sequence.
 
@@ -14,11 +18,13 @@ def save_new_demand(last_message, new_version=False):
     ----------
     last_message
         Last TwilioInboundMessage of the 'new supply' sequence.
+    new_version
+        If True, use intent key for saving a copy of this demand.
     """
     # The intent key determines if we're creating a new demand or creating a
     # new version of an old one
-    intent_key = intents.NEW_DEMAND if new_version else intents.DISCUSS_W_SELLER
-    
+    intent_key = intents.DISCUSS_W_SELLER if new_version else intents.NEW_DEMAND
+
     user = last_message.from_user
     demand = relmods.Demand.objects.create(user=user)
 
@@ -28,10 +34,13 @@ def save_new_demand(last_message, new_version=False):
     # Product type and packing UOM
     product_str, product_val = gvs(
         intent_key,
-        messages.SUPPLY__GET_PRODUCT,
-        datas.PRODUCT
+        messages.DEMAND__GET_PRODUCT,
+        datas.PRODUCT,
+        'Product type'
     )
+
     product_type, uom = get_product_type(product_str)
+
     demand.product_type_data_value = product_val
     demand.product_type_method = methods.FREE_TEXT_INPUT
     demand.product_type = product_type
@@ -41,9 +50,9 @@ def save_new_demand(last_message, new_version=False):
 
     # Country
     country_str, country_val = gvs(
-        intents.NEW_DEMAND,
+        intent_key,
         messages.DEMAND__GET_COUNTRY_STATE,
-        datas.QUANTITY,
+        datas.COUNTRY_STATE,
         'Country'
     )
     demand.country_data_value = country_val
@@ -52,16 +61,17 @@ def save_new_demand(last_message, new_version=False):
 
     # Quantity
     if ptype_found():
-        quantity_msg = messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE
+        quantity_msg_key = messages.DEMAND__GET_QUANTITY_KNOWN_PRODUCT_TYPE
     else:
-        quantity_msg = messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
+        quantity_msg_key = messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE
 
     _, quantity_val = gvs(
-        intents.NEW_DEMAND,
-        quantity_msg,
+        intent_key,
+        quantity_msg_key,
         datas.QUANTITY,
         'Quantity'
     )
+
     demand.quantity_data_value = quantity_val
     demand.quantity_method = methods.FREE_TEXT_INPUT
 

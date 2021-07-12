@@ -2,11 +2,15 @@ from chat.libraries.classes.chat_test import ChatTest
 from chat.libraries.constants import intents, messages, datas
 from chat.tasks.save_new_demand import save_new_demand
 
+_fixtures = [
+    'setup/20210527__relationships__producttype.json',
+    'setup/20210527__relationships__unitofmeasure.json',
+    'setup/20210712__common__matchkeywords.json',
+    'setup/common__country.json'
+]
+
 class TaskSaveNewDemandTest_ProductTypeFound(ChatTest):
-    fixtures = [
-        'setup/20210527__relationships__producttype.json',
-        'setup/20210712__common__matchkeywords.json'
-    ]
+    fixtures = _fixtures
 
     def test_run(self):
         # Setup
@@ -39,6 +43,7 @@ class TaskSaveNewDemandTest_ProductTypeFound(ChatTest):
             intents.NEW_DEMAND,
             messages.DEMAND__THANK_YOU
         )
+
         dmd = save_new_demand(msg)
 
         # Product type
@@ -68,52 +73,80 @@ class TaskSaveNewDemandTest_ProductTypeFound(ChatTest):
         # Quantity
         self.assertEqual(
             dmd.quantity_data_value.id,
-            quantity_dv
+            quantity_dv.id
         )
 
         # Price
         self.assertEqual(
             dmd.price_data_value.id,
-            price_dv
+            price_dv.id
         )
 
-# class TasksSaveNewDemandTest_ProductTypeNotFound(ChatTest):
-#     fixtures = [
-#         'setup/20210527__relationships__producttype.json',
-#         'setup/common__country.json'
-#     ]
+class TasksSaveNewDemandTest_ProductTypeNotFound(ChatTest):
+    fixtures = _fixtures
 
-#     def setUp(self):
-#         super().setUp()
+    def setUp(self):
+        super().setUp()
 
-#         # A product NOT in our database
-#         self.setup_data_value(
-#             intents.NEW_DEMAND,
-#             messages.DEMAND__GET_PRODUCT,
-#             datas.PRODUCT,
-#             'Chicken Nuggets'
-#         )
+        # Setup
+        ptype_dv = self.setup_data_value(
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_PRODUCT,
+            datas.PRODUCT,
+            'Apple Juice' # A product NOT in our database
+        )
+        country_dv = self.setup_data_value(
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_COUNTRY_STATE,
+            datas.COUNTRY_STATE,
+            'Singapore'
+        )
+        quantity_dv = self.setup_data_value(
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE,
+            datas.QUANTITY,
+            '200 boxes'
+        )
+        price_dv = self.setup_data_value(
+            intents.NEW_DEMAND,
+            messages.DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE,
+            datas.PRICE,
+            'USD 5.67 per box'
+        )
 
-#         self.setup_data_value(
-#             intents.NEW_DEMAND,
-#             messages.DEMAND__GET_COUNTRY_STATE,
-#             datas.COUNTRY_STATE,
-#             'Singapore'
-#         )
+        msg = self.setup_inbound_message(
+            intents.NEW_DEMAND,
+            messages.DEMAND__THANK_YOU
+        )
 
-#         # Product type found
-#         self.setup_data_value(
-#             intents.NEW_DEMAND,
-#             messages.DEMAND__GET_QUANTITY_UNKNOWN_PRODUCT_TYPE,
-#             datas.QUANTITY,
-#             '200 boxes'
-#         )
-#         self.setup_data_value(
-#             intents.NEW_DEMAND,
-#             messages.DEMAND__GET_PRICE_UNKNOWN_PRODUCT_TYPE,
-#             datas.PRICE,
-#             'USD 5.67 per box'
-#         )
+        dmd = save_new_demand(msg)
 
-#     def test_run(self):
-#         pass
+        # Product type
+        self.assertEqual(
+            dmd.product_type_data_value.id,
+            ptype_dv.id
+        )
+        
+        # Country
+        #   Data value set
+        self.assertEqual(
+            dmd.country_data_value.id,
+            country_dv.id
+        )
+        #   Right country
+        self.assertEqual(
+            dmd.country.id,
+            696 # Singapore
+        )
+
+        # Quantity
+        self.assertEqual(
+            dmd.quantity_data_value.id,
+            quantity_dv.id
+        )
+
+        # Price
+        self.assertEqual(
+            dmd.price_data_value.id,
+            price_dv.id
+        )
