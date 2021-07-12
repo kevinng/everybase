@@ -428,7 +428,7 @@ class ChatTest(TestCase):
             for a mock outbound message
         """
         # Get or create dataset
-        message = self.get_message(intent_key, message_key, inbound)
+        message = self.get_create_message(intent_key, message_key, inbound)
         if inbound:
             dataset, _ = models.MessageDataset.objects.get_or_create(
                 intent_key=intent_key,
@@ -585,14 +585,14 @@ class ChatTest(TestCase):
 
         return qna
 
-    def get_message(
+    def get_create_message(
             self,
             intent_key: str,
             message_key: str,
             inbound: bool = True
         ):
         """Returns message previously set up via its context (i.e.,
-        intent_key/message_key).
+        intent_key/message_key). Set up a new one if it does not exist.
 
         Parameters
         ----------
