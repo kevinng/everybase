@@ -19,15 +19,15 @@ def save_new_demand_version(
 
     Returns
     -------
-    New supply
+    New demand
     """
-    old_supply = match.supply
-    new_supply = save_new_demand(last_message, True)
+    old_demand = match.demand
+    new_demand = save_new_demand(last_message, True)
 
-    old_supply.next_version = new_supply
-    old_supply.save()
+    old_demand.next_version = new_demand
+    old_demand.save()
 
-    match.supply = new_supply
+    match.demand = new_demand
     match.save()
 
-    return new_supply
+    return new_demand
