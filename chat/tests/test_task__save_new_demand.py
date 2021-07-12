@@ -78,7 +78,7 @@ class TasksSaveNewDemandTest_ProductTypeCountryNotFound(ChatTest):
             intents.NEW_DEMAND,
             messages.DEMAND__GET_COUNTRY_STATE,
             datas.COUNTRY_STATE,
-            'ABC' # A country NOT in our database
+            'Wakanda' # A country NOT in our database
         )
         quantity_dv = self.setup_data_value(
             intents.NEW_DEMAND,
