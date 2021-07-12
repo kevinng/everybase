@@ -1,12 +1,17 @@
+from chat.models import TwilioInboundMessage
 from celery import shared_task
 from relationships import models as relmods
 from chat.libraries.constants import intents, messages, datas, methods
 from chat.libraries.utility_funcs.get_product_type import get_product_type
 from chat.libraries.utility_funcs.get_country import get_country
 from chat.libraries.utility_funcs.get_value_string import get_value_string
+from chat.libraries.utility_funcs.get_value_float import get_value_float
 
 @shared_task
-def save_new_supply(last_message, new_version=False) -> relmods.Supply:
+def save_new_supply(
+        last_message: TwilioInboundMessage,
+        new_version: bool = False
+    ) -> relmods.Supply:
     """Save new supply entered by the user. Triggered at the end of the 'new
     supply's sequence.
 
@@ -21,13 +26,14 @@ def save_new_supply(last_message, new_version=False) -> relmods.Supply:
     """
     # The intent key determines if we're creating a new supply or creating a
     # new version of an old one
-    intent_key = intents.NEW_SUPPLY if new_version else intents.DISCUSS_W_BUYER
+    intent_key = intents.DISCUSS_W_BUYER if new_version else intents.NEW_SUPPLY
 
     user = last_message.from_user
     supply = relmods.Supply.objects.create(user=user)
 
-    # Short-form for get_value_string with preset parameters
+    # Short-form for get_value_string/float with preset parameters
     gvs = lambda i, m, d, n: get_value_string(i, m, d, user, last_message, n)
+    gvf = lambda i, m, d, n: get_value_float(i, m, d, user, last_message, n)
 
     # Product type and packing UOM
     product_str, product_val = gvs(
@@ -92,7 +98,7 @@ def save_new_supply(last_message, new_version=False) -> relmods.Supply:
         cfm_pack_str, cfm_pack_val = gvs(
             intent_key,
             messages.SUPPLY__CONFIRM_PACKING,
-            datas.PACKING,
+            datas.CONFIRM_PACKING,
             'Confirm packing'
         )
         if cfm_pack_str == datas.CONFIRM_PACKING__YES:
@@ -144,7 +150,7 @@ def save_new_supply(last_message, new_version=False) -> relmods.Supply:
     # Deposit and accept-LC
     # Only if availability is pre-order
     if availability_str == datas.AVAILABILITY__PRE_ORDER:
-        _, deposit_val = gvs(
+        deposit_flt, deposit_val = gvf(
             intent_key,
             messages.SUPPLY__GET_DEPOSIT,
             datas.DEPOSIT,
@@ -156,6 +162,7 @@ def save_new_supply(last_message, new_version=False) -> relmods.Supply:
             datas.ACCEPT_LC,
             'Accept LC'
         )
+        supply.deposit_percentage = deposit_flt
         supply.deposit_percentage_data_value = deposit_val
         supply.deposit_percentage_method = methods.NUMERIC_INPUT
         supply.accept_lc_data_value = accept_lc_val
