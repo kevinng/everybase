@@ -1,5 +1,5 @@
 from chat.libraries.classes.chat_test import ChatTest
-from chat.libraries.constants import intents, messages, datas
+from chat.libraries.constants import intents, messages, datas, methods
 from chat.tasks.save_new_demand import save_new_demand
 
 _fixtures = [
@@ -39,55 +39,34 @@ class TaskSaveNewDemandTest_ProductTypeFound(ChatTest):
             'USD 5.67 per box'
         )
 
-        msg = self.setup_inbound_message(
-            intents.NEW_DEMAND,
-            messages.DEMAND__THANK_YOU
-        )
+        # Message concluding the sequence
+        msg = self.setup_inbound_message(intents.NEW_DEMAND,
+            messages.DEMAND__THANK_YOU)
 
         dmd = save_new_demand(msg)
 
         # Product type
-        #   Data value set
-        self.assertEqual(
-            dmd.product_type_data_value.id,
-            ptype_dv.id
-        )
-        #   Right product type
-        self.assertEqual(
-            dmd.product_type.id,
-            1 # Nitrile gloves
-        )
+        self.assertEqual(dmd.product_type_data_value.id, ptype_dv.id)
+        self.assertEqual(dmd.product_type.id, 1) # Nitrile gloves
+        self.assertEqual(dmd.product_type_method, methods.FREE_TEXT_INPUT)
         
         # Country
-        #   Data value set
-        self.assertEqual(
-            dmd.country_data_value.id,
-            country_dv.id
-        )
-        #   Right country
-        self.assertEqual(
-            dmd.country.id,
-            696 # Singapore
-        )
+        self.assertEqual(dmd.country_data_value.id, country_dv.id)
+        self.assertEqual(dmd.country.id, 696) # Singapore
+        self.assertEqual(dmd.country_method, methods.FREE_TEXT_INPUT)
 
         # Quantity
-        self.assertEqual(
-            dmd.quantity_data_value.id,
-            quantity_dv.id
-        )
+        self.assertEqual(dmd.quantity_data_value.id, quantity_dv.id)
+        self.assertEqual(dmd.quantity_method, methods.FREE_TEXT_INPUT)
 
         # Price
-        self.assertEqual(
-            dmd.price_data_value.id,
-            price_dv.id
-        )
+        self.assertEqual(dmd.price_data_value.id, price_dv.id)
+        self.assertEqual(dmd.price_method, methods.FREE_TEXT_INPUT)
 
 class TasksSaveNewDemandTest_ProductTypeNotFound(ChatTest):
     fixtures = _fixtures
 
-    def setUp(self):
-        super().setUp()
-
+    def test_run(self):
         # Setup
         ptype_dv = self.setup_data_value(
             intents.NEW_DEMAND,
@@ -122,31 +101,18 @@ class TasksSaveNewDemandTest_ProductTypeNotFound(ChatTest):
         dmd = save_new_demand(msg)
 
         # Product type
-        self.assertEqual(
-            dmd.product_type_data_value.id,
-            ptype_dv.id
-        )
+        self.assertEqual(dmd.product_type_data_value.id, ptype_dv.id)
+        self.assertEqual(dmd.product_type_method, methods.FREE_TEXT_INPUT)
         
         # Country
-        #   Data value set
-        self.assertEqual(
-            dmd.country_data_value.id,
-            country_dv.id
-        )
-        #   Right country
-        self.assertEqual(
-            dmd.country.id,
-            696 # Singapore
-        )
+        self.assertEqual(dmd.country_data_value.id, country_dv.id)
+        self.assertEqual(dmd.country.id, 696) # Singapore
+        self.assertEqual(dmd.country_method, methods.FREE_TEXT_INPUT)
 
         # Quantity
-        self.assertEqual(
-            dmd.quantity_data_value.id,
-            quantity_dv.id
-        )
+        self.assertEqual(dmd.quantity_data_value.id, quantity_dv.id)
+        self.assertEqual(dmd.quantity_method, methods.FREE_TEXT_INPUT)
 
         # Price
-        self.assertEqual(
-            dmd.price_data_value.id,
-            price_dv.id
-        )
+        self.assertEqual(dmd.price_data_value.id, price_dv.id)
+        self.assertEqual(dmd.price_method, methods.FREE_TEXT_INPUT)
