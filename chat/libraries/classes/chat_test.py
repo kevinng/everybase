@@ -83,7 +83,7 @@ class ChatTest(TestCase):
     def tearDown(self):
         super().tearDown()
 
-        # Clear database
+        # Delete all models - order matters
 
         # Nullify references
         for user in relmods.User.objects.all():
@@ -91,13 +91,23 @@ class ChatTest(TestCase):
             user.current_match = None
             user.save()
 
-        # Delete all - order matters
         models.UserContext.objects.all().delete()
         relmods.QuestionAnswerPair.objects.all().delete()
         paymods.PaymentHash.objects.all().delete()
         relmods.Match.objects.all().delete()
-        relmods.Demand.objects.all().delete()        
+
+        # Nullify references before deletion
+        for demand in relmods.Demand.objects.all():
+            demand.next_version = None
+            demand.save()
+        relmods.Demand.objects.all().delete()
+        
+        # Nullify references before deletion
+        for supply in relmods.Supply.objects.all():
+            supply.next_version = None
+            supply.save()
         relmods.Supply.objects.all().delete()
+
         models.MessageDataValue.objects.all().delete()
         models.MessageDataset.objects.all().delete()
         models.TwilioOutboundMessage.objects.all().delete()
