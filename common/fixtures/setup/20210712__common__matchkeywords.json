@@ -1,0 +1,15 @@
+[
+{
+    "model": "common.matchkeyword",
+    "pk": 1,
+    "fields": {
+        "created": "2021-05-28T04:45:26.294Z",
+        "updated": "2021-05-28T04:45:26.294Z",
+        "deleted": null,
+        "keyword": "nitrile gloves",
+        "tolerance": 3,
+        "product_type": 1,
+        "country": null
+    }
+}
+]
