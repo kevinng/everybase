@@ -63,7 +63,7 @@ class TaskSaveNewDemandTest_ProductTypeFound(ChatTest):
         self.assertEqual(dmd.price_data_value.id, price_dv.id)
         self.assertEqual(dmd.price_method, methods.FREE_TEXT_INPUT)
 
-class TasksSaveNewDemandTest_ProductTypeNotFound(ChatTest):
+class TasksSaveNewDemandTest_ProductTypeCountryNotFound(ChatTest):
     fixtures = _fixtures
 
     def test_run(self):
@@ -78,7 +78,7 @@ class TasksSaveNewDemandTest_ProductTypeNotFound(ChatTest):
             intents.NEW_DEMAND,
             messages.DEMAND__GET_COUNTRY_STATE,
             datas.COUNTRY_STATE,
-            'Singapore'
+            'ABC' # A country NOT in our database
         )
         quantity_dv = self.setup_data_value(
             intents.NEW_DEMAND,
@@ -106,8 +106,8 @@ class TasksSaveNewDemandTest_ProductTypeNotFound(ChatTest):
         self.assertEqual(dmd.product_type_method, methods.FREE_TEXT_INPUT)
         
         # Country
+        self.assertEqual(dmd.country, None)
         self.assertEqual(dmd.country_data_value.id, country_dv.id)
-        self.assertEqual(dmd.country.id, 696) # Singapore
         self.assertEqual(dmd.country_method, methods.FREE_TEXT_INPUT)
 
         # Quantity
