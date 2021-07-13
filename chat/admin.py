@@ -150,65 +150,70 @@ class TwilioInboundMessageMediaAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['message']
 
-_twilio_inbound_message_log_entry = ['payload', 'message']
+_twilio_inbound_message_log_entry_fields = ['payload', 'message']
 @admin.register(mod.TwilioInboundMessageLogEntry)
 class TwilioInboundMessageLogEntryAdmin(comadm.StandardAdmin):
         # List page settings
     list_display = comadm.standard_list_display + \
-        _twilio_inbound_message_log_entry
+        _twilio_inbound_message_log_entry_fields
     list_editable = comadm.standard_list_editable + \
-        _twilio_inbound_message_log_entry
+        _twilio_inbound_message_log_entry_fields
     search_fields = comadm.standard_search_fields + \
-        _twilio_inbound_message_log_entry
+        _twilio_inbound_message_log_entry_fields
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _twilio_inbound_message_log_entry})
+        ('Details', {'fields': _twilio_inbound_message_log_entry_fields})
     ]
     autocomplete_fields = ['message']
 
-_message_dataset = ['intent_key', 'message_key', 'in_message', 'out_message']
+_message_dataset_fields = ['intent_key', 'message_key', 'in_message',
+    'out_message']
 @admin.register(mod.MessageDataset)
 class MessageDatasetAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _message_dataset
-    list_editable = comadm.standard_list_editable + _message_dataset
-    search_fields = comadm.standard_search_fields + _message_dataset
+    list_display = comadm.standard_list_display + _message_dataset_fields
+    list_editable = comadm.standard_list_editable + _message_dataset_fields
+    search_fields = comadm.standard_search_fields + _message_dataset_fields
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _message_dataset})
+        ('Details', {'fields': _message_dataset_fields})
     ]
     autocomplete_fields = ['in_message', 'out_message']
 
-_message_data_value = ['dataset', 'value_string', 'value_float',
+_message_data_value_fields = ['dataset', 'value_string', 'value_float',
     'value_boolean', 'value_id', 'is_valid', 'data_key']
 @admin.register(mod.MessageDataValue)
 class MessageDataValueAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _message_data_value
-    list_editable = comadm.standard_list_editable + _message_data_value
-    search_fields = comadm.standard_search_fields + _message_data_value
+    list_display = comadm.standard_list_display + _message_data_value_fields
+    list_editable = comadm.standard_list_editable + _message_data_value_fields
+    list_filter = comadm.standard_choice_list_filter + \
+        _message_data_value_fields
+    search_fields = comadm.standard_search_fields + _message_data_value_fields
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _message_data_value})
+        ('Details', {'fields': _message_data_value_fields})
     ]
     autocomplete_fields = ['dataset']
 
-_user_context_log_entry = ['started', 'done', 'expired', 'paused', 'user',
+_user_context_fields = ['started', 'done', 'expired', 'paused', 'user',
     'intent_key', 'message_key']
 @admin.register(mod.UserContext)
 class UserContextAdmin(comadm.StandardAdmin):
         # List page settings
     list_display = comadm.standard_list_display + \
-        _user_context_log_entry
+        _user_context_fields
     list_editable = comadm.standard_list_editable + \
-        _user_context_log_entry
+        _user_context_fields
+    list_filter = comadm.standard_choice_list_filter + \
+        _user_context_fields
     search_fields = comadm.standard_search_fields + \
-        _user_context_log_entry
+        _user_context_fields
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _user_context_log_entry})
+        ('Details', {'fields': _user_context_fields})
     ]
