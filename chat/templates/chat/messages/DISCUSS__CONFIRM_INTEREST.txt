@@ -1,4 +1,4 @@
-*Hi {{ name }}, we have {% if buying == True %}supply{% elif buying == False %}demand{% endif %} for:*
+*Hi {{ name }}, we have {% if buying == True %}supply{% elif buying == False %}demand{% endif %} for*:
 
 {% include 'chat/messages/includes/lead_details.txt' %}
 

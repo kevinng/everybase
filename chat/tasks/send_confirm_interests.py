@@ -1,6 +1,7 @@
 import pytz, datetime
 from everybase.settings import TIME_ZONE
 from celery import shared_task
+from relationships import models as relmods
 from chat.libraries.constants import intents, messages
 from chat.libraries.utility_funcs.send_message import send_message
 from chat.libraries.utility_funcs.done_to_context import done_to_context
@@ -9,7 +10,7 @@ from chat.libraries.utility_funcs.render_message import render_message
 
 @shared_task
 def send_confirm_interests(
-        match,
+        match: relmods.Match,
         buyer_only: bool = False,
         seller_only: bool = False,
         no_external_calls: bool = False
@@ -86,3 +87,5 @@ def send_confirm_interests(
             None,
             no_external_calls
         )
+
+    match.save()
