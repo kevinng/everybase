@@ -5,7 +5,7 @@ from everybase import settings
 from chat import models
 
 def expire_context(user, intent_key, message_key):
-    """Set user context's 'done' timestamp to now
+    """Set user context's 'expired' timestamp to now
 
     Parameters
     ----------
