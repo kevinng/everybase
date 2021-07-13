@@ -7,7 +7,7 @@ class SupplyGetPriceReadyOTGHandler(MessageHandler):
     def run(self,
             next_intent_key: str,
             next_message_key: str
-        ):
+        ) -> str:
         self.save_body_as_string(datas.PRICE)
 
         # Trigger background task to save message
