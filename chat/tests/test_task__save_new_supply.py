@@ -1,6 +1,6 @@
-from chat.tasks.save_new_supply import save_new_supply
 from chat.libraries.classes.chat_test import ChatTest
 from chat.libraries.constants import datas, intents, messages, methods
+from chat.tasks.save_new_supply import save_new_supply
 
 _fixtures = [
     'setup/20210527__relationships__availability.json',
@@ -57,7 +57,7 @@ class TaskSaveNewSupplyTest_OTG(ChatTest):
             messages.SUPPLY__THANK_YOU
         )
 
-        sup = save_new_supply(msg)
+        sup = save_new_supply(msg.id)
 
         # Product type
         self.assertEqual(sup.product_type.id, 1) # Nitrile gloves
@@ -137,7 +137,7 @@ class TaskSaveNewSupplyTest_OTG(ChatTest):
             messages.SUPPLY__THANK_YOU
         )
 
-        sup = save_new_supply(msg)
+        sup = save_new_supply(msg.id)
 
         # Product type
         self.assertEqual(sup.product_type, None)
@@ -226,7 +226,7 @@ class TaskSaveNewSupplyTest_PreOrder(ChatTest):
             messages.SUPPLY__THANK_YOU
         )
 
-        sup = save_new_supply(msg)
+        sup = save_new_supply(msg.id)
 
         # Product type
         self.assertEqual(sup.product_type.id, 1) # Nitrile gloves
@@ -316,7 +316,7 @@ class TaskSaveNewSupplyTest_PreOrder(ChatTest):
             messages.SUPPLY__THANK_YOU
         )
 
-        sup = save_new_supply(msg)
+        sup = save_new_supply(msg.id)
 
         # Product type
         self.assertEqual(sup.product_type, None)

@@ -45,7 +45,7 @@ class TaskExchangeContactsTest(ChatTest):
 
     def test_run(self):
         match = self.setup_match(True, SupplyAvailabilityOption.OTG)
-        buyer_msg, seller_msg = exchange_contacts(match, True)
+        buyer_msg, seller_msg = exchange_contacts(match.id, True)
 
         self.send_assert(
             buyer_msg.body,
@@ -64,6 +64,8 @@ class TaskExchangeContactsTest(ChatTest):
             counter_party=True
         )
 
+        match.refresh_from_db()
+        
         self.assertNotEqual(
             match.sent_contact_to_buyer,
             None

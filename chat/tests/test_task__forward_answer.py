@@ -19,7 +19,7 @@ class TaskForwardAnswerTest(ChatTest):
     def test_answer_not_ready(self):
         self.setup_match(False, SupplyAvailabilityOption.OTG)
         qna = self.setup_qna(answer_readied=False)
-        msg = forward_answer(qna, True)
+        msg = forward_answer(qna.id, True)
         self.assertEqual(msg, None)
 
     def test_run_selling(self):
@@ -33,8 +33,9 @@ class TaskForwardAnswerTest(ChatTest):
             answer_readied=True
         )
 
-        msg = forward_answer(qna, True)
+        msg = forward_answer(qna.id, True)
 
+        qna.refresh_from_db()
         self.send_assert(
             msg.body,
             intents.QNA,
@@ -57,8 +58,9 @@ class TaskForwardAnswerTest(ChatTest):
             answer_readied=True
         )
 
-        msg = forward_answer(qna, True)
+        msg = forward_answer(qna.id, True)
 
+        qna.refresh_from_db()
         self.send_assert(
             msg.body,
             intents.QNA,

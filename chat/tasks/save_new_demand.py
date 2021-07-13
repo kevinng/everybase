@@ -8,7 +8,7 @@ from chat.libraries.utility_funcs.get_value_string import get_value_string
 
 @shared_task
 def save_new_demand(
-        last_message: TwilioInboundMessage,
+        last_message_id: int,
         new_version: bool = False
     ) -> relmods.Demand:
     """Save new demand entered by the user. Triggered at the end of the 'new
@@ -16,11 +16,13 @@ def save_new_demand(
 
     Parameters
     ----------
-    last_message
-        Last TwilioInboundMessage of the 'new supply' sequence.
+    last_message_id
+        ID of the last TwilioInboundMessage of the 'new supply' sequence.
     new_version
         If True, use intent key for saving a copy of this demand.
     """
+    last_message = TwilioInboundMessage.objects.get(pk=last_message_id)
+
     # The intent key determines if we're creating a new demand or creating a
     # new version of an old one
     intent_key = intents.DISCUSS_W_SELLER if new_version else intents.NEW_DEMAND

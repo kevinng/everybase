@@ -50,7 +50,7 @@ class TaskSaveNewDemandVersionTest_ProductTypeFound(ChatTest):
         # Match to update
         match = self.setup_match(True, SupplyAvailabilityOption.OTG)
 
-        dmd = save_new_demand_version(match, msg)
+        dmd = save_new_demand_version(match.id, msg.id)
 
         # Product type
         self.assertEqual(dmd.product_type.id, 1) # Nitrile gloves
@@ -71,6 +71,7 @@ class TaskSaveNewDemandVersionTest_ProductTypeFound(ChatTest):
         self.assertEqual(dmd.price_method, methods.FREE_TEXT_INPUT)
 
         # Match's demand
+        match.refresh_from_db()
         self.assertEqual(dmd.id, match.demand.id)
 
 class TaskSaveNewDemandVersionTest_ProductTypeCountryNotFound(ChatTest):
@@ -111,7 +112,7 @@ class TaskSaveNewDemandVersionTest_ProductTypeCountryNotFound(ChatTest):
         # Match to update
         match = self.setup_match(True, SupplyAvailabilityOption.OTG)
 
-        dmd = save_new_demand_version(match, msg)
+        dmd = save_new_demand_version(match.id, msg.id)
 
         # Product type
         self.assertEqual(dmd.product_type, None)
@@ -132,4 +133,5 @@ class TaskSaveNewDemandVersionTest_ProductTypeCountryNotFound(ChatTest):
         self.assertEqual(dmd.price_method, methods.FREE_TEXT_INPUT)
 
         # Match's demand
+        match.refresh_from_db()
         self.assertEqual(dmd.id, match.demand.id)

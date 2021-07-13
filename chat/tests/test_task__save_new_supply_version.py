@@ -1,8 +1,8 @@
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
-from chat.tasks.save_new_supply_version import save_new_supply_version
 from chat.libraries.classes.chat_test import ChatTest
 from chat.libraries.constants import datas, intents, messages, methods
+from chat.tasks.save_new_supply_version import save_new_supply_version
 
 _fixtures = [
     'setup/20210527__relationships__availability.json',
@@ -63,7 +63,7 @@ class TaskSaveNewSupplyVersionTest_OTG(ChatTest):
         # Match to update
         match = self.setup_match(True, SupplyAvailabilityOption.OTG)
 
-        sup = save_new_supply_version(match, msg)
+        sup = save_new_supply_version(match.id, msg.id)
 
         # Product type
         self.assertEqual(sup.product_type.id, 1) # Nitrile gloves
@@ -94,6 +94,7 @@ class TaskSaveNewSupplyVersionTest_OTG(ChatTest):
         self.assertEqual(sup.price_method, methods.FREE_TEXT_INPUT)
 
         # Match's supply
+        match.refresh_from_db()
         self.assertEqual(sup.id, match.supply.id)
 
     def test_unknown_packing_country(self):
@@ -149,7 +150,7 @@ class TaskSaveNewSupplyVersionTest_OTG(ChatTest):
         # Match to update
         match = self.setup_match(True, SupplyAvailabilityOption.OTG)
 
-        sup = save_new_supply_version(match, msg)
+        sup = save_new_supply_version(match.id, msg.id)
 
         # Product type
         self.assertEqual(sup.product_type, None)
@@ -180,6 +181,7 @@ class TaskSaveNewSupplyVersionTest_OTG(ChatTest):
         self.assertEqual(sup.price_method, methods.FREE_TEXT_INPUT)
 
         # Match's supply
+        match.refresh_from_db()
         self.assertEqual(sup.id, match.supply.id)
 
 class TaskSaveNewSupplyTest_PreOrder(ChatTest):
@@ -244,7 +246,7 @@ class TaskSaveNewSupplyTest_PreOrder(ChatTest):
         # Match to update
         match = self.setup_match(True, SupplyAvailabilityOption.OTG)
 
-        sup = save_new_supply_version(match, msg)
+        sup = save_new_supply_version(match.id, msg.id)
 
         # Product type
         self.assertEqual(sup.product_type.id, 1) # Nitrile gloves
@@ -285,6 +287,7 @@ class TaskSaveNewSupplyTest_PreOrder(ChatTest):
         self.assertEqual(sup.accept_lc_method, methods.DATA_KEY_MATCH)
 
         # Match's supply
+        match.refresh_from_db()
         self.assertEqual(sup.id, match.supply.id)
 
     def test_unknown_packing_country(self):
@@ -340,7 +343,7 @@ class TaskSaveNewSupplyTest_PreOrder(ChatTest):
         # Match to update
         match = self.setup_match(True, SupplyAvailabilityOption.OTG)
 
-        sup = save_new_supply_version(match, msg)
+        sup = save_new_supply_version(match.id, msg.id)
 
         # Product type
         self.assertEqual(sup.product_type, None)
@@ -376,4 +379,5 @@ class TaskSaveNewSupplyTest_PreOrder(ChatTest):
         self.assertEqual(sup.accept_lc_method, methods.DATA_KEY_MATCH)
 
         # Match's supply
+        match.refresh_from_db()
         self.assertEqual(sup.id, match.supply.id)

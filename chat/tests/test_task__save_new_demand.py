@@ -43,7 +43,7 @@ class TaskSaveNewDemandTest_ProductTypeFound(ChatTest):
         msg = self.setup_inbound_message(intents.NEW_DEMAND,
             messages.DEMAND__THANK_YOU)
 
-        dmd = save_new_demand(msg)
+        dmd = save_new_demand(msg.id)
 
         # Product type
         self.assertEqual(dmd.product_type.id, 1) # Nitrile gloves
@@ -98,7 +98,7 @@ class TaskSaveNewDemandTest_ProductTypeCountryNotFound(ChatTest):
             messages.DEMAND__THANK_YOU
         )
 
-        dmd = save_new_demand(msg)
+        dmd = save_new_demand(msg.id)
 
         # Product type
         self.assertEqual(dmd.product_type, None)

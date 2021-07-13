@@ -9,7 +9,7 @@ from chat.libraries.utility_funcs.get_value_float import get_value_float
 
 @shared_task
 def save_new_supply(
-        last_message: TwilioInboundMessage,
+        last_message_id: int,
         new_version: bool = False
     ) -> relmods.Supply:
     """Save new supply entered by the user. Triggered at the end of the 'new
@@ -17,13 +17,15 @@ def save_new_supply(
 
     Parameters
     ----------
-    last_message
-        Last TwilioInboundMessage of the 'new supply' sequence
+    last_message_id
+        ID of the last TwilioInboundMessage of the 'new supply' sequence
 
     Returns
     -------
     Supply created
     """
+    last_message = TwilioInboundMessage.objects.get(pk=last_message_id)
+
     # The intent key determines if we're creating a new supply or creating a
     # new version of an old one
     intent_key = intents.DISCUSS_W_BUYER if new_version else intents.NEW_SUPPLY

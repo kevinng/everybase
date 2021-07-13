@@ -10,19 +10,19 @@ from chat.libraries.utility_funcs.render_message import render_message
 
 @shared_task
 def send_confirm_interests(
-        match: relmods.Match,
+        match_id: int,
         buyer_only: bool = False,
         seller_only: bool = False,
         no_external_calls: bool = False
-    ):
+    ) -> relmods.Match:
     """Send confirm-interest to both seller and buyer of a match.
 
     Each user's context will be set accordingly.
 
     Parameters
     ----------
-    match
-        Match we're working on
+    match_id
+        ID of the match we're working on
     buyer_only
         If True, will send buyer only.
     seller_only
@@ -32,6 +32,8 @@ def send_confirm_interests(
         messages. Useful for automated testing, to ascertain model updates are
         made correctly.
     """
+    match = relmods.Match.objects.get(pk=match_id)
+
     sgtz = pytz.timezone(TIME_ZONE)
 
     # Buyer
@@ -89,3 +91,4 @@ def send_confirm_interests(
         )
 
     match.save()
+    return match

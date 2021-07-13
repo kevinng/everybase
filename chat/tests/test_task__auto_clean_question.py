@@ -19,9 +19,10 @@ class TaskAutoCleanQuestionTest(ChatTest):
         )
         
         # Run task
-        auto_clean_question(qna, True)
+        auto_clean_question(qna.id, True)
 
         # Assert
+        qna.refresh_from_db()
         self.assertEqual(
             qna.auto_cleaned_question,
             'My email is * and *'

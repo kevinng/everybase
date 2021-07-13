@@ -14,15 +14,15 @@ from chat.libraries.utility_funcs.send_message import send_message
 from chat.libraries.utility_funcs.done_to_context import done_to_context
 
 def exchange_contacts(
-        match: relmods.Match,
+        match_id: int,
         no_external_calls: bool = False
     ) -> Tuple[models.TwilioOutboundMessage, models.TwilioOutboundMessage]:
     """Exchange buyer and seller contacts to each other
 
     Parameters
     ----------
-    match
-        Match we're working on
+    match_id
+        ID of the match we're working on
     no_external_calls
         If True, will not make external API calls - e.g., send Twilio WhatsApp
         messages. Useful for automated testing, to ascertain model updates are
@@ -34,6 +34,8 @@ def exchange_contacts(
 
     (buyer_msg, seller_msg)
     """
+
+    match = relmods.Match.objects.get(pk=match_id)
 
     chatbot_ph = get_chatbot().phone_number
     buyer = match.demand.user
@@ -93,5 +95,7 @@ def exchange_contacts(
 
     # Switch buyer's context
     done_to_context(seller, intents.QNA, messages.CONNECTED)
+
+    match.save()
 
     return (buyer_msg, seller_msg)

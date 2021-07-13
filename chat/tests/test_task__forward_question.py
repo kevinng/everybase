@@ -1,9 +1,10 @@
-from chat.tasks.forward_question import forward_question
 from chat.libraries.classes.chat_test import ChatTest
 from chat.libraries.constants import intents, messages
 
 from chat.libraries.test_funcs.supply_availability_options import \
     SupplyAvailabilityOption
+
+from chat.tasks.forward_question import forward_question
 
 class TaskForwardQuestionTest(ChatTest):
     fixtures = [
@@ -18,7 +19,7 @@ class TaskForwardQuestionTest(ChatTest):
     def test_answer_not_ready(self):
         self.setup_match(False, SupplyAvailabilityOption.OTG)
         qna = self.setup_qna(question_readied=False)
-        msg = forward_question(qna, True)
+        msg = forward_question(qna.id, True)
         self.assertEqual(msg, None)
 
     def test_run_selling(self):
@@ -32,8 +33,9 @@ class TaskForwardQuestionTest(ChatTest):
             question_readied=True
         )
         
-        msg = forward_question(qna, True)
+        msg = forward_question(qna.id, True)
 
+        qna.refresh_from_db()
         self.send_assert(
             msg.body,
             intents.QNA,
@@ -56,8 +58,9 @@ class TaskForwardQuestionTest(ChatTest):
             question_readied=True
         )
         
-        msg = forward_question(qna, True)
+        msg = forward_question(qna.id, True)
 
+        qna.refresh_from_db()
         self.send_assert(
             msg.body,
             intents.QNA,

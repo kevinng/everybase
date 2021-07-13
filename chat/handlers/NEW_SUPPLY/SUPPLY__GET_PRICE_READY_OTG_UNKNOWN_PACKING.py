@@ -1,9 +1,8 @@
-from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler import MessageHandler
+from chat.libraries.constants import intents, messages
+from chat.libraries.sub_classes.message_handlers.\
+    supply__get_price_ready_otg_unknown_packing import \
+    SupplyGetPriceReadyOTGUnknownPackingHandler
 
-class Handler(MessageHandler):
+class Handler(SupplyGetPriceReadyOTGUnknownPackingHandler):
     def run(self):
-        self.save_body_as_string(datas.PRICE)
-        return self.done_reply(
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__THANK_YOU)
+        return super().run(intents.NEW_SUPPLY, messages.SUPPLY__THANK_YOU)

@@ -5,15 +5,15 @@ from chat.tasks.save_new_supply import save_new_supply
 
 @shared_task
 def save_new_supply_version(
-        match: relmods.Match,
+        match_id: int,
         last_message: models.TwilioInboundMessage
     ):
     """Save a new version of the supply
 
     Parameters
     ----------
-    match
-        Match we're working on
+    match_id
+        ID of the match we're working on
     last_message
         Last TwilioInboundMessage of the 'discuss with buyer' sequence
 
@@ -21,6 +21,8 @@ def save_new_supply_version(
     -------
     New supply
     """
+    match = relmods.Match.objects.get(pk=match_id)
+
     old_supply = match.supply
     new_supply = save_new_supply(last_message, True)
 

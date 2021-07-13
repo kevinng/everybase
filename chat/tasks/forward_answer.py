@@ -10,15 +10,15 @@ from chat.libraries.utility_funcs.done_to_context import done_to_context
 
 @shared_task
 def forward_answer(
-        qna: relmods.QuestionAnswerPair,
+        qna_id: int,
         no_external_calls: bool = False
     ):
     """Forward answer to questioner
 
     Parameters
     ----------
-    qna
-        Q&A pair which we're working on
+    qna_id
+        ID of the Q&A pair which we're working on
     no_external_calls
         If True, will not make external API calls - e.g., send Twilio WhatsApp
         messages. Useful for automated testing, to ascertain model updates are
@@ -28,6 +28,8 @@ def forward_answer(
     -------
     Twilio outbound message sent if successful, None otherwise.
     """
+    qna = relmods.QuestionAnswerPair.objects.get(pk=qna_id)
+
     if qna.answer_ready is None:
         return None
 
