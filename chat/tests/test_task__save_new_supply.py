@@ -167,7 +167,7 @@ class TaskSaveNewSupplyTest_OTG(ChatTest):
         self.assertEqual(sup.price_data_value.id, price_dv.id)
         self.assertEqual(sup.price_method, methods.FREE_TEXT_INPUT)
 
-class TasksSaveNewSupplyTest_PreOrder(ChatTest):
+class TaskSaveNewSupplyTest_PreOrder(ChatTest):
     fixtures = _fixtures
 
     def test_known_packing(self):
