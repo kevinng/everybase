@@ -3,6 +3,8 @@ from datetime import datetime
 from .shared import helpers
 from growth.models import Fibre2FashionSellingOffer
 from relationships.shared import record_email
+from django.core.exceptions import ValidationError
+import traceback
 
 _NAMESPACE = 'fibre2fashion_selling_offer'
 
