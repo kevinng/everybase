@@ -3,7 +3,7 @@ from chat.libraries.classes.message_handler import MessageHandler
 from chat.tasks.save_new_supply import save_new_supply
 from chat.tasks.save_new_supply_version import save_new_supply_version
 
-class SupplyGetPriceReadyOTGHandler(MessageHandler):
+class SupplyGetPriceReadyOTGKnownPackingHandler(MessageHandler):
     def run(self,
             next_intent_key: str,
             next_message_key: str
