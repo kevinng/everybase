@@ -63,7 +63,7 @@ class TaskSaveNewDemandTest_ProductTypeFound(ChatTest):
         self.assertEqual(dmd.price_data_value.id, price_dv.id)
         self.assertEqual(dmd.price_method, methods.FREE_TEXT_INPUT)
 
-class TasksSaveNewDemandTest_ProductTypeCountryNotFound(ChatTest):
+class TaskSaveNewDemandTest_ProductTypeCountryNotFound(ChatTest):
     fixtures = _fixtures
 
     def test_run(self):

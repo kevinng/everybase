@@ -13,7 +13,7 @@ _fixtures = [
     'setup/common__country.json'
 ]
 
-class TasksSaveNewSupplyVersionTest_OTG(ChatTest):
+class TaskSaveNewSupplyVersionTest_OTG(ChatTest):
     fixtures = _fixtures
 
     def test_known_packing(self):
@@ -182,7 +182,7 @@ class TasksSaveNewSupplyVersionTest_OTG(ChatTest):
         # Match's supply
         self.assertEqual(sup.id, match.supply.id)
 
-class TasksSaveNewSupplyTest_PreOrder(ChatTest):
+class TaskSaveNewSupplyTest_PreOrder(ChatTest):
     fixtures = _fixtures
 
     def test_known_packing(self):

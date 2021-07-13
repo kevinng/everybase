@@ -10,7 +10,7 @@ _fixtures = [
     'setup/common__country.json'
 ]
 
-class TasksSaveNewSupplyTest_OTG(ChatTest):
+class TaskSaveNewSupplyTest_OTG(ChatTest):
     fixtures = _fixtures
 
     def test_known_packing(self):

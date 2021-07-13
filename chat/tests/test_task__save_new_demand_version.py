@@ -73,7 +73,7 @@ class TaskSaveNewDemandVersionTest_ProductTypeFound(ChatTest):
         # Match's demand
         self.assertEqual(dmd.id, match.demand.id)
 
-class TasksSaveNewDemandVersionTest_ProductTypeCountryNotFound(ChatTest):
+class TaskSaveNewDemandVersionTest_ProductTypeCountryNotFound(ChatTest):
     fixtures = _fixtures
 
     def test_run(self):
