@@ -230,6 +230,12 @@ class TwilioStatusCallback(Standard):
         blank=True,
         db_index=True
     )
+    error_message = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     event_type = models.CharField(
         max_length=200,
         null=True,
