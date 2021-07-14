@@ -26,7 +26,7 @@ def forward_question(
 
     Returns
     -------
-    Twilio outbound message sent if successful, None otherwise.
+    Twilio outbound message sent
     """
     qna = relmods.QuestionAnswerPair.objects.get(pk=qna_id)
 

@@ -32,11 +32,8 @@ def send_confirm_interests(
         messages. Useful for automated testing, to ascertain model updates are
         made correctly.
     """
-    try:
-        match = relmods.Match.objects.get(pk=match_id)
-    except relmods.Match.DoesNotExist:
-        return None
-
+    match = relmods.Match.objects.get(pk=match_id)
+    
     sgtz = pytz.timezone(TIME_ZONE)
 
     # Buyer

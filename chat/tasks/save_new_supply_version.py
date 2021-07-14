@@ -6,7 +6,7 @@ from chat.tasks.save_new_supply import save_new_supply
 @shared_task
 def save_new_supply_version(
         match_id: int,
-        last_message: models.TwilioInboundMessage
+        last_message_id: int
     ):
     """Save a new version of the supply
 
@@ -14,14 +14,23 @@ def save_new_supply_version(
     ----------
     match_id
         ID of the match we're working on
-    last_message
-        Last TwilioInboundMessage of the 'discuss with buyer' sequence
+    last_message_id
+        ID of the last TwilioInboundMessage of the 'discuss with buyer' sequence
 
     Returns
     -------
-    New supply
+    New supply if successful
     """
-    match = relmods.Match.objects.get(pk=match_id)
+    try:
+        match = relmods.Match.objects.get(pk=match_id)
+    except relmods.Match.DoesNotExist:
+        return None
+    
+    try:
+        last_message = models.TwilioInboundMessage.objects.get(
+            pk=last_message_id)
+    except models.TwilioInboundMessage.DoesNotExist:
+        return None
 
     old_supply = match.supply
     new_supply = save_new_supply(last_message, True)

@@ -6,7 +6,7 @@ from chat.tasks.save_new_demand import save_new_demand
 @shared_task
 def save_new_demand_version(
         match_id: int,
-        last_message: models.TwilioInboundMessage
+        last_message_id: int
     ):
     """Save a new version of the demand
 
@@ -19,9 +19,18 @@ def save_new_demand_version(
 
     Returns
     -------
-    New demand
+    New demand if successful
     """
-    match = relmods.Match.objects.get(pk=match_id)
+    try:
+        match = relmods.Match.objects.get(pk=match_id)
+    except relmods.Match.DoesNotExist:
+        return None
+
+    try:
+        last_message = models.TwilioInboundMessage.objects.get(
+            pk=last_message_id)
+    except models.TwilioInboundMessage.DoesNotExist:
+        return None
 
     old_demand = match.demand
     new_demand = save_new_demand(last_message, True)
