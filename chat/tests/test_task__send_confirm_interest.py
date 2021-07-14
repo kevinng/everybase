@@ -16,47 +16,57 @@ _fixtures = [
 class TaskSendConfirmInterestTest(ChatTest):
     fixtures = _fixtures
 
-    # def test_buy_otg(self):
-    #     match = self.setup_match(True, SupplyAvailabilityOption.OTG)
-    #     send_confirm_interests(match, no_external_calls=True)
+    def test_otg(self):
+        match = self.setup_match(True, SupplyAvailabilityOption.OTG)
+        
+        send_confirm_interests(match.id, no_external_calls=True)
+        match.refresh_from_db()
 
-    #     self.send_assert(
-    #         match.sent_buyer_confirm_interest_message.body,
-    #         intents.DISCUSS_W_SELLER,
-    #         messages.DISCUSS__CONFIRM_INTEREST,
-    #         target_body_variation_key='OTG'
-    #     )
+        self.send_assert(
+            match.sent_buyer_confirm_interest_message.body,
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            target_body_variation_key='OTG'
+        )
+        self.send_assert(
+            match.sent_seller_confirm_interest_message.body,
+            intents.DISCUSS_W_BUYER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            counter_party=True
+        )
 
-    #     self.send_assert(
-    #         match.sent_seller_confirm_interest_message.body,
-    #         intents.DISCUSS_W_BUYER,
-    #         messages.DISCUSS__CONFIRM_INTEREST,
-    #         counter_party=True
-    #     )
+        self.assertIsNotNone(match.sent_buyer_confirm_interest)
+        self.assertIsNotNone(match.sent_seller_confirm_interest)
 
-    # def test_buy_pre_order_deadline(self):
-    #     match = self.setup_match(
-    #         True, SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
-    #     send_confirm_interests(match, no_external_calls=True)
+    def test_pre_order_deadline(self):
+        match = self.setup_match(
+            True, SupplyAvailabilityOption.PRE_ORDER_DEADLINE)
 
-    #     self.send_assert(
-    #         match.sent_buyer_confirm_interest_message.body,
-    #         intents.DISCUSS_W_SELLER,
-    #         messages.DISCUSS__CONFIRM_INTEREST,
-    #         target_body_variation_key='PRE_ORDER_DEADLINE'
-    #     )
+        send_confirm_interests(match.id, no_external_calls=True)
+        match.refresh_from_db()
 
-    #     self.send_assert(
-    #         match.sent_seller_confirm_interest_message.body,
-    #         intents.DISCUSS_W_BUYER,
-    #         messages.DISCUSS__CONFIRM_INTEREST,
-    #         counter_party=True
-    #     )
+        self.send_assert(
+            match.sent_buyer_confirm_interest_message.body,
+            intents.DISCUSS_W_SELLER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            target_body_variation_key='PRE_ORDER_DEADLINE'
+        )
+        self.send_assert(
+            match.sent_seller_confirm_interest_message.body,
+            intents.DISCUSS_W_BUYER,
+            messages.DISCUSS__CONFIRM_INTEREST,
+            counter_party=True
+        )
 
-    def test_buy_pre_order_duration(self):
+        self.assertIsNotNone(match.sent_buyer_confirm_interest)
+        self.assertIsNotNone(match.sent_seller_confirm_interest)
+
+    def test_pre_order_duration(self):
         match = self.setup_match(
             True, SupplyAvailabilityOption.PRE_ORDER_DURATION)
-        send_confirm_interests(match, no_external_calls=True)
+
+        send_confirm_interests(match.id, no_external_calls=True)
+        match.refresh_from_db()
 
         self.send_assert(
             match.sent_buyer_confirm_interest_message.body,
@@ -64,10 +74,12 @@ class TaskSendConfirmInterestTest(ChatTest):
             messages.DISCUSS__CONFIRM_INTEREST,
             target_body_variation_key='PRE_ORDER_DURATION'
         )
-
         self.send_assert(
             match.sent_seller_confirm_interest_message.body,
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__CONFIRM_INTEREST,
             counter_party=True
         )
+
+        self.assertIsNotNone(match.sent_buyer_confirm_interest)
+        self.assertIsNotNone(match.sent_seller_confirm_interest)
