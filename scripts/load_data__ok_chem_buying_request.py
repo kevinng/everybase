@@ -1,8 +1,8 @@
-# 20 Nov 2020
+# Updated: 20 Nov 2020
 
 import pytz
 from datetime import datetime
-from .shared import helpers
+from scripts.shared import helpers
 from growth.models import OKChemBuyingRequest
 
 _NAMESPACE = 'ok_chem_buying_request'

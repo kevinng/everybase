@@ -1,4 +1,4 @@
-# 25 Nov 2020
+# Updated: 25 Nov 2020
 
 import pytz, traceback
 from django.core.exceptions import ValidationError

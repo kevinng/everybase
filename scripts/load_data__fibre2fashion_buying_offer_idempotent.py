@@ -1,8 +1,8 @@
-# 25 Nov 2020
+# Updated: 25 Nov 2020
 
 import pytz
 from datetime import datetime
-from .shared import helpers
+from scripts.shared import helpers
 from growth.models import Fibre2FashionBuyingOffer
 from relationships.shared import record_email
 from django.core.exceptions import ValidationError

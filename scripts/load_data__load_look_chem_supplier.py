@@ -2,7 +2,7 @@
 
 import pytz
 from datetime import datetime
-from .shared import helpers
+from scripts.shared import helpers
 from growth.models import LookChemSupplier
 from relationships.shared import record_email
 

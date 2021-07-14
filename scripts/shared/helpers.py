@@ -49,7 +49,7 @@ def log(filename, *argv):
 def get_filetype(filename):
     return filename.split('.')[-1].lower()
 
-def download_object(bucket_name, object_name, out_filename, namespace):
+def download_object(bucket_name, object_name, filename, namespace):
     print(f'Downloading \'{object_name}\' from bucket \'{bucket_name}\'...')
 
     full_path = os.path.join(_SCRIPTS_ROOT, namespace, filename)

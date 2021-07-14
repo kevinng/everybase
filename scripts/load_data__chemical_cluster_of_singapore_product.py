@@ -2,7 +2,7 @@
 
 import pytz
 from datetime import datetime
-from .shared import helpers
+from scripts.shared import helpers
 from growth.models import ChemicalClusterOfSingaporeProduct
 
 _NAMESPACE = 'chemical_cluster_of_singapore_product'
