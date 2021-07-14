@@ -71,7 +71,7 @@ class TwilioOutboundMessage(Standard):
         db_index=True
     )
     error_message = models.CharField(
-        max_length=200,
+        max_length=500,
         null=True,
         blank=True,
         db_index=True
@@ -231,7 +231,7 @@ class TwilioStatusCallback(Standard):
         db_index=True
     )
     error_message = models.CharField(
-        max_length=200,
+        max_length=500,
         null=True,
         blank=True,
         db_index=True
