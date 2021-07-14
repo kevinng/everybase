@@ -170,23 +170,24 @@ _match_fields = ['closed', 'ready', 'sent_buyer_confirm_interest',
 'seller_bought_contact', 'seller_payment_hash', 'sent_contact_to_buyer',
 'sent_contact_to_seller', 'supply', 'demand']
 @admin.register(mod.Match)
-class MatchAdmin(comadm.ChoiceAdmin):
+class MatchAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.choice_list_display + _match_fields
-    list_editable = comadm.choice_list_editable + _match_fields
-    list_filter = ['closed', 'ready', 'sent_buyer_confirm_interest',
-        'sent_seller_confirm_interest', 'buyer_confirmed_interest',
-        'buyer_interested', 'seller_confirmed_interest',
-        'seller_interested', 'buyer_confirmed_details',
-        'buyer_confirmed_details_correct', 'seller_confirmed_details',
-        'seller_confirmed_details_correct', 'buyer_stopped_discussion',
-        'seller_stopped_discussion', 'buyer_bought_contact',
-        'seller_bought_contact', 'sent_contact_to_buyer',
-        'sent_contact_to_seller']
-    search_fields = ['supply__product_type__name', 'demand__product_type__name']
+    list_display = comadm.standard_list_display + _match_fields
+    list_editable = comadm.standard_list_editable + _match_fields
+    list_filter = comadm.standard_list_filter + ['closed', 'ready',
+        'sent_buyer_confirm_interest', 'sent_seller_confirm_interest',
+        'buyer_confirmed_interest', 'buyer_interested',
+        'seller_confirmed_interest', 'seller_interested',
+        'buyer_confirmed_details', 'buyer_confirmed_details_correct',
+        'seller_confirmed_details', 'seller_confirmed_details_correct',
+        'buyer_stopped_discussion', 'seller_stopped_discussion',
+        'buyer_bought_contact', 'seller_bought_contact',
+        'sent_contact_to_buyer', 'sent_contact_to_seller']
+    search_fields = comadm.standard_search_fields + [
+        'supply__product_type__name', 'demand__product_type__name']
 
     # Details page settings
-    fieldsets = comadm.choice_fieldsets + [
+    fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _match_fields})
     ]
     autocomplete_fields = ['sent_buyer_confirm_interest_message',

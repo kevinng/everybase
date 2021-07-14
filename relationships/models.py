@@ -487,7 +487,7 @@ class TimeFrame(Standard):
             raise ValidationError('Either duration/uom or deadline must be \
                 set.')
 
-class Match(Choice):
+class Match(Standard):
     """Match between supply and demand.
 
     Last updated: 24 June 2021, 10:05 PM
