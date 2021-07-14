@@ -186,7 +186,7 @@ class MatchAdmin(comadm.ChoiceAdmin):
     search_fields = ['supply__product_type__name', 'demand__product_type__name']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
+    fieldsets = comadm.choice_fieldsets + [
         ('Details', {'fields': _match_fields})
     ]
     autocomplete_fields = ['sent_buyer_confirm_interest_message',
