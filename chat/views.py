@@ -232,16 +232,14 @@ class SendConfirmInterestsView(APIView):
         match_id = request.data.get('match_id')
         
         if match_id is None:
-            return HttpResponse(status=HTTPStatus.BAD_REQUEST)
+            return HttpResponse('match_id is None',
+                status=HTTPStatus.BAD_REQUEST)
 
-        match = send_confirm_interests(
+        send_confirm_interests.delay(
             match_id=match_id,
             buyer_only=request.data.get('buyer_only'),
             seller_only=request.data.get('seller_only'),
             no_external_calls=request.data.get('no_external_calls')
         )
 
-        if match is None:
-            return HttpResponse(status=HTTPStatus.BAD_REQUEST)
-
-        return HttpResponse(status=HTTPStatus.OK)
+        return HttpResponse('Done', status=HTTPStatus.OK)
