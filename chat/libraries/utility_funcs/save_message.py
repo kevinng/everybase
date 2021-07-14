@@ -17,8 +17,10 @@ def save_message(request):
     -------
     (message, is_from_new, is_to_new)
         message - Message model reference
-        is_from_new - True if 'from user' was created new
-        is_to_new - True if 'to user' was created new
+        from_ph_is_new - True if 'from user' phone number was created new
+        from_usr_is_new - True if 'from user' was created new
+        to_ph_is_new - True if 'to user' phone number was created new
+        to_usr_is_new - True if 'to user' was created new
     """
     # Create TwilioInboundMessage model
     message = models.TwilioInboundMessage(
