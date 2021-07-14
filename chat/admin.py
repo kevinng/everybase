@@ -211,7 +211,8 @@ class UserContextAdmin(comadm.StandardAdmin):
     list_filter = comadm.standard_choice_list_filter + \
         _user_context_fields
     search_fields = comadm.standard_search_fields + \
-        _user_context_fields
+        ['user__phone_number__country_code',
+        'user__phone_number__national_number']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
