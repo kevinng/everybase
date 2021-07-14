@@ -133,8 +133,9 @@ class ContextLogic():
         """Get/create payment hash of the counter-party for this unique 
         match/user pair."""
         hash, _ = paymods.PaymentHash.objects.get_or_create(
-            match=self.get_match().id,
-            user=self.message_handler.message.from_user)
+            match=self.get_match(),
+            user=self.message_handler.message.from_user
+        )
         
         return hash
 
