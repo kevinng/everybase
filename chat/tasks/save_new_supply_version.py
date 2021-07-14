@@ -25,7 +25,7 @@ def save_new_supply_version(
     last_message = models.TwilioInboundMessage.objects.get(pk=last_message_id)
 
     old_supply = match.supply
-    new_supply = save_new_supply(last_message, True)
+    new_supply = save_new_supply(last_message.id, True)
 
     old_supply.next_version = new_supply
     old_supply.save()

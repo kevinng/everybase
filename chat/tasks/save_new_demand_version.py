@@ -25,7 +25,7 @@ def save_new_demand_version(
     last_message = models.TwilioInboundMessage.objects.get(pk=last_message_id)
 
     old_demand = match.demand
-    new_demand = save_new_demand(last_message, True)
+    new_demand = save_new_demand(last_message.id, True)
 
     old_demand.next_version = new_demand
     old_demand.save()

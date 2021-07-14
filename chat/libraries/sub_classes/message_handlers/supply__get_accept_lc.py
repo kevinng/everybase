@@ -1,5 +1,6 @@
 from chat.libraries.constants import datas, intents
 from chat.libraries.classes.message_handler import MessageHandler
+from chat.libraries.classes.context_logic import ContextLogic
 from chat.tasks.save_new_supply import save_new_supply
 from chat.tasks.save_new_supply_version import save_new_supply_version
 
@@ -12,7 +13,8 @@ class SupplyGetAcceptLCHandler(MessageHandler):
         if next_intent_key == intents.NEW_SUPPLY:
             save_new_supply.delay(self.message.id)
         elif next_intent_key == intents.DISCUSS_W_BUYER:
-            save_new_supply_version.delay(self.message.id)
+            logic = ContextLogic(self)
+            save_new_supply_version.delay(logic.get_match().id, self.message.id)
 
         self.add_option([('1', 0), ('yes', 0)],
             next_intent_key,
