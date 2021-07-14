@@ -10,9 +10,9 @@ class SupplyGetAcceptLCHandler(MessageHandler):
             next_message_key: str
         ) -> str:
 
-        if next_intent_key == intents.NEW_SUPPLY:
+        if self.intent_key == intents.NEW_SUPPLY:
             save_new_supply.delay(self.message.id)
-        elif next_intent_key == intents.DISCUSS_W_BUYER:
+        elif self.message_key == intents.DISCUSS_W_BUYER:
             logic = ContextLogic(self)
             save_new_supply_version.delay(logic.get_match().id, self.message.id)
 

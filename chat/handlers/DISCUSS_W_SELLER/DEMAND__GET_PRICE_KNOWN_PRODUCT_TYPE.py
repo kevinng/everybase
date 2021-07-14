@@ -1,9 +1,8 @@
-from chat.libraries.constants import intents, messages, datas
-from chat.libraries.classes.message_handler import MessageHandler
+from chat.libraries.constants import intents, messages
+from chat.libraries.sub_classes.message_handlers.\
+    demand__get_price_known_product_type import \
+    DemandGetPriceKnownProductTypeHandler
 
-class Handler(MessageHandler):
+class Handler(DemandGetPriceKnownProductTypeHandler):
     def run(self):
-        self.save_body_as_string(datas.PRICE)
-        return self.done_reply(
-            intents.DISCUSS_W_SELLER,
-            messages.DISCUSS__ASK)
+        return super().run(intents.DISCUSS_W_SELLER, messages.DISCUSS__ASK)
