@@ -1,9 +1,18 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.chat_test import ChatTest
+from chat.libraries.test_funcs.supply_availability_options import \
+    SupplyAvailabilityOption
 
 class DiscussWBuyerSupplyGetAcceptLCTest(ChatTest):
+    fixtures = [
+        'setup/common__country.json',
+        'setup/20210528__payments__currency.json',
+        'setup/20210527__relationships__availability.json'
+    ]
+
     def setUp(self):
         super().setUp(intents.DISCUSS_W_BUYER, messages.SUPPLY__GET_ACCEPT_LC)
+        self.setup_match(False, SupplyAvailabilityOption.OTG)
     
     def choose_non_choice(self, input):
         self.receive_reply_assert(
