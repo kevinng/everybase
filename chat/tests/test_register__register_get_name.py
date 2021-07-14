@@ -11,7 +11,7 @@ class RegisterRegisterGetNameTest(ChatTest):
             intents.REGISTER,
             messages.REGISTER__GET_NAME
         )
-        self.assertEqual(self.user.name, None)
+        self.assertIsNone(self.user.name)
         
         self.receive_reply_assert(
             'Kevin Ng',

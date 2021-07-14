@@ -20,7 +20,7 @@ class TaskForwardAnswerTest(ChatTest):
         self.setup_match(False, SupplyAvailabilityOption.OTG)
         qna = self.setup_qna(answer_readied=False)
         msg = forward_answer(qna.id, True)
-        self.assertEqual(msg, None)
+        self.assertIsNone(msg)
 
     def test_run_selling(self):
         self.setup_match(False, SupplyAvailabilityOption.OTG)

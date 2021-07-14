@@ -140,7 +140,7 @@ class TaskSaveNewSupplyTest_OTG(ChatTest):
         sup = save_new_supply(msg.id)
 
         # Product type
-        self.assertEqual(sup.product_type, None)
+        self.assertIsNone(sup.product_type)
         self.assertEqual(sup.product_type_data_value.id, ptype_dv.id)
         self.assertEqual(sup.product_type_method, methods.FREE_TEXT_INPUT)
 
@@ -150,12 +150,12 @@ class TaskSaveNewSupplyTest_OTG(ChatTest):
         self.assertEqual(sup.availability_method, methods.DATA_KEY_MATCH)
 
         # Country
-        self.assertEqual(sup.country, None)
+        self.assertIsNone(sup.country)
         self.assertEqual(sup.country_data_value.id, country_dv.id)
         self.assertEqual(sup.country_method, methods.FREE_TEXT_INPUT)
 
         # Confirm packing
-        self.assertEqual(sup.packing, None)
+        self.assertIsNone(sup.packing)
         self.assertEqual(sup.packing_data_value.id, packing_dv.id)
         self.assertEqual(sup.packing_method, methods.FREE_TEXT_INPUT)
 
@@ -319,7 +319,7 @@ class TaskSaveNewSupplyTest_PreOrder(ChatTest):
         sup = save_new_supply(msg.id)
 
         # Product type
-        self.assertEqual(sup.product_type, None)
+        self.assertIsNone(sup.product_type)
         self.assertEqual(sup.product_type_data_value.id, ptype_dv.id)
         self.assertEqual(sup.product_type_method, methods.FREE_TEXT_INPUT)
 
@@ -329,7 +329,7 @@ class TaskSaveNewSupplyTest_PreOrder(ChatTest):
         self.assertEqual(sup.availability_method, methods.DATA_KEY_MATCH)
 
         # Country
-        self.assertEqual(sup.country, None)
+        self.assertIsNone(sup.country)
         self.assertEqual(sup.country_data_value.id, country_dv.id)
         self.assertEqual(sup.country_method, methods.FREE_TEXT_INPUT)
 

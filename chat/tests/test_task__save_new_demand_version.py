@@ -115,12 +115,12 @@ class TaskSaveNewDemandVersionTest_ProductTypeCountryNotFound(ChatTest):
         dmd = save_new_demand_version(match.id, msg.id)
 
         # Product type
-        self.assertEqual(dmd.product_type, None)
+        self.assertIsNone(dmd.product_type)
         self.assertEqual(dmd.product_type_data_value.id, ptype_dv.id)
         self.assertEqual(dmd.product_type_method, methods.FREE_TEXT_INPUT)
         
         # Country
-        self.assertEqual(dmd.country, None)
+        self.assertIsNone(dmd.country)
         self.assertEqual(dmd.country_data_value.id, country_dv.id)
         self.assertEqual(dmd.country_method, methods.FREE_TEXT_INPUT)
 
