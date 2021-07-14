@@ -1041,6 +1041,10 @@ class Supply(Standard):
         db_index=True
     )
 
+    def __str__(self):
+        return f'({self.product_type_data_value}, {self.quantity_data_value}, \
+            {self.price_data_value}, [{self.id}])'
+
     class Meta:
         verbose_name_plural = 'supplies'
 
@@ -1246,6 +1250,10 @@ class Demand(Standard):
         blank=True,
         db_index=True
     )
+
+    def __str__(self):
+        return f'({self.product_type_data_value}, {self.quantity_data_value}, \
+            {self.price_data_value}, [{self.id}])'
 
 class QuestionAnswerPair(Standard):
     """Question-answer pair.

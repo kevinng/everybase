@@ -648,7 +648,16 @@ class MessageDataValue(Standard):
     )
     
     def __str__(self):
-        return f'({self.dataset}, {self.data_key}, {self.value_string}, {self.value_float}, {self.value_boolean}, {self.value_id} [{self.id}])'
+        if self.value_string is not None:
+            display_str = self.value_string
+        elif self.value_float is not None:
+            display_str = self.value_float
+        elif self.value_boolean is not None:
+            display_str = self.value_boolean
+        elif self.value_id is not None:
+            display_str = self.value_id
+
+        return f'({display_str} [{self.id}])'
 
     def clean(self):
         super(MessageDataValue, self).clean()
