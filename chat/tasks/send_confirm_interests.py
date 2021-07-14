@@ -46,6 +46,7 @@ def send_confirm_interests(
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST
         )
+        buyer.current_match = match
 
         # Send and log
         match.sent_buyer_confirm_interest = datetime.datetime.now(tz=sgtz)
@@ -63,6 +64,8 @@ def send_confirm_interests(
             no_external_calls
         )
 
+        buyer.save()
+
     # Seller
     if buyer_only == False:
         seller = match.supply.user
@@ -73,6 +76,7 @@ def send_confirm_interests(
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__CONFIRM_INTEREST
         )
+        seller.current_match = match
 
         # Send and log
         match.sent_seller_confirm_interest = datetime.datetime.now(tz=sgtz)
@@ -89,6 +93,8 @@ def send_confirm_interests(
             None,
             no_external_calls
         )
+
+        seller.save()
 
     match.save()
     return match
