@@ -195,7 +195,7 @@ class MatchAdmin(comadm.StandardAdmin):
     'seller_confirmed_interest_value', 'buyer_confirmed_details_correct_value',
     'seller_confirmed_details_correct_value', 'buyer_stopped_discussion_value',
     'seller_stopped_discussion_value', 'buyer_payment_hash',
-    'seller_payment_hash']
+    'seller_payment_hash', 'supply', 'demand']
 
 _supply_fields = [ 'user', 'product_type_data_value', 'product_type_method',
 'product_type', 'country_data_value', 'country_method', 'country',
