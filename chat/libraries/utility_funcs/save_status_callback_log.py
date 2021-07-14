@@ -1,6 +1,6 @@
 from chat import models
 
-def save_message_log(request, callback):
+def save_status_callback_log(request, callback):
     """Log Twilio status callback and HTTP request.
 
     Parameters
