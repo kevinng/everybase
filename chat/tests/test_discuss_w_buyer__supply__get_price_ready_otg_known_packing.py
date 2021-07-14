@@ -1,4 +1,5 @@
-from chat.libraries.test_funcs.supply_availability_options import SupplyAvailabilityOption
+from chat.libraries.test_funcs.supply_availability_options import \
+    SupplyAvailabilityOption
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.chat_test import ChatTest
 
