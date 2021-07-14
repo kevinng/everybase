@@ -25,10 +25,7 @@ class TwilioOutboundMessage(comadm.StandardAdmin):
         _twilio_outbound_message_fields
     list_filter = comadm.standard_list_filter + ['date_created', 'date_sent',
         'direction', 'error_message', 'error_code', 'api_version']
-    search_fields = comadm.standard_search_fields + [
-        'notes', 'body', 'direction', 'account_sid', 'message_sid', 'from_str',
-        'to_str', 'uri', 'error_message', 'error_code', 'api_version',
-        'from_user', 'to_user', 'twilml_response_to__message_sid']
+    search_fields = comadm.standard_search_fields + ['message_sid']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
@@ -50,11 +47,7 @@ class TwilioStatusCallbackAdmin(comadm.StandardAdmin):
     list_filter = comadm.standard_list_filter + ['api_version',
         'channel_status_code', 'channel_status_message', 'channel_prefix',
         'message_status', 'error_code', 'event_type']
-    search_fields = comadm.standard_search_fields + ['from_str', 'to_str',
-        'account_sid', 'api_version', 'channel_install_sid', 'channel_prefix',
-        'channel_status_code',  'channel_status_message', 'channel_to_address', 
-        'message_sid', 'message_status', 'sms_sid', 'sms_status', 'error_code',
-        'event_type', 'message__body', 'log_entry__payload']
+    search_fields = comadm.standard_search_fields + ['message_sid']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
