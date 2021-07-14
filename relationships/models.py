@@ -741,6 +741,9 @@ class Match(Standard):
         db_index=True
     )
 
+    def __str__(self):
+        return f'({self.supply}, {self.demand}, [{self.id}])'
+
     class Meta:
         verbose_name_plural = 'matches'
 
