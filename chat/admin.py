@@ -37,9 +37,10 @@ class TwilioOutboundMessage(comadm.StandardAdmin):
     autocomplete_fields = ['from_user', 'to_user', 'twilml_response_to']
 
 _twilio_status_callback_fields = ['from_str', 'to_str', 'account_sid',
-    'api_version', 'channel_to_address', 'channel_install_sid',
-    'channel_status_message', 'channel_prefix', 'message_sid', 'message_status',
-    'sms_sid', 'sms_status', 'error_code', 'event_type', 'message']
+    'api_version', 'channel_install_sid', 'channel_prefix',
+    'channel_status_code', 'channel_status_message', 'channel_to_address',
+    'message_sid', 'message_status', 'sms_sid', 'sms_status', 'error_code',
+    'event_type', 'message']
 @admin.register(mod.TwilioStatusCallback)
 class TwilioStatusCallbackAdmin(comadm.StandardAdmin):
     # List page settings
@@ -47,11 +48,11 @@ class TwilioStatusCallbackAdmin(comadm.StandardAdmin):
     list_editable = comadm.standard_list_editable + \
         _twilio_status_callback_fields
     list_filter = comadm.standard_list_filter + ['api_version',
-        'channel_status_message', 'channel_prefix', 'message_status',
-        'error_code', 'event_type']
+        'channel_status_code', 'channel_status_message', 'channel_prefix',
+        'message_status', 'error_code', 'event_type']
     search_fields = comadm.standard_search_fields + ['from_str', 'to_str',
-        'account_sid', 'api_version', 'channel_to_address',
-        'channel_install_sid', 'channel_status_message', 'channel_prefix',
+        'account_sid', 'api_version', 'channel_install_sid', 'channel_prefix',
+        'channel_status_code',  'channel_status_message', 'channel_to_address', 
         'message_sid', 'message_status', 'sms_sid', 'sms_status', 'error_code',
         'event_type', 'message__body', 'log_entry__payload']
 

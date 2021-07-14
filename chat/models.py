@@ -143,7 +143,7 @@ class TwilioOutboundMessage(Standard):
 class TwilioStatusCallback(Standard):
     """Twilio status callback.
 
-    Last updated: 27 April 2021, 5:10 PM
+    Last updated: 15 July 2021, 3:19 AM
     """
 
     from_str = models.CharField(
@@ -170,13 +170,19 @@ class TwilioStatusCallback(Standard):
         blank=True,
         db_index=True
     )
-    channel_to_address = models.CharField(
+    channel_install_sid = models.CharField(
         max_length=200,
         null=True,
         blank=True,
         db_index=True
     )
-    channel_install_sid = models.CharField(
+    channel_prefix = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    channel_status_code = models.CharField(
         max_length=200,
         null=True,
         blank=True,
@@ -188,7 +194,7 @@ class TwilioStatusCallback(Standard):
         blank=True,
         db_index=True
     )
-    channel_prefix = models.CharField(
+    channel_to_address = models.CharField(
         max_length=200,
         null=True,
         blank=True,
