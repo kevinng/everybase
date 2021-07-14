@@ -20,7 +20,6 @@ def auto_clean_answer(
         messages. Useful for automated testing, to ascertain model updates are
         made correctly.
     """
-
     qna = relmods.QuestionAnswerPair.objects.get(pk=qna_id)
     text = qna.answer_captured_value.value_string
 

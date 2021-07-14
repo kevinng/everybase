@@ -34,7 +34,6 @@ def exchange_contacts(
 
     (buyer_msg, seller_msg)
     """
-
     match = relmods.Match.objects.get(pk=match_id)
 
     chatbot_ph = get_chatbot().phone_number

@@ -1,3 +1,4 @@
+from chat.libraries.constants.intents import EXPLAIN_SERVICE
 from everybase.settings import TIME_ZONE
 import pytz, datetime
 from celery import shared_task
@@ -20,7 +21,6 @@ def auto_clean_question(
         messages. Useful for automated testing, to ascertain model updates are
         made correctly.
     """
-
     qna = relmods.QuestionAnswerPair.objects.get(pk=qna_id)
     text = qna.question_captured_value.value_string
 
