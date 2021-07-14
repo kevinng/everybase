@@ -1,7 +1,7 @@
 from chat import models
 
 def save_message_log(request, message):
-    """Saves Twilio incoming message as a new log model row from a HTTP request.
+    """Log Twilio incoming message and HTTP request.
 
     Parameters
     ----------
