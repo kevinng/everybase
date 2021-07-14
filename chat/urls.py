@@ -5,12 +5,8 @@ from . import views
 app_name = 'chat'
 webhook_root = 'webhooks'
 urlpatterns = [
-    # Webhooks
-    path(f'{webhook_root}/message/',
-        views.TwilioIncomingMessageView.as_view()),
-    # path(f'{webhook_root}/status/',
-        # ?),
-    path(f'send_confirm_interests/',
-        views.SendConfirmInterestsView.as_view())
+    path(f'{webhook_root}/message/', views.TwilioIncomingMessageView.as_view()),
+    path(f'{webhook_root}/status/', views.TwilioIncomingStatusView.as_view()),
+    path(f'send_confirm_interests/', views.SendConfirmInterestsView.as_view())
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
