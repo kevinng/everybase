@@ -1,3 +1,4 @@
+from os import stat
 import traceback
 from http import HTTPStatus
 
@@ -23,6 +24,8 @@ from chat.libraries.utility_funcs.get_context import get_context
 from chat.libraries.utility_funcs.get_handler import get_handler
 from chat.libraries.utility_funcs.get_non_tracking_whatsapp_link import \
     get_non_tracking_whatsapp_link
+
+from chat.tasks.send_confirm_interests import send_confirm_interests
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -221,3 +224,24 @@ def redirect_checkout_page(request, id):
 class StripeFulfilmentCallbackView(APIView):
     """Webhook to receive Stripe fuilfilment callback."""
     # TODO
+    # I need to exchange contacts
+
+class SendConfirmInterestsView(APIView):
+    """API to send confirm interest messages"""
+    def post(self, request, format=None):
+        match_id = request.data.get('match_id')
+        
+        if match_id is None:
+            return HttpResponse(status=HTTPStatus.BAD_REQUEST)
+
+        match = send_confirm_interests(
+            match_id=match_id,
+            buyer_only=request.data.get('buyer_only'),
+            seller_only=request.data.get('seller_only'),
+            no_external_calls=request.data.get('no_external_calls')
+        )
+
+        if match is None:
+            return HttpResponse(status=HTTPStatus.BAD_REQUEST)
+
+        return HttpResponse(status=HTTPStatus.OK)
