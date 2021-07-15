@@ -256,10 +256,8 @@ STRIPE_PAYMENT_METHOD_TYPES = config('STRIPE_PAYMENT_METHOD_TYPES').split(';')
 # System phone numbers
 ## User-facing chatbot
 CHATBOT_PHONE_NUMBER_PK = config('CHATBOT_PHONE_NUMBER_PK')
-## Standard sender for system messages
-MESSAGE_SENDER_PHONE_NUMBER_PK = config('MESSAGE_SENDER_PHONE_NUMBER_PK')
-## Standard receiver for system messages
-MESSAGE_RECEIVER_PHONE_NUMBER_PK = config('MESSAGE_RECEIVER_PHONE_NUMBER_PK')
+## Support number
+SUPPORT_PHONE_NUMBER_PK = config('SUPPORT_PHONE_NUMBER_PK')
 
 sentry_sdk.init(
     dsn="https://b66301735a0345b3b7c6bee436d28bb7@o870163.ingest.sentry.io/5824419",

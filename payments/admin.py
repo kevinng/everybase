@@ -4,7 +4,7 @@ from . import models as mod
 from common import admin as comadm
 
 _payment_hash_fields = ['user', 'match', 'started', 'succeeded', 'failed',
-    'session_id', 'price']
+    'expired', 'session_id', 'price']
 @admin.register(mod.PaymentHash)
 class PaymentHashAdmin(comadm.StandardAdmin):
     # List page settings
@@ -18,7 +18,7 @@ class PaymentHashAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _payment_hash_fields})
     ]
-    autocomplete_fields = ['user', 'match']
+    autocomplete_fields = ['user', 'match', 'price']
 
 _payment_event_fields = ['event_type', 'currency', 'amount', 'user',
     'payment_hash']
