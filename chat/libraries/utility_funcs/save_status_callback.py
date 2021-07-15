@@ -30,8 +30,12 @@ def save_status_callback(request):
     )
 
     # Associate message
-    message = models.TwilioOutboundMessage.objects.get(message_sid=message_sid)
-    callback.message = message
+    try:
+        message = models.TwilioOutboundMessage.objects.get(
+            message_sid=message_sid)
+        callback.message = message
+    except models.TwilioOutboundMessage.DoesNotExist:
+        pass
 
     callback.save()
 
