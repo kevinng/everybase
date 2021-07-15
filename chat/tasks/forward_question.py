@@ -61,6 +61,10 @@ def forward_question(
     user = qna.match.demand.user if buying else qna.match.supply.user
     done_to_context(user, intents.QNA, messages.YOUR_QUESTION)
 
+    # Update user's current Q&A
+    user.current_qna = qna
+    user.save()
+
     return send_message(
         render_message(messages.YOUR_QUESTION, params),
         get_chatbot().phone_number,
