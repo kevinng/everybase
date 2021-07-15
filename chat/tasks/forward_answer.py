@@ -4,7 +4,8 @@ from celery import shared_task
 from relationships import models as relmods
 from chat.libraries.constants import intents, messages
 from chat.libraries.utility_funcs.send_message import send_message
-from chat.libraries.utility_funcs.get_chatbot import get_chatbot
+from chat.libraries.utility_funcs.get_chatbot_phone_number import \
+    get_chatbot_phone_number
 from chat.libraries.utility_funcs.render_message import render_message
 from chat.libraries.utility_funcs.done_to_context import done_to_context
 
@@ -67,7 +68,7 @@ def forward_answer(
 
     return send_message(
         render_message(messages.YOUR_ANSWER, params),
-        get_chatbot().phone_number,
+        get_chatbot_phone_number(),
         qna.answerer.phone_number,
         intents.QNA,
         messages.YOUR_ANSWER,

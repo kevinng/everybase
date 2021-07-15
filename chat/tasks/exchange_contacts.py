@@ -8,7 +8,8 @@ from relationships import models as relmods
 from chat.libraries.constants import intents, messages
 from chat.libraries.utility_funcs.get_create_whatsapp_link import \
     get_create_whatsapp_link
-from chat.libraries.utility_funcs.get_chatbot import get_chatbot
+from chat.libraries.utility_funcs.get_chatbot_phone_number import \
+    get_chatbot_phone_number
 from chat.libraries.utility_funcs.render_message import render_message
 from chat.libraries.utility_funcs.send_message import send_message
 from chat.libraries.utility_funcs.done_to_context import done_to_context
@@ -36,7 +37,7 @@ def exchange_contacts(
     """
     match = relmods.Match.objects.get(pk=match_id)
 
-    chatbot_ph = get_chatbot().phone_number
+    chatbot_ph = get_chatbot_phone_number()
     buyer = match.demand.user
     seller = match.supply.user
 

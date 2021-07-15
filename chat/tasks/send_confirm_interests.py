@@ -5,7 +5,8 @@ from relationships import models as relmods
 from chat.libraries.constants import intents, messages
 from chat.libraries.utility_funcs.send_message import send_message
 from chat.libraries.utility_funcs.done_to_context import done_to_context
-from chat.libraries.utility_funcs.get_chatbot import get_chatbot
+from chat.libraries.utility_funcs.get_chatbot_phone_number import \
+    get_chatbot_phone_number
 from chat.libraries.utility_funcs.render_message import render_message
 
 @shared_task
@@ -56,7 +57,7 @@ def send_confirm_interests(
                 'buying': True,
                 'supply': match.supply
             }),
-            get_chatbot().phone_number,
+            get_chatbot_phone_number(),
             buyer.phone_number,
             intents.DISCUSS_W_SELLER,
             messages.DISCUSS__CONFIRM_INTEREST,
@@ -86,7 +87,7 @@ def send_confirm_interests(
                 'buying': False,
                 'demand': match.demand
             }),
-            get_chatbot().phone_number,
+            get_chatbot_phone_number(),
             seller.phone_number,
             intents.DISCUSS_W_BUYER,
             messages.DISCUSS__CONFIRM_INTEREST,
