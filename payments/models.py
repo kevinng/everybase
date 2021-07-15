@@ -52,13 +52,15 @@ class PaymentHash(Standard):
         db_index=True        
     )
 
-    # price = models.ForeignKey(
-    #     'Price',
-    #     related_name='payment_hashes',
-    #     related_query_name='payment_hashes',
-    #     on_delete=models.PROTECT,
-    #     db_index=True
-    # )
+    price = models.ForeignKey(
+        'Price',
+        null=True,
+        blank=True,
+        related_name='payment_hashes',
+        related_query_name='payment_hashes',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     
     def __str__(self):
         return f'({self.user}, {self.price} [{self.id}])'
