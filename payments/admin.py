@@ -4,14 +4,14 @@ from . import models as mod
 from common import admin as comadm
 
 _payment_hash_fields = ['user', 'match', 'started', 'succeeded', 'failed',
-    'session_id', 'currency', 'unit_amount']
+    'session_id']
 @admin.register(mod.PaymentHash)
 class PaymentHashAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _payment_hash_fields
     list_editable = comadm.standard_list_editable + _payment_hash_fields
     list_filter = comadm.standard_list_filter + ['started', 'succeeded',
-        'failed', 'currency']
+        'failed']
     search_fields = comadm.standard_search_fields + ['user__name', 'session_id']
 
     # Details page settings
@@ -42,4 +42,8 @@ class PaymentEventTypeAdmin(comadm.ChoiceAdmin):
 
 @admin.register(mod.Currency)
 class CurrencyAdmin(comadm.ChoiceAdmin):
+    pass
+
+@admin.register(mod.Price)
+class PriceAdmin(comadm.ChoiceAdmin):
     pass

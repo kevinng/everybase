@@ -5,7 +5,7 @@ from hashid_field import HashidAutoField
 class PaymentHash(Standard):
     """Hash of payment link sent to user.
 
-    Last updated: 18 June 2021, 10:17
+    Last updated: 15 July 2021, 4:04
     """
 
     id = HashidAutoField(primary_key=True)
@@ -24,8 +24,6 @@ class PaymentHash(Standard):
     )
     match = models.ForeignKey(
         'relationships.Match',
-        null=True,
-        blank=True,
         related_name='payment_links',
         related_query_name='payment_links',
         on_delete=models.PROTECT,
@@ -53,31 +51,22 @@ class PaymentHash(Standard):
         blank=True,
         db_index=True        
     )
-    
-    product_name = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    currency = models.ForeignKey(
-        'Currency',
-        null=True,
-        blank=True,
-        related_name='payment_hashes',
-        related_query_name='payment_hashes',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    unit_amount = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
 
+    # price = models.ForeignKey(
+    #     'Price',
+    #     related_name='payment_hashes',
+    #     related_query_name='payment_hashes',
+    #     on_delete=models.PROTECT,
+    #     db_index=True
+    # )
+    
     def __str__(self):
-        return f'({self.session_id}, {self.unit_amount}, {self.currency} \
-            [{self.id}])'
+        return f'({self.user}, {self.price} [{self.id}])'
+
+    class Meta:
+        unique_together = ('user', 'match')
+        verbose_name = 'Payment hash'
+        verbose_name_plural = 'Payment hashes'
 
 class PaymentEvent(Standard):
     """Payment event.
@@ -261,3 +250,13 @@ class PaymentLinkAccess(Standard):
     class Meta:
         verbose_name = 'Phone hash access'
         verbose_name_plural = 'Phone hash accesses'
+
+class Price(Choice):
+    """Prices (of products) available for purchase - e.g., USD 1 referral fee.
+
+    Last updated: 15 July 2021, 4:38 PM
+    """
+
+    class Meta:
+        verbose_name = 'Price'
+        verbose_name_plural = 'Prices'
