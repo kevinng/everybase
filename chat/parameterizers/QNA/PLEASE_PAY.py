@@ -10,4 +10,5 @@ class Parameterizer(MessageParameterizer):
             'buying': logic.is_buying(),
             'currency': hash.currency.name,
             'price': hash.unit_amount,
-            'payment_link': get_payment_link(hash) }
+            'payment_link': get_payment_link(hash)
+        }
