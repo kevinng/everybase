@@ -263,6 +263,9 @@ class Price(Choice):
         verbose_name = 'Price'
         verbose_name_plural = 'Prices'
 
+StripeCallbackCheckoutSession_Paid = 'paid'
+StripeCallbackCheckoutSession_Unpaid = 'unpaid'
+StripeCallbackCheckoutSession_NoPaymentRequired = 'no_payment_required'
 class StripeCallbackCheckoutSession(Standard):
     """Stripe callback checkout session details
     
@@ -313,7 +316,15 @@ class StripeCallbackCheckoutSession(Standard):
         max_length=200,
         null=True,
         blank=True,
-        db_index=True
+        db_index=True,
+        choices=[
+            (StripeCallbackCheckoutSession_Paid, \
+                StripeCallbackCheckoutSession_Paid),
+            (StripeCallbackCheckoutSession_Unpaid, \
+                StripeCallbackCheckoutSession_Unpaid),
+            (StripeCallbackCheckoutSession_NoPaymentRequired, \
+                StripeCallbackCheckoutSession_NoPaymentRequired)
+        ]
     )
     success_url = models.CharField(
         max_length=200,
