@@ -1,15 +1,19 @@
-from os import stat
-import traceback
+from chat.libraries.utility_funcs.get_support_phone_number import \
+    get_support_phone_number
+import traceback, pytz, datetime
 from http import HTTPStatus
 
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
-import sentry_sdk
 
-from everybase.settings import (TWILIO_AUTH_TOKEN,
-    TWILIO_WEBHOOK_INCOMING_MESSAGES_URL, STRIPE_PAYMENT_METHOD_TYPES,
-    CHATBOT_PHONE_NUMBER_PK, STRIPE_PUBLISHABLE_API_KEY)
+import sentry_sdk
+import stripe
+
+from everybase.settings import (STRIPE_SECRET_API_KEY, TIME_ZONE,
+    TWILIO_AUTH_TOKEN, TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
+    STRIPE_PAYMENT_METHOD_TYPES, CHATBOT_PHONE_NUMBER_PK,
+    STRIPE_PUBLISHABLE_API_KEY, TWILIO_WEBHOOK_STATUS_UPDATE_URL)
 
 from common.libraries.get_ip_address import get_ip_address
 
@@ -24,6 +28,10 @@ from chat.libraries.utility_funcs.get_context import get_context
 from chat.libraries.utility_funcs.get_handler import get_handler
 from chat.libraries.utility_funcs.get_non_tracking_whatsapp_link import \
     get_non_tracking_whatsapp_link
+from chat.libraries.utility_funcs.save_status_callback import \
+    save_status_callback
+from chat.libraries.utility_funcs.save_status_callback_log import \
+    save_status_callback_log
 
 from chat.tasks.send_confirm_interests import send_confirm_interests
 
@@ -71,6 +79,9 @@ def reply(message):
     # Return TwilML response string
     response = MessagingResponse()
     response.message(body)
+    # Will need to create a URL that has the outbound message as ID
+    # The status callback will be sent to this method
+#https://www.twilio.com/docs/libraries/reference/twilio-python/6.62.0/docs/source/_rst/twilio.twiml.html?highlight=messagingresponse#twilio.twiml.messaging_response.MessagingResponse.message
     return str(response)
 
 class TwilioIncomingMessageView(APIView):
@@ -96,6 +107,27 @@ class TwilioIncomingMessageView(APIView):
         except:
             traceback.print_exc()
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
+
+class TwilioIncomingStatusView(APIView):
+    # TODO I need to provide an ID here - if it exists, will associate an outbound message with this callback
+    """Webhook to receiving incoming Twilio status via a POST request."""
+    def post(self, request, format=None):
+        signature = request.headers.get('X-Twilio-Signature')
+        validator = RequestValidator(TWILIO_AUTH_TOKEN)
+        if not validator.validate(TWILIO_WEBHOOK_STATUS_UPDATE_URL,
+            request.data, signature):
+            # Authentication failed
+            return HttpResponse(status=HTTPStatus.UNAUTHORIZED)
+
+        try:
+            callback = save_status_callback(request)
+            save_status_callback_log(request, callback)
+
+            return HttpResponse(status=HTTPStatus.OK)
+        except:
+            traceback.print_exc()
+            return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
+
 
 def redirect_whatsapp_phone_number(request, id):
     """Redirects user from our short tracking URL to WhatsApp"""
@@ -153,7 +185,7 @@ def redirect_checkout_page(request, id):
     """Redirect user to the Stripe checkout page"""
     # Log access
     ua = request.user_agent
-    access = paymods.PaymentLinkAccess.objects.create(
+    access = paymods.PaymentLinkAccess(
         ip_address=get_ip_address(request),
         is_mobile=ua.is_mobile,
         is_tablet=ua.is_tablet,
@@ -177,8 +209,17 @@ def redirect_checkout_page(request, id):
         access.hash = hash
         access.save()
 
+        sph = get_support_phone_number()
+        params = { 'whatsapp_url': get_non_tracking_whatsapp_link(
+            sph.country_code, sph.national_number) }
+
         if hash.expired is not None:
-            return render(request, 'chat/pages/expired.html', {})
+            return render(request, 'chat/pages/expired.html', params)
+        elif hash.price is None:
+            return render(request, 'chat/pages/error.html', params)
+        elif hash.succeeded is not None:
+            return render(request, 'chat/pages/paid.html', params)
+
     except paymods.PaymentHash.DoesNotExist as err:
         sentry_sdk.capture_exception(err)
 
@@ -198,17 +239,20 @@ def redirect_checkout_page(request, id):
     session = stripe.checkout.Session.create(
         payment_method_types=STRIPE_PAYMENT_METHOD_TYPES,
         line_items=[{
-            'price_data': {
-                'currency': hash.currency.programmatic_key,
-                'product_data': { 'name': hash.product_name },
-                'unit_amount': hash.unit_amount
-            },
+            'price': hash.price.programmatic_key,
             'quantity': 1,
         }],
         mode='payment',
         success_url=end_url,
         cancel_url=end_url,
+        api_key = STRIPE_SECRET_API_KEY
     )
+
+    # Update hash
+    sgtz = pytz.timezone(TIME_ZONE)
+    hash.started = datetime.datetime.now(tz=sgtz)
+    hash.session_id = session.id
+    hash.save()
 
     # Update log status
     access.outcome = paymods.PAYMENT_LINK_ACCESS_SUCCESSFUL
@@ -224,7 +268,6 @@ def redirect_checkout_page(request, id):
 class StripeFulfilmentCallbackView(APIView):
     """Webhook to receive Stripe fuilfilment callback."""
     # TODO
-    # I need to exchange contacts
 
 class SendConfirmInterestsView(APIView):
     """API to send confirm interest messages"""
