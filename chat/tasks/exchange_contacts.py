@@ -1,5 +1,6 @@
 from typing import Tuple
 import pytz, datetime
+from celery import shared_task
 from everybase.settings import TIME_ZONE
 
 from chat import models
@@ -14,6 +15,7 @@ from chat.libraries.utility_funcs.render_message import render_message
 from chat.libraries.utility_funcs.send_message import send_message
 from chat.libraries.utility_funcs.done_to_context import done_to_context
 
+@shared_task
 def exchange_contacts(
         match_id: int,
         no_external_calls: bool = False
