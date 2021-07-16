@@ -1,5 +1,3 @@
-from chat.libraries.utility_funcs.get_support_phone_number import \
-    get_support_phone_number
 import traceback, pytz, datetime
 from http import HTTPStatus
 
@@ -32,8 +30,11 @@ from chat.libraries.utility_funcs.save_status_callback import \
     save_status_callback
 from chat.libraries.utility_funcs.save_status_callback_log import \
     save_status_callback_log
+from chat.libraries.utility_funcs.get_support_phone_number import \
+    get_support_phone_number
 
 from chat.tasks.send_confirm_interests import send_confirm_interests
+from chat.tasks.exchange_contacts import exchange_contacts
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -240,7 +241,7 @@ def redirect_checkout_page(request, id):
         payment_method_types=STRIPE_PAYMENT_METHOD_TYPES,
         line_items=[{
             'price': hash.price.programmatic_key,
-            'quantity': 1,
+            'quantity': 1
         }],
         mode='payment',
         success_url=end_url,
@@ -267,7 +268,76 @@ def redirect_checkout_page(request, id):
 
 class StripeFulfilmentCallbackView(APIView):
     """Webhook to receive Stripe fuilfilment callback."""
-    # TODO
+    def post(self, request, format=None):
+
+        endpoint_secret = 'whsec_aA5eiKJxZdnAcbMVGwn7w8bNQl0D9cxp'
+        payload = request.body
+        sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+        event = None
+
+        try:
+            event = stripe.Webhook.construct_event(
+                payload, sig_header, endpoint_secret
+            )
+        except ValueError as e:
+            # Invalid payload
+            return HttpResponse(status=400)
+        except stripe.error.SignatureVerificationError as e:
+            # Invalid signature
+            return HttpResponse(status=400)
+
+        if event['type'] == 'checkout.session.completed':
+            s = event['data']['object']
+            cd = s.get('customer_details')
+            session = paymods.StripeCallbackCheckoutSession.objects.create(
+                session_id=s.get('id'),
+                amount_total=s.get('amount_total'),
+                currency=s.get('currency'),
+                customer=s.get('customer'),
+                customer_details_email=cd.get('email') if cd is not None else None,
+                mode=s.get('mode'),
+                payment_intent=s.get('payment_intent'),
+                payment_status=s.get('payment_status'),
+                success_url=s.get('success_url'),
+                cancel_url=s.get('cancel_url')
+            )
+
+            try:
+                hash = paymods.PaymentHash.objects.get(
+                    session_id=session.session_id)
+            except Exception as e:
+                sentry_sdk.capture_exception(e)
+
+            sgtz = pytz.timezone(TIME_ZONE)
+            now = datetime.datetime.now(tz=sgtz)
+
+            if session.payment_status == \
+                paymods.StripeCallbackCheckoutSession_Paid:
+                hash.succeeded = now
+                match = hash.match
+
+                # Fulfill order
+                exchange_contacts.delay(match.id)
+
+                # Update match
+                if hash.user.id == match.supply.user.id:
+                    # Seller paid
+                    match.seller_bought_contact = now
+                    match.seller_payment_hash = hash
+                else:
+                    # Buyer paid
+                    match.buyer_bought_contact = now
+                    match.buyer_payment_hash = hash
+
+                match.save()
+            elif session.payment_status == \
+                paymods.StripeCallbackCheckoutSession_Unpaid:
+                hash.failed = now
+
+            hash.save()
+
+        # Passed signature verification
+        return HttpResponse(status=200)
 
 class SendConfirmInterestsView(APIView):
     """API to send confirm interest messages"""
