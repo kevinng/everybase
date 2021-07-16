@@ -262,3 +262,68 @@ class Price(Choice):
     class Meta:
         verbose_name = 'Price'
         verbose_name_plural = 'Prices'
+
+class StripeCallbackCheckoutSession(Standard):
+    """Stripe callback checkout session details
+    
+    Last updated: 15 July 2021, 4:38 PM
+    """
+    session_id = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    amount_total = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    currency = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    customer = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    customer_details_email = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    mode = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    payment_intent = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    payment_status = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    success_url = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    cancel_url = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
