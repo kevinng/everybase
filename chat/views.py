@@ -30,6 +30,7 @@ from chat.libraries.utility_funcs.get_support_phone_number import \
 
 from chat.tasks.send_confirm_interests import send_confirm_interests
 from chat.tasks.exchange_contacts import exchange_contacts
+from chat.tasks.copy_post_request_data import copy_post_request_data
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -85,7 +86,13 @@ def reply(message):
 
 class TwilioIncomingMessageView(APIView):
     """Webhook to receiving incoming Twilio message via a POST request."""
-    def post(self, request, format=None):
+    def post(self, request):
+        # Copy post to Missive
+        copy_post_request_data.delay(
+            settings.MISSIVE_TWILIO_WA_CALLBACK_URL,
+            request.data
+        )
+
         signature = request.headers.get('X-Twilio-Signature')
         validator = RequestValidator(settings.TWILIO_AUTH_TOKEN)
         if not validator.validate(settings.TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
@@ -110,6 +117,12 @@ class TwilioIncomingMessageView(APIView):
 class TwilioIncomingStatusView(APIView):
     """Webhook to receiving incoming Twilio status via a POST request."""
     def post(self, request, msg_id=None):
+        # Copy post to Missive
+        copy_post_request_data.delay(
+            settings.MISSIVE_TWILIO_WA_CALLBACK_URL,
+            request.data
+        )
+
         signature = request.headers.get('X-Twilio-Signature')
         validator = RequestValidator(settings.TWILIO_AUTH_TOKEN)
 

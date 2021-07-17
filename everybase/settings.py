@@ -272,3 +272,7 @@ sentry_sdk.init(
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True
 )
+
+# Missive's URL for Twilio WhatsApp incoming message and status update
+# callbacks. We copy such post requests to Missive so we may manage it there.
+MISSIVE_TWILIO_WA_CALLBACK_URL = config('MISSIVE_TWILIO_WA_CALLBACK_URL')
