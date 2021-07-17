@@ -266,7 +266,7 @@ PHONE_NUMBER_ACCESS_FAILED = 'PHONE_NUMBER_ACCESS'
 class PhoneNumberLinkAccess(Standard):
     """A single access of a phone number hash/URL.
 
-    Last updated: 18 June 2021, 2:51 PM
+    Last updated: 17 July 2021, 10:12 PM
     """
     accessed = models.DateTimeField(
         db_index=True,
@@ -379,6 +379,8 @@ class PhoneNumberLinkAccess(Standard):
         related_name='accesses',
         related_query_name='accesses',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         db_index=True
     )
 
