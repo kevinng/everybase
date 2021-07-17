@@ -33,6 +33,7 @@ user-agents = "*"
 django-user-agents = "*"
 stripe = "*"
 sentry-sdk = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
