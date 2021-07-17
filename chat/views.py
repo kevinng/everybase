@@ -1,24 +1,19 @@
 import traceback, pytz, datetime
 from http import HTTPStatus
+from urllib.parse import urljoin
 
+from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
 
-import sentry_sdk
-import stripe
-
-from everybase.settings import (STRIPE_SECRET_API_KEY, TIME_ZONE,
-    TWILIO_AUTH_TOKEN, TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
-    STRIPE_PAYMENT_METHOD_TYPES, CHATBOT_PHONE_NUMBER_PK,
-    STRIPE_PUBLISHABLE_API_KEY, TWILIO_WEBHOOK_STATUS_UPDATE_URL)
-
-from common.libraries.get_ip_address import get_ip_address
+from everybase import settings
 
 from chat import models
 from relationships import models as relmods
 from payments import models as paymods
 
+from common.libraries.get_ip_address import get_ip_address
 from chat.libraries.utility_funcs.save_message_log import save_message_log
 from chat.libraries.utility_funcs.save_message_medias import save_message_medias
 from chat.libraries.utility_funcs.save_message import save_message
@@ -38,8 +33,7 @@ from chat.tasks.exchange_contacts import exchange_contacts
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
-
-import stripe
+import stripe, sentry_sdk
 
 def reply(message):
     """Returns TwilML response to a Twilio incoming message model row reference.
@@ -68,7 +62,7 @@ def reply(message):
             (intent_key, message_key, message.id), 'fatal')
 
     # Log
-    models.TwilioOutboundMessage.objects.create(
+    msg = models.TwilioOutboundMessage.objects.create(
         intent_key=intent_key,
         message_key=message_key,
         body=body,
@@ -78,12 +72,14 @@ def reply(message):
     )
 
     # Return TwilML response string
+    status_callback_url = urljoin(settings.BASE_URL,
+        reverse('chat:status_update_message', kwargs={ 'msg_id': msg.id }))
     response = MessagingResponse()
     response.message(
         body=body,
-        # action=action, # We need to 
-        # method='POST'
-
+        action=status_callback_url,
+        status_callback=status_callback_url,
+        method='POST'
     )
     return str(response)
 
@@ -91,8 +87,8 @@ class TwilioIncomingMessageView(APIView):
     """Webhook to receiving incoming Twilio message via a POST request."""
     def post(self, request, format=None):
         signature = request.headers.get('X-Twilio-Signature')
-        validator = RequestValidator(TWILIO_AUTH_TOKEN)
-        if not validator.validate(TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
+        validator = RequestValidator(settings.TWILIO_AUTH_TOKEN)
+        if not validator.validate(settings.TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
             request.data, signature):
             # Authentication failed
             return HttpResponse(status=HTTPStatus.UNAUTHORIZED)
@@ -113,16 +109,31 @@ class TwilioIncomingMessageView(APIView):
 
 class TwilioIncomingStatusView(APIView):
     """Webhook to receiving incoming Twilio status via a POST request."""
-    def post(self, request, format=None):
+    def post(self, request, msg_id=None):
         signature = request.headers.get('X-Twilio-Signature')
-        validator = RequestValidator(TWILIO_AUTH_TOKEN)
-        if not validator.validate(TWILIO_WEBHOOK_STATUS_UPDATE_URL,
-            request.data, signature):
+        validator = RequestValidator(settings.TWILIO_AUTH_TOKEN)
+
+        if msg_id is None:
+            # Validate for the general URL - this status update is for a message
+            # we sent our explicitly, so we have its Twilio message SID at the
+            # time of sending.
+            this_url = settings.TWILIO_WEBHOOK_STATUS_UPDATE_URL
+        else:
+            # Validate for the message-specific URL - this status update is for
+            # a reply which uses TwilML. Because we use TwilML, we do not have
+            # the Twilio message SID at the point of reply, so we must link it
+            # to our message ID.
+            this_url = urljoin(settings.BASE_URL,
+                reverse('chat:status_update_message',
+                kwargs={ 'msg_id': msg_id }
+            ))
+
+        if not validator.validate(this_url, request.data, signature):
             # Authentication failed
             return HttpResponse(status=HTTPStatus.UNAUTHORIZED)
 
         try:
-            callback = save_status_callback(request)
+            callback = save_status_callback(request, msg_id)
             save_status_callback_log(request, callback)
 
             return HttpResponse(status=HTTPStatus.OK)
@@ -130,12 +141,11 @@ class TwilioIncomingStatusView(APIView):
             traceback.print_exc()
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
-
 def redirect_whatsapp_phone_number(request, id):
     """Redirects user from our short tracking URL to WhatsApp"""
     # Log access
     ua = request.user_agent
-    access = relmods.PhoneNumberLinkAccess.objects.create(
+    access = relmods.PhoneNumberLinkAccess(
         ip_address=get_ip_address(request),
         is_mobile=ua.is_mobile,
         is_tablet=ua.is_tablet,
@@ -155,10 +165,7 @@ def redirect_whatsapp_phone_number(request, id):
     )
 
     try:
-        hash = relmods.PhoneNumberHash.objects.get(
-            pk=id,
-            expired__isnull=False
-        )
+        hash = relmods.PhoneNumberHash.objects.get(pk=id)
         access.hash = hash
         access.save()
     except relmods.PhoneNumberHash.DoesNotExist as err:
@@ -175,7 +182,8 @@ def redirect_whatsapp_phone_number(request, id):
     response = HttpResponse(status=302) # Temporary redirect
     response['Location'] = get_non_tracking_whatsapp_link(
         hash.phone_number.country_code,
-        hash.phone_number.national_number)
+        hash.phone_number.national_number
+    )
     
     # Update log status
     access.outcome = relmods.PHONE_NUMBER_ACCESS_SUCCESSFUL
@@ -232,14 +240,15 @@ def redirect_checkout_page(request, id):
         return render(request, 'chat/pages/error.html', {})
 
     # Chatbot phone number - for success/cancel URL
-    chatbot_ph = relmods.PhoneNumber.objects.get(pk=CHATBOT_PHONE_NUMBER_PK)
+    chatbot_ph = relmods.PhoneNumber.objects.get(
+        pk=settings.CHATBOT_PHONE_NUMBER_PK)
     end_url = get_non_tracking_whatsapp_link(
         chatbot_ph.country_code,
         chatbot_ph.national_number)
 
     # Create session
     session = stripe.checkout.Session.create(
-        payment_method_types=STRIPE_PAYMENT_METHOD_TYPES,
+        payment_method_types=settings.STRIPE_PAYMENT_METHOD_TYPES,
         line_items=[{
             'price': hash.price.programmatic_key,
             'quantity': 1
@@ -247,11 +256,11 @@ def redirect_checkout_page(request, id):
         mode='payment',
         success_url=end_url,
         cancel_url=end_url,
-        api_key = STRIPE_SECRET_API_KEY
+        api_key = settings.STRIPE_SECRET_API_KEY
     )
 
     # Update hash
-    sgtz = pytz.timezone(TIME_ZONE)
+    sgtz = pytz.timezone(settings.TIME_ZONE)
     hash.started = datetime.datetime.now(tz=sgtz)
     hash.session_id = session.id
     hash.save()
@@ -262,7 +271,7 @@ def redirect_checkout_page(request, id):
 
     context = {
         'session_id': session.id,
-        'stripe_publishable_api_key': STRIPE_PUBLISHABLE_API_KEY
+        'stripe_publishable_api_key': settings.STRIPE_PUBLISHABLE_API_KEY
     }
 
     return render(request, 'chat/pages/checkout.html', context)
@@ -309,7 +318,7 @@ class StripeFulfilmentCallbackView(APIView):
             except Exception as e:
                 sentry_sdk.capture_exception(e)
 
-            sgtz = pytz.timezone(TIME_ZONE)
+            sgtz = pytz.timezone(settings.TIME_ZONE)
             now = datetime.datetime.now(tz=sgtz)
 
             if session.payment_status == \
