@@ -79,10 +79,12 @@ def reply(message):
 
     # Return TwilML response string
     response = MessagingResponse()
-    response.message(body)
-    # Will need to create a URL that has the outbound message as ID
-    # The status callback will be sent to this method
-#https://www.twilio.com/docs/libraries/reference/twilio-python/6.62.0/docs/source/_rst/twilio.twiml.html?highlight=messagingresponse#twilio.twiml.messaging_response.MessagingResponse.message
+    response.message(
+        body=body,
+        # action=action, # We need to 
+        # method='POST'
+
+    )
     return str(response)
 
 class TwilioIncomingMessageView(APIView):
@@ -110,7 +112,6 @@ class TwilioIncomingMessageView(APIView):
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
 class TwilioIncomingStatusView(APIView):
-    # TODO I need to provide an ID here - if it exists, will associate an outbound message with this callback
     """Webhook to receiving incoming Twilio status via a POST request."""
     def post(self, request, format=None):
         signature = request.headers.get('X-Twilio-Signature')
@@ -268,7 +269,7 @@ def redirect_checkout_page(request, id):
 
 class StripeFulfilmentCallbackView(APIView):
     """Webhook to receive Stripe fuilfilment callback."""
-    def post(self, request, format=None):
+    def post(self, request):
 
         endpoint_secret = 'whsec_aA5eiKJxZdnAcbMVGwn7w8bNQl0D9cxp'
         payload = request.body
@@ -341,7 +342,7 @@ class StripeFulfilmentCallbackView(APIView):
 
 class SendConfirmInterestsView(APIView):
     """API to send confirm interest messages"""
-    def post(self, request, format=None):
+    def post(self, request):
         match_id = request.data.get('match_id')
         
         if match_id is None:
