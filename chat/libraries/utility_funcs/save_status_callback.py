@@ -1,12 +1,17 @@
 from chat import models
 
-def save_status_callback(request):
+def save_status_callback(request, msg_id=None):
     """Save incoming Twilio status callback
     
     Parameters
     ----------
     request
         Incoming message HTTP request
+    msg_id
+        ID of outbound Twilio message to associate this callback with. If not
+        none, will get message with this ID and associate it with this callback.
+        Otherwise, will get message with this callback's Twilio message SID
+        and assocate it with this callback.
     """
     message_sid = request.data.get('MessageSid')
 
@@ -31,12 +36,14 @@ def save_status_callback(request):
 
     # Associate message
     try:
-        message = models.TwilioOutboundMessage.objects.get(
-            message_sid=message_sid)
-        callback.message = message
+        if msg_id is None:
+            message = models.TwilioOutboundMessage.objects.get(
+                message_sid=message_sid)
+        else:
+            message = models.TwilioOutboundMessage.objects.get(pk=msg_id)
     except models.TwilioOutboundMessage.DoesNotExist:
         pass
-
+    callback.message = message
     callback.save()
 
     return callback
