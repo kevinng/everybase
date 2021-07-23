@@ -259,6 +259,13 @@ class Price(Choice):
     Last updated: 15 July 2021, 4:38 PM
     """
 
+    display_name = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     class Meta:
         verbose_name = 'Price'
         verbose_name_plural = 'Prices'

@@ -44,6 +44,16 @@ class PaymentEventTypeAdmin(comadm.ChoiceAdmin):
 class CurrencyAdmin(comadm.ChoiceAdmin):
     pass
 
+_price_fields = ['display_name']
 @admin.register(mod.Price)
 class PriceAdmin(comadm.ChoiceAdmin):
-    pass
+    # List page settings
+    list_display = comadm.choice_list_display + _price_fields
+    list_editable = comadm.choice_list_editable + _price_fields
+    search_fields = comadm.choice_search_fields + _price_fields
+    ordering = comadm.choice_ordering + _price_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _price_fields})
+    ]
