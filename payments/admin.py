@@ -54,6 +54,6 @@ class PriceAdmin(comadm.ChoiceAdmin):
     ordering = comadm.choice_ordering + _price_fields
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
+    fieldsets = comadm.choice_fieldsets + [
         ('Details', {'fields': _price_fields})
     ]
