@@ -293,7 +293,7 @@ class StripeFulfilmentCallbackView(APIView):
     """Webhook to receive Stripe fuilfilment callback."""
     def post(self, request):
 
-        endpoint_secret = 'whsec_aA5eiKJxZdnAcbMVGwn7w8bNQl0D9cxp'
+        endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
         payload = request.body
         sig_header = request.META['HTTP_STRIPE_SIGNATURE']
         event = None
