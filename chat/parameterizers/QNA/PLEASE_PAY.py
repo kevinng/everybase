@@ -8,7 +8,6 @@ class Parameterizer(MessageParameterizer):
         hash = logic.get_create_payment_hash()
         return {
             'buying': logic.is_buying(),
-            'currency': hash.currency.name,
-            'price': hash.unit_amount,
+            'price_display_name': hash.price.display_name,
             'payment_link': get_payment_link(hash)
         }

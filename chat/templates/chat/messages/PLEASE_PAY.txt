@@ -1,4 +1,4 @@
-Please make a payment of {{ currency|upper }} {{ price|floatformat:2 }} at this link.
+Please make a payment of {{ price_display_name }} at this link.
 
 {{ payment_link }}
 
