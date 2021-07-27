@@ -21,12 +21,12 @@ class TwilioOutboundMessage(Standard):
         db_index=True
     )
 
-    date_created = models.DateField(
+    date_created = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
     )
-    date_sent = models.DateField(
+    date_sent = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
