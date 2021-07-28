@@ -1,8 +1,6 @@
 from typing import Tuple
 from chat.libraries.constants import tags
 from chat.libraries.nlp_funcs.get_this_word import get_this_word
-from chat.libraries.nlp_funcs.mark_string import mark_string
-from chat.libraries.nlp_funcs.replace_string import replace_string
 from chat.libraries.nlp_funcs.mark_clean_text import mark_clean_text
 
 def remove_email(
