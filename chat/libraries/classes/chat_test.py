@@ -542,12 +542,11 @@ class ChatTest(TestCase):
 
     def setup_payment_hash(self) -> paymods.PaymentHash:
         """Set up payment hash for this user and match"""
-        usd = paymods.Currency.objects.get(pk=1)
+        price = paymods.Price.objects.create(display_name='USD 5.67')
         self.payment_hash = paymods.PaymentHash.objects.create(
             user=self.user,
             match=self.match,
-            currency=usd,
-            unit_amount=5.67
+            price=price
         )
 
         return self.payment_hash
