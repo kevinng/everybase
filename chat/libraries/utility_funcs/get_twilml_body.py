@@ -1,7 +1,8 @@
+import xml.etree.ElementTree as ET
+
 def get_twilml_body(
         twilml: str
     ) -> str:
     """Extract body from TwilML"""
-    start_pos = twilml.index('<Message>') + len('<Message>')
-    end_pos = twilml.index('</Message>')
-    return twilml[start_pos:end_pos]
+    root = ET.fromstring(twilml)
+    return root.find('Message').text
