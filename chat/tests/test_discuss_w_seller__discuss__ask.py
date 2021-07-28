@@ -5,6 +5,12 @@ from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.chat_test import ChatTest
 
 class DiscussWSellerDiscussAskTest(ChatTest):
+    fixtures = [
+        'setup/20210527__relationships__availability.json',
+        'setup/20210528__payments__currency.json',
+        'setup/common__country.json'
+    ]
+
     def setUp(self):
         super().setUp(
             intents.DISCUSS_W_SELLER,
