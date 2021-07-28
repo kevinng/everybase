@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'files.apps.FilesConfig',
     'growth.apps.GrowthConfig',
     'payments.apps.PaymentsConfig',
+    'amplitude.apps.AmplitudeConfig',
     'django_filters',
     'django_extensions',
     'widget_tweaks',
@@ -277,3 +278,7 @@ sentry_sdk.init(
 # Missive's URL for Twilio WhatsApp incoming message and status update
 # callbacks. We copy such post requests to Missive so we may manage it there.
 MISSIVE_TWILIO_WA_CALLBACK_URL = config('MISSIVE_TWILIO_WA_CALLBACK_URL')
+
+AMPLITUDE_API_KEY = config('AMPLITUDE_API_KEY')
+AMPLITUDE_SECRET_KEY = config('AMPLITUDE_SECRET_KEY')
+AMPLITUDE_SESSION_TIMEOUT_SECONDS = config('AMPLITUDE_SESSION_TIMEOUT_SECONDS')
