@@ -1,8 +1,12 @@
 import typing
 from abc import abstractmethod
 
+from everybase import settings
+
 from chat import models
 from relationships import models as relmods
+from amplitude.tasks.send_event import send_event
+from amplitude.constants import keys
 
 from chat.libraries.constants import datas, messages
 from chat.libraries.utility_funcs.get_parameters import get_parameters
@@ -39,7 +43,9 @@ class MessageHandler():
             self,
             message: models.TwilioInboundMessage,
             intent_key: str,
-            message_key: str
+            message_key: str,
+            no_external_calls: bool = False,
+            no_task_calls: bool = False
         ):
         """Initializes the message handler for an incoming message and the
         context the message is received in.
@@ -59,10 +65,14 @@ class MessageHandler():
             Intent key for the context this message is received in
         message_key
             Message key for the context this message is received in
+        no_external_calls
+            If True, will not make external calls. Enabled for testing purposes.
         """
         self.message = message
         self.intent_key = intent_key
         self.message_key = message_key
+        self.no_external_calls = no_external_calls
+        self.no_task_calls = no_task_calls
 
         # Options for the message handler to work with - if applicable
         self.options = []
@@ -94,7 +104,8 @@ class MessageHandler():
             params_func: typing.Callable = None,
             intent_key_func: typing.Callable = None,
             message_key_func: typing.Callable = None,
-            chosen_func: typing.Callable = None
+            chosen_func: typing.Callable = None,
+            amp_event_key: str = None
         ):
         """Add an option to be matched against the message body. To be used with
         reply_option.
@@ -143,10 +154,13 @@ class MessageHandler():
             msg_handler is the message handler processing the options and
             running the function, and data_value is a reference to the data
             value created to store the data key/value pair.
+        amp_event_key
+            If specified, will make Amplitude event call with this event key
+            with supporting details.
         """
         self.options.append((match_strs, intent_key, message_key, params_func,
             data_key, data_value, intent_key_func, message_key_func,
-            chosen_func))
+            chosen_func, amp_event_key))
 
     def done_reply(
             self,
@@ -172,6 +186,28 @@ class MessageHandler():
         params = get_parameters(self, intent_key, message_key, params_func)
         self.done_to_context(intent_key, message_key)
         return render_message(message_key, params)
+
+    def send_event(self, amp_event_key):
+        """Send amplitude event
+        
+        amp_event_key
+            Amplitude event key
+        """
+        if self.no_external_calls:
+            return
+
+        send_event.delay(
+            self.message.from_user.id,
+            None, # No device_id - call is from Twilio not user
+            amp_event_key, {
+                keys.INTENT: self.intent_key,
+                keys.MESSAGE: self.message_key
+            }, {
+                keys.COUNTRY_CODE: self.message.from_user.\
+                    phone_number.country_code
+            },
+            app_version=settings.APP_VERSION
+        )
 
     def reply_option(self,
             invalid_option_data_key: str = datas.INVALID_CHOICE,
@@ -222,15 +258,16 @@ class MessageHandler():
         for o in self.options:
 
             # Unwrap this option
-            match_strs, \
-            intent_key, \
-            message_key, \
-            params_func, \
-            data_key, \
-            data_value, \
-            intent_key_func, \
-            message_key_func, \
-            chosen_func = o
+            match_strs,\
+            intent_key,\
+            message_key,\
+            params_func,\
+            data_key,\
+            data_value,\
+            intent_key_func,\
+            message_key_func,\
+            chosen_func,\
+            amp_event_key = o
 
             # Iterate each match string in the option
             for match_str, tolerance in match_strs:
@@ -273,6 +310,9 @@ class MessageHandler():
                         to_message_key = message_key_func()
                     else:
                         to_message_key = message_key
+
+                    if amp_event_key is not None:
+                        self.send_event(amp_event_key)
 
                     ##### Run chosen function if it is specified #####
                     if chosen_func is not None:
