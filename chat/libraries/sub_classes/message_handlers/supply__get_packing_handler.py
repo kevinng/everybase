@@ -1,3 +1,4 @@
+from amplitude.constants import events
 from chat.libraries.constants import messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 from chat.libraries.classes.context_logic import ContextLogic
@@ -5,6 +6,8 @@ from chat.libraries.classes.context_logic import ContextLogic
 class SupplyGetPackingHandler(MessageHandler):
     def run(self):
         self.save_body_as_string(datas.PACKING)
+
+        self.send_event(events.ENTERED_FREE_TEXT)
 
         logic = ContextLogic(self)
         if logic.is_ready_otg():

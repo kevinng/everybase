@@ -1,3 +1,4 @@
+from amplitude.constants import events
 import pytz, datetime
 from everybase.settings import TIME_ZONE
 from chat.libraries.constants import messages, datas
@@ -32,14 +33,16 @@ class StillInterestedConfirmHandler(MessageHandler):
             messages.STILL_INTERESTED__THANK_YOU,
             datas.STILL_INTERESTED,
             datas.STILL_INTERESTED__YES,
-            chosen_func=update_match
+            chosen_func=update_match,
+            amp_event_key=events.CHOSE_YES_WITH_REPLY
         )
         self.add_option([('2', 0), ('no', 0)],
             self.intent_key,
             messages.STILL_INTERESTED__THANK_YOU,
             datas.STILL_INTERESTED,
             datas.STILL_INTERESTED__NO,
-            chosen_func=update_match
+            chosen_func=update_match,
+            amp_event_key=events.CHOSE_NO_WITH_REPLY
         )
 
         return self.reply_option()

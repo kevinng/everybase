@@ -1,4 +1,4 @@
-from enum import auto
+from amplitude.constants import events
 import pytz, datetime
 from everybase.settings import TIME_ZONE
 from relationships import models as relmods
@@ -11,6 +11,8 @@ class DiscussAskHandler(MessageHandler):
     def run(self):
         value = self.save_body_as_string(datas.QUESTION)
 
+        self.send_event(events.ENTERED_FREE_TEXT)
+
         logic = ContextLogic(self)
         sgtz = pytz.timezone(TIME_ZONE)
         qna = relmods.QuestionAnswerPair.objects.create(
@@ -21,7 +23,8 @@ class DiscussAskHandler(MessageHandler):
             match=logic.get_match()
         )
 
-        auto_clean_question.delay(qna.id)
+        if self.no_task_calls is False:
+            auto_clean_question.delay(qna.id)
 
         return self.done_reply(
             self.intent_key,

@@ -1,3 +1,4 @@
+from amplitude.constants import events
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 from chat.libraries.classes.context_logic import ContextLogic
@@ -22,6 +23,8 @@ class Handler(MessageHandler):
         
         A user may have only one Q&A in discussion at one time.
         """
+        self.send_event(events.ENTERED_STRAY_TEXT)
+
         match = ContextLogic(self).get_match()
         if match is not None and match.closed is not None:
             return self.done_reply(intents.MENU, messages.MENU)

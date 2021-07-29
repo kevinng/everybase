@@ -1,3 +1,4 @@
+from amplitude.constants import events
 import pytz, datetime
 from relationships import models as relmods
 from everybase.settings import TIME_ZONE
@@ -11,7 +12,10 @@ class Handler(MessageHandler):
 
         match = ContextLogic(self).get_match()
         if match is not None and match.closed is not None:
+            self.send_event(events.ENTERED_STRAY_TEXT)
             return self.done_reply(intents.MENU, messages.MENU)
+
+        self.send_event(events.ENTERED_FREE_TEXT)
 
         # Create new QNA
         logic = ContextLogic(self)

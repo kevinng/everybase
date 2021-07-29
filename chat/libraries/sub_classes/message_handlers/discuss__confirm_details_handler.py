@@ -1,13 +1,12 @@
-from logging import log
 import pytz, datetime
 from everybase.settings import TIME_ZONE
+from amplitude.constants import events
 from chat.libraries.constants import messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 from chat.libraries.classes.context_logic import ContextLogic
 
 class DiscussConfirmDetailsHandler(MessageHandler):
     def run(self):
-
         logic = ContextLogic(self)
         def get_no_message_key():
             if logic.is_buying():
@@ -38,12 +37,16 @@ class DiscussConfirmDetailsHandler(MessageHandler):
             messages.DISCUSS__ASK,
             datas.CONFIRM_DETAILS,
             datas.CONFIRM_DETAILS__YES,
-            chosen_func=update_match)
+            chosen_func=update_match,
+            amp_event_key=events.CHOSE_YES_WITH_REPLY
+        )
         self.add_option([('2', 0), ('no', 0)],
             intent_key=self.intent_key,
             message_key_func=get_no_message_key,
             data_key=datas.CONFIRM_DETAILS,
             data_value=datas.CONFIRM_DETAILS__NO,
-            chosen_func=update_match)
+            chosen_func=update_match,
+            amp_event_key=events.CHOSE_NO_WITH_REPLY
+        )
 
         return self.reply_option()
