@@ -36,7 +36,7 @@ from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
 import stripe, sentry_sdk
 
-def reply(message):
+def reply(message, no_external_calls=False, no_task_calls=False):
     """Returns TwilML response to a Twilio incoming message model row reference.
     This function ascertains the best reply for the user and replies the user.
 
@@ -46,13 +46,16 @@ def reply(message):
         Incoming message model row reference. Message must have valid users and
         phone numbers - i.e., they must have been created if this is the first
         message sent by the user.
+    no_external_calls
+        If True, will not make external calls. Enabled for testing purposes.
     """
 
     # Get user's context
     intent_key, message_key = get_context(message.from_user)
     
     # Get handler for context
-    handler = get_handler(message, intent_key, message_key)
+    handler = get_handler(message, intent_key, message_key, no_external_calls,
+        no_task_calls)
 
     # Run handler and get message body
     body = handler.run()
