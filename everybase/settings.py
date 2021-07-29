@@ -19,6 +19,8 @@ from django.conf.locale.en import formats as en_formats
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+APP_VERSION = config('APP_VERSION')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
