@@ -32,6 +32,8 @@ class Event(Standard):
     )
     device_id = models.CharField(
         max_length=200,
+        null=True,
+        blank=True,        
         db_index=True
     )
     event_type = models.CharField(
