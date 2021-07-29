@@ -4,6 +4,7 @@ from chat import models, views
 from relationships import models as relmods
 from payments import models as paymods
 from common import models as commods
+from amplitude import models as ampmods
 
 from chat.libraries.test_funcs.get_target_body import get_target_body
 from chat.libraries.test_funcs.setup_product_type import setup_product_type
@@ -108,6 +109,7 @@ class ChatTest(TestCase):
             supply.save()
         relmods.Supply.objects.all().delete()
 
+        ampmods.Session.objects.all().delete()
         models.MessageDataValue.objects.all().delete()
         models.MessageDataset.objects.all().delete()
         models.TwilioOutboundMessage.objects.all().delete()
@@ -644,4 +646,4 @@ class ChatTest(TestCase):
             self.message_key,
             body
         )
-        return views.reply(message)
+        return views.reply(message, no_external_calls=True, no_task_calls=True)
