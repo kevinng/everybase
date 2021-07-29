@@ -4,7 +4,7 @@ from common.models import Standard
 class Event(Standard):
     """Event
 
-    Last updated: 27 July 2021, 2:07 PM
+    Last updated: 28 July 2021, 10:06 PM
     """
     requested = models.CharField(
         max_length=200,
@@ -22,6 +22,10 @@ class Event(Standard):
         null=True,
         blank=True,
         db_index=True
+    )
+    response_text = models.TextField(
+        null=True,
+        blank=True
     )
 
     # Note: we store user.key instead of user.id in this field because of the

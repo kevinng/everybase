@@ -44,6 +44,8 @@ def send_event(
     now = datetime.datetime.now(tz=sgtz)
     epoch = sgtz.localize(datetime.datetime(1970, 1, 1))
     now_epoch = (now - epoch).total_seconds()
+    print('NOW EPOCH')
+    print(now_epoch)
 
     # User's session, if any
     session = models.Session.objects\
@@ -85,44 +87,45 @@ def send_event(
 
     # Post to Amplitude
     def post_amplitude():
-        return requests.post('https://api2.amplitude.com/2/httpapi', params={
-            'user_id': user.key,
-            'device_id': device_id,
-            'event_type': event_type,
-            'time': now_epoch,
-            'event_properties': event_properties,
-            'user_properties': user_properties,
-            'app_version': app_version,
-            'platform': platform,
-            'os_name': os_name,
-            'os_version': os_version,
-            'device_brand': device_brand,
-            'device_manufacturer': device_manufacturer,
-            'device_model': device_model,
-            'carrier': carrier,
-            'country': country,
-            'region': region,
-            'city': city,
-            'dma': dma,
-            'language': language,
-            'price': price,
-            'quantity': quantity,
-            'revenue': revenue,
-            'productId': product_id,
-            'revenueType': revenue_type,
-            'location_lat': location_lat,
-            'location_lng': location_lng,
-            'ip': ip,
-            'idfa': idfa,
-            'idfv': idfv,
-            'adid': adid,
-            'android_id': android_id,
-            'event_id': hash,
-            'session_id': session_id,
-            'insert_id': hash
-        }, headers={
-            'Content-Type': 'application/json',
-            'Accept': '*/*'
+        print('post amplitude')
+        return requests.post('https://api2.amplitude.com/2/httpapi', json={
+            'api_key': settings.AMPLITUDE_API_KEY,
+            'events': [{
+                'user_id': user.key,
+                'device_id': device_id,
+                'event_type': event_type,
+                'time': int(now_epoch),
+                'event_properties': event_properties,
+                'user_properties': user_properties,
+                'app_version': app_version,
+                'platform': platform,
+                'os_name': os_name,
+                'os_version': os_version,
+                'device_brand': device_brand,
+                'device_manufacturer': device_manufacturer,
+                'device_model': device_model,
+                'carrier': carrier,
+                'country': country,
+                'region': region,
+                'city': city,
+                'dma': dma,
+                'language': language,
+                'price': price,
+                'quantity': quantity,
+                'revenue': revenue,
+                'productId': product_id,
+                'revenueType': revenue_type,
+                'location_lat': location_lat,
+                'location_lng': location_lng,
+                'ip': ip,
+                'idfa': idfa,
+                'idfv': idfv,
+                'adid': adid,
+                'android_id': android_id,
+                'event_id': hash,
+                'session_id': session_id,
+                'insert_id': hash
+            }]
         })
 
     r = post_amplitude()
@@ -135,6 +138,7 @@ def send_event(
         requested=now,
         responded=datetime.datetime.now(tz=sgtz),
         response_code=r.status_code,
+        response_text=r.text,
         user_id=user.key,
         device_id=device_id,
         event_type=event_type,

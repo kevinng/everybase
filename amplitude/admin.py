@@ -3,9 +3,9 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
-_event_fields = ['requested', 'responded', 'response_code', 'user_id',
-    'device_id', 'event_type', 'time_dt', 'time', 'app_version', 'platform',
-    'os_name', 'os_version', 'device_brand', 'device_manufacturer',
+_event_fields = ['requested', 'responded', 'response_code', 'response_text',
+    'user_id', 'device_id', 'event_type', 'time_dt', 'time', 'app_version',
+    'platform', 'os_name', 'os_version', 'device_brand', 'device_manufacturer',
     'device_model', 'carrier', 'country', 'region', 'city', 'dma', 'language',
     'price', 'quantity', 'revenue', 'product_id', 'revenue_type',
     'location_lat', 'location_lng', 'ip', 'idfa', 'idfv', 'adid', 'android_id',
