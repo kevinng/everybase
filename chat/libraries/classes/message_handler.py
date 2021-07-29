@@ -6,7 +6,7 @@ from everybase import settings
 from chat import models
 from relationships import models as relmods
 from amplitude.tasks.send_event import send_event
-from amplitude.constants import keys
+from amplitude.constants import events, keys
 
 from chat.libraries.constants import datas, messages
 from chat.libraries.utility_funcs.get_parameters import get_parameters
@@ -411,6 +411,8 @@ class MessageHandler():
         """Call reply_bad_input with a default bad/invalid option message."""
         if message_key is None:
             message_key = messages.DO_NOT_UNDERSTAND_OPTION
+
+        self.send_event(events.DO_NOT_UNDERSTAND_OPTION)
 
         return self.reply_bad_input(
             data_key, intent_key, message_key, params_func)
