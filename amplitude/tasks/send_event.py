@@ -36,14 +36,14 @@ def send_event(
         idfa: str = None,
         idfv: str = None,
         adid: str = None,
-        android_id: str = None,
-        no_external_calls: bool = False
+        android_id: str = None
     ):
 
     # Current time
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(tz=sgtz)
-    now_epoch = (now - datetime.datetime(1970, 1, 1)).total_seconds()
+    epoch = sgtz.localize(datetime.datetime(1970, 1, 1))
+    now_epoch = (now - epoch).total_seconds()
 
     # User's session, if any
     session = models.Session.objects\
@@ -63,7 +63,7 @@ def send_event(
             started=now,
             session_id=now_epoch,
             last_activity=now,
-            user=user_id
+            user=relmods.User.objects.get(pk=user_id)
         )
 
         session_id = new_session.session_id
@@ -76,8 +76,8 @@ def send_event(
 
     # Create hash for Amplitude's event ID and insert ID
     hash_str = str(user_id) + str(event_type) + str(now)
-    hash_obj = hashlib.md5(hash_str.encode())
-    hash = hash_obj.hexdigest()
+    hash_obj = hashlib.md5(hash_str.encode('utf-8'))
+    hash = int(hash_obj.hexdigest(), 16) % (10 ** 8)
 
     # Get user's key - we post the user's key instead of the user's ID because
     # Amplitude has a 5-char minimum on their user ID
@@ -125,17 +125,16 @@ def send_event(
             'Accept': '*/*'
         })
 
-    if no_external_calls != True:
+    r = post_amplitude()
+    if r.status_code != 200:
+        # Retry once if failed
         r = post_amplitude()
-        if r.status_code != 200:
-            # Retry once if failed
-            r = post_amplitude()
 
     # Save entry
     return models.Event.objects.create(
         requested=now,
         responded=datetime.datetime.now(tz=sgtz),
-        response_code=r.status_code if no_external_calls == False else None,
+        response_code=r.status_code,
         user_id=user.key,
         device_id=device_id,
         event_type=event_type,
