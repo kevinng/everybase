@@ -85,7 +85,6 @@ def send_event(
 
     # Post to Amplitude
     def post_amplitude():
-        print('post amplitude')
         return requests.post('https://api2.amplitude.com/2/httpapi', json={
             'api_key': settings.AMPLITUDE_API_KEY,
             'events': [{
