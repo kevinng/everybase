@@ -256,13 +256,27 @@ class PaymentLinkAccess(Standard):
 class Price(Choice):
     """Prices (of products) available for purchase - e.g., USD 1 referral fee.
 
-    Last updated: 15 July 2021, 4:38 PM
+    Last updated: 30 July 2021, 11:52 PM
     """
 
     display_name = models.CharField(
         max_length=200,
         null=True,
         blank=True,
+        db_index=True
+    )
+    value = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    currency = models.ForeignKey(
+        'Currency',
+        related_name='prices',
+        related_query_name='prices',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
         db_index=True
     )
 

@@ -43,9 +43,7 @@ def send_event(
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(tz=sgtz)
     epoch = sgtz.localize(datetime.datetime(1970, 1, 1))
-    now_epoch = (now - epoch).total_seconds()
-    print('NOW EPOCH')
-    print(now_epoch)
+    now_epoch = int((now - epoch).total_seconds())
 
     # User's session, if any
     session = models.Session.objects\
@@ -94,7 +92,7 @@ def send_event(
                 'user_id': user.key,
                 'device_id': device_id,
                 'event_type': event_type,
-                'time': int(now_epoch),
+                'time': now_epoch,
                 'event_properties': event_properties,
                 'user_properties': user_properties,
                 'app_version': app_version,

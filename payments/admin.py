@@ -44,7 +44,7 @@ class PaymentEventTypeAdmin(comadm.ChoiceAdmin):
 class CurrencyAdmin(comadm.ChoiceAdmin):
     pass
 
-_price_fields = ['display_name']
+_price_fields = ['display_name', 'value', 'currency']
 @admin.register(mod.Price)
 class PriceAdmin(comadm.ChoiceAdmin):
     # List page settings
@@ -57,3 +57,4 @@ class PriceAdmin(comadm.ChoiceAdmin):
     fieldsets = comadm.choice_fieldsets + [
         ('Details', {'fields': _price_fields})
     ]
+    autocomplete_fields = ['currency']

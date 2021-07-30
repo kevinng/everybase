@@ -1,4 +1,4 @@
 # Properties
-INTENT = 'intent'
-MESSAGE = 'message'
-COUNTRY_CODE = 'country_code'
+INTENT = 'Intent'
+MESSAGE = 'Message'
+COUNTRY_CODE = 'Country Code'

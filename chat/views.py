@@ -32,6 +32,9 @@ from chat.tasks.send_confirm_interests import send_confirm_interests
 from chat.tasks.exchange_contacts import exchange_contacts
 from chat.tasks.copy_post_request_data import copy_post_request_data
 
+from amplitude.tasks.send_event import send_event
+from amplitude.constants import events, keys
+
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
 import stripe, sentry_sdk
@@ -342,6 +345,18 @@ class StripeFulfilmentCallbackView(APIView):
                 hash.succeeded = now
                 match = hash.match
 
+                # Make Amplitude call
+                send_event.delay(
+                    hash.user.id,
+                    None,
+                    events.PAID,
+                    None,
+                    { keys.COUNTRY_CODE: hash.user.phone_number.country_code },
+                    settings.APP_VERSION,
+                    product_id=hash.price.id,
+                    revenue=hash.price.value
+                )
+                
                 # Fulfill order
                 exchange_contacts.delay(match.id)
 
