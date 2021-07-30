@@ -196,6 +196,16 @@ def redirect_whatsapp_phone_number(request, id):
 
         return render(request, 'chat/pages/error.html', {})
 
+    # Make Amplitude call
+    send_event.delay(
+        user_id=hash.user.id,
+        event_type=events.CLICKED_WHATSAPP_LINK,
+        user_properties={
+            keys.COUNTRY_CODE: hash.user.phone_number.country_code
+        },
+        app_version=settings.APP_VERSION
+    )
+
     # Note: we use temporary redirects so search engines do not associate our
     # URLs with WhatsApp phone number links
     response = HttpResponse(status=302) # Temporary redirect
@@ -241,6 +251,16 @@ def redirect_checkout_page(request, id):
         sph = get_support_phone_number()
         params = { 'whatsapp_url': get_non_tracking_whatsapp_link(
             sph.country_code, sph.national_number) }
+
+        # Make Amplitude call
+        send_event.delay(
+            user_id=hash.user.id,
+            event_type=events.CLICKED_PAYMENT_LINK,
+            user_properties={
+                keys.COUNTRY_CODE: hash.user.phone_number.country_code
+            },
+            app_version=settings.APP_VERSION
+        )
 
         if hash.expired is not None:
             return render(request, 'chat/pages/expired.html', params)
@@ -347,16 +367,16 @@ class StripeFulfilmentCallbackView(APIView):
 
                 # Make Amplitude call
                 send_event.delay(
-                    hash.user.id,
-                    None,
-                    events.PAID,
-                    None,
-                    { keys.COUNTRY_CODE: hash.user.phone_number.country_code },
-                    settings.APP_VERSION,
+                    user_id=hash.user.id,
+                    event_type=events.PAID,
+                    user_properties={
+                        keys.COUNTRY_CODE: hash.user.phone_number.country_code
+                    },
+                    app_version=settings.APP_VERSION,
                     product_id=hash.price.id,
                     revenue=hash.price.value
                 )
-                
+
                 # Fulfill order
                 exchange_contacts.delay(match.id)
 

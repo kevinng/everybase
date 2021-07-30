@@ -197,12 +197,13 @@ class MessageHandler():
             return
 
         send_event.delay(
-            self.message.from_user.id,
-            None, # No device_id - call is from Twilio not user
-            amp_event_key, {
+            user_id=self.message.from_user.id,
+            event_type=amp_event_key,
+            event_properties={
                 keys.INTENT: self.intent_key,
                 keys.MESSAGE: self.message_key
-            }, {
+            },
+            user_properties={
                 keys.COUNTRY_CODE: self.message.from_user.\
                     phone_number.country_code
             },

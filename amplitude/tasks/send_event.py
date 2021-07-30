@@ -8,10 +8,10 @@ from relationships import models as relmods
 @shared_task
 def send_event(
         user_id: int,
-        device_id: str,
         event_type: str,
-        event_properties: dict,
-        user_properties: dict,
+        device_id: str = None,
+        event_properties: dict = None,
+        user_properties: dict = None,
         app_version: str = None,
         platform: str = None,
         os_name: str = None,
