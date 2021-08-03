@@ -21,7 +21,8 @@ class PhoneNumberAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _phone_number_fields + ['types']})]
     autocomplete_fields = ['types']
 
-_email_fields = ['email', 'import_job']
+_email_fields = ['email', 'is_excluded', 'is_auto_reply', 'is_customer_service',
+'notes', 'import_job']
 @admin.register(mod.Email)
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
