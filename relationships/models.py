@@ -82,13 +82,33 @@ class PhoneNumber(Standard):
 class Email(Standard):
     """Email.
 
-    Last updated: 21 April 2021, 11:15 PM
+    Last updated: 3 August 2021, 1:15 PM
     """
 
     email = LowerCaseEmailField(
         unique=True,
         db_index=True
     )
+    is_excluded = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_auto_reply = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_customer_service = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    notes = models.TextField(
+        null=True,
+        blank=True
+    )
+
     import_job = models.ForeignKey(
         'common.ImportJob',
         related_name='emails',
