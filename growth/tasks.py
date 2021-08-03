@@ -1,10 +1,4 @@
-import traceback
-import requests
-import os
-import csv
-import io
-import datetime
-import pytz
+import traceback, requests, csv, io, datetime, pytz
 
 from celery import Celery
 from scripts.shared import helpers
@@ -13,7 +7,7 @@ from django.template.loader import render_to_string
 
 from everybase.settings import (TIME_ZONE, SYSTS_LAST_UPDATED_GMASS_BOUNCES,
     SYSTS_LAST_UPDATED_GMASS_UNSUBSCRIBES, EMAIL_SYS_SENDER_EMAIL_ADDRESS,
-    EMAIL_SYS_RECEIVER_EMAIL_ADDRESSES)
+    EMAIL_SYS_RECEIVER_EMAIL_ADDRESSES, GMASS_CAMPAIGN_UPDATE_TIMEFRAME_DAYS)
 
 from relationships.shared import record_email
 from growth.models import GmassCampaign, GmassCampaignResult, GmassEmailStatus
@@ -177,11 +171,12 @@ def load_gmass_campaign_main_report(gmass_campaign):
 def update_gmass_data():
     """Update Gmass data for campaigns sent less than 14 days ago
     """
-    # Process only campaigns sent less than 14 days ago
+    # Process only campaigns sent less than X days ago
     sgtz = pytz.timezone(TIME_ZONE)
     start_time = datetime.datetime.now(sgtz)
     campaigns = GmassCampaign.objects.filter(
-        sent__gte=start_time-datetime.timedelta(days=14))\
+        sent__gte=start_time-datetime.timedelta(days=\
+            int(GMASS_CAMPAIGN_UPDATE_TIMEFRAME_DAYS)))\
             .order_by('updated')
 
     et_path = lambda template: 'growth/email/' + template
