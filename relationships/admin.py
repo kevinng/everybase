@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from . import models as mod
 from common import admin as comadm
+from growth import models as gromods
 
 @admin.register(mod.PhoneNumberType)
 class PhoneNumberTypeAdmin(comadm.ChoiceAdmin):
@@ -21,6 +22,63 @@ class PhoneNumberAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _phone_number_fields + ['types']})]
     autocomplete_fields = ['types']
 
+class GmassEmailStatusInlineAdmin(admin.TabularInline):
+    model = gromods.GmassEmailStatus
+    extra = 0
+    autocomplete_fields = ['invalid_email']
+
+class GmassCampaignResultInlineAdmin(admin.TabularInline):
+    model = gromods.GmassCampaignResult
+    extra = 0
+    autocomplete_fields = ['import_job', 'invalid_email', 'gmass_campaign']
+
+class ChemicalClusterOfSingaporeCompanyInlineAdmin(admin.TabularInline):
+    model = gromods.ChemicalClusterOfSingaporeCompany
+    fk_name = 'email'
+    extra = 0
+    autocomplete_fields = ['import_job', 'invalid_email', 'executive_email',
+        'invalid_executive_email']
+
+class Fibre2FashionBuyingOfferInlineAdmin(admin.TabularInline):
+    model = gromods.Fibre2FashionBuyingOffer
+    extra = 0
+    autocomplete_fields = ['import_job', 'invalid_email']
+
+class Fibre2FashionSellingOfferInlineAdmin(admin.TabularInline):
+    model = gromods.Fibre2FashionSellingOffer
+    extra = 0
+    autocomplete_fields = ['import_job', 'invalid_email']
+
+class ZeroBounceResultInlineAdmin(admin.TabularInline):
+    model = gromods.ZeroBounceResult
+    fk_name = 'email'
+    extra = 0
+    autocomplete_fields = ['import_job', 'invalid_email', 'did_you_mean_email']
+
+class ZeroBounceResultDidYouMeanEmailInlineAdmin(admin.TabularInline):
+    model = gromods.ZeroBounceResult
+    fk_name = 'did_you_mean_email'
+    extra = 0
+    autocomplete_fields = ['import_job', 'invalid_email', 'did_you_mean_email']
+
+class ChemicalBookSupplierInlineAdmin(admin.TabularInline):
+    model = gromods.ChemicalBookSupplier
+    extra = 0
+    autocomplete_fields = ['import_job', 'invalid_email']
+
+class LookChemSupplierInlineAdmin(admin.TabularInline):
+    model = gromods.LookChemSupplier
+    extra = 0
+    autocomplete_fields = ['import_job', 'invalid_email']
+
+class WorldOfChemicalsSupplierInlineAdmin(admin.TabularInline):
+    model = gromods.WorldOfChemicalsSupplier
+    fk_name = 'email'
+    extra = 0
+    autocomplete_fields = ['import_job', 'owner_email', 'alt_email',
+        'alt_email_2', 'alt_email_3', 'invalid_email', 'invalid_owner_email',
+        'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
+
 _email_fields = ['email', 'is_excluded', 'is_auto_reply', 'is_customer_service',
 'notes', 'import_job']
 @admin.register(mod.Email)
@@ -29,7 +87,8 @@ class EmailAdmin(comadm.StandardAdmin):
     list_display = comadm.standard_list_display + _email_fields
     list_editable = comadm.standard_list_editable + ['email', 'is_excluded',
         'is_auto_reply', 'is_customer_service', 'notes']
-    list_filter = comadm.standard_list_filter + ['import_job']
+    list_filter = comadm.standard_list_filter + ['is_excluded',
+        'is_auto_reply', 'is_customer_service', 'import_job']
     search_fields = comadm.standard_search_fields + ['email']
 
     # Details page settings
@@ -37,6 +96,13 @@ class EmailAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _email_fields})
     ]
     autocomplete_fields = ['import_job']
+    inlines = [GmassEmailStatusInlineAdmin, GmassCampaignResultInlineAdmin,
+        ChemicalClusterOfSingaporeCompanyInlineAdmin,
+        Fibre2FashionBuyingOfferInlineAdmin,
+        Fibre2FashionSellingOfferInlineAdmin,
+        ZeroBounceResultInlineAdmin, ZeroBounceResultDidYouMeanEmailInlineAdmin,
+        ChemicalBookSupplierInlineAdmin, LookChemSupplierInlineAdmin,
+        WorldOfChemicalsSupplierInlineAdmin]
 
 _invalid_email_fields = ['email', 'import_job']
 @admin.register(mod.InvalidEmail)
