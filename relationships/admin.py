@@ -27,7 +27,8 @@ _email_fields = ['email', 'is_excluded', 'is_auto_reply', 'is_customer_service',
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _email_fields
-    list_editable = comadm.standard_list_editable + ['email']
+    list_editable = comadm.standard_list_editable + ['email', 'is_excluded',
+        'is_auto_reply', 'is_customer_service',]
     list_filter = comadm.standard_list_filter + ['import_job']
     search_fields = comadm.standard_search_fields + ['email']
 
