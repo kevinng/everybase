@@ -94,16 +94,12 @@ class Email(Standard):
         blank=True,
         db_index=True
     )
-    is_auto_reply = models.BooleanField(
+    is_familiar = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
     )
-    is_customer_service = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+
     notes = models.TextField(
         null=True,
         blank=True

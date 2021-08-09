@@ -79,16 +79,15 @@ class WorldOfChemicalsSupplierInlineAdmin(admin.TabularInline):
         'alt_email_2', 'alt_email_3', 'invalid_email', 'invalid_owner_email',
         'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
 
-_email_fields = ['email', 'is_excluded', 'is_auto_reply', 'is_customer_service',
-'notes', 'import_job']
+_email_fields = ['email', 'is_excluded', 'is_familiar', 'notes', 'import_job']
 @admin.register(mod.Email)
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _email_fields
     list_editable = comadm.standard_list_editable + ['email', 'is_excluded',
-        'is_auto_reply', 'is_customer_service', 'notes']
-    list_filter = comadm.standard_list_filter + ['is_excluded',
-        'is_auto_reply', 'is_customer_service', 'import_job']
+        'is_familiar', 'notes']
+    list_filter = comadm.standard_list_filter + ['is_excluded', 'is_familiar',
+        'import_job']
     search_fields = comadm.standard_search_fields + ['email']
 
     # Details page settings
