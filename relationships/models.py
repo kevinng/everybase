@@ -208,6 +208,25 @@ class User(Standard):
         db_index=True
     )
 
+    country = models.ForeignKey(
+        'common.Country',
+        related_name='users_w_this_country',
+        related_query_name='users_w_this_country',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    state = models.ForeignKey(
+        'common.Country',
+        related_name='users_w_this_state',
+        related_query_name='users_w_this_state',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     current_match = models.ForeignKey(
         'Match',
         related_name='users_w_this_as_current_match',
