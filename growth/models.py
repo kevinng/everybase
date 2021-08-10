@@ -1,5 +1,7 @@
+from django.core.exceptions import ValidationError
+
 from django.db import models
-from common.models import Standard, Choice, short_text
+from common.models import Standard, short_text
 
 class GmassEmailStatus(Standard):
     bounced = models.BooleanField(
@@ -1235,3 +1237,43 @@ class OKChemBuyingRequest(Standard):
     
     def __str__(self):
         return f'({self.email} [{self.id}])'
+
+class Note(Standard):
+    phone_number = models.ForeignKey(
+        'relationships.PhoneNumber',
+        related_name='growth_notes',
+        related_query_name='growth_notes',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='growth_notes',
+        related_query_name='growth_notes',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    text = models.TextField(
+        null=True,
+        blank=True,
+    )
+    deadline = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+    done = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    def clean(self):
+        super(Note, self).clean()
+
+        # Either phone_number or email must be set
+        if self.phone_number is None and self.email is None:
+            raise ValidationError('Either phone_number or email must be set')

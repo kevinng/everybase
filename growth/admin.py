@@ -321,3 +321,17 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['harvested', 'name', 'country', 'request',
             'email', 'domain']})]
+
+_note_fields = ['phone_number', 'email', 'text', 'deadline', 'done']
+@admin.register(mod.Note)
+class NoteAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _note_fields
+    list_filter = comadm.standard_list_filter + ['deadline', 'done']
+    search_fields = comadm.standard_search_fields + ['email__email',
+        'phone_number__country_code', 'phone_number__national_number', 'text']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [(None, {'fields': _note_fields})]
+    autocomplete_fields = ['phone_number', 'email']
