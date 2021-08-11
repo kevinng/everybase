@@ -248,7 +248,7 @@ class User(Standard):
     )
 
     def __str__(self):
-        return f'({self.name} [{self.id}])'
+        return f'({self.name}, {self.email}, {self.phone_number} [{self.id}])'
 
 class PhoneNumberHash(Standard):
     """A URL sent to a user of a phone number. A URL has a standard base, and a
