@@ -1243,7 +1243,7 @@ class Note(Standard):
     may not have an associated user in our database because the user hasn't
     contacted the chatbot.
 
-    Last updated: 11 Aug 2021, 2:46 PM
+    Last updated: 11 August 2021, 2:46 PM
     """
 
     phone_number = models.ForeignKey(
@@ -1270,8 +1270,6 @@ class Note(Standard):
         blank=True,
         choices=[
             ('onboarding', 'Onboarding'),
-            ('onboarding_seller', 'Onboarding Seller'),
-            ('onboarding_buyer', 'Onboarding Buyer'),
             ('information', 'Information'),
             ('task', 'Task')
         ]
