@@ -1264,6 +1264,13 @@ class Note(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='growth_notes',
+        related_query_name='growth_notes',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     note_type = models.CharField(
         max_length=100,
         null=True,
