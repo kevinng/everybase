@@ -74,7 +74,8 @@ class PhoneNumber(Standard):
     )
 
     def __str__(self):
-        return f'(+{self.country_code} {self.national_number} [{self.id}])'
+        return f'(+{self.country_code} {self.national_number}, {self.user} \
+[{self.id}])'
 
     class Meta:
         unique_together = ['country_code', 'national_number']
