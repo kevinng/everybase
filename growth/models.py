@@ -1257,6 +1257,16 @@ class Note(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    note_type = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        choices=[
+            ('onboarding', 'Onboarding'),
+            ('information', 'Information'),
+            ('task', 'Task')
+        ]
+    )
 
     text = models.TextField(
         null=True,
