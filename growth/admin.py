@@ -327,7 +327,8 @@ _note_fields = ['user', 'note_type', 'text', 'started', 'deadline', 'done']
 class NoteAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _note_fields
-    list_editable = comadm.standard_list_editable + ['text', 'deadline', 'done']
+    list_editable = comadm.standard_list_editable + ['text', 'started',
+        'deadline', 'done']
     list_filter = comadm.standard_list_filter + ['deadline', 'done']
     search_fields = comadm.standard_search_fields + ['text']
 
