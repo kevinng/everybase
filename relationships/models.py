@@ -218,7 +218,7 @@ class User(Standard):
         db_index=True
     )
     state = models.ForeignKey(
-        'common.Country',
+        'common.State',
         related_name='users_w_this_state',
         related_query_name='users_w_this_state',
         on_delete=models.PROTECT,
