@@ -83,21 +83,11 @@ class PhoneNumber(Standard):
 class Email(Standard):
     """Email.
 
-    Last updated: 3 August 2021, 1:15 PM
+    Last updated: 11 August 2021, 1:40 PM
     """
 
     email = LowerCaseEmailField(
         unique=True,
-        db_index=True
-    )
-    is_excluded = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_familiar = models.BooleanField(
-        null=True,
-        blank=True,
         db_index=True
     )
 
@@ -113,6 +103,14 @@ class Email(Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    tags = models.ManyToManyField(
+        'EmailTag',
+        related_name='emails',
+        related_query_name='emails',
+        blank=True,
         db_index=True
     )
 
@@ -1434,3 +1432,10 @@ class QuestionAnswerPair(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+
+class EmailTag(Choice):
+    """Email tag
+
+    Last updated: 11 August 2021, 1:30 PM
+    """
+    pass

@@ -79,22 +79,20 @@ class WorldOfChemicalsSupplierInlineAdmin(admin.TabularInline):
         'alt_email_2', 'alt_email_3', 'invalid_email', 'invalid_owner_email',
         'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
 
-_email_fields = ['email', 'is_excluded', 'is_familiar', 'notes', 'import_job']
+_email_fields = ['email', 'notes', 'import_job']
 @admin.register(mod.Email)
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _email_fields
-    list_editable = comadm.standard_list_editable + ['email', 'is_excluded',
-        'is_familiar', 'notes']
-    list_filter = comadm.standard_list_filter + ['is_excluded', 'is_familiar',
-        'import_job']
+    list_editable = comadm.standard_list_editable + ['email', 'notes']
+    list_filter = comadm.standard_list_filter + ['import_job']
     search_fields = comadm.standard_search_fields + ['email']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _email_fields})
+        ('Details', {'fields': _email_fields + ['tags']})
     ]
-    autocomplete_fields = ['import_job']
+    autocomplete_fields = ['import_job', 'tags']
     inlines = [GmassEmailStatusInlineAdmin, GmassCampaignResultInlineAdmin,
         ChemicalClusterOfSingaporeCompanyInlineAdmin,
         Fibre2FashionBuyingOfferInlineAdmin,
@@ -350,3 +348,7 @@ class QuestionAnswerPairAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['questioner', 'answerer', 'question_captured_value',
         'question_forwarded_message', 'answer_captured_value',
         'answer_forwarded_message', 'match']
+
+@admin.register(mod.EmailTag)
+class EmailTagAdmin(comadm.ChoiceAdmin):
+    pass
