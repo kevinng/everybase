@@ -91,13 +91,6 @@ class Email(Standard):
         db_index=True
     )
 
-    name = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
     notes = models.TextField(
         null=True,
         blank=True
