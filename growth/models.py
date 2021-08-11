@@ -1268,6 +1268,8 @@ class Note(Standard):
         'relationships.User',
         related_name='growth_notes',
         related_query_name='growth_notes',
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
