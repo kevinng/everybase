@@ -196,6 +196,8 @@ class User(Standard):
         'PhoneNumber',
         related_name='user',
         related_query_name='user',
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
