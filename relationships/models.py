@@ -73,15 +73,6 @@ class PhoneNumber(Standard):
         db_index=True,
         validators=[validate_national_number]
     )
-    email = models.ForeignKey(
-        'Email',
-        related_name='phone_numbers',
-        related_query_name='phone_numbers',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
 
     def __str__(self):
         return f'(+{self.country_code} {self.national_number}, {self.user} \
@@ -196,8 +187,6 @@ class User(Standard):
         'PhoneNumber',
         related_name='user',
         related_query_name='user',
-        null=True,
-        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
