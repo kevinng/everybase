@@ -1239,6 +1239,13 @@ class OKChemBuyingRequest(Standard):
         return f'({self.email} [{self.id}])'
 
 class Note(Standard):
+    """Note/task related to a contact (e.g., email, phone number). The contact
+    may not have an associated user in our database because the user hasn't
+    contacted the chatbot.
+
+    Last updated: 11 Aug 2021, 2:46 PM
+    """
+
     phone_number = models.ForeignKey(
         'relationships.PhoneNumber',
         related_name='growth_notes',
@@ -1263,6 +1270,8 @@ class Note(Standard):
         blank=True,
         choices=[
             ('onboarding', 'Onboarding'),
+            ('onboarding_seller', 'Onboarding Seller'),
+            ('onboarding_buyer', 'Onboarding Buyer'),
             ('information', 'Information'),
             ('task', 'Task')
         ]
