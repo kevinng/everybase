@@ -123,7 +123,7 @@ _user_fields = ['phone_number', 'name', 'is_banned', 'notes', 'email',
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['key'] + _user_fields
+    list_display = ['key'] + _user_fields + comadm.standard_list_display
     list_editable = comadm.standard_list_editable + ['name', 'is_banned',
         'notes', 'country', 'state']
     list_filter = comadm.standard_list_filter + ['is_banned']
