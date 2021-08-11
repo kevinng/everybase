@@ -1283,12 +1283,5 @@ class Note(Standard):
         blank=True
     )
 
-    def clean(self):
-        super(Note, self).clean()
-
-        # Either phone_number or email must be set
-        if self.phone_number is None and self.email is None:
-            raise ValidationError('Either phone_number or email must be set')
-
     def __str__(self):
         return f'({self.text}, {self.user} [{self.id}])'
