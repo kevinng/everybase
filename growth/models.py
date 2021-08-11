@@ -1270,6 +1270,10 @@ class Note(Standard):
         null=True,
         blank=True,
     )
+    started = models.DateTimeField(
+        null=True,
+        blank=True
+    )
     deadline = models.DateTimeField(
         null=True,
         blank=True

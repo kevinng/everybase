@@ -322,8 +322,7 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
         [(None, {'fields': ['harvested', 'name', 'country', 'request',
             'email', 'domain']})]
 
-_note_fields = ['user', 'note_type', 'text', 'deadline',
-    'done']
+_note_fields = ['user', 'note_type', 'text', 'started', 'deadline', 'done']
 @admin.register(mod.Note)
 class NoteAdmin(comadm.StandardAdmin):
     # List page settings
