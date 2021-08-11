@@ -1246,24 +1246,6 @@ class Note(Standard):
     Last updated: 11 August 2021, 2:46 PM
     """
 
-    phone_number = models.ForeignKey(
-        'relationships.PhoneNumber',
-        related_name='growth_notes',
-        related_query_name='growth_notes',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    email = models.ForeignKey(
-        'relationships.Email',
-        related_name='growth_notes',
-        related_query_name='growth_notes',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
     user = models.ForeignKey(
         'relationships.User',
         related_name='growth_notes',
