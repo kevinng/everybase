@@ -79,7 +79,7 @@ class WorldOfChemicalsSupplierInlineAdmin(admin.TabularInline):
         'alt_email_2', 'alt_email_3', 'invalid_email', 'invalid_owner_email',
         'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
 
-_email_fields = ['email', 'notes', 'import_job']
+_email_fields = ['email', 'name', 'notes', 'import_job']
 @admin.register(mod.Email)
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
