@@ -126,7 +126,8 @@ class UserAdmin(comadm.StandardAdmin):
     list_editable = comadm.standard_list_editable + ['name', 'is_banned',
         'notes', 'country', 'state']
     list_filter = comadm.standard_list_filter + ['is_banned']
-    search_fields = comadm.standard_search_fields + _user_fields
+    search_fields = comadm.standard_search_fields + ['name', 'phone_number',
+        'email']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['key']
