@@ -1,4 +1,5 @@
 import random
+from django import db
 
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -71,6 +72,15 @@ class PhoneNumber(Standard):
         default=None,
         db_index=True,
         validators=[validate_national_number]
+    )
+    email = models.ForeignKey(
+        'Email',
+        related_name='phone_numbers',
+        related_query_name='phone_numbers',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
     )
 
     def __str__(self):

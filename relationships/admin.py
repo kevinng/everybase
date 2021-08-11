@@ -12,15 +12,17 @@ _phone_number_fields = ['country_code', 'national_number']
 @admin.register(mod.PhoneNumber)
 class PhoneNumberAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _phone_number_fields
+    list_display = comadm.standard_list_display + _phone_number_fields + \
+        ['email']
     list_editable = comadm.standard_list_editable + _phone_number_fields
     list_filter = comadm.standard_list_filter + ['country_code']
-    search_fields = comadm.standard_search_fields + _phone_number_fields
+    search_fields = comadm.standard_search_fields + _phone_number_fields + \
+        ['email__email']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _phone_number_fields + ['types']})]
-    autocomplete_fields = ['types']
+        [('Details', {'fields': _phone_number_fields + ['email', 'types']})]
+    autocomplete_fields = ['types', 'email']
 
 class GmassEmailStatusInlineAdmin(admin.TabularInline):
     model = gromods.GmassEmailStatus
@@ -79,6 +81,11 @@ class WorldOfChemicalsSupplierInlineAdmin(admin.TabularInline):
         'alt_email_2', 'alt_email_3', 'invalid_email', 'invalid_owner_email',
         'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
 
+class PhoneNumberInlineAdmin(admin.TabularInline):
+    model = mod.PhoneNumber
+    fk_name = 'email'
+    extra = 1
+
 _email_fields = ['email', 'name', 'notes', 'import_job']
 @admin.register(mod.Email)
 class EmailAdmin(comadm.StandardAdmin):
@@ -93,7 +100,8 @@ class EmailAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _email_fields + ['tags']})
     ]
     autocomplete_fields = ['import_job', 'tags']
-    inlines = [GmassEmailStatusInlineAdmin, GmassCampaignResultInlineAdmin,
+    inlines = [PhoneNumberInlineAdmin, GmassEmailStatusInlineAdmin,
+        GmassCampaignResultInlineAdmin,
         ChemicalClusterOfSingaporeCompanyInlineAdmin,
         Fibre2FashionBuyingOfferInlineAdmin,
         Fibre2FashionSellingOfferInlineAdmin,
