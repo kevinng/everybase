@@ -84,7 +84,7 @@ _email_fields = ['email', 'name', 'notes', 'import_job']
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _email_fields
-    list_editable = comadm.standard_list_editable + ['email', 'notes']
+    list_editable = comadm.standard_list_editable + ['email', 'name', 'notes']
     list_filter = comadm.standard_list_filter + ['import_job']
     search_fields = comadm.standard_search_fields + ['email']
 
