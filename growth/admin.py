@@ -336,4 +336,4 @@ class NoteAdmin(comadm.StandardAdmin):
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _note_fields})]
-    autocomplete_fields = ['phone_number', 'email']
+    autocomplete_fields = ['phone_number', 'email', 'user']
