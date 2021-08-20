@@ -93,14 +93,18 @@ class EmailAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _email_fields + ['tags']})
     ]
     autocomplete_fields = ['import_job', 'tags']
-    inlines = [GmassEmailStatusInlineAdmin,
+    inlines = [
+        GmassEmailStatusInlineAdmin,
         GmassCampaignResultInlineAdmin,
-        ChemicalClusterOfSingaporeCompanyInlineAdmin,
+        # ChemicalClusterOfSingaporeCompanyInlineAdmin,
         Fibre2FashionBuyingOfferInlineAdmin,
         Fibre2FashionSellingOfferInlineAdmin,
-        ZeroBounceResultInlineAdmin, ZeroBounceResultDidYouMeanEmailInlineAdmin,
-        ChemicalBookSupplierInlineAdmin, LookChemSupplierInlineAdmin,
-        WorldOfChemicalsSupplierInlineAdmin]
+        ZeroBounceResultInlineAdmin,
+        ZeroBounceResultDidYouMeanEmailInlineAdmin,
+        # ChemicalBookSupplierInlineAdmin,
+        # LookChemSupplierInlineAdmin,
+        # WorldOfChemicalsSupplierInlineAdmin
+    ]
 
 _invalid_email_fields = ['email', 'import_job']
 @admin.register(mod.InvalidEmail)
