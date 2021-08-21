@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 
 from django.db import models
-from common.models import Standard, short_text
+from common.models import Choice, Standard, short_text
 
 class GmassEmailStatus(Standard):
     bounced = models.BooleanField(
@@ -1239,11 +1239,9 @@ class OKChemBuyingRequest(Standard):
         return f'({self.email} [{self.id}])'
 
 class Note(Standard):
-    """Note/task related to a contact (e.g., email, phone number). The contact
-    may not have an associated user in our database because the user hasn't
-    contacted the chatbot.
+    """Note/task related to a user.
 
-    Last updated: 11 August 2021, 2:46 PM
+    Last updated: 21 August 2021, 8:51 PM
     """
 
     user = models.ForeignKey(
@@ -1255,17 +1253,15 @@ class Note(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    note_type = models.CharField(
-        max_length=100,
+    status = models.ForeignKey(
+        'NoteStatus',
+        related_name='notes',
+        related_query_name='notes',
         null=True,
         blank=True,
-        choices=[
-            ('onboarding', 'Onboarding'),
-            ('information', 'Information'),
-            ('task', 'Task')
-        ]
+        on_delete=models.PROTECT,
+        db_index=True
     )
-
     text = models.TextField(
         null=True,
         blank=True,
@@ -1274,14 +1270,26 @@ class Note(Standard):
         null=True,
         blank=True
     )
-    deadline = models.DateTimeField(
-        null=True,
-        blank=True
-    )
-    done = models.DateTimeField(
-        null=True,
-        blank=True
-    )
 
     def __str__(self):
         return f'({self.text}, {self.user} [{self.id}])'
+
+class NoteTag(Choice):
+    """Tag associated with note.
+    
+    Last updated: 21 August 2021, 9:00 PM
+    """
+
+    notes = models.ManyToManyField(
+        'Note',
+        related_name='tags',
+        related_query_name='tags',
+        blank=True,
+        db_index=True
+    )
+
+class NoteStatus(Choice):
+    """Status associated with note.
+    
+    Last updated: 21 August 2021, 9:00 PM
+    """
