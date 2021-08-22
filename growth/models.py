@@ -1293,3 +1293,7 @@ class NoteStatus(Choice):
     
     Last updated: 21 August 2021, 9:00 PM
     """
+
+    class Meta:
+        verbose_name = 'Note status'
+        verbose_name_plural = 'Note statuses'
