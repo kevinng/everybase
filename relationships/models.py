@@ -199,10 +199,19 @@ class User(Standard):
         blank=True
     )
 
-    email = models.OneToOneField(
+    email = models.ForeignKey(
         'Email',
-        related_name='user',
-        related_query_name='user',
+        related_name='user_with_this_email',
+        related_query_name='user_with_this_email',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    email_2 = models.ForeignKey(
+        'Email',
+        related_name='user_with_this_email_as_cc',
+        related_query_name='user_with_this_email_as_cc',
         on_delete=models.PROTECT,
         null=True,
         blank=True,

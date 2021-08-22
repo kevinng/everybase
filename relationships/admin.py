@@ -127,7 +127,7 @@ class NoteInlineAdmin(admin.TabularInline):
     extra = 1
 
 _user_fields = ['phone_number', 'name', 'is_banned', 'notes', 'email',
-    'country', 'state']
+    'email_2', 'country', 'state']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
@@ -137,14 +137,15 @@ class UserAdmin(comadm.StandardAdmin):
     list_filter = comadm.standard_list_filter + ['is_banned']
     search_fields = comadm.standard_search_fields + ['name',
         'phone_number__country_code', 'phone_number__national_number',
-        'email__email']
+        'email__email', 'email_2__email']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['key']
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': ['key'] + _user_fields})
     ]
-    autocomplete_fields = ['phone_number', 'email', 'country', 'state']
+    autocomplete_fields = ['phone_number', 'email', 'email_2', 'country',
+        'state']
     inlines = [NoteInlineAdmin]
 
 _phone_number_hash_fields = ['user', 'phone_number_type', 'phone_number']
