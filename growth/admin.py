@@ -327,6 +327,11 @@ class NoteTagsInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['notetag']
 
+class NoteStatusesInlineAdmin(admin.TabularInline):
+    model = mod.NoteStatus.notes.through
+    extra = 1
+    autocomplete_fields = ['notestatus']
+
 _note_fields = ['user', 'text', 'closed']
 @admin.register(mod.Note)
 class NoteAdmin(comadm.StandardAdmin):
@@ -340,7 +345,7 @@ class NoteAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _note_fields + ['cc_users']})]
     autocomplete_fields = ['user', 'cc_users']
-    inlines = [NoteTagsInlineAdmin]
+    inlines = [NoteTagsInlineAdmin, NoteStatusesInlineAdmin]
 
 @admin.register(mod.NoteTag)
 class NoteTagAdmin(comadm.ChoiceAdmin):
