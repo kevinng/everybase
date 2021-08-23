@@ -327,20 +327,19 @@ class NoteTagsInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['notetag']
 
-_note_fields = ['user', 'status', 'text', 'started']
+_note_fields = ['user', 'text', 'closed']
 @admin.register(mod.Note)
 class NoteAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _note_fields
-    list_editable = comadm.standard_list_editable + ['text', 'status',
-        'started']
-    list_filter = comadm.standard_list_filter + ['status', 'started']
+    list_editable = comadm.standard_list_editable + ['text', 'closed']
+    list_filter = comadm.standard_list_filter + ['closed']
     search_fields = comadm.standard_search_fields + ['text']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _note_fields})]
-    autocomplete_fields = ['user', 'status']
+        [(None, {'fields': _note_fields + ['cc_users']})]
+    autocomplete_fields = ['user', 'cc_users']
     inlines = [NoteTagsInlineAdmin]
 
 @admin.register(mod.NoteTag)

@@ -1246,27 +1246,25 @@ class Note(Standard):
 
     user = models.ForeignKey(
         'relationships.User',
-        related_name='growth_notes',
-        related_query_name='growth_notes',
+        related_name='notes_with_this_user_as_main',
+        related_query_name='notes_with_this_user_as_main',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
-    status = models.ForeignKey(
-        'NoteStatus',
-        related_name='notes',
-        related_query_name='notes',
-        null=True,
+    cc_users = models.ManyToManyField(
+        'relationships.User',
+        related_name='notes_with_this_user_as_cc',
+        related_query_name='notes_with_this_user_as_cc',
         blank=True,
-        on_delete=models.PROTECT,
         db_index=True
     )
     text = models.TextField(
         null=True,
         blank=True,
     )
-    started = models.DateTimeField(
+    closed = models.DateTimeField(
         null=True,
         blank=True
     )
@@ -1293,6 +1291,14 @@ class NoteStatus(Choice):
     
     Last updated: 21 August 2021, 9:00 PM
     """
+
+    notes = models.ManyToManyField(
+        'Note',
+        related_name='statuses',
+        related_query_name='statuses',
+        blank=True,
+        db_index=True
+    )
 
     class Meta:
         verbose_name = 'Note status'
