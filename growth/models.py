@@ -1241,7 +1241,7 @@ class OKChemBuyingRequest(Standard):
 class Note(Standard):
     """Note/task related to a user.
 
-    Last updated: 21 August 2021, 8:51 PM
+    Last updated: 23 August 2021, 5:56 PM
     """
 
     user = models.ForeignKey(
@@ -1258,6 +1258,15 @@ class Note(Standard):
         related_name='notes_with_this_user_as_cc',
         related_query_name='notes_with_this_user_as_cc',
         blank=True,
+        db_index=True
+    )
+    user_cc_group = models.ForeignKey(
+        'UserCCGroup',
+        related_name='notes',
+        related_query_name='notes',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
         db_index=True
     )
     text = models.TextField(

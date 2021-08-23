@@ -332,7 +332,7 @@ class NoteStatusesInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['notestatus']
 
-_note_fields = ['user', 'text', 'closed']
+_note_fields = ['user', 'user_cc_group', 'text', 'closed']
 @admin.register(mod.Note)
 class NoteAdmin(comadm.StandardAdmin):
     # List page settings
@@ -344,7 +344,7 @@ class NoteAdmin(comadm.StandardAdmin):
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _note_fields + ['cc_users']})]
-    autocomplete_fields = ['user', 'cc_users']
+    autocomplete_fields = ['user', 'user_cc_group', 'cc_users']
     inlines = [NoteTagsInlineAdmin, NoteStatusesInlineAdmin]
 
 @admin.register(mod.NoteTag)
