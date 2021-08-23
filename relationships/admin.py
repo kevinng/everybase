@@ -125,6 +125,7 @@ class NoteInlineAdmin(admin.TabularInline):
     model = gromods.Note
     fk_name = 'user'
     extra = 1
+    autocomplete_fields = ['cc_users']
 
 _user_fields = ['phone_number', 'name', 'is_banned', 'notes', 'email',
     'email_2', 'country', 'state']
