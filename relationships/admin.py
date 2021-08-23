@@ -94,13 +94,13 @@ class EmailAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['import_job', 'tags']
     inlines = [
-        GmassEmailStatusInlineAdmin,
-        GmassCampaignResultInlineAdmin,
+        # GmassEmailStatusInlineAdmin,
+        # GmassCampaignResultInlineAdmin,
         # ChemicalClusterOfSingaporeCompanyInlineAdmin,
-        Fibre2FashionBuyingOfferInlineAdmin,
-        Fibre2FashionSellingOfferInlineAdmin,
-        ZeroBounceResultInlineAdmin,
-        ZeroBounceResultDidYouMeanEmailInlineAdmin,
+        # Fibre2FashionBuyingOfferInlineAdmin,
+        # Fibre2FashionSellingOfferInlineAdmin,
+        # ZeroBounceResultInlineAdmin,
+        # ZeroBounceResultDidYouMeanEmailInlineAdmin,
         # ChemicalBookSupplierInlineAdmin,
         # LookChemSupplierInlineAdmin,
         # WorldOfChemicalsSupplierInlineAdmin
