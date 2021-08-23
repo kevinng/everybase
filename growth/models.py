@@ -1303,3 +1303,25 @@ class NoteStatus(Choice):
     class Meta:
         verbose_name = 'Note status'
         verbose_name_plural = 'Note statuses'
+
+class UserCCGroup(Standard):
+    """A group of user - 1 as the main message recipient, the others in CC
+
+    Last updated: 23 August 2021, 3:30 PM
+    """
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='user_cc_group_with_this_user_as_main',
+        related_query_name='user_cc_group_with_this_user_as_main',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    cc_users = models.ManyToManyField(
+        'relationships.User',
+        related_name='user_cc_group_with_this_user_as_cc',
+        related_query_name='user_cc_group_with_this_user_as_cc',
+        blank=True,
+        db_index=True
+    )
