@@ -370,14 +370,3 @@ class ContactGroupAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _contact_group_fields})]
     autocomplete_fields = ['to_users', 'cc_users']
-
-_user_cc_group_fields = ['user', 'cc_users']
-@admin.register(mod.UserCCGroup)
-class UserCCGroupAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + ['user']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _user_cc_group_fields})]
-    autocomplete_fields = ['user', 'cc_users']

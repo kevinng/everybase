@@ -1260,15 +1260,6 @@ class Note(Standard):
         blank=True,
         db_index=True
     )
-    user_cc_group = models.ForeignKey(
-        'UserCCGroup',
-        related_name='notes',
-        related_query_name='notes',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
     contact_group = models.ForeignKey(
         'ContactGroup',
         related_name='notes',
@@ -1321,31 +1312,6 @@ class NoteStatus(Choice):
     class Meta:
         verbose_name = 'Note status'
         verbose_name_plural = 'Note statuses'
-
-class UserCCGroup(Standard):
-    """A group of user - 1 as the main message recipient, the others in CC
-
-    Last updated: 23 August 2021, 3:30 PM
-    """
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='user_cc_group_with_this_user_as_main',
-        related_query_name='user_cc_group_with_this_user_as_main',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    cc_users = models.ManyToManyField(
-        'relationships.User',
-        related_name='user_cc_group_with_this_user_as_cc',
-        related_query_name='user_cc_group_with_this_user_as_cc',
-        blank=True,
-        db_index=True
-    )
-
-    def __str__(self):
-        return f'({self.user} and {self.cc_users.count()} CC users, [{self.id}])'
 
 class ContactGroup(Standard):
     """A group of user to contact as a group.
