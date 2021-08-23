@@ -363,6 +363,7 @@ _user_cc_group_fields = ['user', 'cc_users']
 class UserCCGroupAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['user']
+    search_fields = comadm.standard_search_fields + ['user__name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
