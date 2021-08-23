@@ -1334,3 +1334,6 @@ class UserCCGroup(Standard):
         blank=True,
         db_index=True
     )
+
+    def __str__(self):
+        return f'({self.user} and {self.cc_users.count()} CC users, [{self.id}])'
