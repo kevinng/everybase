@@ -332,7 +332,7 @@ class NoteStatusesInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['notestatus']
 
-_note_fields = ['user', 'user_cc_group', 'text', 'closed']
+_note_fields = ['user', 'contact_group', 'text', 'closed']
 @admin.register(mod.Note)
 class NoteAdmin(comadm.StandardAdmin):
     # List page settings
@@ -344,7 +344,7 @@ class NoteAdmin(comadm.StandardAdmin):
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': _note_fields + ['cc_users']})]
-    autocomplete_fields = ['user', 'user_cc_group', 'cc_users']
+    autocomplete_fields = ['user', 'contact_group', 'cc_users']
     inlines = [NoteTagsInlineAdmin, NoteStatusesInlineAdmin]
 
 @admin.register(mod.NoteTag)
@@ -358,14 +358,15 @@ class NoteTagAdmin(comadm.ChoiceAdmin):
 class NoteStatusAdmin(comadm.ChoiceAdmin):
     pass
 
-_user_cc_group_fields = ['user', 'cc_users']
-@admin.register(mod.UserCCGroup)
-class UserCCGroupAdmin(comadm.StandardAdmin):
+_contact_group_fields = ['name', 'cc_users']
+@admin.register(mod.ContactGroup)
+class ContactGroupAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['user']
-    search_fields = comadm.standard_search_fields + ['user__name']
+    list_display = comadm.standard_list_display + ['name']
+    list_editable = comadm.standard_list_editable + ['name']
+    search_fields = comadm.standard_search_fields + ['name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _user_cc_group_fields})]
-    autocomplete_fields = ['user', 'cc_users']
+        [(None, {'fields': _contact_group_fields})]
+    autocomplete_fields = ['to_users', 'cc_users']

@@ -1269,6 +1269,15 @@ class Note(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    contact_group = models.ForeignKey(
+        'ContactGroup',
+        related_name='notes',
+        related_query_name='notes',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     text = models.TextField(
         null=True,
         blank=True,
@@ -1337,3 +1346,31 @@ class UserCCGroup(Standard):
 
     def __str__(self):
         return f'({self.user} and {self.cc_users.count()} CC users, [{self.id}])'
+
+class ContactGroup(Standard):
+    """A group of user to contact as a group.
+
+    Last updated: 23 August 2021, 11:12 PM
+    """
+    name = models.CharField(
+        max_length=200,
+        db_index=True
+    )
+    to_users = models.ManyToManyField(
+        'relationships.User',
+        related_name='user_contact_group_with_this_user_as_to',
+        related_query_name='user_contact_group_with_this_user_as_to',
+        blank=True,
+        db_index=True
+    )
+    cc_users = models.ManyToManyField(
+        'relationships.User',
+        related_name='user_contact_group_with_this_user_as_cc',
+        related_query_name='user_contact_group_with_this_user_as_cc',
+        blank=True,
+        db_index=True
+    )
+
+    def __str__(self):
+        return f'({self.user} and {self.cc_users.count()} user contact group, \
+[{self.id}])'
