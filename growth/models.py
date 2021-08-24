@@ -1253,13 +1253,6 @@ class Note(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    cc_users = models.ManyToManyField(
-        'relationships.User',
-        related_name='notes_with_this_user_as_cc',
-        related_query_name='notes_with_this_user_as_cc',
-        blank=True,
-        db_index=True
-    )
     contact_group = models.ForeignKey(
         'ContactGroup',
         related_name='notes',

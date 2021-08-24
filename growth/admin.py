@@ -342,9 +342,8 @@ class NoteAdmin(comadm.StandardAdmin):
     search_fields = comadm.standard_search_fields + ['text']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _note_fields + ['cc_users']})]
-    autocomplete_fields = ['user', 'contact_group', 'cc_users']
+    fieldsets = comadm.standard_fieldsets + [(None, {'fields': _note_fields})]
+    autocomplete_fields = ['user', 'contact_group']
     inlines = [NoteTagsInlineAdmin, NoteStatusesInlineAdmin]
 
 @admin.register(mod.NoteTag)
