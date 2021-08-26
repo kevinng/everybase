@@ -322,50 +322,35 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
         [(None, {'fields': ['harvested', 'name', 'country', 'request',
             'email', 'domain']})]
 
-class NoteTagsInlineAdmin(admin.TabularInline):
-    model = mod.NoteTag.notes.through
-    extra = 1
-    autocomplete_fields = ['notetag']
+# class NoteTagsInlineAdmin(admin.TabularInline):
+#     model = mod.NoteTag.notes.through
+#     extra = 1
+#     autocomplete_fields = ['notetag']
 
-class NoteStatusesInlineAdmin(admin.TabularInline):
-    model = mod.NoteStatus.notes.through
-    extra = 1
-    autocomplete_fields = ['notestatus']
+# class NoteStatusesInlineAdmin(admin.TabularInline):
+#     model = mod.NoteStatus.notes.through
+#     extra = 1
+#     autocomplete_fields = ['notestatus']
 
-_note_fields = ['user', 'contact_group', 'text', 'closed']
+_note_fields = ['closed']
 @admin.register(mod.Note)
 class NoteAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _note_fields
-    list_editable = comadm.standard_list_editable + ['text', 'closed']
-    list_filter = comadm.standard_list_filter + ['closed']
-    search_fields = comadm.standard_search_fields + ['text']
+    list_editable = comadm.standard_list_editable + _note_fields
+    list_filter = comadm.standard_list_filter + _note_fields
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [(None, {'fields': _note_fields})]
-    autocomplete_fields = ['user', 'contact_group']
-    inlines = [NoteTagsInlineAdmin, NoteStatusesInlineAdmin]
+    # inlines = [NoteTagsInlineAdmin, NoteStatusesInlineAdmin]
 
-@admin.register(mod.NoteTag)
-class NoteTagAdmin(comadm.ChoiceAdmin):
-    # Details page settings
-    fieldsets = comadm.choice_fieldsets + \
-        [(None, {'fields': ['notes']})]
-    autocomplete_fields = ['notes']
+# @admin.register(mod.NoteTag)
+# class NoteTagAdmin(comadm.ChoiceAdmin):
+#     # Details page settings
+#     fieldsets = comadm.choice_fieldsets + \
+#         [(None, {'fields': ['notes']})]
+#     autocomplete_fields = ['notes']
 
-@admin.register(mod.NoteStatus)
-class NoteStatusAdmin(comadm.ChoiceAdmin):
-    pass
-
-_contact_group_fields = ['name', 'to_users', 'cc_users']
-@admin.register(mod.ContactGroup)
-class ContactGroupAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + ['name']
-    list_editable = comadm.standard_list_editable + ['name']
-    search_fields = comadm.standard_search_fields + ['name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [(None, {'fields': _contact_group_fields})]
-    autocomplete_fields = ['to_users', 'cc_users']
+# @admin.register(mod.NoteStatus)
+# class NoteStatusAdmin(comadm.ChoiceAdmin):
+#     pass

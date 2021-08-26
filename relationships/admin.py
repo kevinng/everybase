@@ -121,10 +121,10 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['import_job']
 
-class NoteInlineAdmin(admin.TabularInline):
-    model = gromods.Note
-    fk_name = 'user'
-    extra = 1
+# class NoteInlineAdmin(admin.TabularInline):
+#     model = gromods.Note
+#     fk_name = 'user'
+#     extra = 1
 
 _user_fields = ['phone_number', 'name', 'is_banned', 'notes', 'email',
     'email_2', 'country', 'state']
@@ -146,7 +146,7 @@ class UserAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['phone_number', 'email', 'email_2', 'country',
         'state']
-    inlines = [NoteInlineAdmin]
+    # inlines = [NoteInlineAdmin]
 
 _phone_number_hash_fields = ['user', 'phone_number_type', 'phone_number']
 @admin.register(mod.PhoneNumberHash)
