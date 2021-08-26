@@ -359,3 +359,7 @@ class NoteUpdateAdmin(comadm.StandardAdmin):
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [(None, {'fields':
         _note_update_fields})]
+
+@admin.register(mod.EmailStatus)
+class EmailStatusAdmin(comadm.ChoiceAdmin):
+    pass
