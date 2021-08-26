@@ -51,6 +51,11 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = ['email', 'gmass_campaign']
 
+class GmassCampaignTagInlineAdmin(admin.TabularInline):
+    model = mod.GmassCampaignTag.gmass_campaigns.through
+    extra = 1
+    autocomplete_fields = ['gmasscampaigntag']
+
 @admin.register(mod.GmassCampaign)
 class GmassCampaign(admin.ModelAdmin):
     # List page settings
@@ -69,6 +74,7 @@ class GmassCampaign(admin.ModelAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [(None, {'fields': ['sent', 'campaign_id', 'subject', 'spreadsheet',
             'report_url', 'report_last_accessed']})]
+    inlines = [GmassCampaignTagInlineAdmin]
 
 @admin.register(mod.ChemicalClusterOfSingaporeCompany)
 class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
@@ -362,4 +368,8 @@ class NoteUpdateAdmin(comadm.StandardAdmin):
 
 @admin.register(mod.EmailStatus)
 class EmailStatusAdmin(comadm.ChoiceAdmin):
+    pass
+
+@admin.register(mod.GmassCampaignTag)
+class GmassCampaignTagAdmin(comadm.ChoiceAdmin):
     pass

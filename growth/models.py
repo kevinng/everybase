@@ -1327,3 +1327,15 @@ class EmailStatus(Choice):
         related_query_name='statuses',
         blank=True
     )
+
+class GmassCampaignTag(Choice):
+    """Gmass campaign tag.
+    
+    Last updated: 26 August 2021, 11:47 PM
+    """
+    gmass_campaigns = models.ManyToManyField(
+        'GmassCampaign',
+        related_name='tags',
+        related_query_name='tags',
+        blank=True
+    )
