@@ -322,35 +322,40 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
         [(None, {'fields': ['harvested', 'name', 'country', 'request',
             'email', 'domain']})]
 
-# class NoteTagsInlineAdmin(admin.TabularInline):
-#     model = mod.NoteTag.notes.through
-#     extra = 1
-#     autocomplete_fields = ['notetag']
+class NoteUpdateInlineAdmin(admin.TabularInline):
+    model = mod.NoteUpdate
+    extra = 1
 
-# class NoteStatusesInlineAdmin(admin.TabularInline):
-#     model = mod.NoteStatus.notes.through
-#     extra = 1
-#     autocomplete_fields = ['notestatus']
-
-_note_fields = ['closed']
+_note_fields = ['closed', 'email', 'phone_number', 'agenda', 'outcome']
+_note_edit_filter_fields = ['closed', 'agenda', 'outcome']
 @admin.register(mod.Note)
 class NoteAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _note_fields
-    list_editable = comadm.standard_list_editable + _note_fields
-    list_filter = comadm.standard_list_filter + _note_fields
+    list_editable = comadm.standard_list_editable + _note_edit_filter_fields
+    list_filter = comadm.standard_list_filter + _note_edit_filter_fields
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [(None, {'fields': _note_fields})]
-    # inlines = [NoteTagsInlineAdmin, NoteStatusesInlineAdmin]
+    autocomplete_fields = ['email', 'phone_number', 'agenda', 'outcome']
+    inlines = [NoteUpdateInlineAdmin]
 
-# @admin.register(mod.NoteTag)
-# class NoteTagAdmin(comadm.ChoiceAdmin):
-#     # Details page settings
-#     fieldsets = comadm.choice_fieldsets + \
-#         [(None, {'fields': ['notes']})]
-#     autocomplete_fields = ['notes']
+@admin.register(mod.NoteAgenda)
+class NoteTagAdmin(comadm.ChoiceAdmin):
+    pass
 
-# @admin.register(mod.NoteStatus)
-# class NoteStatusAdmin(comadm.ChoiceAdmin):
-#     pass
+@admin.register(mod.NoteOutcome)
+class NoteStatusAdmin(comadm.ChoiceAdmin):
+    pass
+
+_note_update_fields = ['text']
+@admin.register(mod.NoteUpdate)
+class NoteUpdateAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _note_update_fields
+    list_editable = comadm.standard_list_editable + _note_update_fields
+    search_fields = comadm.standard_search_fields + _note_update_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [(None, {'fields':
+        _note_update_fields})]

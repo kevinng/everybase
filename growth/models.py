@@ -1243,6 +1243,39 @@ class Note(Standard):
 
     Last updated: 26 August 2021, 11:47 PM
     """
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='emails',
+        related_query_name='emails',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
+    phone_number = models.ForeignKey(
+        'relationships.PhoneNumber',
+        related_name='notes',
+        related_query_name='notes',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
+
+    agenda = models.ForeignKey(
+        'NoteAgenda',
+        related_name='notes',
+        related_query_name='notes',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
+    outcome = models.ForeignKey(
+        'NoteOutcome',
+        related_name='notes',
+        related_query_name='notes',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
 
     closed = models.DateTimeField(
         null=True,
@@ -1250,36 +1283,35 @@ class Note(Standard):
     )
 
     def __str__(self):
-        return f'({self.text}, {self.user} [{self.id}])'
+        return f'({self.email}, {self.phone_number} [{self.id}])'
 
-# class NoteTag(Choice):
-#     """Tag associated with note.
+    def clean(self):
+        super(Note, self).clean()
+        if self.email is None and self.phone_number is None:
+            raise ValidationError('Either email or phone number must be set.')
+
+class NoteAgenda(Choice):
+    """Agenda of a note.
     
-#     Last updated: 21 August 2021, 9:00 PM
-#     """
+    Last updated: 26 August 2021, 11:47 PM
+    """
 
-#     notes = models.ManyToManyField(
-#         'Note',
-#         related_name='tags',
-#         related_query_name='tags',
-#         blank=True,
-#         db_index=True
-#     )
-
-# class NoteStatus(Choice):
-#     """Status associated with note.
+class NoteOutcome(Choice):
+    """Outcome of a note.
     
-#     Last updated: 21 August 2021, 9:00 PM
-#     """
+    Last updated: 26 August 2021, 11:47 PM
+    """
 
-#     notes = models.ManyToManyField(
-#         'Note',
-#         related_name='statuses',
-#         related_query_name='statuses',
-#         blank=True,
-#         db_index=True
-#     )
+class NoteUpdate(Standard):
+    """Updates of a note.
+    
+    Last updated: 26 August 2021, 11:47 PM
+    """
 
-#     class Meta:
-#         verbose_name = 'Note status'
-#         verbose_name_plural = 'Note statuses'
+    text = models.TextField()
+    notes = models.ForeignKey(
+        'Note',
+        related_name='updates',
+        related_query_name='updates',
+        on_delete=models.PROTECT
+    )
