@@ -366,3 +366,40 @@ class QuestionAnswerPairAdmin(comadm.StandardAdmin):
 @admin.register(mod.EmailTag)
 class EmailTagAdmin(comadm.ChoiceAdmin):
     pass
+
+_recommendation_fields = ['recommendee', 'lead', 'interested_product_type',
+    'responded_interested_product_type', 'is_direct', 'responded_is_direct',
+    'can_source', 'responded_can_source', 'not_interested_details',
+    'responded_not_interested_details', 
+    'responded_not_interested_details_reason']
+@admin.register(mod.Recommendation)
+class RecommendationAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _recommendation_fields
+    list_editable = comadm.standard_list_editable + _recommendation_fields
+    list_filter = comadm.standard_list_filter + _recommendation_fields
+    search_fields = comadm.standard_search_fields + \
+        ['not_interested_details_reason']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _recommendation_fields})
+    ]
+    autocomplete_fields = ['recommendee', 'lead']
+
+_lead_fields = ['owner', 'display_text', 'country', 'state',
+    'capture_method_type', 'lead_type']
+@admin.register(mod.Lead)
+class LeadAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _lead_fields
+    list_editable = comadm.standard_list_editable + _lead_fields
+    list_filter = comadm.standard_list_filter + ['country', 'state',
+        'capture_method_type', 'lead_type']
+    search_fields = comadm.standard_search_fields + ['display_text']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _lead_fields})
+    ]
+    autocomplete_fields = ['owner', 'country', 'state']

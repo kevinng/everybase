@@ -1450,3 +1450,125 @@ class EmailTag(Choice):
     Last updated: 11 August 2021, 1:30 PM
     """
     pass
+
+class Recommendation(Standard):
+    """Recommendation.
+    
+    Last updated: 29 August 2021, 5:05 PM
+    """
+    recommendee = models.ForeignKey(
+        'User',
+        related_name='recommendations',
+        related_query_name='recommendations',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='recommendations',
+        related_query_name='recommendations',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    interested_product_type = models.BooleanField(
+        blank=True,
+        null=True
+    )
+    responded_interested_product_type = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    is_direct = models.BooleanField(
+        blank=True,
+        null=True
+    )
+    responded_is_direct = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    can_source = models.BooleanField(
+        blank=True,
+        null=True
+    )
+    responded_can_source = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    not_interested_details = models.BooleanField(
+        blank=True,
+        null=True
+    )
+    responded_not_interested_details = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    not_interested_details_reason = models.TextField(
+        blank=True,
+        null=True
+    )
+    responded_not_interested_details_reason = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+CAPTURE_METHOD_TYPE__MANUAL = 'manual'
+CAPTURE_METHOD_TYPE__MENU_OPTION = 'menu_option'
+LEAD_TYPE__SUPPLY = 'supply'
+LEAD_TYPE__DEMAND = 'demand'
+class Lead(Standard):
+    """Lead.
+    
+    Last updated: 29 August 2021, 5:05 PM
+    """
+    owner = models.ForeignKey(
+        'relationships.User',
+        related_name='leads',
+        related_query_name='leads',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    display_text = models.TextField(
+        blank=True,
+        null=True
+    )
+    country = models.ForeignKey(
+        'common.Country',
+        related_name='leads',
+        related_query_name='leads',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    state = models.ForeignKey(
+        'common.State',
+        related_name='leads',
+        related_query_name='leads',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    capture_method_type = models.CharField(
+        max_length=50,
+        choices=[
+            (CAPTURE_METHOD_TYPE__MANUAL, 'Manual'),
+            (CAPTURE_METHOD_TYPE__MENU_OPTION, 'Menu Option')
+        ],
+        db_index=True
+    )
+    lead_type = models.CharField(
+        max_length=50,
+        choices=[
+            (LEAD_TYPE__DEMAND, 'Demand'),
+            (LEAD_TYPE__SUPPLY, 'Supply')
+        ],
+        db_index=True
+    )
