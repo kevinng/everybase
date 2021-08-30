@@ -1,0 +1,12 @@
+[
+{
+    "model": "growth.noteagenda",
+    "pk": 1,
+    "fields": {
+        "name": "Talk to Everybase Human Agent",
+        "description": "User has requested to talk to an Everybase human agent",
+        "programmatic_key": "talk_to_human",
+        "programmatic_details": ""
+    }
+}
+]
