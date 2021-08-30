@@ -166,22 +166,18 @@ def get_user_key(length=_USER_KEY_LENGTH):
 class User(Standard):
     """User details.
 
-    Last updated: 1 July 2021, 5:57 PM
+    Last updated: 30 August 2021, 2:42 PM
     """
+    registered = models.DateTimeField(
+        blank=True,
+        null=True,
+        db_index=True
+    )
 
     key = models.CharField(
         max_length=_USER_KEY_LENGTH,
         unique=True,
         default=get_user_key,
-        db_index=True
-    )
-    phone_number = models.OneToOneField(
-        'PhoneNumber',
-        related_name='user',
-        related_query_name='user',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
         db_index=True
     )
     name = models.CharField(
@@ -199,19 +195,19 @@ class User(Standard):
         blank=True
     )
 
-    email = models.ForeignKey(
-        'Email',
-        related_name='user_with_this_email',
-        related_query_name='user_with_this_email',
-        on_delete=models.PROTECT,
+    phone_number = models.OneToOneField(
+        'PhoneNumber',
+        related_name='user',
+        related_query_name='user',
         null=True,
         blank=True,
+        on_delete=models.PROTECT,
         db_index=True
     )
-    email_2 = models.ForeignKey(
+    email = models.OneToOneField(
         'Email',
-        related_name='user_with_this_email_as_cc',
-        related_query_name='user_with_this_email_as_cc',
+        related_name='user',
+        related_query_name='user',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
