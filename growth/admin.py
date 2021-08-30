@@ -332,7 +332,7 @@ class NoteUpdateInlineAdmin(admin.TabularInline):
     model = mod.NoteUpdate
     extra = 1
 
-_note_fields = ['closed', 'email', 'phone_number', 'agenda', 'outcome']
+_note_fields = ['closed', 'user', 'email', 'phone_number', 'agenda', 'outcome']
 _note_edit_filter_fields = ['closed', 'agenda', 'outcome']
 @admin.register(mod.Note)
 class NoteAdmin(comadm.StandardAdmin):

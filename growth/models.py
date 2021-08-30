@@ -1241,20 +1241,28 @@ class OKChemBuyingRequest(Standard):
 class Note(Standard):
     """Note/task related to a user.
 
-    Last updated: 26 August 2021, 11:47 PM
+    Last updated: 30 August 2021, 5:08 PM
     """
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='growth_notes',
+        related_query_name='growth_notes',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
     email = models.ForeignKey(
         'relationships.Email',
-        related_name='emails',
-        related_query_name='emails',
+        related_name='growth_notes',
+        related_query_name='growth_notes',
         null=True,
         blank=True,
         on_delete=models.PROTECT
     )
     phone_number = models.ForeignKey(
         'relationships.PhoneNumber',
-        related_name='notes',
-        related_query_name='notes',
+        related_name='growth_notes',
+        related_query_name='growth_notes',
         null=True,
         blank=True,
         on_delete=models.PROTECT
@@ -1287,8 +1295,10 @@ class Note(Standard):
 
     def clean(self):
         super(Note, self).clean()
-        if self.email is None and self.phone_number is None:
-            raise ValidationError('Either email or phone number must be set.')
+        if self.user is None and self.email is None and \
+            self.phone_number is None:
+            raise ValidationError('Either user or email or phone number must be\
+ set.')
 
 class NoteAgenda(Choice):
     """Agenda of a note.
