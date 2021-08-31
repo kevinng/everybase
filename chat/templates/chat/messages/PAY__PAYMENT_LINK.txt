@@ -1,0 +1,7 @@
+Please pay {{ amount }} at:
+
+{{ payment_link }}
+
+for:
+
+{{ purpose }}

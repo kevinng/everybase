@@ -11,4 +11,4 @@ class Handler(MessageHandler):
 
         self.send_event(events.ENTERED_FREE_TEXT)
         
-        return self.done_reply(intents.MENU, messages.MENU)
+        return self.done_reply(intents.REGISTER, messages.REGISTER__GET_EMAIL)

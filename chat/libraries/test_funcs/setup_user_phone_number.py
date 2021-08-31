@@ -1,9 +1,11 @@
+from datetime import datetime
 from relationships import models as relmods
 
 def setup_user_phone_number(
         name: str = 'Kevin Ng',
         country_code: str = '12345',
-        national_number: str = '1234567890'
+        national_number: str = '1234567890',
+        registered: bool = False
     ):
     """Create user and phone number
 
@@ -15,6 +17,8 @@ def setup_user_phone_number(
         Country code of the user's phone number
     national_number
         National number of the user's phone number
+    registered
+        True if user has registered
     """
     phone_number = relmods.PhoneNumber.objects.create(
         country_code=country_code,
@@ -23,5 +27,9 @@ def setup_user_phone_number(
     user = relmods.User.objects.create(
         phone_number=phone_number,
         name=name)
+
+    if registered:
+        user.registered = datetime.now()
+        user.save()
 
     return (user, phone_number)

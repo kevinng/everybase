@@ -1,0 +1,6 @@
+User ID: {{ user_id }}
+User name: {{ user_name }}
+
+Note URL:
+
+{{ note_url }}

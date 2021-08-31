@@ -1,3 +1,4 @@
+from django.db.models.fields import DateField
 from django.test import TestCase
 from chat import models, views
 
@@ -29,7 +30,8 @@ class ChatTest(TestCase):
             message_key: str = None,
             name: str = 'Kevin Ng',
             country_code: str = '12345',
-            national_number: str = '1234567890'
+            national_number: str = '1234567890',
+            registered: bool = True
         ):
         """TestCase setUp method with additonal parameters for overriding
 
@@ -65,15 +67,15 @@ class ChatTest(TestCase):
 
         # User
         self.user, self.user_ph = self.setup_user_phone_number(
-            name, country_code, national_number)
+            name, country_code, national_number, registered)
 
         # Counter-party, e.g., seller if user is buyer, vice versa
         self.user_2, self.user_2_ph = self.setup_user_phone_number(
-            'Test User 2', '23456', '2345678901')
+            'Test User 2', '23456', '2345678901', registered)
 
         # System user
         self.sys_user, self.sys_user_ph = self.setup_user_phone_number(
-            'Everybase System', '34567', '3456789012')
+            'Everybase System', '34567', '3456789012', registered)
 
         self.match = None
         self.payment_hash = None
@@ -359,7 +361,8 @@ class ChatTest(TestCase):
             self,
             name: str = 'Kevin Ng',
             country_code: str = '12345',
-            national_number: str = '1234567890'
+            national_number: str = '1234567890',
+            registered: bool = True
         ):
         """Create user and phone number
 
@@ -371,9 +374,11 @@ class ChatTest(TestCase):
             Country code of the user's phone number
         national_number
             National number of the user's phone number
+        registered
+            True if user is registered
         """
         user, phone_number = setup_user_phone_number(
-            name, country_code, national_number)
+            name, country_code, national_number, registered)
         
         # Add reference to aid tear down
         self.users.append(user)

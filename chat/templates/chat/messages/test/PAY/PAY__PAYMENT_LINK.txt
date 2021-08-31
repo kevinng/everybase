@@ -1,0 +1,7 @@
+Please pay USD 5.67 at:
+
+{{ payment_link }}
+
+for:
+
+Referral fee for nitrile gloves seller
