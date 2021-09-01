@@ -1,0 +1,6 @@
+Hi {{ name }}, Everybase can help you find buyers and sellers.
+
+*Reply*:
+1. Find buyers
+2. Find sellers
+3. Learn more about our service

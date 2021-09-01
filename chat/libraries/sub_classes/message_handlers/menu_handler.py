@@ -13,6 +13,7 @@ class MenuHandler(MessageHandler):
             messages.GET_LEAD__LOCATION,
             datas.MENU,
             datas.MENU__FIND_BUYERS,
+            params_func=lambda: { 'buying': False },
             amp_event_key=events.CHOSE_FIND_BUYERS
         )
         self.add_option([('2', 0)],
@@ -20,6 +21,7 @@ class MenuHandler(MessageHandler):
             messages.GET_LEAD__LOCATION,
             datas.MENU,
             datas.MENU__FIND_SELLERS,
+            params_func=lambda: { 'buying': True },
             amp_event_key=events.CHOSE_FIND_SELLERS
         )
         # Don't run task functions in tests

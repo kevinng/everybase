@@ -1,3 +1,3 @@
-Everybase match importers and exporters.
+An Everybase human agent will get in touch with you.
 
 {% include 'chat/messages/includes/menu_options.txt' %}

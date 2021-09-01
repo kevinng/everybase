@@ -1,7 +1,0 @@
-Everybase match importers and exporters.
-
-*Reply with option number*:
-1. Find me buyers
-2. Find me sellers
-3. Talk to an Everybase human agent{% if registered == False %}
-4. Register me{% endif %}

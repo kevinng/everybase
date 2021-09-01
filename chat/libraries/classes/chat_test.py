@@ -31,7 +31,7 @@ class ChatTest(TestCase):
             name: str = 'Kevin Ng',
             country_code: str = '12345',
             national_number: str = '1234567890',
-            registered: bool = True
+            registered: bool = False
         ):
         """TestCase setUp method with additonal parameters for overriding
 
@@ -47,6 +47,8 @@ class ChatTest(TestCase):
             Country code of the mock user's phone number
         national_number : String
             National number of the mock user's phone number
+        registered: Bool
+            If true, user is registered
         """
         super().setUp()
 

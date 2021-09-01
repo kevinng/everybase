@@ -1,5 +1,3 @@
-An Everybase human agent will get in touch with you.
-
 *Reply with option number*:
 1. Find me buyers
 2. Find me sellers
