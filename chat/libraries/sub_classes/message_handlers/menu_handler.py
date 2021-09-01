@@ -3,11 +3,12 @@ from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
 from chat.libraries.chosen_funcs.talk_to_an_everybase_human_agent import \
     talk_to_an_everybase_human_agent
+from chat.libraries.classes.context_logic import ContextLogic
 
 class MenuHandler(MessageHandler):
     def run(self):
-        registered = self.message.from_user.registered is not None
-
+        c = ContextLogic(self)
+        
         self.add_option([('1', 0)],
             intents.FIND_BUYERS,
             messages.GET_LEAD__LOCATION,
@@ -32,19 +33,19 @@ class MenuHandler(MessageHandler):
             messages.TALK_TO_HUMAN__CONFIRM,
             datas.MENU,
             datas.MENU__TALK_TO_AN_EVERYBASE_AGENT,
-            params_func=lambda : { 'registered': registered },
+            params_func=lambda : { 'registered': c.is_registered() },
             chosen_func=o3_chosen_func,
             amp_event_key=events.CHOSE_TALK_TO_AN_EVERYBASE_HUMAN_AGENT
         )
 
-        if not registered:
+        if not c.is_registered():
             # User is not registered, provide option to register
             self.add_option([('4', 0)],
                 intents.REGISTER,
                 messages.REGISTER__NAME,
                 datas.MENU,
                 datas.MENU__REGISTER_ME,
-                params_func=lambda : { 'registered': registered },
+                params_func=lambda : { 'registered': c.is_registered() },
                 amp_event_key=events.CHOSE_REGISTER_ME
             )
 

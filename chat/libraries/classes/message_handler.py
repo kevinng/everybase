@@ -432,6 +432,20 @@ class MessageHandler():
         return self.reply_bad_input(
             data_key, intent_key, message_key, params_func)
 
+    def reply_invalid_email(
+            self,
+            data_key: str = None,
+            intent_key: str = None,
+            message_key: str = None,
+            params_func: typing.Callable = None
+        ) -> str:
+        """Call reply_bad_input with a default bad/invalid option message."""
+        if message_key is None:
+            message_key = messages.DO_NOT_UNDERSTAND_EMAIL
+
+        return self.reply_bad_input(
+            data_key, intent_key, message_key, params_func)
+
     def done_to_context(
             self,
             intent_key: str,

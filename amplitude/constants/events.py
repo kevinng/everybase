@@ -15,6 +15,11 @@ CHOSE_FIND_SELLERS = 'CHOSE_FIND_ME_SELLERS'
 CHOSE_TALK_TO_AN_EVERYBASE_HUMAN_AGENT = 'CHOSE_TALK_TO_AN_EVERYBASE_HUMAN_AGENT'
 CHOSE_REGISTER_ME = 'CHOSE_REGISTER_ME'
 
+# Payment
+CLICKED_WHATSAPP_LINK = 'Clicked WhatsApp link'
+CLICKED_PAYMENT_LINK = 'Clicked payment link'
+PAID = 'Paid'
+
 ##### Deprecated 1 Sep 2021 #####
 
 # CHOSE_FIND_BUYERS_WITH_REPLY = 'Chose find-buyers with reply'
@@ -28,6 +33,3 @@ CHOSE_REGISTER_ME = 'CHOSE_REGISTER_ME'
 # CHOSE_BUY_CONTACT_WITH_REPLY = 'Chose buy-contact with reply'
 # CHOSE_STOP_DISCUSSION_WITH_REPLY = 'Chose stop-discussion with reply'
 # CHOSE_ASK_QUESTION_WITH_REPLY = 'Chose ask-question with reply'
-# CLICKED_WHATSAPP_LINK = 'Clicked WhatsApp link'
-# CLICKED_PAYMENT_LINK = 'Clicked payment link'
-# PAID = 'Paid'
