@@ -11,30 +11,34 @@ class MenuHandler(MessageHandler):
         
         self.add_option([('1', 0)],
             intents.FIND_BUYERS,
-            messages.GET_LEAD__LOCATION,
+            # Register first if not registered
+            messages.GET_LEAD__LOCATION if c.is_registered() else \
+                messages.REGISTER__NAME,
             datas.MENU,
             datas.MENU__FIND_BUYERS,
-            params_func=lambda: { 'buying': False },
+            params_func=\
+                lambda: { 'buying': False } if c.is_registered() else None,
             amp_event_key=events.CHOSE_FIND_BUYERS
         )
         self.add_option([('2', 0)],
             intents.FIND_SELLERS,
-            messages.GET_LEAD__LOCATION,
+            # Register first if not registered
+            messages.GET_LEAD__LOCATION if c.is_registered() else \
+                messages.REGISTER__NAME,
             datas.MENU,
             datas.MENU__FIND_SELLERS,
             params_func=lambda: { 'buying': True },
             amp_event_key=events.CHOSE_FIND_SELLERS
         )
-        # Don't run task functions in tests
-        o3_chosen_func = None if self.no_task_calls else \
-            talk_to_an_everybase_human_agent
         self.add_option([('3', 0)],
             intents.TALK_TO_HUMAN,
             messages.TALK_TO_HUMAN__CONFIRM,
             datas.MENU,
             datas.MENU__TALK_TO_AN_EVERYBASE_AGENT,
             params_func=lambda : { 'registered': c.is_registered() },
-            chosen_func=o3_chosen_func,
+            # Don't run tasks in tests
+            chosen_func=None if self.no_task_calls else \
+                talk_to_an_everybase_human_agent,
             amp_event_key=events.CHOSE_TALK_TO_AN_EVERYBASE_HUMAN_AGENT
         )
 

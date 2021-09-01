@@ -9,7 +9,7 @@ class register__register_email_Test(ChatTest):
         self.receive_reply_assert(
             'kevin@everybase.co',
             intents.REGISTER,
-            messages.REGISTER__EMAIL
+            messages.REGISTER__THANK_YOU
         )
         self.assertEqual(self.user.email.email, 'kevin@everybase.co')
 

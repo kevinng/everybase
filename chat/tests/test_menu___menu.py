@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.chat_test import ChatTest
 
-class MenuTest():
+class MenuRegisteredTest():
     fixtures = ['setup/growth__note_agenda.json']
 
     def choose_non_choice(self, input):
@@ -27,7 +27,8 @@ class MenuTest():
         self.receive_reply_assert(
             '1',
             intents.FIND_BUYERS,
-            messages.GET_LEAD__LOCATION
+            messages.GET_LEAD__LOCATION if self.user.registered is not None \
+                else messages.REGISTER__NAME
         )
         self.assert_value(
             datas.MENU,
@@ -38,7 +39,8 @@ class MenuTest():
         self.receive_reply_assert(
             '2',
             intents.FIND_SELLERS,
-            messages.GET_LEAD__LOCATION
+            messages.GET_LEAD__LOCATION if self.user.registered is not None \
+                else messages.REGISTER__NAME
         )
         self.assert_value(
             datas.MENU,
@@ -49,13 +51,27 @@ class MenuTest():
         self.receive_reply_assert(
             '3',
             intents.TALK_TO_HUMAN,
-            messages.TALK_TO_HUMAN__CONFIRM
+            messages.TALK_TO_HUMAN__CONFIRM,
+            target_body_variation_key='REGISTERED'
         )
         self.assert_value(
             datas.MENU,
             value_string=datas.MENU__TALK_TO_AN_EVERYBASE_AGENT
         )
-    
+
+class MenuUnregisteredTest(MenuRegisteredTest):
+    def test_talk_to_an_everybase_human_agent(self):
+        self.receive_reply_assert(
+            '3',
+            intents.TALK_TO_HUMAN,
+            messages.TALK_TO_HUMAN__CONFIRM,
+            target_body_variation_key='UNREGISTERED'
+        )
+        self.assert_value(
+            datas.MENU,
+            value_string=datas.MENU__TALK_TO_AN_EVERYBASE_AGENT
+        )
+
     def test_register_me(self):
         self.receive_reply_assert(
             '4',
@@ -67,6 +83,10 @@ class MenuTest():
             value_string=datas.MENU__REGISTER_ME
         )
 
-class Menu_Menu_Test(MenuTest, ChatTest):
+class Menu_Menu_Registered_Test(MenuRegisteredTest, ChatTest):
     def setUp(self):
-        super().setUp(intents.MENU, messages.MENU)
+        super().setUp(intents.MENU, messages.MENU, registered=True)
+
+class Menu_Menu_Unregistered_Test(MenuUnregisteredTest, ChatTest):
+    def setUp(self):
+        super().setUp(intents.MENU, messages.MENU, registered=False)
