@@ -7,8 +7,8 @@ class MenuTest():
     def choose_non_choice(self, input):
         self.receive_reply_assert(
             input,
-            intents.MENU,
-            messages.MENU,
+            self.intent_key,
+            self.message_key,
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )
