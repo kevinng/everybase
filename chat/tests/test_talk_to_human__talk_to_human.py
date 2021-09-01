@@ -1,18 +1,19 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.chat_test import ChatTest
 
-class MenuMenuV2Test(ChatTest):
+class TalkToHuman_TalkToHuman__Confirm_Test(ChatTest):
     fixtures = ['setup/growth__note_agenda.json']
 
     def setUp(self):
         # Unregistered - so register option available
-        super().setUp(intents.MENU, messages.MENU_V2, registered=False)
+        super().setUp(intents.TALK_TO_HUMAN, messages.TALK_TO_HUMAN,
+            registered=False)
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
             input,
-            intents.MENU,
-            messages.MENU_V2,
+            intents.TALK_TO_HUMAN,
+            messages.TALK_TO_HUMAN,
             target_body_intent_key=intents.NO_INTENT,
             target_body_message_key=messages.DO_NOT_UNDERSTAND_OPTION
         )

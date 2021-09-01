@@ -1,9 +1,12 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.chat_test import ChatTest
 
-class MenuMenuTest(ChatTest):
+class Menu_Menu_Test(ChatTest):
+    fixtures = ['setup/growth__note_agenda.json']
+
     def setUp(self):
-        super().setUp(intents.MENU, messages.MENU)
+        # Unregistered - so register option available
+        super().setUp(intents.MENU, messages.MENU, registered=False)
 
     def choose_non_choice(self, input):
         self.receive_reply_assert(
@@ -22,49 +25,48 @@ class MenuMenuTest(ChatTest):
         self.choose_non_choice('10')
 
     def test_choose_non_choice_with_text(self):
-        self.choose_non_choice('hello')
+        self.choose_non_choice('hello world')
 
-    def choose_new_supply(self, input):
+    def test_find_me_buyers(self):
         self.receive_reply_assert(
-            input,
-            intents.NEW_SUPPLY,
-            messages.SUPPLY__GET_PRODUCT
+            '1',
+            intents.FIND_ME_BUYERS,
+            messages.FIND_BUYERS__GET_LEAD_LOCATION
         )
         self.assert_value(
             datas.MENU,
-            value_string=datas.MENU__FIND_BUYERS
+            value_string=datas.MENU__FIND_ME_BUYERS
         )
 
-    def test_choose_new_supply_with_number(self):
-        self.choose_new_supply('1')
-
-    def test_choose_new_supply_with_text(self):
-        self.choose_new_supply('buyers')
-
-    def choose_new_demand(self, input):
+    def test_find_me_sellers(self):
         self.receive_reply_assert(
-            input,
-            intents.NEW_DEMAND,
-            messages.DEMAND__GET_PRODUCT
+            '2',
+            intents.FIND_ME_SELLERS,
+            messages.FIND_SELLERS__GET_LEAD_LOCATION
         )
         self.assert_value(
             datas.MENU,
-            value_string=datas.MENU__FIND_SELLERS
+            value_string=datas.MENU__FIND_ME_SELLERS
         )
 
-    def test_choose_new_demand_with_number(self):
-        self.choose_new_demand('2')
-
-    def test_choose_new_demand_with_text(self):
-        self.choose_new_demand('sellers')
-
-    def test_learn_more(self):
+    def test_talk_to_an_everybase_human_agent(self):
         self.receive_reply_assert(
             '3',
-            intents.EXPLAIN_SERVICE,
-            messages.EXPLAIN_SERVICE
+            intents.TALK_TO_HUMAN,
+            messages.TALK_TO_HUMAN
         )
         self.assert_value(
             datas.MENU,
-            value_string=datas.MENU__LEARN_MORE
+            value_string=datas.MENU__TALK_TO_AN_EVERYBASE_AGENT
+        )
+    
+    def test_register_me(self):
+        self.receive_reply_assert(
+            '4',
+            intents.REGISTER,
+            messages.REGISTER__GET_NAME
+        )
+        self.assert_value(
+            datas.MENU,
+            value_string=datas.MENU__REGISTER_ME
         )

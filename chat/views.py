@@ -93,16 +93,11 @@ def reply(message, no_external_calls=False, no_task_calls=False):
 class TwilioIncomingMessageView(APIView):
     """Webhook to receiving incoming Twilio message via a POST request."""
     def post(self, request):
-        print('hello world')
-
         # Copy post to Missive
         copy_post_request_data.delay(
             settings.MISSIVE_TWILIO_WA_CALLBACK_URL,
             request.data
         )
-
-        print('hello world 2')
-        print(request)
 
         signature = request.headers.get('X-Twilio-Signature')
         validator = RequestValidator(settings.TWILIO_AUTH_TOKEN)
