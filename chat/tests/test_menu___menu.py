@@ -83,10 +83,10 @@ class MenuUnregisteredTest(MenuRegisteredTest):
             value_string=datas.MENU__REGISTER_ME
         )
 
-class Menu_Menu_Registered_Test(MenuRegisteredTest, ChatTest):
+class MENU___MENU___Registered___Test(MenuRegisteredTest, ChatTest):
     def setUp(self):
         super().setUp(intents.MENU, messages.MENU, registered=True)
 
-class Menu_Menu_Unregistered_Test(MenuUnregisteredTest, ChatTest):
+class MENU___MENU___Unregistered___Test(MenuUnregisteredTest, ChatTest):
     def setUp(self):
         super().setUp(intents.MENU, messages.MENU, registered=False)

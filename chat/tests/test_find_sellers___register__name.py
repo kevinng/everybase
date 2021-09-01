@@ -1,14 +1,14 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.chat_test import ChatTest
 
-class register__register_name_Test(ChatTest):
+class FIND_SELLERS___REGISTER__NAME___Test(ChatTest):
     def setUp(self):
-        super().setUp(intents.REGISTER, messages.REGISTER__NAME, name=None)
+        super().setUp(intents.FIND_SELLERS, messages.REGISTER__NAME, name=None)
 
     def test_enter_name(self):        
         self.receive_reply_assert(
             'Kevin Ng',
-            intents.REGISTER,
+            intents.FIND_SELLERS,
             messages.REGISTER__EMAIL
         )
         self.assertEqual(self.user.name, 'Kevin Ng')
