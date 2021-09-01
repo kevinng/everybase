@@ -33,6 +33,6 @@ class Handler(MessageHandler):
         
         return self.done_reply(
             intents.REGISTER,
-            messages.REGISTER__EMAIL,
+            messages.REGISTER__THANK_YOU,
             params_func=lambda : { 'registered': c.is_registered() }
         )
