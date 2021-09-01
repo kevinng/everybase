@@ -1,4 +1,4 @@
-import pytz
+import pytz, datetime
 from relationships import models as relmods
 from everybase.settings import TIME_ZONE
 
@@ -31,7 +31,7 @@ def setup_user_phone_number(
 
     if registered:
         sgtz = pytz.timezone(TIME_ZONE)
-        user.registered = datetime.now()
+        user.registered = datetime.datetime.now(tz=sgtz)
         user.save()
 
     return (user, phone_number)
