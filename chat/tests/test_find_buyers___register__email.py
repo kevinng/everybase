@@ -3,7 +3,7 @@ from chat.libraries.classes.chat_test import ChatTest
 
 class FIND_BUYERS___REGISTER__EMAIL___Test(ChatTest):
     def setUp(self):
-        super().setUp(intents.FIND_BUYERS, messages.REGISTER__EMAIL, name=None)
+        super().setUp(intents.FIND_BUYERS, messages.REGISTER__EMAIL)
 
     def test_enter_email(self):        
         self.receive_reply_assert(
