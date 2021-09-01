@@ -1,5 +1,6 @@
-from chat.libraries.classes.message_handler import MessageHandler
+from chat.libraries.sub_classes.message_handlers.get_lead__location_handler \
+    import GetLeadLocationHandler
 
-class Handler(MessageHandler):
-    pass
-# Update
+class Handler(GetLeadLocationHandler):
+    def run(self):
+        return super().run(True)
