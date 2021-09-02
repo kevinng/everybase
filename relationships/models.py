@@ -166,7 +166,7 @@ def get_user_key(length=_USER_KEY_LENGTH):
 class User(Standard):
     """User details.
 
-    Last updated: 30 August 2021, 2:42 PM
+    Last updated: 2 September 2021, 9:04 PM
     """
     registered = models.DateTimeField(
         blank=True,
@@ -246,6 +246,16 @@ class User(Standard):
         'QuestionAnswerPair',
         related_name='users_w_this_as_current_qna',
         related_query_name='users_w_this_as_current_qna',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    current_recommendation = models.ForeignKey(
+        'Recommendation',
+        related_name='users_w_this_as_current_recommendation',
+        related_query_name='users_w_this_as_recommendation',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -1512,6 +1522,9 @@ class Recommendation(Standard):
         null=True
     )
 
+    def __str__(self):
+        return f'({self.recommendee}, {self.lead}, [{self.id}])'
+
 CAPTURE_METHOD_TYPE__MANUAL = 'manual'
 CAPTURE_METHOD_TYPE__MENU_OPTION = 'menu_option'
 LEAD_TYPE__SUPPLY = 'supply'
@@ -1568,3 +1581,6 @@ class Lead(Standard):
         ],
         db_index=True
     )
+
+    def __str__(self):
+        return f'({self.display_text}, {self.lead_type}, [{self.id}])'
