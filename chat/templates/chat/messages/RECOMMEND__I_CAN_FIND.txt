@@ -1,6 +1,3 @@
 Please select option 3 you've found a {% if buying == True %}seller{% elif buying == False %}buyer{% endif %} - to get in touch with an Everybase human agent.
 
-*Reply with option number*:
-1. Find me buyers
-2. Find me sellers
-3. Talk to an Everybase human agent
+{% include 'chat/messages/includes/menu_options.txt' %}

@@ -3,6 +3,6 @@ We need {% if buying == True %}sellers{% elif buying == False %}buyers{% endif %
 {{ lead_details }}
 
 *Reply with option number*:
-1. I'm a direct seller
-2. I can find sellers
+1. I'm a direct {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}
+2. I can find {% if buying == True %}sellers{% elif buying == False %}buyers{% endif %}
 3. I'm not interested
