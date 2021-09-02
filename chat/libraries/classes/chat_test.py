@@ -120,6 +120,8 @@ class ChatTest(TestCase):
         models.TwilioInboundMessage.objects.all().delete()
         relmods.Connection.objects.all().delete()
         relmods.PhoneNumberHash.objects.all().delete()
+        relmods.Recommendation.objects.all().delete()
+        relmods.Lead.objects.all().delete()
         relmods.User.objects.all().delete()
         relmods.PhoneNumber.objects.all().delete()
         commods.MatchKeyword.objects.all().delete()
