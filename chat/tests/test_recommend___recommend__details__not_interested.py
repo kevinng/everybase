@@ -2,7 +2,7 @@ from relationships.models import Lead, Recommendation
 from chat.libraries.constants import intents, messages
 from chat.libraries.classes.chat_test import ChatTest
 
-class RECOMMEND___RECOMMEND__DETAILS_NOT_INTERESTED___Registered___Test(
+class RECOMMEND___RECOMMEND__DETAILS__NOT_INTERESTED___Registered___Test(
     ChatTest):
     def setUp(self):
         super().setUp(
