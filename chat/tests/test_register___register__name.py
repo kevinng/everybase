@@ -5,7 +5,7 @@ class REGISTER___REGISTER__NAME___Test(ChatTest):
     def setUp(self):
         super().setUp(intents.REGISTER, messages.REGISTER__NAME, name=None)
 
-    def test_enter_name(self):        
+    def test_enter_name(self):
         self.receive_reply_assert(
             'Kevin Ng',
             intents.REGISTER,
