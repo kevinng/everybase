@@ -1,7 +1,7 @@
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.chat_test import ChatTest
 
-class MenuRegisteredTest():
+class MenuRegisteredTestBase():
     fixtures = ['setup/growth__note_agenda.json']
 
     def choose_non_choice(self, input):
@@ -59,7 +59,7 @@ class MenuRegisteredTest():
             value_string=datas.MENU__TALK_TO_AN_EVERYBASE_AGENT
         )
 
-class MenuUnregisteredTest(MenuRegisteredTest):
+class MenuUnregisteredTestBase(MenuRegisteredTestBase):
     def test_talk_to_an_everybase_human_agent(self):
         self.receive_reply_assert(
             '3',
@@ -83,10 +83,10 @@ class MenuUnregisteredTest(MenuRegisteredTest):
             value_string=datas.MENU__REGISTER_ME
         )
 
-class MENU___MENU___Registered___Test(MenuRegisteredTest, ChatTest):
+class MENU___MENU___Registered___Test(MenuRegisteredTestBase, ChatTest):
     def setUp(self):
         super().setUp(intents.MENU, messages.MENU, registered=True)
 
-class MENU___MENU___Unregistered___Test(MenuUnregisteredTest, ChatTest):
+class MENU___MENU___Unregistered___Test(MenuUnregisteredTestBase, ChatTest):
     def setUp(self):
         super().setUp(intents.MENU, messages.MENU, registered=False)

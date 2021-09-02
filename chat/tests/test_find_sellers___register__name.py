@@ -1,4 +1,4 @@
-from chat.libraries.constants import intents, messages, datas
+from chat.libraries.constants import intents, messages
 from chat.libraries.classes.chat_test import ChatTest
 
 class FIND_SELLERS___REGISTER__NAME___Test(ChatTest):
