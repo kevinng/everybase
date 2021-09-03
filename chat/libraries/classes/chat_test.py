@@ -30,7 +30,7 @@ class ChatTest(TestCase):
             name: str = 'Kevin Ng',
             country_code: str = '12345',
             national_number: str = '1234567890',
-            registered: bool = False
+            registered: bool = True
         ):
         """TestCase setUp method with additonal parameters for overriding
 
@@ -103,6 +103,7 @@ class ChatTest(TestCase):
         for user in relmods.User.objects.all():
             user.current_qna = None
             user.current_match = None
+            user.current_recommendation = None
             user.save()
 
         models.UserContext.objects.all().delete()
