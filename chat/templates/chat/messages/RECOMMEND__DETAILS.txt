@@ -1,8 +1,8 @@
-We need {% if buying == True %}sellers{% elif buying == False %}buyers{% endif %} for:
+We need {% if buying == True %}buyers{% elif buying == False %}sellers{% endif %} for:
 
 {{ lead_details }}
 
 *Reply with option number*:
-1. I'm a direct {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}
-2. I can find {% if buying == True %}sellers{% elif buying == False %}buyers{% endif %}
+1. I'm a direct {% if buying == True %}buyer{% elif buying == False %}seller{% endif %}
+2. I can find {% if buying == True %}buyers{% elif buying == False %}sellers{% endif %}
 3. I'm not interested
