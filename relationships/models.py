@@ -1527,8 +1527,6 @@ class Recommendation(Standard):
 
 CAPTURE_METHOD_TYPE__MANUAL = 'manual'
 CAPTURE_METHOD_TYPE__MENU_OPTION = 'menu_option'
-LEAD_TYPE__SUPPLY = 'supply'
-LEAD_TYPE__DEMAND = 'demand'
 class Lead(Standard):
     """Lead.
     
@@ -1543,6 +1541,11 @@ class Lead(Standard):
     )
 
     display_text = models.TextField(
+        blank=True,
+        null=True
+    )
+    location = models.CharField(
+        max_length=200,
         blank=True,
         null=True
     )
