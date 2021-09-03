@@ -388,14 +388,14 @@ class RecommendationAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['recommendee', 'lead']
 
 _lead_fields = ['owner', 'display_text', 'country', 'state',
-    'capture_method_type', 'lead_type']
+    'is_buying', 'capture_method_type']
 @admin.register(mod.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _lead_fields
     list_editable = comadm.standard_list_editable + _lead_fields
     list_filter = comadm.standard_list_filter + ['country', 'state',
-        'capture_method_type', 'lead_type']
+        'is_buying', 'capture_method_type']
     search_fields = comadm.standard_search_fields + ['display_text']
 
     # Details page settings

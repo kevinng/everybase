@@ -1532,7 +1532,7 @@ LEAD_TYPE__DEMAND = 'demand'
 class Lead(Standard):
     """Lead.
     
-    Last updated: 29 August 2021, 5:05 PM
+    Last updated:  3 September 2021, 2:20 PM
     """
     owner = models.ForeignKey(
         'relationships.User',
@@ -1565,19 +1565,16 @@ class Lead(Standard):
         db_index=True
     )
 
+    is_buying = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     capture_method_type = models.CharField(
         max_length=50,
         choices=[
             (CAPTURE_METHOD_TYPE__MANUAL, 'Manual'),
             (CAPTURE_METHOD_TYPE__MENU_OPTION, 'Menu Option')
-        ],
-        db_index=True
-    )
-    lead_type = models.CharField(
-        max_length=50,
-        choices=[
-            (LEAD_TYPE__DEMAND, 'Demand'),
-            (LEAD_TYPE__SUPPLY, 'Supply')
         ],
         db_index=True
     )
