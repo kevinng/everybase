@@ -3,7 +3,12 @@ from chat.libraries.classes.chat_test import ChatTest
 
 class REGISTER___REGISTER__EMAIL___Test(ChatTest):
     def setUp(self):
-        super().setUp(intents.REGISTER, messages.REGISTER__EMAIL, name=None)
+        super().setUp(
+            intents.REGISTER,
+            messages.REGISTER__EMAIL,
+            name=None,
+            registered=False
+        )
 
     def test_enter_email(self):        
         self.receive_reply_assert(
