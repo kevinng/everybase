@@ -86,7 +86,8 @@ class ChatTest(TestCase):
 
         lead = relmods.Lead(
             owner=self.user_2,
-            is_buying=is_buying
+            is_buying=is_buying,
+            display_text='Example lead details'
         )
         lead.save()
         self.user.current_recommendation = relmods.Recommendation.objects.create(
