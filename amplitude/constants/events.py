@@ -10,15 +10,20 @@ INVALID_NUMBER = 'Invalid number'
 DO_NOT_UNDERSTAND_OPTION = 'Do not understand option'
 
 # Menu
-CHOSE_FIND_BUYERS = 'CHOSE_FIND_ME_BUYERS'
-CHOSE_FIND_SELLERS = 'CHOSE_FIND_ME_SELLERS'
-CHOSE_TALK_TO_AN_EVERYBASE_HUMAN_AGENT = 'CHOSE_TALK_TO_AN_EVERYBASE_HUMAN_AGENT'
-CHOSE_REGISTER_ME = 'CHOSE_REGISTER_ME'
+CHOSE_FIND_BUYERS = 'Chose find me buyers'
+CHOSE_FIND_SELLERS = 'Chose find me sellers'
+CHOSE_TALK_TO_AN_EVERYBASE_HUMAN_AGENT = 'Chose talk to an Everybase agent'
+CHOSE_REGISTER_ME = 'Chose register me'
 
 # Payment
 CLICKED_WHATSAPP_LINK = 'Clicked WhatsApp link'
 CLICKED_PAYMENT_LINK = 'Clicked payment link'
 PAID = 'Paid'
+
+# Recommend details
+CHOSE_DIRECT = 'Chose I am direct'
+CHOSE_CAN_FIND = 'Chose I can find'
+CHOSE_NOT_INTERESTED = 'Chose not interested'
 
 ##### Deprecated 1 Sep 2021 #####
 

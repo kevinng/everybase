@@ -30,7 +30,8 @@ class ChatTest(TestCase):
             name: str = 'Kevin Ng',
             country_code: str = '12345',
             national_number: str = '1234567890',
-            registered: bool = True
+            registered: bool = True,
+            is_buying: bool = True
         ):
         """TestCase setUp method with additonal parameters for overriding
 
@@ -48,6 +49,8 @@ class ChatTest(TestCase):
             National number of the mock user's phone number
         registered: Bool
             If true, user is registered
+        is_buying: Bool
+            If true, user is buying
         """
         super().setUp()
 
@@ -83,7 +86,7 @@ class ChatTest(TestCase):
 
         lead = relmods.Lead(
             owner=self.user_2,
-            is_buying=True
+            is_buying=is_buying
         )
         lead.save()
         self.user.current_recommendation = relmods.Recommendation.objects.create(
