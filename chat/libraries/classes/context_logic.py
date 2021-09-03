@@ -30,6 +30,13 @@ class ContextLogic():
 
         return r.lead.is_buying
 
+    def get_lead(self) -> relmods.Lead:
+        r = self.message_handler.message.from_user.current_recommendation
+        if r is None:
+            return None
+        
+        return r.lead
+
     # ##### Supply/Demand #####
 
     # def get_match(self) -> relmods.Match:
