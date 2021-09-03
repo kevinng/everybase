@@ -10,11 +10,6 @@ class RECOMMEND___RECOMMEND__DETAILS__NOT_INTERESTED___Registered___Test(
             messages.RECOMMEND__DETAILS__NOT_INTERESTED,
             registered=True
         )
-        lead = Lead.objects.create(owner=self.user_2)
-        self.user.current_recommendation = Recommendation.objects.create(
-            recommendee=self.user,
-            lead=lead
-        )
 
     def test_enter_reason(self):
         reason = 'I dun like it'

@@ -1,4 +1,3 @@
-from django.db.models.fields import DateField
 from django.test import TestCase
 from chat import models, views
 
@@ -81,6 +80,12 @@ class ChatTest(TestCase):
 
         self.match = None
         self.payment_hash = None
+
+        lead = relmods.Lead.objects.create(owner=self.user_2)
+        self.user.current_recommendation = relmods.Recommendation.objects.create(
+            recommendee=self.user,
+            lead=lead
+        )
 
         if intent_key is not None and message_key is not None:
             start_context(self.user, intent_key, message_key)
