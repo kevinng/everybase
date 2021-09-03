@@ -12,7 +12,7 @@ class Handler(MessageHandler):
             datas.RECOMMEND__DETAILS,
             datas.RECOMMEND__DETAILS__DIRECT,
             params_func=lambda: { 'registered': c.is_registered() },
-            amp_event_key=events.CHOSE_DIRECT
+            amp_event_key=events.RECOMMEND__DETAILS__DIRECT
         )
         self.add_option([('2', 0)],
             intents.RECOMMEND,
@@ -23,14 +23,14 @@ class Handler(MessageHandler):
                 'buying': c.is_buying(),
                 'registered': c.is_registered()
             },
-            amp_event_key=events.CHOSE_CAN_FIND
+            amp_event_key=events.RECOMMEND__DETAILS__CAN_FIND
         )
         self.add_option([('3', 0)],
             intents.RECOMMEND,
             messages.RECOMMEND__DETAILS__NOT_INTERESTED,
             datas.RECOMMEND__DETAILS,
             datas.RECOMMEND__DETAILS__NOT_INTERESTED,
-            amp_event_key=events.CHOSE_NOT_INTERESTED
+            amp_event_key=events.RECOMMEND__DETAILS__NOT_INTERESTED
         )
 
         return self.reply_option()
