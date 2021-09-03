@@ -33,17 +33,17 @@ class TestBase():
             value_string=datas.RECOMMEND__PRODUCT_TYPE__YES
         )
 
-    # def test_not_now(self):
-    #     self.receive_reply_assert(
-    #         '2',
-    #         intents.RECOMMEND,
-    #         messages.RECOMMEND__NOT_NOW_CONFIRM,
-    #         target_body_variation_key='REGISTERED'
-    #     )
-    #     self.assert_value(
-    #         datas.RECOMMEND__PRODUCT_TYPE,
-    #         value_string=datas.RECOMMEND__PRODUCT_TYPE__NOT_NOW
-    #     )
+    def test_not_now(self):
+        self.receive_reply_assert(
+            '2',
+            intents.RECOMMEND,
+            messages.RECOMMEND__NOT_NOW_CONFIRM,
+            target_body_variation_key='REGISTERED'
+        )
+        self.assert_value(
+            datas.RECOMMEND__PRODUCT_TYPE,
+            value_string=datas.RECOMMEND__PRODUCT_TYPE__NOT_NOW
+        )
 
     def _test_not_interested(self, is_buying):
         self.receive_reply_assert(
