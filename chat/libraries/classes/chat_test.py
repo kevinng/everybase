@@ -81,7 +81,11 @@ class ChatTest(TestCase):
         self.match = None
         self.payment_hash = None
 
-        lead = relmods.Lead.objects.create(owner=self.user_2)
+        lead = relmods.Lead(
+            owner=self.user_2,
+            is_buying=True
+        )
+        lead.save()
         self.user.current_recommendation = relmods.Recommendation.objects.create(
             recommendee=self.user,
             lead=lead
