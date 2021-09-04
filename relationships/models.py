@@ -261,6 +261,15 @@ class User(Standard):
         blank=True,
         db_index=True
     )
+    current_lead = models.ForeignKey(
+        'Lead',
+        related_name='users_w_this_as_current_lead',
+        related_query_name='users_w_this_as_current_lead',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     def __str__(self):
         return f'({self.name}, {self.email}, {self.phone_number} [{self.id}])'

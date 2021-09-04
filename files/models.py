@@ -3,6 +3,11 @@ from common.models import Standard
 import uuid
 
 class File(Standard):
+    """File in S3
+    
+    Last updated: 4 September 2021, 8:40 PM
+    """
+    
     upload_confirmed = models.DateTimeField(
         default=None,
         null=True,
@@ -47,6 +52,16 @@ class File(Standard):
     )
     s3_object_last_modified = models.DateTimeField(
         default=None,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    current_lead = models.ForeignKey(
+        'relationships.Lead',
+        related_name='files',
+        related_query_name='files',
+        on_delete=models.PROTECT,
         null=True,
         blank=True,
         db_index=True
