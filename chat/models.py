@@ -551,7 +551,7 @@ class MessageDataset(Standard):
     """A set of data extracted in-context for a message. A context is a unique
     intent-message pair for an incoming Twilio message.
 
-    Last updated: 29 August 2021, 8:02 PM
+    Last updated: 4 September 2021, 2:39 PM
     """
     intent_key = models.CharField(
         max_length=200,
@@ -592,16 +592,6 @@ class MessageDataset(Standard):
         db_index=True
     )
 
-    lead = models.ForeignKey(
-        'relationships.Lead',
-        related_name='datasets',
-        related_query_name='datasets',
-        blank=True,
-        null=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
     def __str__(self):
         return f'({self.intent_key}, {self.message_key}, {self.in_message}, \
 {self.out_message} [{self.id}])'
@@ -625,7 +615,7 @@ class MessageDataset(Standard):
 class MessageDataValue(Standard):
     """Data value extracted from an incoming Twilio message in its context
 
-    Last updated: 29 August 2021, 8:02 PM
+    Last updated: 4 September 2021, 2:39 PM
     """
     dataset = models.ForeignKey(
         'MessageDataset',
@@ -660,13 +650,6 @@ class MessageDataValue(Standard):
     value_id = models.IntegerField(
         null=True,
         blank=True,
-        db_index=True
-    )
-    value_file = models.ForeignKey(
-        'files.File',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
         db_index=True
     )
 
