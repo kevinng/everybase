@@ -1,5 +1,5 @@
 from django.db import models
-from common.models import Standard, Choice
+from common.models import Standard
 import uuid
 
 class File(Standard):
