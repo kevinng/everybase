@@ -3,7 +3,7 @@ from botocore.exceptions import ClientError
 from django.http import Http404
 from rest_framework import serializers
 from everybase import settings
-from .models import File
+from files.models import File
 from datetime import datetime
 import uuid
 
