@@ -1,3 +1,5 @@
+import pytz, datetime
+from everybase.settings import TIME_ZONE
 from django.core.exceptions import ValidationError
 from amplitude.constants import events
 from relationships.models import Email
@@ -21,6 +23,11 @@ class RegisterEmailHandler(MessageHandler):
                 user.email.email = body
             user.email.full_clean()
             user.email.save()
+
+            # This is the last step of registration - register user
+            sgtz = pytz.timezone(TIME_ZONE)
+            user.registered = datetime.datetime.now(tz=sgtz)
+
             user.save()
         except ValidationError:
             self.save_body_as_string(datas.STRAY_INPUT)
