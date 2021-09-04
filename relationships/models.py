@@ -1592,4 +1592,4 @@ class Lead(Standard):
     )
 
     def __str__(self):
-        return f'({self.display_text}, {self.lead_type}, [{self.id}])'
+        return f'({self.display_text}, [{self.id}])'

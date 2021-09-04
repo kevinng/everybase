@@ -128,7 +128,7 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['import_job']
 
 _user_fields = ['registered', 'phone_number', 'name', 'is_banned', 'notes',
-    'email', 'country', 'state', 'current_recommendation']
+    'email', 'country', 'state', 'current_recommendation', 'current_lead']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
@@ -146,7 +146,7 @@ class UserAdmin(comadm.StandardAdmin):
         ('Details', {'fields': ['key'] + _user_fields})
     ]
     autocomplete_fields = ['phone_number', 'email', 'country',
-        'state', 'current_recommendation']
+        'state', 'current_recommendation', 'current_lead']
 
 _phone_number_hash_fields = ['user', 'phone_number_type', 'phone_number']
 @admin.register(mod.PhoneNumberHash)
