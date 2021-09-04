@@ -1,3 +1,4 @@
+from files.models import File
 from django.contrib import admin
 
 from . import models as mod
@@ -387,6 +388,10 @@ class RecommendationAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['recommendee', 'lead']
 
+class FileInlineAdmin(admin.TabularInline):
+    model = File
+    extra = 1
+
 _lead_fields = ['owner', 'display_text', 'country', 'state',
     'is_buying', 'capture_method_type']
 @admin.register(mod.Lead)
@@ -403,3 +408,4 @@ class LeadAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _lead_fields})
     ]
     autocomplete_fields = ['owner', 'country', 'state']
+    inlines = [FileInlineAdmin]
