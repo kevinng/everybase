@@ -57,7 +57,7 @@ class File(Standard):
         db_index=True
     )
 
-    current_lead = models.ForeignKey(
+    lead = models.ForeignKey(
         'relationships.Lead',
         related_name='files',
         related_query_name='files',
