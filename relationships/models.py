@@ -1593,3 +1593,17 @@ class Lead(Standard):
 
     def __str__(self):
         return f'({self.display_text}, [{self.id}])'
+
+class LeadText(Standard):
+    """Text for a lead.
+
+    Last updated: 5 September 2021, 4:10 PM
+    """
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='texts',
+        related_query_name='texts',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    text = models.TextField()

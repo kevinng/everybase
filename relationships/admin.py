@@ -392,6 +392,10 @@ class FileInlineAdmin(admin.TabularInline):
     model = File
     extra = 1
 
+class LeadTextInlineAdmin(admin.TabularInline):
+    model = mod.LeadText
+    extra = 1
+
 _lead_fields = ['owner', 'display_text', 'country', 'state',
     'is_buying', 'capture_method_type']
 @admin.register(mod.Lead)
@@ -408,4 +412,18 @@ class LeadAdmin(comadm.StandardAdmin):
         ('Details', {'fields': _lead_fields})
     ]
     autocomplete_fields = ['owner', 'country', 'state']
-    inlines = [FileInlineAdmin]
+    inlines = [FileInlineAdmin, LeadTextInlineAdmin]
+
+_lead_text_fields = ['lead', 'text']
+@admin.register(mod.LeadText)
+class LeadTextAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _lead_text_fields
+    list_editable = comadm.standard_list_editable + _lead_text_fields
+    search_fields = comadm.standard_search_fields + ['text']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        ('Details', {'fields': _lead_text_fields})
+    ]
+    autocomplete_fields = ['lead']
