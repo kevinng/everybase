@@ -36,7 +36,7 @@ def save_lead_media(
         s3_bucket_name=AWS_STORAGE_BUCKET_NAME,
         s3_object_content_type=content_type
     )
-    filename = file.uuid
+    filename = str(file.uuid)
     s3_object_key = f'chat/leads/{lead_id}/medias/{filename}'
     file.s3_object_key=s3_object_key
 
