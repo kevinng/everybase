@@ -34,20 +34,13 @@ class ContextLogic():
         """Returns this user's current recommendation"""
         return self.message_handler.message.from_user.current_recommendation
 
-    def get_lead(self) -> relmods.Lead:
-        """Returns lead for this user's current recommendation"""
-        if self.get_recommendation() is None:
-            return None
-        
-        return self.get_recommendation().lead
-
-    def get_lead_display_text(self) -> str:
+    def get_recommendation_lead_display_text(self) -> str:
         """Return this user's current recommendation's lead display text"""
-        if self.get_lead() is None:
+        r = self.get_recommendation()
+        if r is None:
             return None
 
-        return self.get_lead().display_text
-
+        return r.lead.display_text
 
     # ##### Supply/Demand #####
 
