@@ -314,105 +314,105 @@ def redirect_checkout_page(request, id):
 
     return render(request, 'chat/pages/checkout.html', context)
 
-class StripeFulfilmentCallbackView(APIView):
-    """Webhook to receive Stripe fuilfilment callback."""
-    def post(self, request):
+# class StripeFulfilmentCallbackView(APIView):
+#     """Webhook to receive Stripe fuilfilment callback."""
+#     def post(self, request):
 
-        endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
-        payload = request.body
-        sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-        event = None
+#         endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+#         payload = request.body
+#         sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+#         event = None
 
-        try:
-            event = stripe.Webhook.construct_event(
-                payload, sig_header, endpoint_secret
-            )
-        except ValueError as e:
-            # Invalid payload
-            return HttpResponse(status=400)
-        except stripe.error.SignatureVerificationError as e:
-            # Invalid signature
-            return HttpResponse(status=400)
+#         try:
+#             event = stripe.Webhook.construct_event(
+#                 payload, sig_header, endpoint_secret
+#             )
+#         except ValueError as e:
+#             # Invalid payload
+#             return HttpResponse(status=400)
+#         except stripe.error.SignatureVerificationError as e:
+#             # Invalid signature
+#             return HttpResponse(status=400)
 
-        if event['type'] == 'checkout.session.completed':
-            s = event['data']['object']
-            cd = s.get('customer_details')
-            session = paymods.StripeCallbackCheckoutSession.objects.create(
-                session_id=s.get('id'),
-                amount_total=s.get('amount_total'),
-                currency=s.get('currency'),
-                customer=s.get('customer'),
-                customer_details_email=cd.get('email') if cd is not None else None,
-                mode=s.get('mode'),
-                payment_intent=s.get('payment_intent'),
-                payment_status=s.get('payment_status'),
-                success_url=s.get('success_url'),
-                cancel_url=s.get('cancel_url')
-            )
+#         if event['type'] == 'checkout.session.completed':
+#             s = event['data']['object']
+#             cd = s.get('customer_details')
+#             session = paymods.StripeCallbackCheckoutSession.objects.create(
+#                 session_id=s.get('id'),
+#                 amount_total=s.get('amount_total'),
+#                 currency=s.get('currency'),
+#                 customer=s.get('customer'),
+#                 customer_details_email=cd.get('email') if cd is not None else None,
+#                 mode=s.get('mode'),
+#                 payment_intent=s.get('payment_intent'),
+#                 payment_status=s.get('payment_status'),
+#                 success_url=s.get('success_url'),
+#                 cancel_url=s.get('cancel_url')
+#             )
 
-            try:
-                hash = paymods.PaymentHash.objects.get(
-                    session_id=session.session_id)
-            except Exception as e:
-                sentry_sdk.capture_exception(e)
+#             try:
+#                 hash = paymods.PaymentHash.objects.get(
+#                     session_id=session.session_id)
+#             except Exception as e:
+#                 sentry_sdk.capture_exception(e)
 
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            now = datetime.datetime.now(tz=sgtz)
+#             sgtz = pytz.timezone(settings.TIME_ZONE)
+#             now = datetime.datetime.now(tz=sgtz)
 
-            if session.payment_status == \
-                paymods.StripeCallbackCheckoutSession_Paid:
-                hash.succeeded = now
-                match = hash.match
+#             if session.payment_status == \
+#                 paymods.StripeCallbackCheckoutSession_Paid:
+#                 hash.succeeded = now
+#                 match = hash.match
 
-                # Make Amplitude call
-                send_event.delay(
-                    user_id=hash.user.id,
-                    event_type=events.PAID,
-                    user_properties={
-                        keys.COUNTRY_CODE: hash.user.phone_number.country_code
-                    },
-                    app_version=settings.APP_VERSION,
-                    product_id=hash.price.id,
-                    revenue=hash.price.value
-                )
+#                 # Make Amplitude call
+#                 send_event.delay(
+#                     user_id=hash.user.id,
+#                     event_type=events.PAID,
+#                     user_properties={
+#                         keys.COUNTRY_CODE: hash.user.phone_number.country_code
+#                     },
+#                     app_version=settings.APP_VERSION,
+#                     product_id=hash.price.id,
+#                     revenue=hash.price.value
+#                 )
 
-                # Fulfill order
-                exchange_contacts.delay(match.id)
+#                 # Fulfill order
+#                 exchange_contacts.delay(match.id)
 
-                # Update match
-                if hash.user.id == match.supply.user.id:
-                    # Seller paid
-                    match.seller_bought_contact = now
-                    match.seller_payment_hash = hash
-                else:
-                    # Buyer paid
-                    match.buyer_bought_contact = now
-                    match.buyer_payment_hash = hash
+#                 # Update match
+#                 if hash.user.id == match.supply.user.id:
+#                     # Seller paid
+#                     match.seller_bought_contact = now
+#                     match.seller_payment_hash = hash
+#                 else:
+#                     # Buyer paid
+#                     match.buyer_bought_contact = now
+#                     match.buyer_payment_hash = hash
 
-                match.save()
-            elif session.payment_status == \
-                paymods.StripeCallbackCheckoutSession_Unpaid:
-                hash.failed = now
+#                 match.save()
+#             elif session.payment_status == \
+#                 paymods.StripeCallbackCheckoutSession_Unpaid:
+#                 hash.failed = now
 
-            hash.save()
+#             hash.save()
 
-        # Passed signature verification
-        return HttpResponse(status=200)
+#         # Passed signature verification
+#         return HttpResponse(status=200)
 
-class SendConfirmInterestsView(APIView):
-    """API to send confirm interest messages"""
-    def post(self, request):
-        match_id = request.data.get('match_id')
+# class SendConfirmInterestsView(APIView):
+#     """API to send confirm interest messages"""
+#     def post(self, request):
+#         match_id = request.data.get('match_id')
         
-        if match_id is None:
-            return HttpResponse('match_id is None',
-                status=HTTPStatus.BAD_REQUEST)
+#         if match_id is None:
+#             return HttpResponse('match_id is None',
+#                 status=HTTPStatus.BAD_REQUEST)
 
-        send_confirm_interests.delay(
-            match_id=match_id,
-            buyer_only=request.data.get('buyer_only'),
-            seller_only=request.data.get('seller_only'),
-            no_external_calls=request.data.get('no_external_calls')
-        )
+#         send_confirm_interests.delay(
+#             match_id=match_id,
+#             buyer_only=request.data.get('buyer_only'),
+#             seller_only=request.data.get('seller_only'),
+#             no_external_calls=request.data.get('no_external_calls')
+#         )
 
-        return HttpResponse('Done', status=HTTPStatus.OK)
+#         return HttpResponse('Done', status=HTTPStatus.OK)

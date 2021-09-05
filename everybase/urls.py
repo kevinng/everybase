@@ -33,7 +33,7 @@ def trigger_handled_error(request):
 
 urlpatterns = [
     path('common/', include('common.urls')),
-    path('files/', include('files.urls')),
+    path('files/', include('files.urls', namespace='files')),
     path('growth/', include('growth.urls')),
     path('chat/', include('chat.urls')),
     path('', include('chat.urls_root')),

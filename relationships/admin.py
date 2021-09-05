@@ -1,3 +1,8 @@
+from everybase.settings import BASE_URL
+from urllib.parse import urljoin
+from django.urls import reverse
+from django.utils.html import format_html
+
 from files.models import File
 from django.contrib import admin
 
@@ -391,6 +396,18 @@ class RecommendationAdmin(comadm.StandardAdmin):
 class FileInlineAdmin(admin.TabularInline):
     model = File
     extra = 1
+    fields = ['file_url', 'upload_confirmed', 's3_bucket_name',
+        's3_object_key', 's3_object_content_length', 's3_object_e_tag',
+        's3_object_content_type', 's3_object_last_modified', 'lead']
+    readonly_fields = ['uuid', 'file_url']
+
+    def file_url(self, obj):
+        if obj.id is None:
+            return None
+
+        url = urljoin(
+            BASE_URL, reverse('files:get_file', args=[obj.id]))
+        return format_html(f'<a href="{url}">{url}</a>')
 
 class LeadTextInlineAdmin(admin.TabularInline):
     model = mod.LeadText

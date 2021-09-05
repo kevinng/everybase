@@ -11,7 +11,7 @@ urlpatterns = [
         name='status_update_message'),
     path(f'{webhook_root}/status/',
         views.TwilioIncomingStatusView.as_view(), name='status_update'),
-    path(f'{webhook_root}/fulfill/',
-        views.StripeFulfilmentCallbackView.as_view()),
-    path(f'send_confirm_interests/', views.SendConfirmInterestsView.as_view())
+    # path(f'{webhook_root}/fulfill/',
+    #     views.StripeFulfilmentCallbackView.as_view()),
+    # path(f'send_confirm_interests/', views.SendConfirmInterestsView.as_view())
 ]
