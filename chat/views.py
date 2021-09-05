@@ -28,8 +28,6 @@ from chat.libraries.utility_funcs.save_status_callback_log import \
 from chat.libraries.utility_funcs.get_support_phone_number import \
     get_support_phone_number
 
-from chat.tasks.send_confirm_interests import send_confirm_interests
-from chat.tasks.exchange_contacts import exchange_contacts
 from chat.tasks.copy_post_request_data import copy_post_request_data
 
 from amplitude.tasks.send_event import send_event
