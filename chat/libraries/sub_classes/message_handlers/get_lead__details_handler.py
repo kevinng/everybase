@@ -2,6 +2,7 @@ from chat.libraries.constants import messages
 from chat.libraries.classes.message_handler import MessageHandler
 from chat.tasks.save_lead_media import save_lead_media
 from chat.libraries.utility_funcs.render_message import render_message
+from relationships.models import LeadText
 
 class GetLeadDetailsHandler(MessageHandler):
     def run(self):
@@ -13,6 +14,11 @@ class GetLeadDetailsHandler(MessageHandler):
             return self.done_reply(
                 self.intent_key,
                 messages.GET_LEAD__THANK_YOU
+            )
+        else:
+            LeadText.objects.create(
+                lead=lead,
+                text=self.message.body.strip()
             )
 
         return render_message(messages.GET_LEAD__DETAILS_PROMPT, None)
