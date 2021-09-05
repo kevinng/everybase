@@ -1,5 +1,5 @@
 Thanks for letting us know what you want to buy.
 
-We'll check with {% if buying == True %}sellers{% elif %}buyers{% endif %} and update you here.
+We'll check with {% if buying == True %}sellers{% elif buying == False %}buyers{% endif %} and update you here.
 
 {% include 'chat/messages/includes/menu_options.txt' %}
