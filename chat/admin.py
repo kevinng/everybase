@@ -208,7 +208,7 @@ class UserContextAdmin(comadm.StandardAdmin):
     list_editable = comadm.standard_list_editable + \
         _user_context_fields
     list_filter = comadm.standard_choice_list_filter + \
-        _user_context_fields
+        ['started', 'done', 'expired', 'paused', 'intent_key', 'message_key']
     search_fields = comadm.standard_search_fields + \
         ['user__phone_number__country_code',
         'user__phone_number__national_number']
