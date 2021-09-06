@@ -20,7 +20,7 @@ class Handler(MessageHandler):
             datas.RECOMMEND__DETAILS,
             datas.RECOMMEND__DETAILS__CAN_FIND,
             params_func=lambda: {
-                'buying': c.is_buying(),
+                'buying': c.is_current_recommendation_buying(),
                 'registered': c.is_registered()
             },
             amp_event_key=events.RECOMMEND__DETAILS__CAN_FIND

@@ -108,6 +108,7 @@ class ChatTest(TestCase):
             user.current_qna = None
             user.current_match = None
             user.current_recommendation = None
+            user.current_lead = None
             user.save()
 
         models.UserContext.objects.all().delete()

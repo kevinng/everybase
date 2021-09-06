@@ -20,15 +20,25 @@ class ContextLogic():
         """
         return self.message_handler.message.from_user.registered is not None
 
-    def is_buying(self) -> bool:
-        """Returns true if user is buying, False if selling, None if user
-        does not have a current recommendation."""
+    def is_current_recommendation_buying(self) -> bool:
+        """Returns True if this user is buying, False if selling, None if this
+        user does not have a current recommendation."""
         r = self.message_handler.message.from_user.current_recommendation
 
         if r is None:
             return None
 
         return r.lead.is_buying
+
+    def is_current_lead_buying(self) -> bool:
+        """Returns True if this user's current lead is buying, False if
+        otherwise, None if this user does not have a current lead."""
+        l = self.message_handler.message.from_user.current_lead
+
+        if l is None:
+            return None
+
+        return l.is_buying
 
     def get_recommendation(self) -> relmods.Recommendation:
         """Returns this user's current recommendation"""

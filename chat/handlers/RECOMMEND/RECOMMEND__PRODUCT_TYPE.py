@@ -13,7 +13,7 @@ class Handler(MessageHandler):
             datas.RECOMMEND__PRODUCT_TYPE,
             datas.RECOMMEND__PRODUCT_TYPE__YES,
             params_func=lambda: {
-                'buying': c.is_buying(),
+                'buying': c.is_current_recommendation_buying(),
                 'lead_details': c.get_recommendation_lead_display_text()
             },
             amp_event_key=events.RECOMMEND__PRODUCT_TYPE__YES
