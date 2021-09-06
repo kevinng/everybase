@@ -9,6 +9,7 @@ class GetLeadLocationHandler(MessageHandler):
         lead = Lead.objects.create(
             owner=user,
             capture_method_type=CAPTURE_METHOD_TYPE__MENU_OPTION,
+            is_buying=buying,
             location=self.message.body.strip() # Store location
         )
         user.current_lead = lead

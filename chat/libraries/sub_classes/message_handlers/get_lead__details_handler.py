@@ -13,6 +13,7 @@ class GetLeadDetailsHandler(MessageHandler):
 
         if self.message.body.strip() == 'done':
             c = ContextLogic(self)
+            print(c.is_current_lead_buying())
             return self.done_reply(
                 self.intent_key,
                 messages.GET_LEAD__THANK_YOU,
