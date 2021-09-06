@@ -131,11 +131,13 @@ class ChatTest(TestCase):
         ampmods.Session.objects.all().delete()
         models.MessageDataValue.objects.all().delete()
         models.MessageDataset.objects.all().delete()
+        models.TwilioInboundMessageMedia.objects.all().delete()
         models.TwilioOutboundMessage.objects.all().delete()
         models.TwilioInboundMessage.objects.all().delete()
         relmods.Connection.objects.all().delete()
         relmods.PhoneNumberHash.objects.all().delete()
         relmods.Recommendation.objects.all().delete()
+        relmods.LeadText.objects.all().delete()
         relmods.Lead.objects.all().delete()
         relmods.User.objects.all().delete()
         relmods.PhoneNumber.objects.all().delete()
@@ -241,7 +243,9 @@ class ChatTest(TestCase):
             target_body_intent_key: str = None,
             target_body_message_key: str = None,
             target_body_params_func: str = None,
-            target_body_variation_key: str = None
+            target_body_variation_key: str = None,
+            content_type: str = None,
+            url: str = None
         ):
         """Receive inbound message, reply, assert - after-reply context and
         target message text.
@@ -270,8 +274,14 @@ class ChatTest(TestCase):
         target_body_variation_key
             If specified, we will use this key to pick-up specific variation
             of the after-reply target response text.
+        content_type
+            If content_type and url are not done, will assert media
+            associated with this message with content_type and url as the
+            media's content-type and URL respectively.
+        url
+            Ditto content_type description.
         """
-        response = self.receive_reply(body)
+        response, _, media = self.receive_reply(body, content_type, url)
         response_body = get_twilml_body(response)
 
         self.send_assert(
@@ -283,6 +293,10 @@ class ChatTest(TestCase):
             target_body_params_func,
             target_body_variation_key
         )
+
+        if media is not None:
+            self.assertEqual(media.content_type, content_type)
+            self.assertEqual(media.url, url)
 
     def assert_latest_value(
             self,
@@ -656,18 +670,44 @@ class ChatTest(TestCase):
         
         return messages[intent_key][message_key]
 
+    def setup_media(
+            self,
+            message: models.TwilioInboundMessage,
+            content_type: str,
+            url: str):
+        return models.TwilioInboundMessageMedia.objects.create(
+            message=message,
+            content_type=content_type,
+            url=url
+        )
+
     def receive_reply(
             self,
-            body: str
+            body,
+            content_type: str = None,
+            url: str = None
         ):
-        """Receive inbound message in this context and reply with message body
+        """Receive inbound message in this context and reply with message body.
         
         body
             Message body
+        content_type
+            If content_type and url are not done, will create a media
+            associated with this message with content_type and url as the
+            media's content-type and URL respectively.
+        url
+            Ditto content_type description.
         """
         message = self.setup_inbound_message(
             self.intent_key,
             self.message_key,
             body
         )
-        return views.reply(message, no_external_calls=True, no_task_calls=True)
+
+        media = None
+        if content_type is not None and url is not None:
+            media = self.setup_media(message, content_type, url)
+
+        return \
+            (views.reply(message, no_external_calls=True, no_task_calls=True),
+            message, media)

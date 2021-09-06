@@ -1,4 +1,4 @@
-Thanks for letting us know what you want to buy.
+Thanks for letting us know what you want to {% if buying == True %}buy{% elif buying == False %}sell{% endif %}.
 
 We'll check with {% if buying == True %}sellers{% elif buying == False %}buyers{% endif %} and update you here.
 
