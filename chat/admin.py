@@ -204,8 +204,7 @@ _user_context_fields = ['started', 'done', 'expired', 'paused', 'user',
 class UserContextAdmin(comadm.StandardAdmin):
         # List page settings
     list_display = _user_context_fields + comadm.standard_list_display
-    list_editable = comadm.standard_list_editable + \
-        _user_context_fields
+    list_editable = comadm.standard_list_editable + _user_context_fields
     list_filter = ['started', 'done', 'expired', 'paused', 'intent_key',
         'message_key'] + comadm.standard_choice_list_filter
     search_fields = comadm.standard_search_fields + \
