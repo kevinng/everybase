@@ -1,3 +1,5 @@
+from urllib.parse import urljoin
+
 from django.template.loader import render_to_string
 
 from common.tasks import send_email
@@ -28,8 +30,8 @@ def talk_to_an_everybase_human_agent(message_handler: MessageHandler,
         et_path('human_agent_request_body.txt'), {
             'user_id': message_handler.message.from_user.id,
             'user_name': message_handler.message.from_user.name,
-            'note_url': '%s/%s/growth/note/%d/change/' % \
-                (BASE_URL, ADMIN_PATH, note.id)
+            'note_url': '%s/growth/note/%d/change/' % \
+                (urljoin(BASE_URL, ADMIN_PATH), note.id)
         }
     )
     send_email.delay(
