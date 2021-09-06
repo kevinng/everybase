@@ -1,3 +1,4 @@
+from amplitude.constants import events
 from chat.tasks.save_lead_media import save_lead_media
 from chat.libraries.constants import messages
 from chat.libraries.classes.message_handler import MessageHandler
@@ -26,5 +27,7 @@ class GetLeadDetailsHandler(MessageHandler):
                 lead=lead,
                 text=self.message.body.strip()
             )
+
+        self.send_event(events.ENTERED_FREE_TEXT)
 
         return render_message(messages.GET_LEAD__DETAILS_PROMPT, None)
