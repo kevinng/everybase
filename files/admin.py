@@ -14,7 +14,7 @@ class FileAdmin(admin.ModelAdmin):
     def file_url(self, obj):
         url = urljoin(
             BASE_URL, reverse('files:get_file', args=[obj.id]))
-        return format_html(f'<a href="{url}">{url}</a>')
+        return format_html(f'<a href="{url}" target="{url}">{url}</a>')
 
     # List page settings
     list_display = comadm.standard_list_display + _file_fields

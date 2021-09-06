@@ -407,7 +407,7 @@ class FileInlineAdmin(admin.TabularInline):
 
         url = urljoin(
             BASE_URL, reverse('files:get_file', args=[obj.id]))
-        return format_html(f'<a href="{url}">{url}</a>')
+        return format_html(f'<a href="{url}" target="{url}">{url}</a>')
 
 class LeadTextInlineAdmin(admin.TabularInline):
     model = mod.LeadText
