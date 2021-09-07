@@ -14,14 +14,17 @@ class GetLeadDetailsHandler(MessageHandler):
             save_lead_media.delay(lead.id, m.content_type, m.url)
 
         if self.message.body.strip() == 'done':
+            def none_current_lead():
+                user.current_lead = None
+
             c = ContextLogic(self)
-            user.current_lead = None
             return self.done_reply(
                 self.intent_key,
                 messages.GET_LEAD__THANK_YOU,
                 params_func=lambda : {
                     'buying': c.is_current_lead_buying()
-                }
+                },
+                done_func=none_current_lead
             )
         else:
             LeadText.objects.create(

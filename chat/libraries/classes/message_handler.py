@@ -166,7 +166,8 @@ class MessageHandler():
             self,
             intent_key: str,
             message_key: str,
-            params_func: typing.Callable=None
+            params_func: typing.Callable=None,
+            done_func: typing.Callable=None
         ) -> str:
         """Convenience function to call done_to_context and messages.get_body in
         one call - with support for get_parameters use to get parameters for
@@ -182,9 +183,14 @@ class MessageHandler():
             Optional function to compute parameters for the message body.
             intent_key, message_key and params_func will be passed to
             get_parameters to get parameters for the message body.
+        done_func
+            Optional function to perform operations after context is switched
+            (i.e., 'done').
         """
         params = get_parameters(self, intent_key, message_key, params_func)
         self.done_to_context(intent_key, message_key)
+        if done_func is not None:
+            done_func()
         return render_message(message_key, params)
 
     def send_event(self, amp_event_key):
