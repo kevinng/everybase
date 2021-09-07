@@ -7,7 +7,7 @@ from common import models as commods
 from amplitude import models as ampmods
 
 from chat.libraries.test_funcs.get_target_body import get_target_body
-from chat.libraries.test_funcs.setup_product_type import setup_product_type
+# from chat.libraries.test_funcs.setup_product_type import setup_product_type
 from chat.libraries.utility_funcs.get_latest_value import get_latest_value
 from chat.libraries.utility_funcs.get_context import get_context
 from chat.libraries.utility_funcs.start_context import start_context
@@ -15,10 +15,10 @@ from chat.libraries.utility_funcs.get_twilml_body import get_twilml_body
 
 from chat.libraries.test_funcs.setup_user_phone_number import \
     setup_user_phone_number
-from chat.libraries.test_funcs.setup_qna import setup_qna
-from chat.libraries.test_funcs.setup_match import setup_match
-from chat.libraries.test_funcs.supply_availability_options import \
-    SupplyAvailabilityOptions
+# from chat.libraries.test_funcs.setup_qna import setup_qna
+# from chat.libraries.test_funcs.setup_match import setup_match
+# from chat.libraries.test_funcs.supply_availability_options import \
+    # SupplyAvailabilityOptions
 
 class ChatTest(TestCase):
     """Base class for chat test cases"""
@@ -105,8 +105,8 @@ class ChatTest(TestCase):
 
         # Nullify references
         for user in relmods.User.objects.all():
-            user.current_qna = None
-            user.current_match = None
+            # user.current_qna = None
+            # user.current_match = None
             user.current_recommendation = None
             user.current_lead = None
             user.save()
@@ -503,82 +503,82 @@ class ChatTest(TestCase):
             value_id=value_id
         )
 
-    def setup_product_type(
-            self,
-            name: str = None,
-            uom_name: str = None,
-            uom_plural_name: str = None,
-            uom_description: str = None,
-            keyword: str = None
-        ):
-        """Set up product type, unit of measure and matching keyword
+    # def setup_product_type(
+    #         self,
+    #         name: str = None,
+    #         uom_name: str = None,
+    #         uom_plural_name: str = None,
+    #         uom_description: str = None,
+    #         keyword: str = None
+    #     ):
+    #     """Set up product type, unit of measure and matching keyword
 
-        Returns
-        -------
-        (product_type, unit_of_measure, keyword)
-            product_type
-                Product type model reference set up
-            unit_of_measure
-                Unit of measure model reference set up
-            keyword
-                Match keyword model reference set up
-        """
-        if name is None:
-            name = 'Product %d' % len(self.product_types)
+    #     Returns
+    #     -------
+    #     (product_type, unit_of_measure, keyword)
+    #         product_type
+    #             Product type model reference set up
+    #         unit_of_measure
+    #             Unit of measure model reference set up
+    #         keyword
+    #             Match keyword model reference set up
+    #     """
+    #     if name is None:
+    #         name = 'Product %d' % len(self.product_types)
         
-        if uom_name is None:
-            uom_name = 'Product %d UOM' % len(self.product_types)
+    #     if uom_name is None:
+    #         uom_name = 'Product %d UOM' % len(self.product_types)
         
-        if uom_plural_name is None:
-            uom_plural_name = 'Product %d UOMs' % len(self.product_types)
+    #     if uom_plural_name is None:
+    #         uom_plural_name = 'Product %d UOMs' % len(self.product_types)
         
-        if uom_description is None:
-            uom_description = 'Product %d UOM description' % \
-                len(self.product_types)
+    #     if uom_description is None:
+    #         uom_description = 'Product %d UOM description' % \
+    #             len(self.product_types)
 
-        if keyword is None:
-            keyword = 'product %d' % len(self.product_types)
+    #     if keyword is None:
+    #         keyword = 'product %d' % len(self.product_types)
 
-        product_type, uom, keyword = setup_product_type(
-            name, uom_name, uom_plural_name, uom_description, keyword)
+    #     product_type, uom, keyword = setup_product_type(
+    #         name, uom_name, uom_plural_name, uom_description, keyword)
         
-        self.product_types.append(product_type)
-        self.uoms.append(uom)
-        self.keywords.append(keyword)
+    #     self.product_types.append(product_type)
+    #     self.uoms.append(uom)
+    #     self.keywords.append(keyword)
 
-        return (product_type, uom, keyword)
+    #     return (product_type, uom, keyword)
 
-    def setup_match(
-        self,
-        buying: bool,
-        supply_type: SupplyAvailabilityOptions,
-        closed: bool = False
-    ) -> relmods.Match:
-        """Set up a user as either a buyer or a seller, and user_2 as the
-        counter-party (i.e., seller if user is buyer, vice versa).
+    # def setup_match(
+    #     self,
+    #     buying: bool,
+    #     supply_type: SupplyAvailabilityOptions,
+    #     closed: bool = False
+    # ) -> relmods.Match:
+    #     """Set up a user as either a buyer or a seller, and user_2 as the
+    #     counter-party (i.e., seller if user is buyer, vice versa).
 
-        Parameters
-        ----------
-        buying
-            If true, set up user as the buyer, otherwise - set him up as the
-            seller.
-        supply_type
-            The type of supply either the user/user_2 is selling - depending
-            on who's the buyer.
-        closed
-            Close the match immediately.
-        """
+    #     Parameters
+    #     ----------
+    #     buying
+    #         If true, set up user as the buyer, otherwise - set him up as the
+    #         seller.
+    #     supply_type
+    #         The type of supply either the user/user_2 is selling - depending
+    #         on who's the buyer.
+    #     closed
+    #         Close the match immediately.
+    #     """
 
-        self.match = setup_match(
-            buying, supply_type, self.user, self.user_2, closed)
+    #     self.match = setup_match(
+    #         buying, supply_type, self.user, self.user_2, closed)
 
-        self.user.current_match = self.match
-        self.user.save()
+    #     self.user.current_match = self.match
+    #     self.user.save()
 
-        self.user_2.current_match = self.match
-        self.user_2.save()
+    #     self.user_2.current_match = self.match
+    #     self.user_2.save()
 
-        return self.match
+    #     return self.match
 
     def setup_payment_hash(self) -> paymods.PaymentHash:
         """Set up payment hash for this user and match"""
@@ -591,48 +591,48 @@ class ChatTest(TestCase):
 
         return self.payment_hash
 
-    def setup_qna(
-            self,
-            answering: bool = True,
-            answered: bool = False,
-            question_captured: str = 'Can you do OEM?',
-            answer_captured: str = 'Yes, we can.',
-            manual_cleaned_question: str = 'Can you do OEM? (Manual-Cleaned)',
-            manual_cleaned_answer: str = 'Yes, we can. (Manual-Cleaned)',
-            auto_cleaned_question: str = 'Can you do OEM? (Auto-Cleaned)',
-            auto_cleaned_answer: str = 'Yes, we can. (Auto-Cleaned)',
-            answer_readied: bool = None,
-            question_readied: bool = None
-        ) -> relmods.QuestionAnswerPair:
-        """Set up QNA model and associated data key/value for this user, user_2
-        and match.
+    # def setup_qna(
+    #         self,
+    #         answering: bool = True,
+    #         answered: bool = False,
+    #         question_captured: str = 'Can you do OEM?',
+    #         answer_captured: str = 'Yes, we can.',
+    #         manual_cleaned_question: str = 'Can you do OEM? (Manual-Cleaned)',
+    #         manual_cleaned_answer: str = 'Yes, we can. (Manual-Cleaned)',
+    #         auto_cleaned_question: str = 'Can you do OEM? (Auto-Cleaned)',
+    #         auto_cleaned_answer: str = 'Yes, we can. (Auto-Cleaned)',
+    #         answer_readied: bool = None,
+    #         question_readied: bool = None
+    #     ) -> relmods.QuestionAnswerPair:
+    #     """Set up QNA model and associated data key/value for this user, user_2
+    #     and match.
 
-        Returns
-        -------
-        Q&A model reference set up
-        """
+    #     Returns
+    #     -------
+    #     Q&A model reference set up
+    #     """
 
-        qna = setup_qna(
-            self.user,
-            self.user_2,
-            self.match,
-            answering,
-            answered, 
-            question_captured,
-            answer_captured,
-            manual_cleaned_question,
-            manual_cleaned_answer,
-            auto_cleaned_question,
-            auto_cleaned_answer,
-            answer_readied,
-            question_readied
-        )
+    #     qna = setup_qna(
+    #         self.user,
+    #         self.user_2,
+    #         self.match,
+    #         answering,
+    #         answered, 
+    #         question_captured,
+    #         answer_captured,
+    #         manual_cleaned_question,
+    #         manual_cleaned_answer,
+    #         auto_cleaned_question,
+    #         auto_cleaned_answer,
+    #         answer_readied,
+    #         question_readied
+    #     )
 
-        # Set up user's current_qna
-        self.user.current_qna = qna
-        self.user.save()
+    #     # Set up user's current_qna
+    #     self.user.current_qna = qna
+    #     self.user.save()
 
-        return qna
+    #     return qna
 
     def get_create_message(
             self,
