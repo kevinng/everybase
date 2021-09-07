@@ -8,12 +8,14 @@ from relationships.models import LeadText
 
 class GetLeadDetailsHandler(MessageHandler):
     def run(self):
-        lead = self.message.from_user.current_lead
+        user = self.message.from_user
+        lead = user.current_lead
         for m in self.message.medias.all():
             save_lead_media.delay(lead.id, m.content_type, m.url)
 
         if self.message.body.strip() == 'done':
             c = ContextLogic(self)
+            user.current_lead = None
             return self.done_reply(
                 self.intent_key,
                 messages.GET_LEAD__THANK_YOU,
