@@ -373,10 +373,9 @@ class QuestionAnswerPairAdmin(comadm.StandardAdmin):
 class EmailTagAdmin(comadm.ChoiceAdmin):
     pass
 
-_recommendation_fields = ['recommendee', 'lead',
-    'recommend_product_type_choice', 'recommend_product_type_responded',
-    'recommend_details_choice', 'recommend_details_responded',
-    'recommend_details_not_interested_text',
+_recommendation_fields = ['recommend_product_type_choice',
+    'recommend_product_type_responded', 'recommend_details_choice',
+    'recommend_details_responded', 'recommend_details_not_interested_text',
     'recommend_details_not_interested_responded']
 @admin.register(mod.Recommendation)
 class RecommendationAdmin(comadm.StandardAdmin):
