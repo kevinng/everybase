@@ -373,11 +373,11 @@ class QuestionAnswerPairAdmin(comadm.StandardAdmin):
 class EmailTagAdmin(comadm.ChoiceAdmin):
     pass
 
-_recommendation_fields = ['recommendee', 'lead', 'interested_product_type',
-    'responded_interested_product_type', 'is_direct', 'responded_is_direct',
-    'can_source', 'responded_can_source', 'not_interested_details',
-    'responded_not_interested_details', 
-    'responded_not_interested_details_reason']
+_recommendation_fields = ['recommendee', 'lead',
+    'recommend_product_type_choice', 'recommend_product_type_responded',
+    'recommend_details_choice', 'recommend_details_responded',
+    'recommend_details_not_interested_text',
+    'recommend_details_not_interested_responded']
 @admin.register(mod.Recommendation)
 class RecommendationAdmin(comadm.StandardAdmin):
     # List page settings

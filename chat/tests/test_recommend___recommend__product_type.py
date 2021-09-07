@@ -32,6 +32,10 @@ class TestBase():
             datas.RECOMMEND__PRODUCT_TYPE,
             value_string=datas.RECOMMEND__PRODUCT_TYPE__YES
         )
+        self.assertEqual(
+            self.user.current_recommendation.recommend_product_type_choice,
+            datas.RECOMMEND__PRODUCT_TYPE__YES
+        )
 
     def test_not_now(self):
         self.receive_reply_assert(
@@ -44,6 +48,10 @@ class TestBase():
             datas.RECOMMEND__PRODUCT_TYPE,
             value_string=datas.RECOMMEND__PRODUCT_TYPE__NOT_NOW
         )
+        self.assertEqual(
+            self.user.current_recommendation.recommend_product_type_choice,
+            datas.RECOMMEND__PRODUCT_TYPE__NOT_NOW
+        )
 
     def _test_not_interested(self, is_buying):
         self.receive_reply_assert(
@@ -55,6 +63,10 @@ class TestBase():
         self.assert_value(
             datas.RECOMMEND__PRODUCT_TYPE,
             value_string=datas.RECOMMEND__PRODUCT_TYPE__NO
+        )
+        self.assertEqual(
+            self.user.current_recommendation.recommend_product_type_choice,
+            datas.RECOMMEND__PRODUCT_TYPE__NO
         )
 
 class RECOMMEND___RECOMMEND__PRODUCT_TYPE___Buy___Test(TestBase, ChatTest):

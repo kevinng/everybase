@@ -5,4 +5,5 @@ Example lead details
 *Reply with option number*:
 1. I'm a direct buyer
 2. I can find buyers
-3. I'm not interested
+3. I'm not interested now, maybe later
+4. Don't ask me about this

@@ -5,4 +5,5 @@ We need {% if buying == True %}buyers{% elif buying == False %}sellers{% endif %
 *Reply with option number*:
 1. I'm a direct {% if buying == True %}buyer{% elif buying == False %}seller{% endif %}
 2. I can find {% if buying == True %}buyers{% elif buying == False %}sellers{% endif %}
-3. I'm not interested
+3. I'm not interested now, maybe later
+4. Don't ask me about this

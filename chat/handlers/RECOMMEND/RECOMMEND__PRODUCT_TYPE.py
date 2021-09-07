@@ -1,3 +1,5 @@
+import pytz, datetime
+from everybase.settings import TIME_ZONE
 from amplitude.constants import events
 from chat.libraries.constants import intents, messages, datas
 from chat.libraries.classes.message_handler import MessageHandler
@@ -6,6 +8,15 @@ from chat.libraries.classes.context_logic import ContextLogic
 class Handler(MessageHandler):
     def run(self):
         c = ContextLogic(self)
+
+        sgtz = pytz.timezone(TIME_ZONE)
+        now = datetime.datetime.now(tz=sgtz)
+
+        def chosen_func(self, dv):
+            self.message.from_user.current_recommendation.\
+                recommend_product_type_choice = dv.value_string
+            self.message.from_user.current_recommendation.\
+                recommend_product_type_responded = now  
         
         self.add_option([('1', 0)],
             intents.RECOMMEND,
@@ -16,6 +27,7 @@ class Handler(MessageHandler):
                 'buying': c.is_current_recommendation_buying(),
                 'lead_details': c.get_recommendation_lead_display_text()
             },
+            chosen_func=chosen_func,
             amp_event_key=events.RECOMMEND__PRODUCT_TYPE__YES
         )
         self.add_option([('2', 0)],
@@ -26,6 +38,7 @@ class Handler(MessageHandler):
             params_func=lambda: {
                 'registered': c.is_registered()
             },
+            chosen_func=chosen_func,
             amp_event_key=events.RECOMMEND__DETAILS__CAN_FIND
         )
         self.add_option([('3', 0)],
@@ -36,6 +49,7 @@ class Handler(MessageHandler):
             params_func=lambda: {
                 'registered': c.is_registered()
             },
+            chosen_func=chosen_func,
             amp_event_key=events.RECOMMEND__PRODUCT_TYPE__NO
         )
 

@@ -44,16 +44,40 @@ class TestBase():
             datas.RECOMMEND__DETAILS,
             value_string=datas.RECOMMEND__DETAILS__CAN_FIND
         )
+        self.assertEqual(
+            self.user.current_recommendation.recommend_details_choice,
+            datas.RECOMMEND__DETAILS__CAN_FIND
+        )
+
+    def test_not_now(self):
+        self.receive_reply_assert(
+            '3',
+            intents.RECOMMEND,
+            messages.RECOMMEND__NOT_NOW_CONFIRM,
+            target_body_variation_key='REGISTERED'
+        )
+        self.assert_value(
+            datas.RECOMMEND__DETAILS,
+            value_string=datas.RECOMMEND__DETAILS__NOT_NOW
+        )
+        self.assertEqual(
+            self.user.current_recommendation.recommend_details_choice,
+            datas.RECOMMEND__DETAILS__NOT_NOW
+        )
 
     def test_not_interested(self):
         self.receive_reply_assert(
-            '3',
+            '4',
             intents.RECOMMEND,
             messages.RECOMMEND__DETAILS__NOT_INTERESTED
         )
         self.assert_value(
             datas.RECOMMEND__DETAILS,
             value_string=datas.RECOMMEND__DETAILS__NOT_INTERESTED
+        )
+        self.assertEqual(
+            self.user.current_recommendation.recommend_details_choice,
+            datas.RECOMMEND__DETAILS__NOT_INTERESTED
         )
 
 class RECOMMEND___RECOMMEND__DETAILS___Buy___Test(TestBase, ChatTest):

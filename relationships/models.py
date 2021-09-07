@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
-from chat.libraries.constants import methods
+from chat.libraries.constants import datas, methods
 
 from hashid_field import HashidAutoField
 
@@ -1486,49 +1486,51 @@ class Recommendation(Standard):
         db_index=True
     )
 
-    interested_product_type = models.BooleanField(
-        blank=True,
-        null=True
+    recommend_product_type_choice = models.CharField(
+        max_length=200,
+        choices=[
+            (datas.RECOMMEND__PRODUCT_TYPE__YES,
+                datas.RECOMMEND__PRODUCT_TYPE__YES),
+            (datas.RECOMMEND__PRODUCT_TYPE__NOT_NOW,
+                datas.RECOMMEND__PRODUCT_TYPE__NOT_NOW),
+            (datas.RECOMMEND__PRODUCT_TYPE__NO,
+                datas.RECOMMEND__PRODUCT_TYPE__NO)
+        ],
+        null=True,
+        blank=True
     )
-    responded_interested_product_type = models.DateTimeField(
-        blank=True,
-        null=True
-    )
-
-    is_direct = models.BooleanField(
-        blank=True,
-        null=True
-    )
-    responded_is_direct = models.DateTimeField(
-        blank=True,
-        null=True
-    )
-
-    can_source = models.BooleanField(
-        blank=True,
-        null=True
-    )
-    responded_can_source = models.DateTimeField(
-        blank=True,
-        null=True
+    recommend_product_type_responded = models.DateTimeField(
+        null=True,
+        blank=True
     )
 
-    not_interested_details = models.BooleanField(
-        blank=True,
-        null=True
+    recommend_details_choice = models.CharField(
+        max_length=200,
+        choices=[
+            (datas.RECOMMEND__DETAILS__DIRECT,
+                datas.RECOMMEND__DETAILS__DIRECT),
+            (datas.RECOMMEND__DETAILS__CAN_FIND,
+                datas.RECOMMEND__DETAILS__CAN_FIND),
+            (datas.RECOMMEND__DETAILS__NOT_NOW,
+                datas.RECOMMEND__DETAILS__NOT_NOW),
+            (datas.RECOMMEND__DETAILS__NOT_INTERESTED,
+                datas.RECOMMEND__DETAILS__NOT_INTERESTED)
+        ],
+        null=True,
+        blank=True
     )
-    responded_not_interested_details = models.DateTimeField(
-        blank=True,
-        null=True
+    recommend_details_responded = models.DateTimeField(
+        null=True,
+        blank=True
     )
 
-    not_interested_details_reason = models.TextField(
-        blank=True,
-        null=True
+    recommend_details_not_interested_text = models.TextField(
+        null=True,
+        blank=True
     )
-    responded_not_interested_details_reason = models.DateTimeField(
-        blank=True,
-        null=True
+    recommend_details_not_interested_responded = models.DateTimeField(
+        null=True,
+        blank=True
     )
 
     def __str__(self):
