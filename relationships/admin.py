@@ -380,15 +380,19 @@ _recommendation_fields = ['recommend_product_type_choice',
 @admin.register(mod.Recommendation)
 class RecommendationAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _recommendation_fields
+    list_display = comadm.standard_list_display + _recommendation_fields + \
+        ['recommendee', 'lead']
     list_editable = comadm.standard_list_editable + _recommendation_fields
     list_filter = comadm.standard_list_filter + _recommendation_fields
     search_fields = comadm.standard_search_fields + \
-        ['not_interested_details_reason']
+        ['recommendee__name', 'recommendee__phone_number__country_code',
+        'recommendee__phone_number__national_number',
+        'recommendee__email__email']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _recommendation_fields})
+        ('Details', {'fields': _recommendation_fields + \
+            ['recommendee', 'lead']})
     ]
     autocomplete_fields = ['recommendee', 'lead']
 
