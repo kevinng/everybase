@@ -1,6 +1,7 @@
 import pytz, datetime
 from everybase.settings import TIME_ZONE
 from django.core.exceptions import ValidationError
+from django.db.utils import IntegrityError
 from amplitude.constants import events
 from relationships.models import Email
 from chat.libraries.constants import datas
@@ -12,17 +13,14 @@ class RegisterEmailHandler(MessageHandler):
         body = self.message.body.strip().lower()
 
         try:
-            if user.email is None:
-                # User does not have an email - get or create.
-                # Note: get_or_create does not validate email field.
-                try:
-                    user.email = Email.objects.get(email=body)
-                except Email.DoesNotExist:
-                    user.email = Email(email=body)
-            else:
-                user.email.email = body
-            user.email.full_clean()
-            user.email.save()
+            try:
+                email = Email.objects.get(email=body)
+            except Email.DoesNotExist:
+                email = Email(email=body)
+                email.full_clean()
+                email.save()
+
+            user.email = email
 
             # This is the last step of registration - register user
             sgtz = pytz.timezone(TIME_ZONE)
@@ -30,6 +28,10 @@ class RegisterEmailHandler(MessageHandler):
 
             user.save()
         except ValidationError:
+            self.save_body_as_string(datas.STRAY_INPUT)
+            self.send_event(events.ENTERED_STRAY_TEXT)
+            return self.reply_invalid_email()
+        except IntegrityError:
             self.save_body_as_string(datas.STRAY_INPUT)
             self.send_event(events.ENTERED_STRAY_TEXT)
             return self.reply_invalid_email()

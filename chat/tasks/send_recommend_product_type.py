@@ -37,6 +37,9 @@ def send_recommend_product_type(
         messages.RECOMMEND__PRODUCT_TYPE
     )
 
+    r.recommendee.current_recommendation = r
+    r.recommendee.save()
+
     params = {
         'product_type': r.lead.product_type.name,
         'is_buying': r.lead.is_buying

@@ -13,10 +13,10 @@ class Handler(MessageHandler):
         now = datetime.datetime.now(tz=sgtz)
 
         def chosen_func(self, dv):
-            self.message.from_user.current_recommendation.\
-                recommend_details_choice = dv.value_string
-            self.message.from_user.current_recommendation.\
-                recommend_details_responded = now  
+            r = self.message.from_user.current_recommendation
+            r.recommend_details_choice = dv.value_string
+            r.recommend_details_responded = now
+            r.save()
 
         self.add_option([('1', 0)],
             intents.RECOMMEND,
