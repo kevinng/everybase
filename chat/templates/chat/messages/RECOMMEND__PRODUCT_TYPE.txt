@@ -1,6 +1,6 @@
-Do you *{% if lead_type == 'supply' %}buy{% elif lead_type == 'demand' %}sell{% endif %}*, or can you find *{% if lead_type == 'supply' %}buyers{% elif lead_type == 'demand' %}sellers{% endif %}* for *{{ product_type }}*?
+Do you *{% if is_buying == True %}buy{% elif is_buying == False %}sell{% endif %}*, or can you find *{% if is_buying == True %}buyers{% elif is_buying == False %}sellers{% endif %}* for *{{ product_type|lower }}*?
 
 Reply with option number:
 1. Yes, send me details
 2. Not now, maybe later
-3. No, don't ask me about {{ product_type }}
+3. No, don't ask me about {{ product_type|lower }}

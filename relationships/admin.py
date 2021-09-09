@@ -417,7 +417,7 @@ class LeadTextInlineAdmin(admin.TabularInline):
     extra = 1
 
 _lead_fields = ['owner', 'display_text', 'country', 'state',
-    'is_buying', 'capture_method_type']
+    'is_buying', 'capture_method_type', 'product_type']
 @admin.register(mod.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
@@ -431,7 +431,7 @@ class LeadAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _lead_fields})
     ]
-    autocomplete_fields = ['owner', 'country', 'state']
+    autocomplete_fields = ['owner', 'country', 'state', 'product_type']
     inlines = [FileInlineAdmin, LeadTextInlineAdmin]
 
 _lead_text_fields = ['lead', 'text']

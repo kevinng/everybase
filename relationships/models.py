@@ -1486,6 +1486,10 @@ class Recommendation(Standard):
         db_index=True
     )
 
+    recommend_product_type_sent = models.DateTimeField(
+        null=True,
+        blank=True
+    )
     recommend_product_type_choice = models.CharField(
         max_length=200,
         choices=[
@@ -1541,10 +1545,19 @@ CAPTURE_METHOD_TYPE__MENU_OPTION = 'menu_option'
 class Lead(Standard):
     """Lead.
     
-    Last updated:  3 September 2021, 2:20 PM
+    Last updated: 9 September 2021, 11:58 PM
     """
+    product_type = models.ForeignKey(
+        'ProductType',
+        related_name='leads',
+        related_query_name='leads',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     owner = models.ForeignKey(
-        'relationships.User',
+        'User',
         related_name='leads',
         related_query_name='leads',
         on_delete=models.PROTECT,
