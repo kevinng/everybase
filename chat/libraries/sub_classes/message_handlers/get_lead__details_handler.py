@@ -13,7 +13,7 @@ class GetLeadDetailsHandler(MessageHandler):
         for m in self.message.medias.all():
             save_lead_media.delay(lead.id, m.content_type, m.url)
 
-        if self.message.body.strip() == 'done':
+        if self.message.body.strip().lower() == 'done':
             def none_current_lead():
                 user.current_lead = None
 
