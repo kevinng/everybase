@@ -20,7 +20,7 @@ class Handler(MessageHandler):
 
         self.add_option([('1', 0)],
             intents.RECOMMEND,
-            messages.TALK_TO_HUMAN__CONFIRM,
+            messages.TALK_TO_HUMAN__CONFIRMED,
             datas.RECOMMEND__DETAILS,
             datas.RECOMMEND__DETAILS__DIRECT,
             params_func=lambda: { 'registered': c.is_registered() },

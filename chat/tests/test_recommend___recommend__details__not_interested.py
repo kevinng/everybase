@@ -20,7 +20,7 @@ class RECOMMEND___RECOMMEND__DETAILS__NOT_INTERESTED___Registered___Test(
             target_body_variation_key='REGISTERED'
         )
         r = self.user.current_recommendation
-        self.assertEqual(r.not_interested_details_reason, reason)
+        self.assertEqual(r.recommend_details_not_interested_text, reason)
 
 class RECOMMEND___RECOMMEND__DETAILS_NOT_INTERESTED___Unregistered___Test(
     ChatTest):
@@ -45,4 +45,4 @@ class RECOMMEND___RECOMMEND__DETAILS_NOT_INTERESTED___Unregistered___Test(
             target_body_variation_key='UNREGISTERED'
         )
         r = self.user.current_recommendation
-        self.assertEqual(r.not_interested_details_reason, reason)
+        self.assertEqual(r.recommend_details_not_interested_text, reason)

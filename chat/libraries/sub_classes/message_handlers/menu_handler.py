@@ -32,7 +32,7 @@ class MenuHandler(MessageHandler):
         )
         self.add_option([('3', 0)],
             intents.TALK_TO_HUMAN,
-            messages.TALK_TO_HUMAN__CONFIRM,
+            messages.TALK_TO_HUMAN__CONFIRMED,
             datas.MENU,
             datas.MENU__TALK_TO_AN_EVERYBASE_AGENT,
             params_func=lambda : { 'registered': c.is_registered() },

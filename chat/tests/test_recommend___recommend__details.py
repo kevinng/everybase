@@ -25,7 +25,7 @@ class TestBase():
         self.receive_reply_assert(
             '1',
             intents.RECOMMEND,
-            messages.TALK_TO_HUMAN__CONFIRM,
+            messages.TALK_TO_HUMAN__CONFIRMED,
             target_body_variation_key='REGISTERED'
         )
         self.assert_value(

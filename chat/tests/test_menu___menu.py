@@ -51,7 +51,7 @@ class MenuRegisteredTestBase():
         self.receive_reply_assert(
             '3',
             intents.TALK_TO_HUMAN,
-            messages.TALK_TO_HUMAN__CONFIRM,
+            messages.TALK_TO_HUMAN__CONFIRMED,
             target_body_variation_key='REGISTERED'
         )
         self.assert_value(
@@ -64,7 +64,7 @@ class MenuUnregisteredTestBase(MenuRegisteredTestBase):
         self.receive_reply_assert(
             '3',
             intents.TALK_TO_HUMAN,
-            messages.TALK_TO_HUMAN__CONFIRM,
+            messages.TALK_TO_HUMAN__CONFIRMED,
             target_body_variation_key='UNREGISTERED'
         )
         self.assert_value(
