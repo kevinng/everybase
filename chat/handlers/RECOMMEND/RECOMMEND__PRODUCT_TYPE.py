@@ -32,7 +32,7 @@ class Handler(MessageHandler):
         )
         self.add_option([('2', 0)],
             intents.RECOMMEND,
-            messages.RECOMMEND__NOT_NOW_CONFIRM,
+            messages.RECOMMEND__NOT_NOW_CONFIRMED,
             datas.RECOMMEND__PRODUCT_TYPE,
             datas.RECOMMEND__PRODUCT_TYPE__NOT_NOW,
             params_func=lambda: {

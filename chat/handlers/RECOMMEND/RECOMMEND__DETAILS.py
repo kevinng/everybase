@@ -43,7 +43,7 @@ class Handler(MessageHandler):
 
         self.add_option([('3', 0)],
             intents.RECOMMEND,
-            messages.RECOMMEND__NOT_NOW_CONFIRM,
+            messages.RECOMMEND__NOT_NOW_CONFIRMED,
             datas.RECOMMEND__DETAILS,
             datas.RECOMMEND__DETAILS__NOT_NOW,
             chosen_func=chosen_func,

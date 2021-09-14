@@ -41,7 +41,7 @@ class TestBase():
         self.receive_reply_assert(
             '2',
             intents.RECOMMEND,
-            messages.RECOMMEND__NOT_NOW_CONFIRM,
+            messages.RECOMMEND__NOT_NOW_CONFIRMED,
             target_body_variation_key='REGISTERED'
         )
         self.assert_value(
