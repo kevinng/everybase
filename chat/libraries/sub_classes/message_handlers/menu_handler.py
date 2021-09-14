@@ -17,7 +17,7 @@ class MenuHandler(MessageHandler):
             datas.MENU,
             datas.MENU__FIND_BUYERS,
             params_func=\
-                lambda: { 'buying': False } if c.is_registered() else None,
+                lambda: { 'is_buying': False } if c.is_registered() else None,
             amp_event_key=events.MENU__FIND_BUYERS
         )
         self.add_option([('2', 0)],
@@ -27,7 +27,7 @@ class MenuHandler(MessageHandler):
                 messages.REGISTER__NAME,
             datas.MENU,
             datas.MENU__FIND_SELLERS,
-            params_func=lambda: { 'buying': True },
+            params_func=lambda: { 'is_buying': True },
             amp_event_key=events.MENU__FIND_SELLERS
         )
         self.add_option([('3', 0)],
@@ -35,7 +35,7 @@ class MenuHandler(MessageHandler):
             messages.TALK_TO_HUMAN__CONFIRMED,
             datas.MENU,
             datas.MENU__TALK_TO_AN_EVERYBASE_AGENT,
-            params_func=lambda : { 'registered': c.is_registered() },
+            params_func=lambda : { 'is_registered': c.is_registered() },
             # Don't run tasks in tests
             chosen_func=None if self.no_task_calls else \
                 talk_to_an_everybase_human_agent,
@@ -49,7 +49,7 @@ class MenuHandler(MessageHandler):
                 messages.REGISTER__NAME,
                 datas.MENU,
                 datas.MENU__REGISTER_ME,
-                params_func=lambda : { 'registered': c.is_registered() },
+                params_func=lambda : { 'is_registered': c.is_registered() },
                 amp_event_key=events.MENU__REGISTER_ME
             )
 

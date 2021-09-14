@@ -1,4 +1,4 @@
-What do you want to {% if buying == True %}buy{% elif buying == False %}sell{% endif %}?
+What do you want to {% if is_buying == True %}buy{% elif is_buying == False %}sell{% endif %}?
 
 Send me - details, specifications, product list, pictures, videos, files, etc.
 

@@ -7,5 +7,5 @@ class Handler(RegisterEmailHandler):
         return super().run(
             intents.FIND_SELLERS,
             messages.GET_LEAD__LOCATION,
-            lambda : { 'buying': True }
+            lambda : { 'is_buying': True }
         )

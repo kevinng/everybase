@@ -22,7 +22,7 @@ class GetLeadDetailsHandler(MessageHandler):
                 self.intent_key,
                 messages.GET_LEAD__THANK_YOU,
                 params_func=lambda : {
-                    'buying': c.is_current_lead_buying()
+                    'is_buying': c.is_buying__current_lead()
                 },
                 done_func=none_current_lead
             )

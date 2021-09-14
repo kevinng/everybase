@@ -23,7 +23,7 @@ class Handler(MessageHandler):
             messages.TALK_TO_HUMAN__CONFIRMED,
             datas.RECOMMEND__DETAILS,
             datas.RECOMMEND__DETAILS__DIRECT,
-            params_func=lambda: { 'registered': c.is_registered() },
+            params_func=lambda: { 'is_registered': c.is_registered() },
             chosen_func=chosen_func,
             amp_event_key=events.RECOMMEND__DETAILS__DIRECT
         )
@@ -34,8 +34,8 @@ class Handler(MessageHandler):
             datas.RECOMMEND__DETAILS,
             datas.RECOMMEND__DETAILS__CAN_FIND,
             params_func=lambda: {
-                'buying': c.is_current_recommendation_buying(),
-                'registered': c.is_registered()
+                'is_buying': c.is_buying__current_recommendation(),
+                'is_registered': c.is_registered()
             },
             chosen_func=chosen_func,
             amp_event_key=events.RECOMMEND__DETAILS__CAN_FIND

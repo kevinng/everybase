@@ -42,7 +42,7 @@ def send_recommend_product_type(
 
     params = {
         'product_type': r.lead.product_type.name,
-        'is_buying': r.lead.is_buying
+        'is_buying': not r.lead.is_buying # If counter-party is buying, user should sell; vice versa.
     }
 
     sgtz = pytz.timezone(TIME_ZONE)

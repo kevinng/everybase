@@ -8,5 +8,5 @@ class Handler(RegisterEmailHandler):
         return super().run(
             intents.REGISTER,
             messages.REGISTER__THANK_YOU,
-            lambda : { 'registered': ContextLogic(self).is_registered() }
+            lambda : { 'is_registered': ContextLogic(self).is_registered() }
         )

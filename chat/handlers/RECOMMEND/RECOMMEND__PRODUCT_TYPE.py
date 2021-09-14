@@ -24,7 +24,7 @@ class Handler(MessageHandler):
             datas.RECOMMEND__PRODUCT_TYPE,
             datas.RECOMMEND__PRODUCT_TYPE__YES,
             params_func=lambda: {
-                'buying': c.is_current_recommendation_buying(),
+                'is_buying': c.is_buying__current_recommendation(),
                 'lead_details': c.get_recommendation_lead_display_text()
             },
             chosen_func=chosen_func,
@@ -36,7 +36,7 @@ class Handler(MessageHandler):
             datas.RECOMMEND__PRODUCT_TYPE,
             datas.RECOMMEND__PRODUCT_TYPE__NOT_NOW,
             params_func=lambda: {
-                'registered': c.is_registered()
+                'is_registered': c.is_registered()
             },
             chosen_func=chosen_func,
             amp_event_key=events.RECOMMEND__DETAILS__CAN_FIND
@@ -47,7 +47,7 @@ class Handler(MessageHandler):
             datas.RECOMMEND__PRODUCT_TYPE,
             datas.RECOMMEND__PRODUCT_TYPE__NO,
             params_func=lambda: {
-                'registered': c.is_registered()
+                'is_registered': c.is_registered()
             },
             chosen_func=chosen_func,
             amp_event_key=events.RECOMMEND__PRODUCT_TYPE__NO

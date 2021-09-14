@@ -18,10 +18,10 @@ class Test(ChatTest):
             # Set up models
             p = ProductType.objects.get(pk=1) # Nitrile Gloves
             l = Lead.objects.create(
-                owner=self.user,
+                owner=self.user_2,
                 product_type=p,
                 display_text='Example lead details',
-                is_buying=True
+                is_buying=True # User 2 is buying
             )
             r = Recommendation.objects.create(
                 lead=l,
@@ -38,7 +38,7 @@ class Test(ChatTest):
                 msg.body,
                 render_message(
                     messages.RECOMMEND__PRODUCT_TYPE, {
-                        'is_buying': True,
+                        'is_buying': False, # User is selling
                         'product_type': 'Nitrile Gloves'
                     }
                 )
