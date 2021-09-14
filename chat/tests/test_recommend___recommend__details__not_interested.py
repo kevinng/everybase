@@ -16,7 +16,7 @@ class RECOMMEND___RECOMMEND__DETAILS__NOT_INTERESTED___Registered___Test(
         self.receive_reply_assert(
             reason,
             intents.RECOMMEND,
-            messages.RECOMMEND__NOT_INTERESTED_CONFIRM,
+            messages.RECOMMEND__NOT_INTERESTED_CONFIRMED,
             target_body_variation_key='REGISTERED'
         )
         r = self.user.current_recommendation
@@ -41,7 +41,7 @@ class RECOMMEND___RECOMMEND__DETAILS_NOT_INTERESTED___Unregistered___Test(
         self.receive_reply_assert(
             reason,
             intents.RECOMMEND,
-            messages.RECOMMEND__NOT_INTERESTED_CONFIRM,
+            messages.RECOMMEND__NOT_INTERESTED_CONFIRMED,
             target_body_variation_key='UNREGISTERED'
         )
         r = self.user.current_recommendation

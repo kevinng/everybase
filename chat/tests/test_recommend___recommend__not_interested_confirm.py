@@ -8,7 +8,7 @@ class RECOMMEND___RECOMMEND__NOT_INTERESTED_CONFIRM___Unregistered___Test(
     def setUp(self):
         super().setUp(
             intents.RECOMMEND,
-            messages.RECOMMEND__NOT_INTERESTED_CONFIRM,
+            messages.RECOMMEND__NOT_INTERESTED_CONFIRMED,
             registered=False
         )
 
@@ -17,6 +17,6 @@ class RECOMMEND___RECOMMEND__NOT_INTERESTED_CONFIRM___Registered_Test(
     def setUp(self):
         super().setUp(
             intents.RECOMMEND,
-            messages.RECOMMEND__NOT_INTERESTED_CONFIRM,
+            messages.RECOMMEND__NOT_INTERESTED_CONFIRMED,
             registered=True
         )

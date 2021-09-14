@@ -18,6 +18,6 @@ class Handler(MessageHandler):
 
         return self.done_reply(
             intents.RECOMMEND,
-            messages.RECOMMEND__NOT_INTERESTED_CONFIRM,
+            messages.RECOMMEND__NOT_INTERESTED_CONFIRMED,
             lambda : { 'registered': ContextLogic(self).is_registered() }
         )
