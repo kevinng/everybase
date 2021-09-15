@@ -1,3 +1,0 @@
-Please select option 3 you've found a {% if is_buying == True %}buyer{% elif is_buying == False %}seller{% endif %} - to get in touch with an Everybase human agent.
-
-{% include 'chat/messages/includes/menu_options.txt' %}

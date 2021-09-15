@@ -17,43 +17,33 @@ class Handler(MessageHandler):
             r = self.message.from_user.current_recommendation
 
             # Update recommendation choices
-            r.recommend_details_choice = dv.value_string
-            r.recommend_details_responded = now
+            r.recommend_immediate_confirm_choice = dv.value_string
+            r.recommend_immediate_confirm_responded = now
 
             r.save()
 
         self.add_option([('1', 0)],
             intents.RECOMMEND,
-            messages.RECOMMEND__IMMEDIATE_CONFIRM,
-            datas.RECOMMEND__DETAILS,
-            datas.RECOMMEND__DETAILS__IMMEDIATE,
+            messages.TALK_TO_HUMAN__CONFIRMED,
+            datas.RECOMMEND__IMMEDIATE_CONFIRM,
+            datas.RECOMMEND__IMMEDIATE_CONFIRM__YES,
             params_func=lambda: {
-                'is_buying': c.is_buying__current_recommendation()
-            },
-            chosen_func=chosen_func,
-            amp_event_key=events.RECOMMEND__DETAILS__IMMEDIATE
-        )
-
-        self.add_option([('2', 0)],
-            intents.RECOMMEND,
-            messages.RECOMMEND__CONTACT_US_AGAIN,
-            datas.RECOMMEND__DETAILS,
-            datas.RECOMMEND__DETAILS__NEED_TIME,
-            params_func=lambda: {
-                'is_buying': c.is_buying__current_recommendation(),
                 'is_registered': c.is_registered()
             },
             chosen_func=chosen_func,
-            amp_event_key=events.RECOMMEND__DETAILS__NEED_TIME
+            amp_event_key=events.RECOMMEND__IMMEDIATE_CONFIRM__YES
         )
-
-        self.add_option([('3', 0)],
+        self.add_option([('2', 0)],
             intents.RECOMMEND,
-            messages.RECOMMEND__DETAILS__NOT_INTERESTED,
-            datas.RECOMMEND__DETAILS,
-            datas.RECOMMEND__DETAILS__NOT_INTERESTED,
+            messages.RECOMMEND__DETAILS,
+            datas.RECOMMEND__IMMEDIATE_CONFIRM,
+            datas.RECOMMEND__IMMEDIATE_CONFIRM__CANCEL,
+            params_func=lambda: {
+                'is_buying': c.is_buying__current_recommendation(),
+                'lead_details': c.get_recommendation_lead_display_text()
+            },
             chosen_func=chosen_func,
-            amp_event_key=events.RECOMMEND__DETAILS__NOT_INTERESTED
+            amp_event_key=events.RECOMMEND__IMMEDIATE_CONFIRM__CANCEL
         )
-
+        
         return self.reply_option()

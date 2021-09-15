@@ -39,7 +39,7 @@ class Handler(MessageHandler):
                 'is_registered': c.is_registered()
             },
             chosen_func=chosen_func,
-            amp_event_key=events.RECOMMEND__DETAILS__CAN_FIND
+            amp_event_key=events.RECOMMEND__PRODUCT_TYPE__LATER
         )
         self.add_option([('3', 0)],
             intents.RECOMMEND,

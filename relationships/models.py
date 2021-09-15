@@ -1511,12 +1511,10 @@ class Recommendation(Standard):
     recommend_details_choice = models.CharField(
         max_length=200,
         choices=[
-            (datas.RECOMMEND__DETAILS__DIRECT,
-                datas.RECOMMEND__DETAILS__DIRECT),
-            (datas.RECOMMEND__DETAILS__CAN_FIND,
-                datas.RECOMMEND__DETAILS__CAN_FIND),
-            (datas.RECOMMEND__DETAILS__NOT_NOW,
-                datas.RECOMMEND__DETAILS__NOT_NOW),
+            (datas.RECOMMEND__DETAILS__IMMEDIATE,
+                datas.RECOMMEND__DETAILS__IMMEDIATE),
+            (datas.RECOMMEND__DETAILS__NEED_TIME,
+                datas.RECOMMEND__DETAILS__NEED_TIME),
             (datas.RECOMMEND__DETAILS__NOT_INTERESTED,
                 datas.RECOMMEND__DETAILS__NOT_INTERESTED)
         ],
@@ -1524,6 +1522,21 @@ class Recommendation(Standard):
         blank=True
     )
     recommend_details_responded = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    recommend_immediate_confirm_choice = models.CharField(
+        max_length=200,
+        choices=[
+            (datas.RECOMMEND__IMMEDIATE_CONFIRM, datas.RECOMMEND__IMMEDIATE_CONFIRM),
+            (datas.RECOMMEND__IMMEDIATE_CONFIRM__YES, datas.RECOMMEND__IMMEDIATE_CONFIRM__YES),
+            (datas.RECOMMEND__IMMEDIATE_CONFIRM__CANCEL, datas.RECOMMEND__IMMEDIATE_CONFIRM__CANCEL)
+        ],
+        null=True,
+        blank=True
+    )
+    recommend_immediate_confirm_responded = models.DateTimeField(
         null=True,
         blank=True
     )
