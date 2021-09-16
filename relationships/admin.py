@@ -90,7 +90,7 @@ class EmailStatusInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['emailstatus']
 
-_email_fields = ['email', 'notes', 'import_job']
+_email_fields = ['email', 'notes', 'invalid_email', 'import_job']
 @admin.register(mod.Email)
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
@@ -103,9 +103,9 @@ class EmailAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _email_fields + ['tags']})
     ]
-    autocomplete_fields = ['import_job', 'tags']
+    autocomplete_fields = ['import_job', 'tags', 'invalid_email']
     inlines = [
-        EmailStatusInlineAdmin,
+        EmailStatusInlineAdmin
         # GmassEmailStatusInlineAdmin,
         # GmassCampaignResultInlineAdmin,
         # ChemicalClusterOfSingaporeCompanyInlineAdmin,
@@ -117,6 +117,11 @@ class EmailAdmin(comadm.StandardAdmin):
         # LookChemSupplierInlineAdmin,
         # WorldOfChemicalsSupplierInlineAdmin
     ]
+
+class EmailInlineAdmin(admin.TabularInline):
+    model = mod.Email
+    extra = 1
+    autocomplete_fields = ['import_job', 'tags']
 
 _invalid_email_fields = ['email', 'import_job']
 @admin.register(mod.InvalidEmail)
@@ -132,6 +137,7 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
         (None, {'fields': _invalid_email_fields})
     ]
     autocomplete_fields = ['import_job']
+    inlines = [EmailInlineAdmin]
 
 _user_fields = ['registered', 'phone_number', 'name', 'is_banned', 'notes',
     'email', 'country', 'state', 'current_recommendation', 'current_lead']

@@ -83,17 +83,32 @@ class PhoneNumber(Standard):
 class Email(Standard):
     """Email.
 
-    Last updated: 11 August 2021, 1:40 PM
+    Last updated: 16 September 2021, 2:20 PM
     """
 
     email = LowerCaseEmailField(
         unique=True,
         db_index=True
     )
-
     notes = models.TextField(
         null=True,
         blank=True
+    )
+    tags = models.ManyToManyField(
+        'EmailTag',
+        related_name='emails',
+        related_query_name='emails',
+        blank=True,
+        db_index=True
+    )
+    invalid_email = models.ForeignKey(
+        'relationships.InvalidEmail',
+        related_name='clean_email',
+        related_query_name='clean_email',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
     )
 
     import_job = models.ForeignKey(
@@ -103,14 +118,6 @@ class Email(Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
-        db_index=True
-    )
-
-    tags = models.ManyToManyField(
-        'EmailTag',
-        related_name='emails',
-        related_query_name='emails',
-        blank=True,
         db_index=True
     )
 
