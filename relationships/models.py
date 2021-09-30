@@ -1,13 +1,15 @@
 import random
-from django import db
 
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.db.models.deletion import PROTECT
 from django.utils.translation import gettext_lazy as _
 
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
 from chat.libraries.constants import datas, methods
+
+import django.contrib.auth.models as authmods
 
 from hashid_field import HashidAutoField
 
@@ -1642,3 +1644,80 @@ class LeadText(Standard):
         db_index=True
     )
     text = models.TextField()
+
+class UserProfile(Standard):
+    """User profile.
+
+    Last updated: 24 September 2021, 10:48 PM
+    """
+    user = models.OneToOneField(
+        authmods.User,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    
+    family_name = models.CharField(max_length=200)
+    given_name = models.CharField(max_length=200)
+    show_family_name_first = models.BooleanField(db_index=True)
+
+    email = models.ForeignKey(
+        'Email',
+        related_name='user_profiles',
+        related_query_name='user_profiles',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        related_name='user_profiles',
+        related_query_name='user_profiles',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    who_i_know = models.TextField()
+    what_have_i_sold = models.TextField()
+
+    location = models.CharField(max_length=200)
+
+class UserConnection(Standard):
+    """User connection.
+
+    Last updated: 24 September 2021, 10:48 PM
+    """
+    user_1 = models.ForeignKey(
+        'UserProfile',
+        related_name='connections_with_this_as_user_1',
+        related_query_name='connections_with_this_as_user_1',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    user_2 = models.ForeignKey(
+        'UserProfile',
+        related_name='connections_with_this_as_user_2',
+        related_query_name='connections_with_this_as_user_2',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+class UserReview(Standard):
+    """User review.
+
+    Last updated: 24 September 2021, 10:48 PM
+    """
+    reviewer = models.ForeignKey(
+        'UserProfile',
+        related_name='reviewers',
+        related_query_name='reviewers',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    reviewee = models.ForeignKey(
+        'UserProfile',
+        related_name='reviewees',
+        related_query_name='reviewees',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    rating = models.IntegerField(db_index=True)
+    review = models.TextField()
