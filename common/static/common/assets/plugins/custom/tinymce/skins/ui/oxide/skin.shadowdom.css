@@ -19,7 +19,6 @@ body.tox-dialog__disable-scroll {
   padding: 0;
   position: fixed;
   top: 0;
-  -ms-touch-action: pinch-zoom;
   touch-action: pinch-zoom;
   width: 100%;
 }

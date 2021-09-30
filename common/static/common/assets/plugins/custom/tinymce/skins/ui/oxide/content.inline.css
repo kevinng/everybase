@@ -76,7 +76,6 @@ pre[class*=language-] {
   word-wrap: normal;
   line-height: 1.5;
   -moz-tab-size: 4;
-  -o-tab-size: 4;
   tab-size: 4;
   -webkit-hyphens: none;
   -ms-hyphens: none;
@@ -87,11 +86,6 @@ pre[class*=language-]::-moz-selection,
 pre[class*=language-] ::-moz-selection,
 code[class*=language-]::-moz-selection,
 code[class*=language-] ::-moz-selection {
-  text-shadow: none;
-  background: #b3d4fc;
-}
-
-pre[class*=language-]::-moz-selection, pre[class*=language-] ::-moz-selection, code[class*=language-]::-moz-selection, code[class*=language-] ::-moz-selection {
   text-shadow: none;
   background: #b3d4fc;
 }
@@ -380,7 +374,6 @@ pre[class*=language-] {
   border-color: #4099ff;
   border-style: solid;
   border-width: 1px;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   height: 10px;
   position: absolute;
@@ -469,7 +462,6 @@ pre[class*=language-] {
 .tox-rtc-user-cursor:hover::after {
   background-color: inherit;
   border-radius: 100px;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   color: #fff;
   content: attr(data-user);
@@ -592,10 +584,6 @@ pre[class*=language-] {
 
 .mce-content-body td[data-mce-selected]::-moz-selection,
 .mce-content-body th[data-mce-selected]::-moz-selection {
-  background: none;
-}
-
-.mce-content-body td[data-mce-selected]::-moz-selection, .mce-content-body th[data-mce-selected]::-moz-selection {
   background: none;
 }
 

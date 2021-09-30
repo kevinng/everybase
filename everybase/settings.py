@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'growth.apps.GrowthConfig',
     'payments.apps.PaymentsConfig',
     'amplitude.apps.AmplitudeConfig',
+    'leads.apps.LeadsConfig',
     'django_filters',
     'django_extensions',
     'widget_tweaks',
