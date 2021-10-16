@@ -168,54 +168,45 @@ def get_user_key(length=_USER_KEY_LENGTH):
 class User(Standard):
     """User details.
 
-    Last updated: 2 September 2021, 9:04 PM
+    Last updated: 15 October 2021, 11:08 PM
     """
-    registered = models.DateTimeField(
-        blank=True,
+    profile_picture = models.ForeignKey(
+        'files.File',
+        related_name='users_w_this_profile_picture',
+        related_query_name='users_w_this_profile_picture',
+        on_delete=models.PROTECT,
         null=True,
+        blank=True,
         db_index=True
     )
-
     key = models.CharField(
         max_length=_USER_KEY_LENGTH,
         unique=True,
         default=get_user_key,
         db_index=True
     )
-    name = models.CharField(
-        max_length=100,
-        null=True,
+    first_given_name = models.CharField(
+        max_length=20,
+        db_index=True
+    )
+    last_family_name = models.CharField(
+        max_length=20,
+        db_index=True
+    )
+    display_family_name_first = models.BooleanField(
+        db_index=True,
         blank=True,
-        db_index=True
+        null=True
     )
-    is_banned = models.BooleanField(
-        default=False,
-        db_index=True
-    )
-    notes = models.TextField(
-        null=True,
-        blank=True
-    )
+    description = models.TextField(blank=True, null=True)
 
-    phone_number = models.OneToOneField(
-        'PhoneNumber',
-        related_name='user',
-        related_query_name='user',
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    email = models.OneToOneField(
-        'Email',
-        related_name='user',
-        related_query_name='user',
-        on_delete=models.PROTECT,
-        null=True,
+    languages = models.ManyToManyField(
+        'common.Language',
+        related_name='users_w_this_language',
+        related_query_name='users_w_this_language',
         blank=True,
         db_index=True
     )
-
     country = models.ForeignKey(
         'common.Country',
         related_name='users_w_this_country',
@@ -229,6 +220,30 @@ class User(Standard):
         'common.State',
         related_name='users_w_this_state',
         related_query_name='users_w_this_state',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    state_string = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    phone_number = models.OneToOneField(
+        'PhoneNumber',
+        related_name='user',
+        related_query_name='user',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    email = models.OneToOneField(
+        'Email',
+        related_name='user',
+        related_query_name='user',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
