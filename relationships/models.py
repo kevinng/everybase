@@ -85,9 +85,14 @@ class PhoneNumber(Standard):
 class Email(Standard):
     """Email.
 
-    Last updated: 16 September 2021, 2:20 PM
+    Last updated: 15 October 2021, 11:05 PM
     """
 
+    verified = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     email = LowerCaseEmailField(
         unique=True,
         db_index=True

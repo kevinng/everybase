@@ -90,7 +90,7 @@ class EmailStatusInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['emailstatus']
 
-_email_fields = ['email', 'notes', 'invalid_email', 'import_job']
+_email_fields = ['verified', 'email', 'notes', 'invalid_email', 'import_job']
 @admin.register(mod.Email)
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
