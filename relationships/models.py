@@ -494,3 +494,34 @@ class Connection(Standard):
 
     class Meta:
         unique_together = ['user_one', 'user_two']
+
+class FriendRequest(Standard):
+    """Friend request.
+
+    Last updated: 15 October 2021, 11:56 PM
+    """
+    requested = models.DateTimeField(db_index=True)
+    requester = models.ForeignKey(
+        'User',
+        related_name='users_with_this_friend_requester_as_requester',
+        related_query_name='users_with_this_friend_requester_as_requester',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    requestee = models.ForeignKey(
+        'User',
+        related_name='users_with_this_friend_requester_as_requestee',
+        related_query_name='users_with_this_friend_requester_as_requestee',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    responded = models.DateTimeField(db_index=True)
+    response = models.CharField(
+        max_length=20,
+        choices=[
+            ('accept', 'Accept'),
+            ('reject', 'Reject')
+        ],
+        null=True,
+        blank=True
+    )
