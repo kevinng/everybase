@@ -28,6 +28,24 @@ class PhoneNumberAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _phone_number_fields + ['types']})]
     autocomplete_fields = ['types']
 
+_phone_number_verification_fields = ['verified', 'phone_number',
+    'phone_number_type']
+@admin.register(mod.PhoneNumberVerification)
+class PhoneNumberVerificationAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        _phone_number_verification_fields
+    list_editable = comadm.standard_list_editable + \
+        _phone_number_verification_fields
+    list_filter = comadm.standard_list_filter + ['phone_number_type']
+    search_fields = comadm.standard_search_fields + \
+        ['phone_number__country_code', 'phone_number__national_number']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _phone_number_verification_fields})]
+    autocomplete_fields = ['phone_number', 'phone_number_type']
+
 class GmassEmailStatusInlineAdmin(admin.TabularInline):
     model = gromods.GmassEmailStatus
     extra = 0
