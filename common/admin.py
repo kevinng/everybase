@@ -161,18 +161,3 @@ class SystemTimestampAdmin(admin.ModelAdmin):
     readonly_fields = standard_readonly_fields
     fieldsets = standard_fieldsets + [
         (None, {'fields': ['key', 'timestamp']})]
-
-_match_keyword_fields = ['keyword', 'tolerance', 'product_type', 'country']
-@admin.register(models.MatchKeyword)
-class MatchKeywordAdmin(StandardAdmin):
-    # List page settings
-    list_display = standard_list_display + _match_keyword_fields
-    list_editable = standard_list_editable + _match_keyword_fields
-    search_fields = ['keyword']
-    list_filter = standard_list_filter + ['product_type']
-
-    # Details page settings
-    readonly_fields = standard_readonly_fields
-    fieldsets = standard_fieldsets + [
-        (None, {'fields': _match_keyword_fields})]
-    autocomplete_fields = ['product_type', 'country']

@@ -328,44 +328,6 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
         [(None, {'fields': ['harvested', 'name', 'country', 'request',
             'email', 'domain']})]
 
-class NoteUpdateInlineAdmin(admin.TabularInline):
-    model = mod.NoteUpdate
-    extra = 1
-
-_note_fields = ['closed', 'user', 'email', 'phone_number', 'agenda', 'outcome']
-_note_edit_filter_fields = ['closed', 'agenda', 'outcome']
-@admin.register(mod.Note)
-class NoteAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _note_fields
-    list_editable = comadm.standard_list_editable + _note_edit_filter_fields
-    list_filter = comadm.standard_list_filter + _note_edit_filter_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [(None, {'fields': _note_fields})]
-    autocomplete_fields = ['email', 'phone_number', 'agenda', 'outcome']
-    inlines = [NoteUpdateInlineAdmin]
-
-@admin.register(mod.NoteAgenda)
-class NoteTagAdmin(comadm.ChoiceAdmin):
-    pass
-
-@admin.register(mod.NoteOutcome)
-class NoteStatusAdmin(comadm.ChoiceAdmin):
-    pass
-
-_note_update_fields = ['text']
-@admin.register(mod.NoteUpdate)
-class NoteUpdateAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _note_update_fields
-    list_editable = comadm.standard_list_editable + _note_update_fields
-    search_fields = comadm.standard_search_fields + _note_update_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [(None, {'fields':
-        _note_update_fields})]
-
 @admin.register(mod.EmailStatus)
 class EmailStatusAdmin(comadm.ChoiceAdmin):
     pass

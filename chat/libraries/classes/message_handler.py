@@ -13,7 +13,7 @@ from chat.libraries.utility_funcs.get_parameters import get_parameters
 from chat.libraries.utility_funcs.get_latest_value import get_latest_value
 from chat.libraries.utility_funcs.done_to_context import done_to_context
 from chat.libraries.utility_funcs.render_message import render_message
-from chat.libraries.utility_funcs.get_product_type import get_product_type
+# from chat.libraries.utility_funcs.get_product_type import get_product_type
 from chat.libraries.utility_funcs.match import match
 
 class MessageHandler():
@@ -539,37 +539,37 @@ class MessageHandler():
 
         return self.save_value(data_key, value_float=value)
 
-    def get_product_type(
-            self,
-            intent_key: str,
-            message_key: str,
-            data_key: str
-        ) -> typing.Tuple[relmods.ProductType, relmods.UnitOfMeasure]:
-        """Get latest value entered by the user with
-        intent_key/message_key/data_key, and look up product type with the
-        value. If found, return tuple (product_type, uom) - where product_type
-        is reference to the product type model, and uomm is reference to its
-        unit of measure model.
+    # def get_product_type(
+    #         self,
+    #         intent_key: str,
+    #         message_key: str,
+    #         data_key: str
+    #     ) -> typing.Tuple[relmods.ProductType, relmods.UnitOfMeasure]:
+    #     """Get latest value entered by the user with
+    #     intent_key/message_key/data_key, and look up product type with the
+    #     value. If found, return tuple (product_type, uom) - where product_type
+    #     is reference to the product type model, and uomm is reference to its
+    #     unit of measure model.
 
-        Parameters
-        ----------
-        intent_key
-            Intent key for user's latest value for looking up product type
-        message_key
-            Message key for user's latest value for looking up product type
-        data_key
-            Data key for user's latest value for looking up product type
-        """
+    #     Parameters
+    #     ----------
+    #     intent_key
+    #         Intent key for user's latest value for looking up product type
+    #     message_key
+    #         Message key for user's latest value for looking up product type
+    #     data_key
+    #         Data key for user's latest value for looking up product type
+    #     """
 
-        # Get latest user input data value string to match against a product
-        # type
-        value = self.get_latest_value(intent_key, message_key, data_key)
+    #     # Get latest user input data value string to match against a product
+    #     # type
+    #     value = self.get_latest_value(intent_key, message_key, data_key)
 
-        if value is None:
-            # Value does not exist
-            return None
+    #     if value is None:
+    #         # Value does not exist
+    #         return None
 
-        return get_product_type(value.value_string)
+    #     return get_product_type(value.value_string)
 
     def get_latest_value(
             self,

@@ -8,7 +8,7 @@ from common import admin as comadm
 
 _file_fields = ['uuid', 'file_url', 'upload_confirmed', 's3_bucket_name',
     's3_object_key', 's3_object_content_length', 's3_object_e_tag',
-    's3_object_content_type', 's3_object_last_modified', 'lead']
+    's3_object_content_type', 's3_object_last_modified']
 @admin.register(models.File)
 class FileAdmin(admin.ModelAdmin):
     def file_url(self, obj):
@@ -32,4 +32,3 @@ class FileAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields + ['uuid', 'file_url']
     fieldsets = comadm.standard_fieldsets + [(None, {'fields': _file_fields})]
-    autocomplete_fields = ['lead']

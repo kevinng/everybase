@@ -14,13 +14,7 @@ class Lead(Standard):
     agent_sale_commission_pct = models.FloatField(db_index=True)
     location = models.CharField(max_length=200)
 
-    owner = models.ForeignKey(
-        'relationships.UserProfile',
-        related_name='leads',
-        related_query_name='leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+
     owner_role = models.TextField(
         max_length=200,
         choices=[
@@ -63,13 +57,7 @@ class SavedLead(Standard):
 
     Last updated: 24 September 2021, 10:48 PM
     """
-    owner = models.ForeignKey(
-        'relationships.UserProfile',
-        related_name='saved_leads',
-        related_query_name='saved_leads',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+
     lead = models.ForeignKey(
         'Lead',
         related_name='saved_leads',

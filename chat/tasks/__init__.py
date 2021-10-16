@@ -3,7 +3,7 @@
 # from chat.tasks.exchange_contacts import exchange_contacts
 # from chat.tasks.forward_answer import forward_answer
 # from chat.tasks.forward_question import forward_question
-from chat.tasks.save_lead_media import save_lead_media
+# from chat.tasks.save_lead_media import save_lead_media
 # from chat.tasks.save_new_demand_version import save_new_demand_version
 # from chat.tasks.save_new_demand import save_new_demand
 # from chat.tasks.save_new_supply_version import save_new_supply_version
@@ -16,7 +16,7 @@ __all__ = [
     # 'exchange_contacts',
     # 'forward_answer',
     # 'forward_question',
-    'save_lead_media',
+    # 'save_lead_media',
     # 'save_new_demand_version',
     # 'save_new_demand',
     # 'save_new_supply_version',

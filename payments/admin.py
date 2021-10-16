@@ -3,7 +3,7 @@ from django.contrib import admin
 from . import models as mod
 from common import admin as comadm
 
-_payment_hash_fields = ['user', 'match', 'started', 'succeeded', 'failed',
+_payment_hash_fields = ['user', 'started', 'succeeded', 'failed',
     'expired', 'session_id', 'price']
 @admin.register(mod.PaymentHash)
 class PaymentHashAdmin(comadm.StandardAdmin):
@@ -18,7 +18,7 @@ class PaymentHashAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _payment_hash_fields})
     ]
-    autocomplete_fields = ['user', 'match', 'price']
+    autocomplete_fields = ['user', 'price']
 
 _payment_event_fields = ['event_type', 'currency', 'amount', 'user',
     'payment_hash']
