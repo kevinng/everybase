@@ -110,7 +110,6 @@ class PhoneNumberVerification(Standard):
     def __str__(self):
         return f'({self.phone_number} [{self.id}])'
 
-
 class Email(Standard):
     """Email.
 
@@ -460,3 +459,38 @@ class PhoneNumberLinkAccess(Standard):
     class Meta:
         verbose_name = 'Phone Number URL access'
         verbose_name_plural = 'Phone Number URL accesses'
+
+class Connection(Standard):
+    """Connection between two user.
+
+    Last updated: 15 October 2021, 11:56 PM
+    """
+    created = models.DateTimeField(
+        db_index=True,
+        auto_now=True
+    )
+    user_one = models.ForeignKey(
+        'User',
+        related_name='users_with_this_connection_as_one',
+        related_query_name='users_with_this_connection_as_one',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    user_two = models.ForeignKey(
+        'User',
+        related_name='users_with_this_connection_as_two',
+        related_query_name='users_with_this_connection_as_two',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    
+    def clean(self):
+        super(Connection, self).clean()
+
+        # user_one's ID must be smaller than user_two's
+        if self.user_one.id > self.user_two.id:
+            raise ValidationError(
+                'user_one.id must be smaller than user_two.id')
+
+    class Meta:
+        unique_together = ['user_one', 'user_two']

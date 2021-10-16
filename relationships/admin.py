@@ -231,3 +231,23 @@ class FileInlineAdmin(admin.TabularInline):
         url = urljoin(
             BASE_URL, reverse('files:get_file', args=[obj.id]))
         return format_html(f'<a href="{url}" target="{url}">{url}</a>')
+
+_connection_fields = ['user_one', 'user_two']
+@admin.register(mod.Connection)
+class ConnectionAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = ['created'] + comadm.standard_list_display + \
+        _connection_fields
+    list_editable = comadm.standard_list_editable + _connection_fields
+    list_filter = comadm.standard_list_filter + ['created']
+    search_fields = comadm.standard_search_fields + [
+        'user_one__first_given_name', 'user_one__last_family_name',
+        'user_two__first_given_name', 'user_two__last_family_name',
+        'user_one__id', 'user_two__id']
+
+    # Details page settings
+    readonly_fields = comadm.standard_readonly_fields + ['created']
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _connection_fields})
+    ]
+    autocomplete_fields = ['user_one', 'user_two']
