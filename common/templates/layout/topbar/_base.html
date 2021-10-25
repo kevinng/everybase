@@ -1,13 +1,36 @@
-									
+{% load static %}
+
 									<!--begin::Toolbar wrapper-->
 									<div class="d-flex align-items-stretch flex-shrink-0">
 										<!--begin::Search-->
 										<div class="d-flex align-items-stretch ms-1 ms-lg-3">
 
-<!--layout-partial:layout/search/_base.html-->
+										{% comment %}
+
+										{% include 'layout/search/_base.html' %}
+
+										{% endcomment %}
 
 										</div>
 										<!--end::Search-->
+										<!--begin::Saved leads-->
+										{% comment %}
+										<div class="d-flex align-items-center ms-1 ms-lg-3">
+											<!--begin::Drawer toggle-->
+											<div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px" id="kt_activities_toggle">
+												<!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen030.svg-->
+												<span class="svg-icon svg-icon-muted svg-icon-2hx">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+														<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+													</svg>
+												</span>
+												<!--end::Svg Icon-->
+											</div>
+											<!--end::Drawer toggle-->
+										</div>
+										{% endcomment %}
+										<!--end::Saved leads-->
+										{% comment %}
 										<!--begin::Activities-->
 										<div class="d-flex align-items-center ms-1 ms-lg-3">
 											<!--begin::Drawer toggle-->
@@ -26,7 +49,9 @@
 											<!--end::Drawer toggle-->
 										</div>
 										<!--end::Activities-->
+										{% endcomment %}
 										<!--begin::Notifications-->
+										{% comment %}
 										<div class="d-flex align-items-center ms-1 ms-lg-3">
 											<!--begin::Menu- wrapper-->
 											<div class="btn btn-icon btn-active-light-primary position-relative w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
@@ -40,14 +65,19 @@
 													</svg>
 												</span>
 												<!--end::Svg Icon-->
+
+												<!-- Blinking dot - show when the user has unread notifications -->
+												<span class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
 											</div>
 
-<!--layout-partial:layout/topbar/partials/_notifications-menu.html-->
+											{% include 'layout/topbar/partials/_notifications-menu.html' %}
 
 											<!--end::Menu wrapper-->
 										</div>
+										{% endcomment %}
 										<!--end::Notifications-->
 										<!--begin::Chat-->
+										{% comment %}
 										<div class="d-flex align-items-center ms-1 ms-lg-3">
 											<!--begin::Menu wrapper-->
 											<div class="btn btn-icon btn-active-light-primary position-relative w-30px h-30px w-md-40px h-md-40px" id="kt_drawer_chat_toggle">
@@ -64,7 +94,9 @@
 											</div>
 											<!--end::Menu wrapper-->
 										</div>
+										{% endcomment %}
 										<!--end::Chat-->
+										{% comment %}
 										<!--begin::Quick links-->
 										<div class="d-flex align-items-center ms-1 ms-lg-3">
 											<!--begin::Menu wrapper-->
@@ -81,19 +113,27 @@
 												<!--end::Svg Icon-->
 											</div>
 
-<!--layout-partial:layout/topbar/partials/_quick-links-menu.html-->
+											{% include 'layout/topbar/partials/_quick-links-menu.html' %}
 
 											<!--end::Menu wrapper-->
 										</div>
 										<!--end::Quick links-->
+										{% endcomment %}
 										<!--begin::User-->
 										<div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
 											<!--begin::Menu wrapper-->
-											<div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-												<img src="assets/media/avatars/150-26.jpg" alt="user" />
+											{% comment %} <a href="#" class="btn btn-light btn-sm me-3">Sign Up</a>
+											<a href="#" class="btn btn-secondary btn-sm">Login</a> {% endcomment %}
+
+											{% comment %} <div class="cursor-pointer symbol symbol-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+												<img src="{% static 'common/assets/media/avatars/150-26.jpg' %}" alt="user" />
+											</div> {% endcomment %}
+
+											<div class="cursor-pointer symbol symbol symbol-40px me-5" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+												<a><div class="symbol-label fs-3 bg-warning text-light">MJ</div></a>
 											</div>
 
-<!--layout-partial:layout/topbar/partials/_user-menu.html-->
+											{% include 'layout/topbar/partials/_user-menu.html' %}
 
 											<!--end::Menu wrapper-->
 										</div>

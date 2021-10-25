@@ -7,24 +7,24 @@
 				<!--begin::Wrapper-->
 				<div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
 
-<!--layout-partial:layout/header/_base.html-->
+					{% include 'layout/header/_base.html' %}
 
 					<!--begin::Content-->
 					<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
 
-<!--layout-partial:layout/toolbars/_toolbar-1.html-->
+						{% include 'layout/toolbars/_toolbar-1.html' %}
 
 						<!--begin::Post-->
 						<div class="post d-flex flex-column-fluid" id="kt_post">
 
-<!--layout-partial:layout/_content.html-->
+						{% include 'layout/_content.html' %}
 
 						</div>
 						<!--end::Post-->
 					</div>
 					<!--end::Content-->
 
-<!--layout-partial:layout/_footer.html-->
+					{% include 'layout/_footer.html' %}
 
 				</div>
 				<!--end::Wrapper-->
@@ -33,11 +33,16 @@
 		</div>
 		<!--end::Root-->
 		<!--begin::Drawers-->
+	
+		{% comment %}
 
-<!--layout-partial:layout/topbar/partials/_activity-drawer.html-->
+		{% include 'layout/topbar/partials/_activity-drawer.html' %}
 
+		{% endcomment %}
 		
 		<!--begin::Chat drawer-->
+		{% comment %}
+
 		<div id="kt_drawer_chat" class="bg-body" data-kt-drawer="true" data-kt-drawer-name="chat" data-kt-drawer-activate="true" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}" data-kt-drawer-direction="end" data-kt-drawer-toggle="#kt_drawer_chat_toggle" data-kt-drawer-close="#kt_drawer_chat_close">
 			<!--begin::Messenger-->
 			<div class="card w-100 rounded-0 border-0" id="kt_drawer_chat_messenger">
@@ -409,25 +414,24 @@
 			</div>
 			<!--end::Messenger-->
 		</div>
+		
+		{% endcomment %}
 		<!--end::Chat drawer-->
 		
-
-<!--layout-partial:layout/explore/_main.html-->
+		{% comment %} {% include 'layout/explore/_main.html' %} {% endcomment %}
 
 		<!--end::Drawers-->
 		<!--begin::Modals-->
 
-<!--layout-partial:partials/modals/_invite-friends.html-->
+		{% include 'partials/modals/_invite-friends.html' %}
 
+		{% include 'partials/modals/create-app/_main.html' %}
 
-<!--layout-partial:partials/modals/create-app/_main.html-->
-
-
-<!--layout-partial:partials/modals/_upgrade-plan.html-->
+		{% include 'partials/modals/_upgrade-plan.html' %}
 
 		<!--end::Modals-->
 
-<!--layout-partial:layout/_scrolltop.html-->
+		{% include 'layout/_scrolltop.html' %}
 
 		<!--end::Main-->
 		

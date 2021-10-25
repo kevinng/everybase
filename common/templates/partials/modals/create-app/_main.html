@@ -136,19 +136,15 @@
 								<!--begin::Form-->
 								<form class="form" novalidate="novalidate" id="kt_modal_create_app_form">
 
-<!--layout-partial:partials/modals/create-app/steps/_step-1.html-->
+									{% include 'partials/modals/create-app/steps/_step-1.html' %}
 
+									{% include 'partials/modals/create-app/steps/_step-2.html' %}
 
-<!--layout-partial:partials/modals/create-app/steps/_step-2.html-->
+									{% include 'partials/modals/create-app/steps/_step-3.html' %}
 
+									{% include 'partials/modals/create-app/steps/_step-4.html' %}
 
-<!--layout-partial:partials/modals/create-app/steps/_step-3.html-->
-
-
-<!--layout-partial:partials/modals/create-app/steps/_step-4.html-->
-
-
-<!--layout-partial:partials/modals/create-app/steps/_step-5.html-->
+									{% include 'partials/modals/create-app/steps/_step-5.html' %}
 
 									<!--begin::Actions-->
 									<div class="d-flex flex-stack pt-10">

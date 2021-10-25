@@ -1,0 +1,49 @@
+						
+						<!--begin::Toolbar-->
+						<div class="toolbar" id="kt_toolbar">
+							<!--begin::Container-->
+							<div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+
+								{% include 'layout/page-title/_default.html' %}
+
+								<!--begin::Actions-->
+								<div class="d-flex align-items-center py-1">
+									<!--begin::Wrapper-->
+
+									<!-- Note:  -->
+
+									<a href="#" class="btn btn-sm btn-secondary me-2">Clear Filter</a>
+
+									<!--begin::Filter-->
+									<!-- NOTE: modal is defined in base, else it will not work -->
+
+									<!-- Show this if no filter is applied -->
+									{% comment %} <a href="#" class="btn btn-sm btn-light btn-light-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads"> {% endcomment %}
+
+									<!-- Show this if filter is applied -->
+									<a href="#" class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads">
+										<!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
+										<span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+												<path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="black" />
+											</svg>
+										</span>
+										<!--end::Svg Icon-->
+										Filter
+									</a>
+									<!--end::Filter-->
+
+									<!--begin::Separator-->
+									<span class="h-20px border-gray-200 border-start mx-4"></span>
+									<!--end::Separator-->
+
+									<!--begin::New Lead-->
+									<a href="#" class="btn btn-sm btn-primary">New Lead</a>
+									<!--end::New Lead-->
+								</div>
+								<!--end::Actions-->
+							</div>
+							<!--end::Container-->
+						</div>
+						<!--end::Toolbar-->
+						

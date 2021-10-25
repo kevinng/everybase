@@ -49,10 +49,8 @@
 					<div id="kt_header" style="" class="header align-items-stretch">
 						<!--begin::Container-->
 						<div class="container-fluid d-flex align-items-stretch justify-content-between">
-							<!--begin::Aside mobile toggle-->
-							<!--end::Aside mobile toggle-->
 							<!--begin::Logo-->
-							<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
+							<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
 								<a href="?page=index">
 									<img alt="Logo" src="{% static 'common/assets/media/logos/plain-logo.svg' %}" class="h-20px h-lg-30px" />
 								</a>
@@ -68,12 +66,12 @@
 										<!--begin::Menu-->
 										<div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch">
 											<div class="menu-item me-lg-1">
-												<a class="menu-link active py-3" href="?page=index">
+												<a class="menu-link active py-3" href="?page=leads">
 													<span class="menu-title">Leads</span>
 												</a>
 											</div>
                                             <div class="menu-item me-lg-1">
-												<a class="menu-link py-3" href="?page=index">
+												<a class="menu-link py-3" href="?page=contacts">
 													<span class="menu-title">Contacts</span>
 												</a>
 											</div>
@@ -90,12 +88,13 @@
 
 									<!--begin::Toolbar wrapper-->
 									<div class="d-flex align-items-stretch flex-shrink-0">
+										<!--begin::User-->
 										<div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+											<!--begin::Avatar-->
 											{% comment %} <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
 												<img src="{% static 'common/assets/media/avatars/150-26.jpg' %}" alt="user" />
 											</div> {% endcomment %}
 
-                                            <!--begin:: Avatar -->
                                             <div class="symbol symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                                                 <a href="../../demo1/dist/apps/user-management/users/view.html">
                                                     <div class="symbol-label fs-3 bg-light-warning text-warning">MJ</div>
@@ -120,14 +119,14 @@
 												</div>
 												<div class="separator my-2"></div>
 												<div class="menu-item px-5">
-													<a href="?page=account/overview" class="menu-link px-5">My Profile</a>
+													<a href="?page=my-profile" class="menu-link px-5">My Profile</a>
 												</div>
 												<div class="menu-item px-5">
-													<a href="?page=authentication/flows/basic/sign-in" class="menu-link px-5">Sign Out</a>
+													<a href="?page=sign-out" class="menu-link px-5">Sign Out</a>
 												</div>
 											</div>
 										</div>
-										<!--end::User -->
+										<!--end::User-->
 
 										<!--begin::Header menu toggle-->
 										<div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
@@ -159,17 +158,6 @@
 					<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
 						<div class="toolbar" id="kt_toolbar">
 							<div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
-								<div class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
-									<h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">{% block page_title %}Leads{% endblock %}</h1>
-                                    <!--begin::Separator-->
-									<span class="h-20px border-gray-200 border-start mx-4"></span>
-									<!--end::Separator-->
-									<ol class="breadcrumb breadcrumb-separatorless text-muted fs-6 fw-bold">
-                                        <li class="breadcrumb-item pe-3"><a href="#">Latest</a></li>
-                                        <li class="breadcrumb-item text-muted">Saved</li>
-                                    </ol>
-								</div>
-								
 								<div class="d-flex align-items-center py-1">
 									<div class="me-4">
 										<a href="#" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
