@@ -1,0 +1,726 @@
+{% extends 'extendables/base.html' %}
+
+{% load static %}
+
+{% block subtitle %}| Leads{% endblock %}
+
+{% block page_title %}Leads{% endblock %}
+
+{% block page_subtitle %}
+
+<!-- Note: do not show if showing all leads-->
+
+<!--begin::Separator-->
+<span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
+<!--end::Separator-->
+
+<!--begin::Description-->
+{% comment %} <small class="text-muted fs-7 fw-bold my-1 ms-1">20 leads found</small> {% endcomment %}
+<small class="text-muted fs-7 fw-bold my-1 ms-1">Showing all leads</small>
+<!--end::Description--></h1>
+<!--end::Title-->
+
+{% endblock %}
+
+{% block actions %}
+
+<a href="#" class="btn btn-sm btn-secondary me-2">Clear Filter</a>
+
+<!--begin::Filter-->
+<!-- NOTE: modal is defined in base, else it will not work -->
+
+<!-- Show this if no filter is applied -->
+{% comment %} <a href="#" class="btn btn-sm btn-light btn-light-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads"> {% endcomment %}
+
+<!-- Show this if filter is applied -->
+<a href="#" class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads">
+    <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
+    <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="black" />
+        </svg>
+    </span>
+    <!--end::Svg Icon-->
+    Filter
+</a>
+<!--end::Filter-->
+
+<!--begin::Separator-->
+<span class="h-20px border-gray-200 border-start mx-4"></span>
+<!--end::Separator-->
+
+<!--begin::New Lead-->
+<a href="#" class="btn btn-sm btn-primary">New Lead</a>
+<!--end::New Lead-->
+
+{% endblock %}
+
+{% block content %}
+
+<!--begin::Container-->
+<div id="kt_content_container" class="container-xxl">
+	<div class="row">
+		<div class="col-lg-4 mb-5">
+			<div class="card card-flush shadow-sm">
+				<div class="card-header ribbon ribbon-top">
+					<div class="ribbon-label bg-danger">
+						Selling
+					</div>
+					{% comment %} <div class="ribbon-label bg-success">
+						Buying
+					</div> {% endcomment %}
+					<a href="#"><h3 class="text-hover-primary card-title mt-15">Powder-free Vinyl Gloves, Black, All Sizes Black, All Sizes</h3></a>
+				</div>
+				<div class="card-body">
+
+					<!-- User -->
+					<div class="d-flex align-items-center mb-7">
+						<!--begin::Avatar-->
+						{% comment %} <div class="symbol symbol-40px me-3">
+							<img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
+						</div> {% endcomment %}
+
+						<div class="symbol symbol symbol-40px me-3">
+							<div class="symbol-label fs-3 bg-warning text-light">MJ</div>
+						</div>
+						<!--end::Avatar-->
+						<!--begin::Username-->
+						<div class="d-flex flex-column">
+						{% comment %} <span class="badge badge-dark fs-9">Direct</span> {% endcomment %}
+							<div><span class="fw-bolder fs-5 me-2">Max Smith</span><span class="badge badge-info fs-9">Broker</span></div>
+							<div class="fw-bold text-muted fs-7">Singapore, 2 days ago</div>
+						</div>
+						<!--end::Username-->
+					</div>
+
+					<!--begin::Item-->
+					<div class="d-flex mb-7">
+						<img alt="img" style="object-fit: cover; width: 100px" class="rounded h-75px me-3" src="{% static 'common/assets/media/demos/demo1.png' %}" />
+						<img alt="img" style="object-fit: cover; width: 100px" class="rounded h-75px" src="{% static 'common/assets/media/demos/demo1.png' %}" />
+					</div>
+					<!--end::Item-->
+
+					<div class="fw-bolder fs-6">Brokers welcomed, 5&#x25; commission</div>
+					<div class="fs-6 mb-5">Ready stock, USA, LA</div>
+
+					<div class="fs-6 fw-bold text-gray-600">Description preview the entire process writing a blog post often takes a couple of hours if you can type....</div>
+				</div>
+				<div class="card-footer">
+					<div class="d-flex flex-stack flex-wrapr">
+						<div class="d-flex flex-stack">
+							<div class="border border-dashed border-gray-300 rounded py-2 px-3 me-2">
+								<!--begin::Svg Icon | path: icons/duotune/communication/com008.svg-->
+								<span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path opacity="0.3" d="M4.425 20.525C2.525 18.625 2.525 15.525 4.425 13.525L14.825 3.125C16.325 1.625 18.825 1.625 20.425 3.125C20.825 3.525 20.825 4.12502 20.425 4.52502C20.025 4.92502 19.425 4.92502 19.025 4.52502C18.225 3.72502 17.025 3.72502 16.225 4.52502L5.82499 14.925C4.62499 16.125 4.62499 17.925 5.82499 19.125C7.02499 20.325 8.82501 20.325 10.025 19.125L18.425 10.725C18.825 10.325 19.425 10.325 19.825 10.725C20.225 11.125 20.225 11.725 19.825 12.125L11.425 20.525C9.525 22.425 6.425 22.425 4.425 20.525Z" fill="black" />
+										<path d="M9.32499 15.625C8.12499 14.425 8.12499 12.625 9.32499 11.425L14.225 6.52498C14.625 6.12498 15.225 6.12498 15.625 6.52498C16.025 6.92498 16.025 7.525 15.625 7.925L10.725 12.8249C10.325 13.2249 10.325 13.8249 10.725 14.2249C11.125 14.6249 11.725 14.6249 12.125 14.2249L19.125 7.22493C19.525 6.82493 19.725 6.425 19.725 5.925C19.725 5.325 19.525 4.825 19.125 4.425C18.725 4.025 18.725 3.42498 19.125 3.02498C19.525 2.62498 20.125 2.62498 20.525 3.02498C21.325 3.82498 21.725 4.825 21.725 5.925C21.725 6.925 21.325 7.82498 20.525 8.52498L13.525 15.525C12.325 16.725 10.525 16.725 9.32499 15.625Z" fill="black" />
+									</svg>
+								</span>
+								<!--end::Svg Icon-->
+								<span class="ms-1 fs-7 fw-bolder text-gray-600">9</span>
+							</div>
+						</div>
+
+						<div class="separator"></div>
+
+						<div class="d-flex flex-stack">
+							<button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+								</svg></span> Saved</button>
+							{% comment %} <button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+									</svg>
+								</span> Save</button> {% endcomment %}
+							<button class="btn btn-sm btn-outline btn-outline-primary fs-7">Details</button>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 mb-5">
+			<div class="card card-flush shadow-sm">
+				<div class="card-header ribbon ribbon-top">
+					<div class="ribbon-label bg-danger">
+						Selling
+					</div>
+					{% comment %} <div class="ribbon-label bg-success">
+						Buying
+					</div> {% endcomment %}
+					<a href="#"><h3 class="text-hover-primary card-title mt-15">Powder-free Vinyl Gloves, Black, All Sizes Black, All Sizes</h3></a>
+				</div>
+				<div class="card-body">
+
+					<!-- User -->
+					<div class="d-flex align-items-center mb-7">
+						<!--begin::Avatar-->
+						{% comment %} <div class="symbol symbol-40px me-3">
+							<img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
+						</div> {% endcomment %}
+
+						<div class="symbol symbol symbol-40px me-3">
+							<div class="symbol-label fs-3 bg-warning text-light">MJ</div>
+						</div>
+						<!--end::Avatar-->
+						<!--begin::Username-->
+						<div class="d-flex flex-column">
+						{% comment %} <span class="badge badge-dark fs-9">Direct</span> {% endcomment %}
+							<div><span class="fw-bolder fs-5 me-2">Max Smith</span><span class="badge badge-info fs-9">Broker</span></div>
+							<div class="fw-bold text-muted fs-7">Singapore, 2 days ago</div>
+						</div>
+						<!--end::Username-->
+					</div>
+
+					<!--begin::Item-->
+					{% comment %} <div class="d-flex flex-column align-items-center mb-7">
+						<img alt="img" class="rounded w-250px" src="{% static 'common/assets/media/demos/demo1.png' %}" />
+					</div> {% endcomment %}
+					<!--end::Item-->
+
+					<div class="fw-bolder fs-6">Brokers welcomed, 5&#x25; commission</div>
+					<div class="fs-6 mb-5">Ready stock, USA, LA</div>
+
+					<div class="fs-6 fw-bold text-gray-600">Description preview the entire process writing a blog post often takes a couple of hours if you can type....</div>
+				</div>
+				<div class="card-footer">
+					<div class="d-flex flex-stack flex-wrapr">
+						<div class="d-flex flex-stack">
+							<div class="border border-dashed border-gray-300 rounded py-2 px-3 me-2">
+								<!--begin::Svg Icon | path: icons/duotune/communication/com008.svg-->
+								<span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path opacity="0.3" d="M4.425 20.525C2.525 18.625 2.525 15.525 4.425 13.525L14.825 3.125C16.325 1.625 18.825 1.625 20.425 3.125C20.825 3.525 20.825 4.12502 20.425 4.52502C20.025 4.92502 19.425 4.92502 19.025 4.52502C18.225 3.72502 17.025 3.72502 16.225 4.52502L5.82499 14.925C4.62499 16.125 4.62499 17.925 5.82499 19.125C7.02499 20.325 8.82501 20.325 10.025 19.125L18.425 10.725C18.825 10.325 19.425 10.325 19.825 10.725C20.225 11.125 20.225 11.725 19.825 12.125L11.425 20.525C9.525 22.425 6.425 22.425 4.425 20.525Z" fill="black" />
+										<path d="M9.32499 15.625C8.12499 14.425 8.12499 12.625 9.32499 11.425L14.225 6.52498C14.625 6.12498 15.225 6.12498 15.625 6.52498C16.025 6.92498 16.025 7.525 15.625 7.925L10.725 12.8249C10.325 13.2249 10.325 13.8249 10.725 14.2249C11.125 14.6249 11.725 14.6249 12.125 14.2249L19.125 7.22493C19.525 6.82493 19.725 6.425 19.725 5.925C19.725 5.325 19.525 4.825 19.125 4.425C18.725 4.025 18.725 3.42498 19.125 3.02498C19.525 2.62498 20.125 2.62498 20.525 3.02498C21.325 3.82498 21.725 4.825 21.725 5.925C21.725 6.925 21.325 7.82498 20.525 8.52498L13.525 15.525C12.325 16.725 10.525 16.725 9.32499 15.625Z" fill="black" />
+									</svg>
+								</span>
+								<!--end::Svg Icon-->
+								<span class="ms-1 fs-7 fw-bolder text-gray-600">9</span>
+							</div>
+						</div>
+
+						<div class="separator"></div>
+
+						<div class="d-flex flex-stack">
+							{% comment %} <button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+								</svg></span> Saved</button> {% endcomment %}
+							<button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+									</svg>
+								</span> Save</button>
+							<button class="btn btn-sm btn-outline btn-outline-primary fs-7">Details</button>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 mb-5">
+			<div class="card card-flush shadow-sm">
+				<div class="card-header ribbon ribbon-top">
+					<div class="ribbon-label bg-danger">
+						Selling
+					</div>
+					{% comment %} <div class="ribbon-label bg-success">
+						Buying
+					</div> {% endcomment %}
+					<a href="#"><h3 class="text-hover-primary card-title mt-15">Powder-free Vinyl Gloves, Black, All Sizes Black, All Sizes</h3></a>
+				</div>
+				<div class="card-body">
+
+					<!-- User -->
+					<div class="d-flex align-items-center mb-7">
+						<!--begin::Avatar-->
+						{% comment %} <div class="symbol symbol-40px me-3">
+							<img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
+						</div> {% endcomment %}
+
+						<div class="symbol symbol symbol-40px me-3">
+							<div class="symbol-label fs-3 bg-warning text-light">MJ</div>
+						</div>
+						<!--end::Avatar-->
+						<!--begin::Username-->
+						<div class="d-flex flex-column">
+						{% comment %} <span class="badge badge-dark fs-9">Direct</span> {% endcomment %}
+							<div><span class="fw-bolder fs-5 me-2">Max Smith</span><span class="badge badge-info fs-9">Broker</span></div>
+							<div class="fw-bold text-muted fs-7">Singapore, 2 days ago</div>
+						</div>
+						<!--end::Username-->
+					</div>
+
+					<!--begin::Item-->
+					<div class="d-flex mb-7">
+						<img alt="img" style="object-fit: cover; width: 100px" class="rounded h-75px" src="{% static 'common/assets/media/demos/demo1.png' %}" />
+					</div>
+					<!--end::Item-->
+
+					<div class="fw-bolder fs-6">Brokers welcomed, 5&#x25; commission</div>
+					<div class="fs-6 mb-5">Ready stock, USA, LA</div>
+
+					<div class="fs-6 fw-bold text-gray-600">Description preview the entire process writing a blog post often takes a couple of hours if you can type....</div>
+				</div>
+				<div class="card-footer">
+					<div class="d-flex flex-stack flex-wrapr">
+						<div class="d-flex flex-stack">
+							<div class="border border-dashed border-gray-300 rounded py-2 px-3 me-2">
+								<!--begin::Svg Icon | path: icons/duotune/communication/com008.svg-->
+								<span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path opacity="0.3" d="M4.425 20.525C2.525 18.625 2.525 15.525 4.425 13.525L14.825 3.125C16.325 1.625 18.825 1.625 20.425 3.125C20.825 3.525 20.825 4.12502 20.425 4.52502C20.025 4.92502 19.425 4.92502 19.025 4.52502C18.225 3.72502 17.025 3.72502 16.225 4.52502L5.82499 14.925C4.62499 16.125 4.62499 17.925 5.82499 19.125C7.02499 20.325 8.82501 20.325 10.025 19.125L18.425 10.725C18.825 10.325 19.425 10.325 19.825 10.725C20.225 11.125 20.225 11.725 19.825 12.125L11.425 20.525C9.525 22.425 6.425 22.425 4.425 20.525Z" fill="black" />
+										<path d="M9.32499 15.625C8.12499 14.425 8.12499 12.625 9.32499 11.425L14.225 6.52498C14.625 6.12498 15.225 6.12498 15.625 6.52498C16.025 6.92498 16.025 7.525 15.625 7.925L10.725 12.8249C10.325 13.2249 10.325 13.8249 10.725 14.2249C11.125 14.6249 11.725 14.6249 12.125 14.2249L19.125 7.22493C19.525 6.82493 19.725 6.425 19.725 5.925C19.725 5.325 19.525 4.825 19.125 4.425C18.725 4.025 18.725 3.42498 19.125 3.02498C19.525 2.62498 20.125 2.62498 20.525 3.02498C21.325 3.82498 21.725 4.825 21.725 5.925C21.725 6.925 21.325 7.82498 20.525 8.52498L13.525 15.525C12.325 16.725 10.525 16.725 9.32499 15.625Z" fill="black" />
+									</svg>
+								</span>
+								<!--end::Svg Icon-->
+								<span class="ms-1 fs-7 fw-bolder text-gray-600">9</span>
+							</div>
+						</div>
+
+						<div class="separator"></div>
+
+						<div class="d-flex flex-stack">
+							{% comment %} <button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+								</svg></span> Saved</button> {% endcomment %}
+							<button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+									</svg>
+								</span> Save</button>
+							<button class="btn btn-sm btn-outline btn-outline-primary fs-7">Details</button>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 mb-5">
+			<div class="card card-flush shadow-sm">
+				<div class="card-header ribbon ribbon-top">
+					<div class="ribbon-label bg-danger">
+						Selling
+					</div>
+					{% comment %} <div class="ribbon-label bg-success">
+						Buying
+					</div> {% endcomment %}
+					<a href="#"><h3 class="text-hover-primary card-title mt-15">Powder-free Vinyl Gloves, Black, All Sizes Black, All Sizes</h3></a>
+				</div>
+				<div class="card-body">
+
+					<!-- User -->
+					<div class="d-flex align-items-center mb-7">
+						<!--begin::Avatar-->
+						{% comment %} <div class="symbol symbol-40px me-3">
+							<img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
+						</div> {% endcomment %}
+
+						<div class="symbol symbol symbol-40px me-3">
+							<div class="symbol-label fs-3 bg-warning text-light">MJ</div>
+						</div>
+						<!--end::Avatar-->
+						<!--begin::Username-->
+						<div class="d-flex flex-column">
+						{% comment %} <span class="badge badge-dark fs-9">Direct</span> {% endcomment %}
+							<div><span class="fw-bolder fs-5 me-2">Max Smith</span><span class="badge badge-info fs-9">Broker</span></div>
+							<div class="fw-bold text-muted fs-7">Singapore, 2 days ago</div>
+						</div>
+						<!--end::Username-->
+					</div>
+
+					<!--begin::Item-->
+					<div class="d-flex mb-7">
+						<img alt="img" style="object-fit: cover; width: 100px" class="rounded h-75px me-3" src="{% static 'common/assets/media/demos/demo1.png' %}" />
+						<img alt="img" style="object-fit: cover; width: 100px" class="rounded h-75px" src="{% static 'common/assets/media/demos/demo1.png' %}" />
+					</div>
+					<!--end::Item-->
+
+					<div class="fw-bolder fs-6">Brokers welcomed, 5&#x25; commission</div>
+					<div class="fs-6 mb-5">Ready stock, USA, LA</div>
+
+					<div class="fs-6 fw-bold text-gray-600">Description preview the entire process writing a blog post often takes a couple of hours if you can type....</div>
+				</div>
+				<div class="card-footer">
+					<div class="d-flex flex-stack flex-wrapr">
+						<div class="d-flex flex-stack">
+							<div class="border border-dashed border-gray-300 rounded py-2 px-3 me-2">
+								<!--begin::Svg Icon | path: icons/duotune/communication/com008.svg-->
+								<span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path opacity="0.3" d="M4.425 20.525C2.525 18.625 2.525 15.525 4.425 13.525L14.825 3.125C16.325 1.625 18.825 1.625 20.425 3.125C20.825 3.525 20.825 4.12502 20.425 4.52502C20.025 4.92502 19.425 4.92502 19.025 4.52502C18.225 3.72502 17.025 3.72502 16.225 4.52502L5.82499 14.925C4.62499 16.125 4.62499 17.925 5.82499 19.125C7.02499 20.325 8.82501 20.325 10.025 19.125L18.425 10.725C18.825 10.325 19.425 10.325 19.825 10.725C20.225 11.125 20.225 11.725 19.825 12.125L11.425 20.525C9.525 22.425 6.425 22.425 4.425 20.525Z" fill="black" />
+										<path d="M9.32499 15.625C8.12499 14.425 8.12499 12.625 9.32499 11.425L14.225 6.52498C14.625 6.12498 15.225 6.12498 15.625 6.52498C16.025 6.92498 16.025 7.525 15.625 7.925L10.725 12.8249C10.325 13.2249 10.325 13.8249 10.725 14.2249C11.125 14.6249 11.725 14.6249 12.125 14.2249L19.125 7.22493C19.525 6.82493 19.725 6.425 19.725 5.925C19.725 5.325 19.525 4.825 19.125 4.425C18.725 4.025 18.725 3.42498 19.125 3.02498C19.525 2.62498 20.125 2.62498 20.525 3.02498C21.325 3.82498 21.725 4.825 21.725 5.925C21.725 6.925 21.325 7.82498 20.525 8.52498L13.525 15.525C12.325 16.725 10.525 16.725 9.32499 15.625Z" fill="black" />
+									</svg>
+								</span>
+								<!--end::Svg Icon-->
+								<span class="ms-1 fs-7 fw-bolder text-gray-600">9</span>
+							</div>
+						</div>
+
+						<div class="separator"></div>
+
+						<div class="d-flex flex-stack">
+							{% comment %} <button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+								</svg></span> Saved</button> {% endcomment %}
+							<button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+									</svg>
+								</span> Save</button>
+							<button class="btn btn-sm btn-outline btn-outline-primary fs-7">Details</button>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-lg-4 mb-5">
+
+			<div class="card card-flush shadow-sm">
+				<div class="card-header ribbon ribbon-top">
+					<div class="ribbon-label bg-danger">
+						Selling
+					</div>
+					{% comment %} <div class="ribbon-label bg-success">
+						Buying
+					</div> {% endcomment %}
+					<a href="#"><h3 class="text-hover-primary card-title mt-15">Powder-free Vinyl Gloves, Black, All Sizes Black, All Sizes</h3></a>
+				</div>
+				<div class="card-body">
+
+					<!-- User -->
+					<div class="d-flex align-items-center mb-7">
+						<!--begin::Avatar-->
+						{% comment %} <div class="symbol symbol-40px me-3">
+							<img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
+						</div> {% endcomment %}
+
+						<div class="symbol symbol symbol-40px me-3">
+							<div class="symbol-label fs-3 bg-warning text-light">MJ</div>
+						</div>
+						<!--end::Avatar-->
+						<!--begin::Username-->
+						<div class="d-flex flex-column">
+						{% comment %} <span class="badge badge-dark fs-9">Direct</span> {% endcomment %}
+							<div><span class="fw-bolder fs-5 me-2">Max Smith</span><span class="badge badge-info fs-9">Broker</span></div>
+							<div class="fw-bold text-muted fs-7">Singapore, 2 days ago</div>
+						</div>
+						<!--end::Username-->
+					</div>
+
+					<!--begin::Item-->
+					{% comment %} <div class="d-flex flex-column align-items-center mb-7">
+						<img alt="img" class="rounded w-250px" src="{% static 'common/assets/media/demos/demo1.png' %}" />
+					</div> {% endcomment %}
+					<!--end::Item-->
+
+					<div class="fw-bolder fs-6">Brokers welcomed, 5&#x25; commission</div>
+					<div class="fs-6 mb-5">Ready stock, USA, LA</div>
+
+					<div class="fs-6 fw-bold text-gray-600">Description preview the entire process writing a blog post often takes a couple of hours if you can type....</div>
+				</div>
+				<div class="card-footer">
+					<div class="d-flex flex-stack flex-wrapr">
+						<div class="d-flex flex-stack">
+							<div class="border border-dashed border-gray-300 rounded py-2 px-3 me-2">
+								<!--begin::Svg Icon | path: icons/duotune/communication/com008.svg-->
+								<span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path opacity="0.3" d="M4.425 20.525C2.525 18.625 2.525 15.525 4.425 13.525L14.825 3.125C16.325 1.625 18.825 1.625 20.425 3.125C20.825 3.525 20.825 4.12502 20.425 4.52502C20.025 4.92502 19.425 4.92502 19.025 4.52502C18.225 3.72502 17.025 3.72502 16.225 4.52502L5.82499 14.925C4.62499 16.125 4.62499 17.925 5.82499 19.125C7.02499 20.325 8.82501 20.325 10.025 19.125L18.425 10.725C18.825 10.325 19.425 10.325 19.825 10.725C20.225 11.125 20.225 11.725 19.825 12.125L11.425 20.525C9.525 22.425 6.425 22.425 4.425 20.525Z" fill="black" />
+										<path d="M9.32499 15.625C8.12499 14.425 8.12499 12.625 9.32499 11.425L14.225 6.52498C14.625 6.12498 15.225 6.12498 15.625 6.52498C16.025 6.92498 16.025 7.525 15.625 7.925L10.725 12.8249C10.325 13.2249 10.325 13.8249 10.725 14.2249C11.125 14.6249 11.725 14.6249 12.125 14.2249L19.125 7.22493C19.525 6.82493 19.725 6.425 19.725 5.925C19.725 5.325 19.525 4.825 19.125 4.425C18.725 4.025 18.725 3.42498 19.125 3.02498C19.525 2.62498 20.125 2.62498 20.525 3.02498C21.325 3.82498 21.725 4.825 21.725 5.925C21.725 6.925 21.325 7.82498 20.525 8.52498L13.525 15.525C12.325 16.725 10.525 16.725 9.32499 15.625Z" fill="black" />
+									</svg>
+								</span>
+								<!--end::Svg Icon-->
+								<span class="ms-1 fs-7 fw-bolder text-gray-600">9</span>
+							</div>
+						</div>
+
+						<div class="separator"></div>
+
+						<div class="d-flex flex-stack">
+							{% comment %} <button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+								</svg></span> Saved</button> {% endcomment %}
+							<button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+									</svg>
+								</span> Save</button>
+							<button class="btn btn-sm btn-outline btn-outline-primary fs-7">Details</button>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-lg-4 mb-5">
+			<div class="card card-flush shadow-sm">
+				<div class="card-header ribbon ribbon-top">
+					<div class="ribbon-label bg-danger">
+						Selling
+					</div>
+					{% comment %} <div class="ribbon-label bg-success">
+						Buying
+					</div> {% endcomment %}
+					<a href="#"><h3 class="text-hover-primary card-title mt-15">Powder-free Vinyl Gloves, Black, All Sizes Black, All Sizes</h3></a>
+				</div>
+				<div class="card-body">
+
+					<!-- User -->
+					<div class="d-flex align-items-center mb-7">
+						<!--begin::Avatar-->
+						{% comment %} <div class="symbol symbol-40px me-3">
+							<img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
+						</div> {% endcomment %}
+
+						<div class="symbol symbol symbol-40px me-3">
+							<div class="symbol-label fs-3 bg-warning text-light">MJ</div>
+						</div>
+						<!--end::Avatar-->
+						<!--begin::Username-->
+						<div class="d-flex flex-column">
+						{% comment %} <span class="badge badge-dark fs-9">Direct</span> {% endcomment %}
+							<div><span class="fw-bolder fs-5 me-2">Max Smith</span><span class="badge badge-info fs-9">Broker</span></div>
+							<div class="fw-bold text-muted fs-7">Singapore, 2 days ago</div>
+						</div>
+						<!--end::Username-->
+					</div>
+
+					<div class="fw-bolder fs-6">Brokers welcomed, 5&#x25; commission</div>
+					<div class="fs-6 mb-5">Ready stock, USA, LA</div>
+
+					<div class="fs-6 fw-bold text-gray-600">Description preview the entire process writing a blog post often takes a couple of hours if you can type....</div>
+				</div>
+				<div class="card-footer">
+					<div class="d-flex flex-stack flex-wrapr">
+						<div class="d-flex flex-stack">
+							<div class="border border-dashed border-gray-300 rounded py-2 px-3 me-2">
+								<!--begin::Svg Icon | path: icons/duotune/communication/com008.svg-->
+								<span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path opacity="0.3" d="M4.425 20.525C2.525 18.625 2.525 15.525 4.425 13.525L14.825 3.125C16.325 1.625 18.825 1.625 20.425 3.125C20.825 3.525 20.825 4.12502 20.425 4.52502C20.025 4.92502 19.425 4.92502 19.025 4.52502C18.225 3.72502 17.025 3.72502 16.225 4.52502L5.82499 14.925C4.62499 16.125 4.62499 17.925 5.82499 19.125C7.02499 20.325 8.82501 20.325 10.025 19.125L18.425 10.725C18.825 10.325 19.425 10.325 19.825 10.725C20.225 11.125 20.225 11.725 19.825 12.125L11.425 20.525C9.525 22.425 6.425 22.425 4.425 20.525Z" fill="black" />
+										<path d="M9.32499 15.625C8.12499 14.425 8.12499 12.625 9.32499 11.425L14.225 6.52498C14.625 6.12498 15.225 6.12498 15.625 6.52498C16.025 6.92498 16.025 7.525 15.625 7.925L10.725 12.8249C10.325 13.2249 10.325 13.8249 10.725 14.2249C11.125 14.6249 11.725 14.6249 12.125 14.2249L19.125 7.22493C19.525 6.82493 19.725 6.425 19.725 5.925C19.725 5.325 19.525 4.825 19.125 4.425C18.725 4.025 18.725 3.42498 19.125 3.02498C19.525 2.62498 20.125 2.62498 20.525 3.02498C21.325 3.82498 21.725 4.825 21.725 5.925C21.725 6.925 21.325 7.82498 20.525 8.52498L13.525 15.525C12.325 16.725 10.525 16.725 9.32499 15.625Z" fill="black" />
+									</svg>
+								</span>
+								<!--end::Svg Icon-->
+								<span class="ms-1 fs-7 fw-bolder text-gray-600">9</span>
+							</div>
+						</div>
+
+						<div class="separator"></div>
+
+						<div class="d-flex flex-stack">
+							{% comment %} <button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+								</svg></span> Saved</button> {% endcomment %}
+							<button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+									</svg>
+								</span> Save</button>
+							<button class="btn btn-sm btn-outline btn-outline-primary fs-7">Details</button>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<ul class="pagination">
+			<li class="page-item previous disabled"><a href="#" class="page-link"><i class="previous"></i></a></li>
+			<li class="page-item "><a href="#" class="page-link">1</a></li>
+			<li class="page-item active"><a href="#" class="page-link">2</a></li>
+			<li class="page-item "><a href="#" class="page-link">3</a></li>
+			<li class="page-item "><a href="#" class="page-link">4</a></li>
+			<li class="page-item "><a href="#" class="page-link">5</a></li>
+			<li class="page-item "><a href="#" class="page-link">6</a></li>
+			<li class="page-item next"><a href="#"  class="page-link"><i class="next"></i></a></li>
+		</ul>
+	</div>
+</div>
+<!--end::Container-->
+
+{% endblock %}
+
+{% block modals %}
+
+<div class="modal fade" tabindex="-1" id="modal_filter_leads">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter Leads</h5>
+
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="svg-icon svg-icon-2x"></span>
+                </div>
+                <!--end::Close-->
+            </div>
+
+            <div class="modal-body">
+                <!--begin::Form-->
+                <div class="px-7 py-5">
+                    <!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold">Lead Type:</label>
+                        <!--end::Label-->
+                        <!--begin::Options-->
+                        <div class="d-flex">
+                            <!--begin::Options-->
+                            <label class="form-check form-check-sm form-check-custom me-5">
+                                <input class="form-check-input" type="checkbox" value="1" />
+                                <span class="form-check-label">Buying</span>
+                            </label>
+                            <!--end::Options-->
+                            <!--begin::Options-->
+                            <label class="form-check form-check-sm form-check-custom">
+                                <input class="form-check-input" type="checkbox" value="2" checked="checked" />
+                                <span class="form-check-label">Selling</span>
+                            </label>
+                            <!--end::Options-->
+                        </div>
+                        <!--end::Options-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold">Title:</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <input type="text" class="form-control" placeholder="E.g., metal scraps"/>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+					<!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold">Details:</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <input type="text" class="form-control" placeholder="E.g., LC"/>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold">User Country:</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <div>
+                            <!--begin::Input-->
+                            <input type="text" class="form-control" placeholder="E.g., Canada"/>
+                            <!--end::Input-->
+                        </div>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold">Show Brokers-Welcomed Only:</label>
+                        <!--end::Label-->
+                        <!--begin::Options-->
+                        <div class="d-flex">
+                            <!--begin::Options-->
+                            <label class="form-check form-check-sm form-check-custom me-5">
+                                <input class="form-check-input" type="checkbox" value="1" />
+                            </label>
+                            <!--end::Options-->
+                        </div>
+                        <!--end::Options-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold">Availability:</label>
+                        <!--end::Label-->
+                        <!--begin::Options-->
+                        <div class="d-flex">
+                            <!--begin::Options-->
+                            <label class="form-check form-check-sm form-check-custom me-5">
+                                <input class="form-check-input" type="checkbox" value="1" />
+                                <span class="form-check-label">Ready stock</span>
+                            </label>
+                            <!--end::Options-->
+                            <!--begin::Options-->
+                            <label class="form-check form-check-sm form-check-custom">
+                                <input class="form-check-input" type="checkbox" value="2" checked="checked" />
+                                <span class="form-check-label">Pre-order</span>
+                            </label>
+                            <!--end::Options-->
+                        </div>
+                        <!--end::Options-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold">To/From Country:</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <input type="text" class="form-control" placeholder="E.g., USA"/>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold"><span class="text-danger">Exclude</span> To/From Country:</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <input type="text" class="form-control" placeholder="E.g., USA"/>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold">Destination/Source Location:</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <input type="text" class="form-control" placeholder="E.g., LA"/>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fw-bold"><span class="text-danger">Exclude</span> To/From Location:</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <input type="text" class="form-control" placeholder="E.g., LA"/>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                </div>
+                <!--end::Form-->
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Clear Filter</button>
+                <!--begin::Separator-->
+                <span class="h-20px border-gray-200 border-start mx-4"></span>
+                <!--end::Separator-->
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Filter Leads</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
