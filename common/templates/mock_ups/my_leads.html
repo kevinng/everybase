@@ -2,58 +2,9 @@
 
 {% load static %}
 
-{% block subtitle %}| Leads{% endblock %}
+{% block subtitle %}| My Leads{% endblock %}
 
-{% block page_title %}Leads{% endblock %}
-
-{% block page_subtitle %}
-
-<!-- Note: do not show if showing all leads-->
-
-<!--begin::Separator-->
-<span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
-<!--end::Separator-->
-
-<!--begin::Description-->
-{% comment %} <small class="text-muted fs-7 fw-bold my-1 ms-1">20 leads found</small> {% endcomment %}
-<small class="text-muted fs-7 fw-bold my-1 ms-1">Showing all leads</small>
-<!--end::Description--></h1>
-<!--end::Title-->
-
-{% endblock %}
-
-{% block actions %}
-
-<a href="#" class="btn btn-sm btn-secondary me-2">Clear Filter</a>
-
-<!--begin::Filter-->
-<!-- NOTE: modal is defined in base, else it will not work -->
-
-<!-- Show this if no filter is applied -->
-{% comment %} <a href="#" class="btn btn-sm btn-light btn-light-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads"> {% endcomment %}
-
-<!-- Show this if filter is applied -->
-<a href="#" class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads">
-    <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
-    <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="black" />
-        </svg>
-    </span>
-    <!--end::Svg Icon-->
-    Filter
-</a>
-<!--end::Filter-->
-
-<!--begin::Separator-->
-<span class="h-20px border-gray-200 border-start mx-4"></span>
-<!--end::Separator-->
-
-<!--begin::New Lead-->
-<a href="#" class="btn btn-sm btn-primary">New Lead</a>
-<!--end::New Lead-->
-
-{% endblock %}
+{% block page_title %}My Leads{% endblock %}
 
 {% block content %}
 
@@ -100,7 +51,7 @@
 					</div>
 					<!--end::Item-->
 
-					<div class="fw-bolder fs-6">Brokers welcomed, commission negotiable</div>
+					<div class="fw-bolder fs-6">Brokers welcomed, 5&#x25; commission</div>
 					<div class="fs-6 mb-5">Ready stock, USA, LA</div>
 
 					<div class="fs-6 fw-bold text-gray-600">Description preview the entire process writing a blog post often takes a couple of hours if you can type....</div>
@@ -532,11 +483,21 @@
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</div>
 
-	<div class="row mt-5 mx-5">
-		<button class="btn btn-outline btn-outline-primary">Show More</button>
+	<div class="row">
+		<ul class="pagination">
+			<li class="page-item previous disabled"><a href="#" class="page-link"><i class="previous"></i></a></li>
+			<li class="page-item "><a href="#" class="page-link">1</a></li>
+			<li class="page-item active"><a href="#" class="page-link">2</a></li>
+			<li class="page-item "><a href="#" class="page-link">3</a></li>
+			<li class="page-item "><a href="#" class="page-link">4</a></li>
+			<li class="page-item "><a href="#" class="page-link">5</a></li>
+			<li class="page-item "><a href="#" class="page-link">6</a></li>
+			<li class="page-item next"><a href="#"  class="page-link"><i class="next"></i></a></li>
+		</ul>
 	</div>
 </div>
 <!--end::Container-->
@@ -551,18 +512,11 @@
             <div class="modal-header">
                 <h5 class="modal-title">Filter Leads</h5>
 
-					<!--begin::Close-->
-					<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-						<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-						<span class="svg-icon svg-icon-2x">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-								<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-								<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
-							</svg>
-						</span>
-						<!--end::Svg Icon-->
-					</div>
-					<!--end::Close-->
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="svg-icon svg-icon-2x"></span>
+                </div>
+                <!--end::Close-->
             </div>
 
             <div class="modal-body">

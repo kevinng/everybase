@@ -47,12 +47,6 @@
                     </div>
 
                     <div class="d-flex flex-column align-items-center mb-5">
-                        <!--begin::User details-->
-                            {% comment %} <div class="fw-bolder d-flex align-items-center fs-4 mb-1"><span class="me-2">Max Smith</span> <span class="badge badge-info fs-8">Broker</span></div> {% endcomment %}
-                            {% comment %} <div class="fw-bold fs-7"><span class="text-muted">From</span> Canada</div>
-                            <div class="fw-bold fs-7"><span class="text-muted">Speaks</span> English, Chinese, Hindi</div> {% endcomment %}
-                        <!--end::User details-->
-
                         <div class="fw-bolder fs-4">Max Smith</div>
 						<div class="badge badge-light-info d-inline">Broker</div>
                     </div>
@@ -69,14 +63,18 @@
                     </div>
 
                     <div class="d-flex flex-column align-items-center mt-5">
-                        <textarea class="form-control" rows="3" placeholder="Enter message" data-kt-autosize="true"></textarea>
+                        <!-- TODO: put a 140 character limit -->
+                        <textarea class="form-control" rows="3" placeholder="Enter message" data-kt-autosize="true" disabled="true"></textarea>
                     </div>
 
                     <!-- TODO: integrate ReCaptcha 3, it doesn't have any UI -->
+                    <!-- block UI https://preview.keenthemes.com/metronic8/demo1/documentation/general/blockui.html -->
 
                     <div class="d-flex flex-column align-items-center mt-5">
-                        <button class="btn btn-sm btn-success col-12">WhatsApp</button>
+                        <button class="btn btn-sm btn-success col-12" disabled="true">WhatsApp</button>
+                        <span class="mt-2">We'll send you the user's WhatsApp contact when the user has agreed to connect with you.</span>
                     </div>
+
                 </div>
             </div>
 		</div>
@@ -87,7 +85,7 @@
                 <div class="card-header ribbon ribbon-top">
                     {% comment %} <div class="ribbon-label bg-danger">Selling</div> {% endcomment %}
                     <div class="ribbon-label bg-success">Buying</div>
-                    <h3 class="card-title">Powder-free Vinyl Gloves, Black, All Sizes Black, All Sizes</h3>
+                    <h3 class="card-title mt-10">Powder-free Vinyl Gloves, Black, All Sizes Black, All Sizes</h3>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -117,7 +115,7 @@
             <!--begin::Photos and documents toolbar-->
             <div class="d-flex flex-wrap flex-stack mx-4 mb-3">
                 <!--begin::Title-->
-                <h3 class="fw-bolder">Photos & Documents
+                <h3 class="fw-bolder">Photos & Documents</h3>
                 <!--end::Title-->
             </div>
             <!--end::Photos and documents toolbar-->

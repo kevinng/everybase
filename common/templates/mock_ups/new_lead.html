@@ -1,0 +1,92 @@
+{% extends 'extendables/base.html' %}
+
+{% load static %}
+
+{% block subtitle %}| New Lead{% endblock %}
+
+{% block page_title %}New Lead{% endblock %}
+
+{% block actions %}
+
+<button class="btn btn-sm btn-secondary me-2">Back</button>
+<button class="btn btn-sm btn-primary">Post New Lead</button>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div id="kt_content_container" class="container-xxl">
+	<div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+                    <div class="mb-7">
+                        <div class="form-check form-check-custom form-check-solid form-check-lg fs-6">
+                            <input class="form-check-input" type="radio" value="" id="flexRadioSm1" name='radio'/>
+                            <label class="form-check-label me-10" for="flexRadioSm1">Buying</label>
+                            <input class="form-check-input" type="radio" value="" id="flexRadioSm2" name='radio'/>
+                            <label class="form-check-label" for="flexRadioSm2">Selling</label>
+                        </div>
+                        <div class="text-danger mt-3">Please let us know if you're buying or selling.</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <div class="form-check form-check-custom form-check-solid form-check-lg fs-6">
+                            <input class="form-check-input" type="radio" value="" id="flexRadioSm1" name='radio2'/>
+                            <label class="form-check-label me-10" for="flexRadioSm1">Direct Buyer</label>
+                            <input class="form-check-input" type="radio" value="" id="flexRadioSm2" name='radio2'/>
+                            <label class="form-check-label" for="flexRadioSm2">Broker</label>
+                        </div>
+                        <div class="text-danger mt-3">Please let us know if you're a direct buyer or a broker.</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" placeholder="E.g., Scrap Metal"/>
+                        <div class="text-danger mt-3">Please enter a title.</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <label class="form-label">Details</label>
+                        <textarea class="form-control" rows="3" placeholder="E.g., Scrap metal from de-commissioned ships." data-kt-autosize="true"></textarea>
+                        <div class="text-danger mt-3">Please enter details.</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <div class="form-check form-check-custom form-check-solid form-check-lg fs-6">
+                            <input class="form-check-input" type="radio" value="" id="flexRadioSm1" name='radio3'/>
+                            <label class="form-check-label me-10" for="flexRadioSm1">Ready Stock</label>
+                            <input class="form-check-input" type="radio" value="" id="flexRadioSm2" name='radio3'/>
+                            <label class="form-check-label" for="flexRadioSm2">Pre-Order</label>
+                        </div>
+                        <div class="text-danger mt-3">Please let us know if it's goods are available immediately (ready stock) or waiting is required (pre-order).</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <label class="form-label">Source Country</label>
+                        <input type="text" class="form-control" placeholder="E.g., Canada"/>
+                        <div class="text-danger mt-3">Please enter a source country.</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <label class="form-label">Source Location</label>
+                        <input type="text" class="form-control" placeholder="E.g., Vancouver"/>
+                        <div class="text-danger mt-3">Please enter a source location within the source country.</div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <!-- integrate recaptcha -->
+                    <button class="btn btn-primary">Post New Lead</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+</div>
+
+{% endblock %}
