@@ -2,14 +2,14 @@
 
 {% load static %}
 
-{% block subtitle %}| New Lead{% endblock %}
+{% block subtitle %}New Lead | {% endblock %}
 
 {% block page_title %}New Lead{% endblock %}
 
 {% block actions %}
 
 <button class="btn btn-sm btn-secondary me-2">Back</button>
-<button class="btn btn-sm btn-primary">Post New Lead</button>
+<button class="btn btn-sm btn-outline btn-outline-primary">Post This Lead</button>
 
 {% endblock %}
 
@@ -25,62 +25,112 @@
 
                 <div class="card-body">
                     <div class="mb-7">
-                        <div class="form-check form-check-custom form-check-solid form-check-lg fs-6">
-                            <input class="form-check-input" type="radio" value="" id="flexRadioSm1" name='radio'/>
-                            <label class="form-check-label me-10" for="flexRadioSm1">Buying</label>
-                            <input class="form-check-input" type="radio" value="" id="flexRadioSm2" name='radio'/>
-                            <label class="form-check-label" for="flexRadioSm2">Selling</label>
-                        </div>
-                        <div class="text-danger mt-3">Please let us know if you're buying or selling.</div>
+                        <label class="form-label">Title:</label>
+                        <input type="text" class="form-control"/>
+                        <div class="text-danger mt-3">Please enter title.</div>
                     </div>
 
                     <div class="mb-7">
-                        <div class="form-check form-check-custom form-check-solid form-check-lg fs-6">
-                            <input class="form-check-input" type="radio" value="" id="flexRadioSm1" name='radio2'/>
-                            <label class="form-check-label me-10" for="flexRadioSm1">Direct Buyer</label>
-                            <input class="form-check-input" type="radio" value="" id="flexRadioSm2" name='radio2'/>
-                            <label class="form-check-label" for="flexRadioSm2">Broker</label>
-                        </div>
-                        <div class="text-danger mt-3">Please let us know if you're a direct buyer or a broker.</div>
-                    </div>
-
-                    <div class="mb-7">
-                        <label class="form-label">Title</label>
-                        <input type="text" class="form-control" placeholder="E.g., Scrap Metal"/>
-                        <div class="text-danger mt-3">Please enter a title.</div>
-                    </div>
-
-                    <div class="mb-7">
-                        <label class="form-label">Details</label>
-                        <textarea class="form-control" rows="3" placeholder="E.g., Scrap metal from de-commissioned ships." data-kt-autosize="true"></textarea>
+                        <label class="form-label">Details:</label>
+                        <textarea class="form-control" rows="3" data-kt-autosize="true"></textarea>
+                        <div class="text-muted mt-3">Please describe the goods/service you need and what the agent should do for you.</div>
                         <div class="text-danger mt-3">Please enter details.</div>
                     </div>
 
-                    <div class="mb-7">
-                        <div class="form-check form-check-custom form-check-solid form-check-lg fs-6">
-                            <input class="form-check-input" type="radio" value="" id="flexRadioSm1" name='radio3'/>
-                            <label class="form-check-label me-10" for="flexRadioSm1">Ready Stock</label>
-                            <input class="form-check-input" type="radio" value="" id="flexRadioSm2" name='radio3'/>
-                            <label class="form-check-label" for="flexRadioSm2">Pre-Order</label>
+                    <div class="my-10">
+                        <label class="form-label fs-6 mb-5">Do you want to buy or sell?</label>
+                        <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                            <input class="form-check-input" type="radio" value="option__buysell__want_to_buy" id="option__buysell__want_to_buy" name='option__buysell'/>
+                            <label class="form-check-label" for="option__buysell__want_to_buy">I want to buy</label>
                         </div>
-                        <div class="text-danger mt-3">Please let us know if it's goods are available immediately (ready stock) or waiting is required (pre-order).</div>
+                        <div class="form-check form-check-custom form-check-lg col-12">
+                            <input class="form-check-input" type="radio" value="option__buysell__want_to_sell" id="option__buysell__want_to_sell" name='option__buysell'/>
+                            <label class="form-check-label" for="option__buysell__want_to_sell">I want to sell</label>
+                        </div>
+                        <div class="text-danger mt-5">Please let us know if want to buy or sell.</div>
+                    </div>
+
+                    <div class="my-10">
+                        <label class="form-label fs-6 mb-5">Are you a direct buyer or an agent?</label>
+                        <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                            <input class="form-check-input" type="radio" value="option__authortype__direct" id="option__authortype__direct" name="option__authortype"/>
+                            <label class="form-check-label" for="option__authortype__direct">I'm a direct buyer</label>
+                        </div>
+                        <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                            <input class="form-check-input" type="radio" value="option__authortype__agent" id="option__authortype__agent" name="option__authortype"/>
+                            <label class="form-check-label" for="option__authortype__agent">I'm an agent</label>
+                        </div>
+                        <div class="text-danger mt-3">Please let us know if you're a direct buyer or an agent.</div>
                     </div>
 
                     <div class="mb-7">
-                        <label class="form-label">Source Country</label>
+                        <label class="form-label">Destination Country:</label>
                         <input type="text" class="form-control" placeholder="E.g., Canada"/>
-                        <div class="text-danger mt-3">Please enter a source country.</div>
+                        <div class="text-muted mt-3">What is the destination country for the goods/service?</div>
+                        <div class="text-danger mt-3">Please enter a destination country.</div>
                     </div>
 
                     <div class="mb-7">
-                        <label class="form-label">Source Location</label>
-                        <input type="text" class="form-control" placeholder="E.g., Vancouver"/>
-                        <div class="text-danger mt-3">Please enter a source location within the source country.</div>
+                        <!-- TODO: cannot be less than 0 -->
+                        <label class="form-label">Commission %:</label>
+                        <div class="col-6">
+                            <input type="number" class="form-control"/>
+                        </div>
+                        <div class="text-danger mt-3">Please enter commission %.</div>
                     </div>
+
+                    <div class="mb-7">
+                        <div class="my-10">
+                            <label class="form-label fs-6 mb-5">I'd pay the commission after:</label>
+
+                            <!-- these options are for selling leads-->
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__deposit_received" id="option__commissionpayableafter__deposit_received" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__deposit_received">Initial deposit is received</label>
+                            </div>
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__goods_shipped" id="option__commissionpayableafter__goods_shipped" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__goods_shipped">Goods are shipped from source country</label>
+                            </div>
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__full_payment_received" id="option__commissionpayableafter__full_payment_received" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__full_payment_received">Full payment has been received</label>
+                            </div>
+                            <!-- only this option if buying and broker -->
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__goods_services_received" id="option__commissionpayableafter__goods_services_received" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__goods_services_received">Buyer has received goods/services</label>
+                            </div>
+                            <!-- only this option is available if the lead is buying and direct -->
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__goods_services_received" id="option__commissionpayableafter__goods_services_received" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__goods_services_received">I've received goods/services</label>
+                            </div>
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__others" id="option__commissionpayableafter__others" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__others">Others</label>
+                            </div>
+                            <textarea class="form-control" rows="3" data-kt-autosize="true"></textarea>
+                            <div class="text-danger mt-5">Please let us know when the agent will be paid.</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-7">
+                        <label class="form-label">Other Commission Details:</label>
+                        <textarea class="form-control" rows="3" data-kt-autosize="true"></textarea>
+                        <div class="text-muted mt-3">Please specify other details regarding commission.</div>
+                    </div>
+
+
+
+                    {% comment %} commision level
+                    commission text
+                    when to pay commission
+                    how to pay commission {% endcomment %}
                 </div>
                 <div class="card-footer">
                     <!-- integrate recaptcha -->
-                    <button class="btn btn-primary">Post New Lead</button>
+                    <button class="btn btn-primary">Post Lead</button>
                 </div>
             </div>
 

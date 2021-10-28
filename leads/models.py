@@ -4,19 +4,17 @@ from common.models import Standard
 class Lead(Standard):
     """Lead.
 
-    Last updated: 15 October 2021, 12:02 PM
+    Last updated: 27 October 2021, 8:46 PM
     """
-    closed = models.DateTimeField(
-        db_index=True
-    )
-    owner = models.ForeignKey(
+    author = models.ForeignKey(
         'relationships.User',
-        related_name='users_who_own_this_lead',
-        related_query_name='users_who_own_this_lead',
+        related_name='users_who_authored_this_lead',
+        related_query_name='users_who_authored_this_lead',
         on_delete=models.PROTECT,
         db_index=True
     )
-    lead_type = models.CharField(
+    is_buying = models.BooleanField(db_index=True)
+    author_type = models.CharField(
         max_length=20,
         choices=[
             ('direct', 'Direct'),
@@ -26,11 +24,12 @@ class Lead(Standard):
         blank=True
     )
     title = models.CharField(max_length=200)
-    description = models.TextField()
-    is_buying = models.BooleanField(
-        db_index=True
+    details = models.TextField()
+    country_string = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True
     )
-    agent_sale_commission_pct = models.FloatField(db_index=True)
     country = models.ForeignKey(
         'common.Country',
         on_delete=models.PROTECT,
@@ -40,11 +39,25 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    tags = models.ManyToManyField(
-        'LeadTag',
-        related_name='lead_with_this_tags',
-        related_query_name='lead_with_this_tags',
-        db_index=True        
+    commission_pct = models.FloatField(
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    commission_payable_after = models.CharField(
+        max_length=50,
+        choices=[
+            ('initial_deposit_received', 'Initial deposit received'),
+            ('goods_shipped', 'Goods shipped'),
+            ('buyer_received_goods_services', 'Buyer received goods/services'),
+            ('full_payment_received', 'Full payment received')
+        ],
+        null=True,
+        blank=True
+    )
+    other_commission_details = models.TextField(
+        null=True,
+        blank=True
     )
 
 class LeadDocument(Standard):

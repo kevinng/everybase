@@ -2,22 +2,23 @@ from django.contrib import admin
 from common import admin as comadm
 from leads import models
 
-_lead_fields = ['closed', 'owner', 'lead_type', 'title', 'description',
-    'is_buying', 'agent_sale_commission_pct', 'country']
+_lead_fields = ['author', 'is_buying', 'author_type', 'title', 'details',
+    'country_string', 'country', 'commission_pct', 'commission_payable_after',
+    'other_commission_details']
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _lead_fields
     list_editable = comadm.standard_list_editable + _lead_fields
-    list_filter = comadm.standard_list_filter + ['closed', 'lead_type',
-        'is_buying']
-    search_fields = comadm.standard_search_fields + ['owner__name', 'title',
-        'description']
+    list_filter = comadm.standard_list_filter + ['is_buying', 'author_type',
+        'country', 'commission_payable_after']
+    search_fields = comadm.standard_search_fields + ['title', 'details',
+        'other_commission_details']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _lead_fields + ['tags']})]
-    autocomplete_fields = ['owner', 'country', 'tags']
+        [('Details', {'fields': _lead_fields})]
+    autocomplete_fields = ['author', 'country']
 
 _lead_document_fields = ['uploaded', 'lead', 'file']
 @admin.register(models.LeadDocument)
