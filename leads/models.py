@@ -126,3 +126,30 @@ class SavedLead(Standard):
         on_delete=models.PROTECT,
         db_index=True  
     )
+
+class LeadDetailAccess(Standard):
+    """Records access to a lead's detail by an accessor user
+
+    Last updated: 27 October 2021, 8:46 PM
+    """
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='detail_accesses_with_this_lead',
+        related_query_name='detail_accesses_with_this_lead',
+        on_delete=models.PROTECT,
+        db_index=True        
+    )
+    accessor = models.ForeignKey(
+        'relationships.User',
+        related_name='detail_accesses_with_this_accessor',
+        related_query_name='detail_accesses_with_this_accessor',
+        on_delete=models.PROTECT,
+        db_index=True  
+    )
+
+    access_count = models.IntegerField(
+        db_index=True
+    )
+
+    class Meta:
+        unique_together = ('lead', 'accessor')
