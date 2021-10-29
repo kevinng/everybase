@@ -26,10 +26,10 @@ class Migration(migrations.Migration):
             model_name='paymentevent',
             name='user',
         ),
-        migrations.AlterUniqueTogether(
-            name='paymenthash',
-            unique_together=None,
-        ),
+        # migrations.AlterUniqueTogether(
+        #     name='paymenthash',
+        #     unique_together=None,
+        # ),
         migrations.RemoveField(
             model_name='paymenthash',
             name='price',
