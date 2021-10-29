@@ -260,14 +260,19 @@ class PhoneNumberHash(Standard):
     access of the URL. We use a hash and not the ID straight to prevent users
     from iterating the IDs in the URL.
 
-    Last updated: 18 June 2021, 3:53 PM
+    Last updated: 28 October 2021, 11:56 AM
     """
-
     id = HashidAutoField(primary_key=True)
-    expired = models.DateTimeField(
+    link_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('contact', 'Contact'),
+            ('verification', 'Verification'),
+            ('register', 'Register'),
+            ('login', 'Login')
+        ],
         null=True,
-        blank=True,
-        db_index=True
+        blank=True
     )
 
     user = models.ForeignKey(
@@ -295,7 +300,6 @@ class PhoneNumberHash(Standard):
     class Meta:
         verbose_name = 'Phone number hash'
         verbose_name_plural = 'Phone number hashes'
-        unique_together = ['user', 'phone_number_type', 'phone_number']
         index_together = ['user', 'phone_number_type', 'phone_number']
     
     def __str__(self):
