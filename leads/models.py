@@ -180,3 +180,30 @@ class LeadDocumentAccess(Standard):
 
     class Meta:
         unique_together = ('lead_document', 'accessor')
+
+class LeadImageAccess(Standard):
+    """Lead image access
+
+    Last updated: 27 October 2021, 8:46 PM
+    """
+    lead_image = models.ForeignKey(
+        'LeadDocument',
+        related_name='image_accesses_with_this_lead',
+        related_query_name='image_accesses_with_this_lead',
+        on_delete=models.PROTECT,
+        db_index=True        
+    )
+    accessor = models.ForeignKey(
+        'relationships.User',
+        related_name='image_accesses_with_this_lead',
+        related_query_name='image_accesses_with_this_lead',
+        on_delete=models.PROTECT,
+        db_index=True  
+    )
+
+    access_count = models.IntegerField(
+        db_index=True
+    )
+
+    class Meta:
+        unique_together = ('lead_document', 'accessor')
