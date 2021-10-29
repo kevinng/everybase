@@ -213,24 +213,3 @@ class ConnectionAdmin(comadm.StandardAdmin):
         (None, {'fields': _connection_fields})
     ]
     autocomplete_fields = ['user_one', 'user_two']
-
-_friend_request_fields = ['requested', 'requester', 'requestee', 'responded',
-    'response']
-@admin.register(mod.FriendRequest)
-class FriendRequestAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _friend_request_fields
-    list_editable = comadm.standard_list_editable + _friend_request_fields
-    list_filter = comadm.standard_list_filter + ['requested', 'responded',
-        'response']
-    search_fields = comadm.standard_search_fields + [
-        'requester__first_given_name', 'requester__last_family_name',
-        'requestee__first_given_name', 'requestee__last_family_name',
-        'requester__id', 'requestee__id']
-
-    # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['created']
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _friend_request_fields})
-    ]
-    autocomplete_fields = ['requester', 'requestee']
