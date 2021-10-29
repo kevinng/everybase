@@ -24,13 +24,13 @@ class PaymentHash(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    match = models.ForeignKey(
-        'relationships.Match',
-        related_name='payment_links',
-        related_query_name='payment_links',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+    # match = models.ForeignKey(
+    #     'relationships.Match',
+    #     related_name='payment_links',
+    #     related_query_name='payment_links',
+    #     on_delete=models.PROTECT,
+    #     db_index=True
+    # )
     
     started = models.DateTimeField(
         null=True,
@@ -69,7 +69,7 @@ class PaymentHash(Standard):
 
     class Meta:
         # Match is deleted
-        unique_together = ('user', 'match')
+        # unique_together = ('user', 'match')
         verbose_name = 'Payment hash'
         verbose_name_plural = 'Payment hashes'
 
