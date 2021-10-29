@@ -25,7 +25,7 @@ class PaymentHash(Standard):
         db_index=True
     )
     match = models.ForeignKey(
-        'relationships.Match',
+        'relationships.Matchx',
         related_name='payment_links',
         related_query_name='payment_links',
         on_delete=models.PROTECT,
