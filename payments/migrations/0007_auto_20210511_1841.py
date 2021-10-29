@@ -29,7 +29,7 @@ def get_payment_key(length=_USER_KEY_LENGTH):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('relationships', '0043_companyproducttype'),
+        # ('relationships', '0043_companyproducttype'),
         ('payments', '0006_auto_20210511_1824'),
     ]
 
