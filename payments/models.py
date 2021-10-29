@@ -4,74 +4,74 @@ from hashid_field import HashidAutoField
 
 # TODO: Dropped everything, we'll recreate them when we get back to payments.
 
-class PaymentHash(Standard):
-    """Hash of payment link sent to user.
+# class PaymentHash(Standard):
+#     """Hash of payment link sent to user.
 
-    Last updated: 15 July 2021, 4:04
-    """
+#     Last updated: 15 July 2021, 4:04
+#     """
 
-    id = HashidAutoField(primary_key=True)
-    expired = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     id = HashidAutoField(primary_key=True)
+#     expired = models.DateTimeField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='payment_links',
-        related_query_name='payment_links',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    match = models.ForeignKey(
-        'relationships.Matchx',
-        related_name='payment_links',
-        related_query_name='payment_links',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     user = models.ForeignKey(
+#         'relationships.User',
+#         related_name='payment_links',
+#         related_query_name='payment_links',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     # match = models.ForeignKey(
+#     #     'relationships.Match',
+#     #     related_name='payment_links',
+#     #     related_query_name='payment_links',
+#     #     on_delete=models.PROTECT,
+#     #     db_index=True
+#     # )
     
-    started = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    succeeded = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    failed = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    session_id = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True        
-    )
+#     started = models.DateTimeField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     succeeded = models.DateTimeField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     failed = models.DateTimeField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     session_id = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True        
+#     )
 
-    price = models.ForeignKey(
-        'Price',
-        null=True,
-        blank=True,
-        related_name='payment_hashes',
-        related_query_name='payment_hashes',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     price = models.ForeignKey(
+#         'Price',
+#         null=True,
+#         blank=True,
+#         related_name='payment_hashes',
+#         related_query_name='payment_hashes',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
     
-    def __str__(self):
-        return f'({self.user}, {self.price} [{self.id}])'
+#     def __str__(self):
+#         return f'({self.user}, {self.price} [{self.id}])'
 
-    class Meta:
-        # Match is deleted
-        # unique_together = ('user', 'match')
-        verbose_name = 'Payment hash'
-        verbose_name_plural = 'Payment hashes'
+#     class Meta:
+#         # Match is deleted
+#         # unique_together = ('user', 'match')
+#         verbose_name = 'Payment hash'
+#         verbose_name_plural = 'Payment hashes'
 
 class PaymentEvent(Standard):
     """Payment event.
