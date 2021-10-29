@@ -9,6 +9,10 @@ from common.models import (Standard, Choice, LowerCaseCharField,
 
 from hashid_field import HashidAutoField
 
+# TODO: To be deleted
+class Match(Standard):
+    pass
+
 class PhoneNumberType(Choice):
     """Phone number type.
 
