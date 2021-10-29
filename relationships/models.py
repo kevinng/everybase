@@ -169,9 +169,9 @@ def get_user_key(length=_USER_KEY_LENGTH):
 class User(Standard):
     """User details.
 
-    Last updated: 15 October 2021, 11:08 PM
+    Last updated: 28 October 2021, 11:56 AM
     """
-    profile_picture = models.ForeignKey(
+    profile = models.ForeignKey(
         'files.File',
         related_name='users_w_this_profile_picture',
         related_query_name='users_w_this_profile_picture',
@@ -186,20 +186,14 @@ class User(Standard):
         default=get_user_key,
         db_index=True
     )
-    first_given_name = models.CharField(
+    first_name = models.CharField(
         max_length=20,
         db_index=True
     )
-    last_family_name = models.CharField(
+    last_name = models.CharField(
         max_length=20,
         db_index=True
     )
-    display_family_name_first = models.BooleanField(
-        db_index=True,
-        blank=True,
-        null=True
-    )
-    description = models.TextField(blank=True, null=True)
 
     languages = models.ManyToManyField(
         'common.Language',
@@ -207,6 +201,11 @@ class User(Standard):
         related_query_name='users_w_this_language',
         blank=True,
         db_index=True
+    )
+    languages_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
     )
     country = models.ForeignKey(
         'common.Country',
@@ -216,6 +215,11 @@ class User(Standard):
         null=True,
         blank=True,
         db_index=True
+    )
+    country_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
     )
     state = models.ForeignKey(
         'common.State',
@@ -245,6 +249,16 @@ class User(Standard):
         'Email',
         related_name='user',
         related_query_name='user',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    register_user_agent = models.ForeignKey(
+        'UserAgent',
+        related_name='register_user_agents_with_this_user',
+        related_query_name='register_user_agents_with_this_user',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -339,3 +353,99 @@ class Connection(Standard):
 
     class Meta:
         unique_together = ['user_one', 'user_two']
+
+class UserAgent(Standard):
+    """User agent log.
+
+    Last updated: 28 October 2021, 11:56 AM
+    """ 
+    ip_address = models.GenericIPAddressField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_mobile = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_tablet = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_touch_capable = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_pc = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_bot = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_version = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    browser_version_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_version = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    os_version_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    device = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    device_family = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
