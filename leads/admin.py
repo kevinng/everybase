@@ -50,19 +50,6 @@ class LeadImageAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _lead_image_fields})]
     autocomplete_fields = ['lead', 'file']
 
-_lead_tag_fields = ['tag', 'internal_notes']
-@admin.register(models.LeadTag)
-class LeadTagAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _lead_tag_fields
-    list_editable = comadm.standard_list_editable + _lead_tag_fields
-    search_fields = comadm.standard_search_fields + ['tag', 'internal_notes']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _lead_tag_fields})]
-
-
 _saved_lead_fields = ['saved', 'saver', 'lead']
 @admin.register(models.SavedLead)
 class SavedLeadAdmin(comadm.StandardAdmin):

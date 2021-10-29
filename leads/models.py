@@ -103,20 +103,6 @@ class LeadImage(Standard):
         db_index=True
     )
 
-class LeadTag(Standard):
-    """File associated with a lead.
-    
-    Last updated: 15 October 2021, 11:56 PM
-    """
-    tag = models.CharField(
-        max_length=200,
-        db_index=True
-    )
-    internal_notes = models.TextField(
-        null=True,
-        blank=True
-    )
-
 class SavedLead(Standard):
     """Saved lead.
 
