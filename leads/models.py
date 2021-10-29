@@ -1,3 +1,4 @@
+from django import db
 from django.db import models
 from common.models import Standard
 from hashid_field import HashidAutoField
@@ -207,3 +208,53 @@ class LeadImageAccess(Standard):
 
     class Meta:
         unique_together = ('lead_image', 'accessor')
+
+class ContactRequest(Standard):
+    """Contact request.
+
+    Last updated: 27 October 2021, 8:46 PM
+    """
+    requested = models.DateTimeField(db_index=True)
+    responded = models.DateTimeField(
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    response = models.CharField(
+        max_length=20,
+        choices=[
+            ('accept', 'Accept'),
+            ('reject', 'Reject')
+        ],
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    requester = models.ForeignKey(
+        'relationships.User',
+        related_name='contact_requests_with_this_requester',
+        related_query_name='contact_requests_with_this_requester',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    requestee = models.ForeignKey(
+        'relationships.User',
+        related_name='contact_requests_with_this_requestee',
+        related_query_name='contact_requests_with_this_requestee',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='contact_requests_with_this_lead',
+        related_query_name='contact_requests_with_this_lead',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    message = models.TextField()
+    access_count = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
