@@ -187,7 +187,7 @@ class LeadImageAccess(Standard):
     Last updated: 27 October 2021, 8:46 PM
     """
     lead_image = models.ForeignKey(
-        'LeadDocument',
+        'LeadImage',
         related_name='image_accesses_with_this_lead',
         related_query_name='image_accesses_with_this_lead',
         on_delete=models.PROTECT,
@@ -206,4 +206,4 @@ class LeadImageAccess(Standard):
     )
 
     class Meta:
-        unique_together = ('lead_document', 'accessor')
+        unique_together = ('lead_image', 'accessor')
