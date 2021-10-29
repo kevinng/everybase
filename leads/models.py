@@ -153,3 +153,30 @@ class LeadDetailAccess(Standard):
 
     class Meta:
         unique_together = ('lead', 'accessor')
+
+class LeadDocumentAccess(Standard):
+    """Lead document access
+
+    Last updated: 27 October 2021, 8:46 PM
+    """
+    lead_document = models.ForeignKey(
+        'LeadDocument',
+        related_name='document_accesses_with_this_lead',
+        related_query_name='document_accesses_with_this_lead',
+        on_delete=models.PROTECT,
+        db_index=True        
+    )
+    accessor = models.ForeignKey(
+        'relationships.User',
+        related_name='document_accesses_with_this_lead',
+        related_query_name='document_accesses_with_this_lead',
+        on_delete=models.PROTECT,
+        db_index=True  
+    )
+
+    access_count = models.IntegerField(
+        db_index=True
+    )
+
+    class Meta:
+        unique_together = ('lead_document', 'accessor')
