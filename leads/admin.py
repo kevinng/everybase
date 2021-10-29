@@ -20,32 +20,32 @@ class LeadAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _lead_fields})]
     autocomplete_fields = ['author', 'country']
 
-_lead_document_fields = ['uploaded', 'lead', 'file']
+_lead_document_fields = ['lead', 'file']
 @admin.register(models.LeadDocument)
 class LeadDocumentAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _lead_document_fields
     list_editable = comadm.standard_list_editable + _lead_document_fields
-    list_filter = comadm.standard_list_filter + ['uploaded']
     search_fields = comadm.standard_search_fields + ['lead__id', 'lead__title',
         'lead__description']
 
     # Details page settings
+    readonly_fields = comadm.standard_readonly_fields + ['id']
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _lead_document_fields})]
     autocomplete_fields = ['lead', 'file']
 
-_lead_image_fields = ['uploaded', 'lead', 'file']
+_lead_image_fields = ['lead', 'file']
 @admin.register(models.LeadImage)
 class LeadImageAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _lead_image_fields
     list_editable = comadm.standard_list_editable + _lead_image_fields
-    list_filter = comadm.standard_list_filter + ['uploaded']
     search_fields = comadm.standard_search_fields + ['lead__id', 'lead__title',
         'lead__description']
 
     # Details page settings
+    readonly_fields = comadm.standard_readonly_fields + ['id']
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _lead_image_fields})]
     autocomplete_fields = ['lead', 'file']

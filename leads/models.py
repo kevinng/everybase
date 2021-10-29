@@ -1,5 +1,6 @@
 from django.db import models
 from common.models import Standard
+from hashid_field import HashidAutoField
 
 class Lead(Standard):
     """Lead.
@@ -63,11 +64,9 @@ class Lead(Standard):
 class LeadDocument(Standard):
     """Document associated with a lead.
     
-    Last updated: 15 October 2021, 11:56 PM
+    Last updated: 27 October 2021, 8:46 PM
     """
-    uploaded = models.DateTimeField(
-        db_index=True
-    )
+    id = HashidAutoField(primary_key=True)
     lead = models.ForeignKey(
         'Lead',
         related_name='users_who_own_this_lead_document',
@@ -86,11 +85,9 @@ class LeadDocument(Standard):
 class LeadImage(Standard):
     """Document associated with a lead.
     
-    Last updated: 15 October 2021, 11:56 PM
+    Last updated: 27 October 2021, 8:46 PM
     """
-    uploaded = models.DateTimeField(
-        db_index=True
-    )
+    id = HashidAutoField(primary_key=True)
     lead = models.ForeignKey(
         'Lead',
         related_name='users_who_own_this_lead_image',
