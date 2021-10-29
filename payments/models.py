@@ -2,6 +2,8 @@ from django.db import models
 from common.models import Standard, Choice
 from hashid_field import HashidAutoField
 
+# TODO: Dropped everything, we'll recreate them when we get back to payments.
+
 class PaymentHash(Standard):
     """Hash of payment link sent to user.
 
