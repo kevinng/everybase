@@ -78,34 +78,6 @@ class PhoneNumber(Standard):
     class Meta:
         unique_together = ['country_code', 'national_number']
 
-class PhoneNumberVerification(Standard):
-    """Verification record for a phone number..
-
-    Last updated: 15 October 2021, 11:05 PM
-    """
-    verified = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    phone_number = models.ForeignKey(
-        'PhoneNumber',
-        related_name='verifications',
-        related_query_name='verifications',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    phone_number_type = models.ForeignKey(
-        'PhoneNumberType',
-        related_name='verifications',
-        related_query_name='verifications',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
-    def __str__(self):
-        return f'({self.phone_number} [{self.id}])'
-
 class Email(Standard):
     """Email.
 
