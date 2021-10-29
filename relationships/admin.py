@@ -177,26 +177,6 @@ class PhoneNumberHashAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user', 'phone_number']
 
-_phone_number_link_access_fields = ['ip_address', 'is_mobile', 'is_tablet',
-    'is_touch_capable', 'is_pc', 'is_bot', 'browser', 'browser_family',
-    'browser_version', 'browser_version_string', 'os', 'os_version',
-    'os_version_string', 'device', 'device_family', 'hash']
-@admin.register(mod.PhoneNumberLinkAccess)
-class PhoneNumberLinkAccessAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + \
-        _phone_number_link_access_fields
-    list_editable = comadm.standard_list_editable + \
-        _phone_number_link_access_fields
-    search_fields = comadm.standard_search_fields + ['ip_address',
-        'browser', 'browser_family', 'browser_version_string', 'os',
-        'os_version_string', 'device', 'device_family']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _phone_number_link_access_fields})
-    ]
-
 # TODO: refactor to file module
 class FileInlineAdmin(admin.TabularInline):
     model = File
