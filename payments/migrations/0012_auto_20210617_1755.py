@@ -8,7 +8,6 @@ import hashid_field.field
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('relationships', '0075_auto_20210617_1745'),
         ('payments', '0011_auto_20210617_1331'),
     ]
 
