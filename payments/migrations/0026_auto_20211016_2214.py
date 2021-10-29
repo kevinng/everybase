@@ -14,8 +14,8 @@ class Migration(migrations.Migration):
             name='paymenthash',
             unique_together=set(),
         ),
-        # migrations.RemoveField(
-        #     model_name='paymenthash',
-        #     name='match',
-        # ),
+        migrations.RemoveField(
+            model_name='paymenthash',
+            name='match',
+        ),
     ]
