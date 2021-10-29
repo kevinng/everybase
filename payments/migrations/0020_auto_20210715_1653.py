@@ -30,12 +30,12 @@ class Migration(migrations.Migration):
             name='paymenthash',
             options={'verbose_name': 'Payment hash', 'verbose_name_plural': 'Payment hashes'},
         ),
-        migrations.AlterField(
-            model_name='paymenthash',
-            name='match',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, related_name='payment_links', related_query_name='payment_links', to='relationships.match'),
-            preserve_default=False,
-        ),
+        # migrations.AlterField(
+        #     model_name='paymenthash',
+        #     name='match',
+        #     field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, related_name='payment_links', related_query_name='payment_links', to='relationships.match'),
+        #     preserve_default=False,
+        # ),
         migrations.AlterUniqueTogether(
             name='paymenthash',
             unique_together={('user', 'match')},

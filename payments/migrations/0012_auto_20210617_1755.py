@@ -26,7 +26,8 @@ class Migration(migrations.Migration):
                 ('session_id', models.CharField(blank=True, db_index=True, max_length=200, null=True)),
                 ('unit_amount', models.FloatField(blank=True, db_index=True, null=True)),
                 ('currency', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='payment_hashes', related_query_name='payment_hashes', to='payments.currency')),
-                ('match', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='payment_links', related_query_name='payment_links', to='relationships.match')),
+                # ('match', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='payment_links', related_query_name='payment_links', to='relationships.match')),
+                ('match', models.DateTimeField(blank=True, db_index=True, null=True)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='payment_links', related_query_name='payment_links', to='relationships.user')),
             ],
             options={
