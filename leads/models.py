@@ -8,6 +8,7 @@ class Lead(Standard):
 
     Last updated: 27 October 2021, 8:46 PM
     """
+    id = HashidAutoField(primary_key=True)
     author = models.ForeignKey(
         'relationships.User',
         related_name='users_who_authored_this_lead',
