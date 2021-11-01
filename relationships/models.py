@@ -144,46 +144,20 @@ class InvalidEmail(Standard):
     def __str__(self):
         return f'({self.email} [{self.id}])'
 
-_USER_KEY_LENGTH = 16
-def get_user_key(length=_USER_KEY_LENGTH):
-    """Generates and returns a URL friendly key.
-
-    Parameters
-    ----------
-    length : int
-        The length of the key to generate
-
-    Returns
-    -------
-    key
-        URL friendly key
-    """
-
-    chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890'
-    key = ''
-    for i in range(0, length):
-        p = random.randint(0, len(chars)-1)
-        key += chars[p]
-    return key
-
 class User(Standard):
     """User details.
 
-    Last updated: 28 October 2021, 11:56 AM
+    Last updated: 1 November 2021, 10:56 PM
     """
-    profile = models.ForeignKey(
+    registered = models.DateTimeField(db_index=True)
+
+    profile_picture = models.ForeignKey(
         'files.File',
         related_name='users_w_this_profile_picture',
         related_query_name='users_w_this_profile_picture',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
-        db_index=True
-    )
-    key = models.CharField(
-        max_length=_USER_KEY_LENGTH,
-        unique=True,
-        default=get_user_key,
         db_index=True
     )
     first_name = models.CharField(
@@ -254,17 +228,7 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-
-    register_user_agent = models.ForeignKey(
-        'UserAgent',
-        related_name='register_user_agents_with_this_user',
-        related_query_name='register_user_agents_with_this_user',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
+    
     def __str__(self):
         return f'({self.name}, {self.email}, {self.phone_number} [{self.id}])'
 
@@ -449,3 +413,48 @@ class UserAgent(Standard):
         blank=True,
         db_index=True
     )
+
+_TOKEN_LENGTH = 16
+def get_token(length=_TOKEN_LENGTH):
+    """Generates and returns a URL friendly token.
+
+    Parameters
+    ----------
+    length : int
+        The length of the key to generate
+
+    Returns
+    -------
+    key
+        URL friendly key
+    """
+
+    chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890'
+    key = ''
+    for _ in range(0, length):
+        p = random.randint(0, len(chars)-1)
+        key += chars[p]
+    return key
+
+class LoginRegisterToken(Standard):
+    """Login/register token.
+    
+    Last updated: 1 November 2021, 10:56 PM
+    """
+    user = models.ForeignKey(
+        'User',
+        related_name='login_register_tokens',
+        related_query_name='login_register_tokens',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    accessed = models.DateTimeField(
+        db_index=True,
+        auto_now=True
+    )
+    token = models.CharField(
+        max_length=200,
+        db_index=True,
+        default=get_token
+    )
+    expiry_secs = models.IntegerField(db_index=True)

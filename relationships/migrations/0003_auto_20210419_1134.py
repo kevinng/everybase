@@ -17,11 +17,11 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(default=99501, on_delete=django.db.models.deletion.PROTECT, related_name='users', related_query_name='users', to='relationships.email'),
             preserve_default=False,
         ),
-        migrations.AddField(
-            model_name='user',
-            name='key',
-            field=models.CharField(db_index=True, default=relationships.models.get_user_key, max_length=16, unique=True),
-        ),
+        # migrations.AddField(
+        #     model_name='user',
+        #     name='key',
+        #     field=models.CharField(db_index=True, default=relationships.models.get_user_key, max_length=16, unique=True),
+        # ),
         migrations.AddField(
             model_name='user',
             name='name',

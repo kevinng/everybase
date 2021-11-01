@@ -139,23 +139,23 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['import_job']
     inlines = [EmailInlineAdmin]
 
-_user_fields = ['first_name', 'last_name', 'languages_string', 'country',
-    'country_string', 'state', 'state_string', 'phone_number', 'email']
+_user_fields = ['registered', 'first_name', 'last_name', 'languages_string',
+    'country', 'country_string', 'state', 'state_string', 'phone_number',
+    'email']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = ['key'] + _user_fields + comadm.standard_list_display
+    list_display = comadm.standard_list_display + _user_fields
     list_editable = comadm.standard_list_editable + _user_fields
-    list_filter = comadm.standard_list_filter
+    list_filter = comadm.standard_list_filter + ['registered']
     search_fields = comadm.standard_search_fields + [
         'first_name', 'last_name', 'country__name', 'country_string',
         'state__name', 'state_string', 'phone_number__country_code',
         'phone_number__national_number', 'email__email']
 
     # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['key']
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': ['key'] + _user_fields + ['languages']})
+        ('Details', {'fields': _user_fields + ['languages']})
     ]
     autocomplete_fields = ['languages', 'country', 'state', 'phone_number',
         'email']
