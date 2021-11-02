@@ -60,11 +60,6 @@ class PhoneNumber(Standard):
         blank=True,
         db_index=True
     )
-    phone_number = PhoneNumberField(
-        unique=True,
-        null=True,
-        blank=True
-    )
     country_code = models.CharField(
         max_length=50,
         default=None,
