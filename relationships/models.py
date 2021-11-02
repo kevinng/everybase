@@ -8,6 +8,7 @@ from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
 
 from hashid_field import HashidAutoField
+from phonenumber_field.modelfields import PhoneNumberField
 
 class PhoneNumberType(Choice):
     """Phone number type.
@@ -49,7 +50,7 @@ def validate_national_number(value):
 class PhoneNumber(Standard):
     """Phone numbers.
     
-    Last updated: 27 April 2021, 11:43 AM
+    Last updated: 2 November 2021, 12:53 PM
     """
 
     types = models.ManyToManyField(
@@ -58,6 +59,10 @@ class PhoneNumber(Standard):
         related_query_name='phone_numbers',
         blank=True,
         db_index=True
+    )
+    phone_number = PhoneNumberField(
+        null=True,
+        blank=True
     )
     country_code = models.CharField(
         max_length=50,
