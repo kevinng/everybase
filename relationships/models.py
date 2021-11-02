@@ -231,7 +231,8 @@ class User(Standard):
     )
     
     def __str__(self):
-        return f'({self.name}, {self.email}, {self.phone_number} [{self.id}])'
+        return f'({self.first_name}, {self.last_name}, {self.email},\
+ {self.phone_number} [{self.id}])'
 
 class PhoneNumberHash(Standard):
     """A URL sent to a user of a phone number. A URL has a standard base, and a
@@ -437,15 +438,15 @@ def get_token(length=_TOKEN_LENGTH):
         key += chars[p]
     return key
 
-class LoginRegisterToken(Standard):
-    """Login/register token.
+class LoginToken(Standard):
+    """Login token.
     
-    Last updated: 1 November 2021, 10:56 PM
+    Last updated: 2 November 2021, 9:07 PM
     """
     user = models.ForeignKey(
         'User',
-        related_name='login_register_tokens',
-        related_query_name='login_register_tokens',
+        related_name='login_tokens',
+        related_query_name='login_tokens',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -459,3 +460,47 @@ class LoginRegisterToken(Standard):
         default=get_token
     )
     expiry_secs = models.IntegerField(db_index=True)
+
+class RegisterToken(Standard):
+    """Register token.
+    
+    Last updated: 2 November 2021, 9:07 PM
+    """
+    user = models.ForeignKey(
+        'User',
+        related_name='register_tokens',
+        related_query_name='register_tokens',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    accessed = models.DateTimeField(
+        db_index=True,
+        auto_now=True
+    )
+    token = models.CharField(
+        max_length=200,
+        db_index=True,
+        default=get_token
+    )
+    expiry_secs = models.IntegerField(db_index=True)
+
+    whatsapp_phone_number = models.CharField(
+        max_length=50,
+        db_index=True
+    )
+    first_name = models.CharField(
+        max_length=50,
+        db_index=True
+    )
+    last_name = models.CharField(
+        max_length=50,
+        db_index=True
+    )
+    email = models.CharField(
+        max_length=50,
+        db_index=True
+    )
+    languages_string = models.CharField(
+        max_length=50,
+        db_index=True
+    )
