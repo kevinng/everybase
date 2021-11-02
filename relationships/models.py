@@ -61,6 +61,7 @@ class PhoneNumber(Standard):
         db_index=True
     )
     phone_number = PhoneNumberField(
+        unique=True,
         null=True,
         blank=True
     )
