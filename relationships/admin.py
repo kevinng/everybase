@@ -197,7 +197,7 @@ _connection_fields = ['user_one', 'user_two']
 @admin.register(mod.Connection)
 class ConnectionAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = ['created'] + comadm.standard_list_display + \
+    list_display = comadm.standard_list_display + \
         _connection_fields
     list_editable = comadm.standard_list_editable + _connection_fields
     list_filter = comadm.standard_list_filter + ['created']
@@ -212,3 +212,35 @@ class ConnectionAdmin(comadm.StandardAdmin):
         (None, {'fields': _connection_fields})
     ]
     autocomplete_fields = ['user_one', 'user_two']
+
+_login_token_fields = ['user', 'activated', 'token', 'expiry_secs']
+@admin.register(mod.LoginToken)
+class LoginToken(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _login_token_fields
+    list_editable = comadm.standard_list_editable + _login_token_fields
+    list_filter = comadm.standard_list_filter + ['created']
+    search_fields = comadm.standard_search_fields + ['token']
+
+    # Details page settings
+    readonly_fields = comadm.standard_readonly_fields + ['created']
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _login_token_fields})
+    ]
+    autocomplete_fields = ['user']
+
+_register_token_fields = ['user', 'activated', 'token', 'expiry_secs']
+@admin.register(mod.RegisterToken)
+class RegisterToken(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _register_token_fields
+    list_editable = comadm.standard_list_editable + _register_token_fields
+    list_filter = comadm.standard_list_filter + ['created']
+    search_fields = comadm.standard_search_fields + ['token']
+
+    # Details page settings
+    readonly_fields = comadm.standard_readonly_fields + ['created']
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _register_token_fields})
+    ]
+    autocomplete_fields = ['user']
