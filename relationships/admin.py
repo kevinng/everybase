@@ -139,9 +139,9 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['import_job']
     inlines = [EmailInlineAdmin]
 
-_user_fields = ['registered', 'first_name', 'last_name', 'languages_string',
-    'country', 'country_string', 'state', 'state_string', 'phone_number',
-    'email']
+_user_fields = ['registered', 'django_user', 'first_name', 'last_name',
+    'languages_string', 'country', 'country_string', 'state', 'state_string',
+    'phone_number', 'email']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
@@ -157,8 +157,8 @@ class UserAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + [
         ('Details', {'fields': _user_fields + ['languages']})
     ]
-    autocomplete_fields = ['languages', 'country', 'state', 'phone_number',
-        'email']
+    autocomplete_fields = ['django_user', 'languages', 'country', 'state',
+        'phone_number', 'email']
 
 _phone_number_hash_fields = ['user', 'phone_number_type', 'phone_number']
 @admin.register(mod.PhoneNumberHash)
