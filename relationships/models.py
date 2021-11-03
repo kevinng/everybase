@@ -464,15 +464,8 @@ class LoginToken(Standard):
 class RegisterToken(Standard):
     """Register token.
     
-    Last updated: 2 November 2021, 9:07 PM
+    Last updated: 3 November 2021, 12:13 PM
     """
-    user = models.ForeignKey(
-        'User',
-        related_name='register_tokens',
-        related_query_name='register_tokens',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
     accessed = models.DateTimeField(
         db_index=True,
         auto_now=True
