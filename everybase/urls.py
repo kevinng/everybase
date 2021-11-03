@@ -32,22 +32,31 @@ def trigger_handled_error(request):
     return render(request, 'chat/pages/error.html', {})
 
 urlpatterns = [
-    path('common/', include('common.urls')),
-    path('files/', include('files.urls', namespace='files')),
-    path('growth/', include('growth.urls')),
-    path('chat/', include('chat.urls')),
-    path('', include('chat.urls_root')),
+    # path('', include('leads.urls')),
 
-    # Sentry debug URL
-    # Calling this link will trigger an error
-    path('sentry-debug/', trigger_error),
-    path('sentry-debug-handled/', trigger_handled_error),
+    # Relationships
+    path('', include('relationships.urls__root')),
+
+    # Chat
+    path('chat/', include('chat.urls')),
+    path('wa/', include('chat.urls__root__wa')),
+    path('pay/', include('chat.urls__root__pay')),
+
+    # Files
+    path('files/', include('files.urls')),
 
     # Django admin, with obfuscated URL
     path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
 
     # Django Rest Framework login
-    path('api-auth/', include('rest_framework.urls'))
+    path('api-auth/', include('rest_framework.urls')),
+
+    # Sentry debug URLs
+    path('sentry-debug/', trigger_error), # trigger error
+    path('sentry-debug-handled/', trigger_handled_error), # handle triggered error
+
+    # Common
+    path('common/', include('common.urls')),
 ]
 
 admin.site.site_header = "Everybase Admin"
