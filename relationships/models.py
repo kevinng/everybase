@@ -431,7 +431,7 @@ class UserAgent(Standard):
         db_index=True
     )
 
-_TOKEN_LENGTH = 16
+_TOKEN_LENGTH = 24
 def get_token(length=_TOKEN_LENGTH):
     """Generates and returns a URL friendly token.
 
@@ -471,6 +471,7 @@ class LoginToken(Standard):
         blank=True
     )
     token = models.CharField(
+        unique=True,
         max_length=200,
         db_index=True,
         default=get_token
@@ -503,6 +504,7 @@ class RegisterToken(Standard):
         blank=True
     )
     token = models.CharField(
+        unique=True,
         max_length=200,
         db_index=True,
         default=get_token
