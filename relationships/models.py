@@ -4,6 +4,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+from everybase import settings
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField)
 
@@ -460,7 +461,10 @@ class LoginToken(Standard):
         db_index=True,
         default=get_token
     )
-    expiry_secs = models.IntegerField(db_index=True)
+    expiry_secs = models.IntegerField(
+        db_index=True,
+        default=settings.LOGIN_TOKEN_EXPIRY_SECS
+    )
 
 class RegisterToken(Standard):
     """Register token.
@@ -482,7 +486,10 @@ class RegisterToken(Standard):
         db_index=True,
         default=get_token
     )
-    expiry_secs = models.IntegerField(db_index=True)
+    expiry_secs = models.IntegerField(
+        db_index=True,
+        default=settings.REGISTER_TOKEN_EXPIRY_SECS
+    )
 
     whatsapp_phone_number = models.CharField(
         max_length=50,
