@@ -34,6 +34,7 @@ django-user-agents = "*"
 stripe = "*"
 sentry-sdk = "*"
 requests = "*"
+django-phonenumber-field = "*"
 
 [requires]
 python_version = "3.7"
