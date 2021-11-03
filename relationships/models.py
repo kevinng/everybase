@@ -441,7 +441,7 @@ def get_token(length=_TOKEN_LENGTH):
 class LoginToken(Standard):
     """Login token.
     
-    Last updated: 2 November 2021, 9:07 PM
+    Last updated: 3 November 2021, 1:02 PM
     """
     user = models.ForeignKey(
         'User',
@@ -450,9 +450,10 @@ class LoginToken(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    accessed = models.DateTimeField(
+    activated = models.DateTimeField(
         db_index=True,
-        auto_now=True
+        null=True,
+        blank=True
     )
     token = models.CharField(
         max_length=200,
@@ -464,11 +465,17 @@ class LoginToken(Standard):
 class RegisterToken(Standard):
     """Register token.
     
-    Last updated: 3 November 2021, 12:13 PM
+    Last updated: 3 November 2021, 1:02 PM
     """
-    accessed = models.DateTimeField(
+    activated = models.DateTimeField(
         db_index=True,
-        auto_now=True
+        null=True,
+        blank=True
+    )
+    refreshed = models.DateTimeField(
+        db_index=True,
+        null=True,
+        blank=True
     )
     token = models.CharField(
         max_length=200,
