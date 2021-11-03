@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'rest_framework',
     'storages',
-    'django_user_agents'
+    'django_user_agents',
+    'phonenumber_field'
 ]
 
 MIDDLEWARE = [
@@ -295,3 +296,7 @@ GMASS_CAMPAIGN_UPDATE_TIMEFRAME_DAYS = config('GMASS_CAMPAIGN_UPDATE_TIMEFRAME_D
 ADMIN_PATH = config('ADMIN_PATH')
 
 CHAT_FILE_TRANSFER_CACHE_PATH = f'./chat/file_transfer_cache'
+
+# Login/register tokens expiry duration in seconds
+LOGIN_TOKEN_EXPIRY_SECS = 900 # 15 minutes
+REGISTER_TOKEN_EXPIRY_SECS = 900 # 15 minutes
