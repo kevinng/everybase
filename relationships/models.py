@@ -152,7 +152,11 @@ class User(Standard):
 
     Last updated: 3 November 2021, 3:27 PM
     """
-    registered = models.DateTimeField(db_index=True)
+    registered = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     django_user = models.OneToOneField(
         django_user,
         related_name='user',
