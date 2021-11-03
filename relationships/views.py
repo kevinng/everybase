@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from . import forms, models
+from .tasks.send_register_token import send_register_token
 
 import phonenumbers
 
@@ -46,7 +47,7 @@ def register(request):
             # Create register token
             token = models.RegisterToken.objects.create(user=user)
 
-            # TODO: send register token to user
+            send_register_token.delay(token.id)
 
             return HttpResponseRedirect(
                 reverse('relationships:verify_whatsapp_number', args=()))

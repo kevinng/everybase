@@ -8,7 +8,9 @@ from twilio.rest import Client
 
 def send_message(
         body: str,
+        from_user: relmods.User,
         from_ph: relmods.PhoneNumber,
+        to_user: relmods.User,
         to_ph: relmods.PhoneNumber,
         intent_key: str = None,
         message_key: str = None,
@@ -16,6 +18,8 @@ def send_message(
         no_external_calls: bool = False
     ) -> models.TwilioOutboundMessage:
     """Send Twilio WhatsApp message
+
+    TODO: not up-to-date
 
     Parameters
     ----------
@@ -66,8 +70,8 @@ def send_message(
         error_code=message.error_code if message is not None else None,
         api_version=message.api_version if message is not None else None,
 
-        from_user=from_ph.user,
-        to_user=to_ph.user,
+        from_user=from_user,
+        to_user=to_user,
 
         from_phone_number=from_ph,
         to_phone_number=to_ph

@@ -15,6 +15,8 @@ from chat.libraries.utility_funcs.render_message import render_message
 from chat.libraries.utility_funcs.send_message import send_message
 from chat.libraries.utility_funcs.done_to_context import done_to_context
 
+# TODO: the signature for send_message has been changed
+
 @shared_task
 def exchange_contacts(
         match_id: int,

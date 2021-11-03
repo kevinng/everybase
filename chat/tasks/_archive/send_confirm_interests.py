@@ -9,6 +9,8 @@ from chat.libraries.utility_funcs.get_chatbot_phone_number import \
     get_chatbot_phone_number
 from chat.libraries.utility_funcs.render_message import render_message
 
+# TODO: the signature for send_message has been changed
+
 @shared_task
 def send_confirm_interests(
         match_id: int,

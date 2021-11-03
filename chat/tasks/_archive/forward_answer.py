@@ -9,6 +9,8 @@ from chat.libraries.utility_funcs.get_chatbot_phone_number import \
 from chat.libraries.utility_funcs.render_message import render_message
 from chat.libraries.utility_funcs.done_to_context import done_to_context
 
+# TODO: the signature for send_message has been changed
+
 @shared_task
 def forward_answer(
         qna_id: int,

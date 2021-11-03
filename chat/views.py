@@ -102,7 +102,6 @@ class TwilioIncomingMessageView(APIView):
         if not validator.validate(settings.TWILIO_WEBHOOK_INCOMING_MESSAGES_URL,
             request.data, signature):
             # Authentication failed
-            print('unauthorized')
             return HttpResponse(status=HTTPStatus.UNAUTHORIZED)
 
         try:
