@@ -4,8 +4,11 @@ from . import views
 
 app_name = 'relationships'
 urlpatterns = [
-    # path('login/', views.login, name='login'), # we can use the default accounts/login
-    # path('register/', views.register, name='register'), # we can use the default accounts/login
+    path('register/', views.register, name='register'),
+    path('verify_whatsapp_number/', views.verify_whatsapp_number,
+        name='verify_whatsapp_number'),
+    path('login/', views.login, name='login'),
+    
 
 
     # path('contacts/', views.ContactListView.as_view(), name='contacts'),
