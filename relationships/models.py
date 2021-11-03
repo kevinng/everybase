@@ -3,6 +3,7 @@ import random
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User as django_user
 
 from everybase import settings
 from common.models import (Standard, Choice, LowerCaseCharField,
@@ -149,9 +150,18 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 1 November 2021, 10:56 PM
+    Last updated: 3 November 2021, 3:27 PM
     """
     registered = models.DateTimeField(db_index=True)
+    django_user = models.OneToOneField(
+        django_user,
+        related_name='user',
+        related_query_name='user',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
     profile_picture = models.ForeignKey(
         'files.File',
@@ -212,16 +222,16 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    phone_number = models.OneToOneField(
+    phone_number = models.ForeignKey(
         'PhoneNumber',
         related_name='user',
         related_query_name='user',
+        on_delete=models.PROTECT,
         null=True,
         blank=True,
-        on_delete=models.PROTECT,
         db_index=True
     )
-    email = models.OneToOneField(
+    email = models.ForeignKey(
         'Email',
         related_name='user',
         related_query_name='user',
@@ -471,6 +481,13 @@ class RegisterToken(Standard):
     
     Last updated: 3 November 2021, 1:02 PM
     """
+    user = models.ForeignKey(
+        'User',
+        related_name='register_tokens',
+        related_query_name='register_tokens',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
     activated = models.DateTimeField(
         db_index=True,
         null=True,
@@ -489,25 +506,4 @@ class RegisterToken(Standard):
     expiry_secs = models.IntegerField(
         db_index=True,
         default=settings.REGISTER_TOKEN_EXPIRY_SECS
-    )
-
-    whatsapp_phone_number = models.CharField(
-        max_length=50,
-        db_index=True
-    )
-    first_name = models.CharField(
-        max_length=50,
-        db_index=True
-    )
-    last_name = models.CharField(
-        max_length=50,
-        db_index=True
-    )
-    email = models.CharField(
-        max_length=50,
-        db_index=True
-    )
-    languages_string = models.CharField(
-        max_length=50,
-        db_index=True
     )
