@@ -98,3 +98,8 @@ ensure you\'ve entered your phone number correctly.'
             raise ValidationError(None)
 
         return self.cleaned_data
+
+class VerifyWhatsAppNumberForm(forms.Form):
+    whatsapp_phone_number = PhoneNumberField(
+        required=True
+    )

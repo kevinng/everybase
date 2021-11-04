@@ -33,6 +33,9 @@
 		<script src="{% static 'common/assets/plugins/global/plugins.bundle.js' %}"></script>
 		<script src="{% static 'common/assets/js/scripts.bundle.js' %}"></script>
 		<!--end::Global Javascript Bundle-->
+		<!--begin::Page Vendors Javascript(used by this page)-->
+		{% block page_vendors_javascript %}{% endblock %}
+		<!--end::Page Vendors Javascript-->
 		<!--begin::Page Custom Javascript(used by this page)-->
 		{% block page_custom_javascript %}{% endblock %}
 		<!--end::Page Custom Javascript-->

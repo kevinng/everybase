@@ -5,9 +5,11 @@ from . import views
 app_name = 'relationships'
 urlpatterns = [
     path('register/', views.register, name='register'),
-    path('verify_whatsapp_number/', views.verify_whatsapp_number,
+    path('verify_whatsapp_number/<str:token_str>', views.verify_whatsapp_number,
         name='verify_whatsapp_number'),
     path('login/', views.login, name='login'),
+    path('c/<str:token_str>', views.confirm_whatsapp_number,
+        name='confirm_whatsapp_number'),
     
 
 

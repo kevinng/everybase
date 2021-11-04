@@ -486,6 +486,12 @@ class RegisterToken(Standard):
     
     Last updated: 3 November 2021, 1:02 PM
     """
+    token = models.CharField(
+        unique=True,
+        max_length=200,
+        db_index=True,
+        default=get_token
+    )
     user = models.ForeignKey(
         'User',
         related_name='register_tokens',
@@ -502,12 +508,6 @@ class RegisterToken(Standard):
         db_index=True,
         null=True,
         blank=True
-    )
-    token = models.CharField(
-        unique=True,
-        max_length=200,
-        db_index=True,
-        default=get_token
     )
     expiry_secs = models.IntegerField(
         db_index=True,

@@ -1,1 +1,9 @@
-Test registration message
+{{ first_name }},
+
+Thank for registering with Everybase.
+
+Please click on this link to complete registration:
+
+{{ register_link }}
+
+_Please ignore this message if you did not register with Everybase._

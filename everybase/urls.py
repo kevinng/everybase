@@ -32,15 +32,16 @@ def trigger_handled_error(request):
     return render(request, 'chat/pages/error.html', {})
 
 urlpatterns = [
-    # path('', include('leads.urls')),
+    # Leads
+    path('leads/', include('leads.urls')),
+    path('', include('leads.urls__root')),
 
     # Relationships
     path('', include('relationships.urls__root')),
 
     # Chat
     path('chat/', include('chat.urls')),
-    path('wa/', include('chat.urls__root__wa')),
-    path('pay/', include('chat.urls__root__pay')),
+    path('', include('chat.urls__root')),
 
     # Files
     path('files/', include('files.urls')),
