@@ -77,7 +77,7 @@ def save_message(request):
     ).first()
 
     if from_user is None:
-        relmods.User.objects.create(phone_number=from_phone_number)
+        from_user = relmods.User.objects.create(phone_number=from_phone_number)
         from_usr_is_new = True
 
     _, to_raw_number = parse_twilio_phone_number(message.to_str)
@@ -91,8 +91,8 @@ def save_message(request):
         django_user__isnull=False # User has a Django user linked
     ).first()
 
-    if from_user is None:
-        relmods.User.objects.create(phone_number=to_phone_number)
+    if to_user is None:
+        to_user = relmods.User.objects.create(phone_number=to_phone_number)
         to_usr_is_new = True
 
     # Update message with users and phone numbers

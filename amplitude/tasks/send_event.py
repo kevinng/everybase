@@ -88,7 +88,7 @@ def send_event(
         return requests.post('https://api2.amplitude.com/2/httpapi', json={
             'api_key': settings.AMPLITUDE_API_KEY,
             'events': [{
-                'user_id': user.key,
+                'user_id': user.id,
                 'device_id': device_id,
                 'event_type': event_type,
                 'time': now_epoch,
@@ -136,7 +136,7 @@ def send_event(
         responded=datetime.datetime.now(tz=sgtz),
         response_code=r.status_code,
         response_text=r.text,
-        user_id=user.key,
+        user_id=user.id,
         device_id=device_id,
         event_type=event_type,
         time_dt=now,
