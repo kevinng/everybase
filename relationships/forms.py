@@ -103,3 +103,8 @@ class VerifyWhatsAppNumberForm(forms.Form):
     whatsapp_phone_number = PhoneNumberField(
         required=True
     )
+
+class LoginForm(forms.Form):
+    whatsapp_phone_number = PhoneNumberField(
+        required=True
+    )

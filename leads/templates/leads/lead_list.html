@@ -8,12 +8,8 @@
 
 {% block page_subtitle %}
 
-<!-- Note: do not show if showing all leads-->
-
-<!--begin::Description show when filtering-->
-{% comment %} <small class="text-muted fs-7 fw-bold my-1 ms-1">20 leads found</small> {% endcomment %}
-<!--end::Description--></h1>
-<!--end::Title-->
+{% comment %} <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
+<small class="text-muted fs-7 fw-bold my-1 ms-1">20 leads found</small> {% endcomment %}
 
 {% endblock %}
 
@@ -54,27 +50,52 @@
 
 <!--begin::Container-->
 <div id="kt_content_container" class="container-xxl">
-	<div class="row">
-<!--begin::Alert-->
-<div class="alert alert-dismissible bg-light-primary border border-primary d-flex flex-column flex-sm-row p-5 mb-10">
-    <!--begin::Wrapper-->
-    <div class="d-flex flex-column pe-0 pe-sm-10">
-        <!--begin::Title-->
-        <h5>Recruit agents to help you source or promote goods/services on a commission basis</h5>
-        <!--end::Title-->
-        <!--begin::Content-->
-        <a href="#">Post a new lead</a>
-        <!--end::Content-->
-    </div>
-    <!--end::Wrapper-->
 
-    <!--begin::Close-->
-    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-        <i class="bi bi-x fs-1 text-primary"></i>
-    </button>
-    <!--end::Close-->
-</div>
-<!--end::Alert-->
+	{% if messages %}
+		{% for message in messages %}
+
+	<div class="row">
+		<!--begin::Alert-->
+		<div class="alert alert-dismissible bg-light-info border border-info d-flex flex-column flex-sm-row p-5 mb-10">
+			<!--begin::Wrapper-->
+			<div class="d-flex flex-column pe-0 pe-sm-10">
+				<h5>{{ message }}</h5>
+			</div>
+			<!--end::Wrapper-->
+
+			<!--begin::Close-->
+			<button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+				<i class="bi bi-x fs-1 text-info"></i>
+			</button>
+			<!--end::Close-->
+		</div>
+		<!--end::Alert-->
+	</div>
+
+		{% endfor %}
+	{% endif %}
+
+	<div class="row">
+		<!--begin::Alert-->
+		<div class="alert alert-dismissible bg-light-primary border border-primary d-flex flex-column flex-sm-row p-5 mb-10">
+			<!--begin::Wrapper-->
+			<div class="d-flex flex-column pe-0 pe-sm-10">
+				<!--begin::Title-->
+				<h5>Recruit agents to help you source or promote goods/services on a commission basis</h5>
+				<!--end::Title-->
+				<!--begin::Content-->
+				<a href="#">Post a new lead</a>
+				<!--end::Content-->
+			</div>
+			<!--end::Wrapper-->
+
+			<!--begin::Close-->
+			<button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+				<i class="bi bi-x fs-1 text-primary"></i>
+			</button>
+			<!--end::Close-->
+		</div>
+		<!--end::Alert-->
 	</div>
 
 	<div class="row">

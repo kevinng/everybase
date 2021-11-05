@@ -7,11 +7,11 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('verify_whatsapp_number/<str:token_str>', views.verify_whatsapp_number,
         name='verify_whatsapp_number'),
-    path('login/', views.login, name='login'),
-    path('c/<str:token_str>', views.confirm_whatsapp_number,
-        name='confirm_whatsapp_number'),
+    path('login/', views.log_in, name='login'),
+    path('logout/', views.log_out, name='logout'),
+    path('cr/<str:token_str>', views.confirm_register, name='confirm_register'),
     
-
+    # TODO: include paths to check for login and registration status
 
     # path('contacts/', views.ContactListView.as_view(), name='contacts'),
 

@@ -52,7 +52,7 @@
 							<!--begin::Logo-->
 							<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
 								<a href="?page=index">
-									<img alt="Logo" src="{% static 'common/assets/media/logos/plain-logo.svg' %}" class="h-20px h-lg-30px" />
+									<img alt="Logo" src="{% static 'common/assets/media/logos/plain-logo.png' %}" class="h-20px h-lg-30px" />
 								</a>
 							</div>
 							<!--end::Logo-->
@@ -128,49 +128,53 @@
 										<div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
 											<!--begin::Menu wrapper-->
 
-											<div class="cursor-pointer symbol symbol symbol-40px me-5" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-												<a><div class="symbol-label fs-3 bg-warning text-light">MJ</div></a>
-											</div>
+											{% if request.user.is_authenticated %}
 
-											<!--begin::Menu-->
-											<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
-												<!--begin::Menu item-->
-												<div class="menu-item px-3">
-													<div class="menu-content d-flex align-items-center px-3">
-														<!--begin::Avatar-->
-														{% comment %} <div class="symbol symbol-50px me-5">
-															<img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
-														</div> {% endcomment %}
+												<div class="cursor-pointer symbol symbol symbol-40px me-5" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+													<a><div class="symbol-label fs-3 bg-warning text-light">{{ request.user.user.first_name|make_list|first }}{{ request.user.user.last_name|make_list|first }}</div></a>
+												</div>
 
-														<div class="symbol symbol-50px me-5">
-															<a><div class="symbol-label fs-2 bg-warning text-light">MJ</div></a>
+												<!--begin::Menu-->
+												<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
+													<!--begin::Menu item-->
+													<div class="menu-item px-3">
+														<div class="menu-content d-flex align-items-center px-3">
+															<!--begin::Avatar-->
+															{% comment %} 
+															<!-- We don't currently support photo profiles -->
+															<div class="symbol symbol-50px me-5">
+																<img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
+															</div>
+															{% endcomment %}
+
+															<div class="symbol symbol-50px me-5">
+																<a><div class="symbol-label fs-2 bg-warning text-light">{{ request.user.user.first_name|make_list|first }}{{ request.user.user.last_name|make_list|first }}</div></a>
+															</div>
+															<!--end::Avatar-->
+															<!--begin::Username-->
+															<div class="d-flex flex-column">
+																<div class="fw-bolder d-flex align-items-center fs-5">{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}</div>
+																<span class="fw-bold text-muted fs-7">{{ request.user.user.email.email }}</span>
+																<span class="fw-bold text-muted fs-7">+{{ request.user.user.phone_number.country_code }} {{ request.user.user.phone_number.national_number }}</span>
+															</div>
+															<!--end::Username-->
 														</div>
-														<!--end::Avatar-->
-														<!--begin::Username-->
-														<div class="d-flex flex-column">
-															<div class="fw-bolder d-flex align-items-center fs-5">Max Smith</div>
-															<span class="fw-bold text-muted fs-7">max@kt.com</span>
-															<span class="fw-bold text-muted fs-7">+65 96655575</span>
-														</div>
-														<!--end::Username-->
+													</div>
+													<!--end::Menu item-->
+													<div class="separator my-2"></div>
+													<div class="menu-item px-5">
+														<a href="?page=account/overview" class="menu-link px-5">My Profile</a>
+													</div>
+													<div class="menu-item px-5">
+														<a href="{% url 'relationships:logout' %}" class="menu-link px-5">Log out</a>
 													</div>
 												</div>
-												<!--end::Menu item-->
-												<!--begin::Menu separator-->
-												<div class="separator my-2"></div>
-												<!--end::Menu separator-->
-												<!--begin::Menu item-->
-												<div class="menu-item px-5">
-													<a href="?page=account/overview" class="menu-link px-5">My Profile</a>
-												</div>
-												<!--end::Menu item-->
-												<!--begin::Menu item-->
-												<div class="menu-item px-5">
-													<a href="?page=account/overview" class="menu-link px-5">Log out</a>
-												</div>
-												<!--end::Menu item-->
-											</div>
-											<!--end::Menu-->
+												<!--end::Menu-->
+
+											{% else %}
+												<a href="{% url 'relationships:register' %}" class="btn btn-sm btn-secondary fw-bolder me-2">Register</a>
+												<a href="{% url 'relationships:login' %}" class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary fw-bolder">Login</a>
+											{% endif %}
 
 											<!--end::Menu wrapper-->
 										</div>

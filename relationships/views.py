@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 
@@ -75,7 +75,7 @@ def verify_whatsapp_number(request, token_str):
     return render(request,
         'relationships/verify_whatsapp_number.html', {'token': token_obj})
 
-def confirm_whatsapp_number(request, token_str):
+def confirm_register(request, token_str):
     token_obj = models.RegisterToken.objects.get(token=token_str)
     user = token_obj.user
 
@@ -101,12 +101,48 @@ def confirm_whatsapp_number(request, token_str):
             login(request, in_user)
         else:
             capture_message('User not able to log in after registration. \
-Django user ID: %d, user ID: %d' % (django_user.id, user.id), level='error')
+    Django user ID: %d, user ID: %d' % (django_user.id, user.id), level='error')
 
         messages.info(request, 'Welcome %s, your registration is complete.')
 
     return HttpResponseRedirect(reverse('leads__root:list'))
 
-def login(request):
-    template_name = 'relationships/login.html'
-    return TemplateResponse(request, template_name, {})
+def log_in(request):
+    if request.method == 'POST':
+        form = forms.LoginForm(request.POST)
+        if form.is_valid():
+            # Send login link
+
+            # Parse phone number
+            ph_str = form.cleaned_data.get('whatsapp_phone_number')
+            parsed_ph = phonenumbers.parse(str(ph_str), None)
+            ph_cc = parsed_ph.country_code
+            ph_nn = parsed_ph.national_number
+
+            # Get user with this phone number
+            phone_number = models.PhoneNumber.objects.get(
+                country_code=ph_cc,
+                national_number=ph_nn
+            )
+            user_w_ph = models.User.objects.filter(
+                phone_number=phone_number.id, # User has phone number
+                registered__isnull=False, # User is registered
+                django_user__isnull=False # User has a Django user linked
+            ).first()
+
+            # Create login token
+            token = models.LoginToken.objects.create(user=user_w_ph)
+
+            send_login_token.delay(token.token)
+
+            # Redirect to the waiting page
+            pass
+    else:
+        form = forms.LoginForm()
+
+    return render(request, 'relationships/login.html', {'form': form})
+
+def log_out(request):
+    logout(request)
+    messages.info(request, 'You\'ve logged out.')
+    return HttpResponseRedirect(reverse('leads__root:list'))
