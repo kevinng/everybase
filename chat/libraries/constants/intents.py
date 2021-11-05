@@ -2,6 +2,7 @@
 
 NO_INTENT = 'NO_INTENT' # User has no intent
 REGISTER = 'REGISTER'
+LOGIN = 'LOGIN'
 
 # Deprecated 3 Nov 21
 # Active 31 Aug 21
@@ -25,6 +26,7 @@ REGISTER = 'REGISTER'
 # Note: remember to makemigrations when updating this list
 choices = [
     (REGISTER, REGISTER),
+    (LOGIN, LOGIN),
     
     # Active
     # (NO_INTENT, NO_INTENT),
