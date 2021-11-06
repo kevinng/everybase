@@ -16,10 +16,10 @@
             <!--begin::Wrapper-->
             <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
                 <!--begin::Form-->
-                <form class="form w-100" action="{% url 'relationships:verify_whatsapp_number' token.token %}" method="post">
+                <form class="form w-100" action="{% url 'relationships:login_link' token.token %}" method="post">
                     {% csrf_token %}
                     <div class="text-center mb-10">
-                        <h2 class="text-dark mb-3">We've sent you a link on WhatsApp, please click it to complete registration.</h1>
+                        <h2 class="text-dark mb-3">We've sent you a link on WhatsApp, please click it to complete login.</h1>
                     </div>
                     <div class="fv-row mb-3">
                         <label for="whatsapp_phone_number" class="form-label fs-6 fw-bolder text-dark">Your WhatsApp Phone Number</label>
@@ -28,13 +28,13 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-lg btn-success w-100 mb-5" disabled="true" id="verify_whatsapp_number__resend_button">
+                        <button type="submit" class="btn btn-lg btn-success w-100 mb-5" disabled="true" id="login_link__resend_button">
                             Resend Link via WhatsApp
                         </button>
                     </div>
                     <div class="row">
-                        <div class="col-12" id="verify_whatsapp_number__">
-                            Wait <span class="text-light-info fw-bolder bg-info" id="verify_whatsapp_number__counter_seconds">60</span> seconds to resend link.
+                        <div class="col-12" id="login_link__">
+                            Wait <span class="text-light-info fw-bolder bg-info" id="login_link__counter_seconds">60</span> seconds to resend link.
                         </div>
                     </div>
                 </form>
@@ -51,15 +51,15 @@
 {% block page_custom_javascript %}
 <script type="text/javascript">
 
-var verify_whatsapp_number__counter = function () {
+var login_link__counter = function () {
     var start_counter = function() {
         var counter = 60; // Seconds
         var set_interval = setInterval(function() {
-            $('#verify_whatsapp_number__counter_seconds').html('' + counter);
+            $('#login_link__counter_seconds').html('' + counter);
             counter--;
-            if (counter < 59) {
+            if (counter < 0) {
                 clearInterval(set_interval); // Stop this counter
-                $('#verify_whatsapp_number__resend_button').removeAttr('disabled') // Enable resend button
+                $('#login_link__resend_button').removeAttr('disabled') // Enable resend button
 
             }
         }, 1000);
@@ -72,12 +72,18 @@ var verify_whatsapp_number__counter = function () {
     }
 }();
 
-var verify_whatsapp_number__poll_status = function() {
+var login_link__poll_status = function() {
     var start_poll = function () {
-        var counter = 120; // Poll for 5 minutes at most (12 * 2.5s = 5 mins)
+        var counter = 360; // Poll for 15 minutes at most (360 * 2.5s = 15 mins)
         var set_interval = setInterval(function() {
-            // TODO: poll backend
-            console.log('poll backend' + counter)
+            // Get login token and ascertain if it has been activated
+            $.get('/log_in_if_logged_in/{{ token.token }}', function(data) {
+                console.log(data);
+
+                if (data['logged_in'] == true) {
+                    window.location.replace("{% url 'leads__root:list' %}");
+                }
+            });
             counter--;
             if (counter < 0) {
                 clearInterval(set_interval); // Stop this counter
@@ -93,8 +99,8 @@ var verify_whatsapp_number__poll_status = function() {
 }();
 
 jQuery(document).ready(function () {
-    verify_whatsapp_number__counter.init();
-    verify_whatsapp_number__poll_status.init();
+    login_link__counter.init();
+    login_link__poll_status.init();
 });
 
 </script>

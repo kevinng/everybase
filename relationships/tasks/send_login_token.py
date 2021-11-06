@@ -25,11 +25,11 @@ def send_login_token(token: str) -> str:
     done_to_context(
         token_obj.user,
         intents.LOGIN,
-        messages.LOGIN_CONFIRM
+        messages.LOGIN__CONFIRM
     )
 
     return send_message(
-        render_message(messages.LOGIN__CONFIRM, {
+        render_message(messages.LOGIN_CONFIRM, {
             'first_name': token_obj.user.first_name,
             'login_link': settings.BASE_URL + \
                 reverse('relationships:confirm_login',
@@ -40,5 +40,5 @@ def send_login_token(token: str) -> str:
         token_obj.user,
         token_obj.user.phone_number,
         intents.LOGIN,
-        messages.LOGIN__CONFIRM
+        messages.LOGIN_CONFIRM
     )

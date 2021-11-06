@@ -1,17 +1,18 @@
-from datetime import datetime
-
-from django.http import HttpResponseRedirect
-from django.template.response import TemplateResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from everybase import settings
 from . import forms, models
 from .tasks.send_register_token import send_register_token
-from sentry_sdk import capture_message
+from .tasks.send_login_token import send_login_token
 
+import pytz
+from datetime import datetime, timedelta
+from sentry_sdk import capture_message
 import phonenumbers
 
 def register(request):
@@ -56,45 +57,61 @@ def register(request):
             send_register_token.delay(token.token)
 
             return HttpResponseRedirect(
-                reverse('relationships:verify_whatsapp_number',
+                reverse('relationships:register_link',
                     kwargs={'token_str': token.token}))
     else:
         form = forms.RegisterForm()
 
     return render(request, 'relationships/register.html', {'form': form})
 
-def verify_whatsapp_number(request, token_str):
+def register_link(request, token_str):
+    token = models.RegisterToken.objects.get(token=token_str)
     if request.method == 'POST':
+        
+        # Get current timezone
+        sgtz = pytz.timezone(settings.TIME_ZONE)
+        token.refreshed = datetime.now(tz=sgtz)
+
         # Resend token via WhatsApp
         send_register_token.delay(token_str)
+        
         return HttpResponseRedirect(
-            reverse('relationships:verify_whatsapp_number',
+            reverse('relationships:register_link',
                 kwargs={'token_str': token_str}))
 
-    token_obj = models.RegisterToken.objects.get(token=token_str)
     return render(request,
-        'relationships/verify_whatsapp_number.html', {'token': token_obj})
+        'relationships/register_link.html', {'token': token})
 
 def confirm_register(request, token_str):
     token_obj = models.RegisterToken.objects.get(token=token_str)
     user = token_obj.user
 
-    # Create Django user
-    django_user, du_is_new = User.objects.get_or_create(username=str(user.id))
-    if du_is_new:
-        # First time clicking the link - register
+    expiry_datetime = token_obj.created + timedelta(
+        seconds=settings.REGISTER_TOKEN_EXPIRY_SECS)
+    sgtz = pytz.timezone(settings.TIME_ZONE)
+    if datetime.now(tz=sgtz) < expiry_datetime:
+        # ##### Token has not expired
+        
+        # Create Django user
+        django_user, du_is_new = User.objects.get_or_create(
+            username=str(user.id))
+        if du_is_new:
+            # Register user - only works once
 
-        # Set unusable password for Django user and save
-        django_user.set_unusable_password()
-        django_user.save()
+            # Set unusable password for Django user and save
+            django_user.set_unusable_password()
+            django_user.save()
 
-        # Update user profile
-        user.registered = datetime.now()
-        user.django_user = django_user
-        user.save()
+            # Update user profile
+            user.registered = datetime.now(sgtz)
+            user.django_user = django_user
+            user.save()
 
-        # Log the user in
-        # Note: only works the first time this (register) link is used
+            # Update token activated timestamp
+            token_obj.activated = datetime.now(sgtz)
+            token_obj.save()
+
+        # Log the user in - will keep working until token is expired
         in_user = authenticate(django_user.username)
         if in_user is not None:
             # User authenticated by a backend successfully - login
@@ -103,7 +120,11 @@ def confirm_register(request, token_str):
             capture_message('User not able to log in after registration. \
     Django user ID: %d, user ID: %d' % (django_user.id, user.id), level='error')
 
-        messages.info(request, 'Welcome %s, your registration is complete.')
+        messages.info(request, 'Welcome %s, your registration is complete.' % in_user.user.first_name)
+
+    else:
+        # ##### Token has expired
+        messages.info(request, 'This registration link has expired.')
 
     return HttpResponseRedirect(reverse('leads__root:list'))
 
@@ -135,14 +156,55 @@ def log_in(request):
 
             send_login_token.delay(token.token)
 
-            # Redirect to the waiting page
-            pass
+            return HttpResponseRedirect(
+                reverse('relationships:login_link',
+                    kwargs={'token_str': token.token}))
     else:
         form = forms.LoginForm()
 
     return render(request, 'relationships/login.html', {'form': form})
 
+def log_in_link(request, token_str):
+    token = models.LoginToken.objects.get(token=token_str)
+    if request.method == 'POST':
+        
+        # Get current timezone
+        sgtz = pytz.timezone(settings.TIME_ZONE)
+        token.refreshed = datetime.now(tz=sgtz)
+
+        # Resend token via WhatsApp
+        send_login_token.delay(token_str)
+        
+        return HttpResponseRedirect(
+            reverse('relationships:login_link',
+                kwargs={'token_str': token_str}))
+
+    return render(request,
+        'relationships/login_link.html', {'token': token})
+
+def confirm_log_in(request):
+    pass
+
 def log_out(request):
     logout(request)
     messages.info(request, 'You\'ve logged out.')
     return HttpResponseRedirect(reverse('leads__root:list'))
+
+def log_in_if_logged_in(request, token_str):
+    try:
+        register_token = models.RegisterToken.objects.get(token=token_str)
+    except:
+        return HttpResponse(status=404)
+    
+    if register_token.activated is not None:
+        # This token has been activated
+
+        # Authenticate the user
+        in_user = authenticate(register_token.user.django_user.username)
+        if in_user is not None:
+            # User authenticated by a backend successfully - login
+            login(request, in_user)
+            messages.info(request, 'Welcome %s.' % in_user.user.first_name)
+            return JsonResponse({'logged_in': True})
+
+    return JsonResponse({'logged_in': False})

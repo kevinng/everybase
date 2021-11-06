@@ -1,0 +1,9 @@
+{{ first_name }},
+
+You have requested to log in to Everybase.
+
+Please click on this link to complete login:
+
+{{ login_link }}
+
+_Please ignore this message if you did not log in to Everybase._

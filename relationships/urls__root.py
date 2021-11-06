@@ -5,11 +5,15 @@ from . import views
 app_name = 'relationships'
 urlpatterns = [
     path('register/', views.register, name='register'),
-    path('verify_whatsapp_number/<str:token_str>', views.verify_whatsapp_number,
-        name='verify_whatsapp_number'),
+    path('register_link/<str:token_str>', views.register_link,
+        name='register_link'),
+    path('login_link/<str:token_str>', views.log_in_link, name='login_link'),
     path('login/', views.log_in, name='login'),
     path('logout/', views.log_out, name='logout'),
     path('cr/<str:token_str>', views.confirm_register, name='confirm_register'),
+    path('cl/<str:token_str>', views.confirm_log_in, name='confirm_login'),
+    path('log_in_if_logged_in/<str:token_str>', views.log_in_if_logged_in,
+        name='log_in_if_logged_in')
     
     # TODO: include paths to check for login and registration status
 
