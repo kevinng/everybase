@@ -1,4 +1,5 @@
 from django.views.generic.list import ListView
+from django.shortcuts import render
 
 from . import models
 
@@ -6,5 +7,6 @@ class LeadListView(ListView):
     model = models.Lead
     paginate_by = 18
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
+def create_lead(request):
+    
+    return render(request, 'leads/new_lead.html', {})

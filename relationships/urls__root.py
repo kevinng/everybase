@@ -13,10 +13,10 @@ urlpatterns = [
     path('cr/<str:token_str>', views.confirm_register, name='confirm_register'),
     path('cl/<str:token_str>', views.confirm_log_in, name='confirm_login'),
     path('log_in_if_logged_in/<str:token_str>', views.log_in_if_logged_in,
-        name='log_in_if_logged_in')
+        name='log_in_if_logged_in'),
+    path('log_in_if_registered/<str:token_str>', views.log_in_if_registered,
+        name='log_in_if_registered')
     
-    # TODO: include paths to check for login and registration status
-
     # path('contacts/', views.ContactListView.as_view(), name='contacts'),
 
 

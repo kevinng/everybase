@@ -182,29 +182,77 @@ def log_in_link(request, token_str):
     return render(request,
         'relationships/login_link.html', {'token': token})
 
-def confirm_log_in(request):
-    pass
+def confirm_log_in(request, token_str):
+    token = models.LoginToken.objects.get(token=token_str)
+    user = token.user
+
+    expiry_datetime = token.created + timedelta(
+        seconds=settings.LOGIN_TOKEN_EXPIRY_SECS)
+    sgtz = pytz.timezone(settings.TIME_ZONE)
+    if datetime.now(tz=sgtz) < expiry_datetime:
+        # ##### Token has not expired
+
+        # Update token activated timestamp
+        token.activated = datetime.now(sgtz)
+        token.save()
+
+        # Authenticate the user
+        django_user = token.user.django_user
+        user = authenticate(django_user.username)
+        if user is not None:
+            # User authenticated by a backend successfully - login
+            login(request, user)
+        else:
+            capture_message('User not able to log in with token. \
+    Django user ID: %d, user ID: %d' % (django_user.id, user.id), level='error')
+
+        messages.info(request, 'Welcome %s.' % user.user.first_name)
+
+    else:
+        # ##### Token has expired
+        messages.info(request, 'This login link has expired.')
+
+    return HttpResponseRedirect(reverse('leads__root:list'))
 
 def log_out(request):
     logout(request)
     messages.info(request, 'You\'ve logged out.')
     return HttpResponseRedirect(reverse('leads__root:list'))
 
-def log_in_if_logged_in(request, token_str):
+def log_in_if_registered(request, token_str):
     try:
-        register_token = models.RegisterToken.objects.get(token=token_str)
+        token = models.RegisterToken.objects.get(token=token_str)
     except:
         return HttpResponse(status=404)
     
-    if register_token.activated is not None:
+    if token.activated is not None:
         # This token has been activated
 
         # Authenticate the user
-        in_user = authenticate(register_token.user.django_user.username)
-        if in_user is not None:
+        user = authenticate(token.user.django_user.username)
+        if user is not None:
             # User authenticated by a backend successfully - login
-            login(request, in_user)
-            messages.info(request, 'Welcome %s.' % in_user.user.first_name)
+            login(request, user)
+            messages.info(request, 'Welcome %s.' % user.user.first_name)
+            return JsonResponse({'logged_in': True})
+
+    return JsonResponse({'logged_in': False})
+
+def log_in_if_logged_in(request, token_str):
+    try:
+        token = models.LoginToken.objects.get(token=token_str)
+    except:
+        return HttpResponse(status=404)
+    
+    if token.activated is not None:
+        # This token has been activated
+
+        # Authenticate the user
+        user = authenticate(token.user.django_user.username)
+        if user is not None:
+            # User authenticated by a backend successfully - login
+            login(request, user)
+            messages.info(request, 'Welcome %s.' % user.user.first_name)
             return JsonResponse({'logged_in': True})
 
     return JsonResponse({'logged_in': False})

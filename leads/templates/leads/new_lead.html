@@ -1,0 +1,296 @@
+{% extends 'extendables/base.html' %}
+
+{% load static %}
+
+{% block subtitle %}New Lead | {% endblock %}
+
+{% block page_title %}New Lead{% endblock %}
+
+{% block actions %}
+
+<button class="btn btn-sm btn-secondary me-2">Cancel</button>
+<button class="btn btn-sm btn- btn-primary">Post This Lead</button>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div id="kt_content_container" class="container-xxl">
+	<div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <h3 class="fw-bolder mb-5">Details</h3>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="mb-7">
+                        <label class="form-label">Title:</label>
+                        <input type="text" class="form-control"/>
+                        <div class="text-danger mt-3">Please enter title.</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <label class="form-label">Details:</label>
+                        <textarea class="form-control" rows="3" data-kt-autosize="true"></textarea>
+                        <div class="text-muted mt-3">Please describe the goods/service you need and what the agent should do for you.</div>
+                        <div class="text-danger mt-3">Please enter details.</div>
+                    </div>
+
+                    <div class="my-10">
+                        <label class="form-label fs-6 mb-5">Do you want to buy or sell?</label>
+                        <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                            <input class="form-check-input" type="radio" value="option__buysell__want_to_buy" id="option__buysell__want_to_buy" name='option__buysell'/>
+                            <label class="form-check-label" for="option__buysell__want_to_buy">I want to buy</label>
+                        </div>
+                        <div class="form-check form-check-custom form-check-lg col-12">
+                            <input class="form-check-input" type="radio" value="option__buysell__want_to_sell" id="option__buysell__want_to_sell" name='option__buysell'/>
+                            <label class="form-check-label" for="option__buysell__want_to_sell">I want to sell</label>
+                        </div>
+                        <div class="text-danger mt-5">Please let us know if want to buy or sell.</div>
+                    </div>
+
+                    <div class="my-10">
+                        <label class="form-label fs-6 mb-5">Are you a direct buyer or an agent?</label>
+                        <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                            <input class="form-check-input" type="radio" value="option__authortype__direct" id="option__authortype__direct" name="option__authortype"/>
+                            <label class="form-check-label" for="option__authortype__direct">I'm a direct buyer</label>
+                        </div>
+                        <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                            <input class="form-check-input" type="radio" value="option__authortype__agent" id="option__authortype__agent" name="option__authortype"/>
+                            <label class="form-check-label" for="option__authortype__agent">I'm an agent</label>
+                        </div>
+                        <div class="text-danger mt-3">Please let us know if you're a direct buyer or an agent.</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <label class="form-label">Destination Country:</label>
+                        <input type="text" class="form-control" placeholder="E.g., Canada"/>
+                        <div class="text-muted mt-3">What is the destination country for the goods/service?</div>
+                        <div class="text-danger mt-3">Please enter a destination country.</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <!-- TODO: cannot be less than 0 -->
+                        <label class="form-label">Commission %:</label>
+                        <div class="col-6">
+                            <input type="number" class="form-control"/>
+                        </div>
+                        <div class="text-danger mt-3">Please enter commission %.</div>
+                    </div>
+
+                    <div class="mb-7">
+                        <div class="my-10">
+                            <label class="form-label fs-6 mb-5">I'd pay the commission after:</label>
+
+                            <!-- these options are for selling leads-->
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__deposit_received" id="option__commissionpayableafter__deposit_received" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__deposit_received">Initial deposit is received</label>
+                            </div>
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__goods_shipped" id="option__commissionpayableafter__goods_shipped" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__goods_shipped">Goods are shipped from source country</label>
+                            </div>
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__full_payment_received" id="option__commissionpayableafter__full_payment_received" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__full_payment_received">Full payment has been received</label>
+                            </div>
+                            <!-- only this option if buying and broker -->
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__goods_services_received" id="option__commissionpayableafter__goods_services_received" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__goods_services_received">Buyer has received goods/services</label>
+                            </div>
+                            <!-- only this option is available if the lead is buying and direct -->
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__goods_services_received" id="option__commissionpayableafter__goods_services_received" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__goods_services_received">I've received goods/services</label>
+                            </div>
+                            <div class="form-check form-check-custom form-check-lg col-12 mb-5">
+                                <input class="form-check-input" type="radio" value="option__commissionpayableafter__others" id="option__commissionpayableafter__others" name='option__commissionpayableafter'/>
+                                <label class="form-check-label" for="option__commissionpayableafter__others">Others</label>
+                            </div>
+                            <textarea class="form-control" rows="3" data-kt-autosize="true"></textarea>
+                            <div class="text-danger mt-5">Please let us know when the agent will be paid.</div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Other Commission Details:</label>
+                        <textarea class="form-control" rows="3" data-kt-autosize="true"></textarea>
+                        <div class="text-muted mt-3">Please specify other details regarding commission.</div>
+                    </div>
+                </div>
+                {% comment %} <div class="card-footer">
+                    <!-- integrate recaptcha -->
+                    <button class="btn btn-primary">Post Lead</button>
+                </div> {% endcomment %}
+            </div>
+            <h3 class="fw-bolder my-5">Documents & Photos</h3>
+
+            <div class="row mb-15">
+
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <!--begin::Card-->
+                    <div class="card h-100">
+                        <!--begin::Card body-->
+                        <div class="card-body d-flex justify-content-center text-center flex-column p-8">
+                            <!--begin::Name-->
+                            <a href="#" class="text-gray-800 text-hover-primary d-flex flex-column">
+                                <!--begin::Image-->
+                                <div class="mb-5">
+                                    <img src="{% static 'common/assets/media/demos/demo1.png' %}" style="object-fit: cover; height: 90px" class="w-120px rounded" />
+                                </div>
+                                <!--end::Image-->
+                                <!--begin::Title-->
+                                <a href="#" class="btn btn-light-danger btn-shadow">Remove</a>
+                                <!--end::Title-->
+                            </a>
+                            <!--end::Name-->
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <!--begin::Card-->
+                    <div class="card h-100">
+                        <!--begin::Card body-->
+                        <div class="card-body d-flex justify-content-center text-center flex-column p-8">
+                            <!--begin::Name-->
+                            <a href="#" class="text-gray-800 text-hover-primary d-flex flex-column">
+                                <!--begin::Image-->
+                                <div class="mb-5">
+                                    <img src="{% static 'common/assets/media/demos/demo1.png' %}" style="object-fit: cover; height: 90px" class="w-120px rounded" />
+                                </div>
+                                <!--end::Image-->
+                                <!--begin::Title-->
+                                <a href="#" class="btn btn-light-danger btn-shadow">Remove</a>
+                                <!--end::Title-->
+                            </a>
+                            <!--end::Name-->
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <!--begin::Card-->
+                    <div class="card h-100">
+                        <!--begin::Card body-->
+                        <div class="card-body d-flex justify-content-center text-center flex-column p-8">
+                            <!--begin::Name-->
+                            <a href="#" class="text-gray-800 text-hover-primary d-flex flex-column">
+                                <!--begin::Image-->
+                                <div class="symbol symbol-60px mb-5">
+                                    <img src="{% static 'common/assets/media/svg/files/pdf.svg' %}" alt="" />
+                                </div>
+                                <!--end::Image-->
+                                <!--begin::Title-->
+                                <div class="fs-5 fw-bolder mb-2">UTAIR CRM API Co..</div>
+                                <a href="#" class="btn btn-light-danger btn-shadow">Remove</a>
+                                <!--end::Title-->
+                            </a>
+                            <!--end::Name-->
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <!--begin::Card-->
+                    <div class="card h-100">
+                        <!--begin::Card body-->
+                        <div class="card-body d-flex justify-content-center text-center flex-column p-8">
+                            <!--begin::Name-->
+                            <a href="#" class="text-gray-800 text-hover-primary d-flex flex-column">
+                                <!--begin::Image-->
+                                <div class="mb-5">
+                                    <img src="{% static 'common/assets/media/demos/demo1.png' %}" style="object-fit: cover; height: 90px" class="w-120px rounded" />
+                                </div>
+                                <!--end::Image-->
+                                <!--begin::Title-->
+                                <a href="#" class="btn btn-light-danger btn-shadow">Remove</a>
+                                <!--end::Title-->
+                            </a>
+                            <!--end::Name-->
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <!--begin::Card-->
+                    <div class="card">
+                        <!--begin::Card body-->
+                        <div class="card-body d-flex justify-content-center text-center flex-column p-8">
+                            <!--begin::Name-->
+                            <a href="#" class="text-gray-800 text-hover-primary d-flex flex-column">
+                                <!--begin::Image-->
+                                <div class="symbol symbol-60px mb-5">
+                                    <img src="{% static 'common/assets/media/svg/files/pdf.svg' %}" alt="" />
+                                </div>
+                                <!--end::Image-->
+                                <!--begin::Title-->
+                                <div class="fs-5 fw-bolder mb-2">UTAIR CRM API Co..</div>
+                                <a href="#" class="btn btn-light-danger btn-shadow">Remove</a>
+                                <!--end::Title-->
+                            </a>
+                            <!--end::Name-->
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <!--begin::Card-->
+                    <div class="card h-100" id="kt_block_ui_1_target">
+                        <!--begin::Card body-->
+                        <div class="card-body d-flex justify-content-center text-center flex-column p-8">
+                            <button class="btn btn-light-primary btn-shadow" id="kt_block_ui_1_button">Add File</button>
+                            <span class="fs-6" style="display: none;" id="uploading_file_message">Uploading file...</span>
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn btn-secondary col-2 me-2">Cancel</button>
+                <button class="btn btn-primary col-2">Post Lead</button>
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block page_custom_javascript %}
+
+<script type="text/javascript">
+
+var button = document.querySelector("#kt_block_ui_1_button");
+var message = document.querySelector("#uploading_file_message");
+var target = document.querySelector("#kt_block_ui_1_target");
+
+var blockUI = new KTBlockUI(target);
+
+button.addEventListener("click", function() {
+    if (blockUI.isBlocked()) {
+        blockUI.release();
+        // button.innerText = "Block";
+    } else {
+        blockUI.block();
+        button.style.display = 'none';
+        message.style.display = 'block';
+        // button.innerText = "Release";
+    }
+});
+
+</script>
+
+{% endblock %}

@@ -41,7 +41,7 @@
 <!--end::Separator-->
 
 <!--begin::New Lead-->
-<a href="#" class="btn btn-sm btn-primary">Post New Lead</a>
+<a href="{% url 'leads:create' %}" class="btn btn-sm btn-primary">Post New Lead</a>
 <!--end::New Lead-->
 
 {% endblock %}
@@ -84,7 +84,7 @@
 				<h5>Recruit agents to help you source or promote goods/services on a commission basis</h5>
 				<!--end::Title-->
 				<!--begin::Content-->
-				<a href="#">Post a new lead</a>
+				<a href="{% url 'leads:create' %}">Post a new lead</a>
 				<!--end::Content-->
 			</div>
 			<!--end::Wrapper-->
