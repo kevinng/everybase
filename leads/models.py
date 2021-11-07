@@ -16,7 +16,14 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    is_buying = models.BooleanField(db_index=True)
+    lead_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('buying', 'Buying'),
+            ('selling', 'Selling')
+        ],
+        db_index=True
+    )
     author_type = models.CharField(
         max_length=20,
         choices=[
