@@ -54,6 +54,16 @@ class Lead(Standard):
         null=True,
         blank=True
     )
+    commission_payable_by = models.CharField(
+        max_length=20,
+        choices=[
+            ('me', 'Me'),
+            ('buyer', 'Buyer'),
+            ('seller', 'Seller')
+        ],
+        null=True,
+        blank=True
+    )
     commission_payable_after = models.CharField(
         max_length=50,
         choices=[
