@@ -33,6 +33,7 @@
 	<!--end::Head-->
     <!--begin::Body-->
 	<body id="kt_body" class="page-loading-enabled page-loading header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed toolbar-tablet-and-mobile-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
+		{% block body_top %}{% endblock %}
 
         {% include 'layout/_loader.html' %}
 
@@ -51,7 +52,7 @@
 							<!--end::Aside mobile toggle-->
 							<!--begin::Logo-->
 							<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
-								<a href="?page=index">
+								<a href="/">
 									<img alt="Logo" src="{% static 'common/assets/media/logos/plain-logo.png' %}" class="h-20px h-lg-30px" />
 								</a>
 							</div>
@@ -268,17 +269,19 @@
 
         <script>var hostUrl = "assets/";</script>
 		<!--begin::Javascript-->
-        <!--begin::Global Javascript Bundle(used by all pages)-->
+        <!--begin::Global Javascript Bundle (used by all pages)-->
 		<script src="{% static 'common/assets/plugins/global/plugins.bundle.js' %}"></script>
 		<script src="{% static 'common/assets/js/scripts.bundle.js' %}"></script>
 		<!--end::Global Javascript Bundle-->
-		<!--begin::Page Vendors Javascript(used by this page)-->
+		<!--begin::Page Vendors Javascript (used by this page)-->
 		{% block page_vendors_javascript %}{% endblock %}
 		<!--end::Page Vendors Javascript-->
-		<!--begin::Page Custom Javascript(used by this page)-->
-		{% block page_custom_javascript %}{% endblock %}
-		<!--end::Page Custom Javascript-->
+		<!--begin::Page Custom Javascript and CSS (used by this page)-->
+		{% block page_custom_script %}{% endblock %}
+		<!--end::Page Custom Javascript and CSS (used by this page)-->
 		<!--end::Javascript-->
+
+		{% block body_bottom %}{% endblock %}
     </body>
 	<!--end::Body-->
 </html>
