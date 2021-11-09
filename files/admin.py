@@ -6,9 +6,10 @@ from django.contrib import admin
 from files import models
 from common import admin as comadm
 
-_file_fields = ['uuid', 'file_url', 'upload_confirmed', 's3_bucket_name',
-    's3_object_key', 's3_object_content_length', 's3_object_e_tag',
-    's3_object_content_type', 's3_object_last_modified']
+_file_fields = ['uuid', 'file_url', 'uploader', 'file_type',
+    'presigned_url_issued', 'presigned_url_lifespan', 'presigned_url_response',
+    's3_bucket_name', 's3_object_key', 's3_object_content_length',
+    's3_object_e_tag', 's3_object_content_type', 's3_object_last_modified']
 @admin.register(models.File)
 class FileAdmin(admin.ModelAdmin):
     def file_url(self, obj):
@@ -18,11 +19,10 @@ class FileAdmin(admin.ModelAdmin):
 
     # List page settings
     list_display = comadm.standard_list_display + _file_fields
-    list_editable = comadm.standard_list_editable + ['upload_confirmed',
+    list_editable = comadm.standard_list_editable + [
         's3_bucket_name', 's3_object_key', 's3_object_content_length',
         's3_object_e_tag', 's3_object_content_type', 's3_object_last_modified']
-    list_filter = comadm.standard_list_filter + ['upload_confirmed',
-        's3_object_last_modified']
+    list_filter = comadm.standard_list_filter + ['s3_object_last_modified']
     search_fields = ['id', 's3_bucket_name', 's3_object_key', 's3_object_e_tag']
     list_per_page = 50
     ordering = comadm.standard_ordering

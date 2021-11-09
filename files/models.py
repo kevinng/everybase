@@ -5,20 +5,43 @@ import uuid
 class File(Standard):
     """File in S3
     
-    Last updated: 4 September 2021, 8:40 PM
+    Last updated: 9 November 2021 11:32
     """
     
-    upload_confirmed = models.DateTimeField(
-        default=None,
-        null=True,
-        blank=True,
-        db_index=True
-    )
     uuid = models.UUIDField(
         unique=True,
         default=uuid.uuid4,
         editable=False,
         db_index=True
+    )
+    uploader = models.ForeignKey(
+        'relationships.User',
+        related_name='uploaded_files',
+        related_query_name='uploaded_files',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    file_type = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    presigned_url_issued = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    presigned_url_lifespan = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    presigned_url_response = models.JSONField(
+        null=True,
+        blank=True
     )
 
     s3_bucket_name = models.CharField(
