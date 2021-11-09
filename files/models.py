@@ -43,6 +43,11 @@ class File(Standard):
         null=True,
         blank=True
     )
+    lifespan = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     s3_bucket_name = models.CharField(
         max_length=63,

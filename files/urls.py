@@ -4,10 +4,9 @@ from . import views
 
 app_name = 'files'
 urlpatterns = [
-    path('read/', views.ReadOnlyPresignedURLView.as_view()),
-    path('write/', views.WriteOnlyPresignedURLView.as_view()),
-    path('file/<int:id>', views.get_file, name='get_file')
-
+    # path('read/', views.ReadOnlyPresignedURLView.as_view()),
+    # path('write/', views.WriteOnlyPresignedURLView.as_view()),
+    # path('file/<int:id>', views.get_file, name='get_file')
     # path('file/', views.FileList.as_view()),
     # path('file/<int:pk>', views.FileDetail.as_view())
 ]

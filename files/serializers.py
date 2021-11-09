@@ -1,11 +1,12 @@
-import boto3
+import boto3, logging, pytz
 from botocore.exceptions import ClientError
+from datetime import datetime
+
 from django.http import Http404
 from rest_framework import serializers
+
 from everybase import settings
-from files.models import File
-from datetime import datetime
-import uuid
+from files import models as fimods
 
 class ReadOnlyPresignedURLSerializer(serializers.Serializer):
     """
@@ -24,8 +25,8 @@ class ReadOnlyPresignedURLSerializer(serializers.Serializer):
         specified file on AWS S3.
         """
         try:
-            file = File.objects.get(pk=validated_data['file_id'])
-        except File.DoesNotExist:
+            file = fimods.File.objects.get(pk=validated_data['file_id'])
+        except fimods.File.DoesNotExist:
             raise Http404
 
         s3 = boto3.client('s3',
@@ -53,25 +54,27 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
     """
     Serializer class to get pre-signed URL to upload (i.e. write) the file via
     a HTTP POST request.
-    """
 
-    # Details of the pre-signed URL to upload (i.e. write) the file.
-    file_id = serializers.IntegerField(read_only=True)
-    issued = serializers.DateTimeField(read_only=True)
-    lifespan = serializers.IntegerField(read_only=True)
-    response = serializers.JSONField(read_only=True)
+    Override to provide a custom filename.
+    """
+    uuid = serializers.UUIDField(read_only=True)
+    presigned_url_issued = serializers.DateTimeField(read_only=True)
+    presigned_url_lifespan = serializers.IntegerField(read_only=True)
+    presigned_url_response = serializers.JSONField(read_only=True)
+    file_type = serializers.CharField(write_only=True)
+
+    def filename(self):
+        return f'{str(datetime.now())} - {str(self.uuid)}'
 
     def create(self, validated_data):
         """
         HTTP POST request to get a write-only pre-signed URL for uploading a
         file to AWS S3.
         """
-        file = File(**validated_data)
+        file = fimods.File(**validated_data)
+        file.presigned_url_lifespan = settings.AWS_PRESIGNED_URL_EXPIRES_IN
         file.s3_bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-
-        timestamp = str(datetime.now()).split('.')[0]
-        file.s3_object_key = f'{settings.AWS_S3_FILES_ROOT}/{timestamp}' + \
-            f' - {str(uuid.uuid4())}'
+        file.s3_object_key = f'{settings.AWS_S3_FILES_ROOT}/{self.filename()}'
 
         try:
             s3 = boto3.client('s3',
@@ -79,8 +82,10 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
                 aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
             )
-            issued = datetime.now()
-            response = s3.generate_presigned_post(
+
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            file.presigned_url_issued = datetime.now(tz=sgtz)
+            file.presigned_url_response = s3.generate_presigned_post(
                 Bucket=file.s3_bucket_name,
                 Key=file.s3_object_key,
                 Fields = {'acl': 'private'},
@@ -95,16 +100,17 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
         file.save()
 
         return {
-            'file_id': file.id,
-            'issued': issued,
-            'lifespan': settings.AWS_PRESIGNED_URL_EXPIRES_IN,
-            'response': response
+            'file_uuid': file.uuid,
+            'presigned_url_issued': file.presigned_url_issued,
+            'presigned_url_lifespan': settings.AWS_PRESIGNED_URL_EXPIRES_IN,
+            'presigned_url_response': file.presigned_url_response
         }
-    
+
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = File
-        fields = ['id', 'upload_confirmed', 'uuid', 's3_bucket_name',
-            's3_object_key', 's3_object_content_length', 's3_object_e_tag',
-            's3_object_content_type', 's3_object_last_modified', 'details_md',
-            'supplies', 'demands', 'issues', 'persons']
+        model = fimods.File
+        fields = ['uuid', 'uploader', 'file_type', 'presigned_url_issued',
+            'presigned_url_lifespan', 'presigned_url_response',
+            's3_bucket_name', 's3_object_key', 's3_object_content_length',
+            's3_object_e_tag', 's3_object_content_type',
+            's3_object_last_modified']
