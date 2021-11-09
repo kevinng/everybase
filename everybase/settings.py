@@ -302,3 +302,6 @@ CHAT_FILE_TRANSFER_CACHE_PATH = f'./chat/file_transfer_cache'
 # Login/register tokens expiry duration in seconds
 LOGIN_TOKEN_EXPIRY_SECS = 900 # 15 minutes
 REGISTER_TOKEN_EXPIRY_SECS = 900 # 15 minutes
+
+# S3 path for lead files
+LEADS_FILES_S3_PATH = 'leads/files/'
