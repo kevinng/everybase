@@ -8,7 +8,7 @@ from common import admin as comadm
 
 _file_fields = ['uuid', 'file_url', 'uploader', 'file_type',
     'presigned_url_issued', 'presigned_url_lifespan', 'presigned_url_response',
-    's3_bucket_name', 's3_object_key', 's3_object_content_length',
+    'lifespan', 's3_bucket_name', 's3_object_key', 's3_object_content_length',
     's3_object_e_tag', 's3_object_content_type', 's3_object_last_modified']
 @admin.register(models.File)
 class FileAdmin(admin.ModelAdmin):
