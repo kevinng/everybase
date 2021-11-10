@@ -57,10 +57,14 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
     presigned_url_response = serializers.JSONField(read_only=True)
     file_type = serializers.CharField(write_only=True)
     filename = serializers.CharField(write_only=True)
-    lifespan = serializers.IntegerField(write_only=True)
 
     def s3_object_key_prefix(self):
+        """Override to provide an object key prefix."""
         return ''
+
+    def update_file(self, file):
+        """Override to update other fields in the file."""
+        return file
 
     def create(self, validated_data):
         """
@@ -72,6 +76,7 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
         file.s3_bucket_name = settings.AWS_STORAGE_BUCKET_NAME
         file.s3_object_key = f'{self.s3_object_key_prefix()}{settings.AWS_S3_FILES_ROOT}/\
 {str(datetime.now()).replace(" ", "_")}_{str(file.uuid)}'
+        file = self.update_file(file)
 
         try:
             s3 = boto3.client('s3',
