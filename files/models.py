@@ -29,6 +29,12 @@ class File(Standard):
         blank=True,
         db_index=True
     )
+    filename = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     presigned_url_issued = models.DateTimeField(
         null=True,
         blank=True,

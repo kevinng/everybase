@@ -14,7 +14,7 @@ _file_fields = ['uuid', 'file_url', 'uploader', 'file_type',
 class FileAdmin(admin.ModelAdmin):
     def file_url(self, obj):
         url = urljoin(
-            BASE_URL, reverse('files:get_file', args=[obj.id]))
+            BASE_URL, reverse('files:get_file', args=[obj.uuid]))
         return format_html(f'<a href="{url}" target="{url}">{url}</a>')
 
     # List page settings

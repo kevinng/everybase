@@ -1,6 +1,6 @@
 import boto3
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from rest_framework import mixins, generics, permissions
 
 from everybase import settings
@@ -39,14 +39,17 @@ class WriteOnlyPresignedURLView(
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-def get_file(_, id):
+def get_file(_, uuid):
     """Redirect user to file in S3 with a pre-signed URL"""
     s3 = boto3.client('s3',
         region_name=settings.AWS_REGION_NAME,
         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
     )
-    file = models.File.objects.get(pk=id)
+    try:
+        file = models.File.objects.get(uuid=uuid)
+    except models.File.DoesNotExist:
+        raise Http404('File does not exist')
 
     # Temporary redirect - prevents indexing of the S3 destination
     response = HttpResponse(status=302)

@@ -9,23 +9,20 @@ from everybase import settings
 from files import models as fimods
 
 class ReadOnlyPresignedURLSerializer(serializers.Serializer):
+    """Serializer class to get pre-signed URL to read file from S3.
     """
-    Serializer class used to get AWS S3 object read-only pre-signed URLs for the
-    specified file via a HTTP POST request.
-    """
-
-    file_id = serializers.IntegerField(write_only=True)
-    issued = serializers.DateTimeField(read_only=True)
-    lifespan = serializers.FloatField(read_only=True)
-    url = serializers.URLField(read_only=True)
+    uuid = serializers.UUIDField(read_only=True)
+    presigned_url_issued = serializers.DateTimeField(read_only=True)
+    presigned_url_lifespan = serializers.IntegerField(read_only=True)
+    presigned_url_response = serializers.JSONField(read_only=True)
+    file_type = serializers.CharField(read_only=True)
 
     def create(self, validated_data):
-        """
-        HTTP POST request to get a read-only pre-signed URL for reading the
+        """HTTP POST request to get a read-only pre-signed URL for reading the
         specified file on AWS S3.
         """
         try:
-            file = fimods.File.objects.get(pk=validated_data['file_id'])
+            file = fimods.File.objects.get(uuid=validated_data.get('uuid'))
         except fimods.File.DoesNotExist:
             raise Http404
 
@@ -34,7 +31,8 @@ class ReadOnlyPresignedURLSerializer(serializers.Serializer):
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
             aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
         )
-        issued = datetime.now()
+        sgtz = pytz.timezone(settings.TIME_ZONE)
+        issued = datetime.now(tz=sgtz)
         url = s3.generate_presigned_url(
             'get_object',
             Params={
@@ -51,20 +49,17 @@ class ReadOnlyPresignedURLSerializer(serializers.Serializer):
         }
 
 class WriteOnlyPresignedURLSerializer(serializers.Serializer):
-    """
-    Serializer class to get pre-signed URL to upload (i.e. write) the file via
-    a HTTP POST request.
-
-    Override to provide a custom filename.
+    """Serializer class to get pre-signed URL to upload (i.e. write) file to S3.
     """
     uuid = serializers.UUIDField(read_only=True)
     presigned_url_issued = serializers.DateTimeField(read_only=True)
     presigned_url_lifespan = serializers.IntegerField(read_only=True)
     presigned_url_response = serializers.JSONField(read_only=True)
     file_type = serializers.CharField(write_only=True)
+    filename = serializers.CharField(write_only=True)
 
-    def filename(self):
-        return f'{str(datetime.now())} - {str(self.uuid)}'
+    def s3_object_key_prefix(self):
+        return ''
 
     def create(self, validated_data):
         """
@@ -74,7 +69,8 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
         file = fimods.File(**validated_data)
         file.presigned_url_lifespan = settings.AWS_PRESIGNED_URL_EXPIRES_IN
         file.s3_bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-        file.s3_object_key = f'{settings.AWS_S3_FILES_ROOT}/{self.filename()}'
+        file.s3_object_key = f'{self.s3_object_key_prefix()}{settings.AWS_S3_FILES_ROOT}/\
+{str(datetime.now()).replace(" ", "_")}_{str(file.uuid)}'
 
         try:
             s3 = boto3.client('s3',
@@ -88,8 +84,14 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
             file.presigned_url_response = s3.generate_presigned_post(
                 Bucket=file.s3_bucket_name,
                 Key=file.s3_object_key,
-                Fields = {'acl': 'private'},
-                Conditions = [{'acl': 'private'}],
+                Fields = {
+                    'acl': 'private',
+                    'Content-Type': file.file_type
+                },
+                Conditions = [
+                    {'acl': 'private'},
+                    {'Content-Type': file.file_type}
+                ],
                 ExpiresIn=int(settings.AWS_PRESIGNED_URL_EXPIRES_IN)
             )
 
@@ -100,10 +102,10 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
         file.save()
 
         return {
-            'file_uuid': file.uuid,
-            'presigned_url_issued': file.presigned_url_issued,
-            'presigned_url_lifespan': settings.AWS_PRESIGNED_URL_EXPIRES_IN,
-            'presigned_url_response': file.presigned_url_response
+            'uuid': file.uuid,
+            'issued': file.presigned_url_issued,
+            'lifespan': settings.AWS_PRESIGNED_URL_EXPIRES_IN,
+            'response': file.presigned_url_response
         }
 
 class FileSerializer(serializers.ModelSerializer):
