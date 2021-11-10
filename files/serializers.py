@@ -57,6 +57,7 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
     presigned_url_response = serializers.JSONField(read_only=True)
     file_type = serializers.CharField(write_only=True)
     filename = serializers.CharField(write_only=True)
+    lifespan = serializers.IntegerField(write_only=True)
 
     def s3_object_key_prefix(self):
         return ''
@@ -103,9 +104,9 @@ class WriteOnlyPresignedURLSerializer(serializers.Serializer):
 
         return {
             'uuid': file.uuid,
-            'issued': file.presigned_url_issued,
-            'lifespan': settings.AWS_PRESIGNED_URL_EXPIRES_IN,
-            'response': file.presigned_url_response
+            'presigned_url_issued': file.presigned_url_issued,
+            'presigned_url_lifespan': settings.AWS_PRESIGNED_URL_EXPIRES_IN,
+            'presigned_url_response': file.presigned_url_response
         }
 
 class FileSerializer(serializers.ModelSerializer):

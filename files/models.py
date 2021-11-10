@@ -49,7 +49,7 @@ class File(Standard):
         null=True,
         blank=True
     )
-    lifespan = models.IntegerField(
+    unlinked_lead_lifespan = models.IntegerField(
         null=True,
         blank=True,
         db_index=True

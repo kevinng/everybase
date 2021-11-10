@@ -53,7 +53,7 @@ def get_file(_, uuid):
 
     # Temporary redirect - prevents indexing of the S3 destination
     response = HttpResponse(status=302)
-    response['Location'] = s3.generate_presigned_url(
+    url = s3.generate_presigned_url(
         'get_object',
         Params={
             'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
@@ -61,6 +61,8 @@ def get_file(_, uuid):
         },
         ExpiresIn=settings.AWS_PRESIGNED_URL_EXPIRES_IN
     )
+    print(url)
+    response['Location'] = url
 
     return response
 
