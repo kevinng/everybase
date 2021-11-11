@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.urls import reverse
 from django.shortcuts import render
+from django.contrib import messages
 
 from leads import serializers, models, forms
 from files import views as fiviews, models as fimods
@@ -17,6 +18,7 @@ def create_lead(request):
         form = forms.LeadForm(request.POST)
         if form.is_valid():
             lead = models.Lead.objects.create(
+                author=request.user.user,
                 title=form.cleaned_data.get('title'),
                 details=form.cleaned_data.get('details'),
                 lead_type=form.cleaned_data.get('lead_type'),
@@ -40,10 +42,15 @@ def create_lead(request):
                 file.filename = filename
                 file.save()
             
-            # TODO: redirect to lead details page
-            return HttpResponseRedirect(reverse('leads:list'))
+            # TODO: add URL to lead details
+            messages.info(request, 'Your lead has been posted.')
+
+            return HttpResponseRedirect(reverse('leads__root:list'))
     else:
         form = forms.LeadForm()
+
+    for error in form.errors:
+        print(error)
 
     return render(request, 'leads/create_lead.html', {'form': form})
 

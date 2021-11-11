@@ -2,8 +2,6 @@ from django import forms
 from django.contrib.postgres.forms import SimpleArrayField
 from django.core.exceptions import ValidationError
 
-from . import models
-
 class LeadForm(forms.Form):
     title = forms.CharField(
         required=True,
@@ -18,9 +16,23 @@ class LeadForm(forms.Form):
         min_length=1,
         max_length=20
     )
-    commission_pct = forms.FloatField()
-    commission_payable_by = forms.CharField()
-    commission_payable_after = forms.CharField()
-    commission_payable_after_others = forms.CharField()
-    other_commission_details = forms.CharField()
-    files = forms.CharField()
+    commission_pct = forms.FloatField(required=True)
+    commission_payable_by = forms.CharField(required=True)
+    commission_payable_after = forms.CharField(required=True)
+    commission_payable_after_others = forms.CharField(required=False)
+    other_commission_details = forms.CharField(required=False)
+    files = forms.CharField(required=False)
+
+    def clean(self):
+        super(LeadForm, self).clean()
+
+        if self.cleaned_data.get('commission_payable_after') == 'others':
+            others_details = self.cleaned_data.get(
+                'commission_payable_after_others')
+
+            if others_details is None or len(others_details) == 0:
+                self.add_error('commission_payable_after_others',
+                    'Please specify when the commission will be paid.')
+                raise ValidationError(None)
+
+        return self.cleaned_data

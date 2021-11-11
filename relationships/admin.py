@@ -190,7 +190,7 @@ class FileInlineAdmin(admin.TabularInline):
             return None
 
         url = urljoin(
-            BASE_URL, reverse('files:get_file', args=[obj.id]))
+            BASE_URL, reverse('files:get_file', args=[obj.uuid]))
         return format_html(f'<a href="{url}" target="{url}">{url}</a>')
 
 _connection_fields = ['user_one', 'user_two']

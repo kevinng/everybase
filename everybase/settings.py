@@ -297,7 +297,7 @@ GMASS_CAMPAIGN_UPDATE_TIMEFRAME_DAYS = config('GMASS_CAMPAIGN_UPDATE_TIMEFRAME_D
 
 ADMIN_PATH = config('ADMIN_PATH')
 
-CHAT_FILE_TRANSFER_CACHE_PATH = f'./chat/file_transfer_cache'
+CHAT_FILE_TRANSFER_CACHE_PATH = './chat/file_transfer_cache'
 
 # Login/register tokens expiry duration in seconds
 LOGIN_TOKEN_EXPIRY_SECS = 900 # 15 minutes
