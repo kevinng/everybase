@@ -10,9 +10,9 @@ _file_fields = ['uuid', 'file_url', 'uploader', 'file_type',
     'presigned_url_issued', 'presigned_url_lifespan', 'presigned_url_response',
     'unlinked_lead_lifespan', 's3_bucket_name', 's3_object_key',
     's3_object_content_length', 's3_object_e_tag', 's3_object_content_type',
-    's3_object_last_modified']
+    's3_object_last_modified', 'lead']
 @admin.register(models.File)
-class FileAdmin(admin.ModelAdmin):
+class FileAdmin(comadm.StandardAdmin):
     def file_url(self, obj):
         url = urljoin(
             BASE_URL, reverse('files:get_file', args=[obj.uuid]))
@@ -20,13 +20,13 @@ class FileAdmin(admin.ModelAdmin):
 
     # List page settings
     list_display = comadm.standard_list_display + _file_fields
-    list_editable = comadm.standard_list_editable + [
+    list_editable = comadm.standard_list_editable + ['uploader', 'file_type',
         'unlinked_lead_lifespan', 's3_bucket_name', 's3_object_key',
         's3_object_content_length', 's3_object_e_tag', 's3_object_content_type',
         's3_object_last_modified']
-    list_filter = comadm.standard_list_filter + [
-        'unlinked_lead_lifespan', 's3_object_last_modified']
-    search_fields = ['id', 's3_bucket_name', 's3_object_key', 's3_object_e_tag']
+    list_filter = comadm.standard_list_filter + ['unlinked_lead_lifespan',
+        'file_type']
+    search_fields = ['id', 's3_bucket_name', 's3_object_key', 'file_type']
     list_per_page = 50
     ordering = comadm.standard_ordering
     show_full_result_count = True
@@ -35,3 +35,4 @@ class FileAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields + ['uuid', 'file_url']
     fieldsets = comadm.standard_fieldsets + [(None, {'fields': _file_fields})]
+    autocomplete_fields = ['uploader', 'lead']

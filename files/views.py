@@ -61,7 +61,6 @@ def get_file(_, uuid):
         },
         ExpiresIn=settings.AWS_PRESIGNED_URL_EXPIRES_IN
     )
-    print(url)
     response['Location'] = url
 
     return response

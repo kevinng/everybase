@@ -1,5 +1,6 @@
 from django import db
 from django.db import models
+from common.admin import StandardAdmin
 from common.models import Standard
 from hashid_field import HashidAutoField
 
@@ -85,48 +86,6 @@ class Lead(Standard):
         blank=True
     )
 
-class LeadDocument(Standard):
-    """Document associated with a lead.
-    
-    Last updated: 27 October 2021, 8:46 PM
-    """
-    id = HashidAutoField(primary_key=True)
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='users_who_own_this_lead_document',
-        related_query_name='users_who_own_this_lead_document',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    file = models.ForeignKey(
-        'files.File',
-        related_name='leads_with_this_document',
-        related_query_name='leads_with_this_document',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
-class LeadImage(Standard):
-    """Document associated with a lead.
-    
-    Last updated: 27 October 2021, 8:46 PM
-    """
-    id = HashidAutoField(primary_key=True)
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='users_who_own_this_lead_image',
-        related_query_name='users_who_own_this_lead_image',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    file = models.ForeignKey(
-        'files.File',
-        related_name='leads_with_this_image',
-        related_query_name='leads_with_this_image',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
 class SavedLead(Standard):
     """Saved lead.
 
@@ -177,60 +136,6 @@ class LeadDetailAccess(Standard):
 
     class Meta:
         unique_together = ('lead', 'accessor')
-
-class LeadDocumentAccess(Standard):
-    """Lead document access
-
-    Last updated: 27 October 2021, 8:46 PM
-    """
-    lead_document = models.ForeignKey(
-        'LeadDocument',
-        related_name='document_accesses_with_this_lead',
-        related_query_name='document_accesses_with_this_lead',
-        on_delete=models.PROTECT,
-        db_index=True        
-    )
-    accessor = models.ForeignKey(
-        'relationships.User',
-        related_name='document_accesses_with_this_lead',
-        related_query_name='document_accesses_with_this_lead',
-        on_delete=models.PROTECT,
-        db_index=True  
-    )
-
-    access_count = models.IntegerField(
-        db_index=True
-    )
-
-    class Meta:
-        unique_together = ('lead_document', 'accessor')
-
-class LeadImageAccess(Standard):
-    """Lead image access
-
-    Last updated: 27 October 2021, 8:46 PM
-    """
-    lead_image = models.ForeignKey(
-        'LeadImage',
-        related_name='image_accesses_with_this_lead',
-        related_query_name='image_accesses_with_this_lead',
-        on_delete=models.PROTECT,
-        db_index=True        
-    )
-    accessor = models.ForeignKey(
-        'relationships.User',
-        related_name='image_accesses_with_this_lead',
-        related_query_name='image_accesses_with_this_lead',
-        on_delete=models.PROTECT,
-        db_index=True  
-    )
-
-    access_count = models.IntegerField(
-        db_index=True
-    )
-
-    class Meta:
-        unique_together = ('lead_image', 'accessor')
 
 class ContactRequest(Standard):
     """Contact request.
