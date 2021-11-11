@@ -8,5 +8,4 @@ class WriteOnlyPresignedURLSerializer(
         return f'{settings.LEADS_FILES_S3_PATH}/'
 
     def update_file(self, file):
-        file.unlinked_lead_lifespan = settings.LEADS_UNLINKED_FILE_LIFESPAN
         return file

@@ -23,24 +23,25 @@ def create_lead(request):
                 author_type=form.cleaned_data.get('author_type'),
                 country_string=form.cleaned_data.get('country_string'),
                 commission_pct=form.cleaned_data.get('commission_pct'),
-                commission_payable_after=form.cleaned_data.get('commission_payable_after'),
-                commission_payable_after_others=form.cleaned_data.get('commission_payable_after_others'),
-                other_commission_details=form.cleaned_data.get('other_commission_details')
+                commission_payable_after=form.cleaned_data.\
+                    get('commission_payable_after'),
+                commission_payable_after_others=form.cleaned_data.\
+                    get('commission_payable_after_others'),
+                other_commission_details=form.cleaned_data.\
+                    get('other_commission_details')
             )
 
+            # Associate file with lead
             file_datas = json.loads(form.cleaned_data.get('files'))
             for file_data in file_datas:
                 uuid, _, filename = file_data
                 file = fimods.File.objects.get(uuid=uuid)
-                
-                # Prevent file from getting deleted
-                file.unlinked_lead_lifespan = -1
-
-                # Associate file with this lead
-
+                file.lead = lead
+                file.filename = filename
+                file.save()
             
-            # return HttpResponseRedirect(reverse('leads:list',
-            #         kwargs={'token_str': token.token}))
+            # TODO: redirect to lead details page
+            return HttpResponseRedirect(reverse('leads:list'))
     else:
         form = forms.LeadForm()
 

@@ -1,15 +1,18 @@
-from django import db
+import uuid
 from django.db import models
-from common.admin import StandardAdmin
 from common.models import Standard
-from hashid_field import HashidAutoField
 
 class Lead(Standard):
     """Lead.
 
     Last updated: 27 October 2021, 8:46 PM
     """
-    id = HashidAutoField(primary_key=True)
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False,
+        db_index=True
+    )
     author = models.ForeignKey(
         'relationships.User',
         related_name='users_who_authored_this_lead',
