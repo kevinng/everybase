@@ -117,13 +117,15 @@ class ParentChildrenChoiceAdmin(ChoiceAdmin):
     ]
     autocomplete_fields = ['parent']
 
+_country_fields = ['cc_tld', 'source_name', 'country_code', 'dial_code',
+    'flag_url']
 @admin.register(models.Country)
 class CountryAdmin(ChoiceAdmin):
-    list_display = choice_list_display + ['cc_tld']
-    list_editable = choice_list_editable + ['cc_tld']
-    search_fields = choice_search_fields + ['cc_tld']
+    list_display = choice_list_display + _country_fields
+    list_editable = choice_list_editable + _country_fields
+    search_fields = choice_search_fields + _country_fields
     fieldsets = choice_fieldsets + [
-        ('Other details', {'fields': ['cc_tld']})
+        (None, {'fields': _country_fields})
     ]
 
 @admin.register(models.Language)

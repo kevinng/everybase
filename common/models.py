@@ -120,7 +120,7 @@ class Country(Choice):
         db_index=True
     )
 
-    name = models.CharField(
+    source_name = models.CharField(
         max_length=200,
         null=True,
         blank=True,
