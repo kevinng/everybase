@@ -1,7 +1,9 @@
 from datetime import datetime
 import uuid, pytz
 from django.db import models
+
 from common.models import Standard
+from files import models as fimods
 from everybase import settings
 
 class Lead(Standard):
@@ -85,6 +87,18 @@ class Lead(Standard):
         null=True,
         blank=True
     )
+
+    def image_count(self):
+        return fimods.File.objects.filter(
+            lead=self.id,
+            file_type__icontains='image'
+        ).count()
+
+    def document_count(self):
+        return fimods.File.objects.filter(
+            lead=self.id,
+            file_type__icontains='pdf'
+        ).count()
 
     def created_now_difference(self):
         sgtz = pytz.timezone(settings.TIME_ZONE)
