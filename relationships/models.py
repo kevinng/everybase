@@ -206,11 +206,6 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    country_string = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True
-    )
     state = models.ForeignKey(
         'common.State',
         related_name='users_w_this_state',
