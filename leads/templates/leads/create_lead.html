@@ -78,10 +78,15 @@
 
                     <div class="mb-7">
                         <label for="country_string" class="form-label"><span id="create_lead__source_or_destination_1">Destination/Source</span> Country:</label>
-                        <input name="country_string" type="text" class="form-control" placeholder="E.g., Canada" value="{% if form.country_string.value %}{{ form.country_string.value }}{% endif %}" />
+                        <select name="country" class="form-select" data-control="select2" data-placeholder="Select an option">
+                            <option></option>
+                            {% for country in countries %}
+                                <option value="{{ country.programmatic_key }}" {% if form.country.value == country.programmatic_key %}selected{% endif %}>{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
                         <div class="text-muted mt-3">What is the <span id="create_lead__source_or_destination_2">destination/source</span> country for the goods/service?</div>
                         <!--begin::Error message-->
-                        <div class="text-danger mt-3">{% if form.country_string.errors %}{% for error in form.country_string.errors %}{{ error|escape }}{% if forloop.last %} {% endif %}{% endfor %}{% endif %}</div>
+                        <div class="text-danger mt-3">{% if form.country.errors %}{% for error in form.country.errors %}{{ error|escape }}{% if forloop.last %} {% endif %}{% endfor %}{% endif %}</div>
                         <!--end::Error message-->
                     </div>
 

@@ -8,6 +8,7 @@ from django.contrib import messages
 
 from leads import serializers, models, forms
 from files import views as fiviews, models as fimods
+from common import models as commods
 
 class LeadListView(ListView):
     model = models.Lead
@@ -23,7 +24,8 @@ def create_lead(request):
                 details=form.cleaned_data.get('details'),
                 lead_type=form.cleaned_data.get('lead_type'),
                 author_type=form.cleaned_data.get('author_type'),
-                country_string=form.cleaned_data.get('country_string'),
+                country=commods.Country.objects.get(
+                    programmatic_key=form.cleaned_data.get('country')),
                 commission_pct=form.cleaned_data.get('commission_pct'),
                 commission_payable_after=form.cleaned_data.\
                     get('commission_payable_after'),
@@ -49,10 +51,12 @@ def create_lead(request):
     else:
         form = forms.LeadForm()
 
-    for error in form.errors:
-        print(error)
+    countries = commods.Country.objects.order_by('name')
 
-    return render(request, 'leads/create_lead.html', {'form': form})
+    return render(request, 'leads/create_lead.html', {
+        'form': form,
+        'countries': countries
+    })
 
 # @csrf_exempt
 class WriteOnlyPresignedURLView(fiviews.WriteOnlyPresignedURLView):

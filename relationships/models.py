@@ -7,7 +7,7 @@ from django.contrib.auth.models import User as django_user
 
 from everybase import settings
 from common.models import (Standard, Choice, LowerCaseCharField,
-    LowerCaseEmailField)
+    LowerCaseEmailField, Country)
 
 from hashid_field import HashidAutoField
 from phonenumber_field.modelfields import PhoneNumberField
@@ -239,6 +239,13 @@ class User(Standard):
         blank=True,
         db_index=True
     )
+
+    def country_from_phone_number(self):
+        try:
+            return Country.objects.get(
+                country_code=self.phone_number.country_code)
+        except Country.DoesNotExist:
+            return None
     
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email},\

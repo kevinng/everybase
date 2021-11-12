@@ -11,11 +11,7 @@ class LeadForm(forms.Form):
     details = forms.CharField(required=True)
     lead_type = forms.CharField(required=True)
     author_type = forms.CharField(required=True)
-    country_string = forms.CharField(
-        required=True,
-        min_length=1,
-        max_length=20
-    )
+    country = forms.CharField(required=True)
     commission_pct = forms.FloatField(required=True)
     commission_payable_by = forms.CharField(required=True)
     commission_payable_after = forms.CharField(required=True)

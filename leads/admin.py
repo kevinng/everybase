@@ -2,9 +2,9 @@ from django.contrib import admin
 from common import admin as comadm
 from leads import models
 
-_lead_fields = ['author', 'lead_type', 'author_type', 'title',
-    'details', 'country_string', 'country', 'commission_pct',
-    'commission_payable_after', 'other_commission_details']
+_lead_fields = ['author', 'lead_type', 'author_type', 'title', 'details',
+    'country', 'commission_pct', 'commission_payable_after',
+    'other_commission_details']
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
