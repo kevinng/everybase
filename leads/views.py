@@ -11,7 +11,7 @@ from files import views as fiviews, models as fimods
 
 class LeadListView(ListView):
     model = models.Lead
-    paginate_by = 18
+    paginate_by = 30
 
 def create_lead(request):
     if request.method == 'POST':

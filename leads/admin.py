@@ -18,7 +18,7 @@ class LeadAdmin(comadm.StandardAdmin):
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['uuid']
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _lead_fields + ['uuid']})]
+        [('Details', {'fields': _lead_fields})]
     autocomplete_fields = ['author', 'country']
 
 _saved_lead_fields = ['saved', 'saver', 'lead']
