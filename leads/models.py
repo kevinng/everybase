@@ -100,6 +100,17 @@ class Lead(Standard):
             file_type__icontains='pdf'
         ).count()
 
+    def is_saved(self, user):
+        try:
+            SavedLead.objects.get(
+                lead=self,
+                saver=user
+            )
+
+            return True
+        except SavedLead.DoesNotExist:
+            return False
+
     def created_now_difference(self):
         sgtz = pytz.timezone(settings.TIME_ZONE)
         now = datetime.now(tz=sgtz)
@@ -166,6 +177,9 @@ class SavedLead(Standard):
         on_delete=models.PROTECT,
         db_index=True  
     )
+
+    class Meta:
+        unique_together = ('lead', 'saver')
 
 class LeadDetailAccess(Standard):
     """Records access to a lead's detail by an accessor user
