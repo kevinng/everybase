@@ -1,3 +1,4 @@
+from django import db
 from django.db import models
 from django.contrib import admin
 from django.core.exceptions import ValidationError
@@ -118,6 +119,31 @@ class Country(Choice):
         blank=True,
         db_index=True
     )
+
+    name = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country_code = models.CharField(
+        max_length=10,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    dial_code = models.CharField(
+        max_length=10,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    flag_url = models.URLField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     class Meta:
         verbose_name = 'Country'
         verbose_name_plural = 'Countries'
