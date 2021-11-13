@@ -4,7 +4,6 @@ from django.db import models
 
 from common.models import Standard
 from files import models as fimods
-from relationships import models as relmods
 from everybase import settings
 
 class Lead(Standard):
@@ -89,11 +88,6 @@ class Lead(Standard):
         blank=True
     )
 
-    savers = models.ManyToManyField(
-        relmods.User,
-        through='SavedLead'
-    )
-
     def image_count(self):
         return fimods.File.objects.filter(
             lead=self.id,
@@ -160,11 +154,15 @@ class SavedLead(Standard):
 
     saver = models.ForeignKey(
         'relationships.User',
+        related_name='user_with_this_saved_leads',
+        related_query_name='user_with_this_saved_leads',
         on_delete=models.PROTECT,
         db_index=True        
     )
     lead = models.ForeignKey(
         'Lead',
+        related_name='lead_with_this_saved_leads',
+        related_query_name='lead_with_this_saved_leads',
         on_delete=models.PROTECT,
         db_index=True  
     )
