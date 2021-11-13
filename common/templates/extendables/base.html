@@ -66,7 +66,13 @@
 										<!--begin::Menu-->
 										<div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true">
 
-											<div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
+											<div class="menu-item">
+												<a class="menu-link {% if request.path == '/' %}active{% endif %} py-3" href="{% url 'leads__root:list' %}">
+													<span class="menu-title">Leads</span>
+												</a>
+											</div>
+
+											{% comment %} <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
 												<span class="menu-link py-3">
 													<span class="menu-title">Leads</span>
 													<span class="menu-arrow d-lg-none"></span>
@@ -88,7 +94,7 @@
 														</a>
 													</div>
 												</div>
-											</div>
+											</div> {% endcomment %}
 
 											<div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
 												<span class="menu-link py-3">
@@ -163,9 +169,9 @@
 													</div>
 													<!--end::Menu item-->
 													<div class="separator my-2"></div>
-													<div class="menu-item px-5">
+													{% comment %} <div class="menu-item px-5">
 														<a href="?page=account/overview" class="menu-link px-5">My Profile</a>
-													</div>
+													</div> {% endcomment %}
 													<div class="menu-item px-5">
 														<a href="{% url 'relationships:logout' %}" class="menu-link px-5">Log out</a>
 													</div>

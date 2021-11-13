@@ -1,6 +1,7 @@
 {% extends 'extendables/base.html' %}
 
 {% load static %}
+{% load has_saved_lead %}
 
 {% block subtitle %}Leads | {% endblock %}
 
@@ -102,7 +103,7 @@
 
 	<div class="row">
 
-		{% for lead in lead_list %}
+		{% for lead in page_obj %}
 
 		<div class="col-lg-4 mb-5">
 			<div class="card card-flush shadow-sm">
@@ -172,19 +173,22 @@
 
 						<div class="separator"></div>
 
-						<div class="d-flex flex-stack">
-							<button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-									<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
-								</svg></span> Saved</button>
-							{% comment %} <button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
+						{% comment %} <div class="d-flex flex-stack">	
+							{% has_saved_lead request.user.user lead as has_saved_lead %}
+							{% if has_saved_lead %}
+								<button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
+									</svg></span> Saved</button>
+								<button class="btn btn-sm btn-outline btn-outline-primary btn-active-primary fs-7">Details</button>
+							{% else %}
+								<button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
 									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
 									</svg>
-								</span> Save</button> {% endcomment %}
-							<button class="btn btn-sm btn-outline btn-outline-primary btn-active-primary fs-7">Details</button>
-
-						</div>
+								</span> Save</button>
+							{% endif %}
+						</div> {% endcomment %}
 					</div>
 				</div>
 			</div>
@@ -195,13 +199,18 @@
 		{% endfor %}
 	</div>
 
+{% if page_obj.has_previous %}
 	<div class="row mt-5 mx-5">
-		<button class="btn btn-bg-secondary btn-light-primary">Last Page</button>
+		<a href="?page={{ page_obj.previous_page_number }}" class="btn btn-bg-secondary btn-light-primary">Last Page</a>
 	</div>
+{% endif %}
 
+
+{% if page_obj.has_next %}
 	<div class="row mt-5 mx-5">
-		<a class="btn btn-color-primary btn-active-color-white btn-outline btn-outline-primary">Next Page</a>
+		<a href="?page={{ page_obj.next_page_number }}" class="btn btn-color-primary btn-active-color-white btn-outline btn-outline-primary">Next Page</a>
 	</div>
+{% endif %}
 
 	{% endif %}
 </div>
@@ -302,12 +311,12 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Clear Filter</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Reset</button>
                 <!--begin::Separator-->
                 <span class="h-20px border-gray-200 border-start mx-4"></span>
                 <!--end::Separator-->
-                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Filter Leads</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Apply Filter</button>
             </div>
         </div>
     </div>
