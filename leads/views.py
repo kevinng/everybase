@@ -5,6 +5,7 @@ from django.views.generic.list import ListView
 from django.urls import reverse
 from django.shortcuts import render
 from django.contrib import messages
+from django.db.models import Q
 
 from leads import serializers, models, forms
 from files import views as fiviews, models as fimods
@@ -13,6 +14,83 @@ from common import models as commods
 class LeadListView(ListView):
     model = models.Lead
     paginate_by = 30
+
+    def get_queryset(self, **kwargs):
+        title = self.request.GET.get('title')
+        details = self.request.GET.get('details')
+        buying = self.request.GET.get('buying')
+        selling = self.request.GET.get('selling')
+        direct = self.request.GET.get('direct')
+        broker = self.request.GET.get('broker')
+        user_country = self.request.GET.get('user_country')
+        lead_country = self.request.GET.get('lead_country')
+
+        cpa__initial_deposit_received = self.request.GET.get(
+            'cpa__initial_deposit_received')
+        cpa__goods_shipped = self.request.GET.get('cpa__goods_shipped')
+        cpa__buyer_received_goods_services = self.request.GET.get(
+            'cpa__buyer_received_goods_services')
+        cpa__full_payment_received = self.request.GET.get(
+            'cpa__full_payment_received')
+        cpa__others = self.request.GET.get('cpa__others')
+
+        leads = models.Lead.objects.all()
+        
+        if title is not None:
+            leads = leads.filter(title__icontains=title)
+
+        if details is not None:
+            leads = leads.filter(title__icontains=details)
+
+        if buying is not None and selling is not None:
+            pass # No need to filter
+        elif buying is not None:
+            leads = leads.filter(lead_type='buying')
+        elif selling is not None:
+            leads = leads.filter(lead_type='selling')
+
+        if direct is not None and broker is not None:
+            pass # No need to filter
+        elif direct is not None:
+            leads = leads.filter(author_type='direct')
+        elif broker is not None:
+            leads = leads.filter(author_type='broker')
+
+        if user_country is not None and user_country.strip() != '':
+            leads = leads.filter(author__country__programmatic_key=user_country)
+
+        if lead_country is not None and lead_country.strip() != '':
+            leads = leads.filter(country__programmatic_key=lead_country)
+
+        commission_payable_after_q = Q()
+        if cpa__initial_deposit_received is not None:
+            commission_payable_after_q = commission_payable_after_q |\
+                Q(commission_payable_after='initial_deposit_received')
+
+        if cpa__goods_shipped is not None:
+            commission_payable_after_q = commission_payable_after_q |\
+                Q(commission_payable_after='goods_shipped')
+
+        if cpa__buyer_received_goods_services is not None:
+            commission_payable_after_q = commission_payable_after_q |\
+                Q(commission_payable_after='buyer_received_goods_services')
+
+        if cpa__full_payment_received is not None:
+            commission_payable_after_q = commission_payable_after_q |\
+                Q(commission_payable_after='full_payment_received')
+
+        if cpa__others is not None:
+            commission_payable_after_q = commission_payable_after_q |\
+                Q(commission_payable_after='others')
+
+        leads = leads.filter(commission_payable_after_q)
+        
+        return leads.order_by('-created')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['countries'] = commods.Country.objects.order_by('name')
+        return context
 
 def create_lead(request):
     if request.method == 'POST':

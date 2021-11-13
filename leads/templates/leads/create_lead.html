@@ -77,8 +77,8 @@
                     </div>
 
                     <div class="mb-7">
-                        <label for="country_string" class="form-label"><span id="create_lead__source_or_destination_1">Destination/Source</span> Country:</label>
-                        <select name="country" class="form-select" data-control="select2" data-placeholder="Select an option">
+                        <label for="country" class="form-label"><span id="create_lead__source_or_destination_1">Destination/Source</span> Country:</label>
+                        <select name="country" class="form-select" data-control="select2" data-placeholder="Select user country">
                             <option></option>
                             {% for country in countries %}
                                 <option value="{{ country.programmatic_key }}" {% if form.country.value == country.programmatic_key %}selected{% endif %}>{{ country.name }}</option>
@@ -92,7 +92,7 @@
 
                     <div class="mb-7">
                         <label for="commission_pct" class="form-label">Commission %:</label>
-                        <div class="col-6">
+                        <div class="col-12">
                             <input name="commission_pct" type="number" class="form-control" min="0" step="0.5" value="{% if form.commission_pct.value %}{{ form.commission_pct.value }}{% endif %}" />
                         </div>
                         <div class="text-muted mt-3" id="create_lead__commission_pct_label__direct">If you're a direct <span class="create_lead__author_type__lead_type">buyer/seller</span>, please state the commission you offer to an agent for helping you find <span class="create_lead__author_type__lead_type_counterparty">buyer/seller</span>.</div>

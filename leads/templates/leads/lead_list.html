@@ -16,26 +16,32 @@
 
 {% block actions %}
 
-<a href="#" class="btn btn-sm btn-secondary me-2">Clear Filter</a>
-
-<!--begin::Filter-->
-<!-- NOTE: modal is defined in base, else it will not work -->
-
-<!-- Show this if no filter is applied -->
-{% comment %} <a href="#" class="btn btn-sm btn-light btn-light-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads"> {% endcomment %}
-
-<!-- Show this if filter is applied -->
-<a href="#" class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads">
-    <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
-    <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="black" />
-        </svg>
-    </span>
-    <!--end::Svg Icon-->
-    Filter
-</a>
-<!--end::Filter-->
+	{% if request.GET|length > 0 %}
+	<a href="{% url 'leads__root:list' %}" class="btn btn-sm btn-secondary me-2">Clear Filter</a>
+	<!--begin::Have filter-->
+	<a href="#" class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-color-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads">
+		<!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
+		<span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+				<path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="black" />
+			</svg>
+		</span>
+		<!--end::Svg Icon-->
+		Filter
+	</a>
+	<!--end::Have filter-->
+	{% else %}
+	<a href="#" class="btn btn-sm btn-light btn-light-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads">
+		<!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
+		<span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+				<path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="black" />
+			</svg>
+		</span>
+		<!--end::Svg Icon-->
+		Filter
+	</a>
+	{% endif %}
 
 <!--begin::Separator-->
 <span class="h-20px border-gray-200 border-start mx-4"></span>
@@ -220,24 +226,24 @@
 
 {% block modals %}
 
+<form action="{% url 'leads__root:list' %}" method="get">
 <div class="modal fade" tabindex="-1" id="modal_filter_leads">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Filter Leads</h5>
-
-					<!--begin::Close-->
-					<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-						<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-						<span class="svg-icon svg-icon-2x">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-								<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-								<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
-							</svg>
-						</span>
-						<!--end::Svg Icon-->
-					</div>
-					<!--end::Close-->
+				<!--begin::Close-->
+				<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+					<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+					<span class="svg-icon svg-icon-2x">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+							<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+							<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+						</svg>
+					</span>
+					<!--end::Svg Icon-->
+				</div>
+				<!--end::Close-->
             </div>
 
             <div class="modal-body">
@@ -247,62 +253,72 @@
                     <div class="mb-10">
                         <!--begin::Label-->
                         <label class="form-label fw-bold">Title:</label>
-                        <input type="text" class="form-control"/>
+                        <input name="title" type="text" class="form-control" {% if request.GET.title %}value="{{ request.GET.title }}"{% endif %} />
                     </div>
                     <div class="mb-10">
                         <label class="form-label fw-bold">Details:</label>
-                        <input type="text" class="form-control"/>
+                        <input name="details" type="text" class="form-control" {% if request.GET.details %}value="{{ request.GET.details }}"{% endif %} />
                     </div>
                     <div class="mb-10">
                         <label class="form-label fw-bold mb-5">Buying/Selling?</label>
 						<label class="form-check form-check-sm form-check-custom col-12 mb-5">
-							<input class="form-check-input" type="checkbox" value="1" />
+							<input name="buying" class="form-check-input" type="checkbox" {% if request.GET.buying == 'on' %}checked{% endif %} />
 							<span class="form-check-label">Buying</span>
 						</label>
 						<label class="form-check form-check-sm form-check-custom col-12">
-							<input class="form-check-input" type="checkbox" value="2" checked="checked" />
+							<input name="selling" class="form-check-input" type="checkbox" {% if request.GET.selling == 'on' %}checked{% endif %} />
 							<span class="form-check-label">Selling</span>
 						</label>
                     </div>
                     <div class="mb-10">
                         <label class="form-label fw-bold mb-5">Direct/Agent?</label>
 						<label class="form-check form-check-sm form-check-custom col-12 mb-5">
-							<input class="form-check-input" type="checkbox" value="1" />
+							<input name="direct" class="form-check-input" type="checkbox" {% if request.GET.direct == 'on' %}checked{% endif %} />
 							<span class="form-check-label">Direct buyer/seller</span>
 						</label>
 						<label class="form-check form-check-sm form-check-custom col-12">
-							<input class="form-check-input" type="checkbox" value="2" checked="checked" />
+							<input name="broker" class="form-check-input" type="checkbox" {% if request.GET.broker == 'on' %}checked{% endif %} />
 							<span class="form-check-label">Agent</span>
 						</label>
                     </div>
                     <div class="mb-10">
                         <label class="form-label fw-bold">User Country:</label>
-                        <input type="text" class="form-control"/>
+                        <select name="user_country" class="form-select" data-control="select2" data-placeholder="Select user country">
+                            <option></option>
+                            {% for country in countries %}
+                                <option value="{{ country.programmatic_key }}" {% if request.GET.user_country == country.programmatic_key %}selected{% endif %}>{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="mb-10">
                         <label class="form-label fw-bold">Lead Source/Destination Country:</label>
-                        <input type="text" class="form-control"/>
+                        <select name="lead_country" class="form-select" data-control="select2" data-placeholder="Select lead country">
+                            <option></option>
+                            {% for country in countries %}
+                                <option value="{{ country.programmatic_key }}" {% if request.GET.lead_country == country.programmatic_key %}selected{% endif %}>{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div>
                         <label class="form-label fw-bold mb-5">Commission payable after:</label>
 						<label class="form-check form-check-sm form-check-custom col-12 mb-5">
-							<input class="form-check-input" type="checkbox" value="1" />
+							<input name="cpa__initial_deposit_received" class="form-check-input" type="checkbox" {% if request.GET.cpa__initial_deposit_received == 'on' %}checked{% endif %} />
 							<span class="form-check-label">Initial deposit is received</span>
 						</label>
 						<label class="form-check form-check-sm form-check-custom col-12 mb-5">
-							<input class="form-check-input" type="checkbox" value="2" checked="checked" />
+							<input name="cpa__goods_shipped" class="form-check-input" type="checkbox" {% if request.GET.cpa__goods_shipped == 'on' %}checked{% endif %} />
 							<span class="form-check-label">Goods are shipped from source country</span>
 						</label>
 						<label class="form-check form-check-sm form-check-custom col-12 mb-5">
-							<input class="form-check-input" type="checkbox" value="2" checked="checked" />
+							<input name="cpa__buyer_received_goods_services" class="form-check-input" type="checkbox" {% if request.GET.cpa__buyer_received_goods_services == 'on' %}checked{% endif %} />
 							<span class="form-check-label">Full payment has been received</span>
 						</label>
 						<label class="form-check form-check-sm form-check-custom col-12 mb-5">
-							<input class="form-check-input" type="checkbox" value="2" checked="checked" />
+							<input name="cpa__full_payment_received" class="form-check-input" type="checkbox" {% if request.GET.cpa__full_payment_received == 'on' %}checked{% endif %} />
 							<span class="form-check-label">Buyer has received goods/services</span>
 						</label>
 						<label class="form-check form-check-sm form-check-custom col-12">
-							<input class="form-check-input" type="checkbox" value="2" checked="checked" />
+							<input name="cpa__others" class="form-check-input" type="checkbox" {% if request.GET.cpa__others == 'on' %}checked{% endif %} />
 							<span class="form-check-label">Others</span>
 						</label>
                     </div>
@@ -311,7 +327,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Reset</button>
+                <button type="reset" class="btn btn-sm btn-secondary">Reset</button>
                 <!--begin::Separator-->
                 <span class="h-20px border-gray-200 border-start mx-4"></span>
                 <!--end::Separator-->
@@ -321,5 +337,6 @@
         </div>
     </div>
 </div>
+</form>
 
 {% endblock %}
