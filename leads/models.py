@@ -219,17 +219,10 @@ class ContactRequest(Standard):
         db_index=True
     )
 
-    requester = models.ForeignKey(
+    contactor = models.ForeignKey(
         'relationships.User',
-        related_name='contact_requests_with_this_requester',
-        related_query_name='contact_requests_with_this_requester',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    requestee = models.ForeignKey(
-        'relationships.User',
-        related_name='contact_requests_with_this_requestee',
-        related_query_name='contact_requests_with_this_requestee',
+        related_name='contact_requests_with_this_contactor',
+        related_query_name='contact_requests_with_this_contactor',
         on_delete=models.PROTECT,
         db_index=True
     )
