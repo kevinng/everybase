@@ -1,11 +1,8 @@
 from django import template
-from leads import models as lemods
+from leads.libraries.utility_funcs.has_saved_lead import has_saved_lead as f
 
 register = template.Library()
 
 @register.simple_tag
 def has_saved_lead(user, lead):
-    return lemods.SavedLead.objects.filter(
-        saver=user,
-        lead=lead
-    ).count() > 0
+    return f(user, lead)

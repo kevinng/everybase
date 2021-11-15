@@ -3,7 +3,7 @@ from django.urls import reverse
 from relationships import models as relmods
 from everybase import settings
 
-def get_create_whatsapp_link(from_user, to_user) -> str:
+def get_create_whatsapp_link(from_user, to_user, reverse_only=False) -> str:
     """Get/create WhatsApp URL for the to_user. Get/create phone
     number hash of WhatsApp-type for the from_user on the to_user and
     return a formatted WhatsApp URL."""
@@ -15,5 +15,9 @@ def get_create_whatsapp_link(from_user, to_user) -> str:
         phone_number=to_user.phone_number
     )
 
-    return urljoin(settings.BASE_URL,
-        reverse('chat_root:whatsapp', kwargs={ 'id': hash.id }))
+    reverse_url = reverse('chat_root:whatsapp', kwargs={ 'id': hash.id })
+
+    if reverse_only:
+        return reverse_url
+
+    return urljoin(settings.BASE_URL, reverse_url)

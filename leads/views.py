@@ -1,13 +1,20 @@
-import json
+import json, datetime, pytz
+from operator import mod
 
 from django.http import HttpResponseRedirect
+from django.http.response import Http404
 from django.views.generic.list import ListView
 from django.urls import reverse
 from django.shortcuts import render
 from django.contrib import messages
 from django.db.models import Q
 
+from everybase import settings
 from leads import serializers, models, forms
+from chat.libraries.utility_funcs.get_create_whatsapp_link import \
+    get_create_whatsapp_link
+from leads.libraries.utility_funcs.is_connected import is_connected
+from leads.libraries.utility_funcs.has_contacted import has_contacted
 from files import views as fiviews, models as fimods
 from common import models as commods
 
@@ -122,7 +129,6 @@ def create_lead(request):
                 file.filename = filename
                 file.save()
             
-            # TODO: add URL to lead details
             messages.info(request, 'Your lead has been posted.')
 
             return HttpResponseRedirect(reverse('leads__root:list'))
@@ -139,3 +145,65 @@ def create_lead(request):
 # @csrf_exempt
 class WriteOnlyPresignedURLView(fiviews.WriteOnlyPresignedURLView):
     serializer_class = serializers.WriteOnlyPresignedURLSerializer
+
+def lead_detail(request, uuid):
+    try:
+        lead = models.Lead.objects.get(uuid=uuid)
+    except models.Lead.DoesNotExist:
+        raise Http404('Lead does not exist')
+
+    if request.method == 'POST':
+        form = forms.ContactForm(request.POST)
+        if form.is_valid():
+            message = form.cleaned_data.get('message')
+
+            if is_connected(request.user.user, lead):
+                # Set message as a GET parameter
+                request.GET._mutable = True
+                request.GET['text'] = message
+
+                # Direct user to WhatsApp with the message in body
+                HttpResponseRedirect(
+                    get_create_whatsapp_link(request.user.user, lead.author))
+            else:
+                if has_contacted(request.user.user, lead):
+                    form = forms.ContactForm() # Reset form, do nothing
+                else:
+                    # Create contact request
+                    sgtz = pytz.timezone(settings.TIME_ZONE)
+                    now = datetime.datetime.now(tz=sgtz)
+                    models.ContactRequest.objects.create(
+                        requested=now,
+                        contactor=request.user.user,
+                        lead=lead,
+                        message=message
+                    )
+
+                    # Notify lead author
+                    # TODO
+
+                    # Reset form
+                    form = forms.ContactForm()
+
+                    # Add message
+                    messages.info(request, "Message sent. We'll notify you if the author agrees to exchange contacts with you.")
+    else:
+        # Update analytics
+        lead = models.Lead.objects.get(uuid=uuid)
+        try:
+            access = models.LeadDetailAccess.objects.get(lead=lead)
+            access.access_count += 1
+            access.save()
+        except models.LeadDetailAccess.DoesNotExist:
+            access = models.LeadDetailAccess.objects.create(
+                lead=lead,
+                access_count=1,
+                accessor=request.user.user
+            )
+
+        form = forms.ContactForm()
+
+    return render(request, 'leads/lead_detail.html', {
+        'lead': lead,
+        'form': form
+    })

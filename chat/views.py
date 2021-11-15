@@ -160,38 +160,11 @@ class TwilioIncomingStatusView(APIView):
 
 def redirect_whatsapp_phone_number(request, id):
     """Redirects user from our short tracking URL to WhatsApp"""
-    # Log access
-    ua = request.user_agent
-    access = relmods.PhoneNumberLinkAccess(
-        ip_address=get_ip_address(request),
-        is_mobile=ua.is_mobile,
-        is_tablet=ua.is_tablet,
-        is_touch_capable=ua.is_touch_capable,
-        is_pc=ua.is_pc,
-        is_bot=ua.is_bot,
-        browser=ua.browser,
-        browser_family=ua.browser.family,
-        browser_version=ua.browser.version,
-        browser_version_string=ua.browser.version_string,
-        os=ua.os,
-        os_family=ua.os.family,
-        os_version=ua.os.version,
-        os_version_string=ua.os.version_string,
-        device=ua.device,
-        device_family=ua.device.family
-    )
 
     try:
         hash = relmods.PhoneNumberHash.objects.get(pk=id)
-        access.hash = hash
-        access.save()
     except relmods.PhoneNumberHash.DoesNotExist as err:
         sentry_sdk.capture_exception(err)
-
-        # Update log status
-        access.outcome = relmods.PHONE_NUMBER_ACCESS_FAILED
-        access.save()
-
         return render(request, 'chat/pages/error.html', {})
 
     # Make Amplitude call
@@ -209,12 +182,9 @@ def redirect_whatsapp_phone_number(request, id):
     response = HttpResponse(status=302) # Temporary redirect
     response['Location'] = get_non_tracking_whatsapp_link(
         hash.phone_number.country_code,
-        hash.phone_number.national_number
+        hash.phone_number.national_number,
+        request.GET.get('text')
     )
-    
-    # Update log status
-    access.outcome = relmods.PHONE_NUMBER_ACCESS_SUCCESSFUL
-    access.save()
 
     return response
 

@@ -166,18 +166,31 @@
                     </div>
 
                     <div class="fs-6 mb-10">
-                        <!--begin::Details item-->
                         <div class="fw-bolder mt-5">Country</div>
                         <div class="text-gray-600">Australia</div>
-                        <!--begin::Details item-->
-                        <!--begin::Details item-->
-                        <div class="fw-bolder mt-5">Language</div>
-                        <div class="text-gray-600">English, Chinese, Hindi</div>
-                        <!--begin::Details item-->
-                        <!--begin::Details item-->
+                        {% comment %} <div class="fw-bolder mt-5">Language</div> {% endcomment %}
+                        {% comment %} <div class="text-gray-600">English, Chinese, Hindi</div> {% endcomment %}
                         <div class="fw-bolder mt-5">Phone Number</div>
-                        <div class="text-gray-600">+1234567890</div>
-                        <!--begin::Details item-->
+                        {% comment %} <div class="text-gray-600">+1234567890</div> {% endcomment %}
+
+                        <!--begin::Row-->
+                        <div class="d-flex align-items-center flex-wrap">
+                            <!--begin::Input-->
+                            <div id="kt_clipboard_4" class="me-5">+1234567890</div>
+                            <!--end::Input-->
+
+                            <!--begin::Button-->
+                            <button class="btn btn-icon btn-sm btn-light-success" data-clipboard-target="#kt_clipboard_4">
+                                <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen054.svg-->
+                                <span class="svg-icon svg-icon-muted"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path opacity="0.5" d="M18 2H9C7.34315 2 6 3.34315 6 5H8C8 4.44772 8.44772 4 9 4H18C18.5523 4 19 4.44772 19 5V16C19 16.5523 18.5523 17 18 17V19C19.6569 19 21 17.6569 21 16V5C21 3.34315 19.6569 2 18 2Z" fill="black"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.7857 7.125H6.21429C5.62255 7.125 5.14286 7.6007 5.14286 8.1875V18.8125C5.14286 19.3993 5.62255 19.875 6.21429 19.875H14.7857C15.3774 19.875 15.8571 19.3993 15.8571 18.8125V8.1875C15.8571 7.6007 15.3774 7.125 14.7857 7.125ZM6.21429 5C4.43908 5 3 6.42709 3 8.1875V18.8125C3 20.5729 4.43909 22 6.21429 22H14.7857C16.5609 22 18 20.5729 18 18.8125V8.1875C18 6.42709 16.5609 5 14.7857 5H6.21429Z" fill="black"/>
+                                </svg></span>
+                                <!--end::Svg Icon-->
+                            </button>
+                            <!--end::Button-->
+                        </div>
+                        <!--end::Row-->
                     </div>
 
                     <!--begin::WhatsApp-->
@@ -336,5 +349,71 @@
 	</div>
 </div>
 <!--end::Container-->
+
+{% endblock %}
+
+
+{% block page_custom_script %}
+
+<script type="text/javascript">
+
+// Select elements
+const target = document.getElementById('kt_clipboard_4');
+const button = target.nextElementSibling;
+
+// Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+clipboard = new ClipboardJS(button, {
+    target: target,
+    text: function () {
+        return target.innerHTML;
+    }
+});
+
+// Success action handler
+clipboard.on('success', function (e) {
+    var checkIcon = button.querySelector('.bi.bi-check');
+    var svgIcon = button.querySelector('.svg-icon');
+
+    // Exit check icon when already showing
+    if (checkIcon) {
+        return;
+    }
+
+    // Create check icon
+    checkIcon = document.createElement('i');
+    checkIcon.classList.add('bi');
+    checkIcon.classList.add('bi-check');
+    checkIcon.classList.add('fs-2x');
+
+    // Append check icon
+    button.appendChild(checkIcon);
+
+    // Highlight target
+    const classes = ['text-success', 'fw-boldest'];
+    target.classList.add(...classes);
+
+    // Highlight button
+    button.classList.add('btn-success');
+
+    // Hide copy icon
+    svgIcon.classList.add('d-none');
+
+    // Revert button label after 3 seconds
+    setTimeout(function () {
+        // Remove check icon
+        svgIcon.classList.remove('d-none');
+
+        // Revert icon
+        button.removeChild(checkIcon);
+
+        // Remove target highlight
+        target.classList.remove(...classes);
+
+        // Remove button highlight
+        button.classList.remove('btn-success');
+    }, 3000)
+});
+
+</script>
 
 {% endblock %}

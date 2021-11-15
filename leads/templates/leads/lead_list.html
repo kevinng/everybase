@@ -119,7 +119,7 @@
 					{% elif lead.lead_type == 'buying' %}
 						<div class="ribbon-label bg-success">Buying</div>
 					{% endif %}
-					<a href="#"><h3 class="text-hover-primary card-title mt-15">{{ lead.title }}</h3></a>
+					<a href="{% url 'leads:detail' lead.uuid %}"><h3 class="text-hover-primary card-title mt-15">{{ lead.title }}</h3></a>
 				</div>
 				<div class="card-body">
 

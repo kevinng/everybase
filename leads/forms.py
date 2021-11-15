@@ -32,3 +32,6 @@ class LeadForm(forms.Form):
                 raise ValidationError(None)
 
         return self.cleaned_data
+
+class ContactForm(forms.Form):
+    message = forms.CharField(required=True)
