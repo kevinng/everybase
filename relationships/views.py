@@ -82,6 +82,11 @@ def register_link(request, token_str):
     return render(request,
         'relationships/register_link.html', {'token': token})
 
+
+
+
+
+# TODO this link is not in used
 def confirm_register(request, token_str):
     token_obj = models.RegisterToken.objects.get(token=token_str)
     user = token_obj.user
@@ -127,6 +132,16 @@ def confirm_register(request, token_str):
         messages.info(request, 'This registration link has expired.')
 
     return HttpResponseRedirect(reverse('leads__root:list'))
+
+
+
+
+
+
+
+
+
+
 
 def log_in(request):
     if request.method == 'POST':

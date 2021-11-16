@@ -1,9 +1,5 @@
-{{ first_name }},
+{{ first_name }}, please confirm your registration with Everybase.
 
-Thank for registering with Everybase.
-
-Please click on this link to complete registration:
-
-{{ register_link }}
+Reply *YES* to confirm your registration.
 
 _Please ignore this message if you did not register with Everybase._

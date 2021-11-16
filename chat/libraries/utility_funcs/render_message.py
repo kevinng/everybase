@@ -1,6 +1,6 @@
 from django.template.loader import render_to_string
 
-def render_message(message_key, params):
+def render_message(message_key, params=None):
     """Get message body for a message key
 
     Parameters

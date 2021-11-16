@@ -23,11 +23,6 @@ class RegisterForm(forms.Form):
     email = forms.EmailField(
         required=True
     )
-    languages = forms.CharField(
-        required=True,
-        min_length=1,
-        max_length=30
-    )
 
     def clean(self):
         super(RegisterForm, self).clean()

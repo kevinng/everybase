@@ -1,3 +1,5 @@
-Thanks for registering.
+You've confirmed your registration with Everybase.
 
-{% include 'chat/messages/includes/menu_options.txt' %}
+Go to Everybase:
+
+{{ login_url }}

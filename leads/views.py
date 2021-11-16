@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.db.models import Q
 
 from everybase import settings
-from leads import serializers, models, forms
+from leads import serializers, models, forms, tasks
 from chat.libraries.utility_funcs.get_create_whatsapp_link import \
     get_create_whatsapp_link
 from leads.libraries.utility_funcs.is_connected import is_connected
@@ -172,21 +172,22 @@ def lead_detail(request, uuid):
                     # Create contact request
                     sgtz = pytz.timezone(settings.TIME_ZONE)
                     now = datetime.datetime.now(tz=sgtz)
-                    models.ContactRequest.objects.create(
+                    request = models.ContactRequest.objects.create(
                         requested=now,
                         contactor=request.user.user,
                         lead=lead,
                         message=message
                     )
 
-                    # Notify lead author
-                    # TODO
+                    # Contact lead author
+                    tasks.contact_lead_author.delay(request.uuid)
 
                     # Reset form
                     form = forms.ContactForm()
 
                     # Add message
-                    messages.info(request, "Message sent. We'll notify you if the author agrees to exchange contacts with you.")
+                    messages.info(request, "Message sent. We'll notify you if \
+the author agrees to exchange contacts with you.")
     else:
         # Update analytics
         lead = models.Lead.objects.get(uuid=uuid)
@@ -207,3 +208,18 @@ def lead_detail(request, uuid):
         'lead': lead,
         'form': form
     })
+
+def message_detail(request, uuid):
+    if request.method == 'POST':
+        # Allow user to approve the request
+
+        # Whatsapp no need - because it will be a whatsapp URL
+        pass
+    else:
+        pass
+
+    return render(request, 'leads/message_detail.html')
+
+def message_list(request):
+    # Basically get a list of all messages
+    return render(request, 'leads/message_list.html')

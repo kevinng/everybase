@@ -198,15 +198,16 @@ class LeadDetailAccess(Standard):
         unique_together = ('lead', 'accessor')
 
 class ContactRequest(Standard):
-    """Contact request.
+    """A contact request. Note: contactor may or may not already be connected
+    with the lead author.
 
-    Last updated: 14 November 2021, 4:53 PM
+    Last updated: 15 November 2021, 4:53 PM
     """
-    requested = models.DateTimeField(db_index=True)
-    responded = models.DateTimeField(
-        db_index=True,
-        null=True,
-        blank=True
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False,
+        db_index=True
     )
     response = models.CharField(
         max_length=20,
@@ -237,25 +238,3 @@ class ContactRequest(Standard):
 
     class Meta:
         unique_together = ('contactor', 'lead')
-
-class ContactAccess(Standard):
-    """Contact access.
-
-    Last updated: 14 November 2021, 4:53 PM
-    """
-
-    contactor = models.ForeignKey(
-        'relationships.User',
-        related_name='contact_accesses_with_this_contactor',
-        related_query_name='contact_accesses_with_this_contactor',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='contact_accesses_with_this_lead',
-        related_query_name='contact_accesses_with_this_lead',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    message = models.TextField()

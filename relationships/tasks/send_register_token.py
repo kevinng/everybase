@@ -30,10 +30,7 @@ def send_register_token(token: str) -> str:
 
     return send_message(
         render_message(messages.REGISTER__CONFIRM, {
-            'first_name': token_obj.user.first_name,
-            'register_link': settings.BASE_URL + \
-                reverse('relationships:confirm_register',
-                    args=[token_obj.token])
+            'first_name': token_obj.user.first_name
         }),
         chatbot_user,
         chatbot_ph,

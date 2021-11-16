@@ -1,0 +1,24 @@
+*Congratulations.*
+
+*You've exchanged contacts with:*
+
+{{ lead_title }}
+{{ lead_url }}
+
+{{ first_name }} {{ last_name }}, {{ country }}
+
+Click this link to WhatsApp user:
+
+{{ whatsapp_url }}
+
+
+
+
+
+Access your contacts here:
+
+{{ message_list_url }}
+
+Post a new lead at this link:
+
+{{ create_lead_url }}

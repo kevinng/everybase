@@ -52,26 +52,9 @@ class LeadDetailAccessAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _saved_lead_fields})]
     autocomplete_fields = ['lead', 'accessor']
 
-_contact_request_fields = ['requested', 'responded', 'response', 'contactor',
-    'lead', 'message']
+_contact_request_fields = ['response', 'contactor', 'lead', 'message']
 @admin.register(models.ContactRequest)
 class ContactRequestAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _contact_request_fields
-    list_editable = comadm.standard_list_editable + _contact_request_fields
-    list_filter = comadm.standard_list_filter + ['requested', 'responded']
-    search_fields = comadm.standard_search_fields + ['contactor__first_name',
-        'contactor__last_name', 'lead__author__first_name',
-        'lead__author__last_name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _saved_lead_fields})]
-    autocomplete_fields = ['contactor', 'lead']
-
-_contact_request_fields = ['contactor', 'lead', 'message']
-@admin.register(models.ContactAccess)
-class ContactAccessAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _contact_request_fields
     list_editable = comadm.standard_list_editable + _contact_request_fields

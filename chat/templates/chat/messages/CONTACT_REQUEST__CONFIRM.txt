@@ -1,0 +1,11 @@
+*Would you like to exchange contacts with this user?*
+
+Your Lead: {{ lead_title }}
+
+_{{ message }}_
+
+{{ first_name }} {{ last_name }}, {{ country }}
+
+*Approve contact request here:*
+
+{{ contact_detail_url }}
