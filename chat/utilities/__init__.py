@@ -3,7 +3,7 @@ from .done_to_context import done_to_context
 from .expire_context import expire_context
 from .expire_to_context import expire_to_context
 from .get_context import get_context
-from .get_handler import get_handler
+from chat.utilities.get_handler import get_handler
 from .get_parameterizer import get_parameterizer
 from .get_parameters import get_parameters
 from .get_twilml_body import get_twilml_body
