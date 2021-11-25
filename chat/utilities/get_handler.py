@@ -3,7 +3,6 @@ import importlib
 from django.http.request import HttpRequest
 
 from chat.models import TwilioInboundMessage
-from chat.parameterizers.library import MessageParameterizer
 from chat.handlers.library import MessageHandler
 
 def get_handler(

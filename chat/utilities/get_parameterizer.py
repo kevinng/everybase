@@ -1,5 +1,5 @@
 import importlib, typing
-from chat.parameterizers.lib import MessageParameterizer
+from chat.parameterizers.library import MessageParameterizer
 
 if typing.TYPE_CHECKING:
     from chat.libraries.classes.message_handler import MessageHandler
