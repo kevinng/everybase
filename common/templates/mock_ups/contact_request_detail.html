@@ -1,0 +1,62 @@
+{% extends 'extendables/base.html' %}
+
+{% load static %}
+
+{% block subtitle %}Max Smith, Australia | Contact Request | {% endblock %}
+
+{% block page_title %}Contact Request{% endblock %}
+
+{% block content %}
+
+<!--begin::Container-->
+<div id="kt_content_container" class="container-xxl">
+	<div class="row">
+        <div class="col-lg-4 col-md-2"></div>
+        <div class="col-lg-4 col-md-6 mb-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <div class="d-flex flex-column align-items-center my-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-circle symbol-70px">
+                            <img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
+                        </div>
+
+                        {% comment %} <div class="symbol symbol-circle symbol-70px">
+                            <a><div class="symbol-label fs-2 bg-warning text-light">MJ</div></a>
+                        </div> {% endcomment %}
+                        <!--end::Avatar-->
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center mb-5">
+                        <div class="fw-bolder fs-4">Max Smith</div>
+                        <div class="fw-bold fs-7 text-muted">0 min ago</div>
+                    </div>
+
+                    <div class="fs-6 my-5">
+                        <div class="fw-bolder mt-5">Country</div>
+                        <div class="text-gray-600">Australia</div>
+                        {% comment %} <div class="fw-bolder mt-5">Language</div>
+                        <div class="text-gray-600">English, Chinese, Hindi</div> {% endcomment %}
+                        <div class="fw-bolder mt-5">Your Lead</div>
+                        <!-- open in a different target -->
+                        <div><a href="#">Powder-free Vinyl Gloves, Black, All Sizes Black, All Sizes</a></div>
+                        <div class="fw-bolder mt-5">Message</div>
+                        <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris pulvinar velit in justo hendrerit semper. Suspendisse urna ex, varius velit.</div>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    {% comment %} <button class="btn btn-success col-12 mb-2">Exchange Contacts</button> {% endcomment %}
+                    {% comment %} <button class="btn btn-secondary col-12">Delete</button> {% endcomment %}
+
+                    <button class="btn btn-outline btn-outline-success btn-active-color-white col-12 mb-2">WhatsApp</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-2"></div>
+	</div>
+</div>
+<!--end::Container-->
+
+{% endblock %}

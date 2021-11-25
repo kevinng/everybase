@@ -1,0 +1,7 @@
+We didn't receive a response from you.
+
+You may access your contact requests at:
+{{ contact_request_url }}
+
+You may create a new lead at:
+{{ create_lead_url }}

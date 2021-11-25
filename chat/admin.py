@@ -161,43 +161,6 @@ class TwilioInboundMessageLogEntryAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['message']
 
-class MessageDataValueInlineAdmin(admin.TabularInline):
-    model = mod.MessageDataValue
-    extra = 1
-
-_message_dataset_fields = ['intent_key', 'message_key', 'in_message',
-    'out_message']
-@admin.register(mod.MessageDataset)
-class MessageDatasetAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _message_dataset_fields
-    list_editable = comadm.standard_list_editable + _message_dataset_fields
-    search_fields = comadm.standard_search_fields + _message_dataset_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _message_dataset_fields})
-    ]
-    autocomplete_fields = ['in_message', 'out_message']
-    inlines = [MessageDataValueInlineAdmin]
-
-_message_data_value_fields = ['dataset', 'value_string', 'value_float',
-    'value_boolean', 'value_id', 'is_valid', 'data_key']
-@admin.register(mod.MessageDataValue)
-class MessageDataValueAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _message_data_value_fields
-    list_editable = comadm.standard_list_editable + _message_data_value_fields
-    list_filter = comadm.standard_choice_list_filter + \
-        _message_data_value_fields
-    search_fields = comadm.standard_search_fields + _message_data_value_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _message_data_value_fields})
-    ]
-    autocomplete_fields = ['dataset']
-
 _user_context_fields = ['started', 'done', 'expired', 'paused', 'user',
     'intent_key', 'message_key']
 @admin.register(mod.UserContext)

@@ -1,8 +1,0 @@
-We need {% if is_buying == True %}demand/buyers{% elif is_buying == False %}supply/sellers{% endif %} for:
-
-{{ lead_details }}
-
-*Reply with option number*:
-1. I have immediate {% if is_buying == True %}demand/buyers{% elif is_buying == False %}supply/sellers{% endif %}
-2. I need time to get {% if is_buying == True %}demand/buyers{% elif is_buying == False %}supply/sellers{% endif %}
-3. I'm not interested

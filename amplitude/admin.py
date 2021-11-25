@@ -62,13 +62,12 @@ class UserPropertyAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
-_session_fields = ['started', 'session_id', 'last_activity', 'user']
+_session_fields = ['session_id', 'user']
 @admin.register(mod.Session)
 class SessionAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _session_fields
     list_editable = comadm.standard_list_editable + _session_fields
-    list_filter = comadm.standard_list_filter + ['started', 'last_activity']
     search_fields = comadm.standard_search_fields + ['session_id']
 
     # Details page settings

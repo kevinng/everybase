@@ -1,3 +1,0 @@
-Noted. We'll do better next time.
-
-{% include 'chat/messages/includes/menu_options.txt' %}

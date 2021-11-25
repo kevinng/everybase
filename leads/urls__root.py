@@ -4,6 +4,8 @@ from . import views
 app_name = 'leads__root'
 urlpatterns = [
     path('', views.LeadListView.as_view(), name='list'),
-    path('messages/<str:uuid>/', views.message_detail, name='message_detail'),
-    path('messages/', views.message_list, name='message_list'),
+    path('contact_requests/<str:uuid>/', views.contact_request_detail,
+        name='contact_request_detail'),
+    path('contact_requests/', views.contact_request_list,
+        name='contact_request_list'),
 ]

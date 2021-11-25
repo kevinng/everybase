@@ -1,0 +1,16 @@
+You've exchanged WhatsApp contact with this user.
+
+*{{ author_first_name }} {{ author_last_name }}, {{ author_country }}, {{ lead_type }}*
+{{ lead_title }}
+{{ lead_detail_url }}
+
+*User's WhatsApp Link:*
+{{ whatsapp_url }}
+
+
+
+You may access your contact requests at:
+{{ contact_request_url }}
+
+You may create a new lead at:
+{{ create_lead_url }}

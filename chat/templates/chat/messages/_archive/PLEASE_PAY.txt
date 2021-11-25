@@ -1,5 +1,0 @@
-Please make a payment of {{ price_display_name }} at this link.
-
-{{ payment_link }}
-
-We'll send you the {% if buying %}seller{% else %}buyer{% endif %}'s contact once payment is made.

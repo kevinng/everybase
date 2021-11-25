@@ -1,23 +1,23 @@
 from celery import Celery
-
-from leads import models
-
 from django.urls import reverse
 
-from chat.libraries.constants import intents, messages
-from chat.libraries.utility_funcs.render_message import render_message
-from chat.libraries.utility_funcs.send_message import send_message
-from chat.libraries.utility_funcs.get_chatbot_phone_number import \
-    get_chatbot_phone_number
-from chat.libraries.utility_funcs.done_to_context import done_to_context
+from everybase import settings
+
+from chat.constants import intents, messages
+from chat.utilities import render_message, send_message, done_to_context
+
+from leads import models
+from relationships import models as relmods
 
 app = Celery()
 
 @app.task
 def contact_lead_author(contact_request_uuid, no_external_calls=False):
     r = models.ContactRequest.objects.get(uuid=contact_request_uuid)
-    chatbot_ph = get_chatbot_phone_number()
+    chatbot_ph = relmods.PhoneNumber.objects.get(
+        pk=settings.CHATBOT_PHONE_NUMBER_PK)
 
+# TODO: we need to update the message tempalte
     m = send_message(
         render_message(
             messages.CONTACT_REQUEST__CONFIRM, {
@@ -26,7 +26,7 @@ def contact_lead_author(contact_request_uuid, no_external_calls=False):
                 'first_name': r.contactor.first_name,
                 'last_name': r.contactor.last_name,
                 'country': r.contactor.country.name,
-                'contact_detail_url': reverse('leads_root:message_detail',
+                'contact_detail_url': reverse('leads_root:contact_request_detail',
                     {'uuid': contact_request_uuid})
             }
         ),

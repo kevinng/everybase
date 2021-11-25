@@ -2,6 +2,8 @@ from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth.models import User
 
 class DirectBackend(BaseBackend):
+    """Authentication backend that lets user authenticate without password.
+    """
     def authenticate(self, username=None):
         try:
             return User.objects.get(username=username)

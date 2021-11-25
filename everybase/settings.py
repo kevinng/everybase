@@ -19,8 +19,6 @@ from django.conf.locale.en import formats as en_formats
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-APP_VERSION = config('APP_VERSION')
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -296,8 +294,6 @@ AMPLITUDE_SESSION_TIMEOUT_SECONDS = config('AMPLITUDE_SESSION_TIMEOUT_SECONDS')
 GMASS_CAMPAIGN_UPDATE_TIMEFRAME_DAYS = config('GMASS_CAMPAIGN_UPDATE_TIMEFRAME_DAYS')
 
 ADMIN_PATH = config('ADMIN_PATH')
-
-CHAT_FILE_TRANSFER_CACHE_PATH = './chat/file_transfer_cache'
 
 # Login/register tokens expiry duration in seconds
 LOGIN_TOKEN_EXPIRY_SECS = 900 # 15 minutes

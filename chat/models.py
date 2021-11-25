@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from common.models import Standard, short_text
-from chat.libraries.constants import intents, messages, datas
+from chat.constants import intents, messages
 
 class TwilioOutboundMessage(Standard):
     """Twilio outbound message.
@@ -547,152 +547,6 @@ class TwilioInboundMessageLogEntry(Standard):
     def __str__(self):
         return f'({self.message} [{self.id}])'
 
-class MessageDataset(Standard):
-    """A set of data extracted in-context for a message. A context is a unique
-    intent-message pair for an incoming Twilio message.
-
-    Last updated: 4 September 2021, 2:39 PM
-    """
-    intent_key = models.CharField(
-        max_length=200,
-        choices=intents.choices,
-        db_index=True
-    )
-    message_key = models.CharField(
-        max_length=200,
-        choices=messages.choices,
-        db_index=True
-    )
-    in_message = models.ForeignKey(
-        'TwilioInboundMessage',
-        related_name='message_datasets',
-        related_query_name='message_datasets',
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-        db_index=True
-    )
-    out_message = models.ForeignKey(
-        'TwilioOutboundMessage',
-        related_name='message_datasets',
-        related_query_name='message_datasets',
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-        db_index=True
-    )
-
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='message_datasets',
-        related_query_name='message_datasets',
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-        db_index=True
-    )
-
-    def __str__(self):
-        return f'({self.intent_key}, {self.message_key}, {self.in_message}, \
-{self.out_message} [{self.id}])'
-
-    def clean(self):
-        super(MessageDataset, self).clean()
-
-        if (self.in_message is None and self.out_message is None) or \
-            (self.in_message is not None and self.out_message is not None):
-            raise ValidationError(
-                'Either in_message or out_message must be set')
-        
-        if self.in_message is not None and self.user is None:
-            raise ValidationError(
-                'user must be set if in_message is set')
-
-    class Meta:
-        unique_together = ('intent_key', 'message_key', 'in_message',
-            'out_message', 'user')
-
-class MessageDataValue(Standard):
-    """Data value extracted from an incoming Twilio message in its context
-
-    Last updated: 4 September 2021, 2:39 PM
-    """
-    dataset = models.ForeignKey(
-        'MessageDataset',
-        related_name='values',
-        related_query_name='values',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    data_key = models.CharField(
-        max_length=200,
-        choices=datas.choices,
-        db_index=True
-    )
-
-    # 1 of below must be set
-    value_string = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    value_float = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    value_boolean = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    value_id = models.IntegerField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
-    is_valid = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    
-    def __str__(self):
-        if self.value_string is not None:
-            display_str = self.value_string
-        elif self.value_float is not None:
-            display_str = self.value_float
-        elif self.value_boolean is not None:
-            display_str = self.value_boolean
-        elif self.value_id is not None:
-            display_str = self.value_id
-
-        return f'({display_str} [{self.id}])'
-
-    def clean(self):
-        super(MessageDataValue, self).clean()
-
-        count = 0
-        if self.value_string is None:
-            count += 1
-        
-        if self.value_float is None:
-            count += 1
-
-        if self.value_boolean is None:
-            count += 1
-
-        if self.value_id is None:
-            count += 1
-
-        if count != 1:
-            raise ValidationError('Exactly 1 value must be set')
-
-    class Meta:
-        unique_together = ['dataset', 'data_key']
-    
 class UserContext(Standard):
     """User context
 
@@ -741,7 +595,8 @@ class UserContext(Standard):
     )
 
     def __str__(self):
-        return f'({self.user}, {self.intent_key}, {self.message_key} [{self.id}])'
+        return f'({self.user}, {self.intent_key}, {self.message_key} \
+[{self.id}])'
 
     def clean(self):
         super(UserContext, self).clean()

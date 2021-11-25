@@ -1,5 +1,0 @@
-Are you still interested {% if buying == True %}in{% elif buying == False%}to supply{% endif %} {% if buying == True%}{{ demand.product_type.name|lower }}{% elif buying == False %}{{ supply.product_type.name|lower }}{% endif %}?
-
-*Reply*:
-1. Yes
-2. No

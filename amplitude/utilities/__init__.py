@@ -1,0 +1,1 @@
+from .get_user_properties import get_user_properties

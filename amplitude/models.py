@@ -283,15 +283,9 @@ class UserProperty(Standard):
 class Session(Standard):
     """Session
 
-    Last updated: 27 July 2021, 2:07 PM
+    Last updated: 24 November 2021, 9:08 PM
     """
-    started = models.DateTimeField(db_index=True)
     session_id = models.BigIntegerField(db_index=True)
-    last_activity = models.DateTimeField(
-        max_length=200,
-        db_index=True
-    )
-
     user = models.ForeignKey(
         'relationships.user',
         related_name='sessions',

@@ -1,1 +1,0 @@
-Please enter your question to the {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}.

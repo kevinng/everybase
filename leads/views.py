@@ -11,8 +11,7 @@ from django.db.models import Q
 
 from everybase import settings
 from leads import serializers, models, forms, tasks
-from chat.libraries.utility_funcs.get_create_whatsapp_link import \
-    get_create_whatsapp_link
+from relationships.utilities import get_create_whatsapp_link
 from leads.libraries.utility_funcs.is_connected import is_connected
 from leads.libraries.utility_funcs.has_contacted import has_contacted
 from files import views as fiviews, models as fimods
@@ -209,7 +208,7 @@ the author agrees to exchange contacts with you.")
         'form': form
     })
 
-def message_detail(request, uuid):
+def contact_request_detail(request, uuid):
     if request.method == 'POST':
         # Allow user to approve the request
 
@@ -218,8 +217,8 @@ def message_detail(request, uuid):
     else:
         pass
 
-    return render(request, 'leads/message_detail.html')
+    return render(request, 'leads/contact_request_detail.html')
 
-def message_list(request):
+def contact_request_list(request):
     # Basically get a list of all messages
-    return render(request, 'leads/message_list.html')
+    return render(request, 'leads/contact_request_list.html')

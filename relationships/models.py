@@ -12,6 +12,8 @@ from common.models import (Standard, Choice, LowerCaseCharField,
 from hashid_field import HashidAutoField
 from phonenumber_field.modelfields import PhoneNumberField
 
+import uuid
+
 class PhoneNumberType(Choice):
     """Phone number type.
 
@@ -150,8 +152,14 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 3 November 2021, 3:27 PM
+    Last updated: 12 November 2021, 2:12 PM
     """
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False,
+        db_index=True
+    )
     registered = models.DateTimeField(
         null=True,
         blank=True,
@@ -305,7 +313,7 @@ class PhoneNumberHash(Standard):
 class Connection(Standard):
     """Connection between two user.
 
-    Last updated: 28 October 2021, 11:56 AM
+    Last updated: 24 November 2021, 9:15 PM
     """
     connected = models.DateTimeField(
         db_index=True,
@@ -325,6 +333,14 @@ class Connection(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    user_one_contact_count = models.IntegerField(
+        default=0,
+        db_index=False
+    )
+    user_two_contact_count = models.IntegerField(
+        default=0,
+        db_index=False
+    )
     
     def clean(self):
         super(Connection, self).clean()
@@ -340,8 +356,16 @@ class Connection(Standard):
 class UserAgent(Standard):
     """User agent log.
 
-    Last updated: 28 October 2021, 11:56 AM
-    """ 
+    Last updated: 24 November 2021, 9:23 PM
+    """
+    user = models.ForeignKey(
+        'User',
+        related_name='user_agents',
+        related_query_name='user_agents',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
     ip_address = models.GenericIPAddressField(
         null=True,
         blank=True,
@@ -433,6 +457,12 @@ class UserAgent(Standard):
         db_index=True
     )
 
+    class Meta:
+        unique_together = ['user', 'ip_address', 'is_mobile', 'is_tablet',
+            'is_touch_capable', 'is_pc', 'is_bot', 'browser', 'browser_family',
+            'browser_version', 'browser_version_string', 'os', 'os_family',
+            'os_version', 'os_version_string', 'device', 'device_family']
+
 _TOKEN_LENGTH = 24
 def get_token(length=_TOKEN_LENGTH):
     """Generates and returns a URL friendly token.
@@ -458,7 +488,7 @@ def get_token(length=_TOKEN_LENGTH):
 class LoginToken(Standard):
     """Login token.
     
-    Last updated: 3 November 2021, 1:02 PM
+    Last updated: 24 November 2021, 9:23 PM
     """
     user = models.ForeignKey(
         'User',
@@ -468,6 +498,11 @@ class LoginToken(Standard):
         db_index=True
     )
     activated = models.DateTimeField(
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    refreshed = models.DateTimeField(
         db_index=True,
         null=True,
         blank=True

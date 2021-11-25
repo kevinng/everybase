@@ -1,11 +1,12 @@
-*Would you like to exchange contacts with this user?*
+Hi {{ first_name }} {{ last_name }}, would you like to exchange contacts with this user?
 
-Your Lead: {{ lead_title }}
-
+*{{ contactee_first_name|title }} {{ contactee_last_name|title }}, {{ contactee_country }}:*
 _{{ message }}_
 
-{{ first_name }} {{ last_name }}, {{ country }}
+*You're {{ lead_type }}:*
+{{ lead_title }}
+{{ lead_detail_url }}
 
-*Approve contact request here:*
-
-{{ contact_detail_url }}
+*Reply:*
+1. Yes, exchange contacts
+2. No

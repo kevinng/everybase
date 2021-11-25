@@ -1,3 +1,0 @@
-Ready-stock/OTG price per {{ packing_singular|lower }}?
-
-E.g., USD 20

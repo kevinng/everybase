@@ -38,6 +38,9 @@ def send_event(
         adid: str = None,
         android_id: str = None
     ):
+    if settings.AMPLITUDE_API_KEY is None or \
+        settings.AMPLITUDE_API_KEY.strip() == '':
+        return None
 
     # Current time
     sgtz = pytz.timezone(settings.TIME_ZONE)
@@ -53,33 +56,28 @@ def send_event(
 
     # Elapsed session time - if any
     if session is not None:
-        elapsed_s = (now - session.last_activity).total_seconds()
-        timeout_s = int(settings.AMPLITUDE_SESSION_TIMEOUT_SECONDS)
-
-    if session is None or elapsed_s > timeout_s:
-        # User has no pre-existing session(s), or the existing one has expired.
-        # Create a new one and use its ID.
-        new_session = models.Session.objects.create(
-            started=now,
-            session_id=now_epoch,
-            last_activity=now,
-            user=relmods.User.objects.get(pk=user_id)
-        )
-
-        session_id = new_session.session_id
-    else:
-        # Session has not expired, use its ID and update its last activity time
-        session.last_activity = now
-        session.save()
-
         session_id = session.session_id
+    else:
+        session_id = -1 # No session ID
 
-    # Create hash for Amplitude's event ID and insert ID
+    # Create hash for Amplitude's event ID and insert ID.
+    #
+    # event ID:
+    # (Optional) An incrementing counter to distinguish events with the same
+    # user_id and timestamp from each other. We recommend you send an event_id,
+    # increasing over time, especially if you expect events to occur
+    # simultanenously.
+    #
+    # insert ID:
+    # (Optional) A unique identifier for the event. We will deduplicate
+    # subsequent events sent with an insert_id we have already seen before
+    # within the past 7 days. We recommend generation a UUID or using some
+    # combination of device_id, user_id, event_type, event_id, and time.
     hash_str = str(user_id) + str(event_type) + str(now)
     hash_obj = hashlib.md5(hash_str.encode('utf-8'))
     hash = int(hash_obj.hexdigest(), 16) % (10 ** 8)
 
-    # Get user's key - we post the user's key instead of the user's ID because
+    # Get user's uuid - we post the user's key instead of the user's ID because
     # Amplitude has a 5-char minimum on their user ID
     user = relmods.User.objects.get(pk=user_id)
 
@@ -88,7 +86,7 @@ def send_event(
         return requests.post('https://api2.amplitude.com/2/httpapi', json={
             'api_key': settings.AMPLITUDE_API_KEY,
             'events': [{
-                'user_id': user.id,
+                'user_id': user.uuid,
                 'device_id': device_id,
                 'event_type': event_type,
                 'time': now_epoch,
@@ -119,15 +117,15 @@ def send_event(
                 'idfv': idfv,
                 'adid': adid,
                 'android_id': android_id,
-                'event_id': hash,
+                'event_id': hash, # To prevent duplicates
                 'session_id': session_id,
-                'insert_id': hash
+                'insert_id': hash # To prevent duplicates
             }]
         })
 
     r = post_amplitude()
     if r.status_code != 200:
-        # Retry once if failed
+        # Retry once if failed.
         r = post_amplitude()
 
     # Save entry

@@ -7,8 +7,6 @@ from django.contrib import messages
 
 from everybase import settings
 from . import forms, models
-from .tasks.send_register_token import send_register_token
-from .tasks.send_login_token import send_login_token
 
 import pytz
 from datetime import datetime, timedelta
@@ -54,7 +52,8 @@ def register(request):
             # Create register token
             token = models.RegisterToken.objects.create(user=user)
 
-            send_register_token.delay(token.token)
+            # TODO
+            # send_register_token.delay(token.token)
 
             return HttpResponseRedirect(
                 reverse('relationships:register_link',
@@ -72,8 +71,9 @@ def register_link(request, token_str):
         sgtz = pytz.timezone(settings.TIME_ZONE)
         token.refreshed = datetime.now(tz=sgtz)
 
+        # TODO:
         # Resend token via WhatsApp
-        send_register_token.delay(token_str)
+        # send_register_token.delay(token_str)
         
         return HttpResponseRedirect(
             reverse('relationships:register_link',

@@ -1,1 +1,0 @@
-These fixtures were dumped from the old models before 27 May 2021.

@@ -1,5 +1,0 @@
-Are you sure you have *immediate* {% if is_buying == True %}demand/buyers{% elif is_buying == False %}supply/sellers{% endif %}?
-
-*Reply with option number*:
-1. Yes, I have immediate {% if is_buying == True %}demand/buyers{% elif is_buying == False %}supply/sellers{% endif %}
-2. Return to previous menu

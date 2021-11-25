@@ -1,5 +1,0 @@
-{% if initial == True %}Thanks for your {% if answering == True %}answer{% elif answering == False %}question{% endif %}.
-
-{% endif %}*Reply*:
-1. Ask question
-2. Buy {% if buying == True %}seller{% elif buying == False %}buyer{% endif %}'s contact

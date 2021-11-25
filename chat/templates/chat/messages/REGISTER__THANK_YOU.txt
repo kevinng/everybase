@@ -1,5 +1,0 @@
-You've confirmed your registration with Everybase.
-
-Go to Everybase:
-
-{{ login_url }}

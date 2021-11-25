@@ -1,5 +1,0 @@
-Thanks for letting us know what you want to {% if is_buying == True %}buy{% elif is_buying == False %}sell{% endif %}.
-
-We'll check with {% if is_buying == True %}sellers{% elif is_buying == False %}buyers{% endif %} and update you here.
-
-{% include 'chat/messages/includes/menu_options.txt' %}
