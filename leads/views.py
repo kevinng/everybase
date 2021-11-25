@@ -11,9 +11,13 @@ from django.db.models import Q
 
 from everybase import settings
 from leads import serializers, models, forms, tasks
+
 from relationships.utilities import get_create_whatsapp_link
+
+# TODO: tidy these up
 from leads.libraries.utility_funcs.is_connected import is_connected
 from leads.libraries.utility_funcs.has_contacted import has_contacted
+
 from files import views as fiviews, models as fimods
 from common import models as commods
 

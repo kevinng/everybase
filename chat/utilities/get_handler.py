@@ -3,7 +3,8 @@ import importlib
 from django.http.request import HttpRequest
 
 from chat.models import TwilioInboundMessage
-from chat.handlers.lib import MessageHandler
+# from chat.handlers.lib import MessageHandler
+import chat.handlers.lib.message_handler
 
 def get_handler(
         message : TwilioInboundMessage,
@@ -12,7 +13,7 @@ def get_handler(
         no_external_calls : bool = False,
         no_task_calls : bool = False,
         request : HttpRequest = None
-    ) -> MessageHandler:
+    ) -> chat.handlers.lib.message_handler.MessageHandler:
     """Instantiate and return the message handler for a context (i.e., a unique
     intent/message pair). Returns None if no message handler found.
 
