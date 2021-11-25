@@ -1,1 +1,1 @@
-import .lib
+from . import lib
