@@ -2,7 +2,7 @@ import typing
 from abc import ABC, abstractmethod
 
 if typing.TYPE_CHECKING:
-    from chat.libraries.classes.message_handler import MessageHandler
+    from chat.handlers.library import MessageHandler
 
 class MessageParameterizer(ABC):
     """Returns the parameters to its associated template. This class is

@@ -2,7 +2,7 @@ import typing
 from chat.utilities import get_parameterizer
 
 if typing.TYPE_CHECKING:
-    from chat.libraries.classes.message_handler import MessageHandler
+    from chat.handlers.library import MessageHandler
 
 def get_parameters(
         message_handler : 'MessageHandler',
