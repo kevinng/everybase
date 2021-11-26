@@ -9,9 +9,15 @@ from rest_framework.views import APIView
 
 from everybase import settings
 from chat import models
-from chat.utilities import (save_message_log, save_message_medias, save_message,
-    get_context, get_handler, save_status_callback, save_status_callback_log)
+from chat.utilities.save_message_log import save_message_log
+from chat.utilities.save_message_medias import save_message_medias
+from chat.utilities.save_message import save_message
+from chat.utilities.get_context import get_context
+from chat.utilities.get_handler import get_handler
+from chat.utilities.save_status_callback import save_status_callback
+from chat.utilities.save_status_callback_log import save_status_callback_log
 from chat.tasks.copy_post_request_data import copy_post_request_data
+
 from relationships import models as relmods
 from relationships.utilities import get_non_tracking_whatsapp_link
 

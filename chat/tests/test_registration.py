@@ -12,5 +12,5 @@ class RegisterConfirmTest(ChatTest):
             messages.REGISTER__CONFIRMED
         )
 
-    def test_enter_unrecognized_input(self):
-        pass
+    # def test_enter_unrecognized_input(self):
+    #     pass

@@ -9,8 +9,10 @@ from amplitude.utilities import get_user_properties
 
 from chat import models
 from chat.constants import messages
-from chat.utilities import (get_parameters, done_to_context, render_message, \
-    match)
+from chat.utilities.get_parameters import get_parameters
+from chat.utilities.done_to_context import done_to_context
+from chat.utilities.render_message import render_message
+from chat.utilities.match import match
 
 class MessageHandler():
     """A message handler lets us handle an incoming message by overriding the

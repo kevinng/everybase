@@ -4,8 +4,10 @@ from django.test import TestCase
 from everybase import settings
 from relationships import models as relmods
 from chat import models, views
-from chat.utilities import start_context, get_context, get_twilml_body
-from chat.tests.library import get_target_message_body
+from chat.utilities.start_context import start_context
+from chat.utilities.get_context import get_context
+from chat.utilities.get_twilml_body import get_twilml_body
+from chat.tests.library.get_target_message_body import get_target_message_body
 
 class ChatTest(TestCase):
     """Base class for chatbot automated test cases."""
