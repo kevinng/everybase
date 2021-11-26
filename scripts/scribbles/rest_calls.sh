@@ -1,1 +1,0 @@
-curl -d "match_id=1&buyer_only=True" -X POST http://127.0.0.1:8000/chat/send_confirm_interests/

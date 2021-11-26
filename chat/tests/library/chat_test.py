@@ -14,7 +14,8 @@ class ChatTest(TestCase):
             self,
             intent_key : str = None,
             message_key : str = None,
-            name : str = 'Kevin Ng',
+            first_name : str = 'Kevin',
+            last_name : str = 'Ng',
             country_code : str = '12345',
             national_number : str = '1234567890',
             registered : bool = True
@@ -53,7 +54,8 @@ class ChatTest(TestCase):
         )
 
         self.user = relmods.User.objects.create(
-            name=name,
+            first_name=first_name,
+            last_name=last_name,
             phone_number=phone_number
         )
 
@@ -138,8 +140,6 @@ class ChatTest(TestCase):
         url
             Ditto content_type description.
         """
-        response, _, media = self.receive_reply(body, content_type, url)
-
         message = self.setup_inbound_message(
             self.intent_key,
             self.message_key,
