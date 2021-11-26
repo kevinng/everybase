@@ -1,5 +1,5 @@
 from chat.constants import intents, messages
-from chat.utilities import render_message
+from chat.utilities.render_message import render_message
 from chat.handlers.library import MessageHandler
 
 class Handler(MessageHandler):

@@ -12,5 +12,10 @@ class RegisterConfirmTest(ChatTest):
             messages.REGISTER__CONFIRMED
         )
 
-    # def test_enter_unrecognized_input(self):
-    #     pass
+    def test_enter_unrecognized_input(self):
+        self.receive_reply_assert(
+            'huh',
+            intents.REGISTER,
+            messages.REGISTER__CONFIRM,
+            target_body_message_key=messages.REGISTER__DO_NOT_UNDERSTAND
+        )
