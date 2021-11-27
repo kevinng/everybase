@@ -7,6 +7,5 @@ _{{ message }}_
 {{ lead_title }}
 {{ lead_detail_url }}
 
-*Reply:*
-1. Yes, exchange contacts
-2. No
+*Respond at this Link:*
+{{ contact_request_detail_url }}

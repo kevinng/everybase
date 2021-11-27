@@ -1,5 +1,7 @@
-# from chat.tasks.auto_clean_answer import auto_clean_answer
+from chat.tasks.copy_post_request_data import copy_post_request_data
+from chat.tasks.send_register_confirm import send_register_confirm
 
 __all__ = [
-    # 'auto_clean_answer',
+    'copy_post_request_data',
+    'send_register_confirm'
 ]

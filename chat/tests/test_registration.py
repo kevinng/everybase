@@ -1,7 +1,11 @@
 from chat.constants import intents, messages
 from chat.tests.library import ChatTest
+from chat.tasks.send_register_confirm import (
+    send_register_confirm, _USER_DOES_NOT_EXIST, _CHATBOT_USER_DOES_NOT_EXIST)
+from chat.utilities.render_message import render_message
+from chat.tests.library.get_target_message_body import get_target_message_body
 
-class RegisterConfirmTest(ChatTest):
+class RegisterTest(ChatTest):
     def setUp(self):
         super().setUp(intents.REGISTER, messages.REGISTER__CONFIRM)
 
@@ -18,4 +22,35 @@ class RegisterConfirmTest(ChatTest):
             intents.REGISTER,
             messages.REGISTER__CONFIRM,
             target_body_message_key=messages.REGISTER__DO_NOT_UNDERSTAND
+        )
+
+class SendRegisterConfirmTest(ChatTest):
+    fixtures = [
+        'setup/20210527__relationships__phonenumber',
+        'setup/20210527__relationships__phonenumbertype',
+        'setup/20211126__relationships__user'
+    ]
+
+    def setUp(self):
+        super().setUp(intents.NO_INTENT, messages.NO_MESSAGE)
+
+    def test_send_register_confirm(self):
+        msg = send_register_confirm(self.user.id, True)
+
+        self.assertNotEqual(msg, _USER_DOES_NOT_EXIST)
+        self.assertNotEqual(msg, _CHATBOT_USER_DOES_NOT_EXIST)
+
+        self.assert_context(
+            intents.REGISTER,
+            messages.REGISTER__CONFIRM
+        )
+
+        self.assertEqual(
+            msg.body,
+            render_message(
+                messages.REGISTER__CONFIRM, {
+                    'first_name': self.user.first_name,
+                    'last_name': self.user.last_name
+                }
+            )
         )

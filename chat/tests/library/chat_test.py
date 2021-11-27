@@ -20,6 +20,10 @@ class ChatTest(TestCase):
             last_name : str = 'Ng',
             country_code : str = '12345',
             national_number : str = '1234567890',
+            first_name_2 : str = 'Kevin 2',
+            last_name_2 : str = 'Ng 2',
+            country_code_2 : str = '123452',
+            national_number_2 : str = '12345678902',
             registered : bool = True
         ):
         """TestCase setUp method with additonal parameters for overriding.
@@ -59,6 +63,17 @@ class ChatTest(TestCase):
             first_name=first_name,
             last_name=last_name,
             phone_number=phone_number
+        )
+
+        phone_number_2 = relmods.PhoneNumber.objects.create(
+            country_code=country_code_2,
+            national_number=national_number_2
+        )
+
+        self.user_2 = relmods.User.objects.create(
+            first_name=first_name_2,
+            last_name=last_name_2,
+            phone_number=phone_number_2
         )
 
         if registered:
