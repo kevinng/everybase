@@ -4,9 +4,11 @@ from django.test import TestCase
 from everybase import settings
 from relationships import models as relmods
 from chat import models, views
+from chat.constants import intents, messages
 from chat.utilities.start_context import start_context
 from chat.utilities.get_context import get_context
 from chat.utilities.get_twilml_body import get_twilml_body
+from chat.utilities.render_message import render_message
 from chat.tests.library.get_target_message_body import get_target_message_body
 
 class ChatTest(TestCase):
@@ -107,6 +109,17 @@ class ChatTest(TestCase):
         i, m = get_context(self.user)
         self.assertEqual(i, intent_key)
         self.assertEqual(m, message_key)
+
+    def assert_context_body(
+            self,
+            intent_key : str,
+            message_key : str,
+            body : str,
+            params : dict
+        ):
+        """Convenience function to """
+        self.assert_context(intent_key, message_key)
+        self.assertEqual(body, render_message(message_key, params))
 
     def receive_reply_assert(
             self,

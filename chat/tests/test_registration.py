@@ -1,9 +1,8 @@
 from chat.constants import intents, messages
 from chat.tests.library import ChatTest
-from chat.tasks.send_register_confirm import (
-    send_register_confirm, _USER_DOES_NOT_EXIST, _CHATBOT_USER_DOES_NOT_EXIST)
+from chat.tasks.send_register_confirm import (send_register_confirm,
+    _USER_DOES_NOT_EXIST, _CHATBOT_USER_DOES_NOT_EXIST)
 from chat.utilities.render_message import render_message
-from chat.tests.library.get_target_message_body import get_target_message_body
 
 class RegisterTest(ChatTest):
     def setUp(self):
@@ -36,21 +35,11 @@ class SendRegisterConfirmTest(ChatTest):
 
     def test_send_register_confirm(self):
         msg = send_register_confirm(self.user.id, True)
-
-        self.assertNotEqual(msg, _USER_DOES_NOT_EXIST)
-        self.assertNotEqual(msg, _CHATBOT_USER_DOES_NOT_EXIST)
-
-        self.assert_context(
+        self.assert_context_body(
             intents.REGISTER,
-            messages.REGISTER__CONFIRM
-        )
-
-        self.assertEqual(
-            msg.body,
-            render_message(
-                messages.REGISTER__CONFIRM, {
-                    'first_name': self.user.first_name,
-                    'last_name': self.user.last_name
-                }
-            )
+            messages.REGISTER__CONFIRM,
+            msg.body, {
+                'first_name': self.user.first_name,
+                'last_name': self.user.last_name
+            }
         )

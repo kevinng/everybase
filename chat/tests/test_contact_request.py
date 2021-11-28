@@ -8,7 +8,9 @@ class ContactRequestTest(ChatTest):
             messages.CONTACT_REQUEST__CONFIRM
         )
 
-    #TODO: we need to implement the task that sends out the initial message
+    # TODO: we need to implement the task that sends out the initial message
+
+    # TODO: basically we are testing 3 different task sends
 
     def test_enter_yes(self):
         pass

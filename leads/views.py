@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.db.models import Q
 
 from everybase import settings
-from leads import serializers, models, forms, tasks
+from leads import serializers, models, forms
 
 from relationships.utilities import get_create_whatsapp_link
 
@@ -182,8 +182,9 @@ def lead_detail(request, uuid):
                         message=message
                     )
 
+                    # TODO: 
                     # Contact lead author
-                    tasks.contact_lead_author.delay(request.uuid)
+                    # tasks.contact_lead_author.delay(request.uuid)
 
                     # Reset form
                     form = forms.ContactForm()
