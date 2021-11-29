@@ -9,9 +9,6 @@ from everybase import settings
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField, Country)
 
-from hashid_field import HashidAutoField
-from phonenumber_field.modelfields import PhoneNumberField
-
 import uuid
 
 class PhoneNumberType(Choice):
@@ -267,7 +264,12 @@ class PhoneNumberHash(Standard):
 
     Last updated: 28 October 2021, 11:56 AM
     """
-    id = HashidAutoField(primary_key=True)
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False,
+        db_index=True
+    )
     link_type = models.CharField(
         max_length=20,
         choices=[
