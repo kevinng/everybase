@@ -40,7 +40,6 @@ class ContactRequestConfirmTest(ChatTest):
         )
         
         msg = send_contact_request_confirm(
-            self.user.id,
             self.contact_request.id,
             True
         )
@@ -74,11 +73,12 @@ class ContactRequestConfirmTest(ChatTest):
         return super().tearDown()
 
 class ContactRequestExchangedAuthorTest(ChatTest):
-    fixtures = [
-        'setup/20210527__relationships__phonenumber',
-        'setup/20210527__relationships__phonenumbertype',
-        'setup/20211126__relationships__user'
-    ]
+    # fixtures = [
+    #     'setup/20210527__relationships__phonenumber',
+    #     'setup/20210527__relationships__phonenumbertype',
+    #     'setup/20211126__relationships__user',
+    #     ''
+    # ]
     
     def setUp(self):
         super().setUp(intents.NO_INTENT, messages.NO_MESSAGE)
@@ -94,6 +94,7 @@ class ContactRequestExchangedAuthorTest(ChatTest):
         #         'last_name': self.user.last_name
         #     }
         # )
+
 
 class ContactRequestExchangedContactorTest(ChatTest):
     fixtures = [

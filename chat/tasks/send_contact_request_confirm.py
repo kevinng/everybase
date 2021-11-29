@@ -9,21 +9,14 @@ from chat.utilities.done_to_context import done_to_context
 from relationships import models as relmods
 from leads import models as lemods
 
-_USER_DOES_NOT_EXIST = -1
-_CONTACT_REQUEST_DOES_NOT_EXIST = -2
-_CHATBOT_USER_DOES_NOT_EXIST = -3
+_CONTACT_REQUEST_DOES_NOT_EXIST = -1
+_CHATBOT_USER_DOES_NOT_EXIST = -2
 
 @shared_task
 def send_contact_request_confirm(
-        user_id : int,
-        contact_request_id: int,
+        contact_request_id : int,
         no_external_calls : bool = False
     ):
-
-    try:
-        user = relmods.User.objects.get(pk=user_id)
-    except relmods.User.DoesNotExist:
-        return _USER_DOES_NOT_EXIST
 
     try:
         contact_request = lemods.ContactRequest.objects.get(
@@ -40,14 +33,14 @@ def send_contact_request_confirm(
     lead = contact_request.lead
 
     done_to_context(
-        user,
+        contact_request.lead.author,
         intents.CONTACT_REQUEST,
         messages.CONTACT_REQUEST__CONFIRM
     )
 
     params = {
-        'first_name': user.first_name,
-        'last_name': user.last_name,
+        'first_name': contact_request.lead.author.first_name,
+        'last_name': contact_request.lead.author.last_name,
         'message': contact_request.message,
         'contactor_first_name': contactor.first_name,
         'contactor_last_name': contactor.last_name,
@@ -65,7 +58,7 @@ def send_contact_request_confirm(
 
     return send_message(
         render_message(messages.CONTACT_REQUEST__CONFIRM, params),
-        user,
+        contact_request.lead.author,
         chatbot,
         intents.CONTACT_REQUEST,
         messages.CONTACT_REQUEST__CONFIRM,
