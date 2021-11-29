@@ -1,10 +1,10 @@
 You've exchanged WhatsApp contact with this user.
 
-*{{ author_first_name|title }} {{ author_last_name|title }}, {{ author_country }}, {{ lead_type }}*
+*{{ author_first_name|title }} {{ author_last_name|title }}, {{ author_country }}, {{ lead_type|title }}*
 {{ lead_title }}
 {{ lead_detail_url }}
 
-*User's WhatsApp Link:*
+*{{ author_first_name|title }} {{ author_last_name|title }}'s WhatsApp:*
 {{ whatsapp_url }}
 
 

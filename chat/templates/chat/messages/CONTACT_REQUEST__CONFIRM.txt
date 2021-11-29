@@ -7,5 +7,5 @@ _{{ message }}_
 {{ lead_title }}
 {{ lead_detail_url }}
 
-*Respond at this Link:*
+*Approve Request:*
 {{ contact_request_detail_url }}

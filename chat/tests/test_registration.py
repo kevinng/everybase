@@ -1,7 +1,6 @@
 from chat.constants import intents, messages
 from chat.tests.library import ChatTest
-from chat.tasks.send_register_confirm import (send_register_confirm,
-    _USER_DOES_NOT_EXIST, _CHATBOT_USER_DOES_NOT_EXIST)
+from chat.tasks.send_register_confirm import send_register_confirm
 from chat.utilities.render_message import render_message
 
 class RegisterTest(ChatTest):

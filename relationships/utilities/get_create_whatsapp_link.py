@@ -8,9 +8,7 @@ def get_create_whatsapp_link(
         to_user : relmods.User,
         reverse_only : bool = False
     ) -> str:
-    """Get/create WhatsApp URL for the to_user. Get/create phone
-    number hash of WhatsApp-type for the from_user on the to_user and
-    return a formatted WhatsApp URL.
+    """Get/create WhatsApp URL from from_user to to_user. Idempotent.
 
     Parameters
     ----------
@@ -36,7 +34,7 @@ def get_create_whatsapp_link(
         phone_number=to_user.phone_number
     )
 
-    reverse_url = reverse('chat_root:whatsapp', kwargs={ 'id': hash.id })
+    reverse_url = reverse('chat__root:whatsapp', kwargs={ 'id': hash.id })
 
     if reverse_only:
         return reverse_url

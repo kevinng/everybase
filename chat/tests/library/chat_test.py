@@ -1,8 +1,11 @@
 import pytz, datetime
 from django.test import TestCase
+import common
 
 from everybase import settings
 from relationships import models as relmods
+from leads import models as lemods
+from common import models as commods
 from chat import models, views
 from chat.utilities.start_context import start_context
 from chat.utilities.get_context import get_context
@@ -55,6 +58,8 @@ class ChatTest(TestCase):
         self.inbound_messages = {}
         self.outbound_messages = {}
 
+        self.country = commods.Country.objects.get(pk=511) # Australia
+
         phone_number = relmods.PhoneNumber.objects.create(
             country_code=country_code,
             national_number=national_number
@@ -63,7 +68,8 @@ class ChatTest(TestCase):
         self.user = relmods.User.objects.create(
             first_name=first_name,
             last_name=last_name,
-            phone_number=phone_number
+            phone_number=phone_number,
+            country=self.country
         )
 
         phone_number_2 = relmods.PhoneNumber.objects.create(
@@ -74,7 +80,8 @@ class ChatTest(TestCase):
         self.user_2 = relmods.User.objects.create(
             first_name=first_name_2,
             last_name=last_name_2,
-            phone_number=phone_number_2
+            phone_number=phone_number_2,
+            country=self.country
         )
 
         if registered:
@@ -86,12 +93,19 @@ class ChatTest(TestCase):
             start_context(self.user, intent_key, message_key)
 
     def tearDown(self):
-        super().tearDown()
         # Delete all models - order matters
-        models.UserContext.objects.all().delete()        
+        lemods.ContactRequest.objects.all().delete()
+        lemods.Lead.objects.all().delete()
+        relmods.PhoneNumberHash.objects.all().delete()
+        models.UserContext.objects.all().delete()
         models.TwilioInboundMessageMedia.objects.all().delete()
         models.TwilioOutboundMessage.objects.all().delete()
         models.TwilioInboundMessage.objects.all().delete()
+        relmods.Connection.objects.all().delete()
+        relmods.PhoneNumberHash.objects.all().delete()
+        relmods.User.objects.all().delete()
+        relmods.PhoneNumber.objects.all().delete()
+        commods.Country.objects.all().delete()
 
     def assert_context(
             self,

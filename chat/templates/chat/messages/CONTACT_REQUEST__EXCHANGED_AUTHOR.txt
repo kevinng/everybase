@@ -3,7 +3,7 @@ You've exchanged WhatsApp contact with this user.
 *{{ contactor_first_name|title }} {{ contactor_last_name|title }}, {{ contactor_country }}:*
 {{ message }}
 
-*You're {{ lead_type }}:*
+*You're {{ lead_type|title }}:*
 {{ lead_title }}
 {{ lead_detail_url }}
 

@@ -164,15 +164,17 @@ _phone_number_hash_fields = ['user', 'phone_number_type', 'phone_number']
 @admin.register(mod.PhoneNumberHash)
 class PhoneNumberHashAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _phone_number_hash_fields
+    list_display = comadm.standard_list_display + ['uuid'] + \
+        _phone_number_hash_fields
     list_editable = comadm.standard_list_editable + _phone_number_hash_fields
     list_filter = comadm.standard_list_filter + ['phone_number_type']
-    search_fields = comadm.standard_search_fields + ['user__id',
+    search_fields = comadm.standard_search_fields + ['user__id', 'uuid',
         'phone_number__country_code', 'phone_number__national_number']
 
     # Details page settings
+    readonly_fields = comadm.standard_readonly_fields + ['uuid']
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _phone_number_hash_fields})
+        ('Details', {'fields': ['uuid'] + _phone_number_hash_fields})
     ]
     autocomplete_fields = ['user', 'phone_number']
 

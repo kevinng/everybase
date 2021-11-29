@@ -1,8 +1,6 @@
 from chat.constants import intents, messages
 from chat.tests.library import ChatTest
-from chat.tasks.send_login_confirm import (send_login_confirm,
-    _USER_DOES_NOT_EXIST, _CHATBOT_USER_DOES_NOT_EXIST)
-from chat.utilities.render_message import render_message
+from chat.tasks.send_login_confirm import send_login_confirm
 
 class LoginTest(ChatTest):
     def setUp(self):
