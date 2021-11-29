@@ -1,6 +1,6 @@
 Hi {{ first_name }} {{ last_name }}, would you like to exchange contacts with this user?
 
-*{{ contactee_first_name|title }} {{ contactee_last_name|title }}, {{ contactee_country }}:*
+*{{ contactor_first_name|title }} {{ contactor_last_name|title }}, {{ contactor_country }}:*
 _{{ message }}_
 
 *You're {{ lead_type }}:*

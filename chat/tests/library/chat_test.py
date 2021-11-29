@@ -4,7 +4,6 @@ from django.test import TestCase
 from everybase import settings
 from relationships import models as relmods
 from chat import models, views
-from chat.constants import intents, messages
 from chat.utilities.start_context import start_context
 from chat.utilities.get_context import get_context
 from chat.utilities.get_twilml_body import get_twilml_body
@@ -117,7 +116,22 @@ class ChatTest(TestCase):
             body : str,
             params : dict
         ):
-        """Convenience function to """
+        """
+        Convenience function to assert context and message body together.
+
+        Parameters
+        ----------
+        intent_key
+            Intent key for the context to assert.
+        message_key
+            Message key for the context to assert and message to render.
+        body
+            Message body to assert.
+        params
+            Parameters dictionary to merge into message template picked up
+            with message_key.
+        """
+        # print(render_message(message_key, params))
         self.assert_context(intent_key, message_key)
         self.assertEqual(body, render_message(message_key, params))
 

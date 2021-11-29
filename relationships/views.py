@@ -40,6 +40,8 @@ def register(request):
                 email=form.cleaned_data.get('email')
             )
 
+            # TODO: we need to set the user's country also
+
             # Create user
             user = models.User.objects.create(
                 first_name=form.cleaned_data.get('first_name'),
