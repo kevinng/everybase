@@ -1,19 +1,19 @@
 You've exchanged WhatsApp contact with this user.
 
-*{{ contactee_first_name }} {{ contactee_last_name }}, {{ contactee_country }}:*
+*{{ contactor_first_name|title }} {{ contactor_last_name|title }}, {{ contactor_country }}:*
 {{ message }}
 
 *You're {{ lead_type }}:*
 {{ lead_title }}
 {{ lead_detail_url }}
 
-*User's WhatsApp Link:*
+*{{ contactor_first_name|title }} {{ contactor_last_name|title }}'s WhatsApp:*
 {{ whatsapp_url }}
 
 
 
-You may access your contact requests at:
+Access your contact requests:
 {{ contact_request_url }}
 
-You may create a new lead at:
+Create a new lead:
 {{ create_lead_url }}

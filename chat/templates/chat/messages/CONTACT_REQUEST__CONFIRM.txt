@@ -1,4 +1,4 @@
-Hi {{ first_name }} {{ last_name }}, would you like to exchange contacts with this user?
+Hi {{ first_name|title }} {{ last_name|title }}, would you like to exchange contacts with this user?
 
 *{{ contactor_first_name|title }} {{ contactor_last_name|title }}, {{ contactor_country }}:*
 _{{ message }}_
