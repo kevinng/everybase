@@ -1,10 +1,8 @@
-from datetime import datetime
-import uuid, pytz
+import uuid
 from django.db import models
 
 from common.models import Standard
 from files import models as fimods
-from everybase import settings
 
 class Lead(Standard):
     """Lead.
@@ -99,49 +97,6 @@ class Lead(Standard):
             lead=self.id,
             file_type__icontains='pdf'
         ).count()
-
-    def created_now_difference(self):
-        sgtz = pytz.timezone(settings.TIME_ZONE)
-        now = datetime.now(tz=sgtz)
-        difference = (now - self.created).total_seconds()
-        
-        weeks, rest = divmod(difference, 604800)
-        days, rest = divmod(rest, 86400)
-        hours, rest = divmod(rest, 3600)
-        minutes, seconds = divmod(rest, 60)
-
-        return (weeks, days, hours, minutes, seconds)
-
-    def create_now_difference_display_text(self):
-        weeks, days, hours, minutes, seconds = self.created_now_difference()
-
-        if weeks > 0 and weeks < 4:
-            if weeks == 1:
-                return '1 week ago'
-
-            return '%d weeks ago' % weeks
-        elif days > 0:
-            if days == 1:
-                return '1 day ago'
-
-            return '%d days ago' % days
-        elif hours > 0:
-            if hours == 1:
-                return '1 hour ago'
-
-            return '%d hours ago' % hours
-        elif minutes > 0:
-            if minutes == 1:
-                return '1 minute ago'
-
-            return '%d minutes ago' % minutes
-        elif seconds > 0:
-            if seconds == 1:
-                return '1 second ago'
-
-            return '%d seconds ago' % seconds
-
-        return self.created.strftime('%d %b %Y')
 
 class SavedLead(Standard):
     """Saved lead.
