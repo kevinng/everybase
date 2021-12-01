@@ -1,0 +1,3 @@
+Your registration attempt has expired.
+
+Please register again.
