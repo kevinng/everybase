@@ -6,7 +6,9 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 from everybase import settings
-from . import forms, models
+from common import models as commods
+from relationships import forms, models
+from chat.tasks.send_register_confirm import send_register_confirm
 
 import pytz
 from datetime import datetime, timedelta
@@ -40,7 +42,10 @@ def register(request):
                 email=form.cleaned_data.get('email')
             )
 
-            # TODO: we need to set the user's country also
+            try:
+                country = commods.Country.objects.get(country_code=ph_cc)
+            except commods.Country.DoesNotExist:
+                country = None
 
             # Create user
             user = models.User.objects.create(
@@ -48,92 +53,125 @@ def register(request):
                 last_name=form.cleaned_data.get('last_name'),
                 languages_string=form.cleaned_data.get('languages'),
                 phone_number=phone_number,
-                email=email
+                email=email,
+                country=country
             )
 
-            # Create register token
-            token = models.RegisterToken.objects.create(user=user)
-
-            # TODO
-            # send_register_token.delay(token.token)
+            # Create/send register confirmation
+            send_register_confirm.delay(user.id)
 
             return HttpResponseRedirect(
                 reverse('relationships:register_link',
-                    kwargs={'token_str': token.token}))
+                    kwargs={'user_uuid': user.uuid}))
     else:
         form = forms.RegisterForm()
 
     return render(request, 'relationships/register.html', {'form': form})
 
-def register_link(request, token_str):
-    token = models.RegisterToken.objects.get(token=token_str)
-    if request.method == 'POST':
-        
-        # Get current timezone
-        sgtz = pytz.timezone(settings.TIME_ZONE)
-        token.refreshed = datetime.now(tz=sgtz)
+def register_link(request, user_uuid):
+    try:
+        user = models.User.objects.get(uuid=user_uuid)
+    except models.User.DoesNotExist:
+        user = None
 
-        # TODO:
+    if request.method == 'POST':
+
         # Resend token via WhatsApp
-        # send_register_token.delay(token_str)
+        send_register_confirm.delay(user.id)
         
         return HttpResponseRedirect(
             reverse('relationships:register_link',
-                kwargs={'token_str': token_str}))
+                kwargs={'user_uuid': user_uuid}))
 
     return render(request,
-        'relationships/register_link.html', {'token': token})
+        'relationships/register_link.html', {
+            'user_uuid': user_uuid,
+            'country_code': user.phone_number.country_code,
+            'national_number': user.phone_number.national_number
+        })
 
+def confirm_register(request, user_uuid):
+    # Create Django user
+    django_user, du_is_new = User.objects.get_or_create(username=user_uuid)
 
+    # Get Everybase user
+    if du_is_new:
+        # Set unusable password for Django user and save
+        django_user.set_unusable_password()
+        django_user.save()
 
+        # Update user profile
+        sgtz = pytz.timezone(settings.TIME_ZONE)
+        user = models.User.objects.get(uuid=user_uuid)
+        user.registered = datetime.now(sgtz)
+        user.django_user = django_user
+        user.save()
 
-
-# TODO this link is not in used
-def confirm_register(request, token_str):
-    token_obj = models.RegisterToken.objects.get(token=token_str)
-    user = token_obj.user
-
-    expiry_datetime = token_obj.created + timedelta(
-        seconds=settings.REGISTER_TOKEN_EXPIRY_SECS)
-    sgtz = pytz.timezone(settings.TIME_ZONE)
-    if datetime.now(tz=sgtz) < expiry_datetime:
-        # ##### Token has not expired
-        
-        # Create Django user
-        django_user, du_is_new = User.objects.get_or_create(
-            username=str(user.id))
-        if du_is_new:
-            # Register user - only works once
-
-            # Set unusable password for Django user and save
-            django_user.set_unusable_password()
-            django_user.save()
-
-            # Update user profile
-            user.registered = datetime.now(sgtz)
-            user.django_user = django_user
-            user.save()
-
-            # Update token activated timestamp
-            token_obj.activated = datetime.now(sgtz)
-            token_obj.save()
-
-        # Log the user in - will keep working until token is expired
+    if django_user is not None:
+        # Authenticate user
         in_user = authenticate(django_user.username)
         if in_user is not None:
-            # User authenticated by a backend successfully - login
+            # Authentication successful, log user in
             login(request, in_user)
         else:
-            capture_message('User not able to log in after registration. \
-    Django user ID: %d, user ID: %d' % (django_user.id, user.id), level='error')
+            capture_message('User not able to log in after registration. Django\
+    user ID: %d, user ID: %d' % (django_user.id, user.id), level='error')
 
-        messages.info(request, 'Welcome %s, your registration is complete.' % in_user.user.first_name)
+        messages.info(request, 'Welcome %s, your registration is complete.' % \
+            in_user.user.first_name)
+        
+        return JsonResponse({'logged_in': True})
 
-    else:
-        # ##### Token has expired
-        messages.info(request, 'This registration link has expired.')
+    return JsonResponse({'logged_in': False})
 
-    return HttpResponseRedirect(reverse('leads__root:list'))
+    
+
+
+
+    # # token_obj = models.RegisterToken.objects.get(token=token_str)
+    # # user = token_obj.user
+
+    # # expiry_datetime = token_obj.created + timedelta(
+    #     # seconds=settings.REGISTER_TOKEN_EXPIRY_SECS)
+    # # sgtz = pytz.timezone(settings.TIME_ZONE)
+    # if datetime.now(tz=sgtz) < expiry_datetime:
+    #     # ##### Token has not expired
+        
+    #     # Create Django user
+    #     django_user, du_is_new = User.objects.get_or_create(
+    #         username=str(user.id))
+    #     if du_is_new:
+    #         # Register user - only works once
+
+    #         # Set unusable password for Django user and save
+    #         django_user.set_unusable_password()
+    #         django_user.save()
+
+    #         # Update user profile
+    #         user.registered = datetime.now(sgtz)
+    #         user.django_user = django_user
+    #         user.save()
+
+    #         # Update token activated timestamp
+    #         token_obj.activated = datetime.now(sgtz)
+    #         token_obj.save()
+
+    #     # Log the user in - will keep working until token is expired
+    #     in_user = authenticate(django_user.username)
+    #     if in_user is not None:
+    #         # User authenticated by a backend successfully - login
+    #         login(request, in_user)
+    #     else:
+    #         capture_message('User not able to log in after registration. \
+    # Django user ID: %d, user ID: %d' % (django_user.id, user.id), level='error')
+
+    #     messages.info(request, 'Welcome %s, your registration is complete.' % in_user.user.first_name)
+
+    # else:
+    #     # ##### Token has expired
+    #     messages.info(request, 'This registration link has expired.')
+
+    
 
 
 

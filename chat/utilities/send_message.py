@@ -9,9 +9,7 @@ from twilio.rest import Client
 def send_message(
         body: str,
         from_user: relmods.User,
-        # from_ph: relmods.PhoneNumber,
         to_user: relmods.User,
-        # to_ph: relmods.PhoneNumber,
         intent_key: str = None,
         message_key: str = None,
         media_url: List[str] = None,

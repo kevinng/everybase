@@ -32,7 +32,7 @@
                             Please include + symbol. E.g., +14155552671.
                         </div>
                         <!--begin::Error message-->
-                        <div class="row text-danger mt-3">{% if form.whatsapp_phone_number.errors %}{% for error in form.whatsapp_phone_number.errors %}{{ error|escape }}{% if forloop.last %} {% endif %}{% endfor %}{% endif %}</div>
+                        <div class="row text-danger mt-3">{% if form.whatsapp_phone_number.errors %}{% for error in form.whatsapp_phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}{% endif %}</div>
                         <!--end::Error message-->
                     </div>
 					<div class="text-center">

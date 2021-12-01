@@ -59,8 +59,8 @@ def send_contact_request_exchanged_contactor(
 
     return send_message(
         render_message(messages.CONTACT_REQUEST__EXCHANGED_CONTACTOR, params),
-        lead.author,
         chatbot,
+        lead.author,
         intents.CONTACT_REQUEST,
         messages.CONTACT_REQUEST__EXCHANGED_CONTACTOR,
         None,

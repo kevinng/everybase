@@ -38,8 +38,8 @@ def send_register_confirm(
 
     return send_message(
         render_message(messages.REGISTER__CONFIRM, params),
-        user,
         chatbot,
+        user,
         intents.REGISTER,
         messages.REGISTER__CONFIRM,
         None,

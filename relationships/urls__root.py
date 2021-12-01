@@ -1,19 +1,18 @@
 from django.urls import path
-from rest_framework.urlpatterns import format_suffix_patterns
-from . import views
+from relationships import views
 
 app_name = 'relationships'
 urlpatterns = [
     path('register/', views.register, name='register'),
-    path('register_link/<str:token_str>', views.register_link,
+    path('register_link/<str:user_uuid>', views.register_link,
         name='register_link'),
+    path('cr/<str:user_uuid>', views.confirm_register, name='confirm_register'),
     path('login_link/<str:token_str>', views.log_in_link, name='login_link'),
     path('login/', views.log_in, name='login'),
     path('logout/', views.log_out, name='logout'),
-    path('cr/<str:token_str>', views.confirm_register, name='confirm_register'),
     path('cl/<str:token_str>', views.confirm_log_in, name='confirm_login'),
-    path('log_in_if_logged_in/<str:token_str>', views.log_in_if_logged_in,
-        name='log_in_if_logged_in'),
+    # path('log_in_if_logged_in/<str:token_str>', views.log_in_if_logged_in,
+    #     name='log_in_if_logged_in'),
     path('log_in_if_registered/<str:token_str>', views.log_in_if_registered,
         name='log_in_if_registered')
     

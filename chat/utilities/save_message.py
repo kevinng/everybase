@@ -1,7 +1,9 @@
 from relationships import models as relmods
 from chat import models
-from chat.utilities import parse_twilio_phone_number
-from relationships.utilities import get_or_create_phone_number
+from chat.utilities.parse_twilio_phone_number import \
+    parse_twilio_phone_number
+from relationships.utilities.get_or_create_phone_number import \
+    get_or_create_phone_number
 
 def save_message(request):
     """Saves incoming Twilio message from a HTTP request.

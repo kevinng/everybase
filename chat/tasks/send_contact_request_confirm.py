@@ -58,8 +58,8 @@ def send_contact_request_confirm(
 
     return send_message(
         render_message(messages.CONTACT_REQUEST__CONFIRM, params),
-        contact_request.lead.author,
         chatbot,
+        contact_request.lead.author,
         intents.CONTACT_REQUEST,
         messages.CONTACT_REQUEST__CONFIRM,
         None,

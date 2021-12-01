@@ -38,8 +38,8 @@ def send_login_confirm(
 
     return send_message(
         render_message(messages.LOGIN__CONFIRM, params),
-        user,
         chatbot,
+        user,
         intents.LOGIN,
         messages.LOGIN__CONFIRM,
         None,

@@ -65,8 +65,8 @@ def send_contact_request_exchanged_author(
 
     return send_message(
         render_message(messages.CONTACT_REQUEST__EXCHANGED_AUTHOR, params),
-        lead.author,
         chatbot,
+        lead.author,
         intents.CONTACT_REQUEST,
         messages.CONTACT_REQUEST__CONFIRM,
         None,

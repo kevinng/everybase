@@ -244,6 +244,26 @@ class User(Standard):
         blank=True,
         db_index=True
     )
+    is_direct_buyer = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_direct_seller = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_buying_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_buying_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     def country_from_phone_number(self):
         try:
@@ -269,17 +289,6 @@ class PhoneNumberHash(Standard):
         default=uuid.uuid4,
         editable=False,
         db_index=True
-    )
-    link_type = models.CharField(
-        max_length=20,
-        choices=[
-            ('contact', 'Contact'),
-            ('verification', 'Verification'),
-            ('register', 'Register'),
-            ('login', 'Login')
-        ],
-        null=True,
-        blank=True
     )
 
     user = models.ForeignKey(
