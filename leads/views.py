@@ -11,13 +11,10 @@ from django.db.models import Q
 
 from everybase import settings
 from leads import serializers, models, forms
-
-from relationships.utilities import get_create_whatsapp_link
-
-# TODO: tidy these up
 from leads.libraries.utility_funcs.is_connected import is_connected
 from leads.libraries.utility_funcs.has_contacted import has_contacted
-
+from relationships.utilities.get_create_whatsapp_link import \
+    get_create_whatsapp_link
 from files import views as fiviews, models as fimods
 from common import models as commods
 
@@ -224,6 +221,6 @@ def contact_request_detail(request, uuid):
 
     return render(request, 'leads/contact_request_detail.html')
 
-def contact_request_list(request):
-    # Basically get a list of all messages
-    return render(request, 'leads/contact_request_list.html')
+class ContactRequestListView(ListView):
+    model = models.ContactRequest
+    paginate_by = 30

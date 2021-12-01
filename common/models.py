@@ -1,5 +1,6 @@
 import pytz, datetime
 from django.db import models
+from everybase import settings
 
 # --- Start: Helper functions ---
 

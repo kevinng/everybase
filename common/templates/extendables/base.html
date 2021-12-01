@@ -72,11 +72,13 @@
 												</a>
 											</div>
 
+											{% if request.user.is_authenticated %}
 											<div class="menu-item">
 												<a class="menu-link {% if request.resolver_match.view_name == 'leads__root:contact_request_list' %}active{% endif %} py-3" href="{% url 'leads__root:contact_request_list' %}">
 													<span class="menu-title">Contact Requests</span>
 												</a>
 											</div>
+											{% endif %}
 
 											{% comment %} <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
 												<span class="menu-link py-3">
