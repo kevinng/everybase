@@ -11,9 +11,7 @@
 <!--begin::Container-->
 <div id="kt_content_container" class="container-xxl">
 	<div class="row">
-        {% if page_obj.paginator.count == 0 %}
-        You do not have any contact requests.
-        {% endif %}
+        {% if page_obj.paginator.count == 0 %}You do not have any contact requests.{% endif %}
 
         {% for contact_request in page_obj %}
 
@@ -27,7 +25,7 @@
                         </div> {% endcomment %}
 
                         <div class="symbol symbol-circle symbol-70px">
-                            <a><div class="symbol-label fs-2 bg-warning text-light">{{ contact_request.contactor.first_name|make_list|first }} {{ contact_request.contactor.last_name|make_list|first }}</div></a>
+                            <div class="symbol-label fs-2 bg-warning text-light">{{ contact_request.contactor.first_name|make_list|first }} {{ contact_request.contactor.last_name|make_list|first }}</div>
                         </div>
                         <!--end::Avatar-->
                     </div>
@@ -49,9 +47,16 @@
                 </div>
                 <div class="card-footer">
                     {% if contact_request.response is None %}
-                        <button class="btn btn-success col-12 mb-2">Exchange Contacts</button>
+                    {% comment %} This should be an ajax call {% endcomment %}
+                    {% comment %} We can add an onclick call that calls the {% endcomment %}
+                        <a href="" class="btn btn-success col-12 mb-2">Exchange Contacts</a>
                     {% elif contact_request.response == 'accept' %}
-                        <button class="btn btn-outline btn-outline-success btn-active-color-white col-12 mb-2">WhatsApp</button>
+                    {% comment %} Add a link for this user to whatsapp the counterparty {% endcomment %}
+                    {% comment %} For now, only the lead author can contact the contactor {% endcomment %}
+                    {% comment %} This view is only for lead owners {% endcomment %}
+                    {% comment %} So the whatsapp link is for contact owners on that lead {% endcomment %}
+                    {% comment %} the whatsapp link can be linked to a contact request? {% endcomment %}
+                        <a href="" class="btn btn-outline btn-outline-success btn-active-color-white col-12 mb-2">WhatsApp</a>
                     {% endif %}
                     {% comment %} <button class="btn btn-secondary col-12">Delete</button> {% endcomment %}
                 </div>

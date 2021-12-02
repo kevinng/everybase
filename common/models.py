@@ -50,7 +50,7 @@ class Standard(models.Model):
 
     def created_now_difference(self):
         sgtz = pytz.timezone(settings.TIME_ZONE)
-        now = datetime.now(tz=sgtz)
+        now = datetime.datetime.now(tz=sgtz)
         difference = (now - self.created).total_seconds()
         
         weeks, rest = divmod(difference, 604800)

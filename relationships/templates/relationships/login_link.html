@@ -19,7 +19,7 @@
                 <form class="form w-100" action="{% url 'relationships:login_link' user_uuid %}" method="post">
                     {% csrf_token %}
                     <div class="text-center mb-10">
-                        <h2 class="text-dark mb-3">We've sent you a link on WhatsApp, please click it to complete login.</h1>
+                        <h2 class="text-dark mb-3">We've sent you a WhatsApp message, please reply 'yes' to complete login.</h1>
                     </div>
                     <div class="fv-row mb-3">
                         <label for="whatsapp_phone_number_disabled" class="form-label fs-6 fw-bolder text-dark">Your WhatsApp Phone Number</label>
@@ -54,7 +54,7 @@
 
 var login_link__counter = function () {
     var start_counter = function() {
-        var counter = 1; // Seconds (begins as 60 in HTML)
+        var counter = 59; // Seconds (begins as 60 in HTML)
         var set_interval = setInterval(function() {
             $('#login_link__counter_seconds').html('' + counter);
             counter--;
