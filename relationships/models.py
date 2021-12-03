@@ -226,7 +226,7 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    phone_number = models.ForeignKey(
+    phone_number = models.OneToOneField(
         'PhoneNumber',
         related_name='user',
         related_query_name='user',

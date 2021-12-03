@@ -49,7 +49,7 @@ class LeadDetailAccessAdmin(comadm.StandardAdmin):
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _saved_lead_fields})]
+        [('Details', {'fields': _lead_detail_access_fields})]
     autocomplete_fields = ['lead', 'accessor']
 
 _contact_request_fields = ['response', 'contactor', 'lead', 'message']
@@ -64,5 +64,5 @@ class ContactRequestAdmin(comadm.StandardAdmin):
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _saved_lead_fields})]
+        [('Details', {'fields': _contact_request_fields})]
     autocomplete_fields = ['contactor', 'lead']

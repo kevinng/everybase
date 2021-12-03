@@ -155,59 +155,85 @@ def lead_detail(request, uuid):
     if request.method == 'POST':
         form = forms.ContactForm(request.POST)
         if form.is_valid():
-            message = form.cleaned_data.get('message')
-
             if is_connected(request.user.user, lead):
+                # Users are already connected - direct to WhatsApp.
+
                 # Set message as a GET parameter
+                message = form.cleaned_data.get('message')
                 request.GET._mutable = True
                 request.GET['text'] = message
 
                 # Direct user to WhatsApp with the message in body
                 HttpResponseRedirect(
                     get_create_whatsapp_link(request.user.user, lead.author))
-            else:
-                if has_contacted(request.user.user, lead):
-                    form = forms.ContactForm() # Reset form, do nothing
-                else:
-                    # Create contact request
-                    sgtz = pytz.timezone(settings.TIME_ZONE)
-                    now = datetime.datetime.now(tz=sgtz)
-                    request = models.ContactRequest.objects.create(
-                        requested=now,
-                        contactor=request.user.user,
-                        lead=lead,
-                        message=message
-                    )
+            elif not has_contacted(request.user.user, lead):
+                # User should not be able to send a post request if he has
+                # already contacted the lead owner. Users are not connected
+                # and requester have not contacted this lead before.
 
-                    # TODO: 
-                    # Contact lead author
-                    # tasks.contact_lead_author.delay(request.uuid)
+                # Create contact request
+                message = form.cleaned_data.get('message')
+                contact_request = models.ContactRequest.objects.create(
+                    contactor=request.user.user,
+                    lead=lead,
+                    message=message
+                )
 
-                    # Reset form
-                    form = forms.ContactForm()
+                # TODO: 
+                # Contact lead author
+                # tasks.contact_lead_author.delay(request.uuid)
 
-                    # Add message
-                    messages.info(request, "Message sent. We'll notify you if \
-the author agrees to exchange contacts with you.")
+                # Add message
+                messages.info(request, "Message sent. We'll notify you if the \
+author agrees to exchange contacts with you.")
     else:
         # Update analytics
-        lead = models.Lead.objects.get(uuid=uuid)
         try:
-            access = models.LeadDetailAccess.objects.get(lead=lead)
+            access = models.LeadDetailAccess.objects.get(
+                lead=lead,
+                accessor=request.user.user
+            )
             access.access_count += 1
             access.save()
         except models.LeadDetailAccess.DoesNotExist:
             access = models.LeadDetailAccess.objects.create(
                 lead=lead,
-                access_count=1,
-                accessor=request.user.user
+                accessor=request.user.user,
+                access_count=1
             )
 
-        form = forms.ContactForm()
+        if is_connected(request.user.user, lead):
+            # Users are already connected, show an empty form which will allow
+            # the requester to WhatsApp the lead author directly.
+            contact_request = None
+            form = forms.ContactForm()
+        elif has_contacted(request.user.user, lead):
+            # Users are not connected but requester have contacted this
+            # lead before. Users are not connected but requester have contacted
+            # this lead before.
+        
+            # Get contact request
+            contact_request = models.ContactRequest.objects.get(
+                contactor=request.user.user,
+                lead=lead
+            )
+
+            # Show message from contact request
+            form = forms.ContactForm({
+                'message': contact_request.message
+            })
+        else:
+            # User are not connected and requester have not contact lead author.
+            # Show an empty form which will allow the requester to contact the
+            # lead owner. Note: we do not merge this condition with is_connected
+            # for clarity's sake.
+            contact_request = None
+            form = forms.ContactForm()
 
     return render(request, 'leads/lead_detail.html', {
         'lead': lead,
-        'form': form
+        'form': form,
+        'contact_request': contact_request
     })
 
 def contact_request_detail(request, uuid):

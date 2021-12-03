@@ -20,6 +20,10 @@ def register(request):
     if request.method == 'POST':
         form = forms.RegisterForm(request.POST)
         if form.is_valid():
+            # Part of the form check includes checking if the phone number and
+            # email belongs to a REGISTERED user. If so, is_valid() will return
+            # False.
+
             # Parse phone number
             ph_str = form.cleaned_data.get('whatsapp_phone_number')
             parsed_ph = phonenumbers.parse(str(ph_str), None)
@@ -48,15 +52,17 @@ def register(request):
             except commods.Country.DoesNotExist:
                 country = None
 
-            # Create user
-            user = models.User.objects.create(
-                first_name=form.cleaned_data.get('first_name'),
-                last_name=form.cleaned_data.get('last_name'),
-                languages_string=form.cleaned_data.get('languages'),
-                phone_number=phone_number,
-                email=email,
-                country=country
-            )
+            # Get or create an Everybase user
+            user, _ = models.User.objects.get_or_create(
+                phone_number=phone_number)
+            # Override or set user details
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.languages_string = form.cleaned_data.get('languages')
+            user.phone_number = phone_number
+            user.email = email
+            user.country = country
+            user.save()
 
             # Create/send register confirmation
             send_register_confirm.delay(user.id)
@@ -92,23 +98,9 @@ def register_link(request, user_uuid):
         })
 
 def confirm_register(request, user_uuid):
-    # Create Django user
-    django_user, du_is_new = User.objects.get_or_create(username=user_uuid)
+    try:
+        django_user = User.objects.get(username=user_uuid)
 
-    # Get Everybase user
-    if du_is_new:
-        # Set unusable password for Django user and save
-        django_user.set_unusable_password()
-        django_user.save()
-
-        # Update user profile
-        sgtz = pytz.timezone(settings.TIME_ZONE)
-        user = models.User.objects.get(uuid=user_uuid)
-        user.registered = datetime.now(sgtz)
-        user.django_user = django_user
-        user.save()
-
-    if django_user is not None:
         # Authenticate user
         in_user = authenticate(django_user.username)
         if in_user is not None:
@@ -116,12 +108,15 @@ def confirm_register(request, user_uuid):
             login(request, in_user)
         else:
             capture_message('User not able to log in after registration. Django\
-    user ID: %d, user ID: %d' % (django_user.id, user.id), level='error')
+user ID: %d, user ID: %d' % (django_user.id, django_user.user.id), 
+            level='error')
 
         messages.info(request, 'Welcome %s, your registration is complete.' % \
-            in_user.user.first_name)
+            django_user.user.first_name)
         
         return JsonResponse({'logged_in': True})
+    except User.DoesNotExist:
+        pass # User has not confirmed registration
 
     return JsonResponse({'logged_in': False})
 

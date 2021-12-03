@@ -3,6 +3,7 @@
 {% load static %}
 {% load has_contacted %}
 {% load is_connected %}
+{% load is_lead_owner %}
 
 {% block subtitle %}{{ lead.title }} | {% endblock %}
 
@@ -26,6 +27,9 @@
 {% endblock %} {% endcomment %}
 
 {% block content %}
+{% has_contacted request.user.user lead as has_contacted %}
+{% is_connected request.user.user lead as is_connected %}
+{% is_lead_owner request.user.user lead as is_lead_owner %}
 
 <!--begin::Container-->
 <div id="kt_content_container" class="container-xxl">
@@ -38,14 +42,11 @@
                 <div class="card-body">
                     <div class="d-flex flex-column align-items-center my-5">
                         <!--begin::Avatar-->
-                        {% comment %}
-                        <div class="symbol symbol-circle symbol-70px">
+                        {% comment %} <div class="symbol symbol-circle symbol-70px">
                             <img alt="Logo" src="{% static 'common/assets/media/avatars/150-26.jpg' %}" />
-                        </div>
-                        {% endcomment %}
-
+                        </div> {% endcomment %}
                         <div class="symbol symbol-circle symbol-70px">
-                            <a><div class="symbol-label fs-2 bg-warning text-light">{{ lead.author.first_name|make_list|first }}{{ lead.author.last_name|make_list|first }}</div></a>
+                            <div class="symbol-label fs-2 bg-warning text-light">{{ lead.author.first_name|make_list|first }}{{ lead.author.last_name|make_list|first }}</div>
                         </div>
                         <!--end::Avatar-->
                     </div>
@@ -62,19 +63,14 @@
                         <div class="text-gray-600">{{ lead.author.languages_string|title }}</div> {% endcomment %}
                     </div>
 
+                    {% if not is_lead_owner %}
                     <form action="{% url 'leads:detail' lead.uuid %}" method="POST">
                     {% csrf_token %}
 
                     <div class="d-flex flex-column align-items-center mt-5">
-                        <!-- TODO: put a 140 character limit -->
-                        <textarea class="form-control" rows="3" placeholder="Enter message" data-kt-autosize="true" {% if has_contacted and not is_connected %}disabled{% endif %}></textarea>
+                        <textarea name="message" class="form-control" rows="3" placeholder="Enter message" data-kt-autosize="true" {% if has_contacted and not is_connected %}disabled="true"{% endif %}>{% if form.message.value %}{{ form.message.value }}{% endif %}</textarea>
                     </div>
 
-                    <!-- TODO: integrate ReCaptcha 3, it doesn't have any UI -->
-                    <!-- block UI https://preview.keenthemes.com/metronic8/demo1/documentation/general/blockui.html -->
-
-                    {% has_contacted request.user.user lead as has_contacted %}
-                    {% is_connected request.user.user lead as is_connected %}
                     <div class="d-flex flex-column align-items-center mt-5">
                         <button class="btn btn-sm btn-success col-12" {% if has_contacted and not is_connected %}disabled{% endif %}>WhatsApp</button>
                         <span class="mt-2">We'll send you the user's WhatsApp contact when the user has agreed to connect with you.</span>
@@ -84,6 +80,7 @@
                     <!--end::Error message-->
 
                     </form>
+                    {% endif %}
                 </div>
             </div>
 		</div>

@@ -74,31 +74,16 @@ def save_message(request):
     (from_phone_number, from_ph_is_new) = \
         get_or_create_phone_number(from_raw_number)
 
-    from_usr_is_new = False
-    from_user = relmods.User.objects.filter(
-        phone_number=from_phone_number, # User has from phone number
-        registered__isnull=False, # User is registered
-        django_user__isnull=False # User has a Django user linked
-    ).first()
-
-    if from_user is None:
-        from_user = relmods.User.objects.create(phone_number=from_phone_number)
-        from_usr_is_new = True
+    # from_usr_is_new = False
+    from_user, from_usr_is_new = relmods.User.objects.get_or_create(
+        phone_number=from_phone_number)
 
     _, to_raw_number = parse_twilio_phone_number(message.to_str)
     (to_phone_number, to_ph_is_new) = \
         get_or_create_phone_number(to_raw_number)
 
-    to_usr_is_new = False
-    to_user = relmods.User.objects.filter(
-        phone_number=to_phone_number, # User has to phone number
-        registered__isnull=False, # User is registered
-        django_user__isnull=False # User has a Django user linked
-    ).first()
-
-    if to_user is None:
-        to_user = relmods.User.objects.create(phone_number=to_phone_number)
-        to_usr_is_new = True
+    to_user, to_usr_is_new = relmods.User.objects.get_or_create(
+        phone_number=from_phone_number)
 
     # Update message with users and phone numbers
 
