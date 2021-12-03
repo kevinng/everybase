@@ -121,13 +121,15 @@ def create_lead(request):
             )
 
             # Associate file with lead
-            file_datas = json.loads(form.cleaned_data.get('files'))
-            for file_data in file_datas:
-                uuid, _, filename = file_data
-                file = fimods.File.objects.get(uuid=uuid)
-                file.lead = lead
-                file.filename = filename
-                file.save()
+            files = form.cleaned_data.get('files')
+            if files.lower().strip() != '':
+                file_datas = json.loads(files)
+                for file_data in file_datas:
+                    uuid, _, filename = file_data
+                    file = fimods.File.objects.get(uuid=uuid)
+                    file.lead = lead
+                    file.filename = filename
+                    file.save()
             
             messages.info(request, 'Your lead has been posted.')
 
