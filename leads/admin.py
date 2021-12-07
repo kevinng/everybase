@@ -66,3 +66,19 @@ class ContactRequestAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _contact_request_fields})]
     autocomplete_fields = ['contactor', 'lead']
+
+_filter_form_post_fields = ['title', 'details', 'is_buying', 'is_selling',
+'is_direct', 'is_agent', 'user_country', 'lead_country', 'is_initial_deposit',
+'is_goods_shipped', 'is_payment_received', 'is_goods_received', 'is_others',
+'user']
+@admin.register(models.FilterFormPost)
+class FilterFormPostAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _filter_form_post_fields
+    list_editable = comadm.standard_list_editable + _filter_form_post_fields
+    search_fields = comadm.standard_search_fields + _filter_form_post_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _filter_form_post_fields})]
+    autocomplete_fields = ['user']

@@ -82,8 +82,8 @@ def register_link(request, user_uuid):
         user = None
 
     if request.method == 'POST':
+        # Resend message
 
-        # Resend token via WhatsApp
         send_register_confirm.delay(user.id)
         
         return HttpResponseRedirect(
@@ -142,23 +142,74 @@ def log_in(request):
                     django_user__isnull=False # User has a Django user linked
                 ).first()
 
+                next_url = form.cleaned_data.get('next')
+
+                # If there is an activated, unexpired login token, log the user
+                # in immediately without requiring the user to request for
+                # another token.
+                token = models.LoginToken.objects.filter(
+                    user=user.id,
+                    activated__isnull=False # Token is activated
+                ).order_by('-created').first()
+
+                if token is not None:
+                    expiry_datetime = token.created + timedelta(
+                        seconds=settings.LOGIN_TOKEN_EXPIRY_SECS)
+                    sgtz = pytz.timezone(settings.TIME_ZONE)
+                    if datetime.now(tz=sgtz) < expiry_datetime and \
+                        user.django_user is not None and \
+                        token.activated is not None:
+                        # Token not expired, user is registered, token is 
+                        # activated - log the user in immediately without
+                        # requesting for another token.
+
+                        # Log the user in.
+                        django_user = user.django_user
+                        in_user = authenticate(django_user.username)
+                        if in_user is not None:
+                            # Authentication successful, log the user in
+                            login(request, in_user, backend=\
+                                'relationships.auth.backends.DirectBackend')
+
+                        if next_url is not None and next_url.strip() != '':
+                            return HttpResponseRedirect(next_url)
+                        
+                        return HttpResponseRedirect(reverse('leads__root:list'))
+
                 send_login_confirm.delay(user.id)
 
-                return HttpResponseRedirect(
-                    reverse('relationships:login_link',
-                        kwargs={'user_uuid': user.uuid}))
+                login_link_url = reverse('relationships:login_link',
+                    kwargs={'user_uuid': user.uuid})
+
+                if next_url is not None:
+                    login_link_url += f'?next={next_url}'
+
+                response = HttpResponseRedirect(login_link_url)
+
+                return response
             except (models.User.DoesNotExist, models.PhoneNumber.DoesNotExist):
                 messages.info(request, 'Account not found. Create a new \
 account.')
     else:
         form = forms.LoginForm()
 
-    return render(request, 'relationships/login.html', {'form': form})
+    params = {'form': form}
+
+    # Read 'next' URL from GET parameters to form input. We'll add it to the
+    # redirect URL when the user submits this form.
+    next = request.GET.get('next')
+    if next is not None:
+        params['next'] = next
+
+    return render(request, 'relationships/login.html', params)
 
 def log_in_link(request, user_uuid):
     user = models.User.objects.get(uuid=user_uuid)
 
     if request.method == 'POST':
+        # Resend message
+
+        # Note: we use the same LoginForm class as the log_in view.
         form = forms.LoginForm(request.POST)
         if form.is_valid():
             # Parse phone number
@@ -184,36 +235,51 @@ def log_in_link(request, user_uuid):
                 return HttpResponseRedirect(
                     reverse('relationships:login_link',
                         kwargs={'user_uuid': user.uuid}))
+                
             except (models.User.DoesNotExist, models.PhoneNumber.DoesNotExist):
                 pass # Not possible
 
-    return render(request,
-        'relationships/login_link.html', {
-            'user_uuid': user_uuid,
-            'country_code': user.phone_number.country_code,
-            'national_number': user.phone_number.national_number
-        })
+    params = {
+        'user_uuid': user_uuid,
+        'country_code': user.phone_number.country_code,
+        'national_number': user.phone_number.national_number
+    }
+
+    # Read 'next' URL from GET parameters to form input. We'll add it to the
+    # redirect URL when the user submits this form.
+    next = request.GET.get('next')
+    if next is not None:
+        params['next'] = next
+
+    return render(request, 'relationships/login_link.html', params)
 
 def confirm_log_in(request, user_uuid):
+    """This view is polled by the login_link template periodically to check
+    if the user has successfully logged in. If so - log the user in."""
+
     user = models.User.objects.get(uuid=user_uuid)
 
-    # Only the latest token is used
     token = models.LoginToken.objects.filter(
         user=user.id,
         activated__isnull=False # Token is activated
     ).order_by('-created').first()
     
-    if token:
+    if token is not None:
         expiry_datetime = token.created + timedelta(
             seconds=settings.LOGIN_TOKEN_EXPIRY_SECS)
         sgtz = pytz.timezone(settings.TIME_ZONE)
-        if datetime.now(tz=sgtz) < expiry_datetime:
-            # Token has not expired, log the user in
+        if datetime.now(tz=sgtz) < expiry_datetime and \
+            user.django_user is not None and \
+            token.activated is not None:
+            # Token not expired, user is registered, token is activated - log
+            # the user in.
+
             django_user = user.django_user
+
             # Authenticate user
             in_user = authenticate(django_user.username)
             if in_user is not None:
-                # Authentication successful, log user in
+                # Authentication successful, log the user in
                 login(request, in_user, backend=\
                     'relationships.auth.backends.DirectBackend')
                 return JsonResponse({'logged_in': True})

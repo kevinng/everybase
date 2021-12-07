@@ -81,10 +81,9 @@ var register_link__poll_status = function() {
         var set_interval = setInterval(function() {
             // Get register token and ascertain if it has been activated
             $.get("{% url 'relationships:confirm_register' user_uuid %}", function(data) {
-                console.log(data);
-
                 if (data['logged_in'] == true) {
-                    window.location.replace("{% url 'leads__root:list' %}");
+                    next = {% if next is not None %}'{{ next }}'{% else %}"{% url 'leads__root:list' %}"{% endif %}
+                    window.location.replace(next);
                 }
             });
             counter--;

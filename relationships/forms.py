@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.db.models.fields import CharField
 
 from . import models
 
@@ -114,11 +115,8 @@ direct/agent.')
         return self.cleaned_data
 
 class VerifyWhatsAppNumberForm(forms.Form):
-    whatsapp_phone_number = PhoneNumberField(
-        required=True
-    )
+    whatsapp_phone_number = PhoneNumberField(required=True)
 
 class LoginForm(forms.Form):
-    whatsapp_phone_number = PhoneNumberField(
-        required=True
-    )
+    whatsapp_phone_number = PhoneNumberField(required=True)
+    next = forms.CharField(required=False)

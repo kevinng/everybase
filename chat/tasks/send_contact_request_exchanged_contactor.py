@@ -35,7 +35,7 @@ def send_contact_request_exchanged_contactor(
     lead = contact_request.lead
 
     done_to_context(
-        lead.author,
+        contactor,
         intents.CONTACT_REQUEST,
         messages.CONTACT_REQUEST__EXCHANGED_CONTACTOR
     )
@@ -60,7 +60,7 @@ def send_contact_request_exchanged_contactor(
     return send_message(
         render_message(messages.CONTACT_REQUEST__EXCHANGED_CONTACTOR, params),
         chatbot,
-        lead.author,
+        contactor,
         intents.CONTACT_REQUEST,
         messages.CONTACT_REQUEST__EXCHANGED_CONTACTOR,
         None,

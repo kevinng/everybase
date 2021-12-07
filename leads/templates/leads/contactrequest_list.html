@@ -11,7 +11,7 @@
 <!--begin::Container-->
 <div id="kt_content_container" class="container-xxl">
 	<div class="row">
-        {% if page_obj.paginator.count == 0 %}You do not have any contact requests.{% endif %}
+        {% if page_obj.paginator.count == 0 %}<div class="col-1"></div><div class="col-10">You do not have any contact requests.</div><div class="col-1"></div>{% endif %}
 
         {% for contact_request in page_obj %}
 
@@ -31,33 +31,34 @@
                     </div>
 
                     <div class="d-flex flex-column align-items-center mb-5">
-                        <div class="fw-bolder fs-4">{{ contact_request.contactor.first_name }} {{ contact_request.contactor.last_name }}</div>
+                        <div class="fw-bolder fs-4">{{ contact_request.contactor.first_name|title }} {{ contact_request.contactor.last_name|title }}, {{ contact_request.contactor.country.name }}</div>
                         <div class="fw-bold fs-7 text-muted">{{ contact_request.create_now_difference_display_text }}</div>
                     </div>
 
-                    <div class="fs-6 my-5">
+                    {% comment %} <div class="fs-6 my-5">
                         <div class="fw-bolder mt-5">Country</div>
                         <div class="text-gray-600">{{ contact_request.contactor.country.name }}</div>
                         <div class="fw-bolder mt-5">Your Lead</div>
                         <div><a href="{% url 'leads:detail' contact_request.lead.uuid %}">{{ contact_request.lead.title }}</a></div>
                         <div class="fw-bolder mt-5">Message</div>
                         <div>{{ contact_request.message }}</div>
-                    </div>
+                    </div> {% endcomment %}
 
                 </div>
                 <div class="card-footer">
-                    {% if contact_request.response is None %}
+                    <a href="{% url 'leads__root:contact_request_detail' contact_request.uuid %}" class="btn btn-outline btn-outline-primary btn-active-color-white col-12 mb-2">Details</a>
+                    {% comment %} {% if contact_request.response is None %} {% endcomment %}
                     {% comment %} This should be an ajax call {% endcomment %}
                     {% comment %} We can add an onclick call that calls the {% endcomment %}
-                        <a href="" class="btn btn-success col-12 mb-2">Exchange Contacts</a>
-                    {% elif contact_request.response == 'accept' %}
+                        {% comment %} <a href="" class="btn btn-outline btn-outline-primary btn-active-color-white col-12 mb-2">Exchange Contacts</a> {% endcomment %}
+                    {% comment %} {% elif contact_request.response == 'accept' %} {% endcomment %}
                     {% comment %} Add a link for this user to whatsapp the counterparty {% endcomment %}
                     {% comment %} For now, only the lead author can contact the contactor {% endcomment %}
                     {% comment %} This view is only for lead owners {% endcomment %}
                     {% comment %} So the whatsapp link is for contact owners on that lead {% endcomment %}
                     {% comment %} the whatsapp link can be linked to a contact request? {% endcomment %}
-                        <a href="" class="btn btn-outline btn-outline-success btn-active-color-white col-12 mb-2">WhatsApp</a>
-                    {% endif %}
+                        {% comment %} <a href="" class="btn btn-outline btn-outline-success btn-active-color-white col-12 mb-2">WhatsApp</a> {% endcomment %}
+                    {% comment %} {% endif %} {% endcomment %}
                     {% comment %} <button class="btn btn-secondary col-12">Delete</button> {% endcomment %}
                 </div>
             </div>

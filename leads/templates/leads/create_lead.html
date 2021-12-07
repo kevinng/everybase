@@ -4,7 +4,7 @@
 
 {% block body_top %}
 
-<form action="{% url 'leads:create' %}" method="post">
+<form action="{% url 'leads:create' %}" method="post" id="lead_form">
 {% csrf_token %}
 
 {% endblock %}
@@ -16,13 +16,38 @@
 {% block actions %}
 
 <a href="{% url 'leads__root:list' %}" class="btn btn-sm btn-secondary me-2">Cancel</a>
-<button type="submit" class="btn btn-sm btn- btn-primary" id="create_lead__secondary_submit">Post This Lead</a>
+<button type="submit" class="btn btn-sm btn- btn-primary g-recaptcha" id="create_lead__secondary_submit" data-sitekey="6LeW03UdAAAAAIr_q-7C1NvI-BLMWRegSHF0Ya61" data-callback="onSubmit" data-action="submit">Post This Lead</a>
 
 {% endblock %}
 
 {% block content %}
 
 <div id="kt_content_container" class="container-xxl">
+
+    {% if messages %}
+		{% for message in messages %}
+
+	<div class="row">
+		<!--begin::Alert-->
+		<div class="alert alert-dismissible bg-light-info border border-info d-flex flex-column flex-sm-row p-5 mb-10">
+			<!--begin::Wrapper-->
+			<div class="d-flex flex-column pe-0 pe-sm-10">
+				<h5>{{ message }}</h5>
+			</div>
+			<!--end::Wrapper-->
+
+			<!--begin::Close-->
+			<button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+				<i class="bi bi-x fs-1 text-info"></i>
+			</button>
+			<!--end::Close-->
+		</div>
+		<!--end::Alert-->
+	</div>
+
+		{% endfor %}
+	{% endif %}
+
 	<div class="row form">
         <div class="col-lg-2"></div>
         <div class="col-lg-8">
@@ -181,13 +206,8 @@
                 <!--end::Action-->
 
             </div>
-            <div class="row">
-                <!-- integrate recaptcha -->
-                <div class="col-1"></div>
-                <a href="{% url 'leads__root:list' %}" class="btn btn-secondary col-5 me-2">Cancel</a>
-                <button type="submit" class="btn btn-primary col-5" id="create_lead__main_submit">Post Lead</button>
-                <div class="col-1"></div>
-            </div>
+            <div class="row"><button type="submit" class="btn btn-primary col-12 g-recaptcha" id="create_lead__main_submit" data-sitekey="6LeW03UdAAAAAIr_q-7C1NvI-BLMWRegSHF0Ya61" data-callback="onSubmit" data-action="submit">Post Lead</button></div>
+            <div class="row mt-3"><a href="{% url 'leads__root:list' %}" class="btn btn-secondary col-12 me-2">Cancel</a></div>
         </div>
         <div class="col-lg-2"></div>
     </div>
@@ -203,7 +223,13 @@
 
 {% block page_custom_script %}
 
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
 <script type="text/javascript">
+
+function onSubmit(token) {
+    document.getElementById("lead_form").submit();
+}
 
 var create_lead__add_file = function() {
 

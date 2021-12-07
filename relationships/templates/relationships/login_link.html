@@ -9,7 +9,7 @@
         <!--begin::Content-->
         <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
             <!--begin::Logo-->
-            <a href="../../demo1/dist/index.html" class="mb-12">
+            <a href="https://everybase.co" class="mb-12">
                 <img alt="Logo" src="{% static 'common/assets/media/logos/plain-logo.png' %}" class="h-40px" />
             </a>
             <!--end::Logo-->
@@ -18,6 +18,7 @@
                 <!--begin::Form-->
                 <form class="form w-100" action="{% url 'relationships:login_link' user_uuid %}" method="post">
                     {% csrf_token %}
+                    {% if next is not None %}<input type="hidden" name="next" value="{{ next }}"/>{% endif %}
                     <div class="text-center mb-10">
                         <h2 class="text-dark mb-3">We've sent you a WhatsApp message, please reply 'yes' to complete login.</h1>
                     </div>
@@ -29,15 +30,15 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-lg btn-success w-100 mb-5" disabled="true" id="login_link__resend_button">
+                        <button type="submit" class="btn btn-lg btn-success w-100 mb-5" id="login_link__resend_button">
                             Resend Link via WhatsApp
                         </button>
                     </div>
-                    <div class="row">
+                    {% comment %} <div class="row">
                         <div class="col-12">
                             Wait <span class="text-light-info fw-bolder bg-info" id="login_link__counter_seconds">60</span> seconds to resend link.
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </form>
                 <!--end::Form-->
             </div>
@@ -53,9 +54,9 @@
 <script type="text/javascript">
 
 var login_link__counter = function () {
-    var start_counter = function() {
+    var start_counter = function () {
         var counter = 59; // Seconds (begins as 60 in HTML)
-        var set_interval = setInterval(function() {
+        var set_interval = setInterval(function () {
             $('#login_link__counter_seconds').html('' + counter);
             counter--;
             if (counter < 0) {
@@ -72,20 +73,19 @@ var login_link__counter = function () {
     }
 }();
 
-var login_link__poll_status = function() {
+var login_link__poll_status = function () {
     var start_poll = function () {
         var counter = 500; // Poll for 33.3 minutes at most (500 * 4s = 33.3 mins)
-        var set_interval = setInterval(function() {
+        var set_interval = setInterval(function () {
             // Get login token and ascertain if it has been activated
-            $.get("{% url 'relationships:confirm_login' user_uuid %}", function(data) {
+            $.get("{% url 'relationships:confirm_login' user_uuid %}", function (data) {
                 if (data['logged_in'] == true) {
-                    window.location.replace("{% url 'leads__root:list' %}");
+                    next = {% if next %}'{{ next }}'{% else %}"{% url 'leads__root:list' %}"{% endif %}
+                    window.location.replace(next);
                 }
+                console.log(data)
             });
             counter--;
-            if (counter < 0) {
-                clearInterval(set_interval); // Stop this counter
-            }
         }, 4000); // Poll every 4 seconds
     }
 
@@ -97,7 +97,7 @@ var login_link__poll_status = function() {
 }();
 
 jQuery(document).ready(function () {
-    login_link__counter.init();
+    // login_link__counter.init();
     login_link__poll_status.init();
 });
 

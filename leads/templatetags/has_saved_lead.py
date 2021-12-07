@@ -1,5 +1,5 @@
 from django import template
-from leads.libraries.utility_funcs.has_saved_lead import has_saved_lead as f
+from leads.utilities.has_saved_lead import has_saved_lead as f
 
 register = template.Library()
 

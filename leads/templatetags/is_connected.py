@@ -1,5 +1,5 @@
 from django import template
-from leads.libraries.utility_funcs.is_connected import is_connected as f
+from leads.utilities.is_connected import is_connected as f
 
 register = template.Library()
 

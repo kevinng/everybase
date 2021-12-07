@@ -5,9 +5,13 @@ from urllib.parse import urljoin
 from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from rest_framework.views import APIView
 
+from django_ratelimit.decorators import ratelimit
+
 from everybase import settings
+
 from chat import models
 from chat.utilities.save_message_log import save_message_log
 from chat.utilities.save_message_medias import save_message_medias
@@ -19,7 +23,12 @@ from chat.utilities.save_status_callback_log import save_status_callback_log
 from chat.tasks.copy_post_request_data import copy_post_request_data
 
 from relationships import models as relmods
-from relationships.utilities import get_non_tracking_whatsapp_link
+from relationships.utilities.get_non_tracking_whatsapp_link import \
+    get_non_tracking_whatsapp_link
+from relationships.utilities.get_create_whatsapp_link import \
+    get_create_whatsapp_link
+
+from leads import models as lemods
 
 from amplitude.tasks.send_event import send_event
 from amplitude.constants import event
@@ -155,13 +164,7 @@ class TwilioIncomingStatusView(APIView):
 
 def redirect_whatsapp_phone_number(request, id):
     """Redirects user from our short tracking URL to WhatsApp"""
-
-    try:
-        hash = relmods.PhoneNumberHash.objects.get(pk=id)
-    except relmods.PhoneNumberHash.DoesNotExist as err:
-        sentry_sdk.capture_exception(err)
-        # TODO: move this file back in, and use rendered paths
-        return render(request, 'chat/pages/error.html', {})
+    hash = relmods.PhoneNumberHash.objects.get(pk=id)
     
     # TODO: we need to update this call
     # Make Amplitude call
@@ -179,8 +182,20 @@ def redirect_whatsapp_phone_number(request, id):
     response = HttpResponse(status=302) # Temporary redirect
     response['Location'] = get_non_tracking_whatsapp_link(
         hash.phone_number.country_code,
-        hash.phone_number.national_number,
-        request.GET.get('text')
+        hash.phone_number.national_number
     )
+
+    return response
+
+@login_required
+@ratelimit(key='ip', rate='100/h')
+def whatsapp_lead_author(request, lead_uuid):
+    lead = lemods.Lead.objects.get(uuid=lead_uuid)
+    whatsapp_link = get_create_whatsapp_link(request.user.user, lead.author)
+    
+    # Note: we use temporary redirects so search engines do not associate our
+    # URLs with WhatsApp phone number links
+    response = HttpResponse(status=302) # Temporary redirect
+    response['Location'] = whatsapp_link
 
     return response

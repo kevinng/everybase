@@ -3,6 +3,8 @@ from django.db import models
 
 from common.models import Standard
 from files import models as fimods
+from relationships.utilities.get_create_whatsapp_link import \
+    get_create_whatsapp_link
 
 class Lead(Standard):
     """Lead.
@@ -85,6 +87,18 @@ class Lead(Standard):
         null=True,
         blank=True
     )
+
+    def images(self):
+        return fimods.File.objects.filter(
+            lead=self.id,
+            file_type__icontains='image'
+        )
+
+    def documents(self):
+        return fimods.File.objects.filter(
+            lead=self.id,
+            file_type__icontains='pdf'
+        )
 
     def image_count(self):
         return fimods.File.objects.filter(
@@ -193,3 +207,91 @@ class ContactRequest(Standard):
 
     class Meta:
         unique_together = ('contactor', 'lead')
+
+class FilterFormPost(Standard):
+    """Filter form post by a user.
+
+    Last updated: 7 December 2021, 8:06 PM
+    """
+    title = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    details = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    is_buying = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_selling = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_direct = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    user_country = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    lead_country = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    is_initial_deposit = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_goods_shipped = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_payment_received = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_goods_received = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_others = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='filter_form_posts',
+        related_query_name='filter_form_posts',
+        on_delete=models.PROTECT,
+        db_index=True,
+        null=True,
+        blank=True
+    )

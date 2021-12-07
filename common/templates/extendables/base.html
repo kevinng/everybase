@@ -66,19 +66,19 @@
 										<!--begin::Menu-->
 										<div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true">
 
-											<div class="menu-item">
+											{% comment %} <div class="menu-item">
 												<a class="menu-link {% if request.resolver_match.view_name == 'leads__root:list' %}active{% endif %} py-3" href="{% url 'leads__root:list' %}">
 													<span class="menu-title">Leads</span>
 												</a>
-											</div>
+											</div> {% endcomment %}
 
-											{% if request.user.is_authenticated %}
+											{% comment %} {% if request.user.is_authenticated %}
 											<div class="menu-item">
 												<a class="menu-link {% if request.resolver_match.view_name == 'leads__root:contact_request_list' %}active{% endif %} py-3" href="{% url 'leads__root:contact_request_list' %}">
 													<span class="menu-title">Contact Requests</span>
 												</a>
 											</div>
-											{% endif %}
+											{% endif %} {% endcomment %}
 
 											{% comment %} <div data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
 												<span class="menu-link py-3">
@@ -146,7 +146,7 @@
 											{% if request.user.is_authenticated %}
 
 												<div class="cursor-pointer symbol symbol symbol-40px me-5" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-													<a><div class="symbol-label fs-3 bg-warning text-light">{{ request.user.user.first_name|make_list|first }}{{ request.user.user.last_name|make_list|first }}</div></a>
+													<a><div class="symbol-label fs-3 bg-dark text-light">{{ request.user.user.first_name|make_list|first }}{{ request.user.user.last_name|make_list|first }}</div></a>
 												</div>
 
 												<!--begin::Menu-->
@@ -163,7 +163,7 @@
 															{% endcomment %}
 
 															<div class="symbol symbol-50px me-5">
-																<a><div class="symbol-label fs-2 bg-warning text-light">{{ request.user.user.first_name|make_list|first }}{{ request.user.user.last_name|make_list|first }}</div></a>
+																<a><div class="symbol-label fs-2 bg-dark text-light">{{ request.user.user.first_name|make_list|first }}{{ request.user.user.last_name|make_list|first }}</div></a>
 															</div>
 															<!--end::Avatar-->
 															<!--begin::Username-->
@@ -195,7 +195,7 @@
 										</div>
 										<!--end::User -->
 										<!--begin::Heaeder menu toggle-->
-										<div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
+										{% comment %} <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
 											<div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px" id="kt_header_menu_mobile_toggle">
 												<!--begin::Svg Icon | path: icons/duotune/text/txt001.svg-->
 												<span class="svg-icon svg-icon-1">
@@ -206,7 +206,7 @@
 												</span>
 												<!--end::Svg Icon-->
 											</div>
-										</div>
+										</div> {% endcomment %}
 										<!--end::Heaeder menu toggle-->
 									</div>
 									<!--end::Toolbar wrapper-->

@@ -1,7 +1,6 @@
 {% extends 'extendables/base.html' %}
 
 {% load static %}
-{% comment %} {% load has_saved_lead %} {% endcomment %}
 
 {% block subtitle %}Leads | {% endblock %}
 
@@ -9,8 +8,9 @@
 
 {% block page_subtitle %}
 
-{% comment %} <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
-<small class="text-muted fs-7 fw-bold my-1 ms-1">20 leads found</small> {% endcomment %}
+{% comment %} Only show when filtering {% endcomment %}
+{% comment %} <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span> {% endcomment %}
+{% comment %} <small class="text-muted fs-7 fw-bold my-1 ms-1">{{ page_obj.paginator.count }} leads found</small> {% endcomment %}
 
 {% endblock %}
 
@@ -19,7 +19,7 @@
 	{% if request.GET|length > 0 %}
 	<a href="{% url 'leads__root:list' %}" class="btn btn-sm btn-secondary me-2">Clear Filter</a>
 	<!--begin::Have filter-->
-	<a href="#" class="btn btn-sm btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary btn-color-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads">
+	<a href="#" class="btn btn-sm btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning btn-color-warning fw-bolder" data-bs-toggle="modal" data-bs-target="#modal_filter_leads">
 		<!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
 		<span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -82,7 +82,7 @@
 		{% endfor %}
 	{% endif %}
 
-	<div class="row">
+	{% comment %} <div class="row">
 		<!--begin::Alert-->
 		<div class="alert alert-dismissible bg-light-primary border border-primary d-flex flex-column flex-sm-row p-5 mb-10">
 			<!--begin::Wrapper-->
@@ -103,7 +103,7 @@
 			<!--end::Close-->
 		</div>
 		<!--end::Alert-->
-	</div>
+	</div> {% endcomment %}
 
 	{% if lead_list %}
 
@@ -115,11 +115,12 @@
 			<div class="card card-flush shadow-sm">
 				<div class="card-header ribbon ribbon-top">
 					{% if lead.lead_type == 'selling' %}
-						<div class="ribbon-label bg-danger">Selling</div>
+						<div class="ribbon-label bg-danger">Seller, {% if lead.author_type == 'broker' %}Agent{% elif lead.author_type == 'direct' %}Direct{% endif %}</div>
 					{% elif lead.lead_type == 'buying' %}
-						<div class="ribbon-label bg-success">Buying</div>
+						<div class="ribbon-label bg-info">Buyer, {% if lead.author_type == 'broker' %}Agent{% elif lead.author_type == 'direct' %}Direct{% endif %}</div>
 					{% endif %}
-					<a href="{% url 'leads:detail' lead.uuid %}"><h3 class="text-hover-primary card-title mt-15">{{ lead.title }}</h3></a>
+					{% comment %} <a href="{% url 'leads:detail' lead.uuid %}"><h3 class="text-hover-primary card-title mt-15">{{ lead.title }}</h3></a> {% endcomment %}
+					<h3 class="card-title mt-15">{{ lead.title }}</h3>
 				</div>
 				<div class="card-body">
 
@@ -132,38 +133,61 @@
 							</div>
 						{% endcomment %}
 						<div class="symbol symbol symbol-40px me-3">
-							<div class="symbol-label fs-3 bg-warning text-light">{{ lead.author.first_name|make_list|first }}{{ lead.author.last_name|make_list|first }}</div>
+							<div class="symbol-label fs-3 bg-dark text-light">{{ lead.author.first_name|make_list|first }}{{ lead.author.last_name|make_list|first }}</div>
 						</div>
 						<div class="d-flex flex-column">
-							<div><span class="fw-bolder fs-5 me-2">{{ lead.author.first_name }} {{ lead.author.last_name }}</span>{% if lead.author_type == 'broker' %}<span class="badge badge-info fs-9">Agent</span>{% elif lead.author_type == 'direct' %}<span class="badge badge-dark fs-9">Direct</span>{% endif %}</div>
+							<div><span class="fw-bolder fs-5 me-2">{{ lead.author.first_name }} {{ lead.author.last_name }}</span></div>
+							{% comment %} {% if lead.author_type == 'broker' %}<span class="badge badge-info fs-9">Agent</span>{% elif lead.author_type == 'direct' %}<span class="badge badge-dark fs-9">Direct</span>{% endif %} {% endcomment %}
 							<div class="fw-bold text-muted fs-7">{{ lead.author.country_from_phone_number.name }}, {{ lead.create_now_difference_display_text }}</div>
 						</div>
 						<!--end::Username-->
 					</div>
 
 					{% if lead.image_count > 0 %}
-					<!--begin::Images-->
-					<div class="d-flex mb-7">
-						{% for file in lead.files.all|slice:":3" %}
-							{% if 'pdf' not in file.file_type %}
-								<img alt="img" style="object-fit: cover; width: 100px" class="rounded h-75px me-3" src="{% url "files:get_file" file.uuid %}" />
-							{% endif %}
-						{% endfor %}
+					{% for file in lead.images.all %}
+						{% if forloop.counter0|divisibleby:3 %}
+						{% comment %} yes no no yes no no ... {% endcomment %}
+						<div class="d-flex mb-2">
+						{% endif %}
+							<a href="{% url "files:get_file" file.uuid %}" target="{% url "files:get_file" file.uuid %}"><img alt="img" style="object-fit: cover; width: 100px" class="rounded h-75px me-3" src="{% url "files:get_file" file.uuid %}" /></a>
+						{% if forloop.counter|divisibleby:3 or forloop.last %}
+						{% comment %} no no yes no no yes ... {% endcomment %}
+						</div>
+						{% endif %}
+					{% endfor %}
+					{% endif %}
+
+					{% if lead.document_count > 0 %}
+					<div class="fw-bolder fs-6 mt-5">Documents</div>
+					<div class="fs-6 mb-5">
+						<ul>
+							{% for file in lead.documents.all %}
+							<li><a href="{% url "files:get_file" file.uuid %}" target="{% url "files:get_file" file.uuid %}">{{ file.filename }}</a></li>
+							{% endfor %}
+						</ul>
 					</div>
-					<!--end::Images-->
 					{% endif %}
 
 					<div class="fw-bolder fs-6">Commission</div>
 					<div class="fs-6 mb-5">{{ lead.commission_pct }}%</div>
 
+					<div class="fw-bolder fs-6">Commission Payable After</div>
+					<div class="fs-6 mb-5">{{ lead.get_commission_payable_after_display|title }}</div>
+
+					<div class="fw-bolder fs-6">Other Commission Details</div>
+					<div class="fs-6 mb-5">{{ lead.other_commission_details }}</div>
+
 					<div class="fw-bolder fs-6">{% if lead.lead_type == 'buying' %}Destination{% elif lead.lead_type == 'selling' %}Source{% endif %} Country</div>
 					<div class="fs-6 mb-5">{{ lead.country.name }}</div>
 
-					<div class="fs-6 fw-bold text-gray-600">{{ lead.details|slice:':80' }}{% if lead.details.length > 80 %}...{% endif %}</div>
+					{% comment %} <div class="fw-bolder fs-6">Details</div>
+					<div class="fs-6 mb-5">Buyer Received Goods/Services</div> {% endcomment %}
+
+					<div class="fs-6 fw-bold text-gray-600">{{ lead.details }}</div>
 				</div>
 				<div class="card-footer">
 					<div class="d-flex flex-stack flex-wrapr">
-						<div class="d-flex flex-stack">
+						{% comment %} <div class="d-flex flex-stack">
 							<div class="border border-dashed border-gray-300 rounded py-2 px-3 me-2">
 								<!--begin::Svg Icon | path: icons/duotune/communication/com008.svg-->
 								<span class="svg-icon svg-icon-3">
@@ -177,24 +201,25 @@
 							</div>
 						</div>
 
-						<div class="separator"></div>
+						<div class="separator"></div> {% endcomment %}
 
-						{% comment %} <div class="d-flex flex-stack">	
-							{% has_saved_lead request.user.user lead as has_saved_lead %}
-							{% if has_saved_lead %}
-								<button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
+						<div class="d-flex flex-stack">	
+							<a href="{% url 'chat__root:whatsapp_lead_author' lead.uuid %}" target="{{ lead.uuid }}" class="btn btn-success">WhatsApp</a>
+							{% comment %} {% has_saved_lead request.user.user lead as has_saved_lead %} {% endcomment %}
+							{% comment %} {% if has_saved_lead %} {% endcomment %}
+								{% comment %} <button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
 									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
-									</svg></span> Saved</button>
-								<button class="btn btn-sm btn-outline btn-outline-primary btn-active-primary fs-7">Details</button>
-							{% else %}
-								<button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
+									</svg></span> Saved</button> {% endcomment %}
+								{% comment %} <button class="btn btn-sm btn-outline btn-outline-primary btn-active-primary fs-7">Details</button> {% endcomment %}
+							{% comment %} {% else %} {% endcomment %}
+								{% comment %} <button class="btn btn-sm btn-light me-2 fs-7"><span class="svg-icon svg-icon-3">
 									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 										<path d="M18.3721 4.65439C17.6415 4.23815 16.8052 4 15.9142 4C14.3444 4 12.9339 4.73924 12.003 5.89633C11.0657 4.73913 9.66 4 8.08626 4C7.19611 4 6.35789 4.23746 5.62804 4.65439C4.06148 5.54462 3 7.26056 3 9.24232C3 9.81001 3.08941 10.3491 3.25153 10.8593C4.12155 14.9013 9.69287 20 12.0034 20C14.2502 20 19.875 14.9013 20.7488 10.8593C20.9109 10.3491 21 9.81001 21 9.24232C21.0007 7.26056 19.9383 5.54462 18.3721 4.65439Z" fill="black"/>
 									</svg>
-								</span> Save</button>
-							{% endif %}
-						</div> {% endcomment %}
+								</span> Save</button> {% endcomment %}
+							{% comment %} {% endif %} {% endcomment %}
+						</div>
 					</div>
 				</div>
 			</div>

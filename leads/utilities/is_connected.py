@@ -1,6 +1,10 @@
 from relationships import models as relmods
 
 def is_connected(connectee, lead):
+    if isinstance(connectee, str):
+        # Connectee is not authenticated
+        return False
+
     user_one = connectee.id if connectee.id < lead.author.id else lead.author.id
 
     if connectee.id < lead.author.id:

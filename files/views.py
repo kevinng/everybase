@@ -16,7 +16,7 @@ class ReadOnlyPresignedURLView(
     """
     serializer_class = serializers.ReadOnlyPresignedURLSerializer
     permission_classes = [permissions.IsAuthenticated]
-    # Note: provide a credentials for search enginer to index those documents
+    # Note: provide a credentials for search engine to index those documents
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)

@@ -1,5 +1,5 @@
 from django import template
-from leads.libraries.utility_funcs.is_lead_owner import is_lead_owner as f
+from leads.utilities.is_lead_owner import is_lead_owner as f
 
 register = template.Library()
 

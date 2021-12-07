@@ -6,5 +6,7 @@ from . import views
 app_name = 'chat__root'
 urlpatterns = [
     # path('pay/<str:id>/', views.redirect_checkout_page, name='payment'),
-    path('wa/<str:id>/', views.redirect_whatsapp_phone_number, name='whatsapp')
+    path('wa/<str:id>/', views.redirect_whatsapp_phone_number, name='whatsapp'),
+    path('lw/<str:lead_uuid>/', views.whatsapp_lead_author, 
+        name='whatsapp_lead_author')
 ]
