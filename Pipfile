@@ -35,6 +35,7 @@ stripe = "*"
 sentry-sdk = "*"
 requests = "*"
 django-phonenumber-field = "*"
+django-ratelimit = "*"
 
 [requires]
 python_version = "3.7"
