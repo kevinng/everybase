@@ -59,18 +59,18 @@ amplitude.getInstance().init("{{ amplitude_api_key }}", "{{ user_uuid }}");
                         </div>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-lg btn-success w-100 mb-5" disabled="true" id="register_link__resend_button">
+                        <button type="submit" class="btn btn-lg btn-success w-100 mb-5" id="register_link__resend_button">
                             Resend Link via WhatsApp
                         </button>
                     </div>
-                    <div class="row">
+                    {% comment %} <div class="row">
                         <div class="col-12">
                             Wait <span class="text-light-info fw-bolder bg-info" id="register_link__counter_seconds">60</span> seconds to resend link.
                         </div>
                         <div class="col-12 fw-bold mt-3">
                             Refresh this page if you're not automatically logged in after you've replied 'yes' to our message.
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </form>
                 <!--end::Form-->
             </div>
@@ -85,7 +85,7 @@ amplitude.getInstance().init("{{ amplitude_api_key }}", "{{ user_uuid }}");
 {% block page_custom_script %}
 <script type="text/javascript">
 
-var register_link__counter = function () {
+{% comment %} var register_link__counter = function () {
     var start_counter = function() {
         var counter = 59; // Seconds (begins as 60 in HTML)
         var set_interval = setInterval(function() {
@@ -103,7 +103,7 @@ var register_link__counter = function () {
             start_counter();
         }
     }
-}();
+}(); {% endcomment %}
 
 var register_link__poll_status = function() {
     var start_poll = function () {
