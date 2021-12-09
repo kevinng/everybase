@@ -97,7 +97,6 @@ def register_link(request, user_uuid):
         'country_code': user.phone_number.country_code,
         'national_number': user.phone_number.national_number,
         'amplitude_api_key': settings.AMPLITUDE_API_KEY,
-        'register_date_time': user.registered.isoformat(),
         'last_seen_date_time': datetime.now(tz=sgtz).isoformat(),
         'num_whatsapp_lead_author': user.num_whatsapp_lead_author(),
         'num_leads_created': user.num_leads_created()

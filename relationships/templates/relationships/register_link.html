@@ -115,7 +115,6 @@ var register_link__poll_status = function() {
                     // Set user properties
                     var identify = new amplitude.Identify()
                         .set('country code', '{{ country_code }}')
-                        .set('register date time', '{{ register_date_time }}')
                         .set('last seen date time', '{{ last_seen_date_time }}')
                         .set('num whatsapp lead author', {{ num_whatsapp_lead_author }})
                         .set('num leads created', {{ num_leads_created }})
