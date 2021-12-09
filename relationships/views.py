@@ -1,3 +1,6 @@
+import pytz
+from datetime import datetime, timedelta
+
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -11,8 +14,6 @@ from relationships import forms, models
 from chat.tasks.send_register_confirm import send_register_confirm
 from chat.tasks.send_login_confirm import send_login_confirm
 
-import pytz
-from datetime import datetime, timedelta
 from sentry_sdk import capture_message
 import phonenumbers
 
@@ -89,13 +90,21 @@ def register_link(request, user_uuid):
         return HttpResponseRedirect(
             reverse('relationships:register_link',
                 kwargs={'user_uuid': user_uuid}))
+    
+    sgtz = pytz.timezone(settings.TIME_ZONE)
+    params = {
+        'user_uuid': user_uuid,
+        'country_code': user.phone_number.country_code,
+        'national_number': user.phone_number.national_number,
+        'amplitude_api_key': settings.AMPLITUDE_API_KEY,
+        'register_date_time': user.registered.isoformat(),
+        'last_seen_date_time': datetime.now(tz=sgtz).isoformat(),
+        'num_whatsapp_lead_author': user.num_whatsapp_lead_author(),
+        'num_leads_created': user.num_leads_created()
+    }
 
     return render(request,
-        'relationships/register_link.html', {
-            'user_uuid': user_uuid,
-            'country_code': user.phone_number.country_code,
-            'national_number': user.phone_number.national_number
-        })
+        'relationships/register_link.html', params)
 
 def confirm_register(request, user_uuid):
     try:
@@ -238,11 +247,17 @@ def log_in_link(request, user_uuid):
                 
             except (models.User.DoesNotExist, models.PhoneNumber.DoesNotExist):
                 pass # Not possible
-
+    
+    sgtz = pytz.timezone(settings.TIME_ZONE)
     params = {
         'user_uuid': user_uuid,
         'country_code': user.phone_number.country_code,
-        'national_number': user.phone_number.national_number
+        'national_number': user.phone_number.national_number,
+        'amplitude_api_key': settings.AMPLITUDE_API_KEY,
+        'register_date_time': user.registered.isoformat(),
+        'last_seen_date_time': datetime.now(tz=sgtz).isoformat(),
+        'num_whatsapp_lead_author': user.num_whatsapp_lead_author(),
+        'num_leads_created': user.num_leads_created()
     }
 
     # Read 'next' URL from GET parameters to form input. We'll add it to the

@@ -229,12 +229,12 @@ class MessageHandler():
                         to_message_key = message_key
 
                     # If event_key is specified - send Amplitude event.
-                    if event_key is not None:
-                        self.send_amplitude_event(
-                            event_key,
-                            event_properties,
-                            user_properties
-                        )
+                    # if event_key is not None:
+                    #     self.send_amplitude_event(
+                    #         event_key,
+                    #         event_properties,
+                    #         user_properties
+                    #     )
 
                     # If chosen_func is specified - run it.
                     if chosen_func is not None:

@@ -36,6 +36,7 @@ sentry-sdk = "*"
 requests = "*"
 django-phonenumber-field = "*"
 django-ratelimit = "*"
+django-settings-export = "*"
 
 [requires]
 python_version = "3.7"

@@ -82,3 +82,19 @@ class FilterFormPostAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _filter_form_post_fields})]
     autocomplete_fields = ['user']
+
+_whatsapp_lead_author_click_admin = ['lead', 'contactor', 'access_count']
+@admin.register(models.WhatsAppLeadAuthorClick)
+class WhatsAppLeadAuthorClickAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + \
+        _whatsapp_lead_author_click_admin
+    list_editable = comadm.standard_list_editable + \
+        _whatsapp_lead_author_click_admin
+    search_fields = comadm.standard_search_fields + \
+        _whatsapp_lead_author_click_admin
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _whatsapp_lead_author_click_admin})]
+    autocomplete_fields = ['lead', 'contactor']

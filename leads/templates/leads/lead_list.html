@@ -7,11 +7,45 @@
 {% block page_title %}Leads{% endblock %}
 
 {% block page_subtitle %}
-
 {% comment %} Only show when filtering {% endcomment %}
 {% comment %} <span class="h-20px border-gray-200 border-start ms-3 mx-2"></span> {% endcomment %}
 {% comment %} <small class="text-muted fs-7 fw-bold my-1 ms-1">{{ page_obj.paginator.count }} leads found</small> {% endcomment %}
+{% endblock %}
 
+{% block head_bottom %}
+<script type="text/javascript">
+(function(e,t){var r=e.amplitude||{_q:[],_iq:{}};var n=t.createElement("script")
+;n.type="text/javascript"
+;n.integrity="sha384-4rr7CTymHc64YjTTL6O3ktfsHYI1yJnQdmKv4zFoe+frjXb05MfzzuLLIAgJ/XHs"
+;n.crossOrigin="anonymous";n.async=true
+;n.src="https://cdn.amplitude.com/libs/amplitude-8.11.0-min.gz.js"
+;n.onload=function(){if(!e.amplitude.runQueuedFunctions){
+console.log("[Amplitude] Error: could not load SDK")}}
+;var s=t.getElementsByTagName("script")[0];s.parentNode.insertBefore(n,s)
+;function i(e,t){e.prototype[t]=function(){
+this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
+var o=function(){this._q=[];return this}
+;var a=["add","append","clearAll","prepend","set","setOnce","unset","preInsert","postInsert","remove"]
+;for(var c=0;c<a.length;c++){i(o,a[c])}r.Identify=o;var u=function(){this._q=[]
+;return this}
+;var p=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"]
+;for(var l=0;l<p.length;l++){i(u,p[l])}r.Revenue=u
+;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","enableTracking","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","groupIdentify","onInit","logEventWithTimestamp","logEventWithGroups","setSessionId","resetSessionId","setLibrary","setTransport"]
+;function v(e){function t(t){e[t]=function(){
+e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}
+for(var r=0;r<d.length;r++){t(d[r])}}v(r);r.getInstance=function(e){
+e=(!e||e.length===0?"$default_instance":e).toLowerCase()
+;if(!Object.prototype.hasOwnProperty.call(r._iq,e)){r._iq[e]={_q:[]};v(r._iq[e])
+}return r._iq[e]};e.amplitude=r})(window,document);
+{% comment %}
+Render with user UUID if user is authenticated.
+{% endcomment %}
+{% if user.is_authenticated %}
+amplitude.getInstance().init("{{ amplitude_api_key }}", "{{ amplitude_user_id }}");
+{% else %}
+amplitude.getInstance().init("{{ amplitude_api_key }}");
+{% endif %}
+</script>
 {% endblock %}
 
 {% block actions %}
@@ -48,7 +82,7 @@
 <!--end::Separator-->
 
 <!--begin::New Lead-->
-<a href="{% url 'leads:create' %}" class="btn btn-sm btn-primary">Post New Lead</a>
+<a href="{% url 'leads:create' %}" class="btn btn-sm btn-primary" id="post_new_lead">Post New Lead</a>
 <!--end::New Lead-->
 
 {% endblock %}
@@ -204,7 +238,7 @@
 						<div class="separator"></div> {% endcomment %}
 
 						<div class="d-flex flex-stack">	
-							<a href="{% url 'chat__root:whatsapp_lead_author' lead.uuid %}" target="{{ lead.uuid }}" class="btn btn-success">WhatsApp</a>
+							<a id="{{ lead.uuid }}" href="{% url 'chat__root:whatsapp_lead_author' lead.uuid %}" target="{{ lead.uuid }}" class="btn btn-success">WhatsApp</a>
 							{% comment %} {% has_saved_lead request.user.user lead as has_saved_lead %} {% endcomment %}
 							{% comment %} {% if has_saved_lead %} {% endcomment %}
 								{% comment %} <button class="btn btn-sm btn-light-danger me-2 fs-7"><span class="svg-icon svg-icon-3">
@@ -250,7 +284,6 @@
 {% endblock %}
 
 {% block modals %}
-
 <form action="{% url 'leads__root:list' %}" method="get">
 <div class="modal fade" tabindex="-1" id="modal_filter_leads">
     <div class="modal-dialog">
@@ -357,11 +390,106 @@
                 <span class="h-20px border-gray-200 border-start mx-4"></span>
                 <!--end::Separator-->
                 <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Apply Filter</button>
+                <button id="apply_filter" type="submit" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Apply Filter</button>
             </div>
         </div>
     </div>
 </div>
 </form>
+{% endblock %}
 
+{% block page_custom_script %}
+
+<script type="text/javascript">
+
+var clicked_whatsapp_lead_author = function() {
+	var init_buttons = function () {
+		var uuids = [
+			{% for lead in page_obj %}'{{ lead.uuid }}',{% endfor %}
+		]
+
+		for (let i = 0; i < uuids.length; i++) {
+			$('#' + uuids[i]).click(function () {
+				// Set user properties
+				var identify = new amplitude.Identify()
+					.set('country code', '{{ country_code }}')
+					.set('register date time', '{{ register_date_time }}')
+					.set('last seen date time', '{{ last_seen_date_time }}')
+					.set('num whatsapp lead author', {{ num_whatsapp_lead_author }})
+					.set('num leads created', {{ num_leads_created }})
+				amplitude.getInstance().identify(identify)
+
+				// Log event
+				amplitude.getInstance().logEvent(
+					'browse - whatsapp lead author', {
+						'lead uuid': uuids[i]
+				})
+			})
+		}
+	}
+
+    return {
+        init: function () {
+            init_buttons()
+        }
+    }
+}();
+
+var apply_filter = function() {
+	var init_button = function () {
+		$('#apply_filter').click(function () {
+			// Set user properties
+			var identify = new amplitude.Identify()
+				.set('country code', '{{ country_code }}')
+				.set('register date time', '{{ register_date_time }}')
+				.set('last seen date time', '{{ last_seen_date_time }}')
+				.set('num whatsapp lead author', {{ num_whatsapp_lead_author }})
+				.set('num leads created', {{ num_leads_created }})
+			amplitude.getInstance().identify(identify)
+
+			// Log event
+			amplitude.getInstance().logEvent('browse - filtered lead list')
+		})
+	}
+
+    return {
+        init: function () {
+            init_button()
+        }
+    }
+}();
+
+var post_new_lead = function() {
+	var init_button = function () {
+		$('#post_new_lead').click(function () {
+			// Set user properties
+			var identify = new amplitude.Identify()
+				.set('country code', '{{ country_code }}')
+				.set('register date time', '{{ register_date_time }}')
+				.set('last seen date time', '{{ last_seen_date_time }}')
+				.set('num whatsapp lead author', {{ num_whatsapp_lead_author }})
+				.set('num leads created', {{ num_leads_created }})
+			amplitude.getInstance().identify(identify)
+
+			// Log event
+			amplitude.getInstance().logEvent('post new lead - clicked post-new-lead', {
+				'source': 'lead list toolbar'
+			})
+		})
+	}
+
+    return {
+        init: function () {
+            init_button()
+        }
+    }
+}();
+
+jQuery(document).ready(function () {
+    clicked_whatsapp_lead_author.init()
+	apply_filter.init()
+	post_new_lead.init()
+});
+
+</script>
 {% endblock %}

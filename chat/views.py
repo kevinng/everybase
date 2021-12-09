@@ -1,14 +1,13 @@
-import traceback
+import traceback, datetime
 from http import HTTPStatus
 from urllib.parse import urljoin
 
 from django.urls import reverse
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from rest_framework.views import APIView
 
-from django_ratelimit.decorators import ratelimit
+from ratelimit.decorators import ratelimit
 
 from everybase import settings
 
@@ -29,9 +28,6 @@ from relationships.utilities.get_create_whatsapp_link import \
     get_create_whatsapp_link
 
 from leads import models as lemods
-
-from amplitude.tasks.send_event import send_event
-from amplitude.constants import event
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -166,17 +162,6 @@ def redirect_whatsapp_phone_number(request, id):
     """Redirects user from our short tracking URL to WhatsApp"""
     hash = relmods.PhoneNumberHash.objects.get(pk=id)
     
-    # TODO: we need to update this call
-    # Make Amplitude call
-    # send_event.delay(
-    #     user_id=hash.user.id,
-    #     event_type=events.CLICKED_WHATSAPP_LINK,
-    #     user_properties={
-    #         keys.COUNTRY_CODE: hash.user.phone_number.country_code
-    #     },
-    #     # app_version=settings.APP_VERSION
-    # )
-
     # Note: we use temporary redirects so search engines do not associate our
     # URLs with WhatsApp phone number links
     response = HttpResponse(status=302) # Temporary redirect
@@ -188,11 +173,12 @@ def redirect_whatsapp_phone_number(request, id):
     return response
 
 @login_required
-@ratelimit(key='ip', rate='100/h')
+@ratelimit(key='user_or_ip', rate='100/h', block=True)
 def whatsapp_lead_author(request, lead_uuid):
     lead = lemods.Lead.objects.get(uuid=lead_uuid)
-    whatsapp_link = get_create_whatsapp_link(request.user.user, lead.author)
-    
+    requester = request.user.user
+    whatsapp_link = get_create_whatsapp_link(requester, lead.author)
+
     # Note: we use temporary redirects so search engines do not associate our
     # URLs with WhatsApp phone number links
     response = HttpResponse(status=302) # Temporary redirect

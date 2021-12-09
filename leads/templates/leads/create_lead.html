@@ -2,11 +2,41 @@
 
 {% load static %}
 
-{% block body_top %}
+{% block head_bottom %}
+<script type="text/javascript">
+(function(e,t){var r=e.amplitude||{_q:[],_iq:{}};var n=t.createElement("script")
+;n.type="text/javascript"
+;n.integrity="sha384-4rr7CTymHc64YjTTL6O3ktfsHYI1yJnQdmKv4zFoe+frjXb05MfzzuLLIAgJ/XHs"
+;n.crossOrigin="anonymous";n.async=true
+;n.src="https://cdn.amplitude.com/libs/amplitude-8.11.0-min.gz.js"
+;n.onload=function(){if(!e.amplitude.runQueuedFunctions){
+console.log("[Amplitude] Error: could not load SDK")}}
+;var s=t.getElementsByTagName("script")[0];s.parentNode.insertBefore(n,s)
+;function i(e,t){e.prototype[t]=function(){
+this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
+var o=function(){this._q=[];return this}
+;var a=["add","append","clearAll","prepend","set","setOnce","unset","preInsert","postInsert","remove"]
+;for(var c=0;c<a.length;c++){i(o,a[c])}r.Identify=o;var u=function(){this._q=[]
+;return this}
+;var p=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"]
+;for(var l=0;l<p.length;l++){i(u,p[l])}r.Revenue=u
+;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","enableTracking","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","groupIdentify","onInit","logEventWithTimestamp","logEventWithGroups","setSessionId","resetSessionId","setLibrary","setTransport"]
+;function v(e){function t(t){e[t]=function(){
+e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}
+for(var r=0;r<d.length;r++){t(d[r])}}v(r);r.getInstance=function(e){
+e=(!e||e.length===0?"$default_instance":e).toLowerCase()
+;if(!Object.prototype.hasOwnProperty.call(r._iq,e)){r._iq[e]={_q:[]};v(r._iq[e])
+}return r._iq[e]};e.amplitude=r})(window,document);
+{% comment %}
+User ID (UUID) is available for sure, because this page is only accessible if the user is authenticated.
+{% endcomment %}
+amplitude.getInstance().init("{{ amplitude_api_key }}", "{{ amplitude_user_id }}");
+</script>
+{% endblock %}
 
+{% block body_top %}
 <form action="{% url 'leads:create' %}" method="post" id="lead_form">
 {% csrf_token %}
-
 {% endblock %}
 
 {% block subtitle %}New Lead | {% endblock %}
@@ -14,14 +44,11 @@
 {% block page_title %}New Lead{% endblock %}
 
 {% block actions %}
-
 <a href="{% url 'leads__root:list' %}" class="btn btn-sm btn-secondary me-2">Cancel</a>
 <button type="submit" class="btn btn-sm btn- btn-primary g-recaptcha" id="create_lead__secondary_submit" data-sitekey="6LeW03UdAAAAAIr_q-7C1NvI-BLMWRegSHF0Ya61" data-callback="onSubmit" data-action="submit">Post This Lead</a>
-
 {% endblock %}
 
 {% block content %}
-
 <div id="kt_content_container" class="container-xxl">
 
     {% if messages %}
@@ -216,9 +243,7 @@
 {% endblock %}
 
 {% block body_bottom %}
-
 </form>
-
 {% endblock %}
 
 {% block page_custom_script %}
@@ -226,9 +251,24 @@
 <script src="https://www.google.com/recaptcha/api.js"></script>
 
 <script type="text/javascript">
-
+{% comment %}
+This function is for reCaptcha, but we've added Amplitude calls in it so they
+trigger when the form is submitted.
+{% endcomment %}
 function onSubmit(token) {
     document.getElementById("lead_form").submit();
+    
+    // Set user properties
+    var identify = new amplitude.Identify()
+        .set('country code', '{{ country_code }}')
+        .set('register date time', '{{ register_date_time }}')
+        .set('last seen date time', '{{ last_seen_date_time }}')
+        .set('num whatsapp lead author', {{ num_whatsapp_lead_author }})
+        .set('num leads created', {{ num_leads_created }})
+    amplitude.getInstance().identify(identify)
+
+    // Log event
+    amplitude.getInstance().logEvent('post new lead - posted new lead')
 }
 
 var create_lead__add_file = function() {

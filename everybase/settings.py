@@ -83,6 +83,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export'
             ],
         },
     },
@@ -303,3 +304,11 @@ LEADS_FILES_S3_PATH = 'leads'
 
 RECAPTCHA_SECRET = config('RECAPTCHA_SECRET')
 RECAPTCHA_VERIFICATION_URL = config('RECAPTCHA_VERIFICATION_URL')
+
+# Google Analytics 4 settings
+GA4_STREAM_MEASUREMENT_ID = config('GA4_STREAM_MEASUREMENT_ID')
+
+# Export parameters that can be used in templates
+SETTINGS_EXPORT = [
+    'GA4_STREAM_MEASUREMENT_ID'
+]

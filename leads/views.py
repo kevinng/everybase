@@ -1,4 +1,5 @@
-import json, requests
+from datetime import datetime
+import json, requests, pytz
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
@@ -49,7 +50,7 @@ class LeadListView(ListView):
         leads = models.Lead.objects.all()
 
         ffp = models.FilterFormPost()
-        
+
         if title is not None:
             leads = leads.filter(title__icontains=title)
             ffp.title = title
@@ -113,6 +114,7 @@ class LeadListView(ListView):
         leads = leads.filter(commission_payable_after_q)
 
         if self.request.user.is_authenticated:
+            ffp.user = self.request.user.user
             ffp.save()
         
         return leads.order_by('-created')
@@ -120,6 +122,18 @@ class LeadListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['countries'] = commods.Country.objects.order_by('name')
+        context['amplitude_api_key'] = settings.AMPLITUDE_API_KEY
+        if self.request.user.is_authenticated:
+            eb_user = self.request.user.user
+            context['amplitude_user_id'] = eb_user.uuid
+            context['country_code'] = eb_user.phone_number.country_code
+            context['register_date_time'] = eb_user.registered.isoformat()
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            context['last_seen_date_time'] = datetime.now(tz=sgtz).isoformat()
+            context['num_whatsapp_lead_author'] = \
+                eb_user.num_whatsapp_lead_author()
+            context['num_leads_created'] = eb_user.num_leads_created()
+
         return context
 
 def create_lead(request):
@@ -175,9 +189,19 @@ def create_lead(request):
 
     countries = commods.Country.objects.order_by('name')
 
+    eb_user = request.user.user
+    sgtz = pytz.timezone(settings.TIME_ZONE)
+
     return render(request, 'leads/create_lead.html', {
         'form': form,
-        'countries': countries
+        'countries': countries,
+        'amplitude_api_key': settings.AMPLITUDE_API_KEY,
+        'amplitude_user_id': eb_user.uuid,
+        'country_code': eb_user.phone_number.country_code,
+        'register_date_time': eb_user.registered.isoformat(),
+        'last_seen_date_time': datetime.now(tz=sgtz).isoformat(),
+        'num_whatsapp_lead_author': eb_user.num_whatsapp_lead_author(),
+        'num_leads_created': eb_user.num_leads_created()
     })
 
 # @csrf_exempt

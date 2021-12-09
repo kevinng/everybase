@@ -3,8 +3,6 @@ from django.db import models
 
 from common.models import Standard
 from files import models as fimods
-from relationships.utilities.get_create_whatsapp_link import \
-    get_create_whatsapp_link
 
 class Lead(Standard):
     """Lead.
@@ -295,3 +293,26 @@ class FilterFormPost(Standard):
         null=True,
         blank=True
     )
+
+class WhatsAppLeadAuthorClick(Standard):
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='whatsapp_lead_author_clicks',
+        related_query_name='whatsapp_lead_author_clicks',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    contactor = models.ForeignKey(
+        'relationships.User',
+        related_name='whatsapp_lead_author_clicks',
+        related_query_name='whatsapp_lead_author_clicks',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    access_count = models.IntegerField(
+        default=0,
+        db_index=True
+    )
+
+    class Meta:
+        unique_together = ('lead', 'contactor')

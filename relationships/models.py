@@ -11,6 +11,8 @@ from common.models import (Standard, Choice, LowerCaseCharField,
 
 import uuid
 
+from leads.models import Lead, WhatsAppLeadAuthorClick
+
 class PhoneNumberType(Choice):
     """Phone number type.
 
@@ -271,7 +273,17 @@ class User(Standard):
                 country_code=self.phone_number.country_code)
         except Country.DoesNotExist:
             return None
-    
+
+    def num_leads_created(self):
+        return Lead.objects.filter(author=self.id).count()
+
+    def num_whatsapp_lead_author(self):
+        clicks = WhatsAppLeadAuthorClick.objects.filter(contactor=self.id)
+        total = 0
+        for click in clicks:
+            total += click.access_count
+        return total
+
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email},\
  {self.phone_number} [{self.id}])'
