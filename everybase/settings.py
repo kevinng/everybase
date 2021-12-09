@@ -267,7 +267,6 @@ STRIPE_PAYMENT_METHOD_TYPES = config('STRIPE_PAYMENT_METHOD_TYPES').split(';')
 
 # User-facing chatbot user and phone number
 CHATBOT_USER_PK = config('CHATBOT_USER_PK')
-CHATBOT_PHONE_NUMBER_PK = config('CHATBOT_PHONE_NUMBER_PK')
 
 sentry_sdk.init(
     dsn="https://b66301735a0345b3b7c6bee436d28bb7@o870163.ingest.sentry.io/5824419",
