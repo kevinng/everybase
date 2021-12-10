@@ -85,6 +85,20 @@ class Lead(Standard):
         null=True,
         blank=True
     )
+    internal_notes = models.TextField(
+        null=True,
+        blank=True
+    )
+    onboarding = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    onboarded = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     def images(self):
         return fimods.File.objects.filter(
