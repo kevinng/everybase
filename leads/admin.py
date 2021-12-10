@@ -4,14 +4,16 @@ from leads import models
 
 _lead_fields = ['author', 'lead_type', 'author_type', 'title', 'details',
     'country', 'commission_pct', 'commission_payable_after',
-    'other_commission_details', 'internal_notes', 'onboarding', 'onboarded']
+    'other_commission_details', 'internal_notes', 'onboarding', 'onboarded',
+    'hide_commission_details']
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['uuid'] + _lead_fields
     list_editable = comadm.standard_list_editable + _lead_fields
     list_filter = comadm.standard_list_filter + ['lead_type', 'author_type',
-        'country', 'commission_payable_after', 'onboarding', 'onboarded']
+        'country', 'commission_payable_after', 'onboarding', 'onboarded',
+        'hide_commission_details']
     search_fields = comadm.standard_search_fields + ['title', 'details',
         'other_commission_details', 'internal_notes']
 

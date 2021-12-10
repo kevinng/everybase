@@ -201,6 +201,8 @@ amplitude.getInstance().init("{{ amplitude_api_key }}");
 					</div>
 					{% endif %}
 
+					{% if lead.hide_commission_details is not True %}
+
 					<div class="fw-bolder fs-6">Commission</div>
 					<div class="fs-6 mb-5">{{ lead.commission_pct }}%</div>
 
@@ -210,13 +212,22 @@ amplitude.getInstance().init("{{ amplitude_api_key }}");
 					<div class="fw-bolder fs-6">Other Commission Details</div>
 					<div class="fs-6 mb-5">{{ lead.other_commission_details }}</div>
 
+					{% else %}
+
+					<div class="fw-bolder fs-6">Commission</div>
+					<div class="fs-6 mb-5">Contact for commission details</div>
+
+					{% endif %}
+
 					<div class="fw-bolder fs-6">{% if lead.lead_type == 'buying' %}Destination{% elif lead.lead_type == 'selling' %}Source{% endif %} Country</div>
 					<div class="fs-6 mb-5">{{ lead.country.name }}</div>
 
-					{% comment %} <div class="fw-bolder fs-6">Details</div>
-					<div class="fs-6 mb-5">Buyer Received Goods/Services</div> {% endcomment %}
+					<div class="fw-bolder fs-6">Details</div>
+					<div class="fs-6 fw-bold text-gray-600 mb-5">{{ lead.details }}</div>
 
-					<div class="fs-6 fw-bold text-gray-600">{{ lead.details }}</div>
+					{% if lead.onboarding is not None and lead.onboarded is None %}
+					<div class="fs-6 text-info">This lead was posted by Everybase support on behalf of a user.</div>
+					{% endif %}
 				</div>
 				<div class="card-footer">
 					<div class="d-flex flex-stack flex-wrapr">

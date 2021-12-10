@@ -7,7 +7,7 @@ from files import models as fimods
 class Lead(Standard):
     """Lead.
 
-    Last updated: 12 November 2021, 7:59 PM
+    Last updated: 10 December 2021, 11:12 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -95,6 +95,11 @@ class Lead(Standard):
         db_index=True
     )
     onboarded = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    hide_commission_details = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
