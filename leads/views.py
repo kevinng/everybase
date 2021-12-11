@@ -114,7 +114,7 @@ class LeadListView(ListView):
 
         leads = leads.filter(commission_payable_after_q)
 
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated and self.request.user is not None:
             ffp.user = self.request.user.user
             ffp.save()
         
