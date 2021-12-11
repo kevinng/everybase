@@ -281,8 +281,8 @@ var create_lead__add_file = function() {
     var block = function () {
         blockUI.block()
         $('#create_lead__add_file_input_label').hide()
-        $('#create_lead__main_submit').attr('disabled', 'true')
-        $('#create_lead__secondary_submit').attr('disabled', 'true')
+        //$('#create_lead__main_submit').attr('disabled', 'true')
+        //$('#create_lead__secondary_submit').attr('disabled', 'true')
     }
 
     var unblock = function () {
@@ -430,7 +430,7 @@ var create_lead__add_file = function() {
     var init_button = function () {
         $('#create_lead__add_file_input').change(function() {
             // Block
-            //block()
+            block()
 
             // Get pre-signed write-only URL
             var file = $(this).prop('files')[0]
