@@ -17,7 +17,6 @@ from files import views as fiviews, models as fimods
 from leads import serializers, models, forms
 from leads.utilities.is_connected import is_connected
 from leads.utilities.has_contacted import has_contacted
-import relationships
 from relationships.utilities.get_create_whatsapp_link import \
     get_create_whatsapp_link
 from chat.tasks.send_contact_request_confirm import send_contact_request_confirm
@@ -163,7 +162,8 @@ def create_lead(request):
             })
 
             sr = json.loads(server_response.text)
-            if sr.get('success') == True and sr.get('score') > 0.3:
+            if sr.get('success') == True and sr.get('score') > \
+                settings.RECAPTCHA_THRESHOLD:
                 lead = models.Lead.objects.create(
                     author=request.user.user,
                     title=form.cleaned_data.get('title'),
@@ -196,7 +196,7 @@ def create_lead(request):
 
                 return HttpResponseRedirect(reverse('leads__root:list'))
             else:
-                messages.info(request, 'Are you a robot? Please slow down.' + str(sr.get('score')))
+                messages.info(request, 'Are you a robot? Please slow down.')
     else:
         form = forms.LeadForm()
 
