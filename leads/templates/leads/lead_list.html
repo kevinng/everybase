@@ -223,7 +223,7 @@ amplitude.getInstance().init("{{ amplitude_api_key }}");
 					<div class="fs-6 mb-5">{{ lead.country.name }}</div>
 
 					<div class="fw-bolder fs-6">Details</div>
-					<div class="fs-6 fw-bold text-gray-600 mb-5">{{ lead.details }}</div>
+					<div class="fs-6 fw-bold text-gray-600 mb-5">{{ lead.details|safe }}</div>
 
 					{% if lead.onboarding is not None and lead.onboarded is None %}
 					<div class="fs-6 text-info">This lead was posted by Everybase support on behalf of a user.</div>
