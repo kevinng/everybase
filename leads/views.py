@@ -17,6 +17,7 @@ from files import views as fiviews, models as fimods
 from leads import serializers, models, forms
 from leads.utilities.is_connected import is_connected
 from leads.utilities.has_contacted import has_contacted
+import relationships
 from relationships.utilities.get_create_whatsapp_link import \
     get_create_whatsapp_link
 from chat.tasks.send_contact_request_confirm import send_contact_request_confirm
@@ -24,6 +25,7 @@ from chat.tasks.send_contact_request_exchanged_author import \
     send_contact_request_exchanged_author
 from chat.tasks.send_contact_request_exchanged_contactor import \
     send_contact_request_exchanged_contactor
+from relationships import models as relmods
 
 class LeadListView(ListView):
     model = models.Lead
@@ -114,10 +116,14 @@ class LeadListView(ListView):
 
         leads = leads.filter(commission_payable_after_q)
 
-        if self.request.user.is_authenticated and \
-            self.request.user.user is not None:
-            ffp.user = self.request.user.user
-            ffp.save()
+        if self.request.user.is_authenticated:
+            try:
+                ffp.user = self.request.user.user
+            except relmods.User.DoesNotExist:
+                # Prevents error when I'm logging in as admin
+                pass
+        
+        ffp.save()
         
         return leads.order_by('-created')
 
@@ -126,15 +132,19 @@ class LeadListView(ListView):
         context['countries'] = commods.Country.objects.order_by('name')
         context['amplitude_api_key'] = settings.AMPLITUDE_API_KEY
         if self.request.user.is_authenticated:
-            eb_user = self.request.user.user
-            context['amplitude_user_id'] = eb_user.uuid
-            context['country_code'] = eb_user.phone_number.country_code
-            context['register_date_time'] = eb_user.registered.isoformat()
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            context['last_seen_date_time'] = datetime.now(tz=sgtz).isoformat()
-            context['num_whatsapp_lead_author'] = \
-                eb_user.num_whatsapp_lead_author()
-            context['num_leads_created'] = eb_user.num_leads_created()
+            try:
+                eb_user = self.request.user.user
+                context['amplitude_user_id'] = eb_user.uuid
+                context['country_code'] = eb_user.phone_number.country_code
+                context['register_date_time'] = eb_user.registered.isoformat()
+                sgtz = pytz.timezone(settings.TIME_ZONE)
+                context['last_seen_date_time'] = datetime.now(tz=sgtz).isoformat()
+                context['num_whatsapp_lead_author'] = \
+                    eb_user.num_whatsapp_lead_author()
+                context['num_leads_created'] = eb_user.num_leads_created()
+            except relmods.User.DoesNotExist:
+                # Prevents error when I'm logging in as admin
+                pass
 
         return context
 
