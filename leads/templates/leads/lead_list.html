@@ -208,9 +208,11 @@ amplitude.getInstance().init("{{ amplitude_api_key }}");
 
 					<div class="fw-bolder fs-6">Commission Payable After</div>
 					<div class="fs-6 mb-5">{{ lead.get_commission_payable_after_display|title }}</div>
-
+					
+					{% if lead.other_commission_details.strip != '' %}
 					<div class="fw-bolder fs-6">Other Commission Details</div>
 					<div class="fs-6 mb-5">{{ lead.other_commission_details }}</div>
+					{% endif %}
 
 					{% else %}
 
