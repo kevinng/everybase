@@ -163,7 +163,7 @@ def create_lead(request):
 
             sr = json.loads(server_response.text)
             if sr.get('success') == True and sr.get('score') > \
-                settings.RECAPTCHA_THRESHOLD:
+                float(settings.RECAPTCHA_THRESHOLD):
                 lead = models.Lead.objects.create(
                     author=request.user.user,
                     title=form.cleaned_data.get('title'),
