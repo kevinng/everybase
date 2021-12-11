@@ -196,7 +196,7 @@ def create_lead(request):
 
                 return HttpResponseRedirect(reverse('leads__root:list'))
             else:
-                messages.info(request, 'Are you a robot? Please slow down. ' + str(sr.get('score')))
+                messages.info(request, 'Are you a robot? Please slow down. [' + str(sr.get('score')) + ']')
     else:
         form = forms.LeadForm()
 
