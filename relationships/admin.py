@@ -141,17 +141,20 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
 
 _user_fields = ['registered', 'django_user', 'first_name', 'last_name',
     'languages_string', 'country', 'state', 'state_string', 'phone_number',
-    'email']
+    'email', 'is_direct_buyer', 'is_direct_seller', 'is_buying_agent',
+    'is_selling_agent', 'internal_notes']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_fields
     list_editable = comadm.standard_list_editable + _user_fields
-    list_filter = comadm.standard_list_filter + ['registered']
+    list_filter = comadm.standard_list_filter + ['registered',
+        'is_direct_buyer', 'is_direct_seller', 'is_buying_agent',
+        'is_selling_agent']
     search_fields = comadm.standard_search_fields + [
         'first_name', 'last_name', 'country__name', 'state__name',
         'state_string', 'phone_number__country_code',
-        'phone_number__national_number', 'email__email']
+        'phone_number__national_number', 'email__email', 'internal_notes']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [

@@ -2,6 +2,7 @@ import random
 
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.db.models import base
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User as django_user
 
@@ -151,7 +152,7 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 12 November 2021, 2:12 PM
+    Last updated: 12 December 2021, 2:53 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -261,10 +262,14 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    is_buying_agent = models.BooleanField(
+    is_selling_agent = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
+    )
+    internal_notes = models.TextField(
+        null=True,
+        blank=True
     )
 
     def country_from_phone_number(self):
