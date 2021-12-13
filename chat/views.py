@@ -179,6 +179,14 @@ def whatsapp_lead_author(request, lead_uuid):
     requester = request.user.user
     whatsapp_link = get_create_whatsapp_link(requester, lead.author)
 
+    click, _ = lemods.WhatsAppLeadAuthorClick.objects.get_or_create(
+        lead=lead,
+        contactor=requester
+    )
+
+    click.access_count += 1
+    click.save()
+
     # Note: we use temporary redirects so search engines do not associate our
     # URLs with WhatsApp phone number links
     response = HttpResponse(status=302) # Temporary redirect
