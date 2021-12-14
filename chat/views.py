@@ -173,7 +173,7 @@ def redirect_whatsapp_phone_number(request, id):
     return response
 
 @login_required
-@ratelimit(key='user_or_ip', rate='20/h', block=True)
+@ratelimit(key='user_or_ip', rate='50/h', block=True)
 def whatsapp_lead_author(request, lead_uuid):
     lead = lemods.Lead.objects.get(uuid=lead_uuid)
     requester = request.user.user
