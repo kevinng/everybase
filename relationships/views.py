@@ -68,13 +68,27 @@ def register(request):
             # Create/send register confirmation
             send_register_confirm.delay(user.id)
 
-            return HttpResponseRedirect(
-                reverse('relationships:register_link',
-                    kwargs={'user_uuid': user.uuid}))
+            next_url = form.cleaned_data.get('next')
+
+            register_link = reverse('relationships:register_link',
+                kwargs={'user_uuid': user.uuid})
+
+            if next_url is not None:
+                register_link += f'?next={next_url}'
+
+            return HttpResponseRedirect(register_link)
     else:
         form = forms.RegisterForm()
 
-    return render(request, 'relationships/register.html', {'form': form})
+    params = {'form': form}
+
+    # Read 'next' URL from GET parameters to form input. We'll add it to the
+    # redirect URL when the user submits this form.
+    next = request.GET.get('next')
+    if next is not None:
+        params['next'] = next
+
+    return render(request, 'relationships/register.html', params)
 
 def register_link(request, user_uuid):
     try:
@@ -84,12 +98,24 @@ def register_link(request, user_uuid):
 
     if request.method == 'POST':
         # Resend message
-
-        send_register_confirm.delay(user.id)
         
-        return HttpResponseRedirect(
-            reverse('relationships:register_link',
-                kwargs={'user_uuid': user_uuid}))
+        send_register_confirm.delay(user.id)
+
+        # Read next URL and redirect to self, if the user requested to resend
+        # the message. Because we're not using a Django form, we need to
+        # manually read the next parameter from the HTML form, and render it
+        # back into the URL as a GET parameter. Django will then call this URL
+        # again and render the parameter back into the form.
+
+        register_link = reverse('relationships:register_link',
+            kwargs={'user_uuid': user.uuid})
+
+        next_url = request.POST.get('next')
+
+        if next_url is not None:
+            register_link += f'?next={next_url}'
+        
+        return HttpResponseRedirect(register_link)
     
     sgtz = pytz.timezone(settings.TIME_ZONE)
     params = {
@@ -101,6 +127,10 @@ def register_link(request, user_uuid):
         'num_whatsapp_lead_author': user.num_whatsapp_lead_author(),
         'num_leads_created': user.num_leads_created()
     }
+
+    next_url = request.GET.get('next')
+    if next_url is not None:
+        params['next'] = next_url
 
     return render(request,
         'relationships/register_link.html', params)
@@ -192,9 +222,7 @@ def log_in(request):
                 if next_url is not None:
                     login_link_url += f'?next={next_url}'
 
-                response = HttpResponseRedirect(login_link_url)
-
-                return response
+                return HttpResponseRedirect(login_link_url)
             except (models.User.DoesNotExist, models.PhoneNumber.DoesNotExist):
                 messages.info(request, 'Account not found. Create a new \
 account.')

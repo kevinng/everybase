@@ -34,6 +34,7 @@ class RegisterForm(forms.Form):
     is_direct_seller = forms.BooleanField(required=False)
     is_buying_agent = forms.BooleanField(required=False)
     is_selling_agent = forms.BooleanField(required=False)
+    next = forms.CharField(required=False)
 
     def clean(self):
         super(RegisterForm, self).clean()

@@ -22,7 +22,7 @@
 					{% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
 					<div class="text-center mb-10">
 						<h1 class="text-dark mb-3">Sign In</h1>
-						<div class="text-gray-400 fw-bold fs-4">New Here? <a href="{% url 'relationships:register' %}" class="link-primary fw-bolder">Create an Account</a></div>
+						<div class="text-gray-400 fw-bold fs-4">New Here? <a href="{% url 'relationships:register' %}{% if next is not None %}?next={{ next }}{% endif %}" class="link-primary fw-bolder">Create an Account</a></div>
 					</div>
                     <div class="fv-row mb-3">
                         <label for="whatsapp_phone_number" class="form-label fs-6 fw-bolder text-dark">WhatsApp Phone Number</label>

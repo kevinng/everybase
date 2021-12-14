@@ -49,6 +49,7 @@ amplitude.getInstance().init("{{ amplitude_api_key }}", "{{ user_uuid }}");
                 <!--begin::Form-->
                 <form class="form w-100" action="{% url 'relationships:register_link' user_uuid %}" method="post">
                     {% csrf_token %}
+                    {% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
                     <div class="text-center mb-10">
                         <h2 class="text-dark mb-3">We've sent you a WhatsApp message, please reply 'yes' to complete registration.</h1>
                     </div>

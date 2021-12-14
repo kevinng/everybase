@@ -19,6 +19,7 @@
                 <!--begin::Form-->
                 <form class="form w-100" action="{% url 'relationships:register' %}" method="post">
                     {% csrf_token %}
+                    {% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
                     <div class="text-center mb-10">
                         <h1 class="text-dark mb-3">Register</h1>
                         <div class="text-gray-400 fw-bold fs-4">Have an Account? <a href="{% url 'relationships:login' %}" class="link-primary fw-bolder">Log In</a></div>
