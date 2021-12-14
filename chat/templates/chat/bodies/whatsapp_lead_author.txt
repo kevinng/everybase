@@ -1,0 +1,1 @@
+I got your contact from https://everybase.co. I want to help you {% if lead_type == 'buying' %}buy{% elif lead_type == 'selling' %}sell{% endif %} '{{ title }}' on commission. Please give me more details.

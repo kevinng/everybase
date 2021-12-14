@@ -1,10 +1,12 @@
-import traceback, datetime
+import traceback
 from http import HTTPStatus
-from urllib.parse import urljoin
+from urllib.parse import urljoin, quote
 
 from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
+from django.shortcuts import redirect
 from rest_framework.views import APIView
 
 from ratelimit.decorators import ratelimit
@@ -170,6 +172,10 @@ def redirect_whatsapp_phone_number(request, id):
         hash.phone_number.national_number
     )
 
+    text = request.GET.get('text')
+    if text is not None:
+        response['Location'] += '?text=' + text
+
     return response
 
 @login_required
@@ -187,9 +193,22 @@ def whatsapp_lead_author(request, lead_uuid):
     click.access_count += 1
     click.save()
 
+    def is_author_registered():
+        return lead.author is not None and\
+            lead.author.registered is not None and\
+            lead.author.django_user is not None
+
+    params = {
+        'registered': is_author_registered(),
+        'lead_type': lead.lead_type,
+        'title': lead.title
+    }
+    text = quote(render_to_string(
+        'chat/bodies/whatsapp_lead_author.txt', params))
+
     # Note: we use temporary redirects so search engines do not associate our
     # URLs with WhatsApp phone number links
     response = HttpResponse(status=302) # Temporary redirect
-    response['Location'] = whatsapp_link
+    response['Location'] = whatsapp_link + '?text=' + text
 
     return response

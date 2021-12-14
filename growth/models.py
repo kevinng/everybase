@@ -860,7 +860,7 @@ class LookChemSupplier(Standard):
     )
 
     company_name = models.CharField(
-        max_length=100,
+        max_length=200,
         null=True,
         blank=True,
         db_index=True
