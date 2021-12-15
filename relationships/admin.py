@@ -7,7 +7,7 @@ from files.models import File
 from django.contrib import admin
 
 from . import models as mod
-from common import admin as comadm
+from common import admin as comadm, models
 from growth import models as gromods
 
 @admin.register(mod.PhoneNumberType)
@@ -90,6 +90,13 @@ class EmailStatusInlineAdmin(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['emailstatus']
 
+class UserInlineAdmin(admin.TabularInline):
+    # model = gromods.EmailStatus.emails.through
+    model = mod.User
+    extra = 1
+    autocomplete_fields = ['django_user', 'profile_picture', 'languages',
+        'country', 'state', 'phone_number', 'email']
+
 _email_fields = ['verified', 'email', 'notes', 'invalid_email',
     'import_job']
 @admin.register(mod.Email)
@@ -106,7 +113,8 @@ class EmailAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['import_job', 'invalid_email']
     inlines = [
-        EmailStatusInlineAdmin
+        EmailStatusInlineAdmin,
+        UserInlineAdmin
         # GmassEmailStatusInlineAdmin,
         # GmassCampaignResultInlineAdmin,
         # ChemicalClusterOfSingaporeCompanyInlineAdmin,
