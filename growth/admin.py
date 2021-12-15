@@ -284,7 +284,7 @@ class WorldOfChemicalsSupplierAdmin(admin.ModelAdmin):
         'coy_addr_2', 'coy_city', 'coy_state', 'coy_country', 'coy_postal',
         'coy_phone', 'coy_phone_2', 'coy_email', 'coy_owner_email',
         'coy_alt_email', 'coy_alt_email_2', 'coy_alt_email_3', 'coy_website']
-    list_per_page = 50
+    list_per_page = 1000
     list_filter = ['harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'coy_id', 'coy_name', 'coy_about_html',
         'coy_pri_contact', 'coy_addr_1', 'coy_addr_2', 'coy_city', 'coy_state',
