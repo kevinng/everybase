@@ -231,7 +231,7 @@ class ChemicalBookSupplierAdmin(admin.ModelAdmin):
     list_display = comadm.standard_list_display + ['email', 'invalid_email',
         'import_job', 'harvested', 'source_url', 'company_name', 'internal_url',
         'telephone', 'email_str', 'corporate_site_url', 'nationality']
-    list_per_page = 5000
+    list_per_page = 3000
     list_filter = ['import_job', 'harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'company_name', 'internal_url',
         'telephone', 'email_str', 'corporate_site_url', 'nationality']
