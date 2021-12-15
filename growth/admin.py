@@ -315,7 +315,7 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['request', 'email', 'domain',
         'import_job', 'harvested', 'name', 'country']
-    list_per_page = 1000
+    list_per_page = 8000
     list_filter = ['import_job', 'harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source', 'name', 'country', 'request', 'email']
     ordering = ['harvested']
