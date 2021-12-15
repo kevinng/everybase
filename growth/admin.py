@@ -255,7 +255,7 @@ class LookChemSupplierAdmin(admin.ModelAdmin):
         'harvested', 'company_name', 'contact_person', 'street_address', 'city',
         'province_state', 'country_region', 'zip_code', 'business_type', 'tel',
         'mobile', 'email_str', 'website', 'qq']
-    list_per_page = 50
+    list_per_page = 2000
     list_filter = ['harvested', 'business_type'] + comadm.standard_list_filter
     search_fields = ['id', 'company_name', 'contact_person', 'street_address',
         'city', 'province_state', 'country_region', 'zip_code', 'business_type',
