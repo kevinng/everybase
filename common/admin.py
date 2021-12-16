@@ -47,7 +47,7 @@ class StandardAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display
     list_editable = standard_list_editable
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = standard_list_filter
     search_fields = standard_search_fields
     ordering = standard_ordering
@@ -63,7 +63,7 @@ class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = choice_list_display
     list_editable = choice_list_editable
-    list_per_page = 1000
+    list_per_page = 50
     search_fields = choice_search_fields
     ordering = choice_ordering
     show_full_result_count = True
@@ -84,7 +84,7 @@ class StandardChoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_choice_list_display
     list_editable = standard_choice_list_editable
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = standard_choice_list_filter
     search_fields = standard_choice_search_fields
     ordering = standard_choice_ordering
@@ -137,7 +137,7 @@ class ImportJobAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['status', 'description']
     list_editable = standard_list_editable + ['status', 'description']
-    list_per_page = 1000
+    list_per_page = 50
     search_fields = ['id', 'status', 'description']
     list_filter = standard_list_filter + ['status', 'description']
     ordering = standard_ordering
@@ -153,7 +153,7 @@ class SystemTimestampAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display + ['key', 'timestamp']
     list_editable = standard_list_editable
-    list_per_page = 1000
+    list_per_page = 50
     search_fields = ['id', 'key', 'timestamp']
     list_filter = ['key'] + standard_list_filter
     ordering = standard_ordering
