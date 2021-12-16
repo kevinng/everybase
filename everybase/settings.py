@@ -185,12 +185,12 @@ else:
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
-CELERY_BEAT_SCHEDULE = {
-    'schedule-load-gmass-campaign-main-report': {
-        'task': 'growth.tasks.update_gmass_data',
-        'schedule': 43200.0 # 12-hour interval
-    }
-}
+# CELERY_BEAT_SCHEDULE = {
+#     'schedule-load-gmass-campaign-main-report': {
+#         'task': 'growth.tasks.update_gmass_data',
+#         'schedule': 43200.0 # 12-hour interval
+#     }
+# }
 
 # Email-related configurations
 
