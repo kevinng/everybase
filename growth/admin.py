@@ -7,7 +7,7 @@ class GmassEmailStatusAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['bounced', 'bounce_reason',
         'unsubscribed', 'email', 'invalid_email']
-    list_per_page = 8000
+    list_per_page = 50
     list_filter = ['bounced', 'unsubscribed'] + comadm.standard_list_filter
     search_fields = ['id', 'bounce_reason', 'email__email',
         'invalid_email__email']
@@ -30,7 +30,7 @@ class GmassCampaignResultAdmin(admin.ModelAdmin):
         'email_address', 'first_name', 'last_name', 'name_1', 'opens', 'clicks',
         'replied', 'unsubscribed', 'bounced', 'blocked', 'over_gmail_limit',
         'gmail_response', 'email', 'invalid_email', 'gmass_campaign']
-    list_per_page = 8000
+    list_per_page = 50
     list_filter = ['import_job', 'opens', 'clicks', 'replied', 'unsubscribed',
         'bounced', 'blocked', 'over_gmail_limit'] + comadm.standard_list_filter
     search_fields = ['id', 'email_address', 'first_name', 'last_name', 'name_1',
@@ -61,7 +61,7 @@ class GmassCampaign(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['sent', 'campaign_id',
         'subject', 'spreadsheet', 'report_url', 'report_last_accessed']
-    list_per_page = 8000
+    list_per_page = 50
     list_filter = ['sent'] + comadm.standard_list_filter
     search_fields = ['id', 'campaign_id', 'subject', 'spreadsheet',
         'report_url']
@@ -84,7 +84,7 @@ class ChemicalClusterOfSingaporeCompanyAdmin(admin.ModelAdmin):
         'invalid_executive_email', 'import_job', 'harvested', 'source_url',
         'company_name', 'telephone', 'fax', 'website', 'address',
         'nature_of_business', 'executive_name', 'executive_telephone']
-    list_per_page = 8000
+    list_per_page = 50
     list_filter = ['harvested', 'import_job'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'company_name',
         'telephone', 'fax', 'email_str', 'website', 'address',
@@ -111,7 +111,7 @@ class ChemicalClusterOfSingaporeProductAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
         'source_url', 'company_name', 'product']
-    list_per_page = 8000
+    list_per_page = 50
     list_filter = ['harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'company_name', 'product']
     ordering = ['harvested'] + comadm.standard_ordering
@@ -131,7 +131,7 @@ class ChemicalClusterOfSingaporeServiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['import_job', 'harvested',
         'source_url', 'company_name', 'service']
-    list_per_page = 8000
+    list_per_page = 50
     list_filter = ['harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'company_name', 'service']
     ordering = ['harvested'] + comadm.standard_ordering
@@ -255,7 +255,7 @@ class LookChemSupplierAdmin(admin.ModelAdmin):
         'harvested', 'company_name', 'contact_person', 'street_address', 'city',
         'province_state', 'country_region', 'zip_code', 'business_type', 'tel',
         'mobile', 'email_str', 'website', 'qq']
-    list_per_page = 2000
+    list_per_page = 50
     list_filter = ['harvested', 'business_type'] + comadm.standard_list_filter
     search_fields = ['id', 'company_name', 'contact_person', 'street_address',
         'city', 'province_state', 'country_region', 'zip_code', 'business_type',
@@ -315,7 +315,7 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['request', 'email', 'domain',
         'import_job', 'harvested', 'name', 'country']
-    list_per_page = 8000
+    list_per_page = 50
     list_filter = ['import_job', 'harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source', 'name', 'country', 'request', 'email']
     ordering = ['harvested']
