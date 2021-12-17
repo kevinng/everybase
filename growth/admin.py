@@ -203,7 +203,7 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
         'did_you_mean_email', 'import_job', 'generated', 'email_str', 'status',
         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
         'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
-    list_per_page = 5000
+    list_per_page = 2000
     list_filter = ['import_job', 'generated', 'status', 'sub_status', 'gender',
         'free_email', 'mx_found'] + comadm.standard_list_filter
     search_fields = ['id', 'email_str', 'status', 'sub_status', 'account',
