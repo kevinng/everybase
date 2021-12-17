@@ -991,7 +991,7 @@ class WorldOfChemicalsSupplier(Standard):
         db_index=True
     )
     coy_name = models.CharField(
-        max_length=200,
+        max_length=100,
         null=True,
         blank=True,
         db_index=True

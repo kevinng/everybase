@@ -46,6 +46,8 @@ def parse_row(row, import_job):
     )
     result.full_clean()
     result.save()
+
+    print('Created: ' + str(result.id))
     
 def run():
     helpers.load(parse_row, _NAMESPACE)
