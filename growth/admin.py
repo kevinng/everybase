@@ -203,7 +203,7 @@ class ZeroBounceResultAdmin(admin.ModelAdmin):
         'did_you_mean_email', 'import_job', 'generated', 'email_str', 'status',
         'sub_status', 'account', 'domain', 'first_name', 'last_name', 'gender',
         'free_email', 'mx_found', 'mx_record', 'smtp_provider', 'did_you_mean']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = ['import_job', 'generated', 'status', 'sub_status', 'gender',
         'free_email', 'mx_found'] + comadm.standard_list_filter
     search_fields = ['id', 'email_str', 'status', 'sub_status', 'account',
@@ -284,7 +284,7 @@ class WorldOfChemicalsSupplierAdmin(admin.ModelAdmin):
         'coy_addr_2', 'coy_city', 'coy_state', 'coy_country', 'coy_postal',
         'coy_phone', 'coy_phone_2', 'coy_email', 'coy_owner_email',
         'coy_alt_email', 'coy_alt_email_2', 'coy_alt_email_3', 'coy_website']
-    list_per_page = 1000
+    list_per_page = 50
     list_filter = ['harvested'] + comadm.standard_list_filter
     search_fields = ['id', 'source_url', 'coy_id', 'coy_name', 'coy_about_html',
         'coy_pri_contact', 'coy_addr_1', 'coy_addr_2', 'coy_city', 'coy_state',
