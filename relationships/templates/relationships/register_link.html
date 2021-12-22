@@ -108,21 +108,26 @@ amplitude.getInstance().init("{{ amplitude_api_key }}", "{{ user_uuid }}");
 
 var register_link__poll_status = function() {
     var start_poll = function () {
-        var counter = 1000; // Poll for 33.3 minutes at most (1000 * 2s = 33.3 mins)
+        var counter = 1000 // Poll for 33.3 minutes at most (1000 * 2s = 33.3 mins)
+        var logged = false
         var set_interval = setInterval(function() {
             // Get register token and ascertain if it has been activated
             $.get("{% url 'relationships:confirm_register' user_uuid %}", function(data) {
                 if (data['logged_in'] == true) {
                     // Set user properties
-                    var identify = new amplitude.Identify()
-                        .set('country code', '{{ country_code }}')
-                        .set('last seen date time', '{{ last_seen_date_time }}')
-                        .set('num whatsapp lead author', {{ num_whatsapp_lead_author }})
-                        .set('num leads created', {{ num_leads_created }})
-                    amplitude.getInstance().identify(identify)
+                    if (logged == false) {
+                        var identify = new amplitude.Identify()
+                            .set('country code', '{{ country_code }}')
+                            .set('last seen date time', '{{ last_seen_date_time }}')
+                            .set('num whatsapp lead author', {{ num_whatsapp_lead_author }})
+                            .set('num leads created', {{ num_leads_created }})
+                        amplitude.getInstance().identify(identify)
 
-                    // Log event
-                    amplitude.getInstance().logEvent('account - registered')
+                        // Log event
+                        amplitude.getInstance().logEvent('account - registered')
+
+                        logged = true // Log once only
+                    }
 
                     next = {% if next is not None %}'{{ next }}'{% else %}"{% url 'leads__root:list' %}"{% endif %}
                     window.location.replace(next);
