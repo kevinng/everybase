@@ -28,7 +28,7 @@ from relationships import models as relmods
 
 class LeadListView(ListView):
     model = models.Lead
-    paginate_by = 15
+    paginate_by = 9
 
     def get_queryset(self, **kwargs):
         title = self.request.GET.get('title')
