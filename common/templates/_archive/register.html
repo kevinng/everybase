@@ -1,0 +1,115 @@
+{% extends 'extendables/base_simple.html' %}
+
+{% load static %}
+
+{% block main %}
+
+<div class="d-flex flex-column flex-root">
+    <!--begin::Authentication - Sign-in -->
+    <div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url({% static 'common/assets/media/illustrations/sketchy-1/14.png' %}">
+        <!--begin::Content-->
+        <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+            <!--begin::Logo-->
+            <a href="../../demo1/dist/index.html" class="mb-12">
+                <img alt="Logo" src="{% static 'common/assets/media/logos/plain-logo.svg' %}" class="h-40px" />
+            </a>
+            <!--end::Logo-->
+            <!--begin::Wrapper-->
+            <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+                <!--begin::Form-->
+                <form class="form w-100" action="#">
+                    <!--begin::Heading-->
+                    <div class="text-center mb-10">
+                        <!--begin::Title-->
+                        <h1 class="text-dark mb-3">Register</h1>
+                        <!--end::Title-->
+                        <!--begin::Link-->
+                        <div class="text-gray-400 fw-bold fs-4">Have an Account?
+                        <a href="../../demo1/dist/authentication/flows/basic/sign-up.html" class="link-primary fw-bolder">Log In</a></div>
+                        <!--end::Link-->
+                    </div>
+                    <!--begin::Heading-->
+                    <!--begin::Input group-->
+                    <div class="fv-row mb-3">
+                        <!--begin::Label-->
+                        <label class="form-label fs-6 fw-bolder text-dark">WhatsApp Phone Number</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <div class="d-flex d-flex-column">
+                            <div class="fs-1 me-3">+</div><input class="form-control form-control-lg" type="text" placeholder="e.g., 14155552671"/>
+                        </div>
+                        <div class="row text-danger mt-3">
+                            Please enter a valid phone number.
+                        </div>
+                        <div class="row text-muted mt-3">
+                            Please include country code without + symbol. E.g., 14155552671.
+                        </div>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="fv-row mb-3">
+                        <!--begin::Label-->
+                        <label class="form-label fs-6 fw-bolder text-dark">First Name</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <div class="d-flex d-flex-column">
+                            <input class="form-control form-control-lg" type="text"/>
+                        </div>
+                        <div class="row text-danger mt-3">
+                            Please enter your first name.
+                        </div>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="fv-row mb-3">
+                        <!--begin::Label-->
+                        <label class="form-label fs-6 fw-bolder text-dark">Last Name</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <div class="d-flex d-flex-column">
+                            <input class="form-control form-control-lg" type="text"/>
+                        </div>
+                        <div class="row text-danger mt-3">
+                            Please enter your last name.
+                        </div>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="fv-row mb-10">
+                        <!--begin::Label-->
+                        <label class="form-label fs-6 fw-bolder text-dark">Email</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <div class="d-flex d-flex-column">
+                            <input class="form-control form-control-lg" type="email"/>
+                        </div>
+                        <div class="row text-danger mt-3">
+                            Please enter a valid email.
+                        </div>
+                        <!--end::Input-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Actions-->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-lg btn-success w-100 mb-5">
+                            Send Link via WhatsApp
+                        </button>
+                    </div>
+                    <!--end::Actions-->
+                    <div class="row">
+                        A link will sent to your phone number via WhatsApp, please click on it to register and sign-in.
+                    </div>
+                </form>
+                <!--end::Form-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Authentication - Sign-in-->
+</div>
+
+{% endblock %}

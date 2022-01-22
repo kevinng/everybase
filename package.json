@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.0.15"
+  },
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./common/templates/mock_ups/css/input.css -o ./common/static/common/assets/css/output.css --watch"
+  }
+}
