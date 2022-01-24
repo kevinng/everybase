@@ -1,0 +1,25 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}Enter Message Body{% endblock %}
+
+{% block other_head_tags %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block content %}
+<!-- start: login -->
+<div class="flex justify-center">
+    <div class="bg-white max-w-md mt-10 w-full lg:rounded-xl p-10 shadow-md">
+        <h1 class="font-sans text-3xl font-bold text-center mt-5 text-slate-800">Enter Message Body</h1>
+        <div class="mt-7 flex flex-col justify-center">
+            <div class="text-base">Hi Arian Josimaya, my name is Josh Smithsonian.</div>
+            <div class="text-base mt-2">I got your contact from - https://everybase.co</div>
+            <label for="message_body" class="font-sans text-sm font-bold uppercase text-slate-400 mt-4">Message Body</label>
+            <textarea name="message_body" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2"></textarea>
+            <div class="flex items-center justify-start mt-2"><input type="checkbox"><div class="ml-2 text-base">Use last message</div></div>
+            <button class="w-full py-4 px-7 font-bold text-neutral-50 rounded-xl bg-green-500 hover:bg-green-600 mt-6 shadow-md">Go to WhatsApp</button>
+        </div>
+    </div>
+</div>
+<!-- end: login -->
+{% endblock %}
