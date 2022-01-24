@@ -12,10 +12,10 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'common/assets/media/logos/favicon-16x16.png' %}">
     {% block other_css %}{% endblock %}
 </head>
-<body class="bg-slate-100">
+<body class="bg-slate-100 flex flex-col">
     <!-- start: header -->
-    <div class="flex items-center justify-between bg-white py-3 pl-5 pr-5 shadow-md z-[100] relative">
-        <!-- start: hamburger and lgoo -->
+    <div class="flex items-center justify-between bg-white py-3 pl-5 pr-5 shadow-md z-[100] sticky top-0">
+        <!-- start: hamburger and logo -->
         <div>
             <button class="hamburger lg:hidden">
                 <div class="bar"></div>
@@ -25,7 +25,7 @@
         <!-- end: hamburger and logo -->
 
         <!-- start: desktop menu -->
-        <div class="flex justify-between hidden lg:block">
+        <div class="justify-between hidden lg:block">
             <a class="font-bold text-blue-600" href="#">Agents</a>
             <a class="hover:text-blue-600 ml-7" href="#">I-Need-Agents</a>
         </div>
@@ -33,14 +33,22 @@
 
         <!-- start: actions -->
         <div class="flex">
-            <a href="#" class="text-base text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2">Register</a>
-            <a href="#" class="text-base text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2">Login</a>
+            <a href="#" class="text-base text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Register</a>
+            <a href="#" class="text-base text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">Login</a>
         </div>
-        <!-- start: actions -->
+        <!-- end: actions -->
+
+        <!-- start: page actions -->
+        {% block page_actions %}{% endblock %}
+        <!-- end: page actions -->
     </div>
     <nav class="mobile-nav">
+        <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">Home</a>
         <a class="font-bold text-blue-700 block px-4 py-4" href="#">Agents</a>
         <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">I-Need-Agents</a>
+        <div class="h-10"></div>
+        <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">Register</a>
+        <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">Login</a>
     </nav>
     <!-- end: header -->
 
