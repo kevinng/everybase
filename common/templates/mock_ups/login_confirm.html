@@ -9,12 +9,12 @@
 <div class="flex justify-center">
     <div class="bg-white max-w-md mt-10 w-full lg:rounded-xl p-10 shadow-md">
         <a href="https://everybase.co"><img class="mx-auto mt-5" src="{% static 'common/assets/img/logo.png' %}"></a>
-        <h1 class="font-sans text-3xl font-bold text-center mt-5 text-slate-900">We've Sent You a WhatsApp Message, Reply 'Yes' to Confirm Login</h1>
+        <h1 class="font-sans text-3xl font-bold text-center mt-5">We've Sent You a WhatsApp Message, Reply 'Yes' to Confirm Login</h1>
         <div class="mt-7 flex flex-col justify-center">
             <label for="whatsapp_phone_number" class="font-sans text-sm font-bold uppercase text-slate-400">WhatsApp Phone Number</label>
-            <input name="whatsapp_phone_number" placeholder="E.g., +14155552671" type="text" class="block w-full border rounded-md py-3 px-5 mt-2" disabled>
-            <button class="w-full py-4 px-7 font-bold text-neutral-50 rounded-xl bg-green-500 hover:bg-green-600 mt-6 shadow-md">WhatsApp Me</button>
-            <div class="text-center font-sans text-base mt-2 text-slate-900 px-1">A confirmation message was sent to your phone number via WhatsApp. Reply 'yes' to login.</div>
+            <input name="whatsapp_phone_number" value="+14155552671" placeholder="E.g., +14155552671" type="text" class="block font-sans w-full border rounded-md py-3 px-5 mt-2" disabled>
+            <button class="w-full py-4 px-7 font-bold font-sans text-white rounded-xl bg-green-500 hover:bg-green-600 mt-6 shadow-md">WhatsApp Me</button>
+            <div class="text-center font-sans text-base mt-2 px-1">A confirmation message was sent to your phone number via WhatsApp. Reply 'yes' to login.</div>
         </div>
     </div>
 </div>

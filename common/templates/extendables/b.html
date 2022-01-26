@@ -27,8 +27,8 @@
 
         <!-- start: desktop menu -->
         <div class="justify-between hidden lg:block">
-            <a class="font-bold text-blue-600" href="#">Agents</a>
-            <a class="hover:text-blue-600 ml-7" href="#">I-Need-Agents</a>
+            <a class="font-bold text-blue-600 text-base" href="#">Agents</a>
+            <a class="hover:text-blue-600 text-base ml-7" href="#">I-Need-Agents</a>
         </div>
         <!-- end: desktop menu -->
 
@@ -44,7 +44,7 @@
         {% block page_actions %}{% endblock %}
         <!-- end: page actions -->
     </div>
-    <nav class="mobile-nav">
+    <nav class="mobile-nav text-base">
         <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">Home</a>
         <a class="font-bold text-blue-700 block px-4 py-4" href="#">Agents</a>
         <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">I-Need-Agents</a>
@@ -57,7 +57,6 @@
     {% block content %}{% endblock %}
 
     {% block footer %}
-    <!-- start: footer -->
     <div class="flex justify-center bg-blue-50 py-5 px-10 mt-20">
         <div class="text-sm text-center">
             <p>Everybase Pte Ltd, &copy 2022, Singapore</p>
@@ -65,7 +64,6 @@
             <p><a class="text-blue-500 hover:text-blue-700" href="https://wa.me/6588933466">+65 88933466 (WhatsApp)</a></p>
         </div>
     </div>
-    <!-- end: footer -->
     {% endblock %}
 
     <script src="{% static 'common/assets/js/output.js' %}"></script>

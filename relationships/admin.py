@@ -249,3 +249,29 @@ class RegisterToken(comadm.StandardAdmin):
         (None, {'fields': _register_token_fields})
     ]
     autocomplete_fields = ['user']
+
+_user_agent_fields = ['user', 'ip_address', 'is_routable', 'is_mobile',
+    'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot', 'browser',
+    'browser_family', 'browser_version', 'browser_version_string',
+    'os', 'os_family', 'os_version', 'os_version_string', 'device',
+    'device_family']
+@admin.register(mod.UserAgent)
+class RegisterToken(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _user_agent_fields
+    list_editable = comadm.standard_list_editable + _user_agent_fields
+    list_filter = comadm.standard_list_filter + ['ip_address', 'is_routable',
+        'is_mobile', 'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot',
+        'browser', 'browser_family', 'browser_version',
+        'browser_version_string', 'os', 'os_family', 'os_version',
+        'os_version_string', 'device', 'device_family']
+    search_fields = comadm.standard_search_fields + ['ip_address',
+        'browser', 'browser_family', 'browser_version',
+        'browser_version_string', 'os', 'os_family', 'os_version',
+        'os_version_string', 'device', 'device_family']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _user_agent_fields})
+    ]
+    autocomplete_fields = ['user']

@@ -1,0 +1,93 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}Create New I-Need-Agent Post{% endblock %}
+
+{% block other_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<!-- start: login -->
+<div class="flex justify-center">
+    <div class="bg-white max-w-md mt-10 w-full lg:rounded-xl p-10 shadow-md">
+        <button class="w-full py-3 px-7 rounded-xl text-slate-600 shadow-md bg-slate-200 hover:bg-slate-300">Back to Results</button>
+        <div class="text-base text-center mt-6">New Post</div>
+        <h1 class="font-sans text-3xl font-bold text-center text-slate-900">I-Need-Agent</h1>
+        <div class="mt-7 flex flex-col justify-center">
+            <label for="i_want_to" class="font-sans text-sm font-bold uppercase text-slate-400">I Want To</label>
+            <div class="mt-2">
+                <select id="i_want_to" class="select2">
+                    <option value="buy">Buy</option>
+                    <option value="sell">Sell</option>
+                </select>
+            </div>
+
+            <label for="buy_from_this_country" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Buy From This Country</label>
+            <div class="mt-2">
+                <select id="buy_from_this_country" class="select2" data-placeholder="Choose country">
+                    <option></option>
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select>
+            </div>
+        
+            <label for="sell_to_this_country" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Sell To This Country</label>
+            <div class="mt-2">
+                <select id="sell_to_this_country" class="select2" data-placeholder="Choose country">
+                    <option></option>
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select>
+            </div>
+
+            <label for="average_deal_size" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Average Deal Size</label>
+            <div class="flex items-center justify-start">
+                <div class="mr-3 font-bold text-2xl">USD</div><input name="average_deal_size" placeholder="0" type="number" class="block w-1/2 border rounded-md py-3 px-5 mt-2">
+            </div>
+
+            <label for="average_agent_commission" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</label>
+            <div class="flex items-center justify-start">
+                <input name="average_deal_size" placeholder="0" type="number" class="block w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">%</div>
+            </div>
+
+            <div class="text-base mt-4">This is a guide only - actual commissions negotiated per deal.</div>
+
+            <label for="details" class="font-sans text-sm font-bold uppercase text-slate-400 mt-4">Details</label>
+            <textarea name="details" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2"></textarea>
+
+            <label for="other_commission_details" class="font-sans text-sm font-bold uppercase text-slate-400 mt-4">Other Commission Details</label>
+            <textarea name="other_commission_details" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2"></textarea>
+            <div class="text-base mt-2">Other details regarding commission</div>
+
+            <button class="w-full py-3 px-7 rounded-xl text-neutral-50 bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Post</button>
+        </div>
+    </div>
+</div>
+<!-- end: login -->
+{% endblock %}
+
+{% comment %}
+Minify with https://www.minifier.org/
+
+$(document).ready(function() {
+    $('.select2').select2();
+
+    $('.select2').one('select2:open', function(e) {
+        $('input.select2-search__field').prop('placeholder', 'Search here...');
+    });
+});
+{% endcomment %}
+
+{% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>  
+$(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search here...')})});
+</script>
+{% endblock %}
