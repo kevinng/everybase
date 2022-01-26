@@ -19,26 +19,34 @@
                 {% csrf_token %}
                 {% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}{% comment %} The next URL is rendered with the template if it is passed as a GET parameter to the URL. {% endcomment %}
                 <label for="whatsapp_phone_number" class="font-sans text-sm font-bold uppercase text-slate-400">WhatsApp Phone Number</label>
-                <input name="whatsapp_phone_number" placeholder="E.g., +14155552671" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input name="whatsapp_phone_number" value="{% if form.whatsapp_phone_number.value %}{{ form.whatsapp_phone_number.value }}{% endif %}" placeholder="E.g., +14155552671" type="text" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.whatsapp_phone_number.errors %}border-red-500{% endif %}">
                 <div class="font-sans text-base mt-2 px-1 w-full">Please include + symbol. E.g., +14155552671.</div>
                 {% if form.whatsapp_phone_number.errors %}<div class="font-sans w-full text-base px-1 mt-2 text-red-500">{% for error in form.whatsapp_phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <label for="first_name" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">First Name</label>
-                <input name="first_name" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <label for="first_name" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5 block">First Name</label>
+                <input name="first_name" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.first_name.errors %}border-red-500{% endif %}">
                 {% if form.first_name.errors %}<div class="font-sans w-full text-base px-1 mt-2 text-red-500">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <label for="last_name" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Last Name</label>
-                <input name="last_name" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <label for="last_name" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5 block">Last Name</label>
+                <input name="last_name" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.last_name.errors %}border-red-500{% endif %}">
                 {% if form.last_name.errors %}<div class="font-sans w-full text-base px-1 mt-2 text-red-500">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <label for="email" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Email</label>
-                <input name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" type="email" class="block w-full border rounded-md py-3 px-5 mt-2 border-red-500">
+                <label for="email" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5 block">Email</label>
+                <input name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" type="email" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.email.errors %}border-red-500{% endif %}">
                 {% if form.email.errors %}<div class="font-sans w-full text-base px-1 mt-2 text-red-500">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <label for="email" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5 block">Goods I Deal With</label>
+                <textarea rows="4" name="goods_string" class="font-sans w-full border rounded-md py-3 px-5 mt-2 text-base {% if form.goods_string.errors %}border-red-500{% endif %}">{% if form.goods_string.value %}{{ form.goods_string.value }}{% endif %}</textarea>
+                {% if form.goods_string.errors %}<div class="font-sans w-full text-base px-1 mt-2 text-red-500">{% for error in form.goods_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <label for="email" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5 block">Languages I Speak</label>
+                <textarea rows="4" name="languages_string" class="font-sans w-full border rounded-md py-3 px-5 mt-2 text-base {% if form.languages_string.errors %}border-red-500{% endif %}">{% if form.languages_string.value %}{{ form.languages_string.value }}{% endif %}</textarea>
+                {% if form.languages_string.errors %}<div class="font-sans w-full text-base px-1 mt-2 text-red-500">{% for error in form.languages_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="font-sans text-base mt-10 px-1 w-full">Agents help buy and sell for commissions.</div>
 
                 <div class="mt-10 flex justify-start">
-                    <input type="checkbox" class="focus:ring-blue-100 border-gray-300 h-6 w-6" {% if form.is_agent.value == True %}checked{% endif %}>
+                    <input name="is_agent" type="checkbox" class="focus:ring-blue-100 border-gray-300 h-6 w-6"{% if form.is_agent.value == True %} checked{% endif %}>
                     <label class="ml-3 text-base">I'm NOT an agent</label>
                 </div>
                 <div class="font-sans text-base mt-2 px-1 w-full italic">Check this box if you do NOT want to be asked by other users to be an agent.</div>

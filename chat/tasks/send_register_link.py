@@ -10,7 +10,7 @@ _USER_DOES_NOT_EXIST = -1
 _CHATBOT_USER_DOES_NOT_EXIST = -2
 
 @shared_task
-def send_register_confirm(
+def send_register_link(
         user_id : int,
         no_external_calls : bool = False
     ):
@@ -28,7 +28,7 @@ def send_register_confirm(
     done_to_context(
         user,
         intents.REGISTER,
-        messages.REGISTER__CONFIRM
+        messages.REGISTER__LINK
     )
 
     params = {
@@ -37,11 +37,11 @@ def send_register_confirm(
     }
 
     return send_message(
-        render_message(messages.REGISTER__CONFIRM, params),
+        render_message(messages.REGISTER__LINK, params),
         chatbot,
         user,
         intents.REGISTER,
-        messages.REGISTER__CONFIRM,
+        messages.REGISTER__LINK,
         None,
         no_external_calls
     )

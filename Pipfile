@@ -37,6 +37,7 @@ requests = "*"
 django-phonenumber-field = "*"
 django-ratelimit = "*"
 django-settings-export = "*"
+django-ipware = "*"
 
 [requires]
 python_version = "3.7"

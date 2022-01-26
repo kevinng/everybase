@@ -11,11 +11,13 @@ from django.contrib import messages
 from everybase import settings
 from common import models as commods
 from relationships import forms, models
-from chat.tasks.send_register_confirm import send_register_confirm
-from chat.tasks.send_login_confirm import send_login_confirm
+from chat.tasks.send_register_link import send_register_link
+from chat.tasks.send_login_link import send_login_link
 
 from sentry_sdk import capture_message
 import phonenumbers
+from django_user_agents.utils import get_user_agent
+from ipware import get_client_ip
 
 def register(request):
     if request.method == 'POST':
@@ -48,6 +50,7 @@ def register(request):
                 email=form.cleaned_data.get('email')
             )
 
+            # Get country from user's WhatsApp phone number country code
             try:
                 country = commods.Country.objects.get(country_code=ph_cc)
             except commods.Country.DoesNotExist:
@@ -56,6 +59,7 @@ def register(request):
             # Get or create an Everybase user
             user, _ = models.User.objects.get_or_create(
                 phone_number=phone_number)
+
             # Override or set user details
             user.first_name = form.cleaned_data.get('first_name')
             user.last_name = form.cleaned_data.get('last_name')
@@ -65,16 +69,40 @@ def register(request):
             user.country = country
             user.save()
 
-            # Create/send register confirmation
-            send_register_confirm.delay(user.id)
+            # Send register link
+            send_register_link.delay(user.id)
 
+            # Append next URL
             next_url = form.cleaned_data.get('next')
-
             register_link = reverse('relationships:register_link',
                 kwargs={'user_uuid': user.uuid})
 
             if next_url is not None:
                 register_link += f'?next={next_url}'
+
+            # Record IP and user agent
+            r = get_user_agent(request)
+            ip_address, is_routable = get_client_ip(request)
+            models.UserAgent.objects.create(
+                user=user,
+                ip_address=ip_address,
+                is_routable=is_routable,
+                is_mobile=r.is_mobile,
+                is_tablet=r.is_tablet,
+                is_touch_capable=r.is_touch_capable,
+                is_pc=r.is_pc,
+                is_bot=r.is_bot,
+                browser=r.browser,
+                browser_family=r.browser.family,
+                browser_version=r.browser.version,
+                browser_version_string=r.browser.version_string,
+                os=r.os,
+                os_family=r.os.family,
+                os_version=r.os.version,
+                os_version_string=r.os.version_string,
+                device=r.device,
+                device_family=r.device.family
+            )
 
             return HttpResponseRedirect(register_link)
     else:
@@ -99,7 +127,7 @@ def register_link(request, user_uuid):
     if request.method == 'POST':
         # Resend message
         
-        send_register_confirm.delay(user.id)
+        send_register_link.delay(user.id)
 
         # Read next URL and redirect to self, if the user requested to resend
         # the message. Because we're not using a Django form, we need to
@@ -117,20 +145,17 @@ def register_link(request, user_uuid):
         
         return HttpResponseRedirect(register_link)
     
-    sgtz = pytz.timezone(settings.TIME_ZONE)
     params = {
         'user_uuid': user_uuid,
         'country_code': user.phone_number.country_code,
-        'national_number': user.phone_number.national_number,
-        'amplitude_api_key': settings.AMPLITUDE_API_KEY,
-        'last_seen_date_time': datetime.now(tz=sgtz).isoformat(),
-        'num_whatsapp_lead_author': user.num_whatsapp_lead_author(),
-        'num_leads_created': user.num_leads_created()
+        'national_number': user.phone_number.national_number
     }
 
     next_url = request.GET.get('next')
-    if next_url is not None:
+    if next_url is not None and len(next_url.strip()) > 0:
         params['next'] = next_url
+    else:
+        params['next'] = reverse('leads__root:list')
 
     return render(request,
         'relationships/register_link.html', params)
@@ -185,6 +210,7 @@ def log_in(request):
                 # If there is an activated, unexpired login token, log the user
                 # in immediately without requiring the user to request for
                 # another token.
+
                 token = models.LoginToken.objects.filter(
                     user=user.id,
                     activated__isnull=False # Token is activated
@@ -214,7 +240,7 @@ def log_in(request):
                         
                         return HttpResponseRedirect(reverse('leads__root:list'))
 
-                send_login_confirm.delay(user.id)
+                send_login_link.delay(user.id)
 
                 login_link_url = reverse('relationships:login_link',
                     kwargs={'user_uuid': user.uuid})
@@ -266,7 +292,7 @@ def log_in_link(request, user_uuid):
                     django_user__isnull=False # User has a Django user linked
                 ).first()
 
-                send_login_confirm.delay(user.id)
+                send_login_link.delay(user.id)
 
                 return HttpResponseRedirect(
                     reverse('relationships:login_link',
@@ -275,23 +301,19 @@ def log_in_link(request, user_uuid):
             except (models.User.DoesNotExist, models.PhoneNumber.DoesNotExist):
                 pass # Not possible
     
-    sgtz = pytz.timezone(settings.TIME_ZONE)
     params = {
         'user_uuid': user_uuid,
         'country_code': user.phone_number.country_code,
         'national_number': user.phone_number.national_number,
-        'amplitude_api_key': settings.AMPLITUDE_API_KEY,
-        'register_date_time': user.registered.isoformat(),
-        'last_seen_date_time': datetime.now(tz=sgtz).isoformat(),
-        'num_whatsapp_lead_author': user.num_whatsapp_lead_author(),
-        'num_leads_created': user.num_leads_created()
     }
 
     # Read 'next' URL from GET parameters to form input. We'll add it to the
     # redirect URL when the user submits this form.
-    next = request.GET.get('next')
-    if next is not None:
-        params['next'] = next
+    next_url = request.GET.get('next')
+    if next_url is not None and len(next_url.strip()) > 0:
+        params['next'] = next_url
+    else:
+        params['next'] = reverse('leads__root:list')
 
     return render(request, 'relationships/login_link.html', params)
 

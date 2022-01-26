@@ -152,7 +152,7 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 12 December 2021, 2:53 PM
+    Last updated: 25 January 2022, 6:32 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -175,29 +175,12 @@ class User(Standard):
         db_index=True
     )
 
-    profile_picture = models.ForeignKey(
-        'files.File',
-        related_name='users_w_this_profile_picture',
-        related_query_name='users_w_this_profile_picture',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
     first_name = models.CharField(
         max_length=20,
         db_index=True
     )
     last_name = models.CharField(
         max_length=20,
-        db_index=True
-    )
-
-    languages = models.ManyToManyField(
-        'common.Language',
-        related_name='users_w_this_language',
-        related_query_name='users_w_this_language',
-        blank=True,
         db_index=True
     )
     languages_string = models.CharField(
@@ -211,6 +194,42 @@ class User(Standard):
         related_query_name='users_w_this_country',
         on_delete=models.PROTECT,
         null=True,
+        blank=True,
+        db_index=True
+    )
+    phone_number = models.OneToOneField(
+        'PhoneNumber',
+        related_name='user',
+        related_query_name='user',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    email = models.ForeignKey(
+        'Email',
+        related_name='user',
+        related_query_name='user',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    internal_notes = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    # Deprecated
+    languages = models.ManyToManyField(
+        'common.Language',
+        related_name='users_w_this_language',
+        related_query_name='users_w_this_language',
         blank=True,
         db_index=True
     )
@@ -229,19 +248,10 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    phone_number = models.OneToOneField(
-        'PhoneNumber',
-        related_name='user',
-        related_query_name='user',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    email = models.ForeignKey(
-        'Email',
-        related_name='user',
-        related_query_name='user',
+    profile_picture = models.ForeignKey(
+        'files.File',
+        related_name='users_w_this_profile_picture',
+        related_query_name='users_w_this_profile_picture',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -267,10 +277,6 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    internal_notes = models.TextField(
-        null=True,
-        blank=True
-    )
 
     def country_from_phone_number(self):
         try:
@@ -295,7 +301,7 @@ class User(Standard):
 
 class PhoneNumberHash(Standard):
     """A URL sent to a user of a phone number. A URL has a standard base, and a
-    unique hash, and each URL is unique to auser-phone-number, so we may track
+    unique hash, and each URL is unique to a user-phone-number, so we may track
     access of the URL. We use a hash and not the ID straight to prevent users
     from iterating the IDs in the URL.
 
@@ -384,7 +390,7 @@ class Connection(Standard):
 class UserAgent(Standard):
     """User agent log.
 
-    Last updated: 24 November 2021, 9:23 PM
+    Last updated: 26 January 2022, 5:20 PM
     """
     user = models.ForeignKey(
         'User',
@@ -395,6 +401,11 @@ class UserAgent(Standard):
     )
 
     ip_address = models.GenericIPAddressField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_routable = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
@@ -484,12 +495,6 @@ class UserAgent(Standard):
         blank=True,
         db_index=True
     )
-
-    class Meta:
-        unique_together = ['user', 'ip_address', 'is_mobile', 'is_tablet',
-            'is_touch_capable', 'is_pc', 'is_bot', 'browser', 'browser_family',
-            'browser_version', 'browser_version_string', 'os', 'os_family',
-            'os_version', 'os_version_string', 'device', 'device_family']
 
 _TOKEN_LENGTH = 24
 def get_token(length=_TOKEN_LENGTH):

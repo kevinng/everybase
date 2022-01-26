@@ -10,7 +10,7 @@ _USER_DOES_NOT_EXIST = -1
 _CHATBOT_USER_DOES_NOT_EXIST = -2
 
 @shared_task
-def send_login_confirm(
+def send_login_link(
         user_id : int,
         no_external_calls : bool = False
     ):
@@ -28,7 +28,7 @@ def send_login_confirm(
     done_to_context(
         user,
         intents.LOGIN,
-        messages.LOGIN__CONFIRM
+        messages.LOGIN__LINK
     )
 
     params = {
@@ -40,11 +40,11 @@ def send_login_confirm(
     relmods.LoginToken.objects.create(user=user)
 
     return send_message(
-        render_message(messages.LOGIN__CONFIRM, params),
+        render_message(messages.LOGIN__LINK, params),
         chatbot,
         user,
         intents.LOGIN,
-        messages.LOGIN__CONFIRM,
+        messages.LOGIN__LINK,
         None,
         no_external_calls
     )

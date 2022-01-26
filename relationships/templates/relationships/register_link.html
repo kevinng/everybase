@@ -36,9 +36,7 @@ var poll_status = function() {
             // Get register token and ascertain if it has been activated.
             $.get("{% url 'relationships:confirm_register' user_uuid %}", function(data) {
                 if (data['logged_in'] == true) {
-                    // Redirect.
-                    next = {% if next is not None %}'{{ next }}'{% else %}"{% url 'leads__root:list' %}"{% endif %};
-                    window.location.replace(next);
+                    window.location.replace('{{ next }}');
                 }
             });
             counter--;
@@ -55,15 +53,16 @@ var poll_status = function() {
     }
 }();
 
-jQuery(document).ready(function () {
+$(document).ready(function () {
     poll_status.init();
 });
 </script>
 {% endblock %}
 
 {% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>{% comment %} Do not use the slim version, which does not have the .get function. {% endcomment %}
 <script>
-var poll_status=function(){var start_poll=function(){var counter=1000;var set_interval=setInterval(function(){$.get("{% url 'relationships:confirm_register' user_uuid %}",function(data){if(data.logged_in==!0){next={%if next is not None%}'{{ next }}'{%else%}"{% url 'leads__root:list' %}"{%endif%};window.location.replace(next)}});counter--;if(counter<0){clearInterval(set_interval)}},3000)}
-return{init:function(){start_poll()}}}();jQuery(document).ready(function(){poll_status.init()})
+var poll_status=function(){var start_poll=function(){var counter=1000;var set_interval=setInterval(function(){$.get("{% url 'relationships:confirm_register' user_uuid %}",function(data){if(data.logged_in==!0){window.location.replace('{{ next }}')}});counter--;if(counter<0){clearInterval(set_interval)}},3000)}
+return{init:function(){start_poll()}}}();$(document).ready(function(){poll_status.init()})
 </script>
 {% endblock %}
