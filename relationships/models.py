@@ -1,4 +1,4 @@
-import random
+import random, uuid
 
 from django.db import models
 from django.core.exceptions import ValidationError
@@ -9,10 +9,10 @@ from django.contrib.auth.models import User as django_user
 from everybase import settings
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField, Country)
-
-import uuid
-
 from leads.models import Lead, WhatsAppLeadAuthorClick
+
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
 
 class PhoneNumberType(Choice):
     """Phone number type.
@@ -225,6 +225,11 @@ class User(Standard):
         blank=True
     )
 
+    search_agents_veccol = SearchVectorField(
+        null=True,
+        blank=True
+    )
+
     # Deprecated
     languages = models.ManyToManyField(
         'common.Language',
@@ -298,6 +303,9 @@ class User(Standard):
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email},\
  {self.phone_number} [{self.id}])'
+
+    class Meta:
+        indexes = (GinIndex(fields=['search_agents_veccol']),)
 
 class PhoneNumberHash(Standard):
     """A URL sent to a user of a phone number. A URL has a standard base, and a
