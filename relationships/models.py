@@ -13,7 +13,6 @@ from common.models import (Standard, Choice, LowerCaseCharField,
 from leads.models import Lead, WhatsAppLeadAuthorClick
 
 from django.contrib.postgres.search import SearchVectorField
-from django.contrib.postgres.indexes import GinIndex
 
 class PhoneNumberType(Choice):
     """Phone number type.
@@ -592,4 +591,32 @@ class RegisterToken(Standard):
     expiry_secs = models.IntegerField(
         db_index=True,
         default=settings.REGISTER_TOKEN_EXPIRY_SECS
+    )
+
+class Comment(Standard):
+    """Comment
+
+    Last updated: 25 January 2022, 6:36 PM
+    """
+    commentee = models.ForeignKey(
+        'User',
+        related_name='comments_with_this_user_as_commentee',
+        related_query_name='comments_with_this_user_as_commentee',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    commentor = models.ForeignKey(
+        'User',
+        related_name='comments_with_this_user_as_commentor',
+        related_query_name='comments_with_this_user_as_commentor',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    body = models.TextField()
+    is_public = models.BooleanField(
+        default=False,
+        null=False,
+        blank=False,
+        db_index=True
     )
