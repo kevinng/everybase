@@ -85,7 +85,7 @@ class FilterFormPostAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _filter_form_post_fields})]
     autocomplete_fields = ['user']
 
-_whatsapp_lead_author_click_admin = ['lead', 'contactor', 'access_count']
+_whatsapp_lead_author_click_admin = ['lead', 'contactor', 'count']
 @admin.register(models.WhatsAppLeadAuthorClick)
 class WhatsAppLeadAuthorClickAdmin(comadm.StandardAdmin):
     # List page settings
