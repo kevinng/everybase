@@ -48,7 +48,7 @@ class Standard(models.Model):
         db_index=True
     )
 
-    def created_now_difference(self):
+    def age(self):
         sgtz = pytz.timezone(settings.TIME_ZONE)
         now = datetime.datetime.now(tz=sgtz)
         difference = (now - self.created).total_seconds()
@@ -60,36 +60,24 @@ class Standard(models.Model):
 
         return (weeks, days, hours, minutes, seconds)
 
-    def create_now_difference_display_text(self):
-        weeks, days, hours, minutes, seconds = self.created_now_difference()
+    def age_desc(self):
+        weeks, days, hours, minutes, seconds = self.age()
 
-        if weeks > 0 and weeks < 4:
-            if weeks == 1:
-                return '1 week ago'
+        if weeks >= 1 and weeks <= 2:
+            return '%dw ago' % weeks
+        elif weeks < 1:
+            if days >= 1:
+                return '%dd ago' % days
+            elif days < 1:
+                if hours >= 1:
+                    return '%dh ago' % hours        
+                elif hours < 1:
+                    if minutes >= 1:
+                        return '%dm ago' % minutes
+                    elif minutes < 1:
+                        return '%ds ago' % seconds
 
-            return '%d weeks ago' % weeks
-        elif days > 0:
-            if days == 1:
-                return '1 day ago'
-
-            return '%d days ago' % days
-        elif hours > 0:
-            if hours == 1:
-                return '1 hour ago'
-
-            return '%d hours ago' % hours
-        elif minutes > 0:
-            if minutes == 1:
-                return '1 minute ago'
-
-            return '%d minutes ago' % minutes
-        elif seconds > 0:
-            if seconds == 1:
-                return '1 second ago'
-
-            return '%d seconds ago' % seconds
-
-        return self.created.strftime('%d %b %Y')
+        return self.created.strftime('%d %b %y')
 
     class Meta:
         abstract = True
