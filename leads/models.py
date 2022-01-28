@@ -7,7 +7,7 @@ from files import models as fimods
 class Lead(Standard):
     """Lead.
 
-    Last updated: 10 December 2021, 11:12 PM
+    Last updated: 26 January 2022, 9:16 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -22,6 +22,24 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    buy_country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='lead_with_this_buy_country',
+        related_query_name='lead_with_this_buy_country',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sell_country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='lead_with_this_sell_country',
+        related_query_name='lead_with_this_sell_country',
+        null=True,
+        blank=True,
+        db_index=True
+    )
     lead_type = models.CharField(
         max_length=20,
         choices=[
@@ -30,6 +48,30 @@ class Lead(Standard):
         ],
         db_index=True
     )
+    details = models.TextField()
+    avg_comm_pct = models.FloatField(db_index=True)
+    # TO REMOVE commission PCT after we've migrated the old entries
+    commission_pct = models.FloatField(
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    avg_deal_size = models.FloatField(db_index=True)
+    internal_notes = models.TextField(
+        null=True,
+        blank=True
+    )
+    onboarding = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    onboarded = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     author_type = models.CharField(
         max_length=20,
         choices=[
@@ -40,7 +82,6 @@ class Lead(Standard):
         blank=True
     )
     title = models.CharField(max_length=200)
-    details = models.TextField()
     country = models.ForeignKey(
         'common.Country',
         on_delete=models.PROTECT,
@@ -49,11 +90,6 @@ class Lead(Standard):
         null=True,
         blank=True,
         db_index=True
-    )
-    commission_pct = models.FloatField(
-        db_index=True,
-        null=True,
-        blank=True
     )
     commission_payable_by = models.CharField(
         max_length=20,
@@ -84,20 +120,6 @@ class Lead(Standard):
     other_commission_details = models.TextField(
         null=True,
         blank=True
-    )
-    internal_notes = models.TextField(
-        null=True,
-        blank=True
-    )
-    onboarding = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    onboarded = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
     )
     hide_commission_details = models.BooleanField(
         null=True,

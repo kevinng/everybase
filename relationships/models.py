@@ -1,3 +1,4 @@
+from pyexpat import model
 import random, uuid
 
 from django.db import models
@@ -183,6 +184,10 @@ class User(Standard):
         max_length=20,
         db_index=True
     )
+    goods_string = models.TextField(
+        null=True,
+        blank=True
+    )
     languages_string = models.CharField(
         max_length=200,
         null=True,
@@ -303,9 +308,6 @@ class User(Standard):
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email},\
  {self.phone_number} [{self.id}])'
-
-    class Meta:
-        indexes = (GinIndex(fields=['search_agents_veccol']),)
 
 class PhoneNumberHash(Standard):
     """A URL sent to a user of a phone number. A URL has a standard base, and a

@@ -2,6 +2,7 @@
 
 <!doctype html>
 <html>
+{% autoescape on %}
 <head>
     <title>{% block title %}{% endblock %}</title>
     <meta charset="UTF-8">
@@ -27,8 +28,9 @@
 
         <!-- start: desktop menu -->
         <div class="justify-between hidden lg:block">
-            <a class="font-bold text-blue-600 text-base" href="#">Agents</a>
+            <a class="font-bold text-blue-600 text-base">Agents</a>
             <a class="hover:text-blue-600 text-base ml-7" href="#">I-Need-Agents</a>
+            <a class="hover:text-blue-600 text-base ml-7" href="#">About Us</a>
         </div>
         <!-- end: desktop menu -->
 
@@ -45,9 +47,9 @@
         <!-- end: page actions -->
     </div>
     <nav class="mobile-nav text-base">
-        <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">Home</a>
         <a class="font-bold text-blue-700 block px-4 py-4" href="#">Agents</a>
         <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">I-Need-Agents</a>
+        <a class="font-bold text-blue-700 block px-4 py-4" href="#">About Us</a>
         <div class="h-10"></div>
         <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">Register</a>
         <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">Login</a>
@@ -69,4 +71,5 @@
     <script src="{% static 'common/assets/js/output.js' %}"></script>
     {% block other_script %}{% endblock %}
 </body>
+{% endautoescape %}
 </html>

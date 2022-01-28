@@ -2,26 +2,26 @@ from django.contrib import admin
 from common import admin as comadm
 from leads import models
 
-_lead_fields = ['author', 'lead_type', 'author_type', 'title', 'details',
-    'country', 'commission_pct', 'commission_payable_after',
-    'other_commission_details', 'internal_notes', 'onboarding', 'onboarded',
+_lead_fields = ['author', 'buy_country', 'sell_country', 'lead_type', 'details',
+    'avg_comm_pct', 'commission_pct', 'avg_deal_size', 'other_commission_details',
+    'internal_notes', 'onboarding', 'onboarded', 'title', 'author_type',
+    'country', 'commission_payable_by', 'commission_payable_after',
     'hide_commission_details']
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['uuid'] + _lead_fields
     list_editable = comadm.standard_list_editable + _lead_fields
-    list_filter = comadm.standard_list_filter + ['lead_type', 'author_type',
-        'country', 'commission_payable_after', 'onboarding', 'onboarded',
-        'hide_commission_details']
-    search_fields = comadm.standard_search_fields + ['title', 'details',
-        'other_commission_details', 'internal_notes']
+    list_filter = comadm.standard_list_filter + ['buy_country', 'sell_country',
+        'lead_type', 'onboarding', 'onboarded']
+    search_fields = comadm.standard_search_fields + ['details',
+        'internal_notes', 'other_commission_details']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['uuid']
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _lead_fields})]
-    autocomplete_fields = ['author', 'country']
+    autocomplete_fields = ['author', 'buy_country', 'sell_country']
 
 _saved_lead_fields = ['saved', 'saver', 'lead']
 @admin.register(models.SavedLead)

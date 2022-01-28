@@ -9,7 +9,9 @@ from django.urls import reverse
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.db.models import Q, Count
+from django.template.response import TemplateResponse
 
 from everybase import settings
 from common import models as commods
@@ -25,6 +27,38 @@ from chat.tasks.send_contact_request_exchanged_author import \
 from chat.tasks.send_contact_request_exchanged_contactor import \
     send_contact_request_exchanged_contactor
 from relationships import models as relmods
+
+class AgentListView(ListView):
+    template_name = 'leads/agent_list.html'
+    model = relmods.User
+    paginate_by = 20
+
+    def get_queryset(self, **kwargs):
+        search = self.request.GET.get('search')
+        country = self.request.GET.get('country')
+
+        users = relmods.User.objects
+        if country is not None and country != 'any_country':
+            users = users.filter(country__programmatic_key=country)
+
+        vector = SearchVector('search_agents_veccol')
+        query = SearchQuery(search)
+        users = users.annotate(rank=SearchRank(vector, query))\
+            .order_by('-rank')
+            
+        return users
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['countries'] = commods.Country.objects.annotate(
+            number_of_users=Count('users_w_this_country'))\
+            .order_by('-number_of_users')
+
+        # Render search and country back into the template
+        context['search_value'] = self.request.GET.get('search')
+        context['country_value'] = self.request.GET.get('country')
+
+        return context
 
 class LeadListView(ListView):
     model = models.Lead

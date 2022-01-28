@@ -155,7 +155,7 @@ def register_link(request, user_uuid):
     if next_url is not None and len(next_url.strip()) > 0:
         params['next'] = next_url
     else:
-        params['next'] = reverse('leads__root:list')
+        params['next'] = reverse('leads__root:agents')
 
     return render(request,
         'relationships/register_link.html', params)
@@ -238,7 +238,8 @@ def log_in(request):
                         if next_url is not None and next_url.strip() != '':
                             return HttpResponseRedirect(next_url)
                         
-                        return HttpResponseRedirect(reverse('leads__root:list'))
+                        return HttpResponseRedirect(
+                            reverse('leads__root:agents'))
 
                 send_login_link.delay(user.id)
 
@@ -313,7 +314,7 @@ def log_in_link(request, user_uuid):
     if next_url is not None and len(next_url.strip()) > 0:
         params['next'] = next_url
     else:
-        params['next'] = reverse('leads__root:list')
+        params['next'] = reverse('leads__root:agents')
 
     return render(request, 'relationships/login_link.html', params)
 
@@ -353,4 +354,4 @@ def confirm_log_in(request, user_uuid):
 def log_out(request):
     logout(request)
     messages.info(request, 'You\'ve logged out.')
-    return HttpResponseRedirect(reverse('leads__root:list'))
+    return HttpResponseRedirect(reverse('leads__root:agents'))
