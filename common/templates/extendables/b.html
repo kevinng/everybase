@@ -28,8 +28,8 @@
 
         <!-- start: desktop menu -->
         <div class="justify-between hidden lg:block">
-            <a class="font-bold text-blue-600 text-base">Agents</a>
-            <a class="hover:text-blue-600 text-base ml-7" href="#">I-Need-Agents</a>
+            <a class="{% if request.resolver_match.view_name == 'leads__root:agents' %}font-bold{% endif %} text-blue-600 text-base"{% if request.resolver_match.view_name != 'leads__root:agents' %} href="{% url 'leads__root:agents' %}"{% endif %}>Agents</a>
+            <a class="{% if request.resolver_match.view_name == 'leads__root:i_need_agents' %}font-bold{% endif %}hover:text-blue-600 text-base ml-7"{% if request.resolver_match.view_name != 'leads__root:i_need_agents' %} href="{% url 'leads__root:i_need_agents' %}"{% endif %}>I-Need-Agents</a>
             <a class="hover:text-blue-600 text-base ml-7" href="#">About Us</a>
         </div>
         <!-- end: desktop menu -->

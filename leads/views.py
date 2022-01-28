@@ -28,6 +28,14 @@ from chat.tasks.send_contact_request_exchanged_contactor import \
     send_contact_request_exchanged_contactor
 from relationships import models as relmods
 
+def i_need_agents(request):
+    template_name = 'leads/i_need_agent_list.html'
+    countries = commods.Country.objects.annotate(
+        number_of_users=Count('users_w_this_country'))\
+            .order_by('-number_of_users')
+    context = {'countries': countries}
+    return TemplateResponse(request, template_name, context)
+
 class AgentListView(ListView):
     template_name = 'leads/agent_list.html'
     model = relmods.User
