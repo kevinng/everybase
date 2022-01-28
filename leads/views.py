@@ -1,5 +1,5 @@
 from datetime import datetime
-import json, requests, pytz
+import json, requests, pytz, traceback
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
@@ -36,10 +36,85 @@ def i_need_agents(request):
     context = {'countries': countries}
     return TemplateResponse(request, template_name, context)
 
+class INeedAgentListView(ListView):
+    template_name = 'leads/i_need_agent_list.html'
+    model = relmods.Lead
+    paginate_by = 8
+
+    def get_queryset(self, **kwargs):
+        search = self.request.GET.get('search')
+        wants_to = self.request.GET.get('wants_to')
+        buy_country = self.request.GET.get('buy_country')
+        sell_country = self.request.GET.get('sell_country')
+        sort_by = self.request.GET.get('sort_by')
+
+        leads = relmods.Lead.objects
+
+        if wants_to == 'buy':
+            leads = leads.filter(lead_type='buying')
+        elif wants_to == 'sell':
+            leads = leads.filter(lead_type='selling')
+
+        if buy_country != 'any_country':
+            leads = leads.filter(buy_country=buy_country)
+
+        if sell_country != 'any_country':
+            leads = leads.filter(sell_country=sell_country)
+
+        vector = SearchVector('search_i_need_agents_veccol')
+        query = SearchQuery(search)
+        leads = leads.annotate(rank=SearchRank(vector, query))
+        
+        if sort_by == 'comm_percent_hi_lo':
+            leads = leads.order_by('-avg_comm_pct')
+        elif sort_by == 'comm_percent_lo_hi':
+            leads = leads.order_by('avg_comm_pct')
+        elif sort_by == 'comm_dollar_hi_lo':
+            leads = leads.order_by('-avg_deal_comm')
+        elif sort_by == 'comm_dollar_lo_hi':
+            leads = leads.order_by('avg_deal_comm')
+        else:
+            leads = leads.order_by('-rank')
+
+        # Save queries
+        try:
+            if self.request.user.is_authenticated:
+                q = models.INeedAgentQuery()
+                q.user=self.request.user.user
+                q.search=search
+                q.wants_to=wants_to
+                if buy_country != 'any_country':
+                    q.buy_country=commods.Country.objects.get(
+                        programmatic_key=buy_country)
+                if sell_country != 'any_country':
+                    q.sell_country=commods.Country.objects.get(
+                        programmatic_key=sell_country)
+                q.sort_by=sort_by
+                q.save()
+        except:
+            traceback.print_exc()
+
+        return leads
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['countries'] = commods.Country.objects.annotate(
+            number_of_users=Count('users_w_this_country'))\
+            .order_by('-number_of_users')
+
+        # Render search and country back into the template
+        context['search_value'] = self.request.GET.get('search')
+        context['wants_to_value'] = self.request.GET.get('wants_to')
+        context['buy_country_value'] = self.request.GET.get('buy_country')
+        context['sell_country_value'] = self.request.GET.get('sell_country')
+        context['sort_by_value'] = self.request.GET.get('sort_by')
+
+        return context
+
 class AgentListView(ListView):
     template_name = 'leads/agent_list.html'
     model = relmods.User
-    paginate_by = 20
+    paginate_by = 8
 
     def get_queryset(self, **kwargs):
         search = self.request.GET.get('search')
@@ -48,6 +123,18 @@ class AgentListView(ListView):
         users = relmods.User.objects
         if country is not None and country != 'any_country':
             users = users.filter(country__programmatic_key=country)
+
+        # Save queries
+        try:
+            if self.request.user.is_authenticated:
+                models.AgentQuery.objects.create(
+                    user=self.request.user.user,
+                    search=search,
+                    country=commods.Country.objects.get(
+                        programmatic_key=country)
+                )
+        except:
+            traceback.print_exc()
 
         vector = SearchVector('search_agents_veccol')
         query = SearchQuery(search)

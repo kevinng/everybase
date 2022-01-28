@@ -4,6 +4,8 @@ from django.db import models
 from common.models import Standard
 from files import models as fimods
 
+from django.contrib.postgres.search import SearchVectorField
+
 class Lead(Standard):
     """Lead.
 
@@ -50,7 +52,7 @@ class Lead(Standard):
     )
     details = models.TextField()
     avg_comm_pct = models.FloatField(db_index=True)
-    # TO REMOVE commission PCT after we've migrated the old entries
+    # TODO remove commission_pct after we've migrated the old entries
     commission_pct = models.FloatField(
         db_index=True,
         null=True,
@@ -72,6 +74,12 @@ class Lead(Standard):
         db_index=True
     )
 
+    search_i_need_agents_veccol = SearchVectorField(
+        null=True,
+        blank=True
+    )
+
+    # Deprecated
     author_type = models.CharField(
         max_length=20,
         choices=[
@@ -126,6 +134,9 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
+
+    def avg_deal_comm(self):
+        return self.avg_comm_pct * self.avg_deal_size
 
     def images(self):
         return fimods.File.objects.filter(
@@ -336,6 +347,10 @@ class FilterFormPost(Standard):
     )
 
 class WhatsAppLeadAuthorClick(Standard):
+    """User's click on to WhatsApp lead author
+    
+    Last updated: 28 January 2022, 6:26 PM
+    """
     lead = models.ForeignKey(
         'Lead',
         related_name='whatsapp_lead_author_clicks',
@@ -350,10 +365,109 @@ class WhatsAppLeadAuthorClick(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    access_count = models.IntegerField(
+    count = models.IntegerField(
         default=0,
         db_index=True
     )
 
     class Meta:
         unique_together = ('lead', 'contactor')
+
+class WhatsAppClick(Standard):
+    """User's click on to WhatsApp button
+
+    Last updated: 28 January 2022, 6:26 PM
+    """
+    contactee = models.ForeignKey(
+        'relationships.User',
+        related_name='whatsapp_clicks_with_this_contactee',
+        related_query_name='whatsapp_clicks_with_this_contactee',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    contactor = models.ForeignKey(
+        'relationships.User',
+        related_name='whatsapp_clicks_with_this_contactor',
+        related_query_name='whatsapp_clicks_with_this_contactor',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    source = models.CharField(max_length=200)
+    count = models.IntegerField(default=0)
+
+class WhatsAppMessageBody(Standard):
+    """Message body when a user contacts another user
+
+    Last updated: 28 January 2022, 6:26 PM
+    """
+    contactee = models.ForeignKey(
+        'relationships.User',
+        related_name='whatsapp_message_bodies_with_this_contactee',
+        related_query_name='whatsapp_message_bodies_with_this_contactee',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    contactor = models.ForeignKey(
+        'relationships.User',
+        related_name='whatsapp_message_bodies_with_this_contactor',
+        related_query_name='whatsapp_message_bodies_with_this_contactor',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    body = models.TextField()
+
+class AgentQuery(Standard):
+    """Agent query
+
+    Last updated: 28 January 2022, 6:26 PM
+    """
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='agent_query',
+        related_query_name='agent_query',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    search = models.CharField(max_length=200)
+    country = models.ForeignKey(
+        'common.Country',
+        related_name='agent_queries',
+        related_query_name='agent_queries',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+class INeedAgentQuery(Standard):
+    """I-Need-Agent query
+
+    Last updated: 28 January 2022, 6:26 PM
+    """
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='i_need_agent_query',
+        related_query_name='i_need_agent_query',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    search = models.CharField(max_length=200)
+    wants_to = models.CharField(
+        max_length=20,
+        choices=[
+            ('buy', 'Buy'),
+            ('sell', 'Sell')
+        ]
+    )
+    buy_country = models.ForeignKey(
+        'common.Country',
+        related_name='i_need_agent_queries_with_this_buy_country',
+        related_query_name='i_need_agent_queries_with_this_buy_country',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    sell_country = models.ForeignKey(
+        'common.Country',
+        related_name='i_need_agent_queries_with_this_sell_country',
+        related_query_name='i_need_agent_queries_with_this_sell_country',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
