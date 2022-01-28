@@ -449,10 +449,15 @@ class INeedAgentQuery(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    search = models.CharField(max_length=200)
+    search = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
+    )
     wants_to = models.CharField(
         max_length=20,
         choices=[
+            ('buy_or_sell', 'Buy or Sell'),
             ('buy', 'Buy'),
             ('sell', 'Sell')
         ]
@@ -461,6 +466,8 @@ class INeedAgentQuery(Standard):
         'common.Country',
         related_name='i_need_agent_queries_with_this_buy_country',
         related_query_name='i_need_agent_queries_with_this_buy_country',
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -468,6 +475,8 @@ class INeedAgentQuery(Standard):
         'common.Country',
         related_name='i_need_agent_queries_with_this_sell_country',
         related_query_name='i_need_agent_queries_with_this_sell_country',
+        null=True,
+        blank=True,
         on_delete=models.PROTECT,
         db_index=True
     )
