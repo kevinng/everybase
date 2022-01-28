@@ -82,11 +82,15 @@ class INeedAgentListView(ListView):
                 q = models.INeedAgentQuery()
                 q.user=self.request.user.user
                 q.search=search
+                if wants_to is None or wants_to.strip() == '':
+                    wants_to = 'buy_or_sell'
                 q.wants_to=wants_to
-                if buy_country != 'any_country':
+                if buy_country != 'any_country' and buy_country != None and \
+                    buy_country.strip() != '':
                     q.buy_country=commods.Country.objects.get(
                         programmatic_key=buy_country)
-                if sell_country != 'any_country':
+                if sell_country != 'any_country' and sell_country != None and \
+                    sell_country.strip() != '':
                     q.sell_country=commods.Country.objects.get(
                         programmatic_key=sell_country)
                 q.sort_by=sort_by
