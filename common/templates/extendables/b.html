@@ -15,37 +15,36 @@
     {% block other_css %}{% endblock %}
 </head>
 <body class="bg-slate-100 flex flex-col">
-    <!-- start: header -->
+    {% comment %} start: header {% endcomment %}
     <div class="flex items-center justify-between bg-white py-3 pl-5 pr-5 shadow-md z-[100] sticky top-0">
-        <!-- start: hamburger and logo -->
+        {% comment %} start: hamburger and logo {% endcomment %}
         <div>
             <button class="hamburger lg:hidden">
                 <div class="bar"></div>
             </button>
             <a class="hidden lg:block" href="https://everybase.co"><img src="{% static 'common/assets/img/logo.png' %}"></a>
         </div>
-        <!-- end: hamburger and logo -->
+        {% comment %} end: hamburger and logo {% endcomment %}
 
-        <!-- start: desktop menu -->
+        {% comment %} start: desktop menu {% endcomment %}
         <div class="justify-between hidden lg:block">
             <a class="{% if request.resolver_match.view_name == 'leads__root:agents' %}font-bold{% endif %} text-blue-600 text-base"{% if request.resolver_match.view_name != 'leads__root:agents' %} href="{% url 'leads__root:agents' %}"{% endif %}>Agents</a>
             <a class="{% if request.resolver_match.view_name == 'leads__root:i_need_agents' %}font-bold{% endif %}hover:text-blue-600 text-base ml-7"{% if request.resolver_match.view_name != 'leads__root:i_need_agents' %} href="{% url 'leads__root:i_need_agents' %}"{% endif %}>I-Need-Agents</a>
             <a class="hover:text-blue-600 text-base ml-7" href="#">About Us</a>
         </div>
-        <!-- end: desktop menu -->
+        {% comment %} end: desktop menu {% endcomment %}
 
-        <!-- start: actions -->
+        {% comment %} start: actions {% endcomment %}
         <div class="flex">
             <a href="#" class="text-base text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Register</a>
             <a href="#" class="text-base text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">Login</a>
             <a href="#" class="text-base text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2 hidden lg:block">My Profile</a>
         </div>
-        <!-- end: actions -->
+        {% comment %} end: actions {% endcomment %}
 
-        <!-- start: page actions -->
         {% block page_actions %}{% endblock %}
-        <!-- end: page actions -->
     </div>
+    {% comment %} start: mobile menu {% endcomment %}
     <nav class="mobile-nav text-base">
         <a class="font-bold text-blue-700 block px-4 py-4" href="#">Agents</a>
         <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">I-Need-Agents</a>
@@ -54,7 +53,8 @@
         <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">Register</a>
         <a href="#" class="hover:text-blue-700 block px-4 py-4" href="#">Login</a>
     </nav>
-    <!-- end: header -->
+    {% comment %} end: mobile menu {% endcomment %}
+    {% comment %} end: header {% endcomment %}
 
     {% block content %}{% endblock %}
 
