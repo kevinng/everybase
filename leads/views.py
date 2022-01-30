@@ -10,8 +10,10 @@ from django.urls import reverse
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.contrib.postgres.search import SearchVector, SearchQuery, \
+    SearchRank, SearchVectorField
 from django.db.models import Q, Count
+from django.db.models.expressions import RawSQL
 from django.template.response import TemplateResponse
 
 from everybase import settings
@@ -64,9 +66,6 @@ def create_i_need_agent(request):
             elif i_want_to == 'sell':
                 lead_type = 'selling'
 
-            print('average deal size')
-            print(form.cleaned_data.get('avg_deal_size'))
-
             lead = models.Lead.objects.create(
                 author=request.user.user,
                 lead_type=lead_type,
@@ -75,7 +74,8 @@ def create_i_need_agent(request):
                 avg_deal_size=form.cleaned_data.get('avg_deal_size'),
                 avg_comm_pct=form.cleaned_data.get('avg_comm_pct'),
                 details=form.cleaned_data.get('details'),
-                other_commission_details=form.cleaned_data.get('other_comm_details')
+                other_commission_details=form.cleaned_data.get(
+                    'other_comm_details')
             )
 
             return HttpResponseRedirect(
@@ -117,7 +117,12 @@ class INeedAgentListView(ListView):
 
         vector = SearchVector('search_i_need_agents_veccol')
         query = SearchQuery(search)
-        leads = leads.annotate(rank=SearchRank(vector, query))
+        leads = leads.annotate(
+            search_i_need_agents_veccol=RawSQL(
+                'search_i_need_agents_veccol', [],
+                output_field=SearchVectorField()))\
+            .annotate(rank=SearchRank(vector, query))\
+            .order_by('-rank')
         
         if sort_by == 'comm_percent_hi_lo':
             leads = leads.order_by('-avg_comm_pct')
@@ -196,7 +201,10 @@ class AgentListView(ListView):
 
         vector = SearchVector('search_agents_veccol')
         query = SearchQuery(search)
-        users = users.annotate(rank=SearchRank(vector, query))\
+        users = users.annotate(
+            search_agents_veccol=RawSQL('search_agents_veccol', [],
+                output_field=SearchVectorField()))\
+            .annotate(rank=SearchRank(vector, query))\
             .order_by('-rank')
             
         return users

@@ -4,8 +4,6 @@ from django.db import models
 from common.models import Standard
 from files import models as fimods
 
-from django.contrib.postgres.search import SearchVectorField
-
 class Lead(Standard):
     """Lead.
 
@@ -77,11 +75,6 @@ class Lead(Standard):
         null=True,
         blank=True
     )
-
-    # search_i_need_agents_veccol = SearchVectorField(
-    #     null=True,
-    #     blank=True
-    # )
 
     # Deprecated
     author_type = models.CharField(

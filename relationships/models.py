@@ -229,11 +229,6 @@ class User(Standard):
         blank=True
     )
 
-    search_agents_veccol = SearchVectorField(
-        null=True,
-        blank=True
-    )
-
     # Deprecated
     languages = models.ManyToManyField(
         'common.Language',
