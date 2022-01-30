@@ -73,11 +73,15 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-
-    search_i_need_agents_veccol = SearchVectorField(
+    other_commission_details = models.TextField(
         null=True,
         blank=True
     )
+
+    # search_i_need_agents_veccol = SearchVectorField(
+    #     null=True,
+    #     blank=True
+    # )
 
     # Deprecated
     author_type = models.CharField(
@@ -122,10 +126,6 @@ class Lead(Standard):
         blank=True
     )
     commission_payable_after_others = models.TextField(
-        null=True,
-        blank=True
-    )
-    other_commission_details = models.TextField(
         null=True,
         blank=True
     )

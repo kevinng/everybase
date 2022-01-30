@@ -1,6 +1,14 @@
 from django import forms
-from django.contrib.postgres.forms import SimpleArrayField
 from django.core.exceptions import ValidationError
+
+class INeedAgentForm(forms.Form):
+    i_want_to = forms.CharField()
+    buy_country = forms.CharField()
+    sell_country = forms.CharField()
+    avg_deal_size = forms.FloatField()
+    avg_comm_pct = forms.CharField()
+    details = forms.CharField()
+    other_comm_details = forms.CharField(required=False)
 
 class LeadForm(forms.Form):
     title = forms.CharField(

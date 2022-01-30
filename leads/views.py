@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.http.response import Http404
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.urls import reverse
 from django.shortcuts import render
 from django.contrib import messages
@@ -28,13 +29,66 @@ from chat.tasks.send_contact_request_exchanged_contactor import \
     send_contact_request_exchanged_contactor
 from relationships import models as relmods
 
-def i_need_agents(request):
-    template_name = 'leads/i_need_agent_list.html'
+def i_need_agent_detail(request, pk):
+    template_name = 'leads/i_need_agent_detail.html'
+    context = {}
+    print(pk)
+    return TemplateResponse(request, template_name, context)
+
+@login_required
+def create_i_need_agent(request):
+    # template_name = 'leads/i_need_agent_create.html'
     countries = commods.Country.objects.annotate(
         number_of_users=Count('users_w_this_country'))\
             .order_by('-number_of_users')
-    context = {'countries': countries}
-    return TemplateResponse(request, template_name, context)
+    # context = {'countries': countries}
+
+    if request.method == 'POST':
+        form = forms.INeedAgentForm(request.POST)
+        if form.is_valid():
+            buy_country_str = form.cleaned_data.get('buy_country')
+            buy_country = None
+            if buy_country_str != 'any_country':
+                buy_country = commods.Country.objects.get(
+                    programmatic_key=buy_country_str)
+
+            sell_country_str = form.cleaned_data.get('sell_country')
+            sell_country = None
+            if sell_country_str != 'any_country':
+                sell_country = commods.Country.objects.get(
+                    programmatic_key=sell_country_str)
+
+            i_want_to = form.cleaned_data.get('i_want_to')
+            if i_want_to == 'buy':
+                lead_type = 'buying'
+            elif i_want_to == 'sell':
+                lead_type = 'selling'
+
+            print('average deal size')
+            print(form.cleaned_data.get('avg_deal_size'))
+
+            lead = models.Lead.objects.create(
+                author=request.user.user,
+                lead_type=lead_type,
+                buy_country=buy_country,
+                sell_country=sell_country,
+                avg_deal_size=form.cleaned_data.get('avg_deal_size'),
+                avg_comm_pct=form.cleaned_data.get('avg_comm_pct'),
+                details=form.cleaned_data.get('details'),
+                other_commission_details=form.cleaned_data.get('other_comm_details')
+            )
+
+            return HttpResponseRedirect(
+                reverse('leads__root:i_need_agent_detail', args=(lead.id,)))
+    else:
+        form = forms.INeedAgentForm()
+
+    # return TemplateResponse(request, template_name, context)
+
+    return render(request, 'leads/i_need_agent_create.html', {
+        'form': form,
+        'countries': countries
+    })
 
 class INeedAgentListView(ListView):
     template_name = 'leads/i_need_agent_list.html'

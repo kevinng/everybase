@@ -29,32 +29,20 @@ Minify with https://www.minifier.org/
 {% endcomment %}
 {% block unrendered_javascript %}
 <script>
-var poll_status = function() {
-    var start_poll = function () {
-        var counter = 1000; // Poll for 50 minutes at most (1000 * 3s = 50 mins)
-        var set_interval = setInterval(function() {
-            // Get register token and ascertain if it has been activated.
-            $.get("{% url 'relationships:confirm_register' user_uuid %}", function(data) {
-                if (data['logged_in'] == true) {
-                    window.location.replace('{{ next }}');
-                }
-            });
-            counter--;
-            if (counter < 0) {
-                clearInterval(set_interval); // Stop this counter.
-            }
-        }, 3000); // Poll every 3 seconds.
-    }
-
-    return {
-        init: function () {
-            start_poll();
-        }
-    }
-}();
-
 $(document).ready(function () {
-    poll_status.init();
+    var counter = 1000; // Poll for 50 minutes at most (1000 * 3s = 50 mins)
+    var set_interval = setInterval(function() {
+        // Get register token and ascertain if it has been activated.
+        $.get("{% url 'relationships:confirm_register' user_uuid %}", function(data) {
+            if (data['logged_in'] == true) {
+                window.location.replace('{{ next }}');
+            }
+        });
+        counter--;
+        if (counter < 0) {
+            clearInterval(set_interval); // Stop this counter.
+        }
+    }, 3000); // Poll every 3 seconds.
 });
 </script>
 {% endblock %}
@@ -62,7 +50,6 @@ $(document).ready(function () {
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>{% comment %} Do not use the slim version, which does not have the .get function. {% endcomment %}
 <script>
-var poll_status=function(){var start_poll=function(){var counter=1000;var set_interval=setInterval(function(){$.get("{% url 'relationships:confirm_register' user_uuid %}",function(data){if(data.logged_in==!0){window.location.replace('{{ next }}')}});counter--;if(counter<0){clearInterval(set_interval)}},3000)}
-return{init:function(){start_poll()}}}();$(document).ready(function(){poll_status.init()})
+$(document).ready(function(){var counter=1000;var set_interval=setInterval(function(){$.get("{% url 'relationships:confirm_register' user_uuid %}",function(data){if(data.logged_in==!0){window.location.replace('{{ next }}')}});counter--;if(counter<0){clearInterval(set_interval)}},3000)})
 </script>
 {% endblock %}

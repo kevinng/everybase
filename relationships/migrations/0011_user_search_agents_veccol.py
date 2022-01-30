@@ -10,10 +10,13 @@ class Migration(migrations.Migration):
         ('relationships', '0010_manual_search_agents_veccol'),
     ]
 
+    # This operation was previously faked so we can use the defined field on the ORM without actually adding a search vector field column
+    # (it was added as a generated column in the last migration). It does not work because Django will attempt to write to the generated
+    # column when we create a new entry. The solution is to annotate the field whenever we need it.
     operations = [
-        migrations.AddField(
-            model_name='user',
-            name='search_agents_veccol',
-            field=django.contrib.postgres.search.SearchVectorField(blank=True, null=True),
-        ),
+        # migrations.AddField(
+        #     model_name='user',
+        #     name='search_agents_veccol',
+        #     field=django.contrib.postgres.search.SearchVectorField(blank=True, null=True),
+        # ),
     ]

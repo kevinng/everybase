@@ -9,85 +9,130 @@
 {% endblock %}
 
 {% block content %}
-<!-- start: login -->
+<form action="{% url 'leads__root:create_i_need_agent' %}" method="post">
+{% csrf_token %}
 <div class="flex justify-center">
     <div class="bg-white max-w-md mt-10 w-full lg:rounded-xl p-10 shadow-md">
-        <button class="w-full py-3 px-7 rounded-xl text-slate-600 shadow-md bg-slate-200 hover:bg-slate-300">Back to Results</button>
-        <div class="text-base text-center mt-6">New Post</div>
-        <h1 class="font-sans text-3xl font-bold text-center text-slate-900">I-Need-Agent</h1>
+        <div class="text-center mt-6">New Post</div>
+        <h1 class="text-3xl font-bold text-center text-slate-900">I-Need-Agent</h1>
         <div class="mt-7 flex flex-col justify-center">
-            <label for="i_want_to" class="font-sans text-sm font-bold uppercase text-slate-400">I Want To</label>
+            <label for="i_want_to" class="text-sm font-bold uppercase text-slate-400">I Want To</label>
             <div class="mt-2">
-                <select id="i_want_to" class="select2">
-                    <option value="buy">Buy</option>
-                    <option value="sell">Sell</option>
+                <select id="i_want_to" name="i_want_to" class="select2">
+                    <option value="sell"{% if form.i_want_to.value == 'sell' %} selected{% endif %}>Sell</option>
+                    <option value="buy"{% if form.i_want_to.value == 'buy' %} selected{% endif %}>Buy</option>
                 </select>
             </div>
+            {% if form.i_want_to.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.i_want_to.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <label for="buy_from_this_country" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Buy From This Country</label>
+            <label id="buy_label" for="buy_country" class="text-sm font-bold uppercase text-slate-400 mt-5">Source Country</label>
             <div class="mt-2">
-                <select id="buy_from_this_country" class="select2" data-placeholder="Choose country">
+                <select id="buy_country" name="buy_country" class="select2" data-placeholder="Choose country">
                     <option></option>
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option id="buy_country_any" value="any_country"{% if form.buy_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
+                    {% for country in countries %}
+                        <option value="{{ country.programmatic_key }}"{% if form.buy_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
+            {% if form.buy_country.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.buy_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
         
-            <label for="sell_to_this_country" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Sell To This Country</label>
+            <label id="sell_label" for="sell_country" class="text-sm font-bold uppercase text-slate-400 mt-5">Sell To This Country</label>
             <div class="mt-2">
-                <select id="sell_to_this_country" class="select2" data-placeholder="Choose country">
+                <select id="sell_country" name="sell_country" class="select2" data-placeholder="Choose country">
                     <option></option>
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option id="sell_country_any" value="any_country"{% if form.sell_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
+                    {% for country in countries %}
+                        <option value="{{ country.programmatic_key }}"{% if form.sell_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
+            {% if form.sell_country.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.sell_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <label for="average_deal_size" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Average Deal Size</label>
+            <label for="avg_deal_size" class="text-sm font-bold uppercase text-slate-400 mt-5">Average Deal Size</label>
             <div class="flex items-center justify-start">
-                <div class="mr-3 font-bold text-2xl">USD</div><input name="average_deal_size" placeholder="0" type="number" class="block w-1/2 border rounded-md py-3 px-5 mt-2">
+                <div class="mr-3 font-bold text-2xl">USD</div><input name="avg_deal_size" placeholder="0" type="number" value="{{ form.avg_deal_size.value }}" class="w-1/2 border rounded-md py-3 px-5 mt-2">
             </div>
+            {% if form.avg_deal_size.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.avg_deal_size.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <label for="average_agent_commission" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</label>
+            <label for="avg_comm_pct" class="text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</label>
             <div class="flex items-center justify-start">
-                <input name="average_deal_size" placeholder="0" type="number" class="block w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">%</div>
+                <input name="avg_comm_pct" placeholder="0" type="number" value="{{ form.avg_comm_pct.value }}" class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">%</div>
             </div>
+            {% if form.avg_comm_pct.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.avg_comm_pct.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <div class="text-base mt-4">This is a guide only - actual commissions negotiated per deal.</div>
+            <div class="mt-4">This is a guide only - actual commissions negotiated per deal.</div>
 
-            <label for="details" class="font-sans text-sm font-bold uppercase text-slate-400 mt-4">Details</label>
-            <textarea name="details" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2"></textarea>
+            <label for="details" class="text-sm font-bold uppercase text-slate-400 mt-4">Details</label>
+            <textarea name="details" rows="4" type="text" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None %}{{ form.details.value }}{% endif %}</textarea>
+            {% if form.details.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <label for="other_commission_details" class="font-sans text-sm font-bold uppercase text-slate-400 mt-4">Other Commission Details</label>
-            <textarea name="other_commission_details" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2"></textarea>
-            <div class="text-base mt-2">Other details regarding commission</div>
+            <label for="other_commission_details" class="text-sm font-bold uppercase text-slate-400 mt-4">Other Commission Details</label>
+            <textarea name="other_commission_details" rows="4" type="text" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.other_commission_details.value is not None %}{{ form.other_commission_details.value }}{% endif %}</textarea>
+            <div class="mt-2">Other details regarding commission</div>
+            {% if form.other_commission_details.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.other_commission_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <button class="w-full py-3 px-7 rounded-xl text-neutral-50 bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Post</button>
+            <button type="submit" class="w-full py-3 px-7 rounded-xl text-neutral-50 bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Post</button>
         </div>
     </div>
 </div>
-<!-- end: login -->
+</form>
 {% endblock %}
 
 {% comment %}
+Unrendered JavaScript
 Minify with https://www.minifier.org/
-
+{% endcomment %}
+{% block unrendered_javascript %}
+<script>
 $(document).ready(function() {
     $('.select2').select2();
 
     $('.select2').one('select2:open', function(e) {
         $('input.select2-search__field').prop('placeholder', 'Search here...');
     });
-});
-{% endcomment %}
 
+    update_country_labels = function (choice) {
+        console.log($('#buy_country option:selected').val())
+        console.log($('#sell_country option:selected').val())
+        if (choice == 'buy') {
+            $('#buy_label').text('Buy From This Country');
+            $('#sell_label').text('Destination Country');
+            $('#buy_country_any').attr('disabled', false); // I can buy from any country
+            $('#sell_country_any').attr('disabled', true); // My destination cannot be any
+            if ($('#sell_country option:selected').val() == 'any_country') {
+                // If my destination is any, empty it
+                $('#sell_country').val(null).trigger('change');
+            }
+        } else if (choice == 'sell') {
+            $('#buy_label').text('Source Country');
+            $('#sell_label').text('Sell To This Country');
+            $('#buy_country_any').attr('disabled', true); // My source cannot be any
+            $('#sell_country_any').attr('disabled', false); // I can sell to any country
+            if ($('#buy_country option:selected').val() == 'any_country') {
+                // If my source is any, empty it
+                $('#buy_country').val(null).trigger('change');
+            }
+        }
+    }
+
+    update_country_labels($('#i_want_to').val())
+
+    $('#i_want_to').change(function() {
+        choice = $(this).val();
+        update_country_labels(choice);
+    });
+});
+</script>
+{% endblock %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>  
-$(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search here...')})});
+$(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search here...')});update_country_labels=function(choice){console.log($('#buy_country option:selected').val())
+console.log($('#sell_country option:selected').val())
+if(choice=='buy'){$('#buy_label').text('Buy From This Country');$('#sell_label').text('Destination Country');$('#buy_country_any').attr('disabled',!1);$('#sell_country_any').attr('disabled',!0);if($('#sell_country option:selected').val()=='any_country'){$('#sell_country').val(null).trigger('change')}}else if(choice=='sell'){$('#buy_label').text('Source Country');$('#sell_label').text('Sell To This Country');$('#buy_country_any').attr('disabled',!0);$('#sell_country_any').attr('disabled',!1);if($('#buy_country option:selected').val()=='any_country'){$('#buy_country').val(null).trigger('change')}}}
+update_country_labels($('#i_want_to').val())
+$('#i_want_to').change(function(){choice=$(this).val();update_country_labels(choice)})})
 </script>
 {% endblock %}
