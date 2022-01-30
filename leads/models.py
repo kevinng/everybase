@@ -423,12 +423,18 @@ class AgentQuery(Standard):
         blank=True,
         db_index=True
     )
-    search = models.CharField(max_length=200)
+    search = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+    )
     country = models.ForeignKey(
         'common.Country',
         related_name='agent_queries',
         related_query_name='agent_queries',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         db_index=True
     )
 
