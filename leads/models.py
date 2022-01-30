@@ -412,13 +412,15 @@ class WhatsAppMessageBody(Standard):
 class AgentQuery(Standard):
     """Agent query
 
-    Last updated: 28 January 2022, 6:26 PM
+    Last updated: 30 January 2022, 11:14 PM
     """
     user = models.ForeignKey(
         'relationships.User',
         related_name='agent_query',
         related_query_name='agent_query',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         db_index=True
     )
     search = models.CharField(max_length=200)
@@ -433,13 +435,15 @@ class AgentQuery(Standard):
 class INeedAgentQuery(Standard):
     """I-Need-Agent query
 
-    Last updated: 28 January 2022, 6:26 PM
+    Last updated: 30 January 2022, 11:14 PM
     """
     user = models.ForeignKey(
         'relationships.User',
         related_name='i_need_agent_query',
         related_query_name='i_need_agent_query',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         db_index=True
     )
     search = models.CharField(

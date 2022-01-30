@@ -394,13 +394,15 @@ class Connection(Standard):
 class UserAgent(Standard):
     """User agent log.
 
-    Last updated: 26 January 2022, 5:20 PM
+    Last updated: 30 January 2022, 11:14 PM
     """
     user = models.ForeignKey(
         'User',
         related_name='user_agents',
         related_query_name='user_agents',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         db_index=True
     )
 
