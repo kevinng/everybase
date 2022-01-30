@@ -135,25 +135,28 @@ class INeedAgentListView(ListView):
         else:
             leads = leads.order_by('-rank')
 
-        # Save queries
+        # Save query
         try:
-            if self.request.user.is_authenticated:
-                q = models.INeedAgentQuery()
-                q.user=self.request.user.user
-                q.search=search
-                if wants_to is None or wants_to.strip() == '':
-                    wants_to = 'buy_or_sell'
-                q.wants_to=wants_to
-                if buy_country != 'any_country' and buy_country != None and \
-                    buy_country.strip() != '':
-                    q.buy_country=commods.Country.objects.get(
-                        programmatic_key=buy_country)
-                if sell_country != 'any_country' and sell_country != None and \
-                    sell_country.strip() != '':
-                    q.sell_country=commods.Country.objects.get(
-                        programmatic_key=sell_country)
-                q.sort_by=sort_by
-                q.save()
+            if self.request.user is not None:
+                user = self.request.user.user
+            else:
+                user = None
+            q = models.INeedAgentQuery()
+            q.user=user
+            q.search=search
+            if wants_to is None or wants_to.strip() == '':
+                wants_to = 'buy_or_sell'
+            q.wants_to=wants_to
+            if buy_country != 'any_country' and buy_country != None and \
+                buy_country.strip() != '':
+                q.buy_country=commods.Country.objects.get(
+                    programmatic_key=buy_country)
+            if sell_country != 'any_country' and sell_country != None and \
+                sell_country.strip() != '':
+                q.sell_country=commods.Country.objects.get(
+                    programmatic_key=sell_country)
+            q.sort_by=sort_by
+            q.save()
         except:
             traceback.print_exc()
 
@@ -187,14 +190,24 @@ class AgentListView(ListView):
         if country is not None and country != 'any_country':
             users = users.filter(country__programmatic_key=country)
 
-        # Save queries
+        # Save query
         try:
             if self.request.user.is_authenticated:
+                user = self.request.user.user
+            else:
+                user = None
+
+            if country == 'any_country' or country is None:
+                country_model = None
+            else:
+                country_model = commods.Country.objects.get(
+                    programmatic_key=country)
+                
+            if user is not None and search is not None and country is not None:
                 models.AgentQuery.objects.create(
-                    user=self.request.user.user,
+                    user=user,
                     search=search,
-                    country=commods.Country.objects.get(
-                        programmatic_key=country)
+                    country=country_model
                 )
         except:
             traceback.print_exc()

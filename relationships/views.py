@@ -11,13 +11,14 @@ from django.contrib import messages
 from everybase import settings
 from common import models as commods
 from relationships import forms, models
+from relationships.utilities.save_user_agent import save_user_agent
 from chat.tasks.send_register_link import send_register_link
 from chat.tasks.send_login_link import send_login_link
 
 from sentry_sdk import capture_message
 import phonenumbers
-from django_user_agents.utils import get_user_agent
-from ipware import get_client_ip
+# from django_user_agents.utils import get_user_agent
+# from ipware import get_client_ip
 
 def register(request):
     if request.method == 'POST':
@@ -59,11 +60,17 @@ def register(request):
             # Get or create an Everybase user
             user, _ = models.User.objects.get_or_create(
                 phone_number=phone_number)
+            
+
+            is_not_agent = form.cleaned_data.get('is_not_agent')
+            if is_not_agent is None:
+                is_not_agent = False
 
             # Override or set user details
             user.first_name = form.cleaned_data.get('first_name')
             user.last_name = form.cleaned_data.get('last_name')
             user.languages_string = form.cleaned_data.get('languages')
+            user.is_agent = not is_not_agent
             user.phone_number = phone_number
             user.email = email
             user.country = country
@@ -80,29 +87,7 @@ def register(request):
             if next_url is not None:
                 register_link += f'?next={next_url}'
 
-            # Record IP and user agent
-            r = get_user_agent(request)
-            ip_address, is_routable = get_client_ip(request)
-            models.UserAgent.objects.create(
-                user=user,
-                ip_address=ip_address,
-                is_routable=is_routable,
-                is_mobile=r.is_mobile,
-                is_tablet=r.is_tablet,
-                is_touch_capable=r.is_touch_capable,
-                is_pc=r.is_pc,
-                is_bot=r.is_bot,
-                browser=r.browser,
-                browser_family=r.browser.family,
-                browser_version=r.browser.version,
-                browser_version_string=r.browser.version_string,
-                os=r.os,
-                os_family=r.os.family,
-                os_version=r.os.version,
-                os_version_string=r.os.version_string,
-                device=r.device,
-                device_family=r.device.family
-            )
+            save_user_agent(request, user)
 
             return HttpResponseRedirect(register_link)
     else:
@@ -249,6 +234,8 @@ def log_in(request):
                 if next_url is not None:
                     login_link_url += f'?next={next_url}'
 
+                save_user_agent(request, user)
+                
                 return HttpResponseRedirect(login_link_url)
             except (models.User.DoesNotExist, models.PhoneNumber.DoesNotExist):
                 messages.info(request, 'Account not found. Create a new \

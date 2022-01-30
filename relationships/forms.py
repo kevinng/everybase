@@ -31,7 +31,9 @@ class RegisterForm(forms.Form):
         min_length=1,
         max_length=200
     )
-    is_agent = forms.BooleanField(required=True)
+    is_not_agent = forms.BooleanField(
+        required=False
+    )
 
     # Next URL after registration
     next = forms.CharField(required=False)
