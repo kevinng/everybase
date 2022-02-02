@@ -30,6 +30,7 @@ from chat.tasks.send_contact_request_exchanged_author import \
 from chat.tasks.send_contact_request_exchanged_contactor import \
     send_contact_request_exchanged_contactor
 from relationships import models as relmods
+from relationships.utilities.save_user_agent import save_user_agent
 
 def i_need_agent_detail(request, pk):
     template_name = 'leads/i_need_agent_detail.html'
@@ -39,11 +40,9 @@ def i_need_agent_detail(request, pk):
 
 @login_required
 def create_i_need_agent(request):
-    # template_name = 'leads/i_need_agent_create.html'
     countries = commods.Country.objects.annotate(
         number_of_users=Count('users_w_this_country'))\
             .order_by('-number_of_users')
-    # context = {'countries': countries}
 
     if request.method == 'POST':
         form = forms.INeedAgentForm(request.POST)
@@ -78,12 +77,17 @@ def create_i_need_agent(request):
                     'other_comm_details')
             )
 
+            if request.user.is_authenticated:
+                user = request.user.user
+            else:
+                user = None
+
+            save_user_agent(request, user)
+
             return HttpResponseRedirect(
                 reverse('leads__root:i_need_agent_detail', args=(lead.id,)))
     else:
         form = forms.INeedAgentForm()
-
-    # return TemplateResponse(request, template_name, context)
 
     return render(request, 'leads/i_need_agent_create.html', {
         'form': form,
@@ -136,29 +140,29 @@ class INeedAgentListView(ListView):
             leads = leads.order_by('-rank')
 
         # Save query
-        try:
-            if self.request.user is not None:
-                user = self.request.user.user
-            else:
-                user = None
-            q = models.INeedAgentQuery()
-            q.user=user
-            q.search=search
-            if wants_to is None or wants_to.strip() == '':
-                wants_to = 'buy_or_sell'
-            q.wants_to=wants_to
-            if buy_country != 'any_country' and buy_country != None and \
-                buy_country.strip() != '':
-                q.buy_country=commods.Country.objects.get(
-                    programmatic_key=buy_country)
-            if sell_country != 'any_country' and sell_country != None and \
-                sell_country.strip() != '':
-                q.sell_country=commods.Country.objects.get(
-                    programmatic_key=sell_country)
-            q.sort_by=sort_by
-            q.save()
-        except:
-            traceback.print_exc()
+        if self.request.user.is_authenticated:
+            user = self.request.user.user
+        else:
+            user = None
+
+        q = models.INeedAgentQuery()
+        q.user=user
+        q.search=search
+        if wants_to is None or wants_to.strip() == '':
+            wants_to = 'buy_or_sell'
+        q.wants_to=wants_to
+        if buy_country != 'any_country' and buy_country != None and \
+            buy_country.strip() != '':
+            q.buy_country=commods.Country.objects.get(
+                programmatic_key=buy_country)
+        if sell_country != 'any_country' and sell_country != None and \
+            sell_country.strip() != '':
+            q.sell_country=commods.Country.objects.get(
+                programmatic_key=sell_country)
+        q.sort_by=sort_by
+        q.save()
+
+        save_user_agent(self.request, user)
 
         return leads
 

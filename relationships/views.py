@@ -17,8 +17,6 @@ from chat.tasks.send_login_link import send_login_link
 
 from sentry_sdk import capture_message
 import phonenumbers
-# from django_user_agents.utils import get_user_agent
-# from ipware import get_client_ip
 
 def register(request):
     if request.method == 'POST':
