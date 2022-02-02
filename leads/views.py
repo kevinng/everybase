@@ -38,6 +38,10 @@ def i_need_agent_detail(request, pk):
     print(pk)
     return TemplateResponse(request, template_name, context)
 
+class INeedAgentDetail(DetailView):
+    template_name = 'leads/i_need_agent_detail.html'
+    model = models.Lead
+
 @login_required
 def create_i_need_agent(request):
     countries = commods.Country.objects.annotate(

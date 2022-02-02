@@ -2,11 +2,14 @@
 
 {% load static %}
 
-{% block title %}User Details{% endblock %}
+{% block title %}{{ object.author.first_name }} Needs Agent{% endblock %}
 
 {% comment %}
+Unrendered CSS
 Minify with https://www.minifier.org/
-
+{% endcomment %}
+{% block unrendered_css %}
+<style>
 #mobile-filter {
     position: fixed;
     top: 0;
@@ -23,8 +26,8 @@ Minify with https://www.minifier.org/
 #mobile-filter.is-active {
     left: 0;
 }
-{% endcomment %}
-
+</style>
+{% endblock %}
 {% block other_css %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
@@ -35,61 +38,64 @@ Minify with https://www.minifier.org/
 {% block page_actions %}
 <div class="flex lg:hidden">
     <button class="py-2 px-5 font-bold rounded-xl text-neutral-50 bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</button>
-    {% comment %} <button class="py-2 px-5 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</button> {% endcomment %}
+    {% if user.is_authenticated and user.id == object.author.id %}
+        <button class="py-2 px-5 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</button>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="flex flex-col lg:flex-row justify-center mt-10 gap-2">
-    <!-- start: user aside desktop -->
+    {% comment %} start: user aside desktop {% endcomment %}
     <div class="bg-white w-full lg:block lg:w-4/12 xl:w-3/12 2xl:w-3/12 shadow-md lg:sticky lg:top-20 lg:self-start lg:rounded-t-xl">
-        <h1 class="font-sans text-3xl font-bold text-center text-slate-900 mt-10 px-10">Arian Josimaya</h1>
+        <h1 class="font-sans text-3xl font-bold text-center text-slate-900 mt-10 px-10">{{ object.author.first_name }} {{ object.author.last_name }}</h1>
         <div class="flex flex-col items-center">
-            <div class="text-base mt-2">Bangladesh</div>
+            <div class="text-base mt-2">{{ object.author.country.name }}</div>
             <button class="py-2 px-5 font-bold rounded-xl text-neutral-50 bg-green-500 hover:bg-green-600 shadow-md mt-2">WhatsApp</button>
             <div class="text-base mt-2">Contacted 2d ago</div>
-            {% comment %} <button class="py-2 px-5 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 mt-2">Edit Profile</button> {% endcomment %}
+            {% if user.is_authenticated and user.id == object.author.id %}
+                <button class="py-2 px-5 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 mt-2">Edit Profile</button>
+            {% endif %}
         </div>
+        {% if object.author.is_agent == True %}
         <div class="bg-rose-100 w-full mt-5 py-4 text-center font-bold text-rose-400">I'm an Agent</div>
-        <div class="bg-white px-4 pb-5">
+        {% endif %}
+        <div class="bg-white px-4 pb-5 mt-8">
             <div class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Goods I Deal With</div>
-            <div class="text-base mt-2">Minerals like talc, mica ,calcined kaolin, white wollastonite, wet ground mica,graphite expanded s,silica ultra fine all oxide colours</div>
+            <div class="text-base mt-2">{% if object.author.goods_string is not None %}{{ object.author.goods_string }}{% else %}Not specified{% endif %}</div>
             <div class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Languages I Speak</div>
-            <div class="text-base mt-2">Paskistani, English</div>
+            <div class="text-base mt-2">{% if object.author.languages_string is not None %}{{ object.author.languages_string }}{% else %}Not specified{% endif %}</div>
         </div>
     </div>
-    <!-- end: user aside desktop -->
-    <!-- start: user aside mobile -->
-
-    <!-- end: user aside mobile -->
+    {% comment %} end: user aside desktop {% endcomment %}
 
     <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
-        <!-- start: tab -->
         <div class="flex items-center justify-evenly">
             <a href="#" class="w-1/2 text-center py-3 text-slate-600 bg-slate-200 hover:bg-slate-300 shadow-sm lg:rounded-tl-xl">Comments</a>
             <a href="#" class="w-1/2 text-center py-3 text-slate-600 bg-slate-200 hover:bg-slate-300 shadow-sm lg:rounded-tr-xl">I-Need-Agents</a>
         </div>
-        <!-- end: tab -->
 
         <div class="bg-white w-full p-5 mt-2">
             <div class="flex items-center justify-between">
-                <div class="font-bold text-base">Selling</div>
+                <div class="font-bold text-base">Help Me {% if object.lead_type == 'buying' %}Buy{% elif object.lead_type == 'selling' %}Sell{% endif %}</div>
                 <div class="text-base">2d ago</div>
             </div>
-            <div class="text-base">Buy from Indonesia</div>
-            <div class="text-base">Sell to any country</div>
+            <div>{% if object.lead_type == 'buying' %}Buy from{% elif object.lead_type == 'selling' %}Source is {% endif %} {% if object.buy_country is None %}any country{% else %}{{ object.buy_country.name }}{% endif %}</div>
+            <div>{% if object.lead_type == 'buying' %}Destination is{% elif object.lead_type == 'selling' %}Sell to{% endif %} {% if object.sell_country is None %}any country{% else %}{{ object.sell_country.name }}{% endif %}</div>
             <div class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Details</div>
-            <div class="text-base">Minerals like talc, mica ,calcined kaolin, white wollastonite, wet ground mica,graphite expanded s,silica ultra fine all oxide colours</div>
+            <div class="text-base">{{ object.details }}</div>
             <div class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</div>
-            <div class="text-base">3%</div>
+            <div>{{ object.avg_comm_pct }}%</div>
             <div class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Average Deal Size</div>
-            <div class="text-base">USD 30000</div>
+            <div>USD {{ object.avg_deal_size }}</div>
             <div class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Average Commission Per Deal</div>
-            <div class="text-base">USD 900</div>
-            <div class="italic">This is a guide only - actual commissions negotiated per deal.</div>
-            <div class="flex justify-end mt-5">
+            <div>USD {{ object.avg_deal_comm }}</div>
+            <div class="italic mb-5">This is a guide only - actual commissions negotiated per deal.</div>
+            {% if user.is_authenticated and user.id == object.author.id %}
+            <div class="flex justify-end">
                 <a href="#" class="text-base text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-6 py-2 hidden lg:block ml-2">Edit</a>
             </div>
+            {% endif %}
         </div>
 
     </div>
@@ -97,15 +103,17 @@ Minify with https://www.minifier.org/
 {% endblock %}
 
 {% comment %}
+Unrendered JavaScript
 Minify with https://www.minifier.org/
-
+{% endcomment %}
+{% block unrendered_javascript %}
+<script>
 $(document).ready(function() {
     $('.select2').select2();
 
     $('.select2').one('select2:open', function(e) {
         $('input.select2-search__field').prop('placeholder', 'Search here...');
     });
-
 
     $('#filter').click(function() {
         t = $(this);
@@ -125,8 +133,8 @@ $(document).ready(function() {
         $('#mobile-filter').toggleClass('is-active');
     });
 });
-{% endcomment %}
-
+</script>
+{% endblock %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

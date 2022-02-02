@@ -129,7 +129,7 @@ class Lead(Standard):
     )
 
     def avg_deal_comm(self):
-        return self.avg_comm_pct * self.avg_deal_size
+        return self.avg_comm_pct / 100 * self.avg_deal_size
 
     def images(self):
         return fimods.File.objects.filter(

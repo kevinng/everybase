@@ -5,8 +5,11 @@
 {% block title %}Everybase I-Need-Agents{% endblock %}
 
 {% comment %}
+Unrendered CSS
 Minify with https://www.minifier.org/
-
+{% endcomment %}
+{% block unrendered_css %}
+<style>
 #mobile-filter {
     position: fixed;
     top: 0;
@@ -23,7 +26,8 @@ Minify with https://www.minifier.org/
 #mobile-filter.is-active {
     left: 0;
 }
-{% endcomment %}
+</style>
+{% endblock %}
 {% block other_css %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
@@ -184,8 +188,8 @@ Minify with https://www.minifier.org/
                     <div class="font-bold">Help Me {% if l.lead_type == 'buying' %}Buy{% elif l.lead_type == 'selling' %}Sell{% endif %}</div>
                     <div>{{ l.age_desc }}</div>
                 </div>
-                <div>{% if l.lead_type == 'buying' %}Buy from{% elif l.lead_type == 'selling' %}Source{% endif %} {% if l.buy_country is None %}any country{% else %}{{ l.buy_country.name }}{% endif %}</div>
-                <div>{% if l.lead_type == 'buying' %}Destination{% elif l.lead_type == 'selling' %}Sell to{% endif %} {% if l.sell_country is None %}any country{% else %}{{ l.sell_country.name }}{% endif %}</div>
+                <div>{% if l.lead_type == 'buying' %}Buy from{% elif l.lead_type == 'selling' %}Source is{% endif %} {% if l.buy_country is None %}any country{% else %}{{ l.buy_country.name }}{% endif %}</div>
+                <div>{% if l.lead_type == 'buying' %}Destination is{% elif l.lead_type == 'selling' %}Sell to{% endif %} {% if l.sell_country is None %}any country{% else %}{{ l.sell_country.name }}{% endif %}</div>
                 <div class="text-sm font-bold uppercase text-slate-400 mt-5">Details</div>
                 <div>{{ l.details }}</div>
                 <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</div>
