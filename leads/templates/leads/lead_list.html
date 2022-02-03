@@ -178,18 +178,8 @@ Minify with https://www.minifier.org/
 
         {% endfor %}
 
-        {% comment %} start: paginator {% endcomment %}
-        <div class="flex items-center justify-center gap-3 mt-4 sticky top-20">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="text-slate-600 shadow-md bg-slate-200 hover:bg-slate-300 rounded px-4 py-2">Prev</a>
-            {% endif %}
-            <div class="font-bold">Page {{ page_obj.number }}</div>
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="text-slate-600 shadow-md bg-slate-200 hover:bg-slate-300 rounded px-4 py-2">Next</a>
-            {% endif %}
-        </div>
-        {% comment %} end: paginator {% endcomment %}
-
+        {% include 'includes/paginator.html' with other_css_classes='mt-5' %}
+        
         {% else %}
         {% comment %} else: page item count <= 0 {% endcomment %}
 
