@@ -1,7 +1,6 @@
 {% comment %}
 Params:
-    viewing_user, user viewing details
-    detail_user, user whose details are being
+    detail_user, user whose details are being shown
 {% endcomment %}
 <div class="bg-white lg:block lg:w-4/12 xl:w-3/12 2xl:w-3/12 lg:sticky lg:top-20 lg:self-start lg:rounded-t-xl shadow-md">
     <h1 class="text-3xl font-bold text-center mt-10 px-10">{{ detail_user.first_name }} {{ detail_user.last_name }}</h1>
@@ -9,7 +8,7 @@ Params:
         <div class="mt-2">{{ detail_user.country.name }}</div>
         <button class="py-2 px-5 mt-2 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</button>
         {% comment %} <div class="mt-2">Contacted 2d ago</div> {% endcomment %}
-        {% if viewing_user.is_authenticated and viewing_user.id == detail_user.id %}
+        {% if user.is_authenticated and user.id == detail_user.id %}
             <button class="py-2 px-5 mt-2 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</button>
         {% endif %}
     </div>
