@@ -38,6 +38,7 @@ urlpatterns = [
 
     # Relationships
     path('', include('relationships.urls__root')),
+    path('users/', include('relationships.urls__users')),
 
     # Chat
     path('chat/', include('chat.urls')),
