@@ -282,6 +282,9 @@ class User(Standard):
         db_index=True
     )
 
+    def leads(self):
+        return Lead.objects.filter(author=self.id)
+
     def country_from_phone_number(self):
         try:
             return Country.objects.get(
