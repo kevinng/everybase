@@ -29,11 +29,11 @@ Params:
     
     <div class="flex justify-end">
         {% if summary == True %}
-            <a href="{% url 'leads:lead_detail' lead.id %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-6 py-2 hidden lg:block">Details</a>
+            <a href="{% url 'leads:lead_detail' lead.id %}" class="px-6 py-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded">Details</a>
         {% endif %}
 
         {% if user.is_authenticated and user.user.id == lead.author.id %}
-            <a href="{% url 'leads:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 lg:block rounded hidden">Edit</a>
+            <a href="{% url 'leads:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded">Edit</a>
         {% endif %}
     </div>
 </div>
