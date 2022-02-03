@@ -40,7 +40,7 @@ from relationships.utilities.save_user_agent import save_user_agent
 #     return TemplateResponse(request, template_name, context)
 
 # def i_need_agent_edit(request, pk):
-#     template_name = 'leads/i_need_agent_edit.html'
+#     template_name = 'leads/lead_edit.html'
 #     context = {}
 #     print(pk)
 #     return TemplateResponse(request, template_name, context)
@@ -48,8 +48,8 @@ from relationships.utilities.save_user_agent import save_user_agent
 def i_need_agent_author_list(request, user_pk):
     pass
 
-class INeedAgentEdit(UpdateView):
-    template_name = 'leads/i_need_agent_edit.html'
+class LeadEdit(UpdateView):
+    template_name = 'leads/lead_edit.html'
     model = models.Lead
     fields = ['lead_type', 'buy_country', 'sell_country', 'avg_deal_size',
         'avg_comm_pct', 'details', 'other_commission_details']
@@ -63,15 +63,14 @@ class INeedAgentEdit(UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse('leads__root:i_need_agent_detail',
-            args=(self.object.id,))
+        return reverse('leads__root:lead_detail', args=(self.object.id,))
 
-class INeedAgentDetail(DetailView):
-    template_name = 'leads/i_need_agent_detail.html'
+class LeadDetail(DetailView):
+    template_name = 'leads/lead_detail.html'
     model = models.Lead
 
 @login_required
-def i_need_agent_create(request):
+def lead_create(request):
     countries = commods.Country.objects.annotate(
         number_of_users=Count('users_w_this_country'))\
             .order_by('-number_of_users')
@@ -115,13 +114,13 @@ def i_need_agent_create(request):
     else:
         form = forms.INeedAgentForm()
 
-    return render(request, 'leads/i_need_agent_create.html', {
+    return render(request, 'leads/lead_create.html', {
         'form': form,
         'countries': countries
     })
 
-class INeedAgentListView(ListView):
-    template_name = 'leads/i_need_agent_list.html'
+class LeadListView(ListView):
+    template_name = 'leads/lead_list.html'
     model = relmods.Lead
     paginate_by = 8
 

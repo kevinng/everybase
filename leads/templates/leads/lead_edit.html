@@ -2,18 +2,18 @@
 
 {% load static %}
 
-{% block title %}Create I-Need-Agent Post{% endblock %}
+{% block title %}Edit I-Need-Agent Post{% endblock %}
 
 {% block other_css %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'leads__root:i_need_agent_create' %}" method="post">
+<form action="{% url 'leads__root:lead_edit' lead.id %}" method="post">
 {% csrf_token %}
 <div class="flex justify-center">
-    <div class="p-10 mt-10 bg-white max-w-md lg:rounded-xl shadow-md">
-        <div class="text-center mt-6">New Post</div>
+    <div class="bg-white max-w-md mt-10 lg:rounded-xl p-10 shadow-md">
+        <div class="text-center mt-6">Edit Post</div>
         <h1 class="text-3xl font-bold text-center">I-Need-Agent</h1>
         <div class="mt-7 flex flex-col justify-center">
             <label for="lead_type" class="text-sm font-bold uppercase text-slate-400">I Want To</label>
@@ -23,7 +23,7 @@
                     <option value="buying"{% if form.lead_type.value == 'buying' %} selected{% endif %}>Buy</option>
                 </select>
             </div>
-            {% if form.lead_type.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.lead_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% if form.i_want_to.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.i_want_to.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
             <label id="buy_label" for="buy_country" class="text-sm font-bold uppercase text-slate-400 mt-5">Source Country</label>
             <div class="mt-2">
@@ -36,7 +36,7 @@
                 </select>
             </div>
             {% if form.buy_country.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.buy_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-        
+
             <label id="sell_label" for="sell_country" class="text-sm font-bold uppercase text-slate-400 mt-5">Sell To This Country</label>
             <div class="mt-2">
                 <select id="sell_country" name="sell_country" class="select2" data-placeholder="Choose country">
@@ -61,7 +61,7 @@
             </div>
             {% if form.avg_comm_pct.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.avg_comm_pct.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <div class="mt-4">This is a guide only - actual commissions negotiated per deal.</div>
+            <div class="text-base mt-4">This is a guide only - actual commissions negotiated per deal.</div>
 
             <label for="details" class="text-sm font-bold uppercase text-slate-400 mt-4">Details</label>
             <textarea name="details" rows="4" type="text" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None %}{{ form.details.value }}{% endif %}</textarea>
@@ -129,10 +129,6 @@ $(document).ready(function() {
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>  
-$(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search here...')});update_country_labels=function(choice){console.log($('#buy_country option:selected').val())
-console.log($('#sell_country option:selected').val())
-if(choice=='buy'){$('#buy_label').text('Buy From This Country');$('#sell_label').text('Destination Country');$('#buy_country_any').attr('disabled',!1);$('#sell_country_any').attr('disabled',!0);if($('#sell_country option:selected').val()=='any_country'){$('#sell_country').val(null).trigger('change')}}else if(choice=='sell'){$('#buy_label').text('Source Country');$('#sell_label').text('Sell To This Country');$('#buy_country_any').attr('disabled',!0);$('#sell_country_any').attr('disabled',!1);if($('#buy_country option:selected').val()=='any_country'){$('#buy_country').val(null).trigger('change')}}}
-update_country_labels($('#i_want_to').val())
-$('#i_want_to').change(function(){choice=$(this).val();update_country_labels(choice)})})
+$(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search here...')})});
 </script>
 {% endblock %}

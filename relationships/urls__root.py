@@ -3,6 +3,7 @@ from relationships import views
 
 app_name = 'relationships'
 urlpatterns = [
+    # path('comments/')
     path('register/', views.register, name='register'),
     path('register_link/<str:user_uuid>', views.register_link, name='register_link'),
     path('confirm_register/<str:user_uuid>', views.confirm_register, name='confirm_register'),

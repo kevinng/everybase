@@ -4,9 +4,13 @@ from . import views
 app_name = 'leads__root'
 urlpatterns = [
     path('', views.AgentListView.as_view(), name='agents'),
-    path('i-need-agents', views.INeedAgentListView.as_view(), name='i_need_agents'),
+    path('leads', views.LeadListView.as_view(), name='lead_list'),
+    path('leads/create', views.lead_create, name='lead_create'),
+    path('leads/edit/<int:pk>', views.LeadEdit.as_view(), name='lead_edit'),
+    path('leads/<int:pk>', views.LeadDetail.as_view(), name='lead_detail'),
+
+    # path('u/<int:pk>/i-need-agents')
+
+
     # path('i-need-agents/author/<int:user_pk>')
-    path('i-need-agent/new', views.i_need_agent_create, name='i_need_agent_create'),
-    path('i-need-agent/edit/<int:pk>', views.INeedAgentEdit.as_view(), name='i_need_agent_edit'),
-    path('i-need-agent/<int:pk>', views.INeedAgentDetail.as_view(), name='i_need_agent_detail'),
 ]
