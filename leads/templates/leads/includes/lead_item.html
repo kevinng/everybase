@@ -4,7 +4,7 @@ Params:
     summary, if True showing summary
     more_css_classes, additional div CSS classes
 {% endcomment %}
-<div class="bg-white p-5{% if more_css_classes is not None %} {{ more_css_classes }}{% endif %}">
+<div class="bg-white p-5{% if more_css_classes is not None and more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
     <div class="flex items-center justify-between">
         <div class="font-bold">Help Me {% if lead.lead_type == 'buying' %}Buy{% elif lead.lead_type == 'selling' %}Sell{% endif %}</div>
         <div>{{ lead.age_desc }}</div>
@@ -20,7 +20,7 @@ Params:
     <div>USD {{ lead.avg_deal_size }}</div>
     <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Commission Per Deal</div>
     <div>USD {{ lead.avg_deal_comm }}</div>
-    {% if lead.other_commission_details is not None %}
+    {% if lead.other_commission_details is not None and lead.other_commission_details|cut:' ' != '' %}
         <div class="text-sm font-bold uppercase text-slate-400 mt-5">Other Commission Details</div>
         <div>{{ lead.other_commission_details }}</div>
     {% endif %}

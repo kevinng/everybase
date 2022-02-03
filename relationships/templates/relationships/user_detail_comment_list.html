@@ -48,27 +48,8 @@ Minify with https://www.minifier.org/
 
 {% block content %}
 <div class="flex flex-col lg:flex-row justify-center mt-10 gap-2">
-    {% comment %} start: user aside desktop {% endcomment %}
-    <div class="bg-white w-full lg:block lg:w-4/12 xl:w-3/12 2xl:w-3/12 shadow-md lg:sticky lg:top-20 lg:self-start lg:rounded-t-xl">
-        <h1 class="text-3xl font-bold text-center mt-10 px-10">Arian Josimaya</h1>
-        <div class="flex flex-col items-center">
-            <div class="mt-2">Bangladesh</div>
-            {% if user.is_authenticated and user.user.id != detail_user.id %}
-            <a href="#" class="py-2 px-5 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md mt-2">WhatsApp</a>
-            {% else %}
-            <a href="#" class="py-2 px-5 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 mt-2">Edit Profile</a>
-            {% endif %}
-            {% comment %} <div class="mt-2">Contacted 2d ago</div> {% endcomment %}
-        </div>
-        <div class="bg-rose-100 w-full mt-5 py-4 text-center font-bold text-rose-400">I'm an Agent</div>
-        <div class="bg-white px-4 pb-5 mt-8">
-            <div class="text-sm font-bold uppercase text-slate-400 mt-5">Goods I Deal With</div>
-            <div class="mt-2">Minerals like talc, mica ,calcined kaolin, white wollastonite, wet ground mica,graphite expanded s,silica ultra fine all oxide colours</div>
-            <div class="text-sm font-bold uppercase text-slate-400 mt-5">Languages I Speak</div>
-            <div class="mt-2">Paskistani, English</div>
-        </div>
-    </div>
-    {% comment %} end: user aside desktop {% endcomment %}
+
+    {% include 'relationships/includes/user_detail_side.html' %}
 
     <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
         <!-- start: tab -->
@@ -79,14 +60,14 @@ Minify with https://www.minifier.org/
         <!-- end: tab -->
 
         <div class="bg-white p-5 mt-2">
-            <form action="{% url 'relationships:user_comments' user_pk %}" method="post">
+            <form action="{% url 'relationships:user_comments' detail_user.id %}" method="post">
                 <div class="flex flex-col items-center justify-center">
                     <h2 class="font-bold text-xl">Leave a Private Comment</h2>
-                    <div class="text-slate-500">You last contacted Arian Josimaya 2 days ago</div>
+                    <div class="text-slate-500">You last contacted {{ detail_user.first_name }} {{ detail_user.last_name }} 2 days ago</div>
                 </div>
-                <textarea rows="4" class="w-full mt-2 px-5 py-3 border"></textarea>
+                <textarea name="comments" rows="4" class="w-full mt-2 px-5 py-3 border"></textarea>
                 <div class="flex justify-start mt-2">
-                    <input type="checkbox" class="focus:ring-blue-100 border-gray-300 h-6 w-6"><div class="ml-2">Help other users, make this comment public instead</div>
+                    <input name="is_private" type="checkbox" class="focus:ring-blue-100 border-gray-300 h-6 w-6"><div class="ml-2">Help other users, make this comment public instead</div>
                 </div>
                 <div class="italic mt-2">Others will not see this comment unless you make it public</div>
                 <button type="submit" class="w-full py-4 px-7 font-bold text-white rounded-xl bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Post</button>
@@ -141,7 +122,6 @@ Minify with https://www.minifier.org/
         <div class="flex flex-col items-center justify-center mt-5">
             <h2 class="text-lg">No public comments</h2>
         </div>
-
     </div>
 </div>
 {% endblock %}
@@ -158,7 +138,6 @@ $(document).ready(function() {
     $('.select2').one('select2:open', function(e) {
         $('input.select2-search__field').prop('placeholder', 'Search here...');
     });
-
 
     $('#filter').click(function() {
         t = $(this);

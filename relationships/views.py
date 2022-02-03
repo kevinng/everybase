@@ -20,6 +20,8 @@ from sentry_sdk import capture_message
 import phonenumbers
 
 def user_comments(request, pk):
+    user = models.User.objects.get(pk=pk)
+
     if request.method == 'POST':
         form = forms.CommentForm(request.POST)
         if form.is_valid():
@@ -28,7 +30,7 @@ def user_comments(request, pk):
         form = forms.CommentForm()
 
     return render(request, 'relationships/user_detail_comment_list.html', {
-        'user_pk': pk,
+        'detail_user': user,
         'form': form
     })
 

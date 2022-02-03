@@ -51,7 +51,7 @@ Minify with https://www.minifier.org/
         <div class="mt-7 flex flex-col justify-center">
             <form action="{% url 'leads__root:agents' %}" type="get">
                 <label for="search" class="text-sm font-bold uppercase text-slate-400 block">Search</label>
-                <input name="search" {% if search_value is not None %}value="{{ search_value }}"{% endif %} placeholder="Leave blank for all" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
+                <input name="search" {% if search_value is not None and search_value|cut:' ' != '' %}value="{{ search_value }}"{% endif %} placeholder="Leave blank for all" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
 
                 <label for="country" class="text-sm font-bold uppercase text-slate-400 mt-5 block">Country</label>
                 <div class="mt-2">
@@ -75,7 +75,7 @@ Minify with https://www.minifier.org/
         <div class="flex flex-col justify-center mt-7 mx-5">
             <form action="{% url 'leads__root:agents' %}" type="get">
                 <label for="search" class="text-sm font-bold uppercase text-slate-400 block">Search</label>
-                <input name="search" {% if search_value is not None %}value="{{ search_value }}"{% endif %} placeholder="Leave blank for all" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
+                <input name="search" {% if search_value is not None and search_value|cut:' ' != '' %}value="{{ search_value }}"{% endif %} placeholder="Leave blank for all" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
 
                 <label for="country" class="text-sm font-bold uppercase text-slate-400 mt-5 block">Country</label>
                 <div class="mt-2">

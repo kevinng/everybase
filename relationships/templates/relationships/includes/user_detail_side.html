@@ -7,7 +7,7 @@ Params:
     <div class="flex flex-col items-center">
         <div class="mt-2">{{ detail_user.country.name }}</div>
         <button class="py-2 px-5 mt-2 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</button>
-        {% comment %} <div class="mt-2">Contacted 2d ago</div> {% endcomment %}
+        <div class="mt-2">Contacted 2d ago</div>
         {% if user.is_authenticated and user.id == detail_user.id %}
             <button class="py-2 px-5 mt-2 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</button>
         {% endif %}
@@ -17,8 +17,8 @@ Params:
     {% endif %}
     <div class="bg-white px-4 pb-5 mt-8">
         <div class="text-sm font-bold uppercase text-slate-400 mt-5">Goods I Deal With</div>
-        <div class="mt-2">{% if detail_user.goods_string is not None %}{{ detail_user.goods_string }}{% else %}Not specified{% endif %}</div>
+        <div class="mt-2">{% if detail_user.goods_string is not None and detail_user.goods_string|cut:' ' != '' %}{{ detail_user.goods_string }}{% else %}Not specified{% endif %}</div>
         <div class="text-sm font-bold uppercase text-slate-400 mt-5">Languages I Speak</div>
-        <div class="mt-2">{% if detail_user.languages_string is not None %}{{ detail_user.languages_string }}{% else %}Not specified{% endif %}</div>
+        <div class="mt-2">{% if detail_user.languages_string is not None and detail_user.languages_string|cut:' ' != '' %}{{ detail_user.languages_string }}{% else %}Not specified{% endif %}</div>
     </div>
 </div>
