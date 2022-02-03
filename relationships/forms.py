@@ -7,7 +7,7 @@ from phonenumber_field.formfields import PhoneNumberField
 import phonenumbers
 
 class CommentForm(forms.Form):
-    comments = forms.CharField()
+    body = forms.CharField()
     is_public = forms.BooleanField(required=False)
 
 class RegisterForm(forms.Form):
