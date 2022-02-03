@@ -160,6 +160,11 @@ class LeadListView(ListView):
     paginate_by = 8
 
     def get_queryset(self, **kwargs):
+        if self.request.user.is_authenticated:
+            user = self.request.user.user
+        else:
+            user = None
+
         search = self.request.GET.get('search')
         wants_to = self.request.GET.get('wants_to')
         buy_country_str = self.request.GET.get('buy_country')
@@ -168,20 +173,32 @@ class LeadListView(ListView):
 
         leads = relmods.Lead.objects
 
+        q = models.LeadQuery()
+        q.user = user
+        q.search = search
+        q.sort_by = sort_by
+        q.save()
+
         if wants_to == 'buy':
             leads = leads.filter(lead_type='buying')
         elif wants_to == 'sell':
             leads = leads.filter(lead_type='selling')
+        else:
+            wants_to = 'buy_or_sell'
 
-        if buy_country_str != 'any_country':
+        if buy_country_str != 'any_country' and buy_country_str != None and\
+            buy_country_str.strip() != '':
             buy_country = commods.Country.objects.get(
                 programmatic_key=buy_country_str)
             leads = leads.filter(buy_country=buy_country)
+            q.buy_country = buy_country
 
-        if sell_country_str != 'any_country':
+        if sell_country_str != 'any_country' and sell_country_str != None and\
+            sell_country_str.strip() != '':
             sell_country = commods.Country.objects.get(
                 programmatic_key=sell_country_str)
             leads = leads.filter(sell_country=sell_country)
+            q.sell_country = sell_country
 
         vector = SearchVector('search_i_need_agents_veccol')
         query = SearchQuery(search)
@@ -202,25 +219,6 @@ class LeadListView(ListView):
             leads = leads.order_by('avg_deal_comm')
         else:
             leads = leads.order_by('-rank')
-
-        # Save query
-        if self.request.user.is_authenticated:
-            user = self.request.user.user
-        else:
-            user = None
-
-        q = models.LeadQuery()
-        q.user = user
-        q.search = search
-        if wants_to is None or wants_to.strip() == '':
-            wants_to = 'buy_or_sell'
-        q.wants_to = wants_to
-        if buy_country_str != 'any_country':
-            q.buy_country = buy_country
-        if sell_country_str != 'any_country':
-            q.sell_country = sell_country
-        q.sort_by = sort_by
-        q.save()
 
         save_user_agent(self.request, user)
 
