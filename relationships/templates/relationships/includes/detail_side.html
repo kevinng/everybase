@@ -1,0 +1,25 @@
+{% comment %}
+Params:
+    - viewing_user, user viewing details
+    - detail_user, user whose details are being
+{% endcomment %}
+<div class="bg-white lg:block lg:w-4/12 xl:w-3/12 2xl:w-3/12 lg:sticky lg:top-20 lg:self-start lg:rounded-t-xl shadow-md">
+    <h1 class="text-3xl font-bold text-center mt-10 px-10">{{ detail_user.first_name }} {{ detail_user.last_name }}</h1>
+    <div class="flex flex-col items-center">
+        <div class="mt-2">{{ detail_user.country.name }}</div>
+        <button class="py-2 px-5 mt-2 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</button>
+        {% comment %} <div class="mt-2">Contacted 2d ago</div> {% endcomment %}
+        {% if viewing_user.is_authenticated and viewing_user.id == detail_user.id %}
+            <button class="py-2 px-5 mt-2 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</button>
+        {% endif %}
+    </div>
+    {% if detail_user.is_agent == True %}
+    <div class="bg-rose-100 mt-5 py-4 text-center font-bold text-rose-400">I'm an Agent</div>
+    {% endif %}
+    <div class="bg-white px-4 pb-5 mt-8">
+        <div class="text-sm font-bold uppercase text-slate-400 mt-5">Goods I Deal With</div>
+        <div class="mt-2">{% if detail_user.goods_string is not None %}{{ detail_user.goods_string }}{% else %}Not specified{% endif %}</div>
+        <div class="text-sm font-bold uppercase text-slate-400 mt-5">Languages I Speak</div>
+        <div class="mt-2">{% if detail_user.languages_string is not None %}{{ detail_user.languages_string }}{% else %}Not specified{% endif %}</div>
+    </div>
+</div>

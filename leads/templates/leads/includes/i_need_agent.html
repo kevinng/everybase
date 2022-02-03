@@ -1,0 +1,31 @@
+{% comment %} 
+Params:
+    - summary, if True showing summary
+    - lead, lead to display
+{% endcomment %}
+<div class="bg-white p-5 mt-2">
+    <div class="flex items-center justify-between">
+        <div class="font-bold">Help Me {% if lead.lead_type == 'buying' %}Buy{% elif lead.lead_type == 'selling' %}Sell{% endif %}</div>
+        <div>{{ lead.age_desc }}</div>
+    </div>
+    <div>{% if lead.lead_type == 'buying' %}Buy from{% elif lead.lead_type == 'selling' %}Source is {% endif %} {% if lead.buy_country is None %}any country{% else %}{{ lead.buy_country.name }}{% endif %}</div>
+    <div>{% if lead.lead_type == 'buying' %}Destination is{% elif lead.lead_type == 'selling' %}Sell to{% endif %} {% if lead.sell_country is None %}any country{% else %}{{ lead.sell_country.name }}{% endif %}</div>
+    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Details</div>
+    <div>{% if summary == True %}{{ lead.details|slice:':140' }}{% if lead.details|length > 140 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
+    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</div>
+    <div>{{ lead.avg_comm_pct }}%</div>
+    {% if summary != True %}
+    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Deal Size</div>
+    <div>USD {{ lead.avg_deal_size }}</div>
+    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Commission Per Deal</div>
+    <div>USD {{ lead.avg_deal_comm }}</div>
+    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Other Commission Details</div>
+    <div>USD {{ lead.other_commission_details }}</div>
+    {% endif %}
+    <div class="italic my-5">Commissions a guide only - actual commissions negotiated per deal.</div>
+    {% if user.is_authenticated and user.id == lead.author.id %}
+    <div class="flex justify-end">
+        <a href="{% url 'leads__root:i_need_agent_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 lg:block rounded hidden">Edit</a>
+    </div>
+    {% endif %}
+</div>

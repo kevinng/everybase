@@ -8,7 +8,7 @@
 <div class="flex justify-center">
     <div class="bg-white max-w-md mt-10 w-full lg:rounded-xl p-10 shadow-md">
         <a href="https://everybase.co"><img class="mx-auto mt-5" src="{% static 'common/assets/img/logo.png' %}"></a>
-        <h1 class="font-sans text-3xl font-bold text-center mt-5 text-slate-900">We've Sent You a WhatsApp Message, Reply 'Yes' to Confirm Login</h1>
+        <h1 class="font-sans text-3xl font-bold text-center mt-5">We've Sent You a WhatsApp Message, Reply 'Yes' to Confirm Login</h1>
         <div class="mt-7 flex flex-col justify-center">
             <form action="{% url 'relationships:login_link' user_uuid %}" method="post">
                 {% csrf_token %}

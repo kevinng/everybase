@@ -125,9 +125,9 @@ Minify with https://www.minifier.org/
             </div>
             <div class="bg-white w-full p-5">
                 <div class="text-sm font-bold uppercase text-slate-400">Goods I Deal With</div>
-                <div>{{ u.goods_string }}</div>
+                <div>{% if u.goods_string is None %}Not specified{% else %}{{ u.goods_string }}{% endif %}</div>
                 <div class="text-sm font-bold uppercase text-slate-400 mt-5">Languages I Speak</div>
-                <div>{{ u.languages_string }}</div>
+                <div>{% if u.languages_string is None %}Not specified{% else %}{{ u.languages_string }}{% endif %}</div>
             </div>
         </div>
 
@@ -192,7 +192,6 @@ $(document).ready(function() {
 });
 </script>
 {% endblock %}
-
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

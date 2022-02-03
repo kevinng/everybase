@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 class INeedAgentForm(forms.Form):
-    i_want_to = forms.CharField()
+    lead_type = forms.CharField()
     buy_country = forms.CharField()
     sell_country = forms.CharField()
     avg_deal_size = forms.FloatField()

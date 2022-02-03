@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.http.response import Http404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
 from django.urls import reverse
 from django.shortcuts import render
 from django.contrib import messages
@@ -32,18 +33,45 @@ from chat.tasks.send_contact_request_exchanged_contactor import \
 from relationships import models as relmods
 from relationships.utilities.save_user_agent import save_user_agent
 
-def i_need_agent_detail(request, pk):
-    template_name = 'leads/i_need_agent_detail.html'
-    context = {}
-    print(pk)
-    return TemplateResponse(request, template_name, context)
+# def i_need_agent_detail(request, pk):
+#     template_name = 'leads/i_need_agent_detail.html'
+#     context = {}
+#     print(pk)
+#     return TemplateResponse(request, template_name, context)
+
+# def i_need_agent_edit(request, pk):
+#     template_name = 'leads/i_need_agent_edit.html'
+#     context = {}
+#     print(pk)
+#     return TemplateResponse(request, template_name, context)
+
+def i_need_agent_author_list(request, user_pk):
+    pass
+
+class INeedAgentEdit(UpdateView):
+    template_name = 'leads/i_need_agent_edit.html'
+    model = models.Lead
+    fields = ['lead_type', 'buy_country', 'sell_country', 'avg_deal_size',
+        'avg_comm_pct', 'details', 'other_commission_details']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['countries'] = commods.Country.objects.annotate(
+            number_of_users=Count('users_w_this_country'))\
+            .order_by('-number_of_users')
+
+        return context
+
+    def get_success_url(self):
+        return reverse('leads__root:i_need_agent_detail',
+            args=(self.object.id,))
 
 class INeedAgentDetail(DetailView):
     template_name = 'leads/i_need_agent_detail.html'
     model = models.Lead
 
 @login_required
-def create_i_need_agent(request):
+def i_need_agent_create(request):
     countries = commods.Country.objects.annotate(
         number_of_users=Count('users_w_this_country'))\
             .order_by('-number_of_users')
@@ -63,15 +91,9 @@ def create_i_need_agent(request):
                 sell_country = commods.Country.objects.get(
                     programmatic_key=sell_country_str)
 
-            i_want_to = form.cleaned_data.get('i_want_to')
-            if i_want_to == 'buy':
-                lead_type = 'buying'
-            elif i_want_to == 'sell':
-                lead_type = 'selling'
-
             lead = models.Lead.objects.create(
                 author=request.user.user,
-                lead_type=lead_type,
+                lead_type=form.cleaned_data.get('lead_type'),
                 buy_country=buy_country,
                 sell_country=sell_country,
                 avg_deal_size=form.cleaned_data.get('avg_deal_size'),
