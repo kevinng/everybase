@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'leads__root:lead_edit' lead.id %}" method="post">
+<form action="{% url 'leads:lead_edit' lead.id %}" method="post">
 {% csrf_token %}
 <div class="flex justify-center">
     <div class="bg-white max-w-md mt-10 lg:rounded-xl p-10 shadow-md">

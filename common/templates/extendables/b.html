@@ -29,7 +29,7 @@
         {% comment %} start: desktop menu {% endcomment %}
         <div class="justify-between hidden lg:block">
             <a class="{% if request.resolver_match.view_name == 'leads__root:agents' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base"{% if request.resolver_match.view_name != 'leads__root:agents' %} href="{% url 'leads__root:agents' %}"{% endif %}>Agents</a>
-            <a class="{% if request.resolver_match.view_name == 'leads__root:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7"{% if request.resolver_match.view_name != 'leads__root:lead_list' %} href="{% url 'leads__root:lead_list' %}"{% endif %}>I-Need-Agents</a>
+            <a class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7"{% if request.resolver_match.view_name != 'leads:lead_list' %} href="{% url 'leads:lead_list' %}"{% endif %}>I-Need-Agents</a>
             <a class="{% if request.resolver_match.view_name == 'leads__root:about_us' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7" href="#">About Us</a>
         </div>
         {% comment %} end: desktop menu {% endcomment %}
@@ -51,7 +51,7 @@
     {% comment %} start: mobile menu {% endcomment %}
     <nav class="mobile-nav text-base">
         <a class="{% if request.resolver_match.view_name == 'leads__root:agents' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4"{% if request.resolver_match.view_name != 'leads__root:agents' %} href="{% url 'leads__root:agents' %}"{% endif %}>Agents</a>
-        <a class="{% if request.resolver_match.view_name == 'leads__root:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4"{% if request.resolver_match.view_name != 'leads__root:lead_list' %} href="{% url 'leads__root:lead_list' %}"{% endif %}>I-Need-Agents</a>
+        <a class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4"{% if request.resolver_match.view_name != 'leads:lead_list' %} href="{% url 'leads:lead_list' %}"{% endif %}>I-Need-Agents</a>
         <a class="{% if request.resolver_match.view_name == 'leads__root:about_us' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4" href="#">About Us</a>
         <div class="h-10"></div>
         <a class="{% if request.resolver_match.view_name == 'relationships:register' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4" href="{% url 'relationships:register' %}">Register</a>

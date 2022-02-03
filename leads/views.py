@@ -63,7 +63,7 @@ class LeadEdit(UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse('leads__root:lead_detail', args=(self.object.id,))
+        return reverse('leads:lead_detail', args=(self.object.id,))
 
 class LeadDetail(DetailView):
     template_name = 'leads/lead_detail.html'

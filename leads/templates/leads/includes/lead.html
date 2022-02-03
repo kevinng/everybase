@@ -25,7 +25,7 @@ Params:
     <div class="italic my-5">Commissions a guide only - actual commissions negotiated per deal.</div>
     {% if user.is_authenticated and user.id == lead.author.id %}
     <div class="flex justify-end">
-        <a href="{% url 'leads__root:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 lg:block rounded hidden">Edit</a>
+        <a href="{% url 'leads:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 lg:block rounded hidden">Edit</a>
     </div>
     {% endif %}
 </div>
