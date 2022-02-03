@@ -6,6 +6,10 @@ from . import models
 from phonenumber_field.formfields import PhoneNumberField
 import phonenumbers
 
+class CommentForm(forms.Form):
+    comment = forms.CharField()
+    is_public = forms.BooleanField(required=False)
+
 class RegisterForm(forms.Form):
     whatsapp_phone_number = PhoneNumberField(required=True)
     first_name = forms.CharField(

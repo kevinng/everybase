@@ -20,16 +20,17 @@ from sentry_sdk import capture_message
 import phonenumbers
 
 def user_comments(request, pk):
-    template_name = 'relationships/user_detail_comment_list.html'
-    context = {}
-
     if request.method == 'POST':
-        pass
+        form = forms.CommentForm(request.POST)
+        if form.is_valid():
+            pass
     else:
-        pass
+        form = forms.CommentForm()
 
-
-    return TemplateResponse(request, template_name, context)
+    return render(request, 'relationships/user_detail_comment_list.html', {
+        'user_pk': pk,
+        'form': form
+    })
 
 def user_leads(request, pk):
     template_name = 'relationships/user_detail_lead_list.html'
