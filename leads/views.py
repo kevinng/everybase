@@ -231,7 +231,7 @@ class LeadListView(ListView):
         context['countries'] = commods.Country.objects.annotate(
             number_of_users=Count('users_w_this_country'))\
             .order_by('-number_of_users')
-        print(self.request.GET.get('buy_country'))
+
         # Render search and country back into the template
         context['search_value'] = self.request.GET.get('search')
         context['wants_to_value'] = self.request.GET.get('wants_to')
