@@ -209,7 +209,9 @@ class LeadListView(ListView):
             .annotate(rank=SearchRank(vector, query))\
             .order_by('-rank')
         
-        if sort_by == 'comm_percent_hi_lo':
+        if sort_by == 'timestamp':
+            leads = leads.order_by('-created')
+        elif sort_by == 'comm_percent_hi_lo':
             leads = leads.order_by('-avg_comm_pct')
         elif sort_by == 'comm_percent_lo_hi':
             leads = leads.order_by('avg_comm_pct')
@@ -217,8 +219,10 @@ class LeadListView(ListView):
             leads = leads.order_by('-avg_deal_comm')
         elif sort_by == 'comm_dollar_lo_hi':
             leads = leads.order_by('avg_deal_comm')
-        else:
+        elif sort_by == 'relevance':
             leads = leads.order_by('-rank')
+        else:
+            leads = leads.order_by('-created')
 
         save_user_agent(self.request, user)
 
