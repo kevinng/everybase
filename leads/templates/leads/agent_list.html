@@ -38,7 +38,6 @@ Minify with https://www.minifier.org/
 
 {% block page_actions %}
 <div class="flex lg:hidden">
-    <a href="#" class="text-base border border-blue-700 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2">New Post</a>
     <button id="search" class="text-base text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Search</button>
 </div>
 {% endblock %}
@@ -109,7 +108,7 @@ Minify with https://www.minifier.org/
                     <div class="text-slate-400">{{ user.num_comments }} comments</div>
                 </div>
                 <div class="flex flex-col justify-center">
-                    <button class="py-2 px-5 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</button>
+                    <a href="{% url 'users:whatsapp' user.id %}" class="py-2 px-5 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
                 </div>
             </div>
             <div class="bg-white w-full p-5">

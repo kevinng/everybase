@@ -21,6 +21,10 @@ from chat.tasks.send_login_link import send_login_link
 from sentry_sdk import capture_message
 import phonenumbers
 
+def whatsapp(request, pk):
+    template = 'relationships/message.html'
+    return TemplateResponse(request, template, {})
+
 def user_comments(request, pk):
     user = models.User.objects.get(pk=pk)
     template = 'relationships/user_detail_comment_list.html'

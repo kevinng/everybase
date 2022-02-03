@@ -6,7 +6,7 @@ Params:
     <h1 class="text-3xl font-bold text-center mt-10 px-10">{{ detail_user.first_name }} {{ detail_user.last_name }}</h1>
     <div class="flex flex-col items-center">
         <div class="mt-2">{{ detail_user.country.name }}</div>
-        <button class="py-2 px-5 mt-2 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</button>
+        <a href="{% url 'users:whatsapp' user.id %}" class="py-2 px-5 mt-2 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
         <div class="mt-2">Contacted 2d ago</div>
         {% if user.is_authenticated and user.id == detail_user.id %}
             <button class="py-2 px-5 mt-2 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</button>
