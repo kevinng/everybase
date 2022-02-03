@@ -52,9 +52,10 @@ def user_comments(request, pk):
     return render(request, template, {'detail_user': user, 'form': form})
 
 def user_leads(request, pk):
-    template_name = 'relationships/user_detail_lead_list.html'
-    context = {}
-    return TemplateResponse(request, template_name, context)
+    user = models.User.objects.get(pk=pk)
+    template = 'relationships/user_detail_lead_list.html'
+    context = {'detail_user': user}
+    return TemplateResponse(request, template, context)
 
 def register(request):
     if request.method == 'POST':

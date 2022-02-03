@@ -7,7 +7,7 @@ from files import models as fimods
 class Lead(Standard):
     """Lead.
 
-    Last updated: 26 January 2022, 9:16 PM
+    Last updated: 3 February 2022, 11:37 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -17,8 +17,8 @@ class Lead(Standard):
     )
     author = models.ForeignKey(
         'relationships.User',
-        related_name='users_who_authored_this_lead',
-        related_query_name='users_who_authored_this_lead',
+        related_name='leads_authored_by_this_user',
+        related_query_name='leads_authored_by_this_user',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -71,7 +71,7 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    other_commission_details = models.TextField(
+    other_comm_details = models.TextField(
         null=True,
         blank=True
     )

@@ -20,9 +20,9 @@ Params:
     <div>USD {{ lead.avg_deal_size }}</div>
     <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Commission Per Deal</div>
     <div>USD {{ lead.avg_deal_comm }}</div>
-    {% if lead.other_commission_details is not None and lead.other_commission_details|cut:' ' != '' %}
+    {% if lead.other_comm_details is not None and lead.other_comm_details|cut:' ' != '' %}
         <div class="text-sm font-bold uppercase text-slate-400 mt-5">Other Commission Details</div>
-        <div>{{ lead.other_commission_details }}</div>
+        <div>{{ lead.other_comm_details }}</div>
     {% endif %}
     {% endif %}
     <div class="italic my-5">Actual commissions negotiated per deal.</div>

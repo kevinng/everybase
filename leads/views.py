@@ -82,8 +82,8 @@ def lead_edit(request, pk):
             lead.avg_deal_size = form.cleaned_data.get('avg_deal_size')
             lead.avg_comm_pct = form.cleaned_data.get('avg_comm_pct')
             lead.details = form.cleaned_data.get('details')
-            lead.other_commission_details = form.cleaned_data.get(
-                'other_commission_details')
+            lead.other_comm_details = form.cleaned_data.get(
+                'other_comm_details')
 
             lead.save()
 
@@ -107,7 +107,7 @@ def lead_edit(request, pk):
             'avg_deal_size': lead.avg_deal_size,
             'avg_comm_pct': lead.avg_comm_pct,
             'details': lead.details,
-            'other_commission_details': lead.other_commission_details
+            'other_comm_details': lead.other_comm_details
         })
 
     return render(request, 'leads/lead_edit.html', {
@@ -149,8 +149,7 @@ def lead_create(request):
                 avg_deal_size=form.cleaned_data.get('avg_deal_size'),
                 avg_comm_pct=form.cleaned_data.get('avg_comm_pct'),
                 details=form.cleaned_data.get('details'),
-                other_commission_details=form.cleaned_data.get(
-                    'other_comm_details')
+                other_comm_details=form.cleaned_data.get('other_comm_details')
             )
 
             if request.user.is_authenticated:
@@ -467,8 +466,8 @@ def create_lead(request):
                         get('commission_payable_after'),
                     commission_payable_after_others=form.cleaned_data.\
                         get('commission_payable_after_others'),
-                    other_commission_details=form.cleaned_data.\
-                        get('other_commission_details')
+                    other_comm_details=form.cleaned_data.\
+                        get('other_comm_details')
                 )
 
                 # Associate file with lead

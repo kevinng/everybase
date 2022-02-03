@@ -3,7 +3,7 @@ from common import admin as comadm
 from leads import models
 
 _lead_fields = ['author', 'buy_country', 'sell_country', 'lead_type', 'details',
-    'avg_comm_pct', 'commission_pct', 'avg_deal_size', 'other_commission_details',
+    'avg_comm_pct', 'commission_pct', 'avg_deal_size', 'other_comm_details',
     'internal_notes', 'onboarding', 'onboarded', 'title', 'author_type',
     'country', 'commission_payable_by', 'commission_payable_after',
     'hide_commission_details']
@@ -15,7 +15,7 @@ class LeadAdmin(comadm.StandardAdmin):
     list_filter = comadm.standard_list_filter + ['buy_country', 'sell_country',
         'lead_type', 'onboarding', 'onboarded']
     search_fields = comadm.standard_search_fields + ['details',
-        'internal_notes', 'other_commission_details']
+        'internal_notes', 'other_comm_details']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['uuid']

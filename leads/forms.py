@@ -8,7 +8,7 @@ class LeadForm(forms.Form):
     avg_deal_size = forms.FloatField()
     avg_comm_pct = forms.CharField()
     details = forms.CharField()
-    other_commission_details = forms.CharField(required=False)
+    other_comm_details = forms.CharField(required=False)
 
 class OldLeadForm(forms.Form):
     title = forms.CharField(
@@ -24,7 +24,7 @@ class OldLeadForm(forms.Form):
     commission_payable_by = forms.CharField(required=True)
     commission_payable_after = forms.CharField(required=True)
     commission_payable_after_others = forms.CharField(required=False)
-    other_commission_details = forms.CharField(required=False)
+    other_comm_details = forms.CharField(required=False)
     files = forms.CharField(required=False)
 
     def clean(self):
