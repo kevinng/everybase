@@ -103,7 +103,7 @@ Minify with https://www.minifier.org/
         <div class="mt-2">
             <div class="flex justify-between bg-blue-100 w-full px-5">
                 <div class="flex flex-col py-3">
-                    <a href="{% url 'relationships:user_comments' user.id %}" class="font-bold">{{ this_user.first_name }} {{ this_user.last_name }}</a>
+                    <a href="{% url 'relationships:user_comments' this_user.id %}" class="font-bold">{{ this_user.first_name }} {{ this_user.last_name }}</a>
                     <div>{{ this_user.country.name }}</div>
                     <div class="text-slate-400">{{ this_user.num_comments }} comments</div>
                 </div>
