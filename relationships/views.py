@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.template.response import TemplateResponse
@@ -21,9 +22,18 @@ from chat.tasks.send_login_link import send_login_link
 from sentry_sdk import capture_message
 import phonenumbers
 
+@login_required
 def whatsapp(request, pk):
-    template = 'relationships/message.html'
-    return TemplateResponse(request, template, {})
+    if request.user.user.id == pk:
+        return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
+
+    user = models.User.objects.get(pk=pk)
+    return TemplateResponse(request, 'relationships/message.html', {
+        'contactee': user
+    })
+
+def goto_whatsapp(request, pk):
+    pass
 
 def user_comments(request, pk):
     user = models.User.objects.get(pk=pk)

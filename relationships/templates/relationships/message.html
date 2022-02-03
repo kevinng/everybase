@@ -11,7 +11,7 @@
     <div class="bg-white max-w-md mt-10 w-full lg:rounded-xl p-10 shadow-md">
         <h1 class="font-sans text-3xl font-bold text-center mt-5">Enter Message Body</h1>
         <div class="mt-7 flex flex-col justify-center">
-            <div class="text-base">Hi Arian Josimaya, my name is Josh Smithsonian.</div>
+            <div class="text-base">Hi {{ contactee.first_name }} {{ contactee.last_name }}, my name is {{ user.user.first_name }} {{ user.user.last_name }}.</div>
             <div class="text-base mt-2">I got your contact from - https://everybase.co</div>
             <label for="message_body" class="font-sans text-sm font-bold uppercase text-slate-400 mt-4">Message Body</label>
             <textarea name="message_body" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2"></textarea>
