@@ -218,7 +218,7 @@ class ConnectionAdmin(comadm.StandardAdmin):
 
 _login_token_fields = ['user', 'activated', 'token', 'expiry_secs']
 @admin.register(mod.LoginToken)
-class LoginToken(comadm.StandardAdmin):
+class LoginTokenAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _login_token_fields
     list_editable = comadm.standard_list_editable + _login_token_fields
@@ -234,7 +234,7 @@ class LoginToken(comadm.StandardAdmin):
 
 _register_token_fields = ['user', 'activated', 'token', 'expiry_secs']
 @admin.register(mod.RegisterToken)
-class RegisterToken(comadm.StandardAdmin):
+class RegisterTokenAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _register_token_fields
     list_editable = comadm.standard_list_editable + _register_token_fields
@@ -254,7 +254,7 @@ _user_agent_fields = ['user', 'ip_address', 'is_routable', 'is_mobile',
     'os', 'os_family', 'os_version', 'os_version_string', 'device',
     'device_family']
 @admin.register(mod.UserAgent)
-class RegisterToken(comadm.StandardAdmin):
+class UserAgentAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_agent_fields
     list_editable = comadm.standard_list_editable + _user_agent_fields
@@ -273,3 +273,20 @@ class RegisterToken(comadm.StandardAdmin):
         (None, {'fields': _user_agent_fields})
     ]
     autocomplete_fields = ['user']
+
+_comment_fields = ['commentee', 'commentor', 'body', 'is_public']
+@admin.register(mod.Comment)
+class CommentAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _comment_fields
+    list_editable = comadm.standard_list_editable + _comment_fields
+    list_filter = comadm.standard_list_filter + ['is_public']
+    search_fields = comadm.standard_search_fields + ['commentee__first_name',
+        'commentee__last_name', 'commentee__first_name', 'commentee__last_name',
+        'body']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _comment_fields})
+    ]
+    autocomplete_fields = ['commentee', 'commentor']
