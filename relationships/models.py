@@ -282,6 +282,9 @@ class User(Standard):
         db_index=True
     )
 
+    def num_comments(self):
+        return Comment.objects.filter(commentee=self).count()
+
     def country_from_phone_number(self):
         try:
             return Country.objects.get(
