@@ -49,11 +49,7 @@ Minify with https://www.minifier.org/
     {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author %}
 
     <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 lg:mt-0 mt-4">
-        <div class="flex items-center justify-evenly">
-            <a href="#" class="w-1/2 text-center py-3 text-slate-600 bg-slate-200 hover:bg-slate-300 shadow-sm lg:rounded-tl-xl">Comments</a>
-            <a href="#" class="w-1/2 text-center py-3 text-slate-600 bg-slate-200 hover:bg-slate-300 shadow-sm lg:rounded-tr-xl">I-Need-Agents</a>
-        </div>
-
+        {% include 'relationships/includes/user_detail_tabs.html' %}
         {% include 'leads/includes/lead_item.html' with lead=lead summary=False more_css_classes='mt-2' %}
     </div>
 </div>

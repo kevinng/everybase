@@ -1,0 +1,9 @@
+{% comment %}
+Params:
+    selected, 'comments' - comments tab, 'i-need-agents' - I-Need-Agent tab.
+    detail_user, user whose details are being shown.
+{% endcomment %}
+<div class="flex items-center justify-evenly">
+    <a {% if selected != 'comments' %}href="{% url 'relationships:user_comments' detail_user.id %}" {% endif %}class="{% if selected == 'comments' %}font-bold text-blue-600 bg-slate-300 {% else %}text-slate-600 hover:bg-slate-300 bg-slate-200 {% endif %}w-1/2 text-center py-3 shadow-sm lg:rounded-tl-xl">Comments</a>
+    <a {% if selected != 'i-need-agents' %}href="{% url 'relationships:user_leads' detail_user.id %}" {% endif %}class="{% if selected == 'i-need-agents' %}font-bold text-blue-600 bg-slate-300 {% else %}text-slate-600 hover:bg-slate-300 bg-slate-200 {% endif %}w-1/2 text-center py-3 shadow-sm lg:rounded-tr-xl">I-Need-Agents</a>
+</div>
