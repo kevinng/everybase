@@ -38,7 +38,7 @@ Minify with https://www.minifier.org/
 {% block page_actions %}
 <div class="flex lg:hidden">
     <a class="py-2 px-5 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
-    {% if user.is_authenticated and user.id == object.author.id %}
+    {% if user.is_authenticated and user.user.id == object.author.id %}
     <a class="py-2 px-5 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
     {% endif %}
 </div>
@@ -54,7 +54,7 @@ Minify with https://www.minifier.org/
             <a href="#" class="w-1/2 text-center py-3 text-slate-600 bg-slate-200 hover:bg-slate-300 shadow-sm lg:rounded-tr-xl">I-Need-Agents</a>
         </div>
 
-        {% include 'leads/includes/lead_item.html' with summary=False lead=lead only %}
+        {% include 'leads/includes/lead_item.html' with lead=lead summary=False more_css_classes='mt-2' %}
     </div>
 </div>
 {% endblock %}

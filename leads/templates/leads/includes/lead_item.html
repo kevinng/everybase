@@ -1,9 +1,10 @@
 {% comment %} 
 Params:
-    - summary, if True showing summary
-    - lead, lead to display
+    lead, lead to display
+    summary, if True showing summary
+    more_css_classes, additional div CSS classes
 {% endcomment %}
-<div class="bg-white p-5 mt-2">
+<div class="bg-white p-5{% if more_css_classes is not None %} {{ more_css_classes }}{% endif %}">
     <div class="flex items-center justify-between">
         <div class="font-bold">Help Me {% if lead.lead_type == 'buying' %}Buy{% elif lead.lead_type == 'selling' %}Sell{% endif %}</div>
         <div>{{ lead.age_desc }}</div>
@@ -22,10 +23,15 @@ Params:
     <div class="text-sm font-bold uppercase text-slate-400 mt-5">Other Commission Details</div>
     <div>USD {{ lead.other_commission_details }}</div>
     {% endif %}
-    <div class="italic my-5">Commissions a guide only - actual commissions negotiated per deal.</div>
-    {% if user.is_authenticated and user.id == lead.author.id %}
+    <div class="italic my-5">Actual commissions negotiated per deal.</div>
+    
     <div class="flex justify-end">
-        <a href="{% url 'leads:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 lg:block rounded hidden">Edit</a>
+        {% if summary == True %}
+            <a href="{% url 'leads:lead_detail' lead.id %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-6 py-2 hidden lg:block">Details</a>
+        {% endif %}
+
+        {% if user.is_authenticated and user.user.id == lead.author.id %}
+            <a href="{% url 'leads:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 lg:block rounded hidden">Edit</a>
+        {% endif %}
     </div>
-    {% endif %}
 </div>

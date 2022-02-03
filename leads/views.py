@@ -110,7 +110,7 @@ def lead_create(request):
             save_user_agent(request, user)
 
             return HttpResponseRedirect(
-                reverse('leads__root:i_need_agent_detail', args=(lead.id,)))
+                reverse('leads:lead_detail', args=(lead.id,)))
     else:
         form = forms.INeedAgentForm()
 
