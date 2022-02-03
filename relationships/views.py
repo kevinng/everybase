@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.template.response import TemplateResponse
 
 from everybase import settings
 from common import models as commods
@@ -18,11 +19,15 @@ from chat.tasks.send_login_link import send_login_link
 from sentry_sdk import capture_message
 import phonenumbers
 
-def user_comments(request):
-    pass
+def user_comments(request, pk):
+    template_name = 'relationships/user_detail_comment_list.html'
+    context = {}
+    return TemplateResponse(request, template_name, context)
 
-def user_leads(request):
-    pass
+def user_leads(request, pk):
+    template_name = 'relationships/user_detail_lead_list.html'
+    context = {}
+    return TemplateResponse(request, template_name, context)
 
 def register(request):
     if request.method == 'POST':

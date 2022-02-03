@@ -175,7 +175,7 @@ Minify with https://www.minifier.org/
         <div class="mt-2">
             <div class="flex justify-between bg-blue-100 w-full px-5">
                 <div class="flex flex-col py-3">
-                    <a href="#" class="font-bold">{{ l.author.first_name }} {{ l.author.last_name }}</a>
+                    <a href="{% url 'relationships:user_comments' l.author.id %}" class="font-bold">{{ l.author.first_name }} {{ l.author.last_name }}</a>
                     <div>{{ l.author.country.name }}</div>
                     <div class="text-slate-400">3 comments</div>
                 </div>
