@@ -38,20 +38,9 @@ def get_countries():
         number_of_users=Count('users_w_this_country'))\
             .order_by('-number_of_users')
 
-# def i_need_agent_detail(request, pk):
-#     template_name = 'leads/i_need_agent_detail.html'
-#     context = {}
-#     print(pk)
-#     return TemplateResponse(request, template_name, context)
-
-# def i_need_agent_edit(request, pk):
-#     template_name = 'leads/lead_edit.html'
-#     context = {}
-#     print(pk)
-#     return TemplateResponse(request, template_name, context)
-
-def i_need_agent_author_list(request, user_pk):
-    pass
+class LeadDetailView(DetailView):
+    template_name = 'leads/lead_detail.html'
+    model = models.Lead
 
 @login_required
 def lead_edit(request, pk):
@@ -116,10 +105,6 @@ def lead_edit(request, pk):
         'countries': get_countries()
     })
 
-class LeadDetail(DetailView):
-    template_name = 'leads/lead_detail.html'
-    model = models.Lead
-
 @login_required
 def lead_create(request):
     countries = commods.Country.objects.annotate(
@@ -177,8 +162,8 @@ class LeadListView(ListView):
     def get_queryset(self, **kwargs):
         search = self.request.GET.get('search')
         wants_to = self.request.GET.get('wants_to')
-        buy_country = self.request.GET.get('buy_country')
-        sell_country = self.request.GET.get('sell_country')
+        buy_country_str = self.request.GET.get('buy_country')
+        sell_country_str = self.request.GET.get('sell_country')
         sort_by = self.request.GET.get('sort_by')
 
         leads = relmods.Lead.objects
@@ -188,10 +173,14 @@ class LeadListView(ListView):
         elif wants_to == 'sell':
             leads = leads.filter(lead_type='selling')
 
-        if buy_country != 'any_country':
+        if buy_country_str != 'any_country':
+            buy_country = commods.Country.objects.get(
+                programmatic_key=buy_country_str)
             leads = leads.filter(buy_country=buy_country)
 
-        if sell_country != 'any_country':
+        if sell_country_str != 'any_country':
+            sell_country = commods.Country.objects.get(
+                programmatic_key=sell_country_str)
             leads = leads.filter(sell_country=sell_country)
 
         vector = SearchVector('search_i_need_agents_veccol')
@@ -221,20 +210,16 @@ class LeadListView(ListView):
             user = None
 
         q = models.LeadQuery()
-        q.user=user
-        q.search=search
+        q.user = user
+        q.search = search
         if wants_to is None or wants_to.strip() == '':
             wants_to = 'buy_or_sell'
-        q.wants_to=wants_to
-        if buy_country != 'any_country' and buy_country != None and \
-            buy_country.strip() != '':
-            q.buy_country=commods.Country.objects.get(
-                programmatic_key=buy_country)
-        if sell_country != 'any_country' and sell_country != None and \
-            sell_country.strip() != '':
-            q.sell_country=commods.Country.objects.get(
-                programmatic_key=sell_country)
-        q.sort_by=sort_by
+        q.wants_to = wants_to
+        if buy_country_str != 'any_country':
+            q.buy_country = buy_country
+        if sell_country_str != 'any_country':
+            q.sell_country = sell_country
+        q.sort_by = sort_by
         q.save()
 
         save_user_agent(self.request, user)
@@ -246,7 +231,7 @@ class LeadListView(ListView):
         context['countries'] = commods.Country.objects.annotate(
             number_of_users=Count('users_w_this_country'))\
             .order_by('-number_of_users')
-
+        print(self.request.GET.get('buy_country'))
         # Render search and country back into the template
         context['search_value'] = self.request.GET.get('search')
         context['wants_to_value'] = self.request.GET.get('wants_to')
@@ -313,7 +298,7 @@ class AgentListView(ListView):
 
         return context
 
-class LeadListView(ListView):
+class _LeadListView(ListView):
     model = models.Lead
     paginate_by = 54
 
