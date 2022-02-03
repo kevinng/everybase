@@ -181,7 +181,7 @@ $(document).ready(function() {
 
         // Switch button and button text color
         t.toggleClass('bg-blue-500');
-        t.toggleClass('text-neutral-50');
+        t.toggleClass('text-white');
         t.toggleClass('hover:bg-blue-600');
         t.toggleClass('bg-slate-100');
         t.toggleClass('text-slate-600');
@@ -197,6 +197,6 @@ $(document).ready(function() {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>  
 $(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search...')});$('#search').click(function(){t=$(this);if(t.html()=='Search'){t.html('Close')}else{t.html('Search')}
-t.toggleClass('bg-blue-500');t.toggleClass('text-neutral-50');t.toggleClass('hover:bg-blue-600');t.toggleClass('bg-slate-100');t.toggleClass('text-slate-600');t.toggleClass('hover:bg-slate-200');$('#mobile-search').toggleClass('is-active')})})
+t.toggleClass('bg-blue-500');t.toggleClass('text-white');t.toggleClass('hover:bg-blue-600');t.toggleClass('bg-slate-100');t.toggleClass('text-slate-600');t.toggleClass('hover:bg-slate-200');$('#mobile-search').toggleClass('is-active')})})
 </script>
 {% endblock %}

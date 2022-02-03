@@ -37,7 +37,7 @@ Minify with https://www.minifier.org/
 
 {% block page_actions %}
 <div class="flex lg:hidden">
-    <button class="py-2 px-5 font-bold rounded-xl text-neutral-50 bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</button>
+    <button class="py-2 px-5 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</button>
     {% comment %} <button class="py-2 px-5 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</button> {% endcomment %}
 </div>
 {% endblock %}
@@ -49,7 +49,7 @@ Minify with https://www.minifier.org/
         <h1 class="font-sans text-3xl font-bold text-center mt-10 px-10">Arian Josimaya</h1>
         <div class="flex flex-col items-center">
             <div class="text-base mt-2">Bangladesh</div>
-            <button class="py-2 px-5 font-bold rounded-xl text-neutral-50 bg-green-500 hover:bg-green-600 shadow-md mt-2">WhatsApp</button>
+            <button class="py-2 px-5 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md mt-2">WhatsApp</button>
             <div class="text-base mt-2">Contacted 2d ago</div>
             {% comment %} <button class="py-2 px-5 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 mt-2">Edit Profile</button> {% endcomment %}
         </div>
@@ -120,7 +120,7 @@ $(document).ready(function() {
         }
 
         t.toggleClass('bg-blue-500');
-        t.toggleClass('text-neutral-50');
+        t.toggleClass('text-white');
         t.toggleClass('hover:bg-blue-600');
         t.toggleClass('bg-slate-100');
         t.toggleClass('text-slate-600');
@@ -136,6 +136,6 @@ $(document).ready(function() {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>  
 $(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search...')});$('#filter').click(function(){t=$(this);if(t.html()=='Filter'){t.html('Close')}else{t.html('Filter')}
-t.toggleClass('bg-blue-500');t.toggleClass('text-neutral-50');t.toggleClass('hover:bg-blue-600');t.toggleClass('bg-slate-100');t.toggleClass('text-slate-600');t.toggleClass('hover:bg-slate-200');$('#mobile-filter').toggleClass('is-active')})})
+t.toggleClass('bg-blue-500');t.toggleClass('text-white');t.toggleClass('hover:bg-blue-600');t.toggleClass('bg-slate-100');t.toggleClass('text-slate-600');t.toggleClass('hover:bg-slate-200');$('#mobile-filter').toggleClass('is-active')})})
 </script>
 {% endblock %}
