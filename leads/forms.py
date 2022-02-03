@@ -2,7 +2,6 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 class LeadForm(forms.Form):
-    pk = forms.CharField()
     lead_type = forms.CharField()
     buy_country = forms.CharField()
     sell_country = forms.CharField()

@@ -101,7 +101,6 @@ def lead_edit(request, pk):
             sell_country = lead.sell_country.programmatic_key
 
         form = forms.LeadForm(initial={
-            'pk': lead.pk,
             'lead_type': lead.lead_type,
             'buy_country': buy_country,
             'sell_country': sell_country,
@@ -112,6 +111,7 @@ def lead_edit(request, pk):
         })
 
     return render(request, 'leads/lead_edit.html', {
+        'lead_pk': pk,
         'form': form,
         'countries': get_countries()
     })

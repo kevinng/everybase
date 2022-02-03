@@ -9,9 +9,8 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'leads:lead_edit' form.pk.value %}" method="post">
+<form action="{% url 'leads:lead_edit' lead_pk %}" method="post">
 {% csrf_token %}
-<input type="hidden" name="pk" value="{{ form.pk.value }}">
 <div class="flex justify-center">
     <div class="bg-white max-w-md mt-10 lg:rounded-xl p-10 shadow-md">
         <div class="text-center mt-6">Edit Post</div>
