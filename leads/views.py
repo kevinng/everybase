@@ -220,7 +220,7 @@ class LeadListView(ListView):
         else:
             user = None
 
-        q = models.INeedAgentQuery()
+        q = models.LeadQuery()
         q.user=user
         q.search=search
         if wants_to is None or wants_to.strip() == '':

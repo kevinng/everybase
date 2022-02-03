@@ -144,8 +144,8 @@ class AgentQueryAdmin(comadm.StandardAdmin):
 
 _i_need_agent_query_fields = ['user', 'search', 'wants_to', 'buy_country',
     'sell_country']
-@admin.register(models.INeedAgentQuery)
-class INeedAgentQueryAdmin(comadm.StandardAdmin):
+@admin.register(models.LeadQuery)
+class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _i_need_agent_query_fields
     list_editable = comadm.standard_list_editable + _i_need_agent_query_fields

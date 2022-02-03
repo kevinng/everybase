@@ -438,10 +438,10 @@ class AgentQuery(Standard):
         db_index=True
     )
 
-class INeedAgentQuery(Standard):
-    """I-Need-Agent query
+class LeadQuery(Standard):
+    """Lead query
 
-    Last updated: 30 January 2022, 11:14 PM
+    Last updated: 4 February 2022, 12:02 PM
     """
     user = models.ForeignKey(
         'relationships.User',
@@ -464,6 +464,18 @@ class INeedAgentQuery(Standard):
             ('buy', 'Buy'),
             ('sell', 'Sell')
         ]
+    )
+    sort_by = models.CharField(
+        max_length=20,
+        choices=[
+            ('relevance', 'Relevance'),
+            ('comm_percent_hi_lo', 'Avg Comm % High to Low'),
+            ('comm_percent_lo_hi', 'Avg Comm % Low to High'),
+            ('comm_dollar_hi_lo', 'Avg Comm $ High to Low'),
+            ('comm_dollar_lo_hi', 'Avg Comm $ Low to High')
+        ],
+        null=True,
+        blank=True
     )
     buy_country = models.ForeignKey(
         'common.Country',
