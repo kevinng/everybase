@@ -46,9 +46,13 @@ Minify with https://www.minifier.org/
     <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
         {% include 'relationships/includes/user_detail_tabs.html' with selected='leads' %}
 
-        {% for lead in detail_user.leads %}
+        {% include 'includes/paginator.html' with other_css_classes='mt-5' %}
+
+        {% for lead in page_obj %}
             {% include 'leads/includes/lead_item.html' with summary=True more_css_classes='mt-2' %}
         {% endfor %}
+
+        {% include 'includes/paginator.html' with other_css_classes='mt-5' %}
     </div>
 </div>
 {% endblock %}

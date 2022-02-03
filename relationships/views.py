@@ -8,9 +8,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.template.response import TemplateResponse
+from django.views.generic.list import ListView
 
 from everybase import settings
 from common import models as commods
+from leads import models as lemods
 from relationships import forms, models
 from relationships.utilities.save_user_agent import save_user_agent
 from chat.tasks.send_register_link import send_register_link
@@ -51,11 +53,42 @@ def user_comments(request, pk):
 
     return render(request, template, {'detail_user': user, 'form': form})
 
-def user_leads(request, pk):
-    user = models.User.objects.get(pk=pk)
-    template = 'relationships/user_detail_lead_list.html'
-    context = {'detail_user': user}
-    return TemplateResponse(request, template, context)
+# def user_leads(request, pk):
+#     user = models.User.objects.get(pk=pk)
+#     template = 'relationships/user_detail_lead_list.html'
+#     context = {'detail_user': user}
+#     return TemplateResponse(request, template, context)
+
+
+
+
+class UserLeadListView(ListView):
+    template_name = 'relationships/user_detail_lead_list.html'
+    context_object_name = 'leads'
+    model = lemods.Lead
+    paginate_by = 8
+
+    def get_queryset(self, **kwargs):
+        return lemods.Lead.objects.filter(
+            author=models.User.objects.get(pk=self.kwargs['pk'])
+        ).order_by('-created')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = models.User.objects.get(pk=self.kwargs['pk'])
+        context['detail_user'] = user
+        return context
+
+
+
+
+
+
+
+
+
+
+
 
 def register(request):
     if request.method == 'POST':
