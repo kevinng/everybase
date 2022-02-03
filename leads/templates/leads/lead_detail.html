@@ -49,7 +49,7 @@ Minify with https://www.minifier.org/
     {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author %}
 
     <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 lg:mt-0 mt-4">
-        {% include 'relationships/includes/user_detail_tabs.html' %}
+        {% include 'relationships/includes/user_detail_tabs.html' with detail_user=lead.author %}
         {% include 'leads/includes/lead_item.html' with lead=lead summary=False more_css_classes='mt-2' %}
     </div>
 </div>
