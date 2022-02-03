@@ -18,6 +18,12 @@ from chat.tasks.send_login_link import send_login_link
 from sentry_sdk import capture_message
 import phonenumbers
 
+def user_comments(request):
+    pass
+
+def user_leads(request):
+    pass
+
 def register(request):
     if request.method == 'POST':
         form = forms.RegisterForm(request.POST)

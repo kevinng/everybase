@@ -3,7 +3,10 @@ from relationships import views
 
 app_name = 'relationships'
 urlpatterns = [
-    # path('comments/')
+    path('users/<int:pk>/comments', views.user_comments, name='user_comments'),
+    path('users/<int:pk>/leads', views.user_leads, name='user_leads'),
+
+
 
     path('register/', views.register, name='register'),
     path('register_link/<str:user_uuid>', views.register_link, name='register_link'),
