@@ -59,69 +59,74 @@ Minify with https://www.minifier.org/
         </div>
         <!-- end: tab -->
 
+        {% comment %} start: user is authenticated and not detail user {% endcomment %}
+        {% if user.is_authenticated and user.user.id != detail_user.id %}
         <div class="bg-white p-5 mt-2">
             <form action="{% url 'relationships:user_comments' detail_user.id %}" method="post">
+                {% csrf_token %}
                 <div class="flex flex-col items-center justify-center">
                     <h2 class="font-bold text-xl">Leave a Private Comment</h2>
                     <div class="text-slate-500">You last contacted {{ detail_user.first_name }} {{ detail_user.last_name }} 2 days ago</div>
                 </div>
-                <textarea name="comments" rows="4" class="w-full mt-2 px-5 py-3 border"></textarea>
+                <textarea name="body" rows="4" class="w-full mt-2 px-5 py-3 border{% if form.body.errors %} border-red-500{% endif %}"></textarea>
+                {% if form.body.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                 <div class="flex justify-start mt-2">
-                    <input name="is_private" type="checkbox" class="focus:ring-blue-100 border-gray-300 h-6 w-6"><div class="ml-2">Help other users, make this comment public instead</div>
+                    <input name="is_public" type="checkbox" class="focus:ring-blue-100 border-gray-300 h-6 w-6"><div class="ml-2">Help other users, make this comment public instead</div>
                 </div>
                 <div class="italic mt-2">Others will not see this comment unless you make it public</div>
                 <button type="submit" class="w-full py-4 px-7 font-bold text-white rounded-xl bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Post</button>
             </form>
         </div>
-
-        <div class="flex flex-col items-center justify-center mt-5">
+                
+        <div class="flex flex-col items-center justify-center mt-5 mb-3">
             <h2 class="font-bold text-xl">Your Private Comments</h2>
             <div class="text-slate-500">Only you can see your private comments</div>
         </div>
 
-        <div class="bg-white p-5 mt-5">
-            <div class="flex items-center justify-between">
-                <div class="font-bold">John Doe, Australia</div>
-                <div>2d ago</div>
-            </div>
-            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
-        </div>
-        
-        <div class="bg-white p-5 mt-2">
-            <div class="flex items-center justify-between">
-                <div class="font-bold">John Doe, Australia</div>
-                <div>2d ago</div>
-            </div>
-            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
-        </div>
+        {% load private_comments %}
+        {% private_comments request.user.user detail_user as private_comments %}
 
-        <div class="flex flex-col items-center justify-center mt-5">
-            <h2 class="text-lg">You have no private comments</h2>
-        </div>
+        {% if private_comments|length <= 0 %}
+            <div class="flex flex-col items-center justify-center mt-2">
+                <h2 class="text-lg">You have no private comments</h2>
+            </div>
+        {% else %}
+            {% for comment in private_comments %}
+            <div class="bg-white p-5 mt-2">
+                <div class="flex items-center justify-between">
+                    <div class="font-bold">{{ comment.commentor.first_name }} {{ comment.commentor.last_name }}, {{ comment.commentor.country.name }}</div>
+                    <div>{{ comment.age_desc }}</div>
+                </div>
+                <div class="mt-2">{{ comment.body }}</div>
+            </div>
+            {% endfor %}
+        {% endif %}
 
-        <div class="flex flex-col items-center justify-center mt-5">
+        {% endif %}
+        {% comment %} end: user is authenticated and not detail user {% endcomment %}
+
+        <div class="flex flex-col items-center justify-center mt-5 mb-3">
             <h2 class="font-bold text-xl">Public Comments</h2>
         </div>
 
-        <div class="bg-white w-full p-5 mt-5">
-            <div class="flex items-center justify-between">
-                <div class="font-bold">John Doe, Australia</div>
-                <div>2d ago</div>
-            </div>
-            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
-        </div>
+        {% load public_comments %}
+        {% public_comments detail_user as public_comments %}
 
-        <div class="bg-white w-full p-5 mt-2">
-            <div class="flex items-center justify-between">
-                <div class="font-bold">John Doe, Australia</div>
-                <div>2d ago</div>
+        {% if public_comments|length <= 0 %}
+            <div class="flex flex-col items-center justify-center mt-2">
+                <h2 class="text-lg">No public comments</h2>
             </div>
-            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
-        </div>
-
-        <div class="flex flex-col items-center justify-center mt-5">
-            <h2 class="text-lg">No public comments</h2>
-        </div>
+        {% else %}
+            {% for comment in public_comments %}
+            <div class="bg-white p-5 mt-2">
+                <div class="flex items-center justify-between">
+                    <div class="font-bold">{{ comment.commentor.first_name }} {{ comment.commentor.last_name }}, {{ comment.commentor.country.name }}</div>
+                    <div>{{ comment.age_desc }}</div>
+                </div>
+                <div class="mt-2">{{ comment.body }}</div>
+            </div>
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -21,18 +21,35 @@ import phonenumbers
 
 def user_comments(request, pk):
     user = models.User.objects.get(pk=pk)
+    template = 'relationships/user_detail_comment_list.html'
+
+    # Disallow commenting on self
+    if user.id == request.user.user.id:
+        return render(request, template, {'detail_user': user})
 
     if request.method == 'POST':
         form = forms.CommentForm(request.POST)
         if form.is_valid():
-            pass
+            body = form.cleaned_data.get('body')
+            is_public = form.cleaned_data.get('is_public')
+            if is_public is None:
+                is_public = False
+
+            commentor = request.user.user
+
+            models.Comment.objects.create(
+                commentee=user,
+                commentor=commentor,
+                body=body,
+                is_public=is_public
+            )
+
+            return HttpResponseRedirect(
+                reverse('relationships:user_comments', args=(pk,)))
     else:
         form = forms.CommentForm()
 
-    return render(request, 'relationships/user_detail_comment_list.html', {
-        'detail_user': user,
-        'form': form
-    })
+    return render(request, template, {'detail_user': user, 'form': form})
 
 def user_leads(request, pk):
     template_name = 'relationships/user_detail_lead_list.html'
@@ -80,7 +97,6 @@ def register(request):
             user, _ = models.User.objects.get_or_create(
                 phone_number=phone_number)
             
-
             is_not_agent = form.cleaned_data.get('is_not_agent')
             if is_not_agent is None:
                 is_not_agent = False
