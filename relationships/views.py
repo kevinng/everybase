@@ -22,6 +22,13 @@ import phonenumbers
 def user_comments(request, pk):
     template_name = 'relationships/user_detail_comment_list.html'
     context = {}
+
+    if request.method == 'POST':
+        pass
+    else:
+        pass
+
+
     return TemplateResponse(request, template_name, context)
 
 def user_leads(request, pk):

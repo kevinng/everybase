@@ -95,7 +95,7 @@ $(document).ready(function() {
     update_country_labels = function (choice) {
         console.log($('#buy_country option:selected').val())
         console.log($('#sell_country option:selected').val())
-        if (choice == 'buy') {
+        if (choice == 'buying') {
             $('#buy_label').text('Buy From This Country');
             $('#sell_label').text('Destination Country');
             $('#buy_country_any').attr('disabled', false); // I can buy from any country
@@ -104,7 +104,7 @@ $(document).ready(function() {
                 // If my destination is any, empty it
                 $('#sell_country').val(null).trigger('change');
             }
-        } else if (choice == 'sell') {
+        } else if (choice == 'selling') {
             $('#buy_label').text('Source Country');
             $('#sell_label').text('Sell To This Country');
             $('#buy_country_any').attr('disabled', true); // My source cannot be any
@@ -131,7 +131,7 @@ $(document).ready(function() {
 <script>  
 $(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search here...')});update_country_labels=function(choice){console.log($('#buy_country option:selected').val())
 console.log($('#sell_country option:selected').val())
-if(choice=='buy'){$('#buy_label').text('Buy From This Country');$('#sell_label').text('Destination Country');$('#buy_country_any').attr('disabled',!1);$('#sell_country_any').attr('disabled',!0);if($('#sell_country option:selected').val()=='any_country'){$('#sell_country').val(null).trigger('change')}}else if(choice=='sell'){$('#buy_label').text('Source Country');$('#sell_label').text('Sell To This Country');$('#buy_country_any').attr('disabled',!0);$('#sell_country_any').attr('disabled',!1);if($('#buy_country option:selected').val()=='any_country'){$('#buy_country').val(null).trigger('change')}}}
+if(choice=='buying'){$('#buy_label').text('Buy From This Country');$('#sell_label').text('Destination Country');$('#buy_country_any').attr('disabled',!1);$('#sell_country_any').attr('disabled',!0);if($('#sell_country option:selected').val()=='any_country'){$('#sell_country').val(null).trigger('change')}}else if(choice=='selling'){$('#buy_label').text('Source Country');$('#sell_label').text('Sell To This Country');$('#buy_country_any').attr('disabled',!0);$('#sell_country_any').attr('disabled',!1);if($('#buy_country option:selected').val()=='any_country'){$('#buy_country').val(null).trigger('change')}}}
 update_country_labels($('#i_want_to').val())
 $('#i_want_to').change(function(){choice=$(this).val();update_country_labels(choice)})})
 </script>
