@@ -1,16 +1,17 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-class INeedAgentForm(forms.Form):
+class LeadForm(forms.Form):
+    pk = forms.CharField()
     lead_type = forms.CharField()
     buy_country = forms.CharField()
     sell_country = forms.CharField()
     avg_deal_size = forms.FloatField()
     avg_comm_pct = forms.CharField()
     details = forms.CharField()
-    other_comm_details = forms.CharField(required=False)
+    other_commission_details = forms.CharField(required=False)
 
-class LeadForm(forms.Form):
+class OldLeadForm(forms.Form):
     title = forms.CharField(
         required=True,
         min_length=1,

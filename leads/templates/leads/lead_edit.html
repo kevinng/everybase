@@ -9,8 +9,9 @@
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'leads:lead_edit' lead.id %}" method="post">
+<form action="{% url 'leads:lead_edit' form.pk.value %}" method="post">
 {% csrf_token %}
+<input type="hidden" name="pk" value="{{ form.pk.value }}">
 <div class="flex justify-center">
     <div class="bg-white max-w-md mt-10 lg:rounded-xl p-10 shadow-md">
         <div class="text-center mt-6">Edit Post</div>
@@ -61,7 +62,7 @@
             </div>
             {% if form.avg_comm_pct.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.avg_comm_pct.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <div class="text-base mt-4">This is a guide only - actual commissions negotiated per deal.</div>
+            <div class="mt-4">This is a guide only - actual commissions negotiated per deal.</div>
 
             <label for="details" class="text-sm font-bold uppercase text-slate-400 mt-4">Details</label>
             <textarea name="details" rows="4" type="text" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None %}{{ form.details.value }}{% endif %}</textarea>

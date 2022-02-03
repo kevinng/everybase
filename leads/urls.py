@@ -5,7 +5,7 @@ app_name = 'leads'
 urlpatterns = [
     path('', views.LeadListView.as_view(), name='lead_list'),
     path('create', views.lead_create, name='lead_create'),
-    path('edit/<int:pk>', views.LeadEdit.as_view(), name='lead_edit'),
+    path('edit/<int:pk>', views.lead_edit, name='lead_edit'),
     path('<int:pk>', views.LeadDetail.as_view(), name='lead_detail'),
 
     # Old routings

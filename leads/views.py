@@ -33,6 +33,11 @@ from chat.tasks.send_contact_request_exchanged_contactor import \
 from relationships import models as relmods
 from relationships.utilities.save_user_agent import save_user_agent
 
+def get_countries():
+    return commods.Country.objects.annotate(
+        number_of_users=Count('users_w_this_country'))\
+            .order_by('-number_of_users')
+
 # def i_need_agent_detail(request, pk):
 #     template_name = 'leads/i_need_agent_detail.html'
 #     context = {}
@@ -48,22 +53,68 @@ from relationships.utilities.save_user_agent import save_user_agent
 def i_need_agent_author_list(request, user_pk):
     pass
 
-class LeadEdit(UpdateView):
-    template_name = 'leads/lead_edit.html'
-    model = models.Lead
-    fields = ['lead_type', 'buy_country', 'sell_country', 'avg_deal_size',
-        'avg_comm_pct', 'details', 'other_commission_details']
+@login_required
+def lead_edit(request, pk):
+    lead = models.Lead.objects.get(pk=pk)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['countries'] = commods.Country.objects.annotate(
-            number_of_users=Count('users_w_this_country'))\
-            .order_by('-number_of_users')
+    # If requester does not own lead - redirect to lead list
+    if request.user.user.id != lead.author.id:
+        return HttpResponseRedirect(reverse('leads:lead_list', args=()))
 
-        return context
+    if request.method == 'POST':
+        form = forms.LeadForm(request.POST)
+        if form.is_valid():
+            buy_country_str = form.cleaned_data.get('buy_country')
+            if buy_country_str != 'any_country':
+                lead.buy_country = commods.Country.objects.get(
+                    programmatic_key=buy_country_str)
+            else:
+                lead.buy_country = None
 
-    def get_success_url(self):
-        return reverse('leads:lead_detail', args=(self.object.id,))
+            sell_country_str = form.cleaned_data.get('sell_country')
+            if sell_country_str != 'any_country':
+                lead.sell_country = commods.Country.objects.get(
+                    programmatic_key=sell_country_str)
+            else:
+                lead.sell_country = None
+
+            lead.lead_type = form.cleaned_data.get('lead_type')
+            lead.avg_deal_size = form.cleaned_data.get('avg_deal_size')
+            lead.avg_comm_pct = form.cleaned_data.get('avg_comm_pct')
+            lead.details = form.cleaned_data.get('details')
+            lead.other_commission_details = form.cleaned_data.get(
+                'other_commission_details')
+
+            lead.save()
+
+            return HttpResponseRedirect(
+                reverse('leads:lead_detail', args=(lead.id,)))
+    else:
+        lead = models.Lead.objects.get(pk=pk)
+
+        buy_country = 'any_country'
+        if lead.buy_country != None:
+            buy_country = lead.buy_country.programmatic_key
+
+        sell_country = 'any_country'
+        if lead.sell_country != None:
+            sell_country = lead.sell_country.programmatic_key
+
+        form = forms.LeadForm(initial={
+            'pk': lead.pk,
+            'lead_type': lead.lead_type,
+            'buy_country': buy_country,
+            'sell_country': sell_country,
+            'avg_deal_size': lead.avg_deal_size,
+            'avg_comm_pct': lead.avg_comm_pct,
+            'details': lead.details,
+            'other_commission_details': lead.other_commission_details
+        })
+
+    return render(request, 'leads/lead_edit.html', {
+        'form': form,
+        'countries': get_countries()
+    })
 
 class LeadDetail(DetailView):
     template_name = 'leads/lead_detail.html'
@@ -76,7 +127,7 @@ def lead_create(request):
             .order_by('-number_of_users')
 
     if request.method == 'POST':
-        form = forms.INeedAgentForm(request.POST)
+        form = forms.LeadForm(request.POST)
         if form.is_valid():
             buy_country_str = form.cleaned_data.get('buy_country')
             buy_country = None
@@ -112,7 +163,7 @@ def lead_create(request):
             return HttpResponseRedirect(
                 reverse('leads:lead_detail', args=(lead.id,)))
     else:
-        form = forms.INeedAgentForm()
+        form = forms.LeadForm()
 
     return render(request, 'leads/lead_create.html', {
         'form': form,
@@ -387,7 +438,7 @@ class LeadListView(ListView):
 @login_required
 def create_lead(request):
     if request.method == 'POST':
-        form = forms.LeadForm(request.POST)
+        form = forms.OldLeadForm(request.POST)
         if form.is_valid():
             # reCaptcha check
             # Note: blocking
@@ -437,7 +488,7 @@ def create_lead(request):
             else:
                 messages.info(request, 'Are you a robot? Please slow down. [' + str(sr.get('score')) + ']')
     else:
-        form = forms.LeadForm()
+        form = forms.OldLeadForm()
 
     countries = commods.Country.objects.order_by('name')
 

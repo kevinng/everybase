@@ -14,14 +14,16 @@ Params:
     <div class="text-sm font-bold uppercase text-slate-400 mt-5">Details</div>
     <div>{% if summary == True %}{{ lead.details|slice:':140' }}{% if lead.details|length > 140 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
     <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</div>
-    <div>{{ lead.avg_comm_pct }}%</div>
+    <div>{{ lead.avg_comm_pct }} %</div>
     {% if summary != True %}
     <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Deal Size</div>
     <div>USD {{ lead.avg_deal_size }}</div>
     <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Commission Per Deal</div>
     <div>USD {{ lead.avg_deal_comm }}</div>
-    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Other Commission Details</div>
-    <div>USD {{ lead.other_commission_details }}</div>
+    {% if lead.other_commission_details is not None %}
+        <div class="text-sm font-bold uppercase text-slate-400 mt-5">Other Commission Details</div>
+        <div>{{ lead.other_commission_details }}</div>
+    {% endif %}
     {% endif %}
     <div class="italic my-5">Actual commissions negotiated per deal.</div>
     
