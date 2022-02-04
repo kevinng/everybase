@@ -38,7 +38,7 @@
         <div class="flex">
             {% if request.user.is_authenticated %}
                 <a href="{% url 'relationships:logout' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Logout</a>
-                <a href="#" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">My Profile</a>
+                <a href="{% url 'users:user_comments' user.user.id %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">My Profile</a>
             {% else %}
                 <a href="{% url 'relationships:register' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Register</a>
                 <a href="{% url 'relationships:login' %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">Login</a>

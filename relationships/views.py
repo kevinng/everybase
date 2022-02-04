@@ -75,18 +75,6 @@ def whatsapp(request, pk):
 
     return render(request, 'relationships/message.html', params)
 
-@login_required
-def goto_whatsapp(request, pk):
-    if request.user.user.id == pk:
-        return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
-
-    # user = models.User.objects.get(pk=pk)
-
-
-
-
-    pass
-
 def user_comments(request, pk):
     user = models.User.objects.get(pk=pk)
     template = 'relationships/user_detail_comment_list.html'
@@ -113,17 +101,16 @@ def user_comments(request, pk):
             )
 
             return HttpResponseRedirect(
-                reverse('relationships:user_comments', args=(pk,)))
+                reverse('users:user_comments', args=(pk,)))
     else:
         form = forms.CommentForm()
 
     return render(request, template, {'detail_user': user, 'form': form})
 
-# def user_leads(request, pk):
-#     user = models.User.objects.get(pk=pk)
-#     template = 'relationships/user_detail_lead_list.html'
-#     context = {'detail_user': user}
-#     return TemplateResponse(request, template, context)
+def user_edit(request, pk):
+    template = 'relationships/user_edit.html'
+    context = {}
+    return TemplateResponse(request, template, context)
 
 
 

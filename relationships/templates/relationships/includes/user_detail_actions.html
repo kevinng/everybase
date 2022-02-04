@@ -3,8 +3,8 @@ detail_user, user whose details we're showing.
 {% endcomment %}
 <div class="flex lg:hidden">
     {% if user.user.id != detail_user.id %}
-        <a href="{% url 'users:whatsapp' user.id %}" class="py-2 px-5 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
+        <a href="{% url 'users:whatsapp' detail_user.id %}" class="py-2 px-5 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
     {% else %}
-        <a href="#" class="py-2 px-5 rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
+        <a href="{% url 'users:user_edit' user.user.id %}" class="py-2 px-5 rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
     {% endif %}
 </div>

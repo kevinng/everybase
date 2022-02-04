@@ -7,7 +7,7 @@ Params:
     <div class="flex flex-col items-center">
         <div class="mt-2">{{ detail_user.country.name }}</div>
         {% if user.is_authenticated and user.user.id == detail_user.id %}
-            <a class="py-2 px-5 mt-2 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
+            <a href="{% url 'users:user_edit' user.user.id %}" class="py-2 px-5 mt-2 font-bold rounded-xl text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
         {% elif user.user.id != detail_user.id %}
             <a href="{% url 'users:whatsapp' detail_user.id %}" class="py-2 px-5 mt-2 font-bold rounded-xl text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
             <div class="mt-2">Contacted 2d ago</div>
