@@ -6,6 +6,9 @@ from . import models
 from phonenumber_field.formfields import PhoneNumberField
 import phonenumbers
 
+class WhatsAppBodyForm(forms.Form):
+    body = forms.CharField()
+
 class CommentForm(forms.Form):
     body = forms.CharField()
     is_public = forms.BooleanField(required=False)

@@ -1,7 +1,7 @@
 import pytz
 from datetime import datetime, timedelta
 
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -10,12 +10,15 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.template.response import TemplateResponse
 from django.views.generic.list import ListView
+from django.template.loader import render_to_string
 
 from everybase import settings
 from common import models as commods
 from leads import models as lemods
 from relationships import forms, models
 from relationships.utilities.save_user_agent import save_user_agent
+from relationships.utilities.get_non_tracking_whatsapp_link import \
+    get_non_tracking_whatsapp_link
 from chat.tasks.send_register_link import send_register_link
 from chat.tasks.send_login_link import send_login_link
 
@@ -27,12 +30,61 @@ def whatsapp(request, pk):
     if request.user.user.id == pk:
         return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
 
-    user = models.User.objects.get(pk=pk)
-    return TemplateResponse(request, 'relationships/message.html', {
-        'contactee': user
-    })
+    contactee = models.User.objects.get(pk=pk)
 
+    if request.method == 'POST':
+        form = forms.WhatsAppBodyForm(request.POST)
+        if form.is_valid():
+            body = form.cleaned_data.get('body')
+            contactor = request.user.user
+
+            lemods.WhatsAppMessageBody.objects.create(
+                contactor=contactor,
+                contactee=contactee,
+                body=body
+            )
+            
+            response = HttpResponse(status=302) # Temporary redirect
+            response['Location'] = get_non_tracking_whatsapp_link(
+                contactee.phone_number.country_code,
+                contactee.phone_number.national_number
+            )
+            response['Location'] += '?text=' + render_to_string(
+                'chat/bodies/whatsapp_author.txt', {
+                    'contactee': contactee,
+                    'contactor': contactor,
+                    'body': body
+            }).replace('\n', '%0A').replace(' ', '%20')
+
+            return response
+    else:
+        form = forms.WhatsAppBodyForm()
+
+    params = {
+        'contactee': contactee,
+        'form': form
+    }
+
+    last_msg_body = lemods.WhatsAppMessageBody.objects.\
+        filter(contactor=request.user.user).\
+        order_by('-created').\
+        first()
+
+    if last_msg_body is not None:
+        params['last_msg_body'] = last_msg_body.body
+
+    return render(request, 'relationships/message.html', params)
+
+@login_required
 def goto_whatsapp(request, pk):
+    if request.user.user.id == pk:
+        return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
+
+    # user = models.User.objects.get(pk=pk)
+
+
+
+
     pass
 
 def user_comments(request, pk):
