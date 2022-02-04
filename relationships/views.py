@@ -79,11 +79,11 @@ def user_comments(request, pk):
     user = models.User.objects.get(pk=pk)
     template = 'relationships/user_detail_comment_list.html'
 
-    # Disallow commenting on self
-    if user.id == request.user.user.id:
-        return render(request, template, {'detail_user': user})
-
     if request.method == 'POST':
+        # Disallow commenting on self
+        if not request.user.is_authenticated or user.id == request.user.user.id:
+            return render(request, template, {'detail_user': user})
+
         form = forms.CommentForm(request.POST)
         if form.is_valid():
             body = form.cleaned_data.get('body')
