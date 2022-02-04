@@ -107,13 +107,48 @@ def user_comments(request, pk):
 
     return render(request, template, {'detail_user': user, 'form': form})
 
+@login_required
 def user_edit(request, pk):
-    template = 'relationships/user_edit.html'
-    context = {}
-    return TemplateResponse(request, template, context)
+    user = models.User.objects.get(pk=pk)
 
+    if request.method == 'POST':
+        form = forms.UserEditForm(request.POST)
+        if form.is_valid():
+            # Get or create a new email for this user
+            email, _ = models.Email.objects.get_or_create(
+                email=form.cleaned_data.get('email')
+            )
 
+            is_not_agent = form.cleaned_data.get('is_not_agent')
+            if is_not_agent is None:
+                is_not_agent = False
 
+            models.User.objects.update(
+                first_name = form.cleaned_data.get('first_name'),
+                last_name = form.cleaned_data.get('last_name'),
+                email=email,
+                goods_string=form.cleaned_data.get('goods_string'),
+                languages_string=form.cleaned_data.get('languages_string'),
+                is_agent=not is_not_agent
+            )
+
+            return HttpResponseRedirect(
+                reverse('users:user_comments', args=(pk,)))
+    else:
+        form = forms.UserEditForm(initial={
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email.email,
+            'goods_string': user.goods_string,
+            'languages_string': user.languages_string,
+            'is_not_agent': not user.is_agent
+        })
+
+    return TemplateResponse(request, 'relationships/user_edit.html', {
+        'whatsapp_phone_number': str(user.phone_number.country_code) + \
+            str(user.phone_number.national_number),
+        'form': form
+    })
 
 class UserLeadListView(ListView):
     template_name = 'relationships/user_detail_lead_list.html'

@@ -6,6 +6,34 @@ from . import models
 from phonenumber_field.formfields import PhoneNumberField
 import phonenumbers
 
+class UserEditForm(forms.Form):
+    first_name = forms.CharField(
+        required=True,
+        min_length=1,
+        max_length=20
+    )
+    last_name = forms.CharField(
+        required=True,
+        min_length=1,
+        max_length=20
+    )
+    email = forms.EmailField(
+        required=True
+    )
+    goods_string = forms.CharField(
+        required=True,
+        min_length=1,
+        max_length=200
+    )
+    languages_string = forms.CharField(
+        required=True,
+        min_length=1,
+        max_length=200
+    )
+    is_not_agent = forms.BooleanField(
+        required=False
+    )
+
 class WhatsAppBodyForm(forms.Form):
     body = forms.CharField()
 
