@@ -18,7 +18,7 @@ class RegisterTest(ChatTest):
         self.receive_reply_assert(
             'huh',
             intents.REGISTER,
-            messages.REGISTER__LINK,
+            messages.REGISTER__CONFIRM,
             target_body_message_key=messages.REGISTER__DO_NOT_UNDERSTAND
         )
 
@@ -36,7 +36,7 @@ class SendRegisterConfirmTest(ChatTest):
         msg = send_register_message(self.user.id, True)
         self.assert_context_body(
             intents.REGISTER,
-            messages.REGISTER__LINK,
+            messages.REGISTER__CONFIRM,
             msg.body, {
                 'first_name': self.user.first_name,
                 'last_name': self.user.last_name

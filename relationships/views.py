@@ -24,6 +24,7 @@ from chat.tasks.send_login_message import send_login_message
 
 from sentry_sdk import capture_message
 import phonenumbers
+from ratelimit.decorators import ratelimit
 
 @login_required
 def whatsapp(request, pk):
@@ -270,6 +271,7 @@ def register(request):
 
     return render(request, 'relationships/register.html', params)
 
+@ratelimit(key='user_or_ip', rate='10/h', block=True, method=['POST'])
 def confirm_register(request, user_uuid):
     user = models.User.objects.get(uuid=user_uuid)
 
@@ -414,6 +416,7 @@ def log_in(request):
 
     return render(request, 'relationships/login.html', params)
 
+@ratelimit(key='user_or_ip', rate='10/h', block=True, method=['POST'])
 def confirm_login(request, user_uuid):
     if request.method == 'POST':
         # Resend login message

@@ -28,7 +28,7 @@ def send_register_message(
     done_to_context(
         user,
         intents.REGISTER,
-        messages.REGISTER__LINK
+        messages.REGISTER__CONFIRM
     )
 
     params = {
@@ -37,11 +37,11 @@ def send_register_message(
     }
 
     return send_message(
-        render_message(messages.REGISTER__LINK, params),
+        render_message(messages.REGISTER__CONFIRM, params),
         chatbot,
         user,
         intents.REGISTER,
-        messages.REGISTER__LINK,
+        messages.REGISTER__CONFIRM,
         None,
         no_external_calls
     )

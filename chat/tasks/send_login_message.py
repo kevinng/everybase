@@ -28,7 +28,7 @@ def send_login_message(
     done_to_context(
         user,
         intents.LOGIN,
-        messages.LOGIN__LINK
+        messages.LOGIN__CONFIRM
     )
 
     params = {
@@ -40,11 +40,11 @@ def send_login_message(
     relmods.LoginToken.objects.create(user=user)
 
     return send_message(
-        render_message(messages.LOGIN__LINK, params),
+        render_message(messages.LOGIN__CONFIRM, params),
         chatbot,
         user,
         intents.LOGIN,
-        messages.LOGIN__LINK,
+        messages.LOGIN__CONFIRM,
         None,
         no_external_calls
     )
