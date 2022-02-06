@@ -12,7 +12,7 @@ Params:
     <div>{% if lead.lead_type == 'buying' %}Buy from{% elif lead.lead_type == 'selling' %}Source is {% endif %} {% if lead.buy_country is None %}any country{% else %}{{ lead.buy_country.name }}{% endif %}</div>
     <div>{% if lead.lead_type == 'buying' %}Destination is{% elif lead.lead_type == 'selling' %}Sell to{% endif %} {% if lead.sell_country is None %}any country{% else %}{{ lead.sell_country.name }}{% endif %}</div>
     <div class="text-sm font-bold uppercase text-slate-400 mt-5">Details</div>
-    <div>{% if summary == True %}{{ lead.details|slice:':140' }}{% if lead.details|length > 140 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
+    <div>{% if summary == True %}{{ lead.details|slice:':200' }}{% if lead.details|length > 200 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
     <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</div>
     <div>{{ lead.avg_comm_pct }} %</div>
     {% if summary != True %}
