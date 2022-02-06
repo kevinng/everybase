@@ -1,6 +1,6 @@
 from chat.constants import intents, messages
 from chat.tests.library import ChatTest
-from chat.tasks.send_login_link import send_login_link
+from chat.tasks.send_login_message import send_login_message
 
 class LoginTest(ChatTest):
     def setUp(self):
@@ -31,8 +31,8 @@ class LoginConfirmTest(ChatTest):
     def setUp(self):
         super().setUp(intents.NO_INTENT, messages.NO_MESSAGE)
 
-    def test_send_login_link(self):
-        msg = send_login_link(self.user.id, True)
+    def test_send_login_message(self):
+        msg = send_login_message(self.user.id, True)
         self.assert_context_body(
             intents.LOGIN,
             messages.LOGIN__CONFIRM,

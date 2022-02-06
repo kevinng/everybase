@@ -1,6 +1,6 @@
 from chat.constants import intents, messages
 from chat.tests.library import ChatTest
-from chat.tasks.send_register_link import send_register_link
+from chat.tasks.send_register_message import send_register_message
 from chat.utilities.render_message import render_message
 
 class RegisterTest(ChatTest):
@@ -33,7 +33,7 @@ class SendRegisterConfirmTest(ChatTest):
         super().setUp(intents.NO_INTENT, messages.NO_MESSAGE)
 
     def test_send_register_confirm(self):
-        msg = send_register_link(self.user.id, True)
+        msg = send_register_message(self.user.id, True)
         self.assert_context_body(
             intents.REGISTER,
             messages.REGISTER__LINK,

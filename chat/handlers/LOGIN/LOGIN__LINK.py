@@ -12,7 +12,7 @@ class Handler(MessageHandler):
             # Only the latest token is used
             token = models.LoginToken.objects.filter(
                 user=self.message.from_user.id,
-                activated__isnull=True # Token is NOT activated
+                activated__isnull=True # Token not activated
             ).order_by('-created').first()
 
             if token is not None:

@@ -10,9 +10,9 @@ _USER_DOES_NOT_EXIST = -1
 _CHATBOT_USER_DOES_NOT_EXIST = -2
 
 @shared_task
-def send_login_link(
-        user_id : int,
-        no_external_calls : bool = False
+def send_login_message(
+        user_id: int,
+        no_external_calls: bool = False
     ):
 
     try:

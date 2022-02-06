@@ -216,7 +216,7 @@ class ConnectionAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user_one', 'user_two']
 
-_login_token_fields = ['user', 'activated', 'token', 'expiry_secs']
+_login_token_fields = ['user', 'activated', 'killed','token']
 @admin.register(mod.LoginToken)
 class LoginTokenAdmin(comadm.StandardAdmin):
     # List page settings
@@ -232,14 +232,15 @@ class LoginTokenAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
-_register_token_fields = ['user', 'activated', 'token', 'expiry_secs']
+_register_token_fields = ['user', 'activated', 'killed', 'token']
 @admin.register(mod.RegisterToken)
 class RegisterTokenAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _register_token_fields
     list_editable = comadm.standard_list_editable + _register_token_fields
     list_filter = comadm.standard_list_filter + ['created']
-    search_fields = comadm.standard_search_fields + ['token']
+    search_fields = comadm.standard_search_fields + ['user__first_name',
+        'user__last_name', 'token']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['created']

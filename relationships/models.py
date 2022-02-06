@@ -530,7 +530,7 @@ def get_token(length=_TOKEN_LENGTH):
 class LoginToken(Standard):
     """Login token.
     
-    Last updated: 24 November 2021, 9:23 PM
+    Last updated: 6 February 2022, 8:46 PM
     """
     user = models.ForeignKey(
         'User',
@@ -544,7 +544,7 @@ class LoginToken(Standard):
         null=True,
         blank=True
     )
-    refreshed = models.DateTimeField(
+    killed = models.DateTimeField(
         db_index=True,
         null=True,
         blank=True
@@ -555,15 +555,11 @@ class LoginToken(Standard):
         db_index=True,
         default=get_token
     )
-    expiry_secs = models.IntegerField(
-        db_index=True,
-        default=settings.LOGIN_TOKEN_EXPIRY_SECS
-    )
 
 class RegisterToken(Standard):
     """Register token.
     
-    Last updated: 3 November 2021, 1:02 PM
+    Last updated: 6 February 2022, 6:23 PM
     """
     token = models.CharField(
         unique=True,
@@ -583,14 +579,10 @@ class RegisterToken(Standard):
         null=True,
         blank=True
     )
-    refreshed = models.DateTimeField(
+    killed = models.DateTimeField(
         db_index=True,
         null=True,
         blank=True
-    )
-    expiry_secs = models.IntegerField(
-        db_index=True,
-        default=settings.REGISTER_TOKEN_EXPIRY_SECS
     )
 
 class Comment(Standard):
