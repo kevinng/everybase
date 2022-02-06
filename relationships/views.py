@@ -28,6 +28,7 @@ import phonenumbers
 @login_required
 def whatsapp(request, pk):
     if request.user.user.id == pk:
+        # Disallow WhatsApp to self
         return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
 
     contactee = models.User.objects.get(pk=pk)
@@ -109,6 +110,10 @@ def user_comments(request, pk):
 
 @login_required
 def user_edit(request, pk):
+    if request.user.user.id != pk:
+        # Disallow edit of a profile that's not self
+        return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
+
     user = models.User.objects.get(pk=pk)
 
     if request.method == 'POST':
