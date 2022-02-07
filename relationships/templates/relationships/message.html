@@ -16,7 +16,7 @@
             <div>Hi {{ contactee.first_name }} {{ contactee.last_name }}, my name is {{ user.user.first_name }} {{ user.user.last_name }}.</div>
             <div class="mt-2">I got your contact from - https://everybase.co</div>
             <label for="body" class="text-sm font-bold uppercase text-slate-400 mt-4">Message Body</label>
-            <textarea id="body" name="body" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2"{% if form.body.value is not None %} value="{{ form.body.value }}"{% endif %}></textarea>
+            <textarea id="body" name="body" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2 {% if form.body.errors %}border border-red-500{% endif %}"{% if form.body.value is not None %} value="{{ form.body.value }}"{% endif %}></textarea>
             {% if form.body.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% if last_msg_body is not None %}
                 <div class="flex items-center justify-start mt-2"><input id="use_last_msg" name="use_last_msg" type="checkbox" class="focus:ring-blue-100 border-gray-300 h-6 w-6"><label for="use_last_msg" class="ml-2">Use last message</label></div>
