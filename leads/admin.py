@@ -54,21 +54,6 @@ class LeadDetailAccessAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _lead_detail_access_fields})]
     autocomplete_fields = ['lead', 'accessor']
 
-_contact_request_fields = ['response', 'contactor', 'lead', 'message']
-@admin.register(models.ContactRequest)
-class ContactRequestAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _contact_request_fields
-    list_editable = comadm.standard_list_editable + _contact_request_fields
-    search_fields = comadm.standard_search_fields + ['contactor__first_name',
-        'contactor__last_name', 'lead__author__first_name',
-        'lead__author__last_name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _contact_request_fields})]
-    autocomplete_fields = ['contactor', 'lead']
-
 _filter_form_post_fields = ['title', 'details', 'is_buying', 'is_selling',
 'is_direct', 'is_agent', 'user_country', 'lead_country', 'is_initial_deposit',
 'is_goods_shipped', 'is_payment_received', 'is_goods_received', 'is_others',

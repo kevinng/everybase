@@ -1,22 +1,12 @@
-"""Everybase URL Configuration
+from relationships import views as relviews
+from leads import views as leviews
+from chat import views as chatviews
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import include
 from django.shortcuts import render
+
 import sentry_sdk
 
 def trigger_error(request):
@@ -32,22 +22,34 @@ def trigger_handled_error(request):
     return render(request, 'chat/pages/error.html', {})
 
 urlpatterns = [
+    # Common
+    path('', leviews.AgentListView.as_view(), name='home'),
+
     # Leads
     path('leads/', include('leads.urls')),
-    path('', include('leads.urls__root')),
+    path('', leviews.AgentListView.as_view(), name='agents'),
 
     # Relationships
-    path('', include('relationships.urls__root')),
-    path('users/', include('relationships.urls__users')),
+    path('register/', relviews.register, name='register'),
+    path('confirm_register/<str:user_uuid>', relviews.confirm_register,
+        name='confirm_register'),
+    path('is_registered/<str:user_uuid>', relviews.is_registered,
+        name='is_registered'),
+    path('login/', relviews.log_in, name='login'),
+    path('confirm_login/<str:user_uuid>', relviews.confirm_login,
+        name='confirm_login'),
+    path('is_logged_in/<str:user_uuid>', relviews.is_logged_in,
+        name='is_logged_in'),
+    path('logout/', relviews.log_out, name='logout'),
+    path('users/', include('relationships.urls')),
 
     # Chat
     path('chat/', include('chat.urls')),
-    path('', include('chat.urls__root')),
 
     # Files
     path('files/', include('files.urls')),
 
-    # Django admin, with obfuscated URL
+    # Django admin obfuscated URL
     path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
 
     # Django Rest Framework login
@@ -55,7 +57,7 @@ urlpatterns = [
 
     # Sentry debug URLs
     path('sentry-debug/', trigger_error), # trigger error
-    path('sentry-debug-handled/', trigger_handled_error), # handle triggered error
+    path('sentry-debug-handled/', trigger_handled_error), # handle error
 
     # Common
     path('common/', include('common.urls')),

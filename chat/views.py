@@ -1,15 +1,10 @@
 import traceback
 from http import HTTPStatus
-from urllib.parse import urljoin, quote
+from urllib.parse import urljoin
 
 from django.urls import reverse
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.template.loader import render_to_string
-from django.shortcuts import redirect
 from rest_framework.views import APIView
-
-from ratelimit.decorators import ratelimit
 
 from everybase import settings
 
@@ -22,14 +17,6 @@ from chat.utilities.get_handler import get_handler
 from chat.utilities.save_status_callback import save_status_callback
 from chat.utilities.save_status_callback_log import save_status_callback_log
 from chat.tasks.copy_post_request_data import copy_post_request_data
-
-from relationships import models as relmods
-from relationships.utilities.get_non_tracking_whatsapp_link import \
-    get_non_tracking_whatsapp_link
-from relationships.utilities.get_create_whatsapp_link import \
-    get_create_whatsapp_link
-
-from leads import models as lemods
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -160,55 +147,59 @@ class TwilioIncomingStatusView(APIView):
             traceback.print_exc()
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
-def redirect_whatsapp_phone_number(request, id):
-    """Redirects user from our short tracking URL to WhatsApp"""
-    hash = relmods.PhoneNumberHash.objects.get(pk=id)
+# We're not using the PhoneNumberHash
+
+# def redirect_whatsapp_phone_number(request, id):
+#     """Redirects user from our short tracking URL to WhatsApp"""
+#     hash = relmods.PhoneNumberHash.objects.get(pk=id)
     
-    # Note: we use temporary redirects so search engines do not associate our
-    # URLs with WhatsApp phone number links
-    response = HttpResponse(status=302) # Temporary redirect
-    response['Location'] = get_non_tracking_whatsapp_link(
-        hash.phone_number.country_code,
-        hash.phone_number.national_number
-    )
+#     # Note: we use temporary redirects so search engines do not associate our
+#     # URLs with WhatsApp phone number links
+#     response = HttpResponse(status=302) # Temporary redirect
+#     response['Location'] = get_non_tracking_whatsapp_link(
+#         hash.phone_number.country_code,
+#         hash.phone_number.national_number
+#     )
 
-    text = request.GET.get('text')
-    if text is not None:
-        response['Location'] += '?text=' + text
+#     text = request.GET.get('text')
+#     if text is not None:
+#         response['Location'] += '?text=' + text
 
-    return response
+#     return response
 
-@login_required
-@ratelimit(key='user_or_ip', rate='50/h', block=True)
-def whatsapp_lead_author(request, lead_uuid):
-    lead = lemods.Lead.objects.get(uuid=lead_uuid)
-    requester = request.user.user
-    whatsapp_link = get_create_whatsapp_link(requester, lead.author)
+# We're not using WhatsAppLeadAuthorClick
 
-    click, _ = lemods.WhatsAppLeadAuthorClick.objects.get_or_create(
-        lead=lead,
-        contactor=requester
-    )
+# @login_required
+# @ratelimit(key='user_or_ip', rate='50/h', block=True)
+# def whatsapp_lead_author(request, lead_uuid):
+#     lead = lemods.Lead.objects.get(uuid=lead_uuid)
+#     requester = request.user.user
+#     whatsapp_link = get_create_whatsapp_link(requester, lead.author)
 
-    click.access_count += 1
-    click.save()
+#     click, _ = lemods.WhatsAppLeadAuthorClick.objects.get_or_create(
+#         lead=lead,
+#         contactor=requester
+#     )
 
-    def is_author_registered():
-        return lead.author is not None and\
-            lead.author.registered is not None and\
-            lead.author.django_user is not None
+#     click.access_count += 1
+#     click.save()
 
-    params = {
-        'registered': is_author_registered(),
-        'lead_type': lead.lead_type,
-        'title': lead.title
-    }
-    text = quote(render_to_string(
-        'chat/bodies/whatsapp_lead_author.txt', params))
+#     def is_author_registered():
+#         return lead.author is not None and\
+#             lead.author.registered is not None and\
+#             lead.author.django_user is not None
 
-    # Note: we use temporary redirects so search engines do not associate our
-    # URLs with WhatsApp phone number links
-    response = HttpResponse(status=302) # Temporary redirect
-    response['Location'] = whatsapp_link + '?text=' + text
+#     params = {
+#         'registered': is_author_registered(),
+#         'lead_type': lead.lead_type,
+#         'title': lead.title
+#     }
+#     text = quote(render_to_string(
+#         'chat/bodies/whatsapp_lead_author.txt', params))
 
-    return response
+#     # Note: we use temporary redirects so search engines do not associate our
+#     # URLs with WhatsApp phone number links
+#     response = HttpResponse(status=302) # Temporary redirect
+#     response['Location'] = whatsapp_link + '?text=' + text
+
+#     return response

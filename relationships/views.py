@@ -248,7 +248,7 @@ def register(request):
 
             # Append next URL
             next_url = form.cleaned_data.get('next')
-            confirm_register = reverse('relationships:confirm_register',
+            confirm_register = reverse('confirm_register',
                 kwargs={'user_uuid': user.uuid})
 
             if next_url is not None:
@@ -290,7 +290,7 @@ def confirm_register(request, user_uuid):
         # back into the URL as a GET parameter. Django will then call this URL
         # again and render the parameter back into the form.
 
-        confirm_register = reverse('relationships:confirm_register',
+        confirm_register = reverse('confirm_register',
             kwargs={'user_uuid': user.uuid})
 
         next_url = request.POST.get('next')
@@ -310,8 +310,7 @@ def confirm_register(request, user_uuid):
     if next_url is not None and len(next_url.strip()) > 0:
         params['next'] = next_url
     else:
-        # TODO redirect to home
-        params['next'] = reverse('leads__root:agents')
+        params['next'] = reverse('home')
 
     return render(request,
         'relationships/confirm_register.html', params)
@@ -392,7 +391,7 @@ def log_in(request):
                 # Create token and send message
                 send_login_message.delay(user.id)
 
-                confirm_login_url = reverse('relationships:confirm_login',
+                confirm_login_url = reverse('confirm_login',
                     kwargs={'user_uuid': user.uuid})
 
                 if next_url is not None:
@@ -449,13 +448,11 @@ def confirm_login(request, user_uuid):
                 send_login_message.delay(user.id)
 
                 return HttpResponseRedirect(
-                    reverse('relationships:confirm_login',
-                        kwargs={'user_uuid': user.uuid}))
+                    reverse('confirm_login', kwargs={'user_uuid': user.uuid}))
                 
             except (models.User.DoesNotExist, models.PhoneNumber.DoesNotExist):
                 # Not possible - unless user hacked the form
-                return HttpResponseRedirect(reverse('relationships:login',
-                    kwargs={}))
+                return HttpResponseRedirect(reverse('login', kwargs={}))
 
     user = models.User.objects.get(uuid=user_uuid)
     params = {
@@ -470,7 +467,7 @@ def confirm_login(request, user_uuid):
     if next_url is not None and len(next_url.strip()) > 0:
         params['next'] = next_url
     else:
-        params['next'] = reverse('leads__root:agents')
+        params['next'] = reverse('home')
 
     return render(request, 'relationships/confirm_login.html', params)
 
@@ -522,5 +519,4 @@ def is_logged_in(request, user_uuid):
 
 def log_out(request):
     logout(request)
-    # TODO redirect to home
-    return HttpResponseRedirect(reverse('leads__root:agents'))
+    return HttpResponseRedirect(reverse('home'))

@@ -34,7 +34,7 @@ def get_create_whatsapp_link(
         phone_number=to_user.phone_number
     )
 
-    reverse_url = reverse('chat__root:whatsapp', kwargs={ 'id': hash.id })
+    reverse_url = reverse('whatsapp', kwargs={ 'id': hash.id })
 
     if reverse_only:
         return reverse_url

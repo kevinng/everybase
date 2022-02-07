@@ -193,14 +193,14 @@
 														<a href="?page=account/overview" class="menu-link px-5">My Profile</a>
 													</div> {% endcomment %}
 													<div class="menu-item px-5">
-														<a href="{% url 'relationships:logout' %}" class="menu-link px-5">Log out</a>
+														<a href="{% url 'logout' %}" class="menu-link px-5">Log out</a>
 													</div>
 												</div>
 												<!--end::Menu-->
 
 											{% else %}
-												<a href="{% url 'relationships:register' %}" class="btn btn-sm btn-secondary fw-bolder me-2">Register</a>
-												<a href="{% url 'relationships:login' %}" class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary fw-bolder">Login</a>
+												<a href="{% url 'register' %}" class="btn btn-sm btn-secondary fw-bolder me-2">Register</a>
+												<a href="{% url 'login' %}" class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary fw-bolder">Login</a>
 											{% endif %}
 
 											<!--end::Menu wrapper-->

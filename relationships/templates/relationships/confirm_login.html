@@ -10,7 +10,7 @@
         <a href="https://everybase.co"><img class="mx-auto mt-5" src="{% static 'common/assets/img/logo.png' %}"></a>
         <h1 class="font-sans text-3xl font-bold text-center mt-5">We've Sent You a WhatsApp Message, Reply 'Yes' to Confirm Login</h1>
         <div class="mt-7 flex flex-col justify-center">
-            <form action="{% url 'relationships:confirm_login' user_uuid %}" method="post">
+            <form action="{% url 'confirm_login' user_uuid %}" method="post">
                 {% csrf_token %}
                 {% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}{% comment %} The next URL is rendered with the template if it is passed as a GET parameter to the URL. {% endcomment %}
                 <label for="whatsapp_phone_number" class="font-sans text-sm font-bold uppercase text-slate-400">WhatsApp Phone Number</label>
@@ -35,7 +35,7 @@ $(document).ready(function () {
     var set_interval = setInterval(function () {
         // Get login token and ascertain if it has been activated.
         // Note: the URLs are rendered by the view into the Javascript.
-        $.get("{% url 'relationships:is_logged_in' user_uuid %}", function (data) {
+        $.get("{% url 'is_logged_in' user_uuid %}", function (data) {
             console.log(data['l'])
             if (data['l'] == true) {
                 window.location.replace('{{ next }}');
@@ -49,7 +49,7 @@ $(document).ready(function () {
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>{% comment %} Do not use the slim version, which does not have the .get function. {% endcomment %}
 <script>
-$(document).ready(function(){var counter=1000;var set_interval=setInterval(function(){$.get("{% url 'relationships:is_logged_in' user_uuid %}",function(data){console.log(data.l)
+$(document).ready(function(){var counter=1000;var set_interval=setInterval(function(){$.get("{% url 'is_logged_in' user_uuid %}",function(data){console.log(data.l)
 if(data.l==!0){window.location.replace('{{ next }}')}});counter--},3000)})
 </script>
 {% endblock %}
