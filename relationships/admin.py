@@ -179,23 +179,6 @@ class PhoneNumberHashAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user', 'phone_number']
 
-# TODO: refactor to file module
-class FileInlineAdmin(admin.TabularInline):
-    model = File
-    extra = 1
-    fields = ['file_url', 'upload_confirmed', 's3_bucket_name',
-        's3_object_key', 's3_object_content_length', 's3_object_e_tag',
-        's3_object_content_type', 's3_object_last_modified']
-    readonly_fields = ['uuid', 'file_url']
-
-    def file_url(self, obj):
-        if obj.id is None:
-            return None
-
-        url = urljoin(
-            BASE_URL, reverse('files:get_file', args=[obj.uuid]))
-        return format_html(f'<a href="{url}" target="{url}">{url}</a>')
-
 _connection_fields = ['user_one', 'user_two']
 @admin.register(mod.Connection)
 class ConnectionAdmin(comadm.StandardAdmin):

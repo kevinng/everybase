@@ -34,3 +34,19 @@ class FileAdmin(comadm.StandardAdmin):
     readonly_fields = comadm.standard_readonly_fields + ['uuid', 'file_url']
     fieldsets = comadm.standard_fieldsets + [(None, {'fields': _file_fields})]
     autocomplete_fields = ['uploader', 'lead']
+
+class FileInlineAdmin(admin.TabularInline):
+    model = models.File
+    extra = 1
+    fields = ['file_url', 'upload_confirmed', 's3_bucket_name',
+        's3_object_key', 's3_object_content_length', 's3_object_e_tag',
+        's3_object_content_type', 's3_object_last_modified']
+    readonly_fields = ['uuid', 'file_url']
+
+    def file_url(self, obj):
+        if obj.id is None:
+            return None
+
+        url = urljoin(
+            BASE_URL, reverse('files:get_file', args=[obj.uuid]))
+        return format_html(f'<a href="{url}" target="{url}">{url}</a>')
