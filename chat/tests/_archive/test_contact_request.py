@@ -3,10 +3,10 @@ from django.urls import reverse
 from everybase import settings
 from chat.constants import intents, messages
 from chat.tests.library import ChatTest
-from chat.tasks.send_contact_request_confirm import send_contact_request_confirm
-from chat.tasks.send_contact_request_exchanged_author import \
+from chat.tasks._archive.send_contact_request_confirm import send_contact_request_confirm
+from chat.tasks._archive.send_contact_request_exchanged_author import \
     send_contact_request_exchanged_author
-from chat.tasks.send_contact_request_exchanged_contactor import \
+from chat.tasks._archive.send_contact_request_exchanged_contactor import \
     send_contact_request_exchanged_contactor
 from relationships import models as relmods
 from relationships.utilities.get_create_whatsapp_link import \
