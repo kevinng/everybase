@@ -382,25 +382,28 @@ def log_in(request):
                     registered__isnull=False, # User is registered
                     django_user__isnull=False # User has a Django user linked
                 ).first()
-
-                next_url = form.cleaned_data.get('next')
-
-                # Kill all tokens
-                kill_live_login_tokens(user)
-
-                # Create token and send message
-                send_login_message.delay(user.id)
-
-                confirm_login_url = reverse('confirm_login',
-                    kwargs={'user_uuid': user.uuid})
-
-                if next_url is not None:
-                    confirm_login_url += f'?next={next_url}'
-
-                save_user_agent(request, user)
                 
-                return HttpResponseRedirect(confirm_login_url)
-            except (models.User.DoesNotExist, models.PhoneNumber.DoesNotExist):
+                if user is None:
+                    messages.info(request, "Account don't exist.")
+                else:
+                    next_url = form.cleaned_data.get('next')
+
+                    # Kill all tokens
+                    kill_live_login_tokens(user)
+
+                    # Create token and send message
+                    send_login_message.delay(user.id)
+
+                    confirm_login_url = reverse('confirm_login',
+                        kwargs={'user_uuid': user.uuid})
+
+                    if next_url is not None:
+                        confirm_login_url += f'?next={next_url}'
+
+                    save_user_agent(request, user)
+                    
+                    return HttpResponseRedirect(confirm_login_url)
+            except models.PhoneNumber.DoesNotExist:
                 messages.info(request, "Account don't exist.")
     else:
         form = forms.LoginForm()
