@@ -160,6 +160,8 @@ class LeadListView(ListView):
         q.user = user
         q.search = search
         q.sort_by = sort_by
+
+# TODO the lead query is not saved properly
         q.save()
 
         if wants_to == 'buy':
@@ -228,6 +230,7 @@ class LeadListView(ListView):
 
 class AgentListView(ListView):
     template_name = 'leads/agent_list.html'
+    context_object_name = 'agents'
     model = relmods.User
     paginate_by = 8
 

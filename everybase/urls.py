@@ -27,7 +27,7 @@ urlpatterns = [
 
     # Leads
     path('leads/', include('leads.urls')),
-    path('', leviews.AgentListView.as_view(), name='agents'),
+    path('', leviews.AgentListView.as_view(), name='agents'), # Map to /agents and agents:agents_list
 
     # Relationships
     path('register/', relviews.register, name='register'),
@@ -42,6 +42,7 @@ urlpatterns = [
         name='is_logged_in'),
     path('logout/', relviews.log_out, name='logout'),
     path('users/', include('relationships.urls')),
+    path('/#pricing', leviews.AgentListView.as_view(),name='pricing'),
 
     # Chat
     path('chat/', include('chat.urls')),
