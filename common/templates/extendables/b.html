@@ -22,25 +22,25 @@
             <button class="hamburger lg:hidden">
                 <div class="bar"></div>
             </button>
-            <a class="hidden lg:block" href="{% url 'home' %}"><img src="{% static 'common/assets/img/logo.png' %}"></a>
+            <a ut-tag-id="home_logo_link" href="{% url 'home' %}" class="hidden lg:block"><img src="{% static 'common/assets/img/logo.png' %}"></a>
         </div>
         {% comment %} end: hamburger and logo {% endcomment %}
 
         {% comment %} start: desktop menu {% endcomment %}
         <div class="justify-between hidden lg:block">
-            <a class="{% if request.resolver_match.view_name == 'users:agent_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base"{% if request.resolver_match.view_name != 'users:agent_list' %} href="{% url 'users:agent_list' %}"{% endif %}>Agents</a>
-            <a class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7"{% if request.resolver_match.view_name != 'leads:lead_list' %} href="{% url 'leads:lead_list' %}"{% endif %}>I-Need-Agents</a>
+            <a ut-tag-id="nav_bar_desktop_agents_link" {% if request.resolver_match.view_name != 'users:agent_list' %}href="{% url 'users:agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:agent_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base">Agents</a>
+            <a ut-tag-id="nav_bar_desktop_leads_link" {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7">I-Need-Agents</a>
         </div>
         {% comment %} end: desktop menu {% endcomment %}
 
         {% comment %} start: actions {% endcomment %}
         <div class="flex">
             {% if request.user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Logout</a>
-                <a href="{% url 'users:user_comments' user.user.id %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">My Profile</a>
+                <a ut-tag-id="nav_bar_desktop_logout_link" href="{% url 'logout' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Logout</a>
+                <a ut-tag-id="nav_bar_desktop_my_profiile_link" href="{% url 'users:user_comments' user.user.id %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">My Profile</a>
             {% else %}
-                <a href="{% url 'register' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Register</a>
-                <a href="{% url 'login' %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">Login</a>
+                <a ut-tag-id="nav_bar_desktop_register_link" href="{% url 'register' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Register</a>
+                <a ut-tag-id="nav_bar_desktop_login_link" href="{% url 'login' %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">Login</a>
             {% endif %}
         </div>
         {% comment %} end: actions {% endcomment %}
@@ -49,15 +49,15 @@
     </div>
     {% comment %} start: mobile menu {% endcomment %}
     <nav class="mobile-nav text-base">
-        <a class="{% if request.resolver_match.view_name == 'users:agent_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4"{% if request.resolver_match.view_name != 'users:agent_list' %} href="{% url 'users:agent_list' %}"{% endif %}>Agents</a>
-        <a class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4"{% if request.resolver_match.view_name != 'leads:lead_list' %} href="{% url 'leads:lead_list' %}"{% endif %}>I-Need-Agents</a>
+        <a ut-tag-id="nav_bar_mobile_agents_link" {% if request.resolver_match.view_name != 'users:agent_list' %}href="{% url 'users:agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:agent_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Agents</a>
+        <a ut-tag-id="nav_bar_mobile_leads_link" {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">I-Need-Agents</a>
         <div class="h-10"></div>
         {% if request.user.is_authenticated %}
-            <a class="{% if request.resolver_match.view_name == 'logout' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4" href="{% url 'logout' %}">Logout</a>
-            <a class="{% if request.resolver_match.view_name == 'login' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4" href="{% url 'login' %}">My Profile</a>
+            <a ut-tag-id="nav_bar_mobile_logout_link" href="{% url 'logout' %}" class="{% if request.resolver_match.view_name == 'logout' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Logout</a>
+            <a ut-tag-id="nav_bar_mobile_my_profile_link" href="{% url 'users:user_comments' request.user.user.id %}" class="{% if request.resolver_match.view_name == 'users:user_comments' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">My Profile</a>
         {% else %}
-            <a class="{% if request.resolver_match.view_name == 'register' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4" href="{% url 'register' %}">Register</a>
-            <a class="{% if request.resolver_match.view_name == 'login' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4" href="{% url 'login' %}">Login</a>
+            <a ut-tag-id="nav_bar_mobile_register_link" href="{% url 'register' %}" class="{% if request.resolver_match.view_name == 'register' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Register</a>
+            <a ut-tag-id="nav_bar_mobile_login_link" href="{% url 'login' %}" class="{% if request.resolver_match.view_name == 'login' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Login</a>
         {% endif %}
     </nav>
     {% comment %} end: mobile menu {% endcomment %}

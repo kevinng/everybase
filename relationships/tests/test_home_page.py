@@ -25,6 +25,10 @@ class HomePageNotLoggedInTest(PageTest):
         url = reverse('register')
         self.assert_link(tag_id, url)
 
+    def test_logo_link_exists(self) -> None:
+        url = reverse('home')
+        self.assert_link('home_logo_link', url)
+
     def test_hero_agents_link_exists(self) -> None:
         self.assert_users_agent_list('hero_agents_link')
     
@@ -47,7 +51,7 @@ class HomePageNotLoggedInTest(PageTest):
         self.assert_users_agent_list('nav_bar_mobile_agents_link')
 
     def test_nav_bar_mobile_i_need_agents_link_exists(self) -> None:
-        self.assert_leads_lead_list('nav_bar_mobile_i_need_agents_link')
+        self.assert_leads_lead_list('nav_bar_mobile_leads_link')
 
     def test_nav_bar_mobile_register_link_exists(self) -> None:
         self.assert_register('nav_bar_mobile_register_link')
@@ -61,6 +65,14 @@ class HomePageNotLoggedInTest(PageTest):
 #         self.response = c.get('/')
 #         return super().setUp()
 
+    # def assert_logout(self, tag_id):
+    #     url = reverse('logout')
+    #     self.assert_link(tag_id, url)
+
+    # def assert_my_profile(self, tag_id):
+    #     url = reverse('users:user_comments')
+    #     self.assert_link(tag_id, url)
+
 #     def test_hero_agents_link_exists(self) -> None:
 #         pass
 
@@ -73,11 +85,11 @@ class HomePageNotLoggedInTest(PageTest):
 #     def test_nav_bar_desktop_i_need_agents(self) -> None:
 #         pass
 
-#     def test_nav_bar_desktop_register(self) -> None:
-#         pass
+    # def test_nav_bar_desktop_logout_link_exists(self) -> None:
+    #     self.assert_logout('nav_bar_desktop_logout_link')
 
-#     def test_nav_bar_desktop_login(self) -> None:
-#         pass
+    # def test_nav_bar_desktop_my_profile_link_exists(self) -> None:
+    #     self.assert_my_profile('nav_bar_desktop_my_profile_link')
 
 #     def test_nav_bar_mobile_agents(self) -> None:
 #         pass
@@ -85,8 +97,8 @@ class HomePageNotLoggedInTest(PageTest):
 #     def test_nav_bar_mobile_i_need_agents(self) -> None:
 #         pass
 
-#     def test_nav_bar_mobile_register(self) -> None:
-#         pass
+    # def test_nav_bar_mobile_logout_link_exists(self) -> None:
+    #     self.assert_logout('nav_bar_mobile_logout_link')
 
-#     def test_nav_bar_mobile_login(self) -> None:
-#         pass
+    # def test_nav_bar_mobile_my_profile_link_exists(self) -> None:
+    #     self.assert_my_profile('nav_bar_mobile_my_profile_link')
