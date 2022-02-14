@@ -1,6 +1,6 @@
 from relationships import views as relviews
 from leads import views as leviews
-from chat import views as chatviews
+from common import views as comviews
 
 from django.contrib import admin
 from django.urls import include, path
@@ -23,7 +23,7 @@ def trigger_handled_error(request):
 
 urlpatterns = [
     # Common
-    path('', leviews.AgentListView.as_view(), name='home'),
+    path('', comviews.home, name='home'),
 
     # Leads
     path('leads/', include('leads.urls')),
