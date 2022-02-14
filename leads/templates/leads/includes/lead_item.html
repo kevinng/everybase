@@ -4,24 +4,24 @@ Params:
     summary, if True showing summary
     more_css_classes, additional div CSS classes
 {% endcomment %}
-<div class="bg-white p-5{% if more_css_classes is not None and more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
+<div class="bg-white px-5 py-4{% if more_css_classes is not None and more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
     <div class="flex items-center justify-between">
         <div class="font-bold">Help Me {% if lead.lead_type == 'buying' %}Buy{% elif lead.lead_type == 'selling' %}Sell{% endif %}</div>
         <div>{{ lead.age_desc }}</div>
     </div>
     <div>{% if lead.lead_type == 'buying' %}Buy from{% elif lead.lead_type == 'selling' %}Source is {% endif %} {% if lead.buy_country is None %}any country{% else %}{{ lead.buy_country.name }}{% endif %}</div>
     <div>{% if lead.lead_type == 'buying' %}Destination is{% elif lead.lead_type == 'selling' %}Sell to{% endif %} {% if lead.sell_country is None %}any country{% else %}{{ lead.sell_country.name }}{% endif %}</div>
-    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Details</div>
+    <div class="text-sm font-bold uppercase text-slate-400 mt-3">Details</div>
     <div>{% if summary == True %}{{ lead.details|slice:':200' }}{% if lead.details|length > 200 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
-    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</div>
+    <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Agent Commission</div>
     <div>{{ lead.avg_comm_pct }} %</div>
     {% if summary != True %}
-    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Deal Size</div>
+    <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Deal Size</div>
     <div>USD {{ lead.avg_deal_size }}</div>
-    <div class="text-sm font-bold uppercase text-slate-400 mt-5">Average Commission Per Deal</div>
+    <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Commission Per Deal</div>
     <div>USD {{ lead.avg_deal_comm }}</div>
     {% if lead.other_comm_details is not None and lead.other_comm_details|cut:' ' != '' %}
-        <div class="text-sm font-bold uppercase text-slate-400 mt-5">Other Commission Details</div>
+        <div class="text-sm font-bold uppercase text-slate-400 mt-3">Other Commission Details</div>
         <div>{{ lead.other_comm_details }}</div>
     {% endif %}
     {% endif %}
