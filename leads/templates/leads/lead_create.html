@@ -12,7 +12,7 @@
 <form action="{% url 'leads:lead_create' %}" method="post">
 {% csrf_token %}
 <div class="flex justify-center">
-    <div class="p-10 mt-10 mb-10 bg-white max-w-3xl lg:rounded-xl shadow-md">
+    <div class="p-10 mt-10 mb-10 bg-white w-full md:w-2/3 lg:w-1/2 xl:w-1/3 md:rounded-lg shadow-md">
         <div class="text-center mt-6">New Post</div>
         <h1 class="text-3xl font-bold text-center">I-Need-Agent</h1>
         <div class="mt-7 flex flex-col justify-center">
@@ -61,7 +61,7 @@
             </div>
             {% if form.avg_comm_pct.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.avg_comm_pct.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <div class="mt-4">This is a guide only - actual commissions negotiated per deal.</div>
+            <div class="mt-4">Actual commissions negotiated per deal.</div>
 
             <label for="details" class="text-sm font-bold uppercase text-slate-400 mt-4">Details</label>
             <textarea name="details" rows="4" type="text" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None and form.details.value|cut:' ' != '' %}{{ form.details.value }}{% endif %}</textarea>
