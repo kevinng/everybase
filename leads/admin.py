@@ -39,20 +39,20 @@ class SavedLeadAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _saved_lead_fields})]
     autocomplete_fields = ['saver', 'lead']
 
-_lead_detail_access_fields = ['lead', 'accessor', 'access_count']
-@admin.register(models.LeadDetailAccess)
-class LeadDetailAccessAdmin(comadm.StandardAdmin):
+_lead_detail_view_fields = ['lead', 'viewer', 'count']
+@admin.register(models.LeadDetailView)
+class LeadDetailViewAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _lead_detail_access_fields
-    list_editable = comadm.standard_list_editable + _lead_detail_access_fields
+    list_display = comadm.standard_list_display + _lead_detail_view_fields
+    list_editable = comadm.standard_list_editable + _lead_detail_view_fields
     list_filter = comadm.standard_list_filter
-    search_fields = comadm.standard_search_fields + ['accessor__first_name',
-        'accessor__last_name']
+    search_fields = comadm.standard_search_fields + ['viewer__first_name',
+        'viewer__last_name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _lead_detail_access_fields})]
-    autocomplete_fields = ['lead', 'accessor']
+        [('Details', {'fields': _lead_detail_view_fields})]
+    autocomplete_fields = ['lead', 'viewer']
 
 _filter_form_post_fields = ['title', 'details', 'is_buying', 'is_selling',
 'is_direct', 'is_agent', 'user_country', 'lead_country', 'is_initial_deposit',
@@ -86,7 +86,7 @@ class WhatsAppLeadAuthorClickAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _whatsapp_lead_author_click_fields})]
     autocomplete_fields = ['lead', 'contactor']
 
-_whatsapp_click_fields = ['contactee', 'contactor', 'source', 'count']
+_whatsapp_click_fields = ['contactee', 'contactor', 'count']
 @admin.register(models.WhatsAppClick)
 class WhatsAppClickAdmin(comadm.StandardAdmin):
     # List page settings
@@ -127,16 +127,16 @@ class AgentQueryAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _agent_query_fields})]
     autocomplete_fields = ['user', 'country']
 
-_i_need_agent_query_fields = ['user', 'search', 'wants_to', 'buy_country',
-    'sell_country']
+_lead_query_fields = ['user', 'search', 'wants_to', 'buy_country',
+    'sell_country', 'sort_by']
 @admin.register(models.LeadQuery)
-class LeadAdmin(comadm.StandardAdmin):
+class LeadQueryAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _i_need_agent_query_fields
-    list_editable = comadm.standard_list_editable + _i_need_agent_query_fields
-    search_fields = comadm.standard_search_fields + _i_need_agent_query_fields
+    list_display = comadm.standard_list_display + _lead_query_fields
+    list_editable = comadm.standard_list_editable + _lead_query_fields
+    search_fields = comadm.standard_search_fields + _lead_query_fields
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _i_need_agent_query_fields})]
+        [('Details', {'fields': _lead_query_fields})]
     autocomplete_fields = ['user', 'buy_country', 'sell_country']

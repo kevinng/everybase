@@ -155,53 +155,52 @@ class Lead(Standard):
             file_type__icontains='pdf'
         ).count()
 
-class LeadDetailAccess(Standard):
-    """Records access to a lead's detail by an accessor user
+class LeadDetailView(Standard):
+    """Lead detail view.
 
-    Last updated: 27 October 2021, 8:46 PM
+    Last updated: 11 February 2022, 10:11 PM
     """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='detail_accesses_with_this_lead',
-        related_query_name='detail_accesses_with_this_lead',
-        on_delete=models.PROTECT,
-        db_index=True        
-    )
-    accessor = models.ForeignKey(
+    viewer = models.ForeignKey(
         'relationships.User',
-        related_name='detail_accesses_with_this_accessor',
-        related_query_name='detail_accesses_with_this_accessor',
+        related_name='lead_detail_views',
+        related_query_name='lead_detail_views',
         on_delete=models.PROTECT,
         db_index=True  
     )
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='lead_detail_views',
+        related_query_name='lead_detail_views',
+        on_delete=models.PROTECT,
+        db_index=True        
+    )
 
-    access_count = models.IntegerField(
+    count = models.IntegerField(
         db_index=True
     )
 
     class Meta:
-        unique_together = ('lead', 'accessor')
+        unique_together = ('viewer', 'lead')
 
 class WhatsAppClick(Standard):
     """User's click on to WhatsApp button
 
-    Last updated: 28 January 2022, 6:26 PM
+    Last updated: 11 February 2022, 10:15 PM
     """
     contactee = models.ForeignKey(
         'relationships.User',
-        related_name='whatsapp_clicks_with_this_contactee',
-        related_query_name='whatsapp_clicks_with_this_contactee',
+        related_name='whatsapp_clicks_with_this_user_as_contactee',
+        related_query_name='whatsapp_clicks_with_this_user_as_contactee',
         on_delete=models.PROTECT,
         db_index=True
     )
     contactor = models.ForeignKey(
         'relationships.User',
-        related_name='whatsapp_clicks_with_this_contactor',
-        related_query_name='whatsapp_clicks_with_this_contactor',
+        related_name='whatsapp_clicks_with_this_user_as_contactor',
+        related_query_name='whatsapp_clicks_with_this_user_as_contactor',
         on_delete=models.PROTECT,
         db_index=True
     )
-    source = models.CharField(max_length=200)
     count = models.IntegerField(default=0)
 
 class WhatsAppMessageBody(Standard):
@@ -228,7 +227,7 @@ class WhatsAppMessageBody(Standard):
 class AgentQuery(Standard):
     """Agent query
 
-    Last updated: 30 January 2022, 11:14 PM
+    Last updated: 11 February 2022, 9:56 PM
     """
     user = models.ForeignKey(
         'relationships.User',
@@ -242,7 +241,7 @@ class AgentQuery(Standard):
     search = models.CharField(
         max_length=200,
         null=True,
-        blank=True,
+        blank=True
     )
     country = models.ForeignKey(
         'common.Country',
@@ -253,11 +252,17 @@ class AgentQuery(Standard):
         blank=True,
         db_index=True
     )
+    sort_by = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
 class LeadQuery(Standard):
     """Lead query
 
-    Last updated: 4 February 2022, 12:02 PM
+    Last updated: 11 February 2022, 9:56 PM
     """
     user = models.ForeignKey(
         'relationships.User',
@@ -279,7 +284,8 @@ class LeadQuery(Standard):
             ('buy_or_sell', 'Buy or Sell'),
             ('buy', 'Buy'),
             ('sell', 'Sell')
-        ]
+        ],
+        db_index=True
     )
     sort_by = models.CharField(
         max_length=20,
@@ -291,7 +297,8 @@ class LeadQuery(Standard):
             ('comm_dollar_lo_hi', 'Avg Comm $ Low to High')
         ],
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
     buy_country = models.ForeignKey(
         'common.Country',

@@ -140,9 +140,10 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     inlines = [EmailInlineAdmin]
 
 _user_fields = ['registered', 'django_user', 'first_name', 'last_name',
-    'goods_string', 'languages_string', 'country', 'phone_number', 'email',
-    'is_agent', 'internal_notes', 'state', 'state_string', 'is_direct_buyer',
-    'is_direct_seller', 'is_buying_agent', 'is_selling_agent', ]
+    'goods_string', 'languages_string', 'country', 'phone_number',
+    'email', 'is_agent', 'internal_notes', 'state', 'state_string',
+    'is_direct_buyer', 'is_direct_seller', 'is_buying_agent',
+    'is_selling_agent']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
@@ -160,44 +161,6 @@ class UserAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['django_user', 'languages', 'country', 'state',
         'phone_number', 'email']
-
-_phone_number_hash_fields = ['user', 'phone_number_type', 'phone_number']
-@admin.register(mod.PhoneNumberHash)
-class PhoneNumberHashAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + ['uuid'] + \
-        _phone_number_hash_fields
-    list_editable = comadm.standard_list_editable + _phone_number_hash_fields
-    list_filter = comadm.standard_list_filter + ['phone_number_type']
-    search_fields = comadm.standard_search_fields + ['user__id', 'uuid',
-        'phone_number__country_code', 'phone_number__national_number']
-
-    # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['uuid']
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': ['uuid'] + _phone_number_hash_fields})
-    ]
-    autocomplete_fields = ['user', 'phone_number']
-
-_connection_fields = ['user_one', 'user_two']
-@admin.register(mod.Connection)
-class ConnectionAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + \
-        _connection_fields
-    list_editable = comadm.standard_list_editable + _connection_fields
-    list_filter = comadm.standard_list_filter + ['created']
-    search_fields = comadm.standard_search_fields + [
-        'user_one__first_given_name', 'user_one__last_family_name',
-        'user_two__first_given_name', 'user_two__last_family_name',
-        'user_one__id', 'user_two__id']
-
-    # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['created']
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _connection_fields})
-    ]
-    autocomplete_fields = ['user_one', 'user_two']
 
 _login_token_fields = ['user', 'activated', 'killed','token']
 @admin.register(mod.LoginToken)
@@ -258,19 +221,51 @@ class UserAgentAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
-_comment_fields = ['commentee', 'commentor', 'body', 'is_public']
-@admin.register(mod.Comment)
-class CommentAdmin(comadm.StandardAdmin):
+_user_comment_fields = ['commentee', 'commentor', 'body']
+@admin.register(mod.UserComment)
+class UserCommentAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _comment_fields
-    list_editable = comadm.standard_list_editable + _comment_fields
-    list_filter = comadm.standard_list_filter + ['is_public']
+    list_display = comadm.standard_list_display + _user_comment_fields
+    list_editable = comadm.standard_list_editable + _user_comment_fields
     search_fields = comadm.standard_search_fields + ['commentee__first_name',
-        'commentee__last_name', 'commentee__first_name', 'commentee__last_name',
+        'commentee__last_name', 'commentor__first_name', 'commentor__last_name',
         'body']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _comment_fields})
+        (None, {'fields': _user_comment_fields})
     ]
     autocomplete_fields = ['commentee', 'commentor']
+
+_lead_comment_fields = ['lead', 'commentor', 'body']
+@admin.register(mod.LeadComment)
+class LeadCommentAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _lead_comment_fields
+    list_editable = comadm.standard_list_editable + _lead_comment_fields
+    search_fields = comadm.standard_search_fields + ['lead__first_name',
+        'lead__last_name', 'commentor__first_name', 'commentor__last_name',
+        'body']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _lead_comment_fields})
+    ]
+    autocomplete_fields = ['lead', 'commentor']
+
+_user_detail_views_fields = ['viewee', 'viewer', 'reviews_view_count',
+    'leads_view_count']
+@admin.register(mod.UserDetailView)
+class UserDetailViewAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _user_detail_views_fields
+    list_editable = comadm.standard_list_editable + _user_detail_views_fields
+    list_filter = comadm.standard_list_filter
+    search_fields = comadm.standard_search_fields + ['viewee__first_name',
+        'viewee__last_name', 'viewer__first_name', 'viewer__last_name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _user_detail_views_fields})
+    ]
+    autocomplete_fields = ['viewee', 'viewer']

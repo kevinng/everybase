@@ -30,7 +30,6 @@
         <div class="justify-between hidden lg:block">
             <a class="{% if request.resolver_match.view_name == 'agents' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base"{% if request.resolver_match.view_name != 'agents' %} href="{% url 'agents' %}"{% endif %}>Agents</a>
             <a class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7"{% if request.resolver_match.view_name != 'leads:lead_list' %} href="{% url 'leads:lead_list' %}"{% endif %}>I-Need-Agents</a>
-            <a class="{% if request.resolver_match.view_name == 'pricing' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7"{% if request.resolver_match.view_name != 'pricing' %} href="{% url 'pricing' %}"{% endif %}>Pricing</a>
         </div>
         {% comment %} end: desktop menu {% endcomment %}
 

@@ -152,7 +152,7 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 25 January 2022, 6:32 PM
+    Last updated: 11 February 2022, 9:52 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -305,94 +305,6 @@ class User(Standard):
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email},\
  {self.phone_number} [{self.id}])'
-
-class PhoneNumberHash(Standard):
-    """A URL sent to a user of a phone number. A URL has a standard base, and a
-    unique hash, and each URL is unique to a user-phone-number, so we may track
-    access of the URL. We use a hash and not the ID straight to prevent users
-    from iterating the IDs in the URL.
-
-    Last updated: 28 October 2021, 11:56 AM
-    """
-    uuid = models.UUIDField(
-        unique=True,
-        default=uuid.uuid4,
-        editable=False,
-        db_index=True
-    )
-
-    user = models.ForeignKey(
-        'User',
-        related_name='phone_number_hashes',
-        related_query_name='phone_number_hashes',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    phone_number_type = models.ForeignKey(
-        'PhoneNumberType',
-        related_name='phone_number_hashes',
-        related_query_name='phone_number_hashes',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    phone_number = models.ForeignKey(
-        'PhoneNumber',
-        related_name='phone_number_hashes',
-        related_query_name='phone_number_hashes',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
-    class Meta:
-        verbose_name = 'Phone number hash'
-        verbose_name_plural = 'Phone number hashes'
-        index_together = ['user', 'phone_number_type', 'phone_number']
-    
-    def __str__(self):
-        return f'({self.user}, {self.phone_number_type}, {self.phone_number} [{self.id}])'
-
-class Connection(Standard):
-    """Connection between two user.
-
-    Last updated: 24 November 2021, 9:15 PM
-    """
-    connected = models.DateTimeField(
-        db_index=True,
-        auto_now=True
-    )
-    user_one = models.ForeignKey(
-        'User',
-        related_name='users_with_this_connection_as_one',
-        related_query_name='users_with_this_connection_as_one',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    user_two = models.ForeignKey(
-        'User',
-        related_name='users_with_this_connection_as_two',
-        related_query_name='users_with_this_connection_as_two',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    user_one_contact_count = models.IntegerField(
-        default=0,
-        db_index=False
-    )
-    user_two_contact_count = models.IntegerField(
-        default=0,
-        db_index=False
-    )
-    
-    def clean(self):
-        super(Connection, self).clean()
-
-        # user_one's ID must be smaller than user_two's
-        if self.user_one.id > self.user_two.id:
-            raise ValidationError(
-                'user_one.id must be smaller than user_two.id')
-
-    class Meta:
-        unique_together = ['user_one', 'user_two']
 
 class UserAgent(Standard):
     """User agent log.
@@ -585,30 +497,91 @@ class RegisterToken(Standard):
         blank=True
     )
 
-class Comment(Standard):
-    """Comment
+class UserComment(Standard):
+    """Comment on a user
 
-    Last updated: 25 January 2022, 6:36 PM
+    Last updated: 14 February 2022, 11:33 AM
     """
     commentee = models.ForeignKey(
         'User',
-        related_name='comments_with_this_user_as_commentee',
-        related_query_name='comments_with_this_user_as_commentee',
+        related_name='user_comments_as_commentee',
+        related_query_name='user_comments_as_commentee',
         on_delete=models.PROTECT,
         db_index=True
     )
     commentor = models.ForeignKey(
         'User',
-        related_name='comments_with_this_user_as_commentor',
-        related_query_name='comments_with_this_user_as_commentor',
+        related_name='user_comments_as_commentor',
+        related_query_name='user_comments_as_commentor',
         on_delete=models.PROTECT,
         db_index=True
     )
 
     body = models.TextField()
-    is_public = models.BooleanField(
-        default=False,
-        null=False,
-        blank=False,
+
+    reply_to = models.ForeignKey(
+        'UserComment',
+        related_name='replies',
+        related_query_name='replies',
+        on_delete=models.PROTECT,
         db_index=True
+    )
+
+class LeadComment(Standard):
+    """Comment on a lead
+
+    Last updated: 14 February 2022, 11:33 AM
+    """
+    lead = models.ForeignKey(
+        'leads.Lead',
+        related_name='lead_comments',
+        related_query_name='lead_comments',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    commentor = models.ForeignKey(
+        'User',
+        related_name='lead_comments_as_commentor',
+        related_query_name='lead_comments_as_commentor',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    body = models.TextField()
+
+    reply_to = models.ForeignKey(
+        'LeadComment',
+        related_name='replies',
+        related_query_name='replies',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+class UserDetailView(Standard):
+    """User detail view
+    
+    Last updated: 11 February 2022, 9:24 PM
+    """
+    viewee = models.ForeignKey(
+        'User',
+        related_name='user_detail_views',
+        related_query_name='user_detail_views',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    viewer = models.ForeignKey(
+        'User',
+        related_name='user_detail_views_with_this_user_as_viewer',
+        related_query_name='user_detail_views_with_this_user_as_viewer',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    
+    reviews_view_count = models.IntegerField(
+        default=0,
+        db_index=True    
+    )
+    leads_view_count = models.IntegerField(
+        default=0,
+        db_index=True    
     )

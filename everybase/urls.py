@@ -42,7 +42,6 @@ urlpatterns = [
         name='is_logged_in'),
     path('logout/', relviews.log_out, name='logout'),
     path('users/', include('relationships.urls')),
-    path('/#pricing', leviews.AgentListView.as_view(),name='pricing'),
 
     # Chat
     path('chat/', include('chat.urls')),
