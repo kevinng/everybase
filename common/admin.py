@@ -47,7 +47,7 @@ class StandardAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_list_display
     list_editable = standard_list_editable
-    list_per_page = 1000
+    list_per_page = 100
     list_filter = standard_list_filter
     search_fields = standard_search_fields
     ordering = standard_ordering
@@ -63,7 +63,7 @@ class ChoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = choice_list_display
     list_editable = choice_list_editable
-    list_per_page = 1000
+    list_per_page = 100
     search_fields = choice_search_fields
     ordering = choice_ordering
     show_full_result_count = True
@@ -84,7 +84,7 @@ class StandardChoiceAdmin(admin.ModelAdmin):
     # List page settings
     list_display = standard_choice_list_display
     list_editable = standard_choice_list_editable
-    list_per_page = 1000
+    list_per_page = 100
     list_filter = standard_choice_list_filter
     search_fields = standard_choice_search_fields
     ordering = standard_choice_ordering
