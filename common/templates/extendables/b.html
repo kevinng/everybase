@@ -37,7 +37,7 @@
         <div class="flex">
             {% if request.user.is_authenticated %}
                 <a ut-tag-id="nav_bar_desktop_logout_link" href="{% url 'logout' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Logout</a>
-                <a ut-tag-id="nav_bar_desktop_my_profiile_link" href="{% url 'users:user_comments' user.user.id %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">My Profile</a>
+                <a ut-tag-id="nav_bar_desktop_my_profile_link" href="{% url 'users:user_comments' user.user.id %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">My Profile</a>
             {% else %}
                 <a ut-tag-id="nav_bar_desktop_register_link" href="{% url 'register' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 hidden lg:block">Register</a>
                 <a ut-tag-id="nav_bar_desktop_login_link" href="{% url 'login' %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 ml-2 hidden lg:block">Login</a>

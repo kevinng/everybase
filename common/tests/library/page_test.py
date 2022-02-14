@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.test import Client
 from common.libraries.tear_down import tear_down
+from relationships import models as relmods
 
 class PageTest(TestCase):
     """Base class for client-access page automated test cases."""
@@ -16,7 +17,8 @@ class PageTest(TestCase):
     def setUp(
             self,
             url : str,
-            method : str
+            method : str,
+            logged_in : bool = False
         ):
         """TestCase setUp method with additonal parameters for overriding.
 
@@ -28,10 +30,16 @@ class PageTest(TestCase):
             'get' if HTTP GET, 'post' if HTTP POST
         """
         c = Client()
+
+        if logged_in:
+            self.user = relmods.User.objects.get(pk=3)
+            c.force_login(self.user.django_user)
+
         if method == 'get':
             self.response = c.get(url)
         elif method == 'post':
             self.response = c.post(url)
+        
         super().setUp()
 
     def tearDown(self):
