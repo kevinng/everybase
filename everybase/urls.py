@@ -27,7 +27,6 @@ urlpatterns = [
 
     # Leads
     path('leads/', include('leads.urls')),
-    path('', leviews.AgentListView.as_view(), name='agents'), # Map to /agents and agents:agents_list
 
     # Relationships
     path('register/', relviews.register, name='register'),
