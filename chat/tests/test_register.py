@@ -22,13 +22,6 @@ class RegisterTest(ChatTest):
         )
 
 class SendRegisterConfirmTest(ChatTest):
-    fixtures = [
-        'test/relationships__phone_number',
-        'test/relationships__phone_number_type',
-        'test/relationships__user',
-        'test/common__country'
-    ]
-
     def setUp(self):
         super().setUp(intents.NO_INTENT, messages.NO_MESSAGE)
 
