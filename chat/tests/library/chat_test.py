@@ -1,4 +1,3 @@
-import imp
 import pytz, datetime
 from django.test import TestCase
 
