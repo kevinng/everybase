@@ -1,7 +1,6 @@
 from chat.constants import intents, messages
 from chat.tests.library import ChatTest
 from chat.tasks.send_register_message import send_register_message
-from chat.utilities.render_message import render_message
 
 class RegisterTest(ChatTest):
     def setUp(self):
@@ -24,9 +23,10 @@ class RegisterTest(ChatTest):
 
 class SendRegisterConfirmTest(ChatTest):
     fixtures = [
-        'setup/20210527__relationships__phonenumber',
-        'setup/20210527__relationships__phonenumbertype',
-        'setup/20211126__relationships__user'
+        'test/relationships__phone_number',
+        'test/relationships__phone_number_type',
+        'test/relationships__user',
+        'test/common__country'
     ]
 
     def setUp(self):

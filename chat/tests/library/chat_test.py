@@ -1,11 +1,11 @@
+import imp
 import pytz, datetime
 from django.test import TestCase
-import common
 
 from everybase import settings
 from relationships import models as relmods
-from leads import models as lemods
 from common import models as commods
+from common.libraries.tear_down import tear_down
 from chat import models, views
 from chat.utilities.start_context import start_context
 from chat.utilities.get_context import get_context
@@ -15,6 +15,9 @@ from chat.tests.library.get_target_message_body import get_target_message_body
 
 class ChatTest(TestCase):
     """Base class for chatbot automated test cases."""
+    fixtures = [
+        'test/common__country'
+    ]
 
     def setUp(
             self,
@@ -58,6 +61,8 @@ class ChatTest(TestCase):
         self.inbound_messages = {}
         self.outbound_messages = {}
 
+        # Note: we need to reload the country fixtures in the child class if
+        # we're overriding the fixtures property.
         self.country = commods.Country.objects.get(pk=511) # Australia
 
         phone_number = relmods.PhoneNumber.objects.create(
@@ -93,19 +98,7 @@ class ChatTest(TestCase):
             start_context(self.user, intent_key, message_key)
 
     def tearDown(self):
-        # Delete all models - order matters
-        lemods.ContactRequest.objects.all().delete()
-        lemods.Lead.objects.all().delete()
-        relmods.PhoneNumberHash.objects.all().delete()
-        models.UserContext.objects.all().delete()
-        models.TwilioInboundMessageMedia.objects.all().delete()
-        models.TwilioOutboundMessage.objects.all().delete()
-        models.TwilioInboundMessage.objects.all().delete()
-        relmods.Connection.objects.all().delete()
-        relmods.PhoneNumberHash.objects.all().delete()
-        relmods.User.objects.all().delete()
-        relmods.PhoneNumber.objects.all().delete()
-        commods.Country.objects.all().delete()
+        tear_down()
 
     def assert_context(
             self,
