@@ -1,7 +1,5 @@
-import pytz, datetime
 from django.test import TestCase
 
-from everybase import settings
 from relationships import models as relmods
 from common import models as commods
 from common.libraries.tear_down import tear_down
@@ -63,9 +61,6 @@ class ChatTest(TestCase):
             start_context(self.user, intent_key, message_key)
 
     def tearDown(self):
-        # We usually run tests with the --noinput flag, so we do not usually
-        # need to tear down. This procedure is for just-in-cases we need to
-        # preserve the test database.
         tear_down()
 
     def assert_context(
