@@ -283,7 +283,7 @@ class User(Standard):
     )
 
     def num_comments(self):
-        return Comment.objects.filter(commentee=self).count()
+        return UserComment.objects.filter(commentee=self).count()
 
     def country_from_phone_number(self):
         try:
