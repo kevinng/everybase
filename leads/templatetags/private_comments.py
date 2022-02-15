@@ -5,8 +5,7 @@ register = template.Library()
 @register.simple_tag
 def private_comments(commentor, commentee):
     """Private comments from commentor to commentee"""
-    return models.Comment.objects.filter(
+    return models.UserComment.objects.filter(
         commentor=commentor,
-        commentee=commentee,
-        is_public=False
+        commentee=commentee
     )
