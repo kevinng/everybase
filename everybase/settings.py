@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'storages',
     'django_user_agents',
-    'phonenumber_field'
+    'phonenumber_field',
+    'loginas'
 ]
 
 MIDDLEWARE = [
