@@ -5,8 +5,7 @@ from leads import models
 _lead_fields = ['author', 'buy_country', 'sell_country', 'lead_type', 'details',
     'commission_pct', 'avg_deal_size', 'other_comm_details', 'internal_notes',
     'onboarding', 'onboarded', 'title', 'author_type', 'country',
-    'commission_payable_by', 'commission_payable_after',
-    'hide_commission_details']
+    'commission_payable_by', 'commission_payable_after']
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings

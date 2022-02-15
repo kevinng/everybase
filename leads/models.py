@@ -120,11 +120,6 @@ class Lead(Standard):
         null=True,
         blank=True
     )
-    hide_commission_details = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
 
     def avg_deal_comm(self):
         return self.commission_pct / 100 * self.avg_deal_size
