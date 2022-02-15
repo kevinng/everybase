@@ -1,3 +1,4 @@
+from pyexpat import model
 import uuid
 from django.db import models
 
@@ -58,6 +59,11 @@ class Lead(Standard):
         db_index=True
     )
     details = models.TextField()
+    need_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     commissions = models.FloatField(
         db_index=True,
         null=True,
