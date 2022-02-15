@@ -16,6 +16,7 @@ class Lead(Standard):
         editable=False,
         db_index=True
     )
+
     author = models.ForeignKey(
         'relationships.User',
         related_name='leads_authored_by_this_user',
@@ -23,14 +24,24 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    author_type = models.CharField(
+    lead_type = models.CharField(
         max_length=20,
         choices=[
+            ('buying', 'Buying'),
+            ('selling', 'Selling')
+        ],
+        db_index=True
+    )
+    author_type = models.CharField(
+        max_length=20,
+        default='direct',
+        choices=[
             ('direct', 'Direct'),
-            ('broker', 'Broker')
+            ('broker', 'Broker') # Middleman
         ],
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
     buy_country = models.ForeignKey(
         'common.Country',
@@ -50,26 +61,15 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    lead_type = models.CharField(
-        max_length=20,
-        choices=[
-            ('buying', 'Buying'),
-            ('selling', 'Selling')
-        ],
-        db_index=True
+    details = models.TextField(
+        null=True,
+        blank=True
     )
-    details = models.TextField()
     need_agent = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
     )
-    commissions = models.FloatField(
-        db_index=True,
-        null=True,
-        blank=True
-    )
-    avg_deal_size = models.FloatField(db_index=True)
     commission_payable_by = models.CharField(
         max_length=20,
         choices=[
@@ -78,7 +78,32 @@ class Lead(Standard):
             ('seller', 'Seller')
         ],
         null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('percentage', 'Percentage'),
+            ('other', 'Other')
+        ],
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_type_other = models.TextField(
+        null=True,
         blank=True
+    )
+    commissions = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    avg_deal_size = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
     )
     commission_payable_after = models.CharField(
         max_length=50,
@@ -90,12 +115,18 @@ class Lead(Standard):
             ('others', 'others')
         ],
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
     commission_payable_after_others = models.TextField(
         null=True,
         blank=True
     )
+    other_comm_details = models.TextField(
+        null=True,
+        blank=True
+    )
+
     internal_notes = models.TextField(
         null=True,
         blank=True
@@ -110,13 +141,11 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    other_comm_details = models.TextField(
-        null=True,
-        blank=True
-    )
 
-    # Deprecated
+    # Keep for data
     title = models.CharField(max_length=200)
+
+    # Keep for future
     country = models.ForeignKey(
         'common.Country',
         on_delete=models.PROTECT,
@@ -129,30 +158,6 @@ class Lead(Standard):
 
     def avg_deal_comm(self):
         return self.commissions / 100 * self.avg_deal_size
-
-    def images(self):
-        return fimods.File.objects.filter(
-            lead=self.id,
-            file_type__icontains='image'
-        )
-
-    def documents(self):
-        return fimods.File.objects.filter(
-            lead=self.id,
-            file_type__icontains='pdf'
-        )
-
-    def image_count(self):
-        return fimods.File.objects.filter(
-            lead=self.id,
-            file_type__icontains='image'
-        ).count()
-
-    def document_count(self):
-        return fimods.File.objects.filter(
-            lead=self.id,
-            file_type__icontains='pdf'
-        ).count()
 
 class LeadImage(models.Model):
     """Lead image.

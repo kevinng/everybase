@@ -14,10 +14,10 @@
 <div class="flex justify-center">
     <div class="p-10 mt-10 mb-10 bg-white w-full md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-md">
         <div class="text-center mt-6">New Post</div>
-        <h1 class="text-3xl font-bold text-center">I-Need-Agent</h1>
+        <h1 class="text-3xl font-bold text-center">I-Need-Agents</h1>
         <div class="mt-7 flex flex-col justify-center">
 
-            {% comment %} start: I want to {% endcomment %}
+            {% comment %} start: lead_type {% endcomment %}
             <label for="lead_type" class="text-sm font-bold uppercase text-slate-400">I Want To</label>
             <div class="mt-2">
                 <select id="i_want_to" name="lead_type" class="select2">
@@ -26,7 +26,28 @@
                 </select>
             </div>
             {% if form.lead_type.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.lead_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            {% comment %} end: I want to {% endcomment %}
+            {% comment %} end: lead_type {% endcomment %}
+
+
+
+
+
+            {% comment %} start: author_type {% endcomment %}
+            <label id="author_type_label" for="author_type" class="text-sm font-bold uppercase text-slate-400 mt-7">Are you the direct seller/buyer or a middleman?</label>
+            <div class="mt-2">
+                <select name="author_type" class="select2">
+                    <option id="author_type_direct_option" value="direct"{% if form.author_type.value == 'direct' %} selected{% endif %}>Direct Buyer/Seller</option>
+                    <option value="broker"{% if form.author_type.value == 'broker' %} selected{% endif %}>Middleman</option>
+                </select>
+            </div>
+            {% if form.author_type.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.author_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: author_type {% endcomment %}
+
+
+
+
+
+
 
             {% comment %} start: buy country {% endcomment %}
             <label id="buy_label" for="buy_country" class="text-sm font-bold uppercase text-slate-400 mt-7">Source Country</label>
@@ -40,6 +61,8 @@
                 </select>
             </div>
             {% if form.buy_country.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.buy_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="buy_country_help_text_if_selling" class="mt-2">My goods/services are exported from, or in, this country.</div>
+            <div id="buy_country_help_text_if_buying" class="mt-2">I want to buy from this country.</div>
             {% comment %} end: buy country {% endcomment %}
             
             {% comment %} start: sell country {% endcomment %}
@@ -54,53 +77,74 @@
                 </select>
             </div>
             {% if form.sell_country.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.sell_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="sell_country_help_text_if_selling" class="mt-2">I want to sell to this country.</div>
+            <div id="sell_country_help_text_if_buying" class="mt-2">My goods/services will be imported to, or needed in, this country.</div>
             {% comment %} end: sell country {% endcomment %}
+
+            {% comment %} start: details {% endcomment %}
+            <label for="details" class="text-sm font-bold uppercase text-slate-400 mt-7">Goods/Services Details</label>
+            <textarea name="details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None and form.details.value|cut:' ' != '' %}{{ form.details.value }}{% endif %}</textarea>
+            {% if form.details.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="details_if_selling" class="mt-2">Description of goods/services I want to sell, and what I'd like the agent to do for me.</div>
+            <div id="details_if_buying" class="mt-2">Description of goods/services I want to buy, and what I'd like the agent to do for me.</div>
+            {% comment %} end: other commission details {% endcomment %}
+
+
+            {% comment %} start: images {% endcomment %}
+            <label class="text-sm font-bold uppercase text-slate-400 mt-7">Goods/Services Images</label>
+            <div id="images_if_selling" class="mt-2">Images of goods/services I want to sell.</div>
+            <div id="images_if_buying" class="mt-2">Images of goods/services I want to buy.</div>
+            <div class="flex flex-col items-center">
+                <div id="image_one_preview" class="mt-12">No image chosen</div>
+                <label for="image_one" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 1</label>
+                <input id="image_one" name="image_one" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" />
+
+                <div id="image_two_preview" class="mt-12">No image chosen</div>
+                <label for="image_two" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 2</label>
+                <input id="image_two" name="image_two" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" />
+
+                <div id="image_three_preview" class="mt-12">No image chosen</div>
+                <label for="image_three" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 3</label>
+                <input id="image_three" name="image_two" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" />
+            </div>
+            {% comment %} end: images {% endcomment %}
+
+
+{% comment %} 
+
+THE COMMISSION SECTION WILL BE REDESIGNED TO INCLUDE MORE DETAILS - THIS WILL AFFECT THE LISTING PAGES
+
+
+{% endcomment %}
+
+
+            {% comment %} start: commission % {% endcomment %}
+            <label for="commissions" class="text-sm font-bold uppercase text-slate-400 mt-7">Average Agent Commission</label>
+            <div class="flex items-center justify-start">
+                <input name="commissions" placeholder="0" type="number" {% if form.commissions.value %}value="{{ form.commissions.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">%</div>
+            </div>
+            {% if form.commissions.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.commissions.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: commission % {% endcomment %}
             
             {% comment %} start: average deal size {% endcomment %}
             <label for="avg_deal_size" class="text-sm font-bold uppercase text-slate-400 mt-7">Average Deal Size</label>
             <div class="flex items-center justify-start">
-                <div class="mr-3 font-bold text-2xl">USD</div><input name="avg_deal_size" placeholder="0" type="number" value="{{ form.avg_deal_size.value }}" class="w-1/2 border rounded-md py-3 px-5 mt-2">
+                <div class="mr-3 font-bold text-2xl">USD</div><input name="avg_deal_size" placeholder="0" type="number" {% if form.avg_deal_size.value %}value="{{ form.avg_deal_size.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2">
             </div>
             {% if form.avg_deal_size.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.avg_deal_size.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: average deal size {% endcomment %}
 
-            {% comment %} start: average agent commission {% endcomment %}
-            <label for="avg_comm_pct" class="text-sm font-bold uppercase text-slate-400 mt-7">Average Agent Commission</label>
-            <div class="flex items-center justify-start">
-                <input name="avg_comm_pct" placeholder="0" type="number" value="{{ form.avg_comm_pct.value }}" class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">%</div>
-            </div>
-            {% if form.avg_comm_pct.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.avg_comm_pct.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            {% comment %} end: average agent commission {% endcomment %}
-
-            <div class="mt-4">Actual commissions negotiated per deal.</div>
-
-            {% comment %} start: images {% endcomment %}
-            <label for="image_one" class="text-sm font-bold uppercase text-slate-400 mt-7">Images</label>
-            <div class="flex flex-col items-center">
-                <div id="image_one_preview" class="mt-12">No image selected</div>
-                <label for="image_one" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Add Image</label>
-                <input id="image_one" name="image_one" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" />
-
-                <div id="image_two_preview" class="mt-12">No image selected</div>
-                <label for="image_two" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Add Image</label>
-                <input id="image_two" name="image_two" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" />
-            </div>
-            {% comment %} end: images {% endcomment %}
-
-            {% comment %} start: details {% endcomment %}
-            <label for="details" class="text-sm font-bold uppercase text-slate-400 mt-16">Details</label>
-            <textarea name="details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None and form.details.value|cut:' ' != '' %}{{ form.details.value }}{% endif %}</textarea>
-            {% if form.details.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            {% comment %} end: other commission details {% endcomment %}
-            
             {% comment %} start: other commission details {% endcomment %}
-            <label for="other_comm_details" class="text-sm font-bold uppercase text-slate-400 mt-7">Other Commission Details</label>
+            <label for="other_comm_details" class="text-sm font-bold uppercase text-slate-400 mt-7">Other Details On Agent Commission</label>
             <textarea name="other_comm_details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.other_comm_details.value is not None %}{{ form.other_comm_details.value }}{% endif %}</textarea>
-            <div class="mt-2">Other details regarding commission</div>
             {% if form.other_comm_details.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.other_comm_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: other commission details {% endcomment %}
 
-            <button type="submit" class="py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-7 shadow-md">Post</button>
+            <div class="mt-4">Actual commissions negotiated per deal.</div>
+
+
+
+            <button type="submit" class="py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-16 shadow-md">Post</button>
         </div>
     </div>
 </div>
@@ -116,85 +160,97 @@ https://codebeautify.org/minify-js
 {% endcomment %}
 {% block unrendered_javascript %}
 <script>
-$(document).ready(function() {
-    $('.select2').select2();
 
-    $('.select2').one('select2:open', function(e) {
-        $('input.select2-search__field').prop('placeholder', 'Search here...');
-    });
-
-    update_country_labels = function (choice) {
-        console.log($('#buy_country option:selected').val())
-        console.log($('#sell_country option:selected').val())
-        if (choice == 'buying') {
-            $('#buy_label').text('Buy From This Country');
-            $('#sell_label').text('Destination Country');
-            $('#buy_country_any').attr('disabled', false); // I can buy from any country
-            $('#sell_country_any').attr('disabled', true); // My destination cannot be any
-            if ($('#sell_country option:selected').val() == 'any_country') {
-                // If my destination is any, empty it
-                $('#sell_country').val(null).trigger('change');
-            }
-        } else if (choice == 'selling') {
-            $('#buy_label').text('Source Country');
-            $('#sell_label').text('Sell To This Country');
-            $('#buy_country_any').attr('disabled', true); // My source cannot be any
-            $('#sell_country_any').attr('disabled', false); // I can sell to any country
-            if ($('#buy_country option:selected').val() == 'any_country') {
-                // If my source is any, empty it
-                $('#buy_country').val(null).trigger('change');
-            }
-        }
-    }
-
-    update_country_labels($('#i_want_to').val())
-    
-    $('#i_want_to').change(function() {
-        choice = $(this).val();
-        update_country_labels(choice);
-    });
-
-    // Image one preview
-    $('#image_one').change(function () {
-        // Remove preview
-        preview = $('#image_one_preview')
-        preview.find(':first-child').remove();
-
-        files = $(this).prop('files')
-        if (files.length > 0) {
-            // Only 1 file
-            img = '<img src="' + URL.createObjectURL(files[0]) + '">';
-            preview.append(img);
-        }
-    })
-
-    // Image two preview
-    $('#image_two').change(function () {
-        // Remove preview
-        preview = $('#image_two_preview')
-        preview.find(':first-child').remove();
-
-        files = $(this).prop('files')
-        if (files.length > 0) {
-            // Only 1 file
-            img = '<img src="' + URL.createObjectURL(files[0]) + '">';
-            $('#image_two_preview').append(img);
-        }
-    })
-
-    // Growing text areas
-    $(".growing").keyup(function(e) {
-        while($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css("borderTopWidth")) + parseFloat($(this).css("borderBottomWidth"))) {
-            $(this).height($(this).height()+1);
-        };
-    });
-});
 </script>
 {% endblock %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>  
-$(document).ready((function(){$(".select2").select2(),$(".select2").one("select2:open",(function(e){$("input.select2-search__field").prop("placeholder","Search here...")})),update_country_labels=function(e){console.log($("#buy_country option:selected").val()),console.log($("#sell_country option:selected").val()),"buying"==e?($("#buy_label").text("Buy From This Country"),$("#sell_label").text("Destination Country"),$("#buy_country_any").attr("disabled",!1),$("#sell_country_any").attr("disabled",!0),"any_country"==$("#sell_country option:selected").val()&&$("#sell_country").val(null).trigger("change")):"selling"==e&&($("#buy_label").text("Source Country"),$("#sell_label").text("Sell To This Country"),$("#buy_country_any").attr("disabled",!0),$("#sell_country_any").attr("disabled",!1),"any_country"==$("#buy_country option:selected").val()&&$("#buy_country").val(null).trigger("change"))},update_country_labels($("#i_want_to").val()),$("#i_want_to").change((function(){choice=$(this).val(),update_country_labels(choice)})),$("#image_one").change((function(){preview=$("#image_one_preview"),preview.find(":first-child").remove(),files=$(this).prop("files"),files.length>0&&(img='<img src="'+URL.createObjectURL(files[0])+'">',preview.append(img))})),$("#image_two").change((function(){preview=$("#image_two_preview"),preview.find(":first-child").remove(),files=$(this).prop("files"),files.length>0&&(img='<img src="'+URL.createObjectURL(files[0])+'">',$("#image_two_preview").append(img))})),$(".growing").keyup((function(e){for(;$(this).outerHeight()<this.scrollHeight+parseFloat($(this).css("borderTopWidth"))+parseFloat($(this).css("borderBottomWidth"));)$(this).height($(this).height()+1)}))}));
+    $(document).ready(function() {
+        $('.select2').select2();
+    
+        $('.select2').one('select2:open', function(e) {
+            $('input.select2-search__field').prop('placeholder', 'Search here...');
+        });
+    
+        update_country_labels = function (choice) {
+            if (choice == 'buying') {
+                $('#buy_label').text('Buy From This Country');
+                $('#sell_label').text('Destination Country');
+                $('#buy_country_any').attr('disabled', false); // I can buy from any country
+                $('#sell_country_any').attr('disabled', true); // My destination cannot be any
+                if ($('#sell_country option:selected').val() == 'any_country') {
+                    // If my destination is any, empty it
+                    $('#sell_country').val(null).trigger('change');
+                }
+                $('#buy_country_help_text_if_selling').hide();
+                $('#sell_country_help_text_if_selling').hide();
+                $('#buy_country_help_text_if_buying').show();
+                $('#sell_country_help_text_if_buying').show();
+                $('#details_if_selling').hide();
+                $('#details_if_buying').show();
+                $('#images_if_selling').hide();
+                $('#images_if_buying').show();
+                $('#author_type_label').text('Are you the direct buyer or a middleman?');
+                $('#author_type_direct_option').html('Direct Buyer');
+            } else if (choice == 'selling') {
+                $('#buy_label').text('Source Country');
+                $('#sell_label').text('Sell To This Country');
+                $('#buy_country_any').attr('disabled', true); // My source cannot be any
+                $('#sell_country_any').attr('disabled', false); // I can sell to any country
+                if ($('#buy_country option:selected').val() == 'any_country') {
+                    // If my source is any, empty it
+                    $('#buy_country').val(null).trigger('change');
+                }
+                $('#buy_country_help_text_if_selling').show();
+                $('#sell_country_help_text_if_selling').show();
+                $('#buy_country_help_text_if_buying').hide();
+                $('#sell_country_help_text_if_buying').hide();
+                $('#details_if_selling').show();
+                $('#details_if_buying').hide();
+                $('#images_if_selling').show();
+                $('#images_if_buying').hide();
+                $('#author_type_label').text('Are you the direct seller or a middleman?');
+                $('#author_type_direct_option').html('Direct Seller');
+            }
+        }
+    
+        update_country_labels($('#i_want_to').val())
+        
+        $('#i_want_to').change(function() {
+            choice = $(this).val();
+            update_country_labels(choice);
+        });
+
+        setup_image_preview = function (input_sel, preview_sel) {
+            $(input_sel).change(function () {
+                // Remove text or preview
+                preview = $(preview_sel)
+                preview.text('');
+                preview.find(':first-child').remove();
+        
+                files = $(this).prop('files')
+                if (files.length > 0) {
+                    // Only 1 file
+                    img = '<img src="' + URL.createObjectURL(files[0]) + '">';
+                    preview.append(img);
+                } else {
+                    preview.text('No image chosen');
+                }
+            })
+        }
+
+        setup_image_preview('#image_one', '#image_one_preview');
+        setup_image_preview('#image_two', '#image_two_preview');
+        setup_image_preview('#image_three', '#image_three_preview');
+    
+        // Growing text areas
+        $(".growing").keyup(function(e) {
+            while($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css("borderTopWidth")) + parseFloat($(this).css("borderBottomWidth"))) {
+                $(this).height($(this).height()+1);
+            };
+        });
+    });
 </script>
 {% endblock %}
