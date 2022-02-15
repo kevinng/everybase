@@ -39,6 +39,7 @@ django-ratelimit = "*"
 django-settings-export = "*"
 django-ipware = "*"
 django-loginas = "*"
+sorl-thumbnail = "*"
 
 [requires]
 python_version = "3.7"

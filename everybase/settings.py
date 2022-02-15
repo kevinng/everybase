@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'storages',
     'django_user_agents',
     'phonenumber_field',
-    'loginas'
+    'loginas',
+    'sorl.thumbnail'
 ]
 
 MIDDLEWARE = [
@@ -150,6 +151,25 @@ USE_TZ = True
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
+# Custom AWS settings
+AWS_REGION_NAME = config('AWS_REGION')
+AWS_PRESIGNED_URL_EXPIRES_IN = config('AWS_PRESIGNED_URL_EXPIRES_IN')
+# django-storages AWS settings
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.us-east-1.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'static'
+
+# Media URL
+MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+
+# Root for all files uploaded via the 'files' app.
+AWS_S3_FILES_ROOT = 'files'
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Static files (CSS, JavaScript, Images)
@@ -164,9 +184,9 @@ STATIC_URL = '/static/'
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+DEFAULT_FILE_STORAGE = 'mysite.storage_backends.MediaStorage'
 
 # Override message tags
 MESSAGE_TAGS = {
@@ -218,19 +238,6 @@ if DEBUG == False:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LOGIN_URL = '/login'
-
-AWS_REGION_NAME = config('AWS_REGION')
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.us-east-1.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-AWS_PRESIGNED_URL_EXPIRES_IN = config('AWS_PRESIGNED_URL_EXPIRES_IN')
-
-# Media URL
-MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
-
-# Root for all files uploaded via the 'files' app.
-AWS_S3_FILES_ROOT = 'files'
 
 # List of persons to notify when someone signs up as a lead
 LEAD_SIGN_UP_NOTIFICATION_LIST = ['kevin@everybase.co']
