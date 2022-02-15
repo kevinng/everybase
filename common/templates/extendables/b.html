@@ -7,10 +7,11 @@
     <title>{% block title %}{% endblock %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{% static 'common/assets/css/output.css' %}" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'common/assets/media/logos/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'common/assets/media/logos/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'common/assets/media/logos/favicon-16x16.png' %}">
+    <link href="{% static 'common/css/output.css' %}" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'common/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'common/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'common/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'common/favicon/site.webmanifest' %}">
     {% block other_head_tags %}{% endblock %}
     {% block other_css %}{% endblock %}
 </head>
@@ -22,7 +23,7 @@
             <button class="hamburger lg:hidden">
                 <div class="bar"></div>
             </button>
-            <a ut-tag-id="home_logo_link" href="{% url 'home' %}" class="hidden lg:block"><img src="{% static 'common/assets/img/logo.png' %}"></a>
+            <a ut-tag-id="home_logo_link" href="{% url 'home' %}" class="hidden lg:block"><img src="{% static 'common/img/logo.png' %}"></a>
         </div>
         {% comment %} end: hamburger and logo {% endcomment %}
 
