@@ -7,7 +7,7 @@ from files import models as fimods
 class Lead(Standard):
     """Lead.
 
-    Last updated: 3 February 2022, 11:37 PM
+    Last updated: 15 February 2022, 11:24 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -21,6 +21,15 @@ class Lead(Standard):
         related_query_name='leads_authored_by_this_user',
         on_delete=models.PROTECT,
         db_index=True
+    )
+    author_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('direct', 'Direct'),
+            ('broker', 'Broker')
+        ],
+        null=True,
+        blank=True
     )
     buy_country = models.ForeignKey(
         'common.Country',
@@ -55,45 +64,6 @@ class Lead(Standard):
         blank=True
     )
     avg_deal_size = models.FloatField(db_index=True)
-    internal_notes = models.TextField(
-        null=True,
-        blank=True
-    )
-    onboarding = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    onboarded = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    other_comm_details = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    # Deprecated
-    author_type = models.CharField(
-        max_length=20,
-        choices=[
-            ('direct', 'Direct'),
-            ('broker', 'Broker')
-        ],
-        null=True,
-        blank=True
-    )
-    title = models.CharField(max_length=200)
-    country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='lead_with_this_country',
-        related_query_name='lead_with_this_country',
-        null=True,
-        blank=True,
-        db_index=True
-    )
     commission_payable_by = models.CharField(
         max_length=20,
         choices=[
@@ -119,6 +89,36 @@ class Lead(Standard):
     commission_payable_after_others = models.TextField(
         null=True,
         blank=True
+    )
+    internal_notes = models.TextField(
+        null=True,
+        blank=True
+    )
+    onboarding = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    onboarded = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    other_comm_details = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    # Deprecated
+    title = models.CharField(max_length=200)
+    country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='lead_with_this_country',
+        related_query_name='lead_with_this_country',
+        null=True,
+        blank=True,
+        db_index=True
     )
 
     def avg_deal_comm(self):
