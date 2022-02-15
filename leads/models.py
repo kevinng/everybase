@@ -49,8 +49,6 @@ class Lead(Standard):
         db_index=True
     )
     details = models.TextField()
-    avg_comm_pct = models.FloatField(db_index=True)
-    # TODO remove commission_pct after we've migrated the old entries
     commission_pct = models.FloatField(
         db_index=True,
         null=True,
@@ -129,7 +127,7 @@ class Lead(Standard):
     )
 
     def avg_deal_comm(self):
-        return self.avg_comm_pct / 100 * self.avg_deal_size
+        return self.commission_pct / 100 * self.avg_deal_size
 
     def images(self):
         return fimods.File.objects.filter(

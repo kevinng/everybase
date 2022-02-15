@@ -6,7 +6,7 @@ class LeadForm(forms.Form):
     buy_country = forms.CharField()
     sell_country = forms.CharField()
     avg_deal_size = forms.FloatField()
-    avg_comm_pct = forms.CharField()
+    commission_pct = forms.CharField()
     details = forms.CharField()
     other_comm_details = forms.CharField(required=False)
 

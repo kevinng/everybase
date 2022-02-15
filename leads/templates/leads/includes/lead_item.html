@@ -14,7 +14,7 @@ Params:
     <div class="text-sm font-bold uppercase text-slate-400 mt-3">Details</div>
     <div>{% if summary == True %}{{ lead.details|slice:':200' }}{% if lead.details|length > 200 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
     <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Agent Commission</div>
-    <div>{{ lead.avg_comm_pct }} %</div>
+    <div>{{ lead.commission_pct }} %</div>
     {% if summary != True %}
     <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Deal Size</div>
     <div>USD {{ lead.avg_deal_size }}</div>

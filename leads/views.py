@@ -52,7 +52,7 @@ def lead_edit(request, pk):
 
             lead.lead_type = form.cleaned_data.get('lead_type')
             lead.avg_deal_size = form.cleaned_data.get('avg_deal_size')
-            lead.avg_comm_pct = form.cleaned_data.get('avg_comm_pct')
+            lead.commission_pct = form.cleaned_data.get('commission_pct')
             lead.details = form.cleaned_data.get('details')
             lead.other_comm_details = form.cleaned_data.get(
                 'other_comm_details')
@@ -77,7 +77,7 @@ def lead_edit(request, pk):
             'buy_country': buy_country,
             'sell_country': sell_country,
             'avg_deal_size': lead.avg_deal_size,
-            'avg_comm_pct': lead.avg_comm_pct,
+            'commission_pct': lead.commission_pct,
             'details': lead.details,
             'other_comm_details': lead.other_comm_details
         })
@@ -115,7 +115,7 @@ def lead_create(request):
                 buy_country=buy_country,
                 sell_country=sell_country,
                 avg_deal_size=form.cleaned_data.get('avg_deal_size'),
-                avg_comm_pct=form.cleaned_data.get('avg_comm_pct'),
+                commission_pct=form.cleaned_data.get('commission_pct'),
                 details=form.cleaned_data.get('details'),
                 other_comm_details=form.cleaned_data.get('other_comm_details')
             )
@@ -194,12 +194,13 @@ class LeadListView(ListView):
             .annotate(rank=SearchRank(vector, query))\
             .order_by('-rank')
         
+# TODO: the sort_by keys here are wrong
         if sort_by == 'timestamp':
             leads = leads.order_by('-created')
         elif sort_by == 'comm_percent_hi_lo':
-            leads = leads.order_by('-avg_comm_pct')
+            leads = leads.order_by('-commission_pct')
         elif sort_by == 'comm_percent_lo_hi':
-            leads = leads.order_by('avg_comm_pct')
+            leads = leads.order_by('commission_pct')
         elif sort_by == 'comm_dollar_hi_lo':
             leads = leads.order_by('-avg_deal_comm')
         elif sort_by == 'comm_dollar_lo_hi':

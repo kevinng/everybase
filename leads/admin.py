@@ -3,9 +3,9 @@ from common import admin as comadm
 from leads import models
 
 _lead_fields = ['author', 'buy_country', 'sell_country', 'lead_type', 'details',
-    'avg_comm_pct', 'commission_pct', 'avg_deal_size', 'other_comm_details',
-    'internal_notes', 'onboarding', 'onboarded', 'title', 'author_type',
-    'country', 'commission_payable_by', 'commission_payable_after',
+    'commission_pct', 'avg_deal_size', 'other_comm_details', 'internal_notes',
+    'onboarding', 'onboarded', 'title', 'author_type', 'country',
+    'commission_payable_by', 'commission_payable_after',
     'hide_commission_details']
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
