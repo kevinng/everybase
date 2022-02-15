@@ -6,8 +6,11 @@
 {% block title %}User Details{% endblock %}
 
 {% comment %}
-Unrendered CSS
-Minify with https://www.minifier.org/
+Unrendered CSS. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
+
+Minifiers:
+https://www.minifier.org/
+https://codebeautify.org/css-beautify-minify
 {% endcomment %}
 {% block unrendered_css %}
 <script>
@@ -121,8 +124,11 @@ Minify with https://www.minifier.org/
 {% endblock %}
 
 {% comment %}
-Unrendered Javascript
-Minify with https://www.minifier.org/
+Unrendered Javascript. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
+
+Minifiers:
+https://www.minifier.org/
+https://codebeautify.org/minify-js
 {% endcomment %}
 {% block unrendered_javascript %}
 <script>
@@ -157,7 +163,6 @@ $(document).ready(function() {
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>  
-$(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search...')});$('#filter').click(function(){t=$(this);if(t.html()=='Filter'){t.html('Close')}else{t.html('Filter')}
-t.toggleClass('bg-blue-500');t.toggleClass('text-white');t.toggleClass('hover:bg-blue-600');t.toggleClass('bg-slate-100');t.toggleClass('text-slate-600');t.toggleClass('hover:bg-slate-200');$('#mobile-filter').toggleClass('is-active')})})
+$(document).ready((function(){$(".select2").select2(),$(".select2").one("select2:open",(function(e){$("input.select2-search__field").prop("placeholder","Search here...")})),$("#filter").click((function(){t=$(this),"Filter"==t.html()?t.html("Close"):t.html("Filter"),t.toggleClass("bg-blue-500"),t.toggleClass("text-white"),t.toggleClass("hover:bg-blue-600"),t.toggleClass("bg-slate-100"),t.toggleClass("text-slate-600"),t.toggleClass("hover:bg-slate-200"),$("#mobile-filter").toggleClass("is-active")}))}));
 </script>
 {% endblock %}

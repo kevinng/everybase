@@ -29,8 +29,11 @@
 {% endblock %}
 
 {% comment %}
-Unrendered Javascript
-Minify with https://www.minifier.org/
+Unrendered Javascript. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
+
+Minifiers:
+https://www.minifier.org/
+https://codebeautify.org/minify-js
 {% endcomment %}
 {% block unrendered_javascript %}
 <script>
@@ -54,9 +57,6 @@ $(document).ready(function() {
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script>
-$(document).ready(function(){last_msg_body='{{ last_msg_body }}'
-entered_body=''
-$('#use_last_msg').change(function(){if($(this).prop("checked")==!0){if($('#body').val().trim()!=''){entered_body=$('#body').val()}
-$('#body').val(last_msg_body)}else{$('#body').val(entered_body)}})})
+$(document).ready((function(){last_msg_body="{{ last_msg_body }}",entered_body="",$("#use_last_msg").change((function(){1==$(this).prop("checked")?(""!=$("#body").val().trim()&&(entered_body=$("#body").val()),$("#body").val(last_msg_body)):$("#body").val(entered_body)}))}));
 </script>
 {% endblock %}

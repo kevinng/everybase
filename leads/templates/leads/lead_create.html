@@ -108,8 +108,11 @@
 {% endblock %}
 
 {% comment %}
-Unrendered Javascript
-Minify with https://www.minifier.org/
+Unrendered Javascript. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
+
+Minifiers:
+https://www.minifier.org/
+https://codebeautify.org/minify-js
 {% endcomment %}
 {% block unrendered_javascript %}
 <script>
@@ -192,16 +195,6 @@ $(document).ready(function() {
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>  
-$(document).ready(function(){$('.select2').select2();$('.select2').one('select2:open',function(e){$('input.select2-search__field').prop('placeholder','Search here...')});update_country_labels=function(choice){console.log($('#buy_country option:selected').val())
-console.log($('#sell_country option:selected').val())
-if(choice=='buying'){$('#buy_label').text('Buy From This Country');$('#sell_label').text('Destination Country');$('#buy_country_any').attr('disabled',!1);$('#sell_country_any').attr('disabled',!0);if($('#sell_country option:selected').val()=='any_country'){$('#sell_country').val(null).trigger('change')}}else if(choice=='selling'){$('#buy_label').text('Source Country');$('#sell_label').text('Sell To This Country');$('#buy_country_any').attr('disabled',!0);$('#sell_country_any').attr('disabled',!1);if($('#buy_country option:selected').val()=='any_country'){$('#buy_country').val(null).trigger('change')}}}
-update_country_labels($('#i_want_to').val())
-$('#i_want_to').change(function(){choice=$(this).val();update_country_labels(choice)});$('#image_one').change(function(){preview=$('#image_one_preview')
-preview.find(':first-child').remove();files=$(this).prop('files')
-if(files.length>0){img='<img src="'+URL.createObjectURL(files[0])+'">';preview.append(img)}})
-$('#image_two').change(function(){preview=$('#image_two_preview')
-preview.find(':first-child').remove();files=$(this).prop('files')
-if(files.length>0){img='<img src="'+URL.createObjectURL(files[0])+'">';$('#image_two_preview').append(img)}})
-$(".growing").keyup(function(e){while($(this).outerHeight()<this.scrollHeight+parseFloat($(this).css("borderTopWidth"))+parseFloat($(this).css("borderBottomWidth"))){$(this).height($(this).height()+1)}})})
+$(document).ready((function(){$(".select2").select2(),$(".select2").one("select2:open",(function(e){$("input.select2-search__field").prop("placeholder","Search here...")})),update_country_labels=function(e){console.log($("#buy_country option:selected").val()),console.log($("#sell_country option:selected").val()),"buying"==e?($("#buy_label").text("Buy From This Country"),$("#sell_label").text("Destination Country"),$("#buy_country_any").attr("disabled",!1),$("#sell_country_any").attr("disabled",!0),"any_country"==$("#sell_country option:selected").val()&&$("#sell_country").val(null).trigger("change")):"selling"==e&&($("#buy_label").text("Source Country"),$("#sell_label").text("Sell To This Country"),$("#buy_country_any").attr("disabled",!0),$("#sell_country_any").attr("disabled",!1),"any_country"==$("#buy_country option:selected").val()&&$("#buy_country").val(null).trigger("change"))},update_country_labels($("#i_want_to").val()),$("#i_want_to").change((function(){choice=$(this).val(),update_country_labels(choice)})),$("#image_one").change((function(){preview=$("#image_one_preview"),preview.find(":first-child").remove(),files=$(this).prop("files"),files.length>0&&(img='<img src="'+URL.createObjectURL(files[0])+'">',preview.append(img))})),$("#image_two").change((function(){preview=$("#image_two_preview"),preview.find(":first-child").remove(),files=$(this).prop("files"),files.length>0&&(img='<img src="'+URL.createObjectURL(files[0])+'">',$("#image_two_preview").append(img))})),$(".growing").keyup((function(e){for(;$(this).outerHeight()<this.scrollHeight+parseFloat($(this).css("borderTopWidth"))+parseFloat($(this).css("borderBottomWidth"));)$(this).height($(this).height()+1)}))}));
 </script>
 {% endblock %}

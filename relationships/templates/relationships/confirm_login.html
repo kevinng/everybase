@@ -26,7 +26,10 @@
 
 {% comment %}
 Unrendered Javascript. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
-Minify with https://www.minifier.org/
+
+Minifiers:
+https://www.minifier.org/
+https://codebeautify.org/minify-js
 {% endcomment %}
 {% block unrendered_javascript %}
 <script>    
@@ -49,7 +52,6 @@ $(document).ready(function () {
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>{% comment %} Do not use the slim version, which does not have the .get function. {% endcomment %}
 <script>
-$(document).ready(function(){var counter=1000;var set_interval=setInterval(function(){$.get("{% url 'is_logged_in' user_uuid %}",function(data){console.log(data.l)
-if(data.l==!0){window.location.replace('{{ next }}')}});counter--},3000)})
+$(document).ready((function(){setInterval((function(){$.get("{% url 'is_logged_in' user_uuid %}",(function(n){console.log(n.l),1==n.l&&window.location.replace("{{ next }}")}))}),3e3)}));
 </script>
 {% endblock %}
