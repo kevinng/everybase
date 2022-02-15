@@ -1,9 +1,9 @@
-from pyexpat import model
 import uuid
 from django.db import models
 
 from common.models import Standard
 from files import models as fimods
+from sorl.thumbnail import ImageField
 
 class Lead(Standard):
     """Lead.
@@ -153,6 +153,20 @@ class Lead(Standard):
             lead=self.id,
             file_type__icontains='pdf'
         ).count()
+
+class LeadImage(models.Model):
+    """Lead image.
+
+    Last updated: 15 February 2022, 11:24 PM
+    """
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='lead_images',
+        related_query_name='lead_images',
+        on_delete=models.PROTECT,
+        db_index=True  
+    )
+    image = ImageField(upload_to='leads')
 
 class LeadDetailView(Standard):
     """Lead detail view.
