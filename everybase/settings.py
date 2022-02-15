@@ -174,18 +174,21 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
+## Previously uncommented
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+## Previously uncommented
+# STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'common/static'),
+)
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
+## Previously uncommented
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 DEFAULT_FILE_STORAGE = 'mysite.storage_backends.MediaStorage'
 
 # Override message tags
@@ -207,10 +210,10 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULE = {
-    'schedule-load-gmass-campaign-main-report': {
-        'task': 'growth.tasks.update_gmass_data',
-        'schedule': 43200.0 # 12-hour interval
-    }
+    # 'schedule-load-gmass-campaign-main-report': {
+    #     'task': 'growth.tasks.update_gmass_data',
+    #     'schedule': 43200.0 # 12-hour interval
+    # }
 }
 
 # Email-related configurations
