@@ -164,7 +164,7 @@ class LeadImage(models.Model):
         related_name='lead_images',
         related_query_name='lead_images',
         on_delete=models.PROTECT,
-        db_index=True  
+        db_index=True
     )
     image = ImageField(upload_to='leads')
 
