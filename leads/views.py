@@ -52,7 +52,7 @@ def lead_edit(request, pk):
 
             lead.lead_type = form.cleaned_data.get('lead_type')
             lead.avg_deal_size = form.cleaned_data.get('avg_deal_size')
-            lead.commission_pct = form.cleaned_data.get('commission_pct')
+            lead.commissions = form.cleaned_data.get('commissions')
             lead.details = form.cleaned_data.get('details')
             lead.other_comm_details = form.cleaned_data.get(
                 'other_comm_details')
@@ -77,7 +77,7 @@ def lead_edit(request, pk):
             'buy_country': buy_country,
             'sell_country': sell_country,
             'avg_deal_size': lead.avg_deal_size,
-            'commission_pct': lead.commission_pct,
+            'commissions': lead.commissions,
             'details': lead.details,
             'other_comm_details': lead.other_comm_details
         })
@@ -115,7 +115,7 @@ def lead_create(request):
                 buy_country=buy_country,
                 sell_country=sell_country,
                 avg_deal_size=form.cleaned_data.get('avg_deal_size'),
-                commission_pct=form.cleaned_data.get('commission_pct'),
+                commissions=form.cleaned_data.get('commissions'),
                 details=form.cleaned_data.get('details'),
                 other_comm_details=form.cleaned_data.get('other_comm_details')
             )
@@ -198,9 +198,9 @@ class LeadListView(ListView):
         if sort_by == 'timestamp':
             leads = leads.order_by('-created')
         elif sort_by == 'comm_percent_hi_lo':
-            leads = leads.order_by('-commission_pct')
+            leads = leads.order_by('-commissions')
         elif sort_by == 'comm_percent_lo_hi':
-            leads = leads.order_by('commission_pct')
+            leads = leads.order_by('commissions')
         elif sort_by == 'comm_dollar_hi_lo':
             leads = leads.order_by('-avg_deal_comm')
         elif sort_by == 'comm_dollar_lo_hi':

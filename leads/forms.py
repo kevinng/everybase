@@ -6,7 +6,7 @@ class LeadForm(forms.Form):
     buy_country = forms.CharField()
     sell_country = forms.CharField()
     avg_deal_size = forms.FloatField()
-    commission_pct = forms.CharField()
+    commissions = forms.CharField()
     details = forms.CharField()
     other_comm_details = forms.CharField(required=False)
 
@@ -20,7 +20,7 @@ class OldLeadForm(forms.Form):
     lead_type = forms.CharField(required=True)
     author_type = forms.CharField(required=True)
     country = forms.CharField(required=True)
-    commission_pct = forms.FloatField(required=True)
+    commissions = forms.FloatField(required=True)
     commission_payable_by = forms.CharField(required=True)
     commission_payable_after = forms.CharField(required=True)
     commission_payable_after_others = forms.CharField(required=False)

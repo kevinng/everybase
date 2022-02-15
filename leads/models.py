@@ -58,7 +58,7 @@ class Lead(Standard):
         db_index=True
     )
     details = models.TextField()
-    commission_pct = models.FloatField(
+    commissions = models.FloatField(
         db_index=True,
         null=True,
         blank=True
@@ -122,7 +122,7 @@ class Lead(Standard):
     )
 
     def avg_deal_comm(self):
-        return self.commission_pct / 100 * self.avg_deal_size
+        return self.commissions / 100 * self.avg_deal_size
 
     def images(self):
         return fimods.File.objects.filter(

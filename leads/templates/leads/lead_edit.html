@@ -58,11 +58,11 @@ UPDATE THIS PAGE TO LOOK LIKE THE CREATE PAGE
             </div>
             {% if form.avg_deal_size.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.avg_deal_size.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-            <label for="commission_pct" class="text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</label>
+            <label for="commissions" class="text-sm font-bold uppercase text-slate-400 mt-5">Average Agent Commission</label>
             <div class="flex items-center justify-start">
-                <input name="commission_pct" placeholder="0" type="number" value="{{ form.commission_pct.value }}" class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">%</div>
+                <input name="commissions" placeholder="0" type="number" value="{{ form.commissions.value }}" class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">%</div>
             </div>
-            {% if form.commission_pct.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.commission_pct.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% if form.commissions.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.commissions.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
             <div class="mt-4">This is a guide only - actual commissions negotiated per deal.</div>
 
