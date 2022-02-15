@@ -66,8 +66,6 @@ class Lead(Standard):
         blank=True
     )
     need_agent = models.BooleanField(
-        null=True,
-        blank=True,
         db_index=True
     )
     commission_payable_by = models.CharField(
