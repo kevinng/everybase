@@ -76,7 +76,22 @@
     </div>
     {% endblock %}
 
-    <script src="{% static 'common/js/output.js' %}"></script>
+{% comment %}
+Javascript
+https://codebeautify.org/minify-js
+
+<script>
+    const menu_btn = document.querySelector('.hamburger');
+    const mobile_menu = document.querySelector('.mobile-nav');
+    menu_btn.addEventListener('click', function () {
+        menu_btn.classList.toggle('is-active');
+        mobile_menu.classList.toggle('is-active');
+    })
+</script>
+{% endcomment %}
+    <script>
+        const menu_btn=document.querySelector(".hamburger"),mobile_menu=document.querySelector(".mobile-nav");menu_btn.addEventListener("click",(function(){menu_btn.classList.toggle("is-active"),mobile_menu.classList.toggle("is-active")}));
+    </script>
     {% block other_script %}{% endblock %}
 </body>
 {% endautoescape %}
