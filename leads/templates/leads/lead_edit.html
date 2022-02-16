@@ -83,14 +83,9 @@ UPDATE THIS PAGE TO LOOK LIKE THE CREATE PAGE
 {% endblock %}
 
 {% comment %}
-Unrendered Javascript. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
-
-Minifiers:
-https://www.minifier.org/
+Javascript
 https://codebeautify.org/minify-js
-{% endcomment %}
-{% block unrendered_javascript %}
-<script>
+
 $(document).ready(function() {
     $('.select2').select2();
 
@@ -129,8 +124,7 @@ $(document).ready(function() {
         update_country_labels(choice);
     });
 });
-</script>
-{% endblock %}
+{% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
