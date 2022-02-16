@@ -96,13 +96,13 @@ class Lead(Standard):
             ('goods_shipped', 'Goods shipped'),
             ('buyer_received_goods_services', 'Buyer received goods/services'),
             ('full_payment_received', 'Full payment received'),
-            ('others', 'Others')
+            ('other', 'Other')
         ],
         null=True,
         blank=True,
         db_index=True
     )
-    commission_payable_after_others = models.TextField(
+    commission_payable_after_other = models.TextField(
         null=True,
         blank=True
     )
