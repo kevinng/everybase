@@ -25,14 +25,9 @@
 {% endblock %}
 
 {% comment %}
-Unrendered Javascript. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
-
-Minifiers:
-https://www.minifier.org/
+Javascript
 https://codebeautify.org/minify-js
-{% endcomment %}
-{% block unrendered_javascript %}
-<script>    
+
 $(document).ready(function () {
     var counter = 1000; // Poll for 50 minutes (1000 * 3s = 3000 mins).
     var set_interval = setInterval(function () {
@@ -47,8 +42,7 @@ $(document).ready(function () {
         counter--;
     }, 3000); // Poll every 3 seconds.
 });
-</script>
-{% endblock %}
+{% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>{% comment %} Do not use the slim version, which does not have the .get function. {% endcomment %}
 <script>

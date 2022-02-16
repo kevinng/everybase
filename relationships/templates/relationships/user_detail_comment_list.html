@@ -6,14 +6,9 @@
 {% block title %}User Details{% endblock %}
 
 {% comment %}
-Unrendered CSS. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
-
-Minifiers:
-https://www.minifier.org/
+CSS
 https://codebeautify.org/css-beautify-minify
-{% endcomment %}
-{% block unrendered_css %}
-<script>
+
 #mobile-filter {
     position: fixed;
     top: 0;
@@ -30,8 +25,7 @@ https://codebeautify.org/css-beautify-minify
 #mobile-filter.is-active {
     left: 0;
 }
-</script>
-{% endblock %}
+{% endcomment %}
 {% block other_css %}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
@@ -124,14 +118,9 @@ https://codebeautify.org/css-beautify-minify
 {% endblock %}
 
 {% comment %}
-Unrendered Javascript. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
-
-Minifiers:
-https://www.minifier.org/
+Javascript
 https://codebeautify.org/minify-js
-{% endcomment %}
-{% block unrendered_javascript %}
-<script>
+
 $(document).ready(function() {
     $('.select2').select2();
 
@@ -157,8 +146,7 @@ $(document).ready(function() {
         $('#mobile-filter').toggleClass('is-active');
     });
 });
-</script>
-{% endblock %}
+{% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
