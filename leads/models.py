@@ -8,7 +8,7 @@ from sorl.thumbnail import ImageField
 class Lead(Standard):
     """Lead.
 
-    Last updated: 15 February 2022, 11:24 PM
+    Last updated: 16 February 2022, 10:47 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -106,7 +106,7 @@ class Lead(Standard):
         null=True,
         blank=True
     )
-    other_comm_details = models.TextField(
+    other_agent_details = models.TextField(
         null=True,
         blank=True
     )
