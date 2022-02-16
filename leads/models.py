@@ -96,7 +96,7 @@ class Lead(Standard):
             ('goods_shipped', 'Goods shipped'),
             ('buyer_received_goods_services', 'Buyer received goods/services'),
             ('full_payment_received', 'Full payment received'),
-            ('others', 'others')
+            ('others', 'Others')
         ],
         null=True,
         blank=True,
