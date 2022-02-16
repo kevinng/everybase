@@ -163,6 +163,8 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 AWS_LOCATION = 'static'
+# See: https://stackoverflow.com/questions/48722355/aws-s3-and-django-returns-an-error-occurred-accessdenied-when-calling-the-put
+AWS_DEFAULT_ACL = None
 
 # Media URL
 MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
@@ -180,9 +182,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'common/static'),
-)
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'common/static'),
+# )
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
