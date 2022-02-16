@@ -176,20 +176,21 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-## Previously uncommented
+## Comment to save static in AWS S3
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-## Previously uncommented
+## Comment to save static in AWS S3
 # STATIC_URL = '/static/'
 
 # Extra places for collectstatic to find static files.
 # STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'common/static'),
+#     os.path.join(BASE_DIR, 'static'),
 # )
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
-## Previously uncommented
+## Comment to save static in AWS S3
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+## Uncommented to save static in AWS S3
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 DEFAULT_FILE_STORAGE = 'mysite.storage_backends.MediaStorage'
 
