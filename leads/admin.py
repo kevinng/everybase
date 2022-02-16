@@ -18,7 +18,7 @@ class InlineLeadImageAdmin(AdminImageMixin, admin.TabularInline):
     model = models.LeadImage
 
 _lead_fields = ['author', 'buy_country', 'sell_country', 'lead_type', 'details',
-    'commission', 'avg_deal_size', 'other_comm_details', 'internal_notes',
+    'commission', 'avg_deal_size', 'other_agent_details', 'internal_notes',
     'onboarding', 'onboarded', 'title', 'author_type', 'country',
     'commission_payable_by', 'commission_payable_after']
 @admin.register(models.Lead)
