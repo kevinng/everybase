@@ -1,9 +1,9 @@
 {% extends 'extendables/b.html' %}
 
-{% block title %}Everybase - we match importers & exporters with commission agents worldwide{% endblock %}
+{% block title %}Everybase - we connect importers, exporters, agents, worldwide{% endblock %}
 
 {% block content %}
-<div class="bg-slate-800 pt-20 pb-20 flex flex-col items-center text-white text-center">
+<div class="bg-gradient-to-t from-violet-800 to-fuchsia-600 pt-20 pb-20 flex flex-col items-center text-white text-center">
     {% comment %} start: header {% endcomment %}
     <div class="font-bold text-3xl px-10">We connect importers, exporters, agents, worldwide</div>
     {% comment %} end: header {% endcomment %}
@@ -16,8 +16,8 @@
     {% comment %} end: importers/exporters, call-to-action {% endcomment %}
     {% comment %} start: agents, call-to-action {% endcomment %}
     <div class="mt-8 flex flex-col items-center px-10">
-        <div class="font-bold text-2xl">Agents</div>
-        <div class="mt-2 text-slate-300">Help buy or sell for commissions</div>
+        <div class="font-bold text-2xl">Buyers, Sellers, Agents</div>
+        <div class="mt-2 text-slate-300">Buy, sell, or help buy/sell for commissions</div>
         <a ut-tag-id="hero_leads_link" href="{% url 'leads:lead_list' %}" class="mt-4 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-lg font-bold rounded-lg">Find Buyers & Sellers</a>
     </div>
     {% comment %} end: agents, call-to-action {% endcomment %}
