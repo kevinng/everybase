@@ -188,10 +188,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
-## Comment to save static in AWS S3
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-## Uncommented to save static in AWS S3
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = config('STATICFILES_STORAGE')
 DEFAULT_FILE_STORAGE = 'mysite.storage_backends.MediaStorage'
 
 # Override message tags
