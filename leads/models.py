@@ -16,7 +16,6 @@ class Lead(Standard):
         editable=False,
         db_index=True
     )
-
     author = models.ForeignKey(
         'relationships.User',
         related_name='leads_authored_by_this_user',
@@ -39,8 +38,6 @@ class Lead(Standard):
             ('direct', 'Direct'),
             ('broker', 'Broker') # Middleman
         ],
-        null=True,
-        blank=True,
         db_index=True
     )
     buy_country = models.ForeignKey(
@@ -48,8 +45,6 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         related_name='lead_with_this_buy_country',
         related_query_name='lead_with_this_buy_country',
-        null=True,
-        blank=True,
         db_index=True
     )
     sell_country = models.ForeignKey(
@@ -57,14 +52,9 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         related_name='lead_with_this_sell_country',
         related_query_name='lead_with_this_sell_country',
-        null=True,
-        blank=True,
         db_index=True
     )
-    details = models.TextField(
-        null=True,
-        blank=True
-    )
+    details = models.TextField()
     need_agent = models.BooleanField(
         db_index=True
     )
@@ -75,8 +65,6 @@ class Lead(Standard):
             ('buyer', 'Buyer'),
             ('seller', 'Seller')
         ],
-        null=True,
-        blank=True,
         db_index=True
     )
     commission_type = models.CharField(
@@ -85,8 +73,6 @@ class Lead(Standard):
             ('percentage', 'Percentage'),
             ('other', 'Other')
         ],
-        null=True,
-        blank=True,
         db_index=True
     )
     commission_type_other = models.TextField(
