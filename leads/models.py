@@ -79,7 +79,7 @@ class Lead(Standard):
         null=True,
         blank=True
     )
-    commissions = models.FloatField(
+    commission = models.FloatField(
         null=True,
         blank=True,
         db_index=True
