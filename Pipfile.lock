@@ -46,17 +46,18 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:25a76b7b530a124d9e526c62ff2b7da5782315195badb9a6273714898d689820",
-                "sha256:cc40566dec3f48611a82ace07b29489848e9bd35a51e3e992d1902a3c037e9fc"
+                "sha256:9ce450f97e0368cf2535acfbc562b6684ca2ef4c9f58e36dda3ab0bac91f2b5e",
+                "sha256:d83e0f2dad07441c8d56542f5140e8cf264b05936e7bf64c88805ebda605cab9"
             ],
             "index": "pypi",
-            "version": "==1.21.0"
+            "version": "==1.21.1"
         },
         "botocore": {
             "hashes": [
-                "sha256:2bf4463513bd89817aa5d7341ed81c7c76d906e6c70672c8762d64ecf3275771"
+                "sha256:913542189e1df4487e354df942b9013ded7a5dc6c4e9f11af996a6c7d4aa6334",
+                "sha256:fbeb774c4542f4e85a3348c1e9928a31da4f9d743669686fbd5290bf94e8cc03"
             ],
-            "version": "==1.24.0"
+            "version": "==1.24.1"
         },
         "cached-property": {
             "hashes": [
@@ -603,11 +604,11 @@
         },
         "redis": {
             "hashes": [
-                "sha256:267e89e476eb684517584e8988f1e5d755f483a368c133020c4c40e8b676bc5d",
-                "sha256:f2715caad9f0e8c6ff8df46d3c4c9022a3929001f530f66b62747554d3067068"
+                "sha256:04629f8e42be942c4f7d1812f2094568f04c612865ad19ad3ace3005da70631a",
+                "sha256:1d9a0cdf89fdd93f84261733e24f55a7bbd413a9b219fdaf56e3e728ca9a2306"
             ],
             "index": "pypi",
-            "version": "==4.1.3"
+            "version": "==4.1.4"
         },
         "requests": {
             "extras": [
@@ -666,11 +667,11 @@
         },
         "stripe": {
             "hashes": [
-                "sha256:16a8d1dfc0ba414b24612d31ede0f57ff260bccebd6dc18e17277cb24f58c6b7",
-                "sha256:2e55d4d7262085de9cef2228f14581925c35350ba58a332352b1ec9e19a7b7a6"
+                "sha256:283f6f80d16cc5b473116697e0f4569df46b44826d1c78197880bce6dc066d0d",
+                "sha256:77c6032230f7714b1a1b459074f08c60d60c229b9c3beac372719063e3d1409c"
             ],
             "index": "pypi",
-            "version": "==2.65.0"
+            "version": "==2.66.0"
         },
         "twilio": {
             "hashes": [
