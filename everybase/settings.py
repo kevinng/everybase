@@ -189,7 +189,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = config('STATICFILES_STORAGE')
-DEFAULT_FILE_STORAGE = 'mysite.storage_backends.MediaStorage'
+DEFAULT_FILE_STORAGE = 'everybase.storage_backends.MediaStorage'
 
 # Override message tags
 MESSAGE_TAGS = {
