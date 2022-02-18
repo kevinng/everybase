@@ -10,7 +10,7 @@
         <form action="{% url 'confirm_register' user_uuid %}" method="post">
             {% csrf_token %}
             {% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}{% comment %} The next URL is rendered with the template if it is passed as a GET parameter to the URL. {% endcomment %}
-            <a href="https://everybase.co"><img class="mx-auto mt-5" src="{% static 'common/assets/img/logo.png' %}"></a>
+            <a href="https://everybase.co"><img class="mx-auto mt-5" src="{% static 'common/img/logo.png' %}"></a>
             <h1 class="font-sans text-3xl font-bold text-center mt-5">We've Sent You a WhatsApp Message, Reply 'Yes' to Confirm Register</h1>
             <div class="mt-7 flex flex-col justify-center">
                 <label for="whatsapp_phone_number" class="font-sans text-sm font-bold uppercase text-slate-400">WhatsApp Phone Number</label>
