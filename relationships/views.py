@@ -19,6 +19,8 @@ from relationships import forms, models
 from relationships.utilities.save_user_agent import save_user_agent
 from relationships.utilities.get_non_tracking_whatsapp_link import \
     get_non_tracking_whatsapp_link
+from relationships.utilities.kill_login_tokens import kill_login_tokens
+from relationships.utilities.kill_register_tokens import kill_register_tokens
 from chat.tasks.send_register_message import send_register_message
 from chat.tasks.send_login_message import send_login_message
 
@@ -173,18 +175,6 @@ class UserLeadListView(ListView):
         context['detail_user'] = user
         return context
 
-def kill_live_register_tokens(user):
-    live_tokens = models.RegisterToken.objects.filter(
-        user=user,
-        activated__isnull=True, # Not activated
-        killed__isnull=True # Not killed
-    )
-    sgtz = pytz.timezone(settings.TIME_ZONE)
-    now = datetime.now(tz=sgtz)
-    for t in live_tokens:
-        t.killed = now
-        t.save()
-
 def register(request):
     if request.method == 'POST':
         form = forms.RegisterForm(request.POST)
@@ -241,9 +231,12 @@ def register(request):
             user.save()
 
             # Kill all tokens
-            kill_live_register_tokens(user)
+            kill_register_tokens(user)
 
-            # Send register message
+            # Create new token
+            models.RegisterToken.objects.create(user=user)
+
+            # Send message
             send_register_message.delay(user.id)
 
             # Append next URL
@@ -276,12 +269,15 @@ def confirm_register(request, user_uuid):
     user = models.User.objects.get(uuid=user_uuid)
 
     if request.method == 'POST':
-        # Resend message
+        # User request to resend message
 
         # Kill all tokens
-        kill_live_register_tokens(user)
+        kill_register_tokens(user)
+
+        # Create new token
+        models.RegisterToken.objects.create(user=user)
         
-        # Create token and send message
+        # Send message
         send_register_message.delay(user.id)
 
         # If the user requested to resend the message, read next URL and
@@ -339,7 +335,7 @@ def is_registered(request, user_uuid):
 
         user = models.User.objects.get(uuid=user_uuid)
 
-        kill_live_register_tokens(user)
+        kill_register_tokens(user)
 
         # TODO Amplitude
     else:
@@ -348,18 +344,6 @@ user ID: %d, user ID: %d' % (django_user.id, django_user.user.id),
         level='error')
 
     return JsonResponse({'r': True})
-
-def kill_live_login_tokens(user):
-    live_tokens = models.LoginToken.objects.filter(
-        user=user,
-        activated__isnull=True, # Not activated
-        killed__isnull=True # Not killed
-    )
-    sgtz = pytz.timezone(settings.TIME_ZONE)
-    now = datetime.now(tz=sgtz)
-    for t in live_tokens:
-        t.killed = now
-        t.save()
 
 def log_in(request):
     if request.method == 'POST':
@@ -389,9 +373,12 @@ def log_in(request):
                     next_url = form.cleaned_data.get('next')
 
                     # Kill all tokens
-                    kill_live_login_tokens(user)
+                    kill_login_tokens(user)
 
-                    # Create token and send message
+                    # Create login token
+                    models.LoginToken.objects.create(user=user)
+
+                    # Send message
                     send_login_message.delay(user.id)
 
                     confirm_login_url = reverse('confirm_login',
@@ -444,8 +431,11 @@ def confirm_login(request, user_uuid):
                     django_user__isnull=False # User has a Django user linked
                 ).first()
 
-                # Kill all live tokens
-                kill_live_login_tokens(user)
+                # Kill all tokens
+                kill_login_tokens(user)
+
+                # Create login token
+                models.LoginToken.objects.create(user=user)
 
                 # Create token and send message
                 send_login_message.delay(user.id)
@@ -481,37 +471,34 @@ def is_logged_in(request, user_uuid):
     """
     user = models.User.objects.get(uuid=user_uuid)
 
-    token = models.LoginToken.objects.filter(
-        user=user.id,
-        activated__isnull=False # Activated
-    ).order_by('-created').first()
+    # Get latest token for this user.
+    # Note: do not filter conditions here because the latest token for the
+    #   matching conditions may not be the latest-of-all token for this user.
+    token = models.LoginToken.objects.filter(user=user.id)\
+        .order_by('-created').first()
     
     if token is not None:
         expiry_datetime = token.created + timedelta(
             seconds=settings.LOGIN_TOKEN_EXPIRY_SECS)
         sgtz = pytz.timezone(settings.TIME_ZONE)
         if datetime.now(tz=sgtz) < expiry_datetime and \
-            user.django_user is not None:
-            # Registered user has activated this unexpired token
+            user.django_user is not None and token.activated is not None and \
+            token.is_not_latest is None:
+            # Checks passed
+            #   Token is not expired
+            #   User is registered (i.e., user.django_user is not None)
+            #   Token has been activated via chatbot (activated is not None)
+            #   Token is latest (is_not_latest is None)
 
             django_user = user.django_user
 
             # Authenticate user
             in_user = authenticate(django_user.username)
-            if in_user is not None:
 
-                # Authentication successful, log the user in
+            if in_user is not None:
+                # Authentication successful, log the user in with password
                 login(request, in_user, backend=\
                     'relationships.auth.backends.DirectBackend')
-                
-                # Activate this token
-                sgtz = pytz.timezone(settings.TIME_ZONE)
-                now = datetime.now(tz=sgtz)
-                token.activated = now
-                token.save()
-
-                # Kill other live tokens
-                kill_live_login_tokens(user)
 
                 # TODO Amplitude
                 save_user_agent(request, user)
