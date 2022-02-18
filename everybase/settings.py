@@ -174,20 +174,18 @@ AWS_S3_FILES_ROOT = 'files'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-## Comment to save static in AWS S3
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-## Comment to save static in AWS S3
-# STATIC_URL = '/static/'
+# Static folder relative to app
+STATIC_URL = '/static/'
 
-# Extra places for collectstatic to find static files.
+# Static files that aren't tied to apps
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static'),
 # )
 
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
+# Notes:
+#   - Use whitenoise for development, but AWS S3 for production
+#   - We only use django-storages to help use collectstatic assets, not upload
+#       or manage media from users
 STATICFILES_STORAGE = config('STATICFILES_STORAGE')
 DEFAULT_FILE_STORAGE = 'everybase.storage_backends.MediaStorage'
 
@@ -323,3 +321,6 @@ GA4_STREAM_MEASUREMENT_ID = config('GA4_STREAM_MEASUREMENT_ID')
 SETTINGS_EXPORT = [
     'GA4_STREAM_MEASUREMENT_ID'
 ]
+
+# 5 MB 5242880
+MAX_UPLOAD_SIZE = 5242880
