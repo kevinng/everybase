@@ -36,9 +36,6 @@ def send_login_message(
         'last_name': user.last_name
     }
 
-    # Create login token
-    relmods.LoginToken.objects.create(user=user)
-
     return send_message(
         render_message(messages.LOGIN__CONFIRM, params),
         chatbot,
