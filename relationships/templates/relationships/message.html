@@ -49,8 +49,8 @@ $(document).ready(function() {
 });
 {% endcomment %}
 {% block other_script %}
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 <script>
+{% include 'includes/js/jquery.js' %}
 $(document).ready((function(){last_msg_body="{{ last_msg_body }}",entered_body="",$("#use_last_msg").change((function(){1==$(this).prop("checked")?(""!=$("#body").val().trim()&&(entered_body=$("#body").val()),$("#body").val(last_msg_body)):$("#body").val(entered_body)}))}));
 </script>
 {% endblock %}
