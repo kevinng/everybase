@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Confirm Register to Everybase{% endblock %}
+{% block title %}Everybase Register{% endblock %}
 
 {% block content %}
 <div class="flex justify-center">
@@ -44,8 +44,8 @@ $(document).ready(function () {
 });
 {% endcomment %}
 {% block other_script %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>{% comment %} Do not use the slim version, which does not have the .get function. {% endcomment %}
 <script>
+{% include 'includes/js/jquery.js' %}
 $(document).ready((function(){var e=1e3,n=setInterval((function(){$.get("{% url 'is_registered' user_uuid %}",(function(e){1==e.r&&window.location.replace("{{ next }}")})),--e<0&&clearInterval(n)}),3e3)}));
 </script>
 {% endblock %}
