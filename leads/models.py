@@ -8,7 +8,7 @@ from sorl.thumbnail import ImageField
 class Lead(Standard):
     """Lead.
 
-    Last updated: 16 February 2022, 10:47 PM
+    Last updated: 18 February 2022, 1:56 AM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -45,6 +45,8 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         related_name='lead_with_this_buy_country',
         related_query_name='lead_with_this_buy_country',
+        null=True,
+        blank=True,
         db_index=True
     )
     sell_country = models.ForeignKey(
@@ -52,6 +54,8 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         related_name='lead_with_this_sell_country',
         related_query_name='lead_with_this_sell_country',
+        null=True,
+        blank=True,
         db_index=True
     )
     details = models.TextField()
@@ -65,6 +69,8 @@ class Lead(Standard):
             ('buyer', 'Buyer'),
             ('seller', 'Seller')
         ],
+        null=True,
+        blank=True,
         db_index=True
     )
     commission_type = models.CharField(
@@ -73,11 +79,18 @@ class Lead(Standard):
             ('percentage', 'Percentage'),
             ('other', 'Other')
         ],
+        null=True,
+        blank=True,
         db_index=True
     )
     commission_type_other = models.TextField(
         null=True,
         blank=True
+    )
+    is_comm_negotiable = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
     )
     commission = models.FloatField(
         null=True,
@@ -127,7 +140,11 @@ class Lead(Standard):
     )
 
     # Keep for data
-    title = models.CharField(max_length=200)
+    title = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
+    )
 
     # Keep for future
     country = models.ForeignKey(
@@ -141,7 +158,7 @@ class Lead(Standard):
     )
 
     def avg_deal_comm(self):
-        return self.commissions / 100 * self.avg_deal_size
+        return self.commission / 100 * self.avg_deal_size
 
 class LeadImage(models.Model):
     """Lead image.
