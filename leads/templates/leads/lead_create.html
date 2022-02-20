@@ -2,149 +2,204 @@
 
 {% load static %}
 
-{% block title %}Create I-Need-Agent Post{% endblock %}
+{% block title %}New Lead{% endblock %}
 
 {% block other_css %}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+{% include 'includes/css/select2.css' %}
+</style>
 {% endblock %}
 
 {% block content %}
-<form action="{% url 'leads:lead_create' %}" method="post">
+<form enctype="multipart/form-data" action="{% url 'leads:lead_create' %}" method="post">
 {% csrf_token %}
 <div class="flex justify-center">
     <div class="p-10 mt-10 mb-10 bg-white w-full md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-md">
-        <div class="text-center mt-6">New Post</div>
-        <h1 class="text-3xl font-bold text-center">I-Need-Agents</h1>
+        <h1 class="text-3xl font-bold text-center mt-6">New Lead</h1>
         <div class="mt-7 flex flex-col justify-center">
-
             {% comment %} start: lead_type {% endcomment %}
-            <label for="lead_type" class="text-sm font-bold uppercase text-slate-400">I Want To</label>
+            <label for="lead_type" class="text-md font-bold text-slate-400">Are you selling or buying?</label>
             <div class="mt-2">
-                <select id="i_want_to" name="lead_type" class="select2">
-                    <option value="selling"{% if form.lead_type.value == 'selling' %} selected{% endif %}>Sell</option>
-                    <option value="buying"{% if form.lead_type.value == 'buying' %} selected{% endif %}>Buy</option>
+                <select id="lead_type" name="lead_type" class="select2">
+                    <option value="selling"{% if form.lead_type.value == 'selling' %} selected{% endif %}>Selling</option>
+                    <option value="buying"{% if form.lead_type.value == 'buying' %} selected{% endif %}>Buying</option>
                 </select>
             </div>
             {% if form.lead_type.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.lead_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: lead_type {% endcomment %}
 
-
-
-
-
             {% comment %} start: author_type {% endcomment %}
-            <label id="author_type_label" for="author_type" class="text-sm font-bold uppercase text-slate-400 mt-7">Are you the direct seller/buyer or a middleman?</label>
+            <label id="author_type__label" for="author_type" class="text-md font-bold text-slate-400 mt-7">Are you a direct seller/buyer or a middleman?</label>
             <div class="mt-2">
-                <select name="author_type" class="select2">
-                    <option id="author_type_direct_option" value="direct"{% if form.author_type.value == 'direct' %} selected{% endif %}>Direct Buyer/Seller</option>
+                <select id="author_type" name="author_type" class="select2">
+                    <option id="author_type__option__direct" value="direct"{% if form.author_type.value == 'direct' %} selected{% endif %}></option>
                     <option value="broker"{% if form.author_type.value == 'broker' %} selected{% endif %}>Middleman</option>
                 </select>
             </div>
             {% if form.author_type.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.author_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: author_type {% endcomment %}
 
-
-
-
-
-
-
             {% comment %} start: buy country {% endcomment %}
-            <label id="buy_label" for="buy_country" class="text-sm font-bold uppercase text-slate-400 mt-7">Source Country</label>
+            <label id="buy_country__label" for="buy_country" class="text-md font-bold text-slate-400 mt-7">Buy From This Country</label>
             <div class="mt-2">
                 <select id="buy_country" name="buy_country" class="select2" data-placeholder="Choose country">
                     <option></option>
-                    <option id="buy_country_any" value="any_country"{% if form.buy_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
+                    <option id="buy_country__option__any_country" value="any_country"{% if form.buy_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
                     {% for country in countries %}
                         <option value="{{ country.programmatic_key }}"{% if form.buy_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            {% if form.buy_country.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.buy_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="buy_country_help_text_if_selling" class="mt-2">My goods/services are exported from, or in, this country.</div>
-            <div id="buy_country_help_text_if_buying" class="mt-2">I want to buy from this country.</div>
+            {% if form.buy_country.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.buy_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}            
+            <div id="buy_country__help" class="mt-2"></div>
             {% comment %} end: buy country {% endcomment %}
-            
+
             {% comment %} start: sell country {% endcomment %}
-            <label id="sell_label" for="sell_country" class="text-sm font-bold uppercase text-slate-400 mt-7">Sell To This Country</label>
+            <label id="sell_country__label" for="sell_country" class="text-md font-bold text-slate-400 mt-7">Sell In This Country</label>
             <div class="mt-2">
                 <select id="sell_country" name="sell_country" class="select2" data-placeholder="Choose country">
                     <option></option>
-                    <option id="sell_country_any" value="any_country"{% if form.sell_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
+                    <option id="sell_country__option__any_country" value="any_country"{% if form.sell_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
                     {% for country in countries %}
                         <option value="{{ country.programmatic_key }}"{% if form.sell_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                     {% endfor %}
                 </select>
             </div>
             {% if form.sell_country.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.sell_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="sell_country_help_text_if_selling" class="mt-2">I want to sell to this country.</div>
-            <div id="sell_country_help_text_if_buying" class="mt-2">My goods/services will be imported to, or needed in, this country.</div>
+            <div id="sell_country__help" class="mt-2"></div>
             {% comment %} end: sell country {% endcomment %}
 
             {% comment %} start: details {% endcomment %}
-            <label for="details" class="text-sm font-bold uppercase text-slate-400 mt-7">Goods/Services Details</label>
+            <label for="details" class="text-md font-bold text-slate-400 mt-7">Goods/Services Details</label>
             <textarea name="details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None and form.details.value|cut:' ' != '' %}{{ form.details.value }}{% endif %}</textarea>
             {% if form.details.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="details_if_selling" class="mt-2">Description of goods/services I want to sell, and what I'd like the agent to do for me.</div>
-            <div id="details_if_buying" class="mt-2">Description of goods/services I want to buy, and what I'd like the agent to do for me.</div>
+            <div id="details__help" class="mt-2"></div>
             {% comment %} end: other commission details {% endcomment %}
 
-
             {% comment %} start: images {% endcomment %}
-            <label class="text-sm font-bold uppercase text-slate-400 mt-7">Goods/Services Images</label>
-            <div id="images_if_selling" class="mt-2">Images of goods/services I want to sell.</div>
-            <div id="images_if_buying" class="mt-2">Images of goods/services I want to buy.</div>
+            <label class="text-md font-bold text-slate-400 mt-7">Goods/Services Images</label>
             <div class="flex flex-col items-center">
-                <div id="image_one_preview" class="mt-12">No image chosen</div>
+                <div id="image_one_preview" class="mt-8">No image chosen</div>
                 <label for="image_one" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 1</label>
-                <input id="image_one" name="image_one" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" />
+                <input id="image_one" name="image_one" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" value=''>{% comment %} We set value='' so use may select the same file again in the event of a validaton fail {% endcomment %}
+                {% if form.image_one.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.image_one.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <div id="image_two_preview" class="mt-12">No image chosen</div>
+                <div id="image_two_preview" class="mt-8">No image chosen</div>
                 <label for="image_two" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 2</label>
-                <input id="image_two" name="image_two" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" />
+                <input id="image_two" name="image_two" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" value=''>{% comment %} We set value='' so use may select the same file again in the event of a validaton fail {% endcomment %}
+                {% if form.image_two.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.image_two.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <div id="image_three_preview" class="mt-12">No image chosen</div>
+                <div id="image_three_preview" class="mt-8">No image chosen</div>
                 <label for="image_three" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 3</label>
-                <input id="image_three" name="image_two" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" />
+                <input id="image_three" name="image_three" type="file" accept="image/*" style="opacity: 0; width: 0; height: 0;" value=''>{% comment %} We set value='' so use may select the same file again in the event of a validaton fail {% endcomment %}
+                {% if form.image_three.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.image_three.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             </div>
             {% comment %} end: images {% endcomment %}
 
+            {% comment %} start: need_agent {% endcomment %}
+            <label class="text-md font-bold text-slate-400 mt-12">Do you need agents?</label>
+            <div class="mt-4 flex justify-start">
+                <input id="need_agent" name="need_agent" type="checkbox" class="h-6 w-6 flex-none" {% if form.need_agent.value == True %} checked{% endif %}>
+                <label id="need_agent__label" for="need_agent" class="ml-3"></label>
+            </div>
+            <div id="need_agent__help" class="mt-2"></div>
+            {% comment %} end: need_agent {% endcomment %}
 
-{% comment %} 
+            {% comment %} start: commission_type {% endcomment %}
+            <label id="commission_type__label" for="commission_type" class="text-md font-bold text-slate-400 mt-7">How is agent commission calculated?</label>
+            <div id="commission_type__input" class="mt-2">
+                <select id="commission_type" name="commission_type" class="select2">
+                    <option value="percentage"{% if form.commission_type.value == 'percentage' %} selected{% endif %}>% of Sales</option>
+                    <option value="other"{% if form.commission_type.value == 'other' %} selected{% endif %}>Other</option>
+                </select>
+            </div>
+            {% if form.commission_type.errors %}<div id="commission_type__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: commission_type {% endcomment %}
 
-THE COMMISSION SECTION WILL BE REDESIGNED TO INCLUDE MORE DETAILS - THIS WILL AFFECT THE LISTING PAGES
-
-
-{% endcomment %}
-
+            {% comment %} start: commission_type_other {% endcomment %}
+            <textarea id="commission_type_other" name="commission_type_other" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.commission_type_other.value is not None and form.commission_type_other.value|cut:' ' != '' %}{{ form.commission_type_other.value }}{% endif %}</textarea>
+            {% if form.commission_type_other.errors %}<div id="commission_type_other__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_type_other.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission_type_other__help" class="mt-2">Describe how agent commission is calculated.</div>
+            {% comment %} end: commission_type_other {% endcomment %}
 
             {% comment %} start: commission % {% endcomment %}
-            <label for="commissions" class="text-sm font-bold uppercase text-slate-400 mt-7">Average Agent Commission</label>
-            <div class="flex items-center justify-start">
-                <input name="commissions" placeholder="0" type="number" {% if form.commissions.value %}value="{{ form.commissions.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">%</div>
+            <label id="commission__label" for="commission" class="text-md font-bold text-slate-400 mt-7">Agent Commission</label>
+            <div id="commission__input" class="flex items-center justify-start">
+                <input id="commission" name="commission" placeholder="0" type="number" min="0" max="100" step="0.5" {% if form.commission.value %}value="{{ form.commission.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">% of Sales</div>
             </div>
-            {% if form.commissions.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.commissions.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission__js_errors" class="px-1 mt-2 text-red-500"></div>
+            {% if form.commission.errors %}<div id="commission__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission__help" class="mt-2">E.g., agent sold $1000 x 10% commission = $100 earned</div>
             {% comment %} end: commission % {% endcomment %}
-            
-            {% comment %} start: average deal size {% endcomment %}
-            <label for="avg_deal_size" class="text-sm font-bold uppercase text-slate-400 mt-7">Average Deal Size</label>
-            <div class="flex items-center justify-start">
-                <div class="mr-3 font-bold text-2xl">USD</div><input name="avg_deal_size" placeholder="0" type="number" {% if form.avg_deal_size.value %}value="{{ form.avg_deal_size.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2">
+
+            {% comment %} start: avg_deal_size {% endcomment %}
+            <label id="avg_deal_size__label" for="avg_deal_size" class="text-md font-bold text-slate-400 mt-7">Average Deal Size</label>
+            <div id="avg_deal_size__input" class="flex items-center justify-start">
+                <div class="mr-3 font-bold text-2xl">USD</div><input id="avg_deal_size" name="avg_deal_size" placeholder="0" type="number" {% if form.avg_deal_size.value %}value="{{ form.avg_deal_size.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2">
             </div>
-            {% if form.avg_deal_size.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.avg_deal_size.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            {% comment %} end: average deal size {% endcomment %}
+            {% if form.avg_deal_size.errors %}<div id="avg_deal_size__errors" class="px-1 mt-2 text-red-500">{% for error in form.avg_deal_size.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="avg_deal_size__help" class="mt-2">On average, what's a typical deal size or order value? This helps an agent calculate how much he can make per deal.</div>
+            {% comment %} end: avg_deal_size {% endcomment %}
 
-            {% comment %} start: other commission details {% endcomment %}
-            <label for="other_comm_details" class="text-sm font-bold uppercase text-slate-400 mt-7">Other Details On Agent Commission</label>
-            <textarea name="other_comm_details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.other_comm_details.value is not None %}{{ form.other_comm_details.value }}{% endif %}</textarea>
-            {% if form.other_comm_details.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.other_comm_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            {% comment %} end: other commission details {% endcomment %}
+            {% comment %} start: average earnings per deal {% endcomment %}
+            <label id="avg_earnings__label" class="text-md font-bold text-slate-400 mt-7">Average Agent Earnings Per Deal</label>
+            <div id="avg_earnings__value" class="mt-2 font-bold text-2xl">USD <span id="avg_earnings__value_1">0.00</span></div>
+            <div id="avg_earnings__help" class="mt-2">On average, an agent makes <span class="font-bold">USD <span id="avg_earnings__value_2">0.00</span></span> per deal. <span class="italic">This is a guide only</span>.</div>
+            {% comment %} end: average earnings per deal {% endcomment %}
 
-            <div class="mt-4">Actual commissions negotiated per deal.</div>
+            {% comment %} start: is_comm_negotiable {% endcomment %}
+            <label id="is_comm_negotiable__label" for="commission" class="text-md font-bold text-slate-400 mt-7">Is commission negotiable for each deal?</label>
+            <div id="is_comm_negotiable__input" class="mt-4 flex justify-start">
+                <input id="is_comm_negotiable" name="is_comm_negotiable" type="checkbox" class="h-6 w-6" {% if form.is_comm_negotiable.value == True %} checked{% endif %}>
+                <label for="is_comm_negotiable" class="ml-3">Yes, commission <span class="italic">may</span> differ and is negotiable for each deal.</label>
+            </div>
+            {% comment %} end: is_comm_negotiable {% endcomment %}
 
+            {% comment %} start: commission_payable_by {% endcomment %}
+            <label id="commission_payable_by__label" for="commission_payable_by" class="text-md font-bold text-slate-400 mt-7">Commission Payable By</label>
+            <div id="commission_payable_by__input" class="mt-2">
+                <select id="commission_payable_by" name="commission_payable_by" class="select2">
+                    <option value="me"{% if form.commission_payable_by.value == 'me' %} selected{% endif %}>Me</option>
+                    <option id="commission_payable_by__option__counter_party" value="counter_party"{% if form.commission_payable_by.value == 'counter_party' %} selected{% endif %}>Seller/Buyer</option>
+                </select>
+            </div>
+            {% if form.commission_payable_by.errors %}<div id="commission_payable_by__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_payable_by.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission_payable_by__help" class="mt-2"></div>
+            {% comment %} end: commission_payable_by {% endcomment %}
 
+            {% comment %} start: commission_payable_after {% endcomment %}
+            <label id="commission_payable_after__label" for="commission_payable_after" class="text-md font-bold text-slate-400 mt-7">When will commissions be paid?</label>
+            <div id="commission_payable_after__input" class="mt-2">
+                <select id="commission_payable_after" name="commission_payable_after" class="select2">
+                    <option value="initial_deposit_received"{% if form.commission_payable_after.value == 'initial_deposit_received' %} selected{% endif %}>Initial Deposit Received</option>
+                    <option value="goods_shipped"{% if form.commission_payable_after.value == 'goods_shipped' %} selected{% endif %}>Goods Shipped</option>
+                    <option value="buyer_received_goods_services"{% if form.commission_payable_after.value == 'buyer_received_goods_services' %} selected{% endif %}>Buyer Received Goods/Services</option>
+                    <option value="full_payment_received"{% if form.commission_payable_after.value == 'full_payment_received' %} selected{% endif %}>Full Payment Received</option>
+                    <option value="other"{% if form.commission_payable_after.value == 'other' %} selected{% endif %}>Other</option>
+                </select>
+            </div>
+            {% if form.commission_payable_after.errors %}<div id="commission_payable_after__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_payable_after.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: commission_payable_after {% endcomment %}
 
-            <button type="submit" class="py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-16 shadow-md">Post</button>
+            {% comment %} start: commission_payable_after_other {% endcomment %}
+            <textarea id="commission_payable_after_other" name="commission_payable_after_other" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.commission_payable_after_other.value is not None and form.commission_payable_after_other.value|cut:' ' != '' %}{{ form.commission_payable_after_other.value }}{% endif %}</textarea>
+            {% if form.commission_payable_after_other.errors %}<div id="commission_payable_after_other__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_payable_after_other.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission_payable_after_other__help" class="mt-2">Describe when agent commission is paid.</div>
+            {% comment %} end: commission_payable_after_other {% endcomment %}
+
+            {% comment %} start: other_agent_details {% endcomment %}
+            <label id="other_agent_details__label" for="other_agent_details" class="text-md font-bold text-slate-400 mt-7">Other details you'd like the agent to know</label>
+            <textarea id="other_agent_details" name="other_agent_details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.other_agent_details.value is not None %}{{ form.other_agent_details.value }}{% endif %}</textarea>
+            {% if form.other_agent_details.errors %}<div id="other_agent_details__errors" class="px-1 mt-2 text-red-500">{% for error in form.other_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: other_agent_details {% endcomment %}
+
+            <button id="submit" type="submit" class="py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-12 shadow-md">Post</button>
+
+            <div class="mt-4 flex justify-start">
+                <input id="friendly" type="checkbox" class="h-6 w-6 flex-none">
+                <label for="friendly_label" class="ml-3 font-semibold">I know you sell credits for users to contact others. So, I didn't include contact details in my post. Let's help each other grow our businesses 😊</label>
+            </div>
+            <div class="mt-14 font-extrabold text-center"><span class="text-red-500">WARNING:</span> Users who violate our terms and conditions may be banned.</div>
         </div>
     </div>
 </div>
@@ -152,105 +207,663 @@ THE COMMISSION SECTION WILL BE REDESIGNED TO INCLUDE MORE DETAILS - THIS WILL AF
 {% endblock %}
 
 {% comment %}
-Unrendered Javascript. We put the in an unrendered block so we can take advantage of the code editor's code highlighting feature.
-
-Minifiers:
-https://www.minifier.org/
+Javascript, minify with following tool and paste into script block
 https://codebeautify.org/minify-js
+
+$(document).ready(function() {
+    // ***** Cache jQuery objects (prefix $) *****
+
+    // Lead type
+    $lead_type = $('#lead_type')
+
+    // Author type
+    $author_type = $('#author_type')
+    $author_type__label = $('#author_type__label')
+    $author_type__option__direct = $('#author_type__option__direct')
+
+    // Buy country
+    $buy_country = $('#buy_country')
+    $buy_country__label = $('#buy_country__label')
+    $buy_country__option__any_country = $('#buy_country__option__any_country')
+    $buy_country__help = $('#buy_country__help')
+
+    // Sell country
+    $sell_country = $('#sell_country')
+    $sell_country__label = $('#sell_country__label')
+    $sell_country__option__any_country = $('#sell_country__option__any_country')
+    $sell_country__help = $('#sell_country__help')
+
+    // Details
+    $details__help = $('#details__help')
+
+    // Need agent
+    $need_agent = $('#need_agent')
+    $need_agent__help = $('#need_agent__help')
+    $need_agent__label = $('#need_agent__label')
+
+    // Commission type
+    $commission_type__label = $('#commission_type__label')
+    $commission_type__input = $('#commission_type__input')
+    $commission_type__errors = $('#commission_type__errors')
+
+    // Commission type other
+    $commission_type = $('#commission_type')
+    $commission_type_other = $('#commission_type_other')
+    $commission_type_other__errors = $('#commission_type_other__errors')
+    $commission_type_other__help = $('#commission_type_other__help')
+
+    // Commission payable by
+    $commission_payable_by__label = $('#commission_payable_by__label')
+    $commission_payable_by__input = $('#commission_payable_by__input')
+    $commission_payable_by__option__counter_party = $('#commission_payable_by__option__counter_party')
+    $commission_payable_by__help = $('#commission_payable_by__help')
+    $commission_payable_by__errors = $('#commission_payable_by__errors')
+
+    // Commission
+    $commission = $('#commission')
+    $commission__label = $('#commission__label')
+    $commission__input = $('#commission__input')
+    $commission__errors = $('#commission__errors')
+    $commission__js_errors = $('#commission__js_errors')
+    $commission__help = $('#commission__help')
+
+    // Average deal size
+    $avg_deal_size = $('#avg_deal_size')
+    $avg_deal_size__label = $('#avg_deal_size__label')
+    $avg_deal_size__input = $('#avg_deal_size__input')
+    $avg_deal_size__errors = $('#avg_deal_size__errors')
+    $avg_deal_size__help = $('#avg_deal_size__help')
+
+    // Average earnings
+    $avg_earnings__label = $('#avg_earnings__label')
+    $avg_earnings__value = $('#avg_earnings__value')
+    $avg_earnings__value_1 = $('#avg_earnings__value_1')
+    $avg_earnings__value_2 = $('#avg_earnings__value_2')
+    $avg_earnings__help = $('#avg_earnings__help')
+
+    // Is commission negotiable
+    $is_comm_negotiable__label = $('#is_comm_negotiable__label')
+    $is_comm_negotiable__input = $('#is_comm_negotiable__input')
+
+    // Commission payable after
+    $commission_payable_after = $('#commission_payable_after')
+    $commission_payable_after__label = $('#commission_payable_after__label')
+    $commission_payable_after__input = $('#commission_payable_after__input')
+    $commission_payable_after__errors = $('#commission_payable_after__errors')
+
+    // Commission payable after other
+    $commission_payable_after_other = $('#commission_payable_after_other')
+    $commission_payable_after_other__errors = $('#commission_payable_after_other__errors')
+    $commission_payable_after_other__help = $('#commission_payable_after_other__help')
+
+    // Other agent details
+    $other_agent_details = $('#other_agent_details')
+    $other_agent_details__label = $('#other_agent_details__label')
+    $other_agent_details__errors = $('#other_agent_details__errors')
+
+    // Friendly
+    $friendly = $('#friendly')
+
+    // Submit
+    $submit = $('#submit')
+
+    // ***** Initialize select2 comboboxes *****
+
+    $select2 = $('.select2')
+
+    $select2.select2()
+
+    $select2.one('select2:open', function(e) {
+        $('input.select2-search__field').prop('placeholder', 'Search here...')
+    })
+
+    // ***** Functions to set the state of each section *****
+
+    // author_type
+
+    function set_section__author_type__is_buying() {
+        $author_type__label.text('Are you a direct buyer or a middleman?')
+        $author_type__option__direct.text('Direct Buyer')
+        $author_type.select2() // Refresh
+    }
+
+    function set_section__author_type__is_selling() {
+        $author_type__label.text('Are you a direct seller or a middleman?')
+        $author_type__option__direct.text('Direct Seller')
+        $author_type.select2() // Refresh
+    }
+
+    function set_section__author_type() {
+        author_type_val = $author_type.val()
+        if (author_type_val == 'direct') {
+            set_section__commission_payable_by__direct()
+        } else if (author_type_val == 'broker' && $need_agent.is(':checked')) {
+            set_section__commission_payable_by__broker()
+        }
+    }
+
+    // buy_country
+
+    function set_section__buy_country__buying() {
+        $buy_country__label.text('Buy From This Country')
+        $buy_country__option__any_country.attr('disabled', false)
+        $buy_country__help.text("Country you'd like to buy or source from.")
+    }
+
+    function set_section__buy_country__selling() {
+        $buy_country__label.text('Source Country')
+        $buy_country__option__any_country.attr('disabled', true)
+        if ($buy_country.find('option:selected').val() == 'any_country') {
+            $buy_country.val(null).trigger('change') // Clear selection
+        }
+        $buy_country__help.text("Country your goods/services are exported from or based in.")
+    }
+
+    // sell_country
+
+    function set_section__sell_country__buying() {
+        $sell_country__label.text('Destination Country')
+        $sell_country__option__any_country.attr('disabled', true)
+        if ($sell_country.find('option:selected').val() == 'any_country') {
+            $sell_country.val(null).trigger('change') // Clear selections
+        }
+        $sell_country__help.text("Country your goods/services are imported into or needed.")
+    }
+
+    function set_section__sell_country__selling() {
+        $sell_country__label.text('Sell In This Country')
+        $sell_country__option__any_country.attr('disabled', false)
+        $sell_country__help.text("Country you'd like to sell your goods/services in.")
+    }
+    
+    // details
+
+    function set_section__details__buying() {
+        $details__help.text("Describe goods/services you'd like to buy")
+    }
+
+    function set_section__details__selling() {
+        $details__help.text("Describe goods/services you'd like to sell")
+    }
+
+    // need_agent
+
+    function set_section__need_agent__buying() {
+        $need_agent__label.text('Yes, I need agents to help me buy')
+        $need_agent__help.text('Agents help you buy or source for goods/services.')
+    }
+
+    function set_section__need_agent__selling() {
+        $need_agent__label.text('Yes, I need agents to help me sell')
+        $need_agent__help.text('Agents help you sell or promote your goods/services.')
+    }
+
+    // commission_type
+
+    function set_section__commission_type__need_agent() {
+        $commission_type__label.show()
+        $commission_type__input.show()
+        $commission_type__errors.show()
+    }
+
+    function set_section__commission_type__not_need_agent() {
+        $commission_type__label.hide()
+        $commission_type__input.hide()
+        $commission_type__errors.hide()
+    }
+
+    // commission_type_other
+
+    function set_section__commission_type_other__comm_type_percentage() {
+        $commission_type_other.hide()
+        $commission_type_other__errors.hide()
+        $commission_type_other__help.hide()
+    }
+
+    function set_section__commission_type_other__comm_type_other() {
+        $commission_type_other.show()
+        $commission_type_other__errors.show()
+        $commission_type_other__help.show()
+    }
+
+    function set_section__commission_type_other__need_agent() {
+        if ($commission_type.val() == 'other') {
+            $commission_type_other.show()
+            $commission_type_other__errors.show()
+            $commission_type_other__help.show()
+        }
+    }
+
+    function set_section__commission_type_other__not_need_agent() {
+        $commission_type_other.hide()
+        $commission_type_other__errors.hide()
+        $commission_type_other__help.hide()
+    }
+
+    // commission
+
+    function set_section__commission__comm_type_percentage() {
+        $commission__label.show()
+        $commission__input.show()
+        $commission__errors.show()
+        $commission__help.show()
+    }
+
+    function set_section__commission__comm_type_other() {
+        $commission__label.hide()
+        $commission__input.hide()
+        $commission__errors.hide()
+        $commission__help.hide()
+    }
+
+    function set_section__commission__need_agent() {
+        if ($commission_type.val() != 'other') {
+            $commission__label.show()
+            $commission__input.show()
+            $commission__errors.show()
+            $commission__help.show()
+        }
+    }
+
+    function set_section__commission__not_need_agent() {
+        $commission__label.hide()
+        $commission__input.hide()
+        $commission__errors.hide()
+        $commission__help.hide()
+    }
+
+    // avg_deal_size
+
+    function set_section__avg_deal_size__comm_type_percentage() {
+        $avg_deal_size__label.show()
+        $avg_deal_size__input.show()
+        $avg_deal_size__errors.show()
+        $avg_deal_size__help.show()
+    }
+
+    function set_section__avg_deal_size__comm_type_other() {
+        $avg_deal_size__label.hide()
+        $avg_deal_size__input.hide()
+        $avg_deal_size__errors.hide()
+        $avg_deal_size__help.hide()
+    }
+
+    function set_section__avg_deal_size__need_agent() {
+        if ($commission_type.val() != 'other') {
+            $avg_deal_size__label.show()
+            $avg_deal_size__input.show()
+            $avg_deal_size__errors.show()
+            $avg_deal_size__help.show()
+        }
+    }
+
+    function set_section__avg_deal_size__not_need_agent() {
+        $avg_deal_size__label.hide()
+        $avg_deal_size__input.hide()
+        $avg_deal_size__errors.hide()
+        $avg_deal_size__help.hide()
+    }
+
+    // avg_earnings
+
+    function set_section__avg_earnings__comm_type_percentage() {
+        $avg_earnings__label.show()
+        $avg_earnings__value.show()
+        $avg_earnings__help.show()
+    }
+
+    function set_section__avg_earnings__comm_type_other() {
+        $avg_earnings__label.hide()
+        $avg_earnings__value.hide()
+        $avg_earnings__help.hide()
+    }
+
+    function set_section__avg_earnings__need_agent() {
+        if ($commission_type.val() != 'other') {
+            $avg_earnings__label.show()
+            $avg_earnings__value.show()
+            $avg_earnings__help.show()
+        }
+    }
+
+    function set_section__avg_earnings__not_need_agent() {
+        $avg_earnings__label.hide()
+        $avg_earnings__value.hide()
+        $avg_earnings__help.hide()
+    }
+
+    // is_comm_negotiable
+
+    function set_section__is_comm_negotiable__need_agent() {
+        $is_comm_negotiable__label.show()
+        $is_comm_negotiable__input.show()
+    }
+
+    function set_section__is_comm_negotiable__not_need_agent() {
+        $is_comm_negotiable__label.hide()
+        $is_comm_negotiable__input.hide()
+    }
+
+    // commission_payable_by
+
+    function set_section__commission_payable_by__buying() {
+        $commission_payable_by__help.text("You're a middleman. Will commission be paid by you or the buyer?")
+        $commission_payable_by__option__counter_party.text('Buyer')
+        $commission_payable_by__option__counter_party.val('buyer')
+        $commission_payable_by__option__counter_party.select2() // Refresh
+    }
+
+    function set_section__commission_payable_by__selling() {
+        $commission_payable_by__help.text("You're a middleman. Will commission be paid by you or the seller?")
+        $commission_payable_by__option__counter_party.text('Seller')
+        $commission_payable_by__option__counter_party.val('seller')
+        $commission_payable_by__option__counter_party.select2() // Refresh
+    }
+
+    function set_section__commission_payable_by__direct() {
+        $commission_payable_by__label.hide()
+        $commission_payable_by__input.hide()
+        $commission_payable_by__help.hide()
+        $commission_payable_by__errors.hide()
+    }
+
+    function set_section__commission_payable_by__broker() {
+        $commission_payable_by__label.show()
+        $commission_payable_by__input.show()
+        $commission_payable_by__help.show()
+        $commission_payable_by__errors.show()
+    }
+
+    function set_section__commission_payable_by__not_need_agent() {
+        $commission_payable_by__label.hide()
+        $commission_payable_by__input.hide()
+        $commission_payable_by__help.hide()
+        $commission_payable_by__errors.hide()
+    }
+
+    // commission_payable_after
+
+    function set_section__commission_payable_after__need_agent() {
+        $commission_payable_after__label.show()
+        $commission_payable_after__input.show()
+        $commission_payable_after__errors.show()
+    }
+
+    function set_section__commission_payable_after__not_need_agent() {
+        $commission_payable_after__label.hide()
+        $commission_payable_after__input.hide()
+        $commission_payable_after__errors.hide()
+    }
+
+    // commission_payable_after_other
+
+    function set_section__commission_payable_after_other__comm_pay_aft_other() {
+        $commission_payable_after_other.show()
+        $commission_payable_after_other__errors.show()
+        $commission_payable_after_other__help.show()
+    }
+
+    function set_section__commission_payable_after_other__comm_pay_aft_not_other() {
+        $commission_payable_after_other.hide()
+        $commission_payable_after_other__errors.hide()
+        $commission_payable_after_other__help.hide()
+    }
+
+    function set_section__commission_payable_after_other__not_need_agent() {
+        $commission_payable_after_other.hide()
+        $commission_payable_after_other__errors.hide()
+        $commission_payable_after_other__help.hide()
+    }
+
+    // other_agent_details
+
+    function set_section__other_agent_details__need_agent() {
+        $other_agent_details__label.show()
+        $other_agent_details.show()
+        $other_agent_details__errors.show()
+    }
+
+    function set_section__other_agent_details__not_need_agent() {
+        $other_agent_details__label.hide()
+        $other_agent_details.hide()
+        $other_agent_details__errors.hide()
+    }
+
+    // ***** Functions to set the state of the page *****
+
+    // Buying, selling
+
+    function set_page__buying() {
+        set_section__author_type__is_buying()
+        set_section__buy_country__buying()
+        set_section__sell_country__buying()
+        set_section__details__buying()
+        set_section__need_agent__buying()
+        set_section__commission_payable_by__buying()
+    }
+
+    function set_page__selling() {
+        set_section__sell_country__selling()
+        set_section__buy_country__selling()
+        set_section__details__selling()
+        set_section__author_type__is_selling()
+        set_section__need_agent__selling()
+        set_section__commission_payable_by__selling()
+    }
+
+    function set_page__lead_type() {
+        choice = $lead_type.val()
+        if (choice == 'buying') {
+            set_page__buying()
+        } else if (choice == 'selling') {
+            set_page__selling()
+        }
+    }
+
+    // Need agent
+
+    function set_page__need_agent() {
+        set_section__author_type()
+        set_section__commission_type__need_agent()
+        set_section__commission_type_other__need_agent()
+        set_section__commission__need_agent()
+        set_section__avg_deal_size__need_agent()
+        set_section__avg_earnings__need_agent()
+        set_section__is_comm_negotiable__need_agent()
+        set_section__other_agent_details__need_agent()
+        set_section__commission_payable_after__need_agent()
+        set_page__commission_payable_after()
+    }
+
+    function set_page__not_need_agent() {
+        set_section__commission_type__not_need_agent()
+        set_section__commission_type_other__not_need_agent()
+        set_section__commission__not_need_agent()
+        set_section__avg_deal_size__not_need_agent()
+        set_section__avg_earnings__not_need_agent()
+        set_section__is_comm_negotiable__not_need_agent()
+        set_section__other_agent_details__not_need_agent()
+        set_section__commission_payable_after__not_need_agent()
+        set_section__commission_payable_by__not_need_agent()
+        set_section__commission_payable_after_other__not_need_agent()
+    }
+
+    function set_need_agent() {
+        if ($need_agent.is(':checked')) {
+            set_page__need_agent()
+        } else {
+            set_page__not_need_agent()
+        }
+    }
+
+    // Commission type
+
+    function set_page__comm_type_percentage() {
+        set_section__commission_type_other__comm_type_percentage()
+        set_section__commission__comm_type_percentage()
+        set_section__avg_deal_size__comm_type_percentage()
+        set_section__avg_earnings__comm_type_percentage()
+    }
+
+    function set_page__comm_type_other() {
+        set_section__commission_type_other__comm_type_other()
+        set_section__commission__comm_type_other()
+        set_section__avg_deal_size__comm_type_other()
+        set_section__avg_earnings__comm_type_other()
+    }
+
+    function set_page__commission_type() {
+        choice = $commission_type.val()
+        if (choice == 'percentage') {
+            set_page__comm_type_percentage()
+        } else if (choice == 'other') {
+            set_page__comm_type_other()
+        }
+    }
+
+    // Update average earnings calculation
+
+    function set_avg_earnings() {
+        if ($commission.val() == '') {
+            // We have 2 conditions hiding the error because the textfield
+            // starts blank. We only want to check if commission is between
+            // 0.01 and 100 if it's not blank. Where it passes the test,
+            // we want to hide it.
+            $commission__js_errors.hide()
+        } else if ($commission.val() < 0.01 || $commission.val() > 100) {
+            $avg_earnings__value_1.text('?')
+            $avg_earnings__value_2.text('?')
+            $commission__js_errors.text('Agent commission must be between 0.01% and 100%')
+            $commission__js_errors.show()
+            return   
+        } else {
+            $commission__js_errors.hide()
+        }
+
+        avg_earnings = 0
+        if (!isNaN($avg_deal_size.val())) {
+            avg_earnings = $commission.val() / 100 * $avg_deal_size.val()
+        }
+        avg_earnings = avg_earnings.toFixed(0)
+        $avg_earnings__value_1.text(avg_earnings)
+        $avg_earnings__value_2.text(avg_earnings)
+    }
+
+    // Commission payable after
+
+    function set_page__commission_payable_after() {
+        if ($commission_payable_after.val() == 'other') {
+            set_section__commission_payable_after_other__comm_pay_aft_other()
+        } else {
+            set_section__commission_payable_after_other__comm_pay_aft_not_other()
+        }
+    }
+
+    // Submit button
+
+    function set_submit() {
+        if ($friendly.is(':checked')) {
+            $submit.removeAttr('disabled')
+            $submit.addClass('bg-blue-500 hover:bg-blue-600')
+            $submit.removeClass('bg-blue-200')
+            console.log('enable')
+        } else {
+            $submit.prop('disabled', true)
+            console.log('disable')
+            $submit.removeClass('bg-blue-500 hover:bg-blue-600')
+            $submit.addClass('bg-blue-200')
+        }
+        console.log('hello world')
+    }
+
+    // ***** Run on load *****
+    // Note: order matters
+
+    set_page__lead_type()
+    set_section__author_type()
+    set_avg_earnings()
+    set_page__commission_payable_after()
+    set_page__commission_type()
+    set_need_agent()
+    set_submit()
+
+    // ***** Run on change *****
+
+    $lead_type.change(function() {
+        set_page__lead_type()
+    })
+
+    $author_type.change(function() {
+        set_section__author_type()
+    })
+
+    $need_agent.change(function() {
+        set_section__author_type()
+        set_need_agent()
+    })
+
+    $commission_type.change(function() {
+        set_page__commission_type()
+    })
+
+    $commission.on('input', function() {
+        set_avg_earnings()
+    })
+
+    $avg_deal_size.on('input', function() {
+        set_avg_earnings()
+    })
+
+    $commission_payable_after.change(function() {
+        set_page__commission_payable_after()
+    })
+
+    $friendly.change(function() {
+        set_submit()
+    })
+
+    // ***** Growing text areas *****
+
+    $(".growing").keyup(function(e) {
+        while($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css("borderTopWidth")) + parseFloat($(this).css("borderBottomWidth"))) {
+            $(this).height($(this).height()+1)
+        }
+    })
+    
+    // ***** Setup image preview *****
+
+    function set_image_preview(input_selector, preview_selector) {
+        // Remove text or preview
+        preview = $(preview_selector)
+        preview.text('')
+        preview.find(':first-child').remove()
+
+        files = $(input_selector).prop('files')
+        if (files.length > 0) {
+            // Only 1 file
+            img = '<img src="' + URL.createObjectURL(files[0]) + '">'
+            preview.append(img)
+        } else {
+            preview.text('No image chosen')
+        }
+    }
+
+    function run_image_preview_on_change(input_selector, preview_selector) {
+        $(input_selector).change(function() {
+            set_image_preview(input_selector, preview_selector);
+        })
+    }
+
+    // Run on change
+    run_image_preview_on_change('#image_one', '#image_one_preview')
+    run_image_preview_on_change('#image_two', '#image_two_preview')
+    run_image_preview_on_change('#image_three', '#image_three_preview')
+})
 {% endcomment %}
-{% block unrendered_javascript %}
-<script>
-
-</script>
-{% endblock %}
 {% block other_script %}
-<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>  
-    $(document).ready(function() {
-        $('.select2').select2();
-    
-        $('.select2').one('select2:open', function(e) {
-            $('input.select2-search__field').prop('placeholder', 'Search here...');
-        });
-    
-        update_country_labels = function (choice) {
-            if (choice == 'buying') {
-                $('#buy_label').text('Buy From This Country');
-                $('#sell_label').text('Destination Country');
-                $('#buy_country_any').attr('disabled', false); // I can buy from any country
-                $('#sell_country_any').attr('disabled', true); // My destination cannot be any
-                if ($('#sell_country option:selected').val() == 'any_country') {
-                    // If my destination is any, empty it
-                    $('#sell_country').val(null).trigger('change');
-                }
-                $('#buy_country_help_text_if_selling').hide();
-                $('#sell_country_help_text_if_selling').hide();
-                $('#buy_country_help_text_if_buying').show();
-                $('#sell_country_help_text_if_buying').show();
-                $('#details_if_selling').hide();
-                $('#details_if_buying').show();
-                $('#images_if_selling').hide();
-                $('#images_if_buying').show();
-                $('#author_type_label').text('Are you the direct buyer or a middleman?');
-                $('#author_type_direct_option').html('Direct Buyer');
-            } else if (choice == 'selling') {
-                $('#buy_label').text('Source Country');
-                $('#sell_label').text('Sell To This Country');
-                $('#buy_country_any').attr('disabled', true); // My source cannot be any
-                $('#sell_country_any').attr('disabled', false); // I can sell to any country
-                if ($('#buy_country option:selected').val() == 'any_country') {
-                    // If my source is any, empty it
-                    $('#buy_country').val(null).trigger('change');
-                }
-                $('#buy_country_help_text_if_selling').show();
-                $('#sell_country_help_text_if_selling').show();
-                $('#buy_country_help_text_if_buying').hide();
-                $('#sell_country_help_text_if_buying').hide();
-                $('#details_if_selling').show();
-                $('#details_if_buying').hide();
-                $('#images_if_selling').show();
-                $('#images_if_buying').hide();
-                $('#author_type_label').text('Are you the direct seller or a middleman?');
-                $('#author_type_direct_option').html('Direct Seller');
-            }
-        }
-    
-        update_country_labels($('#i_want_to').val())
-        
-        $('#i_want_to').change(function() {
-            choice = $(this).val();
-            update_country_labels(choice);
-        });
-
-        setup_image_preview = function (input_sel, preview_sel) {
-            $(input_sel).change(function () {
-                // Remove text or preview
-                preview = $(preview_sel)
-                preview.text('');
-                preview.find(':first-child').remove();
-        
-                files = $(this).prop('files')
-                if (files.length > 0) {
-                    // Only 1 file
-                    img = '<img src="' + URL.createObjectURL(files[0]) + '">';
-                    preview.append(img);
-                } else {
-                    preview.text('No image chosen');
-                }
-            })
-        }
-
-        setup_image_preview('#image_one', '#image_one_preview');
-        setup_image_preview('#image_two', '#image_two_preview');
-        setup_image_preview('#image_three', '#image_three_preview');
-    
-        // Growing text areas
-        $(".growing").keyup(function(e) {
-            while($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css("borderTopWidth")) + parseFloat($(this).css("borderBottomWidth"))) {
-                $(this).height($(this).height()+1);
-            };
-        });
-    });
+<script>
+{% include 'includes/js/jquery.js' %}
+{% include 'includes/js/select2.js' %}
+$(document).ready((function(){function _(){author_type_val=$author_type.val(),"direct"==author_type_val?($commission_payable_by__label.hide(),$commission_payable_by__input.hide(),$commission_payable_by__help.hide(),$commission_payable_by__errors.hide()):"broker"==author_type_val&&$need_agent.is(":checked")&&($commission_payable_by__label.show(),$commission_payable_by__input.show(),$commission_payable_by__help.show(),$commission_payable_by__errors.show())}function e(){$author_type__label.text("Are you a direct buyer or a middleman?"),$author_type__option__direct.text("Direct Buyer"),$author_type.select2(),$buy_country__label.text("Buy From This Country"),$buy_country__option__any_country.attr("disabled",!1),$buy_country__help.text("Country you'd like to buy or source from."),$sell_country__label.text("Destination Country"),$sell_country__option__any_country.attr("disabled",!0),"any_country"==$sell_country.find("option:selected").val()&&$sell_country.val(null).trigger("change"),$sell_country__help.text("Country your goods/services are imported into or needed."),$details__help.text("Describe goods/services you'd like to buy"),$need_agent__label.text("Yes, I need agents to help me buy"),$need_agent__help.text("Agents help you buy or source for goods/services."),$commission_payable_by__help.text("You're a middleman. Will commission be paid by you or the buyer?"),$commission_payable_by__option__counter_party.text("Buyer"),$commission_payable_by__option__counter_party.val("buyer"),$commission_payable_by__option__counter_party.select2()}function o(){$sell_country__label.text("Sell In This Country"),$sell_country__option__any_country.attr("disabled",!1),$sell_country__help.text("Country you'd like to sell your goods/services in."),$buy_country__label.text("Source Country"),$buy_country__option__any_country.attr("disabled",!0),"any_country"==$buy_country.find("option:selected").val()&&$buy_country.val(null).trigger("change"),$buy_country__help.text("Country your goods/services are exported from or based in."),$details__help.text("Describe goods/services you'd like to sell"),$author_type__label.text("Are you a direct seller or a middleman?"),$author_type__option__direct.text("Direct Seller"),$author_type.select2(),$need_agent__label.text("Yes, I need agents to help me sell"),$need_agent__help.text("Agents help you sell or promote your goods/services."),$commission_payable_by__help.text("You're a middleman. Will commission be paid by you or the seller?"),$commission_payable_by__option__counter_party.text("Seller"),$commission_payable_by__option__counter_party.val("seller"),$commission_payable_by__option__counter_party.select2()}function i(){choice=$lead_type.val(),"buying"==choice?e():"selling"==choice&&o()}function s(){_(),$commission_type__label.show(),$commission_type__input.show(),$commission_type__errors.show(),"other"==$commission_type.val()&&($commission_type_other.show(),$commission_type_other__errors.show(),$commission_type_other__help.show()),"other"!=$commission_type.val()&&($commission__label.show(),$commission__input.show(),$commission__errors.show(),$commission__help.show()),"other"!=$commission_type.val()&&($avg_deal_size__label.show(),$avg_deal_size__input.show(),$avg_deal_size__errors.show(),$avg_deal_size__help.show()),"other"!=$commission_type.val()&&($avg_earnings__label.show(),$avg_earnings__value.show(),$avg_earnings__help.show()),$is_comm_negotiable__label.show(),$is_comm_negotiable__input.show(),$other_agent_details__label.show(),$other_agent_details.show(),$other_agent_details__errors.show(),$commission_payable_after__label.show(),$commission_payable_after__input.show(),$commission_payable_after__errors.show(),c()}function a(){$commission_type__label.hide(),$commission_type__input.hide(),$commission_type__errors.hide(),$commission_type_other.hide(),$commission_type_other__errors.hide(),$commission_type_other__help.hide(),$commission__label.hide(),$commission__input.hide(),$commission__errors.hide(),$commission__help.hide(),$avg_deal_size__label.hide(),$avg_deal_size__input.hide(),$avg_deal_size__errors.hide(),$avg_deal_size__help.hide(),$avg_earnings__label.hide(),$avg_earnings__value.hide(),$avg_earnings__help.hide(),$is_comm_negotiable__label.hide(),$is_comm_negotiable__input.hide(),$other_agent_details__label.hide(),$other_agent_details.hide(),$other_agent_details__errors.hide(),$commission_payable_after__label.hide(),$commission_payable_after__input.hide(),$commission_payable_after__errors.hide(),$commission_payable_by__label.hide(),$commission_payable_by__input.hide(),$commission_payable_by__help.hide(),$commission_payable_by__errors.hide(),$commission_payable_after_other.hide(),$commission_payable_after_other__errors.hide(),$commission_payable_after_other__help.hide()}function t(){$need_agent.is(":checked")?s():a()}function n(){$commission_type_other.hide(),$commission_type_other__errors.hide(),$commission_type_other__help.hide(),$commission__label.show(),$commission__input.show(),$commission__errors.show(),$commission__help.show(),$avg_deal_size__label.show(),$avg_deal_size__input.show(),$avg_deal_size__errors.show(),$avg_deal_size__help.show(),$avg_earnings__label.show(),$avg_earnings__value.show(),$avg_earnings__help.show()}function l(){$commission_type_other.show(),$commission_type_other__errors.show(),$commission_type_other__help.show(),$commission__label.hide(),$commission__input.hide(),$commission__errors.hide(),$commission__help.hide(),$avg_deal_size__label.hide(),$avg_deal_size__input.hide(),$avg_deal_size__errors.hide(),$avg_deal_size__help.hide(),$avg_earnings__label.hide(),$avg_earnings__value.hide(),$avg_earnings__help.hide()}function r(){choice=$commission_type.val(),"percentage"==choice?n():"other"==choice&&l()}function m(){if(""==$commission.val())$commission__js_errors.hide();else{if($commission.val()<.01||$commission.val()>100)return $avg_earnings__value_1.text("?"),$avg_earnings__value_2.text("?"),$commission__js_errors.text("Agent commission must be between 0.01% and 100%"),void $commission__js_errors.show();$commission__js_errors.hide()}avg_earnings=0,isNaN($avg_deal_size.val())||(avg_earnings=$commission.val()/100*$avg_deal_size.val()),avg_earnings=avg_earnings.toFixed(0),$avg_earnings__value_1.text(avg_earnings),$avg_earnings__value_2.text(avg_earnings)}function c(){"other"==$commission_payable_after.val()?($commission_payable_after_other.show(),$commission_payable_after_other__errors.show(),$commission_payable_after_other__help.show()):($commission_payable_after_other.hide(),$commission_payable_after_other__errors.hide(),$commission_payable_after_other__help.hide())}function h(){$friendly.is(":checked")?($submit.removeAttr("disabled"),$submit.addClass("bg-blue-500 hover:bg-blue-600"),$submit.removeClass("bg-blue-200"),console.log("enable")):($submit.prop("disabled",!0),console.log("disable"),$submit.removeClass("bg-blue-500 hover:bg-blue-600"),$submit.addClass("bg-blue-200")),console.log("hello world")}function y(_,e){$(_).change((function(){!function(_,e){preview=$(e),preview.text(""),preview.find(":first-child").remove(),files=$(_).prop("files"),files.length>0?(img='<img src="'+URL.createObjectURL(files[0])+'">',preview.append(img)):preview.text("No image chosen")}(_,e)}))}$lead_type=$("#lead_type"),$author_type=$("#author_type"),$author_type__label=$("#author_type__label"),$author_type__option__direct=$("#author_type__option__direct"),$buy_country=$("#buy_country"),$buy_country__label=$("#buy_country__label"),$buy_country__option__any_country=$("#buy_country__option__any_country"),$buy_country__help=$("#buy_country__help"),$sell_country=$("#sell_country"),$sell_country__label=$("#sell_country__label"),$sell_country__option__any_country=$("#sell_country__option__any_country"),$sell_country__help=$("#sell_country__help"),$details__help=$("#details__help"),$need_agent=$("#need_agent"),$need_agent__help=$("#need_agent__help"),$need_agent__label=$("#need_agent__label"),$commission_type__label=$("#commission_type__label"),$commission_type__input=$("#commission_type__input"),$commission_type__errors=$("#commission_type__errors"),$commission_type=$("#commission_type"),$commission_type_other=$("#commission_type_other"),$commission_type_other__errors=$("#commission_type_other__errors"),$commission_type_other__help=$("#commission_type_other__help"),$commission_payable_by__label=$("#commission_payable_by__label"),$commission_payable_by__input=$("#commission_payable_by__input"),$commission_payable_by__option__counter_party=$("#commission_payable_by__option__counter_party"),$commission_payable_by__help=$("#commission_payable_by__help"),$commission_payable_by__errors=$("#commission_payable_by__errors"),$commission=$("#commission"),$commission__label=$("#commission__label"),$commission__input=$("#commission__input"),$commission__errors=$("#commission__errors"),$commission__js_errors=$("#commission__js_errors"),$commission__help=$("#commission__help"),$avg_deal_size=$("#avg_deal_size"),$avg_deal_size__label=$("#avg_deal_size__label"),$avg_deal_size__input=$("#avg_deal_size__input"),$avg_deal_size__errors=$("#avg_deal_size__errors"),$avg_deal_size__help=$("#avg_deal_size__help"),$avg_earnings__label=$("#avg_earnings__label"),$avg_earnings__value=$("#avg_earnings__value"),$avg_earnings__value_1=$("#avg_earnings__value_1"),$avg_earnings__value_2=$("#avg_earnings__value_2"),$avg_earnings__help=$("#avg_earnings__help"),$is_comm_negotiable__label=$("#is_comm_negotiable__label"),$is_comm_negotiable__input=$("#is_comm_negotiable__input"),$commission_payable_after=$("#commission_payable_after"),$commission_payable_after__label=$("#commission_payable_after__label"),$commission_payable_after__input=$("#commission_payable_after__input"),$commission_payable_after__errors=$("#commission_payable_after__errors"),$commission_payable_after_other=$("#commission_payable_after_other"),$commission_payable_after_other__errors=$("#commission_payable_after_other__errors"),$commission_payable_after_other__help=$("#commission_payable_after_other__help"),$other_agent_details=$("#other_agent_details"),$other_agent_details__label=$("#other_agent_details__label"),$other_agent_details__errors=$("#other_agent_details__errors"),$friendly=$("#friendly"),$submit=$("#submit"),$select2=$(".select2"),$select2.select2(),$select2.one("select2:open",(function(_){$("input.select2-search__field").prop("placeholder","Search here...")})),i(),_(),m(),c(),r(),t(),h(),$lead_type.change((function(){i()})),$author_type.change((function(){_()})),$need_agent.change((function(){_(),t()})),$commission_type.change((function(){r()})),$commission.on("input",(function(){m()})),$avg_deal_size.on("input",(function(){m()})),$commission_payable_after.change((function(){c()})),$friendly.change((function(){h()})),$(".growing").keyup((function(_){for(;$(this).outerHeight()<this.scrollHeight+parseFloat($(this).css("borderTopWidth"))+parseFloat($(this).css("borderBottomWidth"));)$(this).height($(this).height()+1)})),y("#image_one","#image_one_preview"),y("#image_two","#image_two_preview"),y("#image_three","#image_three_preview")}));
 </script>
 {% endblock %}
