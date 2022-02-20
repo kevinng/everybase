@@ -1,4 +1,6 @@
-import traceback
+import traceback, boto3
+from PIL import Image, ImageOps
+from io import BytesIO
 
 from django.urls import reverse
 from django.shortcuts import render
@@ -8,13 +10,15 @@ from django.db.models.expressions import RawSQL
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import login_required
-from django.contrib.postgres.search import SearchVector, SearchQuery, \
-    SearchRank, SearchVectorField
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
 
+from everybase import settings
 from common import models as commods
 from leads import models, forms
 from relationships import models as relmods
 from relationships.utilities.save_user_agent import save_user_agent
+from files import models as fimods
+from files.utilities.get_mime_type import get_mime_type
 
 def get_countries():
     return commods.Country.objects.annotate(
@@ -90,42 +94,101 @@ def lead_edit(request, pk):
 
 @login_required
 def lead_create(request):
-    countries = commods.Country.objects.annotate(
-        number_of_users=Count('users_w_this_country'))\
-            .order_by('-number_of_users')
+    countries = get_countries()
 
     if request.method == 'POST':
-        form = forms.LeadForm(request.POST)
+        form = forms.LeadForm(request.POST, request.FILES)
         if form.is_valid():
-            buy_country_str = form.cleaned_data.get('buy_country')
-            buy_country = None
-            if buy_country_str != 'any_country':
-                buy_country = commods.Country.objects.get(
-                    programmatic_key=buy_country_str)
 
-            sell_country_str = form.cleaned_data.get('sell_country')
-            sell_country = None
-            if sell_country_str != 'any_country':
-                sell_country = commods.Country.objects.get(
-                    programmatic_key=sell_country_str)
+            # Helper to get cleaned data
+            get = lambda s : form.cleaned_data.get(s)
 
+            # Helper to get country or not (i.e., any country)
+            get_country = lambda c : commods.Country.objects.get(programmatic_key=c) if c != 'any_country' else None
+
+            # Create lead
+            need_agent = get('need_agent')
+            commission_type = get('commission_type')
+            author_type = get('author_type')
             lead = models.Lead.objects.create(
                 author=request.user.user,
-                lead_type=form.cleaned_data.get('lead_type'),
-                buy_country=buy_country,
-                sell_country=sell_country,
-                avg_deal_size=form.cleaned_data.get('avg_deal_size'),
-                commissions=form.cleaned_data.get('commissions'),
-                details=form.cleaned_data.get('details'),
-                other_comm_details=form.cleaned_data.get('other_comm_details')
+                lead_type=get('lead_type'),
+                author_type=author_type,
+                buy_country=get_country(get('buy_country')),
+                sell_country=get_country(get('sell_country')),
+                details=get('details'),
+                need_agent=need_agent,
+                commission_type=commission_type if need_agent else None,
+                commission_type_other=get('commission_type_other') if need_agent and commission_type == 'other' else None,
+                commission=get('commission') if need_agent and commission_type == 'percentage' else None,
+                avg_deal_size=get('avg_deal_size') if need_agent and commission_type == 'percentage' else None,
+                is_comm_negotiable=get('is_comm_negotiable') if need_agent else None,
+                commission_payable_after=get('commission_payable_after') if need_agent else None,
+                commission_payable_after_other=get('commission_payable_after_other') if need_agent else None,
+                commission_payable_by=get('commission_payable_by') if need_agent and author_type == 'broker' else None,
+                other_agent_details=get('other_agent_details') if need_agent else None
             )
 
-            if request.user.is_authenticated:
-                user = request.user.user
-            else:
-                user = None
+            def save_img_if_exists(name):
+                image = request.FILES.get(name)
+                
+                # Proceed if image exists
+                if image is None:
+                    return
 
-            save_user_agent(request, user)
+                mime_type = get_mime_type(image)
+                file = fimods.File.objects.create(
+                    uploader=request.user.user,
+                    mime_type=mime_type,
+                    filename=image.name,
+                    lead=lead,
+                    s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                    thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                )
+
+                key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, file.id)
+                thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, file.id)
+
+                s3 = boto3.session.Session(
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                ).resource('s3')
+
+                # Save image
+                results = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+                    Key=key,
+                    Body=image,
+                    ContentType=mime_type
+                )
+
+                # Update file with S3 put-object results
+                file.s3_object_key = key
+                file.thumbnail_s3_object_key = thumb_key
+                file.s3_object_content_length = results.content_length
+                file.e_tag = results.e_tag
+                file.content_type = results.content_type
+                file.last_modified = results.last_modified
+                file.save()
+
+                # Resize and save thumbnail
+                with Image.open(image) as im:
+                    # Resize preserving aspect ratio cropping from the center
+                    thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
+                    output = BytesIO()
+                    thumbnail.save(output, format = "PNG")
+                    output.seek(0)
+
+                    s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+                        Key=thumb_key,
+                        Body=output,
+                        ContentType=mime_type
+                    )
+
+            save_img_if_exists('image_one')
+            save_img_if_exists('image_two')
+            save_img_if_exists('image_three')
+
+            save_user_agent(request, request.user.user)
 
             return HttpResponseRedirect(
                 reverse('leads:lead_detail', args=(lead.id,)))
@@ -216,9 +279,7 @@ class LeadListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['countries'] = commods.Country.objects.annotate(
-            number_of_users=Count('users_w_this_country'))\
-            .order_by('-number_of_users')
+        context['countries'] = get_countries()
 
         # Render search and country back into the template
         context['search_value'] = self.request.GET.get('search')
@@ -277,9 +338,7 @@ class AgentListView(ListView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['countries'] = commods.Country.objects.annotate(
-            number_of_users=Count('users_w_this_country'))\
-            .order_by('-number_of_users')
+        context['countries'] = get_countries()
 
         # Render search and country back into the template
         context['search_value'] = self.request.GET.get('search')
