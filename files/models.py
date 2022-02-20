@@ -23,7 +23,7 @@ class File(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    file_type = models.CharField(
+    mime_type = models.CharField(
         max_length=200,
         null=True,
         blank=True,
@@ -35,6 +35,8 @@ class File(Standard):
         blank=True,
         db_index=True
     )
+
+    # Set if relevant
     presigned_url_issued = models.DateTimeField(
         null=True,
         blank=True,
@@ -76,7 +78,6 @@ class File(Standard):
         db_index=True
     )
 
-    # Not in use
     s3_object_content_length = models.PositiveIntegerField(
         null=True, 
         blank=True,
