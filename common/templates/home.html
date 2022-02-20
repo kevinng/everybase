@@ -4,22 +4,24 @@
 
 {% block content %}
 <div class="bg-gradient-to-t from-violet-800 to-fuchsia-600 pt-20 pb-20 flex flex-col items-center text-white text-center">
+
     {% comment %} start: header {% endcomment %}
-    <div class="font-bold text-3xl px-10">We connect importers, exporters, agents, worldwide</div>
+    <div class="font-bold text-3xl px-10">Connect buyers, sellers, agents worldwide</div>
     {% comment %} end: header {% endcomment %}
+
     {% comment %} start: importers/exporters, call-to-action {% endcomment %}
-    <div class="mt-16 flex flex-col items-center px-10">
-        <div class="font-bold text-2xl">Importers/Exporters</div>
-        <div class="mt-2 text-slate-300">Find agents to buy or sell for you</div>
+    <div class="mt-10 flex flex-col items-center px-10">
         <a ut-tag-id="hero_agents_link" href="{% url 'users:agent_list' %}" class="mt-4 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-lg font-bold rounded-lg">Find Agents</a>
+        <div class="mt-2 text-slate-300">Agents help you buy, sell, export, arrange logistics, etc - for commissions</div>
     </div>
     {% comment %} end: importers/exporters, call-to-action {% endcomment %}
+
     {% comment %} start: agents, call-to-action {% endcomment %}
     <div class="mt-8 flex flex-col items-center px-10">
-        <div class="font-bold text-2xl">Buyers, Sellers, Agents</div>
-        <div class="mt-2 text-slate-300">Buy, sell, or help buy/sell for commissions</div>
         <a ut-tag-id="hero_leads_link" href="{% url 'leads:lead_list' %}" class="mt-4 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-lg font-bold rounded-lg">Find Buyers & Sellers</a>
+        <div class="mt-2 text-slate-300">Buy, sell, or be an agent</div>
     </div>
     {% comment %} end: agents, call-to-action {% endcomment %}
+
 </div>
 {% endblock %}
