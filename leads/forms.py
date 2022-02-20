@@ -1,67 +1,105 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from everybase import settings
+
 class LeadForm(forms.Form):
     lead_type = forms.CharField()
-    
     author_type = forms.CharField()
     buy_country = forms.CharField()
     sell_country = forms.CharField()
     details = forms.CharField()
-    need_agent = forms.CharField()
-    commission_payable_by = forms.CharField()
-    commission_type = forms.CharField()
-    # Conditionally require in clean()
+    image_one = forms.ImageField(required=False)
+    image_two = forms.ImageField(required=False)
+    image_three = forms.ImageField(required=False)
+    need_agent = forms.BooleanField(required=False) # Unchecked is None
+
+    # Not required whether we need agents or not
+    other_agent_details = forms.CharField(required=False)
+
+    ## Following fields are only required if need_agent is True. All of them
+    ## are required=False by default.
+
+    commission_type = forms.CharField(required=False)
+
+    # This field is required if commission_type is 'other'
     commission_type_other = forms.CharField(required=False)
-    commissions = forms.FloatField(required=False)
-    avg_deal_size = forms.FloatField(required=False)
-    commission_payable_after = forms.CharField()
-    # Conditionally require in clean()
-    commission_payable_after_others = forms.CharField(required=False)
-    # Conditionally require in clean()
-    other_comm_details = forms.CharField(required=False)
+
+    # These fields are required if commission_type is 'percentage'
+    commission = forms.FloatField(
+        required=False,
+        min_value=0.01,
+        max_value=100
+    )
+    avg_deal_size = forms.FloatField(
+        required=False,
+        min_value=1
+    )
+
+    # This field is required if commission_payable_after is 'other'
+    commission_payable_after_other = forms.CharField(required=False)
+
+    # Required if author_type is 'broker'
+    commission_payable_by = forms.CharField(required=False)
+
+    is_comm_negotiable = forms.BooleanField(required=False) # Unchecked is None
+    commission_payable_after = forms.CharField(required=False)
 
     def clean(self):
         super(LeadForm, self).clean()
 
         has_error = False
+        msg = 'This field is required.'
 
-        # Require commission and avg_deal_size if commission_type is
-        # 'percentage', require commission_type_other if commission_type is
-        # 'other'.
-        commission_type = self.cleaned_data.get('commission_type')
-        if commission_type == 'percentage':
-            commissions = self.cleaned_data.get('commissions')
-            if commissions is None or \
-                len(commissions.strip()) == 0:
-                self.add_error('commissions', 'This field is required.')
+        # Helper function to get cleaned data
+        get = lambda s : self.cleaned_data.get(s)
+
+        # Helper function to test for empty string
+        is_empty_string = lambda s : s is None or len(s.strip()) == 0
+
+        if get('need_agent'):
+            ct = get('commission_type')
+            if ct == 'other':
+                if is_empty_string(get('commission_type_other')):
+                    self.add_error('commission_type_other', msg)
+                    has_error = True
+            elif ct == 'percentage':
+                if get('commission') is None:
+                    self.add_error('commission', msg)
+                    has_error = True
+
+                if get('avg_deal_size') is None:
+                    self.add_error('avg_deal_size', msg)
+                    has_error = True
+
+            if get('commission_payable_after') == 'other':
+                if is_empty_string(get('commission_payable_after_other')):
+                    self.add_error('commission_payable_after_other', msg)
+                    has_error = True
+
+            if get('author_type') == 'broker':
+                if is_empty_string(get('commission_payable_by')):
+                    self.add_error('commission_payable_by', msg)
+                    has_error = True
+
+            if is_empty_string(get('commission_payable_after')):
+                self.add_error('commission_payable_after', msg)
                 has_error = True
 
-            avg_deal_size = self.cleaned_data.get('avg_deal_size')
-            if avg_deal_size is None or \
-                len(avg_deal_size.strip()) == 0:
-                self.add_error('avg_deal_size', 'This field is required.')
-                has_error = True
+        image_one = get('image_one')
+        if image_one is not None and image_one.size > settings.MAX_UPLOAD_SIZE:
+            self.add_error('image_one', 'Please upload a smaller file')
+            has_error = True
 
-        elif commission_type == 'other':
-            commission_type_other = self.cleaned_data.get(
-                'commission_type_other')
-            if commission_type_other is None or \
-                len(commission_type_other.strip()) == 0:
-                self.add_error('commission_type_other',
-                    'This field is required.')
-                has_error = True
+        image_two = get('image_two')
+        if image_two is not None and image_two.size > settings.MAX_UPLOAD_SIZE:
+            self.add_error('image_two', 'Please upload a smaller file')
+            has_error = True
 
-        # Require commission_payable_after_others if commission_payable_after
-        # is 'other'.
-        if self.cleaned_data.get('commission_payable_after') == 'others':
-            commission_payable_after_others = self.cleaned_data.get(
-                'commission_payable_after_others')
-            if commission_payable_after_others is None or \
-                len(commission_payable_after_others.strip()) == 0:
-                self.add_error('commission_payable_after_others',
-                    'This field is required.')
-                has_error = True
+        image_three = get('image_three')
+        if image_three is not None and image_three.size > settings.MAX_UPLOAD_SIZE:
+            self.add_error('image_three', 'Please upload a smaller file')
+            has_error = True
 
         if has_error:
             raise ValidationError(None)
