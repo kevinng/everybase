@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Login to Everybase{% endblock %}
+{% block title %}Everybase Login{% endblock %}
 
 {% block content %}
 <div class="flex justify-center">
@@ -46,8 +46,8 @@ $(document).ready(function () {
 });
 {% endcomment %}
 {% block other_script %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>{% comment %} Do not use the slim version, which does not have the .get function. {% endcomment %}
 <script>
+{% include 'includes/js/jquery.js' %}
 $(document).ready((function(){setInterval((function(){$.get("{% url 'is_logged_in' user_uuid %}",(function(n){console.log(n.l),1==n.l&&window.location.replace("{{ next }}")}))}),3e3)}));
 </script>
 {% endblock %}
