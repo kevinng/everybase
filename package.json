@@ -3,6 +3,6 @@
     "tailwindcss": "^3.0.15"
   },
   "scripts": {
-    "build:css": "npx tailwindcss -i ./common/build/css/input.css -o ./common/static/common/css/output.css --watch"
+    "build:css": "npx tailwindcss -i ./common/build/css/input.css -o ./common/templates/includes/css/output.css --watch"
   }
 }
