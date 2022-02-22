@@ -1,27 +1,70 @@
 {% extends 'extendables/b.html' %}
 
+{% load static %}
+
 {% block title %}Everybase - we connect importers, exporters, agents, worldwide{% endblock %}
 
 {% block content %}
-<div class="bg-gradient-to-t from-violet-800 to-fuchsia-600 pt-20 pb-20 flex flex-col items-center text-white text-center">
+<div class="bg-gradient-to-t from-violet-800 to-fuchsia-600 pt-20 pb-20 px-10 flex flex-col items-center text-center">
 
     {% comment %} start: header {% endcomment %}
-    <div class="font-bold text-3xl px-10">Connect buyers, sellers, agents worldwide</div>
+    <div class="font-bold text-3xl text-white ">Connect buyers, sellers, agents worldwide</div>
     {% comment %} end: header {% endcomment %}
 
     {% comment %} start: importers/exporters, call-to-action {% endcomment %}
-    <div class="mt-10 flex flex-col items-center px-10">
-        <a ut-tag-id="hero_agents_link" href="{% url 'users:agent_list' %}" class="mt-4 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-lg font-bold rounded-lg">Find Agents</a>
-        <div class="mt-2 text-slate-300">Agents can help you with buying, selling, exporting, logistics for commissions</div>
+    <div class="mt-12 flex flex-col items-center">
+        <div class="font-bold text-white text-2xl">Importers, Exporters</div>
+
+        <div class="mt-4 text-white">Find agents to help you:</div>
+
+        <a href="#" class="mt-4 py-2 px-6 text-white bg-amber-700 hover:bg-amber-600 text-md font-bold rounded-md">Buy or Source Goods</a>
+
+        <a href="#" class="mt-4 py-2 px-6 text-white bg-lime-700 hover:bg-lime-600 text-md font-bold rounded-md">Sell or Promote Goods</a>
+
+        <a href="#" class="mt-4 py-2 px-6 text-white bg-sky-700 hover:bg-sky-600 text-md font-bold rounded-md">Handle Logistics</a>
     </div>
     {% comment %} end: importers/exporters, call-to-action {% endcomment %}
 
     {% comment %} start: agents, call-to-action {% endcomment %}
-    <div class="mt-8 flex flex-col items-center px-10">
-        <a ut-tag-id="hero_leads_link" href="{% url 'leads:lead_list' %}" class="mt-4 py-3 px-6 bg-blue-600 hover:bg-blue-700 text-lg font-bold rounded-lg">Find Buyers & Sellers</a>
-        <div class="mt-2 text-slate-300">Buy, sell, or be an agent</div>
+    <div class="mt-12 flex flex-col items-center">
+        <div class="font-bold text-white text-2xl">Buyers, Sellers, Agents</div>
+        <a href="#" class="mt-4 py-2 px-6 text-white bg-fuchsia-700 hover:bg-fuchsia-600 text-md font-bold rounded-md">Find Buyers & Sellers</a>
     </div>
     {% comment %} end: agents, call-to-action {% endcomment %}
+</div>
+<div class="pt-20 pb-20 px-10 bg-sky-50 flex flex-col items-center">
+    <div class="font-bold text-3xl text-center">Be found by buyers, sellers, agents - no limits*, no charge</div>
 
+    <div class="mt-12 flex justify-center gap-10">
+        {% comment %} start: attention image {% endcomment %}
+        <img src="{% static 'common/img/home/1.svg' %}" class="w-1/3">
+        {% comment %} end: attention image {% endcomment %}
+
+        {% comment %} start: copywriting {% endcomment %}
+        <div class="mt-6">
+            <div><span class="mr-2">😇</span> Sell, buy, recruit agents to help you buy, sell, handle logistics.</div>
+            <div class="mt-4"><span class="mr-2">😇</span> Post leads, no limits*, no charge.</div>
+            <div class="mt-4"><span class="mr-2">😇</span> Be contacted by other users, no limits, no charge.</div>
+            <div class="mt-6 font-bold">*Phone numbers of spammers will be banned!</div>
+        </div>
+        {% comment %} end: copywriting {% endcomment %}
+    </div>
+</div>
+<div class="pt-20 pb-20 px-10 bg-teal-50 flex flex-col items-center">
+    <div class="font-bold text-3xl text-center">Better than crawling social networks and chatgroups for leads</div>
+
+    <div class="mt-12 flex justify-center gap-10">
+        {% comment %} start: copywriting {% endcomment %}
+        <div class="mt-6">
+            <div><span class="mr-2">😇</span> We forward you to WhatsApp directly. No emails to send or phonecalls to make.</div>
+            <div class="mt-4"><span class="mr-2">😇</span> Advanced search and filtering capabilities - find what you need, quickly.</div>
+            <div class="mt-4"><span class="mr-2">😇</span> Save persons and leads for considerations.</div>
+        </div>
+        {% comment %} end: copywriting {% endcomment %}
+
+        {% comment %} start: attention image {% endcomment %}
+        <img src="{% static 'common/img/home/2.svg' %}" class="w-1/3">
+        {% comment %} end: attention image {% endcomment %}
+    </div>
 </div>
 {% endblock %}
