@@ -41,7 +41,7 @@ django-ipware = "*"
 django-loginas = "*"
 sorl-thumbnail = "*"
 pillow = "*"
-python-magic-bin = "*"
+python-magic = "*"
 
 [requires]
 python_version = "3.7"
