@@ -35,7 +35,7 @@
             <a ut-tag-id="nav_bar_desktop_agents_link" {% if request.resolver_match.view_name != 'users:agent_list' %}href="{% url 'users:agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:agent_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base">Agents</a>
             <a ut-tag-id="nav_bar_desktop_leads_link" {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7">Buyers & Sellers</a>
             <a href="#" class="hover:text-blue-600 text-base ml-7">Connections</a>
-            <a href="#" class="hover:text-blue-600 text-base ml-7">Pricing</a>
+            <a {% if request.resolver_match.view_name != 'pricing' %}href="{% url 'pricing' %}" {% endif %}class="hover:text-blue-600 text-base ml-7">Pricing</a>
         </div>
         {% comment %} end: desktop menu {% endcomment %}
 

@@ -24,6 +24,7 @@ def trigger_handled_error(request):
 urlpatterns = [
     # Common
     path('', comviews.home, name='home'),
+    path('pricing', comviews.pricing, name='pricing'),
 
     # Leads
     path('leads/', include('leads.urls')),

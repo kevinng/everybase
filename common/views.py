@@ -61,3 +61,6 @@ def m(request, file_to_render):
 
 def home(request):
     return TemplateResponse(request, 'home.html', {})
+
+def pricing(request):
+    return TemplateResponse(request, 'pricing.html', {})
