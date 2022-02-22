@@ -7,6 +7,7 @@
     <title>{% block title %}{% endblock %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% comment %} Include SEO keywords {% endcomment %}
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'common/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'common/favicon/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'common/favicon/favicon-16x16.png' %}">
@@ -31,11 +32,10 @@
 
         {% comment %} start: desktop menu {% endcomment %}
         <div class="justify-between hidden lg:block text-sm">
-            <a ut-tag-id="nav_bar_desktop_agents_link" {% if request.resolver_match.view_name != 'users:agent_list' %}href="{% url 'users:agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:agent_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base underline underline-offset-4">Agents</a>
-            <a ut-tag-id="nav_bar_desktop_leads_link" {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base underline underline-offset-4 ml-7">Buyers, Sellers</a>
-            <a href="#" class="hover:text-blue-600 text-base underline underline-offset-4 ml-7">Bookmarks</a>
-            <a href="#" class="hover:text-blue-600 text-base underline underline-offset-4 ml-7">Contacts</a>
-            <a href="#" class="hover:text-blue-600 text-base underline underline-offset-4 ml-7">Pricing</a>
+            <a ut-tag-id="nav_bar_desktop_agents_link" {% if request.resolver_match.view_name != 'users:agent_list' %}href="{% url 'users:agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:agent_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base">Agents</a>
+            <a ut-tag-id="nav_bar_desktop_leads_link" {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7">Buyers & Sellers</a>
+            <a href="#" class="hover:text-blue-600 text-base ml-7">Connections</a>
+            <a href="#" class="hover:text-blue-600 text-base ml-7">Pricing</a>
         </div>
         {% comment %} end: desktop menu {% endcomment %}
 
@@ -67,9 +67,8 @@
     {% comment %} start: mobile menu {% endcomment %}
     <nav class="mobile-nav text-base">
         <a ut-tag-id="nav_bar_mobile_agents_link" {% if request.resolver_match.view_name != 'users:agent_list' %}href="{% url 'users:agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:agent_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Agents</a>
-        <a ut-tag-id="nav_bar_mobile_leads_link" {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Buyers, Sellers</a>
-        <a href="#" class="hover:text-blue-700 block px-4 py-4">Bookmarks</a>
-        <a href="#" class="hover:text-blue-700 block px-4 py-4">Contacts</a>
+        <a ut-tag-id="nav_bar_mobile_leads_link" {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Buyers & Sellers</a>
+        <a href="#" class="hover:text-blue-700 block px-4 py-4">Connections</a>
         <a href="#" class="hover:text-blue-700 block px-4 py-4">Pricing</a>
         <div class="h-10"></div>
         {% if request.user.is_authenticated %}
