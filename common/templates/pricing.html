@@ -5,7 +5,178 @@
 {% block title %}Everybase Pricing{% endblock %}
 
 {% block content %}
-<div class="pt-20 pb-20 px-10 flex flex-col items-center text-center">
-    <div class="font-bold text-3xl">1 credit = 1 new business contact</div>
+<div class="pt-20 pb-20 px-10 bg-sky-50 flex flex-col items-center text-center">
+    <div class="font-bold text-3xl">1 credit = 1 <span class="underline underline-offset-2">new</span>* connection</div>
+    <div class="mt-6">Credits sold in bundles. Contact us for volume pricing.</div>
+    <div class="flex justify-center lg:flex-row flex-col lg:items-stretch items-center mt-8 gap-2 w-full">
+        <div class="flex flex-col justify-between bg-white px-4 py-6 xl:w-1/6 lg:w-1/5 w-4/5">
+            <div>
+                <div class="font-extrabold">USD 9</div>
+                <div class="mt-3 font-bold">30 credits</div>
+                <div>USD 0.30 / credit</div>
+            </div>
+            <a class="mt-8 bg-blue-500 hover:bg-blue-600 rounded-md px-3 py-2 text-white font-bold" href="#">Buy</a>
+        </div>
+        <div class="flex flex-col justify-between bg-white px-4 py-6 xl:w-1/6 lg:w-1/5 w-4/5">
+            <div>
+                <div class="font-extrabold">USD 50</div>
+                <div class="mt-3 font-bold">200 credits</div>
+                <div>USD 0.25 / credit</div>
+                <div class="font-bold text-green-500">16.6% Cheaper</div>
+                <div class="font-bold text-green-500">Save USD 10</div>
+            </div>
+            <a class="mt-8 bg-blue-500 hover:bg-blue-600 rounded-md px-3 py-2 text-white font-bold" href="#">Buy</a>
+        </div>
+        <div class="flex flex-col justify-between bg-white px-4 py-6 xl:w-1/6 lg:w-1/5 w-4/5">
+            <div>
+                <div class="font-extrabold">USD 100</div>
+                <div class="mt-3 font-bold">500 credits</div>
+                <div>USD 0.20 / credit</div>
+                <div class="font-bold text-green-500">33.3% Cheaper</div>
+                <div class="font-bold text-green-500">Save USD 50</div>
+            </div>
+            <a class="mt-8 bg-blue-500 hover:bg-blue-600 rounded-md px-3 py-2 text-white font-bold" href="#">Buy</a>
+        </div>
+        <div class="bg-white px-4 py-6 xl:w-1/6 lg:w-1/5 w-4/5">
+            <div class="font-extrabold">Spending More Than USD 1000?</div>
+            <div class="mt-3"><a class="hover:text-blue-600 text-blue-500" href="mailto:friend@everybase.co">Email us</a> your needs and we’ll get back to you.</div>
+        </div>
+    </div>
+
+    <div class="mt-12 px-20 font-bold"><span class="mr-2">😇</span> Credits never expire</div>
+
+    <div class="mt-6 px-20"><span class="mr-2">😇</span> <span class="font-bold">*Pay only for <span class="underline underline-offset-2">new</span> connections</span> - <span class="italic">you won’t be charged for contacting a connected user</span></div>
 </div>
+
+<div class="pt-20 pb-20 px-10 bg-teal-50 flex flex-col items-center text-center">
+    <div class="font-bold text-3xl">How It Works</div>
+
+    <img class="mt-8" src="{% static 'common/img/pricing/1.png' %}">
+
+    <div class="mt-4">A credit is deducted when we forward you to a user on WhatsApp.</div>
+
+    <div class="mt-4 font-bold">You <span class="underline underline-offset-2">won’t</span> be charged for connecting to the <span class="underline underline-offset-2">same</span> user twice.</div>
+</div>
+
+<div class="pt-20 pb-20 px-10 bg-sky-50 flex flex-col items-center text-center">
+
+    <img src="{% static 'common/img/pricing/2.svg' %}">
+
+    <div class="mt-4 font-bold text-3xl">FAQ</div>
+
+    <div class="flex flex-col items-center w-full">
+
+        <div faq-answer="faq1__answer" class="faq-question mt-10 font-bold text-xl bg-sky-100 hover:bg-sky-200 cursor-pointer px-6 py-3 w-2/3 flex justify-between text-left">How do credits work? <span id="faq__symbol">+<span></div>
+
+        <div id="faq1__answer" class="faq-answer mt-8 mb-8 w-2/3 flex flex-col px-6 text-left">
+            <div>Credits lets you connect with <span class="underline underline-offset-2">new</span> business contacts over WhatsApp.
+            One credit lets you connect with one user you haven’t connected with before.</div>
+            
+            <div class="mt-6">See credits as the number of <span class="underline underline-offset-2">new</span> business contacts you can make on Everybase.</div>
+
+            <div class="mt-6 font-bold">You won't be charged for connecting the same user twice.</div>
+
+            <div class="mt-6">When you click on a user’s WhatsApp button, and you haven't connected with the user before, you’ll be asked to confirm if
+            you’d like to connect with the user.</div>
+            
+            <div class="mt-6">If you'd like to connect, a credit will be deducted, and you’ll be directed to the user on WhatsApp.</div>
+
+            <div class="mt-6 font-bold">If you’re already connected with a user, you’ll be directed to the user on WhatsApp without charge.</div>
+        </div>
+
+        <div faq-answer="faq2__answer" class="faq-question mt-2 font-bold text-xl bg-sky-100 hover:bg-sky-200 cursor-pointer px-6 py-3 w-2/3 flex justify-between text-left">How can I be sure that a user is relevant, before I decide to spend a credit to connect with the user? <span id="faq__symbol">+<span></div>
+
+        <div id="faq2__answer" class="faq-answer mt-8 mb-8 w-2/3 flex flex-col px-6 text-left">
+
+            <div>You may comment or reply on user profiles and leads.</div>
+            
+            <div class="mt-6">Commenting and replying does not cost you credits.</div>
+
+            <div class="mt-6">However, you’re <span class="underline underline-offset-2">not</span> allowed to share contact details in your comments and replies.</div>
+
+            <div class="mt-6">Our software actively filters contact details in user interactions, and <span class="font-bold">we’ll banned phone numbers that violate our terms and conditions</span>.</div>
+        </div>
+
+        <div faq-answer="faq3__answer" class="faq-question mt-2 font-bold text-xl bg-sky-100 hover:bg-sky-200 cursor-pointer px-6 py-3 w-2/3 flex justify-between text-left">Do credits expire? <span id="faq__symbol">+<span></div>
+
+        <div id="faq3__answer" class="faq-answer mt-8 mb-8 w-2/3 flex flex-col px-6 text-left">
+            <div>No, credits never expire.</div>
+        </div>
+
+        <div faq-answer="faq4__answer" class="faq-question mt-2 font-bold text-xl bg-sky-100 hover:bg-sky-200 cursor-pointer px-6 py-3 w-2/3 flex justify-between text-left">Can I transfer my credits to another phone number? <span id="faq__symbol">+<span></div>
+
+        <div id="faq4__answer" class="faq-answer mt-8 mb-8 w-2/3 flex flex-col px-6 text-left">
+            <div>Yes, you have to prove ownership of both phone numbers.</div>
+            
+            <div class="mt-6">Do make sure you still have control over the phone number you’re transferring the credits from and contact us to help you make the transfer.</div>
+        </div>
+
+        <div faq-answer="faq5__answer" class="faq-question mt-2 font-bold text-xl bg-sky-100 hover:bg-sky-200 cursor-pointer px-6 py-3 w-2/3 flex justify-between text-left">Where do I find users I’ve already connected with? <span id="faq__symbol">+<span></div>
+
+        <div id="faq5__answer" class="faq-question faq-answer mt-8 mb-8 w-2/3 flex flex-col px-6 text-left">
+            <div>You may find them in the <a class="hover:text-blue-600 text-blue-500" href="#">Persons</a> section.</div>
+        </div>
+
+        <div faq-answer="faq6__answer" class="faq-question mt-2 font-bold text-xl bg-sky-100 hover:bg-sky-200 cursor-pointer px-6 py-3 w-2/3 flex justify-between text-left">Do you provide other forms of contact method besides the user’s WhatsApp (e.g., email)? <span id="faq__symbol">+<span></div>
+        
+        <div id="faq6__answer" class="faq-question faq-answer mt-8 mb-8 w-2/3 flex flex-col px-6 text-left">
+            <div>WhatsApp is our primary contact method. We verify each user’s WhatsApp number via our chatbot on registration to be sure it works.</div>
+
+            <div class="mt-6">You may ask a connected user directly for other forms of contact (e.g., email) over WhatsApp.</div>
+        </div>
+
+        <div faq-answer="faq7__answer" class="faq-question mt-2 font-bold text-xl bg-sky-100 hover:bg-sky-200 cursor-pointer px-6 py-3 w-2/3 flex justify-between text-left">Do you support other chat platforms besides WhatsApp? E.g., Telegram, WeChat. <span id="faq__symbol">+<span></div>
+
+        <div id="faq7__answer" class="faq-answer mt-8 mb-8 w-2/3 flex flex-col px-6 text-left">
+            <div>Not at the moment.</div>
+
+            <div class="mt-6">We may support other chat platforms in the future.</div>
+        </div>
+
+        <div faq-answer="faq8__answer" class="faq-question mt-2 font-bold text-xl bg-sky-100 hover:bg-sky-200 cursor-pointer px-6 py-3 w-2/3 flex justify-between text-left">How do I know if a user is contactable via the WhatsApp contact provided? <span id="faq__symbol">+<span></div>
+
+        <div id="faq8__answer" class="faq-answer mt-8 mb-8 w-2/3 flex flex-col px-6 text-left">
+            <div>We verify the WhatsApp number of each user on registration to be sure it works.</div>
+        </div>
+
+        <div faq-answer="faq9__answer" class="faq-question mt-2 font-bold text-xl bg-sky-100 hover:bg-sky-200 cursor-pointer px-6 py-3 w-2/3 flex justify-between text-left">Won’t users be able to bypass the credit system by sharing contact details in profiles and posts? <span id="faq__symbol">+<span></div>
+
+        <div id="faq9__answer" class="faq-answer mt-8 mb-8 w-2/3 flex flex-col px-6 text-left">
+            <div>No, our software actively filters any contact details in profile, posts, comments and other user interactions.</div>
+
+            <div class="mt-6">By using Everybase, you <span class="underline underline-offset-2">agree</span> not to share contact details in any user interactions.</div>
+
+            <div class="mt-6 font-bold">Phone numbers of users who violate our terms and conditions will be banned.</div>
+
+            <div class="mt-6">Let’s keep to the rules of this platform and help each other grow our businesses 😊</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% comment %}
+Javascript
+https://codebeautify.org/minify-js
+
+$(document).ready(function() {
+    $faq_questions = $('.faq-question')
+    $faq_answers = $('.faq-answer')
+
+    // Hide all answers
+    $faq_answers.hide()
+
+    $faq_questions.click(function () {
+        // Hide all answers
+        $faq_answers.hide()
+
+        // Show answer for this question
+        $('#' + $(this).attr('faq-answer')).show()
+    })
+})
+{% endcomment %}
+{% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready((function(){$faq_questions=$(".faq-question"),$faq_answers=$(".faq-answer"),$faq_answers.hide(),$faq_questions.click((function(){$faq_answers.hide(),$("#"+$(this).attr("faq-answer")).show()}))}));
+</script>
 {% endblock %}

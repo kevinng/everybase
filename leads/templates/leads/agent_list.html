@@ -26,8 +26,8 @@ https://codebeautify.org/css-beautify-minify
 }
 {% endcomment %}
 {% block other_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
-{% include 'includes/css/select2.css' %}
 #mobile-search{position:fixed;top:0;left:100%;width:100%;min-height:100vh;display:block;z-index:98;background-color:#fff;padding-top:100px;transition:0.3s}#mobile-search.is-active{left:0}
 </style>
 {% endblock %}
@@ -166,9 +166,9 @@ $(document).ready(function() {
 });
 {% endcomment %}
 {% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-{% include 'includes/js/jquery.js' %}
-{% include 'includes/js/select2.js' %}
 $(document).ready((function(){$(".select2").select2(),$(".select2").one("select2:open",(function(e){$("input.select2-search__field").prop("placeholder","Search here...")})),$("#search").click((function(){t=$(this),"Search"==t.html()?t.html("Close"):t.html("Search"),t.toggleClass("bg-blue-500"),t.toggleClass("text-white"),t.toggleClass("hover:bg-blue-600"),t.toggleClass("bg-slate-100"),t.toggleClass("text-slate-600"),t.toggleClass("hover:bg-slate-200"),$("#mobile-search").toggleClass("is-active")}))}));
 </script>
 {% endblock %}

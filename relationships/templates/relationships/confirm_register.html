@@ -44,8 +44,8 @@ $(document).ready(function () {
 });
 {% endcomment %}
 {% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-{% include 'includes/js/jquery.js' %}
 $(document).ready((function(){var e=1e3,n=setInterval((function(){$.get("{% url 'is_registered' user_uuid %}",(function(e){1==e.r&&window.location.replace("{{ next }}")})),--e<0&&clearInterval(n)}),3e3)}));
 </script>
 {% endblock %}
