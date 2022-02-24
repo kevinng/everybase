@@ -1,14 +1,12 @@
+from operator import mod
 import uuid
 from django.db import models
-
 from common.models import Standard
-from files import models as fimods
-from sorl.thumbnail import ImageField
 
 class Lead(Standard):
     """Lead.
 
-    Last updated: 18 February 2022, 1:56 AM
+    Last updated: 24 February 2022, 5:06 AM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -123,6 +121,15 @@ class Lead(Standard):
         null=True,
         blank=True
     )
+    need_logistics_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    other_logistics_agent_details = models.TextField(
+        null=True,
+        blank=True
+    )
 
     internal_notes = models.TextField(
         null=True,
@@ -136,6 +143,23 @@ class Lead(Standard):
     onboarded = models.DateTimeField(
         null=True,
         blank=True,
+        db_index=True
+    )
+
+    saved_count = models.IntegerField(
+        default=0,
+        db_index=True
+    )
+    search_appearance_count = models.IntegerField(
+        default=0,
+        db_index=True
+    )
+    search_to_lead_details_count = models.IntegerField(
+        default=0,
+        db_index=True
+    )
+    search_to_user_details_count = models.IntegerField(
+        default=0,
         db_index=True
     )
 

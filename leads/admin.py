@@ -3,19 +3,33 @@ from common import admin as comadm
 from leads import models
 from sorl.thumbnail.admin import AdminImageMixin
 
-_lead_fields = ['author', 'buy_country', 'sell_country', 'lead_type', 'details',
-    'commission', 'avg_deal_size', 'other_agent_details', 'internal_notes',
-    'onboarding', 'onboarded', 'title', 'author_type', 'country',
-    'commission_payable_by', 'commission_payable_after']
+_lead_fields = ['author', 'author_type', 'buy_country', 'sell_country',
+    'lead_type', 'details', 'need_agent', 'commission_payable_by',
+    'commission', 'commission_type', 'commission_type_other',
+    'is_comm_negotiable', 'avg_deal_size', 'commission_payable_after',
+    'commission_payable_after_other', 'other_agent_details',
+    'need_logistics_agent', 'other_logistics_agent_details',
+    
+    'internal_notes', 'onboarding', 'onboarded',
+
+    'saved_count', 'search_appearance_count', 'search_to_lead_details_count',
+    'search_to_user_details_count',
+    
+    # Keep for future
+    'title', 'country'
+]
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['uuid'] + _lead_fields
     list_editable = comadm.standard_list_editable + _lead_fields
     list_filter = comadm.standard_list_filter + ['buy_country', 'sell_country',
-        'lead_type', 'onboarding', 'onboarded']
+        'lead_type', 'need_agent', 'commission_payable_by', 'commission_type',
+        'is_comm_negotiable', 'commission_payable_after',
+        'need_logistics_agent', 'onboarding', 'onboarded']
     search_fields = comadm.standard_search_fields + ['details',
-        'internal_notes', 'other_comm_details']
+        'other_agent_details', 'other_logistics_agent_details',
+        'internal_notes']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['uuid']
