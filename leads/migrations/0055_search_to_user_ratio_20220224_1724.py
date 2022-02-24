@@ -18,9 +18,7 @@ class Migration(migrations.Migration):
             ''',
 
             reverse_sql = '''
-                ALTER TABLE leads_lead DROP COLUMN search_to_user_ratio;
-                
-                DROP INDEX leads_search_to_user_ratio_idx;
+                ALTER TABLE leads_lead DROP COLUMN search_to_user_ratio CASCADE;
             '''
         )
     ]

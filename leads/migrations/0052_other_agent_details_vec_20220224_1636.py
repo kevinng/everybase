@@ -19,9 +19,7 @@ class Migration(migrations.Migration):
             ''',
 
             reverse_sql = '''
-                ALTER TABLE leads_lead DROP COLUMN other_agent_details_vec;
-                
-                DROP INDEX leads_other_agent_details_vec_idx;
+                ALTER TABLE leads_lead DROP COLUMN other_agent_details_vec CASCADE;
             '''
         )
     ]

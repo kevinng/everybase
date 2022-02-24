@@ -19,9 +19,7 @@ class Migration(migrations.Migration):
             ''',
 
             reverse_sql = '''
-                ALTER TABLE leads_lead DROP COLUMN commission_type_other_vec;
-                
-                DROP INDEX leads_commission_type_other_vec_idx;
+                ALTER TABLE leads_lead DROP COLUMN commission_type_other_vec CASCADE;
             '''
         )
     ]
