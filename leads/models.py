@@ -16,8 +16,8 @@ class Lead(Standard):
     )
     author = models.ForeignKey(
         'relationships.User',
-        related_name='leads_authored_by_this_user',
-        related_query_name='leads_authored_by_this_user',
+        related_name='leads_author',
+        related_query_name='leads_author',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -41,8 +41,8 @@ class Lead(Standard):
     buy_country = models.ForeignKey(
         'common.Country',
         on_delete=models.PROTECT,
-        related_name='lead_with_this_buy_country',
-        related_query_name='lead_with_this_buy_country',
+        related_name='leads_buy_country',
+        related_query_name='leads_buy_country',
         null=True,
         blank=True,
         db_index=True
@@ -50,8 +50,8 @@ class Lead(Standard):
     sell_country = models.ForeignKey(
         'common.Country',
         on_delete=models.PROTECT,
-        related_name='lead_with_this_sell_country',
-        related_query_name='lead_with_this_sell_country',
+        related_name='leads_sell_country',
+        related_query_name='leads_sell_country',
         null=True,
         blank=True,
         db_index=True
@@ -174,8 +174,8 @@ class Lead(Standard):
     country = models.ForeignKey(
         'common.Country',
         on_delete=models.PROTECT,
-        related_name='lead_with_this_country',
-        related_query_name='lead_with_this_country',
+        related_name='leads_country',
+        related_query_name='leads_country',
         null=True,
         blank=True,
         db_index=True
@@ -218,15 +218,15 @@ class WhatsAppClick(Standard):
     """
     contactee = models.ForeignKey(
         'relationships.User',
-        related_name='whatsapp_clicks_with_this_user_as_contactee',
-        related_query_name='whatsapp_clicks_with_this_user_as_contactee',
+        related_name='whatsapp_clicks_contactee',
+        related_query_name='whatsapp_clicks_contactee',
         on_delete=models.PROTECT,
         db_index=True
     )
     contactor = models.ForeignKey(
         'relationships.User',
-        related_name='whatsapp_clicks_with_this_user_as_contactor',
-        related_query_name='whatsapp_clicks_with_this_user_as_contactor',
+        related_name='whatsapp_clicks_contactor',
+        related_query_name='whatsapp_clicks_contactor',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -239,15 +239,15 @@ class WhatsAppMessageBody(Standard):
     """
     contactee = models.ForeignKey(
         'relationships.User',
-        related_name='whatsapp_message_bodies_with_this_contactee',
-        related_query_name='whatsapp_message_bodies_with_this_contactee',
+        related_name='whatsapp_message_bodies_contactee',
+        related_query_name='whatsapp_message_bodies_contactee',
         on_delete=models.PROTECT,
         db_index=True
     )
     contactor = models.ForeignKey(
         'relationships.User',
-        related_name='whatsapp_message_bodies_with_this_contactor',
-        related_query_name='whatsapp_message_bodies_with_this_contactor',
+        related_name='whatsapp_message_bodies_contactor',
+        related_query_name='whatsapp_message_bodies_contactor',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -291,12 +291,12 @@ class AgentQuery(Standard):
 class LeadQuery(Standard):
     """Lead query
 
-    Last updated: 11 February 2022, 9:56 PM
+    Last updated: 24 February 2022, 6:00 PM
     """
     user = models.ForeignKey(
         'relationships.User',
-        related_name='i_need_agent_query',
-        related_query_name='i_need_agent_query',
+        related_name='lead_query',
+        related_query_name='lead_query',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -331,8 +331,8 @@ class LeadQuery(Standard):
     )
     buy_country = models.ForeignKey(
         'common.Country',
-        related_name='i_need_agent_queries_with_this_buy_country',
-        related_query_name='i_need_agent_queries_with_this_buy_country',
+        related_name='lead_queries_buy_country',
+        related_query_name='lead_queries_buy_country',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
@@ -340,8 +340,8 @@ class LeadQuery(Standard):
     )
     sell_country = models.ForeignKey(
         'common.Country',
-        related_name='i_need_agent_queries_with_this_sell_country',
-        related_query_name='i_need_agent_queries_with_this_sell_country',
+        related_name='lead_queries_sell_country',
+        related_query_name='lead_queries_sell_country',
         null=True,
         blank=True,
         on_delete=models.PROTECT,
@@ -477,15 +477,15 @@ class SavedLead(Standard):
 
     saver = models.ForeignKey(
         'relationships.User',
-        related_name='user_with_this_saved_leads',
-        related_query_name='user_with_this_saved_leads',
+        related_name='saved_leads_saver',
+        related_query_name='saved_leads_saver',
         on_delete=models.PROTECT,
         db_index=True        
     )
     lead = models.ForeignKey(
         'Lead',
-        related_name='lead_with_this_saved_leads',
-        related_query_name='lead_with_this_saved_leads',
+        related_name='saved_leads_lead',
+        related_query_name='saved_leads_lead',
         on_delete=models.PROTECT,
         db_index=True  
     )
