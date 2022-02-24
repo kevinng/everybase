@@ -215,11 +215,6 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    is_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
     internal_notes = models.TextField(
         null=True,
         blank=True
@@ -244,15 +239,6 @@ class User(Standard):
     )
     state_string = models.CharField(
         max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    profile_picture = models.ForeignKey(
-        'files.File',
-        related_name='users_w_this_profile_picture',
-        related_query_name='users_w_this_profile_picture',
-        on_delete=models.PROTECT,
         null=True,
         blank=True,
         db_index=True
