@@ -151,7 +151,7 @@ class Lead(Standard):
         db_index=True
     )
     search_appearance_count = models.IntegerField(
-        default=0,
+        default=1, # Prevent division by 0
         db_index=True
     )
     search_to_lead_details_count = models.IntegerField(
