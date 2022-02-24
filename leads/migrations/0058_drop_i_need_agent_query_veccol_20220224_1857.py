@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             sql='''
                 ALTER TABLE leads_lead DROP COLUMN search_i_need_agents_veccol CASCADE;
-            '''
+            ''',
+            reverse_sql = ''''''
         ),
     ]
