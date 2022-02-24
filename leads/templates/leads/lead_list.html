@@ -167,7 +167,7 @@ https://codebeautify.org/css-beautify-minify
                 <div class="flex flex-col py-3">
                     <a href="{% url 'users:user_comments' lead.author.id %}" class="font-bold">{{ lead.author.first_name }} {{ lead.author.last_name }}</a>
                     <div>{{ lead.author.country.name }}</div>
-                    <div class="text-slate-400">{{ lead.author.num_comments }} comments</div>
+                    <div class="text-slate-400">{{ lead.author.num_comments_as_commentee }} comments</div>
                 </div>
                 <div class="flex flex-col justify-center">
                     <a href="{% url 'users:whatsapp' lead.author.id %}" class="font-bold rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md py-2 px-5">WhatsApp</a>

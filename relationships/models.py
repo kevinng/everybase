@@ -3,16 +3,12 @@ import random, uuid
 
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.db.models import base
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User as django_user
 
-from everybase import settings
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField, Country)
 from leads.models import Lead, WhatsAppLeadAuthorClick
-
-from django.contrib.postgres.search import SearchVectorField
 
 class PhoneNumberType(Choice):
     """Phone number type.
@@ -152,7 +148,7 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 11 February 2022, 9:52 PM
+    Last updated: 24 February 2022, 5:06 AM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -261,29 +257,6 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    is_direct_buyer = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_direct_seller = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_buying_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_selling_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
-    def num_comments(self):
-        return UserComment.objects.filter(commentee=self).count()
 
     def country_from_phone_number(self):
         try:
@@ -292,15 +265,11 @@ class User(Standard):
         except Country.DoesNotExist:
             return None
 
+    def num_comments_as_commentee(self):
+        return UserComment.objects.filter(commentee=self).count()
+
     def num_leads_created(self):
         return Lead.objects.filter(author=self.id).count()
-
-    def num_whatsapp_lead_author(self):
-        clicks = WhatsAppLeadAuthorClick.objects.filter(contactor=self.id)
-        total = 0
-        for click in clicks:
-            total += click.access_count
-        return total
 
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email},\

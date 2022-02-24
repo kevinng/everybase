@@ -141,9 +141,7 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
 
 _user_fields = ['registered', 'django_user', 'first_name', 'last_name',
     'goods_string', 'languages_string', 'country', 'phone_number',
-    'email', 'is_agent', 'internal_notes', 'state', 'state_string',
-    'is_direct_buyer', 'is_direct_seller', 'is_buying_agent',
-    'is_selling_agent']
+    'email', 'is_agent', 'internal_notes', 'state', 'state_string']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings

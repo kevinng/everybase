@@ -101,7 +101,7 @@ https://codebeautify.org/css-beautify-minify
                 <div class="flex flex-col py-3">
                     <a href="{% url 'users:user_comments' agent.id %}" class="font-bold">{{ agent.first_name }} {{ agent.last_name }}</a>
                     <div>{{ agent.country.name }}</div>
-                    <div class="text-slate-400">{{ agent.num_comments }} comments</div>
+                    <div class="text-slate-400">{{ agent.num_comments_as_commentee }} comments</div>
                 </div>
                 {% if user.user.id != agent.id %}
                     <div class="flex flex-col justify-center">
