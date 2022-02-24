@@ -206,76 +206,76 @@ class LeadListView(ListView):
     paginate_by = 8
 
     def get_queryset(self, **kwargs):
-        if self.request.user.is_authenticated:
-            user = self.request.user.user
-        else:
-            user = None
+#         if self.request.user.is_authenticated:
+#             user = self.request.user.user
+#         else:
+#             user = None
 
-        search = self.request.GET.get('search')
-        wants_to = self.request.GET.get('wants_to')
-        buy_country_str = self.request.GET.get('buy_country')
-        sell_country_str = self.request.GET.get('sell_country')
-        sort_by = self.request.GET.get('sort_by')
+#         search = self.request.GET.get('search')
+#         wants_to = self.request.GET.get('wants_to')
+#         buy_country_str = self.request.GET.get('buy_country')
+#         sell_country_str = self.request.GET.get('sell_country')
+#         sort_by = self.request.GET.get('sort_by')
 
-        leads = relmods.Lead.objects
+#         leads = relmods.Lead.objects
 
-        q = models.LeadQuery()
-        q.user = user
-        q.search = search
-        q.sort_by = sort_by
+#         q = models.LeadQuery()
+#         q.user = user
+#         q.search = search
+#         q.sort_by = sort_by
 
-# TODO the lead query is not saved properly
-        q.save()
+# # TODO the lead query is not saved properly
+#         q.save()
 
-        if wants_to == 'buy':
-            leads = leads.filter(lead_type='buying')
-        elif wants_to == 'sell':
-            leads = leads.filter(lead_type='selling')
-        else:
-            wants_to = 'buy_or_sell'
+#         if wants_to == 'buy':
+#             leads = leads.filter(lead_type='buying')
+#         elif wants_to == 'sell':
+#             leads = leads.filter(lead_type='selling')
+#         else:
+#             wants_to = 'buy_or_sell'
 
-        if buy_country_str != 'any_country' and buy_country_str != None and\
-            buy_country_str.strip() != '':
-            buy_country = commods.Country.objects.get(
-                programmatic_key=buy_country_str)
-            leads = leads.filter(buy_country=buy_country)
-            q.buy_country = buy_country
+#         if buy_country_str != 'any_country' and buy_country_str != None and\
+#             buy_country_str.strip() != '':
+#             buy_country = commods.Country.objects.get(
+#                 programmatic_key=buy_country_str)
+#             leads = leads.filter(buy_country=buy_country)
+#             q.buy_country = buy_country
 
-        if sell_country_str != 'any_country' and sell_country_str != None and\
-            sell_country_str.strip() != '':
-            sell_country = commods.Country.objects.get(
-                programmatic_key=sell_country_str)
-            leads = leads.filter(sell_country=sell_country)
-            q.sell_country = sell_country
+#         if sell_country_str != 'any_country' and sell_country_str != None and\
+#             sell_country_str.strip() != '':
+#             sell_country = commods.Country.objects.get(
+#                 programmatic_key=sell_country_str)
+#             leads = leads.filter(sell_country=sell_country)
+#             q.sell_country = sell_country
 
-        vector = SearchVector('search_i_need_agents_veccol')
-        query = SearchQuery(search)
-        leads = leads.annotate(
-            search_i_need_agents_veccol=RawSQL(
-                'search_i_need_agents_veccol', [],
-                output_field=SearchVectorField()))\
-            .annotate(rank=SearchRank(vector, query))\
-            .order_by('-rank')
+#         vector = SearchVector('search_i_need_agents_veccol')
+#         query = SearchQuery(search)
+#         leads = leads.annotate(
+#             search_i_need_agents_veccol=RawSQL(
+#                 'search_i_need_agents_veccol', [],
+#                 output_field=SearchVectorField()))\
+#             .annotate(rank=SearchRank(vector, query))\
+#             .order_by('-rank')
         
-# TODO: the sort_by keys here are wrong
-        if sort_by == 'timestamp':
-            leads = leads.order_by('-created')
-        elif sort_by == 'comm_percent_hi_lo':
-            leads = leads.order_by('-commissions')
-        elif sort_by == 'comm_percent_lo_hi':
-            leads = leads.order_by('commissions')
-        elif sort_by == 'comm_dollar_hi_lo':
-            leads = leads.order_by('-avg_deal_comm')
-        elif sort_by == 'comm_dollar_lo_hi':
-            leads = leads.order_by('avg_deal_comm')
-        elif sort_by == 'relevance':
-            leads = leads.order_by('-rank')
-        else:
-            leads = leads.order_by('-created')
+# # TODO: the sort_by keys here are wrong
+#         if sort_by == 'timestamp':
+#             leads = leads.order_by('-created')
+#         elif sort_by == 'comm_percent_hi_lo':
+#             leads = leads.order_by('-commissions')
+#         elif sort_by == 'comm_percent_lo_hi':
+#             leads = leads.order_by('commissions')
+#         elif sort_by == 'comm_dollar_hi_lo':
+#             leads = leads.order_by('-avg_deal_comm')
+#         elif sort_by == 'comm_dollar_lo_hi':
+#             leads = leads.order_by('avg_deal_comm')
+#         elif sort_by == 'relevance':
+#             leads = leads.order_by('-rank')
+#         else:
+#             leads = leads.order_by('-created')
 
-        save_user_agent(self.request, user)
+#         save_user_agent(self.request, user)
 
-        return leads
+        return models.Lead.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
