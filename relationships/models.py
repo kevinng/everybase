@@ -1,3 +1,4 @@
+from operator import mod
 from pyexpat import model
 import random, uuid
 
@@ -179,6 +180,16 @@ class User(Standard):
         max_length=20,
         db_index=True
     )
+    has_company = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    company_name = models.TextField(
+        null=True,
+        blank=True
+    )
+
     goods_string = models.TextField(
         null=True,
         blank=True
@@ -193,6 +204,12 @@ class User(Standard):
         related_name='users_w_this_country',
         related_query_name='users_w_this_country',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    state_string = models.CharField(
+        max_length=50,
         null=True,
         blank=True,
         db_index=True
@@ -220,7 +237,49 @@ class User(Standard):
         blank=True
     )
 
-    # Deprecated
+    is_buy_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_sell_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_logistics_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    buy_agent_details = models.TextField(
+        null=True,
+        blank=True
+    )
+    sell_agent_details = models.TextField(
+        null=True,
+        blank=True
+    )
+    logistics_agent_details = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    search_appearance_count = models.IntegerField(
+        default=1, # Prevent division by 0
+        db_index=True
+    )
+    search_to_user_count = models.IntegerField(
+        default=0,
+        db_index=True
+    )
+    saved_count = models.IntegerField(
+        default=0,
+        db_index=True
+    )
+
+    # Save for future
     languages = models.ManyToManyField(
         'common.Language',
         related_name='users_w_this_language',
@@ -233,12 +292,6 @@ class User(Standard):
         related_name='users_w_this_state',
         related_query_name='users_w_this_state',
         on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    state_string = models.CharField(
-        max_length=50,
         null=True,
         blank=True,
         db_index=True

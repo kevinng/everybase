@@ -139,19 +139,32 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['import_job']
     inlines = [EmailInlineAdmin]
 
-_user_fields = ['registered', 'django_user', 'first_name', 'last_name',
-    'goods_string', 'languages_string', 'country', 'phone_number', 'email',
-    'internal_notes', 'state', 'state_string']
+_user_fields = ['registered', 'django_user',
+
+    'first_name', 'last_name', 'has_company', 'company_name',
+
+    'goods_string', 'languages_string', 'country', 'state_string',
+    'phone_number', 'email', 'internal_notes',
+
+    'is_buy_agent', 'is_sell_agent', 'is_logistics_agent',
+
+    'buy_agent_details', 'sell_agent_details', 'logistics_agent_details',
+
+    'search_appearance_count', 'search_to_user_count', 'saved_count',
+    'state']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['uuid'] + _user_fields
     list_editable = comadm.standard_list_editable + _user_fields
-    list_filter = comadm.standard_list_filter + ['registered']
+    list_filter = comadm.standard_list_filter + ['registered', 'has_company',
+        'is_buy_agent', 'is_sell_agent', 'is_logistics_agent']
     search_fields = comadm.standard_search_fields + [
-        'first_name', 'last_name', 'languages_string', 'country__name',
+        'first_name', 'last_name', 'company_name', 'goods_string',
+        'languages_string', 'country__name', 'state_string', 'email__email',
         'phone_number__country_code', 'phone_number__national_number',
-        'email__email', 'internal_notes']
+        'internal_notes', 'buy_agent_details', 'sell_agent_details',
+        'logistics_agent_details']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
