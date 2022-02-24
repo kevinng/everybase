@@ -3,20 +3,6 @@ from common import admin as comadm
 from leads import models
 from sorl.thumbnail.admin import AdminImageMixin
 
-_lead_image_fields = ['lead', 'image']
-@admin.register(models.LeadImage)
-class LeadImageAdmin(AdminImageMixin, admin.ModelAdmin):
-    list_display = _lead_image_fields
-    list_display_links = ['lead']
-    list_editable = ['image']
-    search_fields = ['lead__id']
-
-    fieldsets = [(None, {'fields': _lead_image_fields})]
-    autocomplete_fields = ['lead']
-
-class InlineLeadImageAdmin(AdminImageMixin, admin.TabularInline):
-    model = models.LeadImage
-
 _lead_fields = ['author', 'buy_country', 'sell_country', 'lead_type', 'details',
     'commission', 'avg_deal_size', 'other_agent_details', 'internal_notes',
     'onboarding', 'onboarded', 'title', 'author_type', 'country',
@@ -36,7 +22,6 @@ class LeadAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _lead_fields})]
     autocomplete_fields = ['author', 'buy_country', 'sell_country']
-    inlines = [InlineLeadImageAdmin]
 
 _saved_lead_fields = ['saved', 'saver', 'lead']
 @admin.register(models.SavedLead)

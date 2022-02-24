@@ -160,20 +160,6 @@ class Lead(Standard):
     def avg_deal_comm(self):
         return self.commission / 100 * self.avg_deal_size
 
-class LeadImage(models.Model):
-    """Lead image.
-
-    Last updated: 15 February 2022, 11:24 PM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='lead_images',
-        related_query_name='lead_images',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    image = ImageField(upload_to='leads')
-
 class LeadDetailView(Standard):
     """Lead detail view.
 
