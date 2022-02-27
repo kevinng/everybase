@@ -578,7 +578,7 @@ class LeadComment(Standard):
 class UserDetailView(Standard):
     """User detail view
     
-    Last updated: 11 February 2022, 9:24 PM
+    Last updated: 28 February 2022, 12:17 AM
     """
     viewee = models.ForeignKey(
         'User',
@@ -595,7 +595,7 @@ class UserDetailView(Standard):
         db_index=True
     )
     
-    reviews_view_count = models.IntegerField(
+    comments_view_count = models.IntegerField(
         default=0,
         db_index=True    
     )
