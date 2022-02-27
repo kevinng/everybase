@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from relationships import models as relmods
 from common import models as commods
-from common.libraries.tear_down import tear_down
+from common.utilities.tear_down import tear_down
 from chat import models, views
 from chat.utilities.start_context import start_context
 from chat.utilities.get_context import get_context
