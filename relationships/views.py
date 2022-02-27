@@ -223,7 +223,8 @@ def register(request):
             # Override or set user details
             user.first_name = form.cleaned_data.get('first_name')
             user.last_name = form.cleaned_data.get('last_name')
-            user.languages_string = form.cleaned_data.get('languages')
+            user.goods_string = form.cleaned_data.get('goods_string')
+            user.languages_string = form.cleaned_data.get('languages_string')
             user.is_agent = not is_not_agent
             user.phone_number = phone_number
             user.email = email
