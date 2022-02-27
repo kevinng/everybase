@@ -264,7 +264,7 @@ class LeadCommentAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['lead', 'commentor']
 
-_user_detail_views_fields = ['viewee', 'viewer', 'reviews_view_count',
+_user_detail_views_fields = ['viewee', 'viewer', 'comments_view_count',
     'leads_view_count']
 @admin.register(mod.UserDetailView)
 class UserDetailViewAdmin(comadm.StandardAdmin):
