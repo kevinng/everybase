@@ -69,7 +69,7 @@ https://codebeautify.org/css-beautify-minify
             <div class="text-slate-500">Only you can see your private comments</div>
         </div>
 
-        {% load private_comments %}
+        {% comment %} {% load private_comments %}
         {% private_comments request.user.user detail_user as private_comments %}
 
         {% if private_comments|length <= 0 %}
@@ -86,7 +86,7 @@ https://codebeautify.org/css-beautify-minify
                 <div class="mt-2">{{ comment.body }}</div>
             </div>
             {% endfor %}
-        {% endif %}
+        {% endif %} {% endcomment %}
 
         {% endif %}
         {% comment %} end: user is authenticated and not detail user {% endcomment %}
@@ -95,7 +95,7 @@ https://codebeautify.org/css-beautify-minify
             <h2 class="font-bold text-xl">Public Comments</h2>
         </div>
 
-        {% load public_comments %}
+        {% comment %} {% load public_comments %}
         {% public_comments detail_user as public_comments %}
 
         {% if public_comments|length <= 0 %}
@@ -112,7 +112,7 @@ https://codebeautify.org/css-beautify-minify
                 <div class="mt-2">{{ comment.body }}</div>
             </div>
             {% endfor %}
-        {% endif %}
+        {% endif %} {% endcomment %}
     </div>
 </div>
 {% endblock %}
