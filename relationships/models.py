@@ -185,9 +185,11 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    company_name = models.TextField(
+    company_name = models.CharField(
+        max_length=20,
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
 
     goods_string = models.TextField(
