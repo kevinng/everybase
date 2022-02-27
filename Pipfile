@@ -39,7 +39,6 @@ django-ratelimit = "*"
 django-settings-export = "*"
 django-ipware = "*"
 django-loginas = "*"
-sorl-thumbnail = "*"
 pillow = "*"
 python-magic = "*"
 

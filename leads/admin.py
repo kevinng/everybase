@@ -1,7 +1,7 @@
 from django.contrib import admin
 from common import admin as comadm
+from files import admin as fiadm
 from leads import models
-from sorl.thumbnail.admin import AdminImageMixin
 
 _lead_fields = ['author', 'author_type', 'buy_country', 'sell_country',
     'lead_type', 'details', 'need_agent', 'commission_payable_by',
@@ -36,6 +36,7 @@ class LeadAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _lead_fields})]
     autocomplete_fields = ['author', 'buy_country', 'sell_country']
+    inlines = [fiadm.FileInlineAdmin]
 
 _saved_lead_fields = ['saved', 'saver', 'lead']
 @admin.register(models.SavedLead)

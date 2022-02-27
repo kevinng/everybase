@@ -110,6 +110,7 @@ def lead_create(request):
             need_agent = get('need_agent')
             commission_type = get('commission_type')
             author_type = get('author_type')
+            need_logistics_agent = get('need_logistics_agent')
             lead = models.Lead.objects.create(
                 author=request.user.user,
                 lead_type=get('lead_type'),
@@ -126,67 +127,152 @@ def lead_create(request):
                 commission_payable_after=get('commission_payable_after') if need_agent else None,
                 commission_payable_after_other=get('commission_payable_after_other') if need_agent else None,
                 commission_payable_by=get('commission_payable_by') if need_agent and author_type == 'broker' else None,
-                other_agent_details=get('other_agent_details') if need_agent else None
+                other_agent_details=get('other_agent_details') if need_agent else None,
+                need_logistics_agent=need_logistics_agent,
+                other_logistics_agent_details=get('other_logistics_agent_details') if need_logistics_agent else None
             )
 
-            def save_img_if_exists(name):
-                image = request.FILES.get(name)
-                
-                # Proceed if image exists
-                if image is None:
-                    return
+            # We'll only reach here if form validation passes.
+            #
+            # A valid cache has its File model deleted field set to None.
+            # Otherwise, it's invalid.
+            #
+            # It's not possible to have a file with a valid cache. Since cache
+            # is deleted once we detect a file in the form, whether the file is
+            # valid or not. If we've a file, save it.
+            #
+            # If file does not exist, but a valid cache exists - use the cache
+            # by copying it to our desired location, and delete the cache.
 
-                mime_type = get_mime_type(image)
-                file = fimods.File.objects.create(
-                    uploader=request.user.user,
-                    mime_type=mime_type,
-                    filename=image.name,
-                    lead=lead,
-                    s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-                    thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-                )
+            def save_img_if_exists(image_key, image_cache_use_key, image_cache_file_id_key):
+                image = request.FILES.get(image_key)
 
-                key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, file.id)
-                thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, file.id)
+                if image is not None:
+                    mime_type = get_mime_type(image)
 
-                s3 = boto3.session.Session(
-                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-                ).resource('s3')
+                    # Create lead file
+                    file = fimods.File.objects.create(
+                        uploader=request.user.user,
+                        mime_type=mime_type,
+                        filename=image.name,
+                        lead=lead,
+                        s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                        thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                    )
 
-                # Save image
-                results = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
-                    Key=key,
-                    Body=image,
-                    ContentType=mime_type
-                )
+                    key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, file.id)
+                    thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, file.id)
 
-                # Update file with S3 put-object results
-                file.s3_object_key = key
-                file.thumbnail_s3_object_key = thumb_key
-                file.s3_object_content_length = results.content_length
-                file.e_tag = results.e_tag
-                file.content_type = results.content_type
-                file.last_modified = results.last_modified
-                file.save()
+                    s3 = boto3.session.Session(
+                        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                    ).resource('s3')
 
-                # Resize and save thumbnail
-                with Image.open(image) as im:
-                    # Resize preserving aspect ratio cropping from the center
-                    thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
-                    output = BytesIO()
-                    thumbnail.save(output, format = "PNG")
-                    output.seek(0)
-
-                    s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
-                        Key=thumb_key,
-                        Body=output,
+                    # Upload lead image
+                    lead_s3_obj = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+                        Key=key,
+                        Body=image,
                         ContentType=mime_type
                     )
 
-            save_img_if_exists('image_one')
-            save_img_if_exists('image_two')
-            save_img_if_exists('image_three')
+                    # Update lead file with S3 results
+                    file.s3_object_key = key
+                    file.thumbnail_s3_object_key = thumb_key
+                    file.s3_object_content_length = lead_s3_obj.content_length
+                    file.e_tag = lead_s3_obj.e_tag
+                    file.content_type = lead_s3_obj.content_type
+                    file.last_modified = lead_s3_obj.last_modified
+                    file.save()
+
+                    # Resize and save thumbnail
+                    with Image.open(image) as im:
+                        # Resize preserving aspect ratio cropping from the center
+                        thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
+                        output = BytesIO()
+                        thumbnail.save(output, format='PNG')
+                        output.seek(0)
+
+                        s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+                            Key=thumb_key,
+                            Body=output,
+                            ContentType=mime_type
+                        )
+                else:
+                    # Image does not exist
+
+                    image_cache_use = get(image_cache_use_key)
+                    image_cache_file_id = get(image_cache_file_id_key)
+
+                    if image_cache_use == 'yes' and \
+                        image_cache_file_id is not None and \
+                        len(image_cache_file_id.strip()) > 0:
+                        # Frontend indicates use-cache, and we have the details to do so.
+
+                        cache_file = fimods.File.objects.get(pk=image_cache_file_id)
+                        if cache_file.deleted is None:
+                            # Cache is valid, use cache.
+                            
+                            # Create lead file model
+                            lead_file = fimods.File.objects.create(
+                                uploader=request.user.user,
+                                mime_type=cache_file.mime_type,
+                                filename=cache_file.filename,
+                                lead=lead,
+                                s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                                thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                                s3_object_content_type = cache_file.s3_object_content_type,
+                                s3_object_content_length = cache_file.s3_object_content_length
+                            )
+
+                            lead_key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, lead_file.id)
+                            cache_key = f'{cache_file.s3_bucket_name}/{cache_file.s3_object_key}'
+
+                            s3 = boto3.session.Session(
+                                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                            ).resource('s3')
+
+                            # Copy cache to lead file S3 location
+                            lead_s3_obj = s3.Object(
+                                settings.AWS_STORAGE_BUCKET_NAME, lead_key)\
+                                .copy_from(CopySource=cache_key)
+
+                            thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, lead_file.id)
+
+                            # Update file model
+                            lead_file.s3_object_key = lead_key
+                            lead_file.thumbnail_s3_object_key = thumb_key
+                            lead_file.e_tag = lead_s3_obj.get('ETag')
+                            lead_file.last_modified = lead_s3_obj.get('LastModified')
+                            lead_file.save()
+
+                            # Download cache image for resize to thumbnail
+                            cache = BytesIO()
+                            s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)\
+                                .download_fileobj(cache_file.s3_object_key, cache)
+                            cache.seek(0)
+
+                            # Resize and save thumbnail
+                            with Image.open(cache) as im:
+                                # Resize preserving aspect ratio cropping from the center
+                                thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
+                                output = BytesIO()
+                                thumbnail.save(output, format='PNG')
+                                output.seek(0)
+
+                                s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+                                    Key=thumb_key,
+                                    Body=output,
+                                    ContentType=cache_file.mime_type
+                                )
+
+                            # Delete cache
+                            s3.Object(settings.AWS_STORAGE_BUCKET_NAME,
+                                cache_file.s3_object_key).delete()
+
+            save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id')
+            save_img_if_exists('image_two', 'image_two_cache_use', 'image_two_cache_file_id')
+            save_img_if_exists('image_three', 'image_three_cache_use', 'image_three_cache_file_id')
 
             save_user_agent(request, request.user.user)
 

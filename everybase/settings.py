@@ -56,8 +56,7 @@ INSTALLED_APPS = [
     'storages',
     'django_user_agents',
     'phonenumber_field',
-    'loginas',
-    'sorl.thumbnail'
+    'loginas'
 ]
 
 MIDDLEWARE = [
@@ -194,6 +193,7 @@ DEFAULT_FILE_STORAGE = 'everybase.storage_backends.MediaStorage'
 #   file ID
 AWS_S3_KEY_LEAD_IMAGE = 'leads/%s/%s'
 AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL = 'leads/%s/t/%s'
+AWS_S3_KEY_CACHE_IMAGE = 'cache/%s'
 
 # Lead image thumbnail size
 LEAD_IMAGE_THUMBNAIL_SIZE = 80, 80

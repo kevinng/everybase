@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import sorl.thumbnail.fields
+# import sorl.thumbnail.fields
 
 
 class Migration(migrations.Migration):
@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name='LeadImage',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', sorl.thumbnail.fields.ImageField(upload_to='leads')),
+                # ('image', sorl.thumbnail.fields.ImageField(upload_to='leads')),
                 ('lead', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='lead_images', related_query_name='lead_images', to='leads.lead')),
             ],
         ),
