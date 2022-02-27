@@ -1,6 +1,6 @@
-import pytz, datetime
 from django.db import models
-from everybase import settings
+from common.utilities.diff_now import diff_now
+from common.utilities.diff_now_desc import diff_now_desc
 
 # --- Start: Helper functions ---
 
@@ -49,35 +49,10 @@ class Standard(models.Model):
     )
 
     def age(self):
-        sgtz = pytz.timezone(settings.TIME_ZONE)
-        now = datetime.datetime.now(tz=sgtz)
-        difference = (now - self.created).total_seconds()
-        
-        weeks, rest = divmod(difference, 604800)
-        days, rest = divmod(rest, 86400)
-        hours, rest = divmod(rest, 3600)
-        minutes, seconds = divmod(rest, 60)
-
-        return (weeks, days, hours, minutes, seconds)
+        return diff_now(self.created)
 
     def age_desc(self):
-        weeks, days, hours, minutes, seconds = self.age()
-
-        if weeks >= 1 and weeks <= 2:
-            return '%dw ago' % weeks
-        elif weeks < 1:
-            if days >= 1:
-                return '%dd ago' % days
-            elif days < 1:
-                if hours >= 1:
-                    return '%dh ago' % hours        
-                elif hours < 1:
-                    if minutes >= 1:
-                        return '%dm ago' % minutes
-                    elif minutes < 1:
-                        return '%ds ago' % seconds
-
-        return self.created.strftime('%d %b %y')
+        return diff_now_desc(self.created)
 
     class Meta:
         abstract = True
