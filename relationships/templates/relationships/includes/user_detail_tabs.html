@@ -4,6 +4,6 @@ Params:
     detail_user, user whose details are being shown.
 {% endcomment %}
 <div class="flex items-center justify-evenly">
-    <a {% if selected != 'comments' %}href="{% url 'users:user_comments' detail_user.id %}" {% endif %}class="{% if selected == 'comments' %}font-bold text-blue-600 bg-slate-300 {% else %}text-slate-600 hover:bg-slate-300 bg-slate-200 {% endif %}w-1/2 text-center py-3 shadow-sm">Comments</a>
-    <a {% if selected != 'leads' %}href="{% url 'users:user_leads' detail_user.id %}" {% endif %}class="{% if selected == 'leads' %}font-bold text-blue-600 bg-slate-300 {% else %}text-slate-600 hover:bg-slate-300 bg-slate-200 {% endif %}w-1/2 text-center py-3 shadow-sm">I-Need-Agents</a>
+    <a {% if selected != 'comments' %}href="{% url 'users:user_comments' detail_user.id %}" {% endif %}class="{% if selected == 'comments' %}font-bold text-blue-600 bg-slate-300 {% else %}text-slate-600 hover:bg-slate-300 bg-slate-200 {% endif %}w-1/2 text-center py-2 rounded-tl-md shadow-sm">Comments</a>
+    <a {% if selected != 'leads' %}href="{% url 'users:user_leads' detail_user.id %}" {% endif %}class="{% if selected == 'leads' %}font-bold text-blue-600 bg-slate-300 {% else %}text-slate-600 hover:bg-slate-300 bg-slate-200 {% endif %}w-1/2 text-center py-2 rounded-tr-md shadow-sm">I-Need-Agents</a>
 </div>
