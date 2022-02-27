@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.test import Client
-from common.libraries.tear_down import tear_down
+from common.utilities.tear_down import tear_down
 from relationships import models as relmods
 
 class PageTest(TestCase):
