@@ -1,5 +1,3 @@
-from operator import mod
-from pyexpat import model
 import random, uuid
 
 from django.db import models
@@ -9,7 +7,7 @@ from django.contrib.auth.models import User as django_user
 
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField, Country)
-from leads.models import Lead, WhatsAppLeadAuthorClick
+from leads.models import Lead
 
 class PhoneNumberType(Choice):
     """Phone number type.
@@ -605,3 +603,30 @@ class UserDetailView(Standard):
         default=0,
         db_index=True    
     )
+
+class SavedUser(Standard):
+    """Saved user.
+
+    Last updated: 28 February 2022, 3:58 PM
+    """
+    saved = models.DateTimeField(
+        db_index=True
+    )
+
+    saver = models.ForeignKey(
+        'User',
+        related_name='saved_users_saver',
+        related_query_name='saved_users_saver',
+        on_delete=models.PROTECT,
+        db_index=True        
+    )
+    savee = models.ForeignKey(
+        'User',
+        related_name='saved_users_savee',
+        related_query_name='saved_users_savee',
+        on_delete=models.PROTECT,
+        db_index=True  
+    )
+
+    class Meta:
+        unique_together = ('saver', 'savee')

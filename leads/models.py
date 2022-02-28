@@ -465,7 +465,6 @@ class WhatsAppLeadAuthorClick(Standard):
     class Meta:
         unique_together = ('lead', 'contactor')
 
-# Not in use, keep for future implementation
 class SavedLead(Standard):
     """Saved lead.
 
