@@ -121,7 +121,7 @@ class TwilioIncomingStatusView(APIView):
 
         if msg_id is None:
             # Validate for the general URL - this status update is for a message
-            # we sent our explicitly, so we have its Twilio message SID at the
+            # we sent out explicitly, so we have its Twilio message SID at the
             # time of sending.
             this_url = settings.TWILIO_WEBHOOK_STATUS_UPDATE_URL
         else:
