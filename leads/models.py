@@ -468,12 +468,12 @@ class WhatsAppLeadAuthorClick(Standard):
 class SavedLead(Standard):
     """Saved lead.
 
-    Last updated: 15 October 2021, 11:56 PM
+    Last updated: 28 February 2022, 10:32 PM
     """
-    saved = models.DateTimeField(
+    active = models.BooleanField(
+        default=True,
         db_index=True
     )
-
     saver = models.ForeignKey(
         'relationships.User',
         related_name='saved_leads_saver',
