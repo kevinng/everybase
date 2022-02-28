@@ -105,7 +105,7 @@ class LeadForm(forms.Form):
                 has_error = True
 
         need_logistics_agent = get('need_logistics_agent')
-        if need_logistics_agent is True:
+        if need_logistics_agent == True:
             if is_empty_string(get('other_logistics_agent_details')):
                 self.add_error('other_logistics_agent_details', 'This field is required.')
 
