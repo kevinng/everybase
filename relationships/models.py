@@ -609,10 +609,10 @@ class SavedUser(Standard):
 
     Last updated: 28 February 2022, 3:58 PM
     """
-    saved = models.DateTimeField(
+    active = models.BooleanField(
+        default=True,
         db_index=True
     )
-
     saver = models.ForeignKey(
         'User',
         related_name='saved_users_saver',

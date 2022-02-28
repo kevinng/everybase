@@ -281,13 +281,13 @@ class UserDetailViewAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['viewee', 'viewer']
 
-_saved_user_fields = ['saved', 'saver', 'savee']
+_saved_user_fields = ['active', 'saver', 'savee']
 @admin.register(mod.SavedUser)
 class SavedUserAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _saved_user_fields
     list_editable = comadm.standard_list_editable + _saved_user_fields
-    list_filter = comadm.standard_list_filter + ['saved']
+    list_filter = comadm.standard_list_filter + ['active']
     search_fields = comadm.standard_search_fields + ['saver__id',
         'saver__family_first_name', 'saver__family_last_name', 'savee__id',
         'savee__family_first_name', 'savee__family_last_name',]

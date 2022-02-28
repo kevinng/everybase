@@ -38,13 +38,13 @@ class LeadAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['author', 'buy_country', 'sell_country']
     inlines = [fiadm.FileInlineAdmin]
 
-_saved_lead_fields = ['saved', 'saver', 'lead']
+_saved_lead_fields = ['active', 'saver', 'lead']
 @admin.register(models.SavedLead)
 class SavedLeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _saved_lead_fields
     list_editable = comadm.standard_list_editable + _saved_lead_fields
-    list_filter = comadm.standard_list_filter + ['saved']
+    list_filter = comadm.standard_list_filter + ['active']
     search_fields = comadm.standard_search_fields + ['saver__id',
         'saver__family_first_name', 'saver__family_last_name',
         'lead__id', 'lead__title', 'lead__description']
