@@ -8,7 +8,8 @@ from common import admin as comadm
 
 _file_fields = ['uploader', 'mime_type', 'filename', 'presigned_url_issued',
     'presigned_url_lifespan', 'presigned_url_response', 's3_bucket_name',
-    's3_object_key', 'thumbnail_s3_bucket_name', 'thumbnail_s3_object_key',
+    's3_object_key', 'width', 'height', 'thumbnail_s3_bucket_name',
+    'thumbnail_s3_object_key', 'thumbnail_width', 'thumbnail_height',
     's3_object_content_length', 's3_object_e_tag', 's3_object_content_type',
     's3_object_last_modified', 'lead']
 @admin.register(models.File)

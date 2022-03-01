@@ -64,6 +64,16 @@ class File(Standard):
         blank=True,
         db_index=True
     )
+    width = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    height = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     thumbnail_s3_bucket_name = models.CharField(
         max_length=63,
@@ -73,6 +83,16 @@ class File(Standard):
     )
     thumbnail_s3_object_key = models.CharField(
         max_length=1024,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    thumbnail_width = models.IntegerField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    thumbnail_height = models.IntegerField(
         null=True,
         blank=True,
         db_index=True
