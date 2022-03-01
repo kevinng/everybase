@@ -42,35 +42,35 @@ Dependencies:
     <div class="bg-white px-8 pb-8 mt-8">
         {% comment %} start: goods_string {% endcomment %}
         {% if detail_user.goods_string is not None and detail_user.goods_string|cut:' ' != '' %}
-            <div class="text-sm font-bold text-slate-400">Goods & Services</div>
+            <div class="font-bold text-slate-400">Goods & Services</div>
             <div class="mt-1">{{ detail_user.goods_string }}</div>
         {% endif %}
         {% comment %} end: goods_string {% endcomment %}
 
         {% comment %} start: languages_string {% endcomment %}
         {% if detail_user.languages_string is not None and detail_user.languages_string|cut:' ' != '' %}
-        <div class="text-sm font-bold text-slate-400 mt-4">Languages</div>
+        <div class="font-bold text-slate-400 mt-4">Languages</div>
         <div class="mt-1">{{ detail_user.languages_string }}</div>
         {% endif %}
         {% comment %} end: languages_string {% endcomment %}
 
         {% comment %} start: is_buy_agent and buy_agent_details {% endcomment %}
         {% if detail_user.is_buy_agent == True %}
-        <div class="text-sm font-bold text-slate-400 mt-4">Buying or Sourcing Agent</div>
+        <div class="font-bold text-slate-400 mt-4">Buying or Sourcing Agent</div>
         <div class="mt-1">{% if detail_user.buy_agent_details is not None and detail_user.buy_agent_details|cut:' ' != '' %}{{ detail_user.buy_agent_details }}{% else %}<span class='italic'>Contact user for more details.</span>{% endif %}</div>
         {% endif %}
         {% comment %} end: is_buy_agent and buy_agent_details {% endcomment %}
 
         {% comment %} start: is_sell_agent and sell_agent_details {% endcomment %}
         {% if detail_user.is_sell_agent == True %}
-        <div class="text-sm font-bold text-slate-400 mt-4">Selling or Promoting Agent</div>
+        <div class="font-bold text-slate-400 mt-4">Selling or Promoting Agent</div>
         <div class="mt-1">{% if detail_user.sell_agent_details is not None and detail_user.sell_agent_details|cut:' ' != '' %}{{ detail_user.sell_agent_details }}{% else %}<span class='italic'>Contact user for more details.</span>{% endif %}</div>
         {% endif %}
         {% comment %} end: is_sell_agent and sell_agent_details {% endcomment %}
 
         {% comment %} start: is_logistics_agent and logistics_agent_details {% endcomment %}
         {% if detail_user.is_logistics_agent == True %}
-        <div class="text-sm font-bold text-slate-400 mt-4">Logistics Agent</div>
+        <div class="font-bold text-slate-400 mt-4">Logistics Agent</div>
         <div class="mt-1">{% if detail_user.logistics_agent_details is not None and detail_user.logistics_agent_details|cut:' ' != '' %}{{ detail_user.logistics_agent_details }}{% else %}<span class='italic'>Contact user for more details.</span>{% endif %}</div>
         {% endif %}
         {% comment %} end: is_logistics_agent and logistics_agent_details {% endcomment %}

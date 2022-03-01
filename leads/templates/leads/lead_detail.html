@@ -39,13 +39,14 @@ https://codebeautify.org/css-beautify-minify
     {% comment %} SHALL I INCLUDE A FLOATING BUTTON THAT JUMPS TO THE USER SECTION IN MOBILE MODE? IN MOBILE WE DON'T REALLY WNAT TO SHOW USER ON TOP, BUT IT'S TOO FAR DOWN THE SCREEN {% endcomment %}
     <div class="w-full lg:w-1/2 lg:mt-0 mt-4">
 
-        <div class="bg-white rounded px-8 py-8">
+        <div class="bg-white rounded px-8 py-8 shadow-md">
             <div class="flex items-start justify-between">
                 <div class="text-xl font-bold">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
                 <div class="text-sm">{{ lead.age_desc }}</div>
             </div>
 
-            <div class="flex items-start justify-start mt-2 gap-2 image-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+            {% comment %} start: thumbnails {% endcomment %}
+            <div class="flex items-start justify-start mt-4 gap-2 image-gallery" itemscope itemtype="http://schema.org/ImageGallery">
                 {% load thumbnail_url %}
                 {% load image_url %}
                 {% for file in lead.files.all %}
@@ -53,19 +54,39 @@ https://codebeautify.org/css-beautify-minify
                     {% image_url file as image_url %}
                     <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
                         <a href="{{ image_url }}" itemprop="contentUrl" data-size="{{ file.width }}x{{ file.height }}">
-                            <img src="{{ thumbnail_url }}" itemprop="thumbnail" class="border border-slate-200">
+                            <img src="{{ thumbnail_url }}" itemprop="thumbnail" class="shadow-md">
                         </a>
                     </figure>
                 {% endfor %}
             </div>
-
-            {% comment %} start: thumbnails {% endcomment %}
-
             {% comment %} end: thumbnails {% endcomment %}
 
+            {% comment %} start: buy_country {% endcomment %}
+            <div class="text-sm font-bold text-slate-400 mt-6">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
+            <div class="mt-1">{% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}Any Country{% endif %}</div>
+            <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country your goods/services are exported from or based in.{% elif lead.lead_type == 'buying' %}Country you'd like to buy or source from.{% endif %}</div>
+            {% comment %} end: buy_country {% endcomment %}
+
+            {% comment %} start: sell_country {% endcomment %}
+            <div class="text-sm font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Sell In This Country{% elif lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
+            <div class="mt-1">{% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}Any Country{% endif %}</div>
+            <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country you'd like to sell your goods/services in.{% elif lead.lead_type == 'buying' %}Country your goods/services are imported into or needed.{% endif %}</div>
+            {% comment %} end: sell_country {% endcomment %}
+
+            {% comment %} start: details {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4">Goods/Services Details</div>
+            <div class="mt-1">{{ lead.details }}</div>
+            {% comment %} end: details {% endcomment %}
+            
+
+
+
+
+
+
                             
-            <div>{% if lead.lead_type == 'buying' %}Buy from{% elif lead.lead_type == 'selling' %}Source is {% endif %} {% if lead.buy_country is None %}any country{% else %}{{ lead.buy_country.name }}{% endif %}</div>
-            <div>{% if lead.lead_type == 'buying' %}Destination is{% elif lead.lead_type == 'selling' %}Sell to{% endif %} {% if lead.sell_country is None %}any country{% else %}{{ lead.sell_country.name }}{% endif %}</div>
+            {% comment %} <div>{% if lead.lead_type == 'buying' %}Buy from{% elif lead.lead_type == 'selling' %}Source is {% endif %} {% if lead.buy_country is None %}any country{% else %}{{ lead.buy_country.name }}{% endif %}</div>
+            <div>{% if lead.lead_type == 'buying' %}Destination is{% elif lead.lead_type == 'selling' %}Sell to{% endif %} {% if lead.sell_country is None %}any country{% else %}{{ lead.sell_country.name }}{% endif %}</div> {% endcomment %}
             <div class="text-sm font-bold uppercase text-slate-400 mt-3">Details</div>
             <div>{% if summary == True %}{{ lead.details|slice:':200' }}{% if lead.details|length > 200 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
             <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Agent Commission</div>
