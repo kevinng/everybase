@@ -1,3 +1,4 @@
+from statistics import mode
 import traceback, boto3
 from PIL import Image, ImageOps
 from io import BytesIO
@@ -5,10 +6,11 @@ from io import BytesIO
 from django.urls import reverse
 from django.shortcuts import render
 from django.db.models import Count
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models.expressions import RawSQL
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
 
@@ -439,6 +441,61 @@ class AgentListView(ListView):
         context['country_value'] = self.request.GET.get('country')
 
         return context
+
+@login_required
+@csrf_exempt
+def toggle_save_lead(request, pk):
+    # Disallow saving of leads owned by the owner
+    try:
+        lead = models.Lead.objects.get(pk=pk)
+        if lead.author.id == request.user.user.id:
+            HttpResponseRedirect(reverse('leads:lead_detail', args=(pk,)))
+    except models.Lead.DoesNotExist:
+        HttpResponseRedirect(reverse('leads:lead_detail', args=(pk,)))
+
+    def toggle(pk):
+        try:
+            saved_lead = models.SavedLead.objects.get(
+                saver=request.user.user,
+                lead=lead
+            )
+
+            # Toggle save-unsave
+            saved_lead.active = not saved_lead.active
+            saved_lead.save()
+        except models.SavedLead.DoesNotExist:
+            saved_lead = models.SavedLead.objects.create(
+                saver=request.user.user,
+                lead=lead,
+                active=True
+            )
+        
+        return {'s': saved_lead.active}
+
+    if request.method == 'POST':
+        # AJAX call, toggle save-unsave, return JSON.
+        return JsonResponse(toggle(pk))
+
+    # Unauthenticated call. User will be given the URL to click only if the
+    # user is authenticated. Otherwise, a click on the 'save' button will
+    # result in an AJAX post to this URL.
+    #
+    # Toggle save-unsave, redirect user to next URL.
+    toggle(pk)
+
+    # Read 'next' URL from GET parameters. Redirect user there if the
+    # parameter exists. Other redirect user to default lead details page.
+    next_url = request.GET.get('next')
+    if next_url is not None and len(next_url.strip()) > 0:
+        return HttpResponseRedirect(next_url)
+    else:
+        return HttpResponseRedirect(
+            reverse('leads:lead_detail', args=(pk,)))
+
+
+
+
+
 
 # Deprecated
 # class _LeadListView(ListView):

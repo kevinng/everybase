@@ -62,13 +62,13 @@ https://codebeautify.org/css-beautify-minify
             {% comment %} end: thumbnails {% endcomment %}
 
             {% comment %} start: buy_country {% endcomment %}
-            <div class="text-sm font-bold text-slate-400 mt-6">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
+            <div class="font-bold text-slate-400 mt-6">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
             <div class="mt-1">{% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}Any Country{% endif %}</div>
             <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country your goods/services are exported from or based in.{% elif lead.lead_type == 'buying' %}Country you'd like to buy or source from.{% endif %}</div>
             {% comment %} end: buy_country {% endcomment %}
 
             {% comment %} start: sell_country {% endcomment %}
-            <div class="text-sm font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Sell In This Country{% elif lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
+            <div class="font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Sell In This Country{% elif lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
             <div class="mt-1">{% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}Any Country{% endif %}</div>
             <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country you'd like to sell your goods/services in.{% elif lead.lead_type == 'buying' %}Country your goods/services are imported into or needed.{% endif %}</div>
             {% comment %} end: sell_country {% endcomment %}
@@ -78,38 +78,73 @@ https://codebeautify.org/css-beautify-minify
             <div class="mt-1">{{ lead.details }}</div>
             {% comment %} end: details {% endcomment %}
             
+            {% comment %} start: need_agent {% endcomment %}
+            {% if lead.need_agent %}
+                <div class="text-xl font-bold mt-6">I need selling or promoting agents</div>
 
+                {% if lead.commission_type == 'percentage' %}
 
+                {% comment %} start: commission {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">Agent Commission</div>
+                <div class="mt-1">{{ lead.commission }} % of Sales</div>
+                {% comment %} end: commission {% endcomment %}
 
+                {% comment %} start: avg_deal_size {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">Average Deal Size</div>
+                <div class="mt-1">USD {{ lead.avg_deal_size|floatformat:2 }}</div>
+                {% comment %} end: avg_deal_size {% endcomment %}
 
+                {% comment %} start: avg_deal_comm {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">Average Earnings Per Deal</div>
+                <div class="mt-1">USD {{ lead.avg_deal_comm|floatformat:2 }}</div>
+                {% comment %} end: avg_deal_comm {% endcomment %}
 
+                {% comment %} start: commission_payable_after {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">Commission Payable After</div>
+                <div class="mt-1">{% if lead.commission_payable_after == 'initial_deposit_received' %}Initial Deposit Received{% elif lead.commission_payable_after == 'goods_shipped' %}Goods Shipped{% elif lead.commission_payable_after == 'buyer_received_goods_services' %}Buyer Received Goods/Services{% elif lead.commission_payable_after == 'full_payment_received' %}Full Payment Received{% elif lead.commission_payable_after == 'other' %}{{ lead.commission_payable_after_other }}{% endif %}</div>
+                {% comment %} end: commission_payable_after {% endcomment %}
 
-                            
-            {% comment %} <div>{% if lead.lead_type == 'buying' %}Buy from{% elif lead.lead_type == 'selling' %}Source is {% endif %} {% if lead.buy_country is None %}any country{% else %}{{ lead.buy_country.name }}{% endif %}</div>
-            <div>{% if lead.lead_type == 'buying' %}Destination is{% elif lead.lead_type == 'selling' %}Sell to{% endif %} {% if lead.sell_country is None %}any country{% else %}{{ lead.sell_country.name }}{% endif %}</div> {% endcomment %}
-            <div class="text-sm font-bold uppercase text-slate-400 mt-3">Details</div>
-            <div>{% if summary == True %}{{ lead.details|slice:':200' }}{% if lead.details|length > 200 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
-            <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Agent Commission</div>
-            <div>{{ lead.commissions }} %</div>
-            {% if summary != True %}
-            <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Deal Size</div>
-            <div>USD {{ lead.avg_deal_size }}</div>
-            <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Commission Per Deal</div>
-            <div>USD {{ lead.commissions }}</div>
-            {% if lead.other_comm_details is not None and lead.other_comm_details|cut:' ' != '' %}
-                <div class="text-sm font-bold uppercase text-slate-400 mt-3">Other Commission Details</div>
-                <div>{{ lead.other_comm_details }}</div>
-            {% endif %}
-            {% endif %}
-            <div class="italic my-5">Actual commissions negotiated per deal.</div>
-            
-            <div class="flex justify-end">
-                {% if summary == True %}
-                    <a href="{% url 'leads:lead_detail' lead.id %}" class="px-6 py-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md">Details</a>
+                {% comment %} start: other_agent_details {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">Other Details For {% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %} Agent</div>
+                <div class="mt-1">{{ lead.other_agent_details }}</div>
+                {% comment %} end: other_agent_details {% endcomment %}
+
+                {% elif lead.commission_type == 'other' %}
+
+                <div class="font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %} Agent Commission</div>
+                <div class="mt-1">{{ lead.commission_type_other }}</div>
+
                 {% endif %}
-        
-                {% if user.is_authenticated and user.user.id == lead.author.id %}
+
+                {% comment %} start: is_comm_negotiable {% endcomment %}
+                {% if lead.is_comm_negotiable == True %}
+                <div class="italic mt-4">Commission may differ and is negotiable for each deal.</div>
+                {% endif %}
+                {% comment %} end: is_comm_negotiable {% endcomment %}
+
+            {% endif %}
+            {% comment %} end: need_agent {% endcomment %}
+
+            {% if lead.need_logistics_agent %}
+                <div class="text-xl font-bold mt-6">I need logistics agents</div>
+
+                <div class="font-bold text-slate-400 mt-4">Logistics Needs</div>
+                <div class="mt-1">{{ lead.other_logistics_agent_details }}</div>
+            {% endif %}
+
+            <div class="flex justify-end mt-8">
+                {% if user.is_authenticated == True and user.user.id == lead.author.id %}
                     <a href="{% url 'leads:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md">Edit</a>
+                {% elif user.user.id != lead.author.id %}
+                    {% if user.is_authenticated == True %}
+                        {% comment %} Allow toggling of save-unsave asynchronously {% endcomment %}
+                        {% load has_saved_lead %}
+                        {% has_saved_lead user.user lead as has_saved_lead %}
+                        <button id="toggle_save_lead" class="py-2 px-4 mt-2 rounded-md shadow-md {% if has_saved_lead == True %}text-white bg-blue-500 hover:bg-blue-600{% else %}text-slate-600 bg-slate-100 hover:bg-slate-200{% endif %}">{% if has_saved_lead == True %}Lead Saved{% else %}Save Lead{% endif %}</button>
+                    {% else %}
+                        {% comment %} Direct user to login and come back to this page with lead saved {% endcomment %}
+                        <a href="" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Lead</a>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -125,12 +160,11 @@ https://codebeautify.org/css-beautify-minify
 {% endblock %}
 
 {% comment %}
-static/js/user_detail_side.js
-
 Dependences:
     JQuery
 
 $(document).ready(function() {
+    // 
     $toggle_save_user = $('#toggle_save_user')
     $toggle_save_user.click(function () {
         // Make AJAX call to save user, and update button look.
@@ -153,6 +187,8 @@ $(document).ready(function() {
             }
         })
     })
+
+
 })
 {% endcomment %}
 {% block other_script %}
@@ -161,7 +197,59 @@ $(document).ready(function() {
 <script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
 <script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
 <script>
+
+    $(document).ready(function() {
+        // Save/unsave user
+        $toggle_save_user = $('#toggle_save_user')
+        $toggle_save_user.click(function () {
+            // Make AJAX call to save user, and update button look.
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'users:toggle_save_user' lead.author.id %}",
+                dataType: 'json',
+                success: function (data) {
+                    if (data['s'] == true) {
+                        $toggle_save_user
+                            .removeClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
+                            .addClass('text-white bg-blue-500 hover:bg-blue-600')
+                            .text('Person Saved')
+                    } else {
+                        $toggle_save_user
+                            .addClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
+                            .removeClass('text-white bg-blue-500 hover:bg-blue-600')
+                            .text('Save Person')
+                    }
+                }
+            })
+        })
+    
+        // Save/unsave lead
+        $toggle_save_lead = $('#toggle_save_lead')
+        $toggle_save_lead.click(function () {
+            // Make AJAX call to save lead, and update button look.
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'leads:toggle_save_lead' lead.id %}",
+                dataType: 'json',
+                success: function (data) {
+                    if (data['s'] == true) {
+                        $toggle_save_lead
+                            .removeClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
+                            .addClass('text-white bg-blue-500 hover:bg-blue-600')
+                            .text('Lead Saved')
+                    } else {
+                        $toggle_save_lead
+                            .addClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
+                            .removeClass('text-white bg-blue-500 hover:bg-blue-600')
+                            .text('Save Lead')
+                    }
+                }
+            })
+        })
+    })
+
+
 {% comment %} Embedded here because URL needs to be rendered into code. {% endcomment %}
-$(document).ready((function(){$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.post("{% url 'users:toggle_save_user' lead.author.id %}",(function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}))}))}));
+
 </script>
 {% endblock %}
