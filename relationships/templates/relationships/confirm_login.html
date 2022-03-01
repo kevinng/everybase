@@ -41,12 +41,15 @@ $(document).ready(function () {
             }
         })
         counter--
+        if (counter < 0) {
+            clearInterval(set_interval) // Stop counter
+        }
     }, 3000) // Poll every 3 seconds.
 })
 {% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready((function(){setInterval((function(){$.get("{% url 'is_logged_in' user_uuid %}",(function(n){1==n.l&&window.location.replace("{{ next }}")}))}),3e3)}));
+$(document).ready((function(){var e=1e3,n=setInterval((function(){$.get("{% url 'is_logged_in' user_uuid %}",(function(e){1==e.l&&window.location.replace("{{ next }}")})),--e<0&&clearInterval(n)}),3e3)}));
 </script>
 {% endblock %}

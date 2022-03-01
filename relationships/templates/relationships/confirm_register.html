@@ -28,20 +28,20 @@ Javascript
 https://codebeautify.org/minify-js
 
 $(document).ready(function () {
-    var counter = 1000; // Poll for 50 minutes at most (1000 * 3s = 50 mins)
+    var counter = 1000 // Poll for 50 minutes at most (1000 * 3s = 50 mins)
     var set_interval = setInterval(function() {
-        // Get register token and ascertain if it has been activated.
+        // Get register token and ascertain if it has been activated
         $.get("{% url 'is_registered' user_uuid %}", function(data) {
             if (data['r'] == true) {
-                window.location.replace('{{ next }}');
+                window.location.replace('{{ next }}')
             }
-        });
-        counter--;
+        })
+        counter--
         if (counter < 0) {
-            clearInterval(set_interval); // Stop this counter.
+            clearInterval(set_interval) // Stop counter
         }
-    }, 3000); // Poll every 3 seconds.
-});
+    }, 3000) // Poll every 3 seconds
+})
 {% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
