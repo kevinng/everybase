@@ -31,23 +31,22 @@ Javascript
 https://codebeautify.org/minify-js
 
 $(document).ready(function () {
-    var counter = 1000; // Poll for 50 minutes (1000 * 3s = 3000 mins).
+    var counter = 1000 // Poll for 50 minutes (1000 * 3s = 3000 mins)
     var set_interval = setInterval(function () {
-        // Get login token and ascertain if it has been activated.
-        // Note: the URLs are rendered by the view into the Javascript.
+        // Get login token and ascertain if it has been activated
+        // Note: the URLs are rendered by the view into the Javascript
         $.get("{% url 'is_logged_in' user_uuid %}", function (data) {
-            console.log(data['l'])
             if (data['l'] == true) {
-                window.location.replace('{{ next }}');
+                window.location.replace('{{ next }}')
             }
-        });
-        counter--;
-    }, 3000); // Poll every 3 seconds.
-});
+        })
+        counter--
+    }, 3000) // Poll every 3 seconds.
+})
 {% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready((function(){setInterval((function(){$.get("{% url 'is_logged_in' user_uuid %}",(function(n){console.log(n.l),1==n.l&&window.location.replace("{{ next }}")}))}),3e3)}));
+$(document).ready((function(){setInterval((function(){$.get("{% url 'is_logged_in' user_uuid %}",(function(n){1==n.l&&window.location.replace("{{ next }}")}))}),3e3)}));
 </script>
 {% endblock %}
