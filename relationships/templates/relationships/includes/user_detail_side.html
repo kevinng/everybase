@@ -2,16 +2,18 @@
 Params:
     detail_user, user whose details are being shown
 {% endcomment %}
-
-<div class="bg-white lg:block lg:w-1/3 xl:w-1/4 lg:sticky lg:top-20 lg:self-start rounded shadow-md">
+<div class="bg-white lg:block lg:w-1/3 xl:w-1/4 lg:self-start rounded shadow-md">
     <div class="flex flex-col items-center">
         <h1 class="text-2xl font-bold text-center mt-10 px-10">{{ detail_user.first_name }} {{ detail_user.last_name }}</h1>
-        <div class="mt-2">{{ detail_user.country.name }}{% if detail_user.state_string is not None %} {{ detail_user.state_string }}{% endif %}</div>
+        <div class="mt-2">{{ detail_user.country.name }}{% if detail_user.state_string is not None %}, {{ detail_user.state_string }}{% endif %}</div>
+        {% if detail_user.company_name %}
+            <div class="">{{ detail_user.company_name }}</div>
+        {% endif %}
         {% if user.is_authenticated and user.user.id == detail_user.id %}
-            <a href="{% url 'users:user_edit' user.user.id %}" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
+            <a href="{% url 'users:user_edit' user.user.id %}" class="py-2 px-4 mt-4 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
             <a href="{% url 'logout' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2 mt-2">Logout</a>
         {% elif user.user.id != detail_user.id %}
-            <a href="{% url 'users:whatsapp' detail_user.id %}" class="py-2 px-4 mt-2 rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
+            <a href="{% url 'users:whatsapp' detail_user.id %}" class="py-2 px-4 mt-4 rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
             {% if user.is_authenticated %}
                 {% load last_contacted %}
                 {% last_contacted user.user detail_user as last_contacted %}
@@ -21,18 +23,7 @@ Params:
                     </div>
                 {% endif %}
             {% endif %}
-        {% endif %}
-
-        {% comment %}
-        If user is authenticated and is not the detail user, and user has not saved detail user, allow the user to save asynchronously.
-        
-        Otherwise, redirect the user to login, and if user is not the detail user, redirect back after login with detail user saved.
-        
-        This mechanism is implemented by passing a GET parameter to the view. The view will save the user before perform the rest of its function.
-        {% endcomment %}
-        {% comment %} {% if user.is_authenticated and user.user.id != detail_user.id %} {% endcomment %}
-            {% comment %} TODO check if user is saved, if not allow async save {% endcomment %}
-    
+        {% endif %}    
         {% if user.user.id != detail_user.id %}
             {% if user.is_authenticated %}
                 {% comment %} Allow toggling of save-unsave asynchronously {% endcomment %}
@@ -44,13 +35,8 @@ Params:
                 <a href="{% url 'users:toggle_save_user' detail_user.id %}" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Person</a>
             {% endif %}
         {% endif %}
-
-        
-
-
-        
     </div>
-    <div class="bg-white px-4 pb-5 mt-8 mb-4">
+    <div class="bg-white px-8 pb-8 mt-8">
         {% comment %} start: goods_string {% endcomment %}
         {% if detail_user.goods_string is not None and detail_user.goods_string|cut:' ' != '' %}
             <div class="text-sm font-bold text-slate-400">Goods & Services</div>
