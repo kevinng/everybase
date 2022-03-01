@@ -2,6 +2,9 @@
 Javascript
 https://codebeautify.org/minify-js
 
+Dependences:
+    JQuery
+
 $(document).ready(function() {
     $toggle_save_user = $('#toggle_save_user')
     $toggle_save_user.click(function () {
