@@ -530,14 +530,14 @@ def toggle_save_user(request, pk):
             # Toggle save-unsave
             saved_user.active = not saved_user.active
             saved_user.save()
-
-            return {'s': saved_user.active}
         except models.SavedUser.DoesNotExist:
-            models.SavedUser.objects.create(
+            saved_user = models.SavedUser.objects.create(
                 savee=models.User.objects.get(pk=pk),
                 saver=request.user.user,
                 active=True
             )
+        
+        return {'s': saved_user.active}
 
     if request.method == 'POST':
         # AJAX call, toggle save-unsave, return JSON.
