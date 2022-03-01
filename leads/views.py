@@ -184,7 +184,7 @@ def lead_create(request):
                     file.last_modified = lead_s3_obj.last_modified
                     file.save()
 
-                    # Resize and save thumbnail
+                    # Resize and save thumbnail, and record sizes
                     with Image.open(image) as im:
                         # Resize preserving aspect ratio cropping from the center
                         thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
@@ -197,6 +197,10 @@ def lead_create(request):
                             Body=output,
                             ContentType=mime_type
                         )
+
+                        file.width, file.height = im.size
+                        file.thumbnail_width, file.thumbnail_height = thumbnail.size
+                        file.save()
                 else:
                     # Image does not exist
 
@@ -252,7 +256,7 @@ def lead_create(request):
                                 .download_fileobj(cache_file.s3_object_key, cache)
                             cache.seek(0)
 
-                            # Resize and save thumbnail
+                            # Resize and save thumbnail, and record sizes
                             with Image.open(cache) as im:
                                 # Resize preserving aspect ratio cropping from the center
                                 thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
@@ -265,6 +269,10 @@ def lead_create(request):
                                     Body=output,
                                     ContentType=cache_file.mime_type
                                 )
+
+                                file.width, file.height = im.size
+                                file.thumbnail_width, file.thumbnail_height = thumbnail.size
+                                file.save()
 
                             # Delete cache
                             s3.Object(settings.AWS_STORAGE_BUCKET_NAME,
