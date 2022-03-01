@@ -16,7 +16,7 @@
         <h1 class="text-3xl font-bold text-center mt-6">New Lead</h1>
         <div class="mt-7 flex flex-col justify-center">
             {% comment %} start: lead_type {% endcomment %}
-            <label for="lead_type" class="text-md font-bold text-slate-400">Are you selling or buying?</label>
+            <label for="lead_type" class="font-bold text-slate-400">Are you selling or buying?</label>
             <div class="mt-2">
                 <select id="lead_type" name="lead_type" class="select2">
                     <option value="selling"{% if form.lead_type.value == 'selling' %} selected{% endif %}>Selling</option>
@@ -27,7 +27,7 @@
             {% comment %} end: lead_type {% endcomment %}
 
             {% comment %} start: author_type {% endcomment %}
-            <label id="author_type__label" for="author_type" class="text-md font-bold text-slate-400 mt-7">Are you a direct seller/buyer or a middleman?</label>
+            <label id="author_type__label" for="author_type" class="font-bold text-slate-400 mt-7">Are you a direct seller/buyer or a middleman?</label>
             <div class="mt-2">
                 <select id="author_type" name="author_type" class="select2">
                     <option id="author_type__option__direct" value="direct"{% if form.author_type.value == 'direct' %} selected{% endif %}></option>
@@ -38,7 +38,7 @@
             {% comment %} end: author_type {% endcomment %}
 
             {% comment %} start: buy country {% endcomment %}
-            <label id="buy_country__label" for="buy_country" class="text-md font-bold text-slate-400 mt-7">Buy From This Country</label>
+            <label id="buy_country__label" for="buy_country" class="font-bold text-slate-400 mt-7">Buy From This Country</label>
             <div class="mt-2">
                 <select id="buy_country" name="buy_country" class="select2" data-placeholder="Choose country">
                     <option></option>
@@ -53,7 +53,7 @@
             {% comment %} end: buy country {% endcomment %}
 
             {% comment %} start: sell country {% endcomment %}
-            <label id="sell_country__label" for="sell_country" class="text-md font-bold text-slate-400 mt-7">Sell In This Country</label>
+            <label id="sell_country__label" for="sell_country" class="font-bold text-slate-400 mt-7">Sell In This Country</label>
             <div class="mt-2">
                 <select id="sell_country" name="sell_country" class="select2" data-placeholder="Choose country">
                     <option></option>
@@ -68,14 +68,14 @@
             {% comment %} end: sell country {% endcomment %}
 
             {% comment %} start: details {% endcomment %}
-            <label for="details" class="text-md font-bold text-slate-400 mt-7">Goods/Services Details</label>
+            <label for="details" class="font-bold text-slate-400 mt-7">Goods/Services Details</label>
             <textarea name="details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None and form.details.value|cut:' ' != '' %}{{ form.details.value }}{% endif %}</textarea>
             {% if form.details.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             <div id="details__help" class="mt-2"></div>
             {% comment %} end: details {% endcomment %}
 
             {% comment %} start: images {% endcomment %}
-            <label class="text-md font-bold text-slate-400 mt-7">Goods/Services Images</label>
+            <label class="font-bold text-slate-400 mt-7">Goods/Services Images</label>
             <div class="flex flex-col items-center">
                 <div id="image_one_preview" class="mt-8">No image chosen</div>
                 <div id="image_one_remove" class="py-3 px-4 rounded-md font-bold bg-rose-100 hover:bg-rose-200 cursor-pointer mt-3">Remove Image 1</div>
@@ -125,7 +125,7 @@
             {% comment %} end: images {% endcomment %}
 
             {% comment %} start: need_agent {% endcomment %}
-            <label id="need_agent__question" class="text-md font-bold text-slate-400 mt-12"></label>
+            <label id="need_agent__question" class="font-bold text-slate-400 mt-12"></label>
             <div class="mt-4 flex justify-start">
                 <input id="need_agent" name="need_agent" type="checkbox" class="h-6 w-6 flex-none" {% if form.need_agent.value == True %} checked{% endif %}>
                 <label id="need_agent__label" for="need_agent" class="ml-3"></label>
@@ -134,7 +134,7 @@
             {% comment %} end: need_agent {% endcomment %}
 
             {% comment %} start: commission_type {% endcomment %}
-            <label id="commission_type__label" for="commission_type" class="text-md font-bold text-slate-400 mt-7">How is agent commission calculated?</label>
+            <label id="commission_type__label" for="commission_type" class="font-bold text-slate-400 mt-7">How is agent commission calculated?</label>
             <div id="commission_type__input" class="mt-2">
                 <select id="commission_type" name="commission_type" class="select2">
                     <option value="percentage"{% if form.commission_type.value == 'percentage' %} selected{% endif %}>% of Sales</option>
@@ -151,7 +151,7 @@
             {% comment %} end: commission_type_other {% endcomment %}
 
             {% comment %} start: commission % {% endcomment %}
-            <label id="commission__label" for="commission" class="text-md font-bold text-slate-400 mt-7">Agent Commission</label>
+            <label id="commission__label" for="commission" class="font-bold text-slate-400 mt-7">Agent Commission</label>
             <div id="commission__input" class="flex items-center justify-start">
                 <input id="commission" name="commission" placeholder="0" type="number" min="0" max="100" step="0.5" {% if form.commission.value %}value="{{ form.commission.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">% of Sales</div>
             </div>
@@ -161,7 +161,7 @@
             {% comment %} end: commission % {% endcomment %}
 
             {% comment %} start: avg_deal_size {% endcomment %}
-            <label id="avg_deal_size__label" for="avg_deal_size" class="text-md font-bold text-slate-400 mt-7">Average Deal Size</label>
+            <label id="avg_deal_size__label" for="avg_deal_size" class="font-bold text-slate-400 mt-7">Average Deal Size</label>
             <div id="avg_deal_size__input" class="flex items-center justify-start">
                 <div class="mr-3 font-bold text-2xl">USD</div><input id="avg_deal_size" name="avg_deal_size" placeholder="0" type="number" {% if form.avg_deal_size.value %}value="{{ form.avg_deal_size.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2">
             </div>
@@ -170,13 +170,13 @@
             {% comment %} end: avg_deal_size {% endcomment %}
 
             {% comment %} start: average earnings per deal {% endcomment %}
-            <label id="avg_earnings__label" class="text-md font-bold text-slate-400 mt-7">Average Agent Earnings Per Deal</label>
+            <label id="avg_earnings__label" class="font-bold text-slate-400 mt-7">Average Agent Earnings Per Deal</label>
             <div id="avg_earnings__value" class="mt-2 font-bold text-2xl">USD <span id="avg_earnings__value_1">0.00</span></div>
             <div id="avg_earnings__help" class="mt-2">On average, an agent makes <span class="font-bold">USD <span id="avg_earnings__value_2">0.00</span></span> per deal. <span class="italic">This is a guide only</span>.</div>
             {% comment %} end: average earnings per deal {% endcomment %}
 
             {% comment %} start: is_comm_negotiable {% endcomment %}
-            <label id="is_comm_negotiable__label" for="commission" class="text-md font-bold text-slate-400 mt-7">Is commission negotiable for each deal?</label>
+            <label id="is_comm_negotiable__label" for="commission" class="font-bold text-slate-400 mt-7">Is commission negotiable for each deal?</label>
             <div id="is_comm_negotiable__input" class="mt-4 flex justify-start">
                 <input id="is_comm_negotiable" name="is_comm_negotiable" type="checkbox" class="h-6 w-6" {% if form.is_comm_negotiable.value == True %} checked{% endif %}>
                 <label for="is_comm_negotiable" class="ml-3">Yes, commission <span class="italic">may</span> differ and is negotiable for each deal.</label>
@@ -184,7 +184,7 @@
             {% comment %} end: is_comm_negotiable {% endcomment %}
 
             {% comment %} start: commission_payable_by {% endcomment %}
-            <label id="commission_payable_by__label" for="commission_payable_by" class="text-md font-bold text-slate-400 mt-7">Commission Payable By</label>
+            <label id="commission_payable_by__label" for="commission_payable_by" class="font-bold text-slate-400 mt-7">Commission Payable By</label>
             <div id="commission_payable_by__input" class="mt-2">
                 <select id="commission_payable_by" name="commission_payable_by" class="select2">
                     <option value="me"{% if form.commission_payable_by.value == 'me' %} selected{% endif %}>Me</option>
@@ -196,7 +196,7 @@
             {% comment %} end: commission_payable_by {% endcomment %}
 
             {% comment %} start: commission_payable_after {% endcomment %}
-            <label id="commission_payable_after__label" for="commission_payable_after" class="text-md font-bold text-slate-400 mt-7">When will commissions be paid?</label>
+            <label id="commission_payable_after__label" for="commission_payable_after" class="font-bold text-slate-400 mt-7">When will commissions be paid?</label>
             <div id="commission_payable_after__input" class="mt-2">
                 <select id="commission_payable_after" name="commission_payable_after" class="select2">
                     <option value="initial_deposit_received"{% if form.commission_payable_after.value == 'initial_deposit_received' %} selected{% endif %}>Initial Deposit Received</option>
@@ -216,13 +216,13 @@
             {% comment %} end: commission_payable_after_other {% endcomment %}
 
             {% comment %} start: other_agent_details {% endcomment %}
-            <label id="other_agent_details__label" for="other_agent_details" class="text-md font-bold text-slate-400 mt-7">Other details you'd like the agent to know</label>
+            <label id="other_agent_details__label" for="other_agent_details" class="font-bold text-slate-400 mt-7">Other details you'd like the agent to know</label>
             <textarea id="other_agent_details" name="other_agent_details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.other_agent_details.value is not None %}{{ form.other_agent_details.value }}{% endif %}</textarea>
             {% if form.other_agent_details.errors %}<div id="other_agent_details__errors" class="px-1 mt-2 text-red-500">{% for error in form.other_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: other_agent_details {% endcomment %}
 
             {% comment %} start: need_logistics_agent {% endcomment %}
-            <label class="text-md font-bold text-slate-400 mt-12">Do you need agents to help you with logistics?</label>
+            <label class="font-bold text-slate-400 mt-12">Do you need agents to help you with logistics?</label>
             <div class="mt-4 flex justify-start">
                 <input id="need_logistics_agent" name="need_logistics_agent" type="checkbox" class="h-6 w-6 flex-none" {% if form.need_logistics_agent.value == True %} checked{% endif %}>
                 <label for="need_logistics_agent" class="ml-3">Yes, I need agents to help me with logistics</label>
@@ -231,7 +231,7 @@
             {% comment %} end: need_logistics_agent {% endcomment %}
 
             {% comment %} start: other_logistics_agent_details {% endcomment %}
-            <label id="other_logistics_agent_details__label" for="other_logistics_agent_details" class="text-md font-bold text-slate-400 mt-7">What logistics needs do you have?</label>
+            <label id="other_logistics_agent_details__label" for="other_logistics_agent_details" class="font-bold text-slate-400 mt-7">What logistics needs do you have?</label>
             <textarea id="other_logistics_agent_details" name="other_logistics_agent_details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.other_logistics_agent_details.value is not None %}{{ form.other_logistics_agent_details.value }}{% endif %}</textarea>
             {% if form.other_logistics_agent_details.errors %}<div id="other_logistics_agent_details__errors" class="px-1 mt-2 text-red-500">{% for error in form.other_logistics_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: other_logistics_agent_details {% endcomment %}
