@@ -20,12 +20,9 @@ https://codebeautify.org/css-beautify-minify
 
 {% endcomment %}
 {% block other_css %}
-<link href="{% static 'common/css/photoswipe.min.css' %}" rel="stylesheet" />
-<style>
-</style>
+<link href="{% static 'common/photoswipe/photoswipe.min.css' %}" rel="stylesheet" />
+<link href="{% static 'common/photoswipe/default-skin/default-skin.min.css' %}" rel="stylesheet" />
 {% endblock %}
-
-
 
 {% block title %}{% endblock %}
 
@@ -48,18 +45,22 @@ https://codebeautify.org/css-beautify-minify
                 <div class="text-sm">{{ lead.age_desc }}</div>
             </div>
 
-            {% comment %} start: thumbnails {% endcomment %}
-            <div class="flex items-start justify-start mt-2 gap-2">
+            <div class="flex items-start justify-start mt-2 gap-2 image-gallery" itemscope itemtype="http://schema.org/ImageGallery">
                 {% load thumbnail_url %}
                 {% load image_url %}
                 {% for file in lead.files.all %}
                     {% thumbnail_url file as thumbnail_url %}
                     {% image_url file as image_url %}
-                    <a href="{{ image_url }}">
-                        <img src="{{ thumbnail_url }}" class="border border-slate-200">
-                    </a>
+                    <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                        <a href="{{ image_url }}" itemprop="contentUrl" data-size="{{ file.width }}x{{ file.height }}">
+                            <img src="{{ thumbnail_url }}" itemprop="thumbnail" class="border border-slate-200">
+                        </a>
+                    </figure>
                 {% endfor %}
             </div>
+
+            {% comment %} start: thumbnails {% endcomment %}
+
             {% comment %} end: thumbnails {% endcomment %}
 
                             
@@ -98,15 +99,48 @@ https://codebeautify.org/css-beautify-minify
 
     </div>
 </div>
+{% comment %} PhotoSwipe library HTML code to be inserted before end of body tag. {% endcomment %}
+{% include 'includes/photoswipe.html' %}
 {% endblock %}
 
 {% comment %}
-Javascript
-https://codebeautify.org/minify-js
+static/js/user_detail_side.js
+
+Dependences:
+    JQuery
+
+$(document).ready(function() {
+    $toggle_save_user = $('#toggle_save_user')
+    $toggle_save_user.click(function () {
+        // Make AJAX call to save user, and update button look.
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'users:toggle_save_user' lead.author.id %}",
+            dataType: 'json',
+            success: function (data) {
+                if (data['s'] == true) {
+                    $toggle_save_user
+                        .removeClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
+                        .addClass('text-white bg-blue-500 hover:bg-blue-600')
+                        .text('Person Saved')
+                } else {
+                    $toggle_save_user
+                        .addClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
+                        .removeClass('text-white bg-blue-500 hover:bg-blue-600')
+                        .text('Save Person')
+                }
+            }
+        })
+    })
+})
 {% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
+<script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
+<script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
 <script>
-{% include 'relationships/includes/js/user_detail_side.js' %}
+{% comment %} Embedded here because URL needs to be rendered into code. {% endcomment %}
+$(document).ready((function(){$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.post("{% url 'users:toggle_save_user' lead.author.id %}",(function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}))}))}));
 </script>
 {% endblock %}
