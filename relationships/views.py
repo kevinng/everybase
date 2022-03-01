@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.template.response import TemplateResponse
 from django.views.generic.list import ListView
+from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
 
 from everybase import settings
@@ -511,3 +512,49 @@ def is_logged_in(request, user_uuid):
 def log_out(request):
     logout(request)
     return HttpResponseRedirect(reverse('home'))
+
+@login_required
+@csrf_exempt
+def toggle_save_user(request, pk):
+    if request.user.user.id == pk:
+        # Disallow saving of self
+        return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
+
+    def toggle(pk):
+        try:
+            saved_user = models.SavedUser.objects.get(
+                savee=models.User.objects.get(pk=pk),
+                saver=request.user.user
+            )
+
+            # Toggle save-unsave
+            saved_user.active = not saved_user.active
+            saved_user.save()
+
+            return {'s': saved_user.active}
+        except models.SavedUser.DoesNotExist:
+            models.SavedUser.objects.create(
+                savee=models.User.objects.get(pk=pk),
+                saver=request.user.user,
+                active=True
+            )
+
+    if request.method == 'POST':
+        # AJAX call, toggle save-unsave, return JSON.
+        return JsonResponse(toggle(pk))
+
+    # Unauthenticated call. User will be given the URL to click only if the
+    # user is authenticated. Otherwise, a click on the 'save' button will
+    # result in an AJAX post to this URL.
+    #
+    # Toggle save-unsave, redirect user to next URL.
+    toggle(pk)
+
+    # Read 'next' URL from GET parameters. Redirect user there if the
+    # parameter exists. Other redirect user to default user details page.
+    next_url = request.GET.get('next')
+    if next_url is not None and len(next_url.strip()) > 0:
+        return HttpResponseRedirect(next_url)
+    else:
+        return HttpResponseRedirect(
+            reverse('users:user_comments', args=(pk,)))

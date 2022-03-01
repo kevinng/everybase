@@ -8,7 +8,6 @@ $(document).ready(function() {
         // Make AJAX call to save user, and update button look.
         $.ajax({
             type: 'POST',
-            headers: {'X-CSRFToken': '{{ csrf_token }}'},
             url: "{% url 'users:toggle_save_user' lead.author.id %}",
             dataType: 'json',
             success: function (data) {
@@ -28,4 +27,4 @@ $(document).ready(function() {
     })
 })
 {% endcomment %}
-$(document).ready((function(){$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",headers:{"X-CSRFToken":"{{ csrf_token }}"},url:"{% url 'users:toggle_save_user' lead.author.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})}))}));
+$(document).ready((function(){$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.post("{% url 'users:toggle_save_user' lead.author.id %}",(function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}))}))}));
