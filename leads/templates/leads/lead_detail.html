@@ -2,48 +2,100 @@
 
 {% load static %}
 
+{% comment %} TODO {% endcomment %}
+
+{% comment %} Put in all the on-page SEO here {% endcomment %}
 {% comment %} Include keywords {% endcomment %}
-{% block title %}{{ lead.author.first_name }} Needs Agent{% endblock %}
+{% comment %}
+Title is optimized for SEO purposes. String format:
+- Buyer or seller
+- If buying, source country. If selling, destination country.
+- Goods/services keywords
+We want to cache the title, so the code doesn't have to run each and everytime the page is loaded
+{% endcomment %}
 
 {% comment %}
 CSS
 https://codebeautify.org/css-beautify-minify
 
-#mobile-filter {
-    position: fixed;
-    top: 0;
-    left: 100%;
-    width: 100%;
-    min-height: 100vh;
-    display: block;
-    z-index: 98;
-    background-color: white;
-    padding-top: 100px;
-    transition: 0.3s;
-}
-
-#mobile-filter.is-active {
-    left: 0;
-}
 {% endcomment %}
 {% block other_css %}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="{% static 'common/css/photoswipe.min.css' %}" rel="stylesheet" />
 <style>
-#mobile-filter{position:fixed;top:0;left:100%;width:100%;min-height:100vh;display:block;z-index:98;background-color:#fff;padding-top:100px;transition:0.3s}#mobile-filter.is-active{left:0}
 </style>
 {% endblock %}
 
+
+
+{% block title %}{% endblock %}
+
 {% block page_actions %}
+{% comment %} WRONG {% endcomment %}
 {% include 'relationships/includes/user_detail_actions.html' with detail_user=lead.author %}
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col lg:flex-row justify-center mt-10 gap-2">
+<div class="flex flex-col lg:flex-row justify-center mt-10 mb-10 gap-2">
     {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author %}
 
-    <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 lg:mt-0 mt-4">
-        {% include 'relationships/includes/user_detail_tabs.html' with detail_user=lead.author %}
-        {% include 'leads/includes/lead_item.html' with lead=lead summary=False more_css_classes='mt-2' %}
+
+    {% comment %} SHALL I INCLUDE A FLOATING BUTTON THAT JUMPS TO THE USER SECTION IN MOBILE MODE? IN MOBILE WE DON'T REALLY WNAT TO SHOW USER ON TOP, BUT IT'S TOO FAR DOWN THE SCREEN {% endcomment %}
+    <div class="w-full lg:w-1/2 lg:mt-0 mt-4">
+
+        <div class="bg-white rounded px-8 py-8">
+            <div class="flex items-start justify-between">
+                <div class="text-xl font-bold">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
+                <div class="text-sm">{{ lead.age_desc }}</div>
+            </div>
+
+            {% comment %} start: thumbnails {% endcomment %}
+            <div class="flex items-start justify-start mt-2 gap-2">
+                {% load thumbnail_url %}
+                {% load image_url %}
+                {% for file in lead.files.all %}
+                    {% thumbnail_url file as thumbnail_url %}
+                    {% image_url file as image_url %}
+                    <a href="{{ image_url }}">
+                        <img src="{{ thumbnail_url }}" class="border border-slate-200">
+                    </a>
+                {% endfor %}
+            </div>
+            {% comment %} end: thumbnails {% endcomment %}
+
+                            
+            <div>{% if lead.lead_type == 'buying' %}Buy from{% elif lead.lead_type == 'selling' %}Source is {% endif %} {% if lead.buy_country is None %}any country{% else %}{{ lead.buy_country.name }}{% endif %}</div>
+            <div>{% if lead.lead_type == 'buying' %}Destination is{% elif lead.lead_type == 'selling' %}Sell to{% endif %} {% if lead.sell_country is None %}any country{% else %}{{ lead.sell_country.name }}{% endif %}</div>
+            <div class="text-sm font-bold uppercase text-slate-400 mt-3">Details</div>
+            <div>{% if summary == True %}{{ lead.details|slice:':200' }}{% if lead.details|length > 200 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
+            <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Agent Commission</div>
+            <div>{{ lead.commissions }} %</div>
+            {% if summary != True %}
+            <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Deal Size</div>
+            <div>USD {{ lead.avg_deal_size }}</div>
+            <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Commission Per Deal</div>
+            <div>USD {{ lead.commissions }}</div>
+            {% if lead.other_comm_details is not None and lead.other_comm_details|cut:' ' != '' %}
+                <div class="text-sm font-bold uppercase text-slate-400 mt-3">Other Commission Details</div>
+                <div>{{ lead.other_comm_details }}</div>
+            {% endif %}
+            {% endif %}
+            <div class="italic my-5">Actual commissions negotiated per deal.</div>
+            
+            <div class="flex justify-end">
+                {% if summary == True %}
+                    <a href="{% url 'leads:lead_detail' lead.id %}" class="px-6 py-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md">Details</a>
+                {% endif %}
+        
+                {% if user.is_authenticated and user.user.id == lead.author.id %}
+                    <a href="{% url 'leads:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md">Edit</a>
+                {% endif %}
+            </div>
+        </div>
+        
+
+
+
+
     </div>
 </div>
 {% endblock %}
@@ -51,37 +103,10 @@ https://codebeautify.org/css-beautify-minify
 {% comment %}
 Javascript
 https://codebeautify.org/minify-js
-
-$(document).ready(function() {
-    $('.select2').select2();
-
-    $('.select2').one('select2:open', function(e) {
-        $('input.select2-search__field').prop('placeholder', 'Search here...');
-    });
-
-    $('#filter').click(function() {
-        t = $(this);
-        if (t.html() == 'Filter') {
-            t.html('Close');
-        } else {
-            t.html('Filter');
-        }
-
-        t.toggleClass('bg-blue-500');
-        t.toggleClass('text-white');
-        t.toggleClass('hover:bg-blue-600');
-        t.toggleClass('bg-slate-100');
-        t.toggleClass('text-slate-600');
-        t.toggleClass('hover:bg-slate-200');
-
-        $('#mobile-filter').toggleClass('is-active');
-    });
-});
 {% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-$(document).ready((function(){$(".select2").select2(),$(".select2").one("select2:open",(function(e){$("input.select2-search__field").prop("placeholder","Search here...")})),$("#filter").click((function(){t=$(this),"Filter"==t.html()?t.html("Close"):t.html("Filter"),t.toggleClass("bg-blue-500"),t.toggleClass("text-white"),t.toggleClass("hover:bg-blue-600"),t.toggleClass("bg-slate-100"),t.toggleClass("text-slate-600"),t.toggleClass("hover:bg-slate-200"),$("#mobile-filter").toggleClass("is-active")}))}));
+{% include 'relationships/includes/js/user_detail_side.js' %}
 </script>
 {% endblock %}

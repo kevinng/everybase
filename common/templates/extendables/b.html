@@ -13,9 +13,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'common/favicon/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'common/favicon/site.webmanifest' %}">
     {% block other_head_tags %}{% endblock %}
-    <style>
-        {% include 'includes/css/output.min.css' %}
-    </style>
+    <link href="{% static 'common/css/output.min.css' %}" rel="stylesheet" />
     {% block other_css %}{% endblock %}
 </head>
 <body class="bg-slate-100 flex flex-col">
