@@ -1,4 +1,3 @@
-from operator import mod
 import uuid
 from django.db import models
 from common.models import Standard
