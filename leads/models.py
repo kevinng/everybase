@@ -2,6 +2,42 @@ import uuid
 from django.db import models
 from common.models import Standard
 
+class LeadComment(Standard):
+    """Comment on a lead
+
+    Last updated: 14 February 2022, 11:33 AM
+    """
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='lead_comments',
+        related_query_name='lead_comments',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    commentor = models.ForeignKey(
+        'relationships.User',
+        related_name='lead_comments_as_commentor',
+        related_query_name='lead_comments_as_commentor',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    body = models.TextField()
+
+    reply_to = models.ForeignKey(
+        'LeadComment',
+        related_name='replies',
+        related_query_name='replies',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    def replies(self):
+        """Returns replies to this lead"""
+        return LeadComment.objects.filter(reply_to=self).order('')
+
 class Lead(Standard):
     """Lead.
 
@@ -182,6 +218,15 @@ class Lead(Standard):
 
     def avg_deal_comm(self):
         return self.commission / 100 * self.avg_deal_size
+
+    def root_comments(self):
+        """Returns root comments only (i.e., comments that are not replies to
+        a comment. We do not chain replies and all replies are to root comments.
+        """
+        return LeadComment.objects.filter(
+            lead=self,
+            reply_to__isnull=True
+        ).order_by('created')
 
 class LeadDetailView(Standard):
     """Lead detail view.
