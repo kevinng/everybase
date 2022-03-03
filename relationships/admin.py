@@ -1,9 +1,3 @@
-from everybase.settings import BASE_URL
-from urllib.parse import urljoin
-from django.urls import reverse
-from django.utils.html import format_html
-
-from files.models import File
 from django.contrib import admin
 
 from . import models as mod
