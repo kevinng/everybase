@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'storages',
     'django_user_agents',
     'phonenumber_field',
-    'loginas'
+    'loginas',
+    'payments.apps.PaymentsConfig'
 ]
 
 MIDDLEWARE = [

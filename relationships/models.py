@@ -8,6 +8,7 @@ from django.contrib.auth.models import User as django_user
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField, Country)
 from leads.models import Lead
+from payments import models as paymods
 
 class PhoneNumberType(Choice):
     """Phone number type.
@@ -309,6 +310,15 @@ class User(Standard):
 
     def num_leads_created(self):
         return Lead.objects.filter(author=self.id).count()
+
+    def num_credits_left(self):
+        sum = paymods.CreditsEvent.objects.filter(user=self)\
+            .aggregate(models.Sum('value'))
+
+        if sum['value__sum'] is None:
+            return 0
+
+        return sum['value__sum']
 
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email},\
