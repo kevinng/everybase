@@ -3,6 +3,22 @@ from common import admin as comadm
 from files import admin as fiadm
 from leads import models
 
+_lead_comment_fields = ['lead', 'commentor', 'body']
+@admin.register(models.LeadComment)
+class LeadCommentAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _lead_comment_fields
+    list_editable = comadm.standard_list_editable + _lead_comment_fields
+    search_fields = comadm.standard_search_fields + ['lead__first_name',
+        'lead__last_name', 'commentor__first_name', 'commentor__last_name',
+        'body']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _lead_comment_fields})
+    ]
+    autocomplete_fields = ['lead', 'commentor']
+
 _lead_fields = ['author', 'author_type', 'buy_country', 'sell_country',
     'lead_type', 'details', 'need_agent', 'commission_payable_by',
     'commission', 'commission_type', 'commission_type_other',

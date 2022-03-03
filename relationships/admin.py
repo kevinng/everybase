@@ -248,22 +248,6 @@ class UserCommentAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['commentee', 'commentor']
 
-_lead_comment_fields = ['lead', 'commentor', 'body']
-@admin.register(mod.LeadComment)
-class LeadCommentAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _lead_comment_fields
-    list_editable = comadm.standard_list_editable + _lead_comment_fields
-    search_fields = comadm.standard_search_fields + ['lead__first_name',
-        'lead__last_name', 'commentor__first_name', 'commentor__last_name',
-        'body']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _lead_comment_fields})
-    ]
-    autocomplete_fields = ['lead', 'commentor']
-
 _user_detail_views_fields = ['viewee', 'viewer', 'comments_view_count',
     'leads_view_count']
 @admin.register(mod.UserDetailView)

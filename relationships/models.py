@@ -555,38 +555,6 @@ class UserComment(Standard):
         db_index=True
     )
 
-class LeadComment(Standard):
-    """Comment on a lead
-
-    Last updated: 14 February 2022, 11:33 AM
-    """
-    lead = models.ForeignKey(
-        'leads.Lead',
-        related_name='lead_comments',
-        related_query_name='lead_comments',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    commentor = models.ForeignKey(
-        'User',
-        related_name='lead_comments_as_commentor',
-        related_query_name='lead_comments_as_commentor',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
-    body = models.TextField()
-
-    reply_to = models.ForeignKey(
-        'LeadComment',
-        related_name='replies',
-        related_query_name='replies',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
 class UserDetailView(Standard):
     """User detail view
     
