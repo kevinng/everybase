@@ -360,7 +360,8 @@ $(document).ready(function() {
 
             // Focus on this comment box
             $('html, body').animate({
-                scrollTop: $(this).offset().top
+                // 180 pixel from top looks good
+                scrollTop: $(this).find('.reply-box').offset().top - 180
             }, 500)
         } else {
             // Hide reply box on load    
@@ -377,7 +378,8 @@ $(document).ready(function() {
     // Scroll to focus if a target exists
     {% if focus %}
     $('html, body').animate({
-        scrollTop: $("#{{ focus }}").offset().top
+        // 180 pixel from top looks good
+        scrollTop: $("#{{ focus }}").offset().top - 180
     }, 500)
     {% endif %}
 })

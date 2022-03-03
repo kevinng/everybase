@@ -41,6 +41,7 @@ django-ipware = "*"
 django-loginas = "*"
 pillow = "*"
 python-magic = "*"
+email-scraper = "*"
 
 [requires]
 python_version = "3.7"
