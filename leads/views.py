@@ -11,6 +11,7 @@ from django.db.models.expressions import RawSQL
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
 
@@ -30,6 +31,42 @@ def get_countries():
 class LeadDetailView(DetailView):
     template_name = 'leads/lead_detail.html'
     model = models.Lead
+
+def lead_detail(request, pk):
+    lead = models.Lead.objects.get(pk=pk)
+    if request.method == 'POST':
+        # User posted a comment
+        form = forms.LeadCommentForm(request.POST)
+        if form.is_valid():
+            comment = models.LeadComment.objects.create(
+                lead=models.Lead.objects.get(pk=pk),
+                commentor=request.user.user,
+                body=request.POST.get('body')
+            )
+
+            comment_id = request.POST.get('comment_id')
+            if comment_id is not None:
+                # This is a reply to a root comment
+                comment.reply_to = models.LeadComment.objects.get(pk=comment_id)
+                comment.save()
+
+            # Focus on comment created
+            url = reverse('leads:lead_detail', args=(pk,)) + \
+                '?focus=comment-' + str(comment.id)
+            return HttpResponseRedirect(url)
+    else:
+        form = forms.LeadCommentForm()
+
+    params = {
+        'lead': lead,
+        'form': form
+    }
+
+    focus = request.GET.get('focus')
+    if focus is not None:
+        params['focus'] = focus
+
+    return render(request, 'leads/lead_detail.html', params)
 
 @login_required
 def lead_edit(request, pk):
@@ -491,7 +528,6 @@ def toggle_save_lead(request, pk):
     else:
         return HttpResponseRedirect(
             reverse('leads:lead_detail', args=(pk,)))
-
 
 
 

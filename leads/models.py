@@ -34,9 +34,9 @@ class LeadComment(Standard):
         db_index=True
     )
 
-    def replies(self):
+    def reply_comments(self):
         """Returns replies to this lead"""
-        return LeadComment.objects.filter(reply_to=self).order('')
+        return LeadComment.objects.filter(reply_to=self).order_by('created')
 
 class Lead(Standard):
     """Lead.

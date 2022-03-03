@@ -1,6 +1,7 @@
 {% extends 'extendables/b.html' %}
 
 {% load static %}
+{% load string_equal %}
 
 {% comment %} TODO {% endcomment %}
 
@@ -34,6 +35,8 @@ https://codebeautify.org/css-beautify-minify
 {% block content %}
 
 {% comment %} SHALL I INCLUDE A FLOATING BUTTON THAT JUMPS TO THE USER SECTION IN MOBILE MODE? IN MOBILE WE DON'T REALLY WNAT TO SHOW USER ON TOP, BUT IT'S TOO FAR DOWN THE SCREEN {% endcomment %}
+
+{% comment %} SHOW THE USER SIDE BETWEEN COMMENTS AND DETAILS IN MOBILE {% endcomment %}
 
 <div class="flex flex-col lg:flex-row justify-center mt-10 mb-10 gap-2">
     {% comment %} start: user detail side {% endcomment %}
@@ -156,112 +159,98 @@ https://codebeautify.org/css-beautify-minify
         {% comment %} end: details {% endcomment %}
 
         {% comment %} start: main comment box
-        For starting a new comment thread on this lead.
-        Shown always, to this and detail user. I.e., anyone may start a new comment any time.
+            For starting a new comment thread on this lead.
+            Shown always, to this and detail user. I.e., anyone may start a new comment any time.
         {% endcomment %}
-        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+        {% comment %} id="comment-starter" is used by our JavaScript code to focus on this section {% endcomment %}
+        <div id="comment-starter" class="bg-white rounded px-8 py-8 shadow-md mt-2">
             <div class="text-xl font-bold text-center">Comment On This Lead</div>
             <div class="flex flex-col items-center justify-center mt-2">
-                <textarea rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2"></textarea>
-                <button class="py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
-                <div class="flex justify-start px-2 mt-2">
-                    <input type="checkbox" class="h-6 w-6 flex-none">
-                    <label class="ml-3">I know you sell credits for users to contact others. So, I didn't include contact details in my comment. Let's help each other grow our businesses 😊</label>
-                </div>
-                <div class="mt-8">Comments do <span class="underline underline-offset-1">not</span> cost credits. You've <span class="font-bold">{{ user.user.num_credits_left }} credits</span> left.</div>
+                <form action="{% url 'leads:lead_detail' lead.id %}" class="check-to-enable" method="post">
+                    {% csrf_token %}
+                    <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments"></textarea>
+                    <button type="submit" class="check-to-enable-button py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
+                    <div class="flex flex-col items-center px-2 mt-2">
+                        <div class="flex justify-start">
+                            <input id="comment-enable-checkbox-starter" type="checkbox" class="check-to-enable-checkbox h-6 w-6 flex-none">
+                            <label for="comment-enable-checkbox-starter" class="ml-3">I know you sell credits for users to contact others. So, I didn't include contact details in my reply. Let's help each other grow our businesses 😊</label>
+                        </div>
+                        <div class="font-semibold mt-2 text-center"><span class="text-red-500">WARNING:</span> phone numbers of users who share contact details in comments will be banned.</div>
+                    </div>
+                </form>
 
-                <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
-            </div>
-        </div>
-        {% comment %} end: main comment box {% endcomment %}
-
-
-        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
-            <div class="flex justify-between items-center">
-                <div class="font-bold">John Doe, Australia</div>
-                <div class="text-sm">2d ago</div>
-            </div>
-            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
-
-            {% comment %} start: reply {% endcomment %}
-            <div class="mt-4">
-                <div class="flex justify-between items-center">
-                    <div class="font-bold ml-8">Arian Josimaya, Bangladesh</div>
-                    <div class="text-sm">3d ago</div>
-                </div>
-                <div class="mt-2 pl-8">Thanks for the compliment.</div>
-            </div>
-            {% comment %} end: reply {% endcomment %}
-
-            {% comment %} start: reply button
-            Anyone may reply to any message.
-            {% endcomment %}
-            <div class="flex justify-end">
-                <button class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Reply</button>
-            </div>
-            {% comment %} end: reply button {% endcomment %}
-        </div>
-        
-        
-        
-        {% comment %}
-
-
-
-
-        Iterate comments for this lead
-        
-        
-        
-        
-        {% endcomment %}
-
-
-        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
-            <div class="flex justify-between items-center">
-                <div class="font-bold">John Doe, Australia</div>
-                <div class="text-sm">2d ago</div>
-            </div>
-            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
-
-            <div class="flex justify-end">
-                <button class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Reply</button>
-            </div>
-        </div>
-
-
-
-
-        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
-            <div class="flex justify-between items-center">
-                <div class="font-bold">John Doe, Australia</div>
-                <div class="text-sm">2d ago</div>
-            </div>
-            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
-
-            {% comment %} start: reply {% endcomment %}
-            <div class="mt-4">
-                <div class="flex justify-between items-center">
-                    <div class="font-bold ml-8">Arian Josimaya, Bangladesh</div>
-                    <div class="text-sm">3d ago</div>
-                </div>
-                <div class="mt-2 pl-8">Thanks for the compliment.</div>
-            </div>
-            {% comment %} end: reply {% endcomment %}
-
-            <div class="flex flex-col items-center justify-center mt-2">
-                <textarea rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2"></textarea>
-                <button class="py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Reply</button>
-                <div class="flex justify-start px-2 mt-2">
-                    <input type="checkbox" class="h-6 w-6 flex-none">
-                    <label class="ml-3">I know you sell credits for users to contact others. So, I didn't include contact details in my comment. Let's help each other grow our businesses 😊 <span class="font-semibold ml-1"><span class="text-red-500">WARNING:</span> phone numbers of users who share contact details in posts will be banned.</span></label>
-                </div>
-                <div class="mt-8">Replies do <span class="underline underline-offset-1">not</span> cost credits. You've <span class="font-bold">{{ user.user.num_credits_left }} credits</span> left.</div>
+                <div class="mt-8 text-center">Replies do <span class="underline underline-offset-1">not</span> cost credits.</div>
+                <div class="text-center">You've <span class="font-bold">{{ user.user.num_credits_left }} credits</span> left.</div>
 
                 <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
             </div>
         </div>
 
+        {% comment %} start: root comments {% endcomment %}
+        {% for root_comment in lead.root_comments %}
+            {% string_equal form.comment_id.value root_comment.id as is_this_comment %}
+
+            <div class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if is_this_comment and form.body.errors %} focus-comment-box="yes"{% endif %}>
+                <div id="comment-{{ root_comment.id }}" class="flex justify-between items-center">
+                    {% comment %} TODO add link {% endcomment %}
+                    <div class="font-bold">{{ root_comment.commentor.first_name }} {{ root_comment.commentor.last_name }}, {{ root_comment.commentor.country.name }}</div>
+                    <div class="text-sm">{{ root_comment.age_desc }}</div>
+                </div>
+                <div class="mt-2">{{ root_comment.body }}</div>
+
+                {% comment %} start: replies {% endcomment %}
+                {% for reply in root_comment.reply_comments %}
+                    {% comment %} id="comment-{{ reply.id }}" is used by our JavaScript code to focus on this section {% endcomment %}
+                    <div id="comment-{{ reply.id }}" class="mt-4">
+                        <div class="flex justify-between items-center">
+                            <div class="font-bold ml-8">{{ reply.commentor.first_name }} {{ reply.commentor.last_name }}, {{ reply.commentor.country.name }}</div>
+                            <div class="text-sm">{{ reply.age_desc }}</div>
+                        </div>
+                        <div class="mt-2 pl-8">{{ reply.body }}</div>
+                    </div>
+                {% endfor %}
+                {% comment %} end: replies {% endcomment %}
+                
+                {% comment %} start: reply {% endcomment %}
+                <div class="flex justify-end">
+                    <button id="comment-reply-show-{{ root_comment.id }}" class="reply-show py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Reply</button>
+                </div>
+                {% comment %} end: reply {% endcomment %}
+
+                {% comment %} start: reply box {% endcomment %}
+                {% comment %} id="comment-reply-box-{{ root_comment.id }}" is used by our JavaScript code to focus on this section {% endcomment %}
+                <form id="comment-reply-box-{{ root_comment.id }}" action="{% url 'leads:lead_detail' lead.id %}" class="reply-box check-to-enable flex flex-col justify-center" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="comment_id" value="{{ root_comment.id }}">
+                    <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-4" placeholder="Enter reply"></textarea>
+                    {% if is_this_comment and form.body.errors is not None %}
+                        <div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>
+                    {% endif %}
+                    <button type="submit" class="check-to-enable-button py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
+                    <div class="flex flex-col items-center px-2 mt-2">
+                        <div class="flex justify-start">
+                            <input id="comment-enable-checkbox-{{ root_comment.id }}" type="checkbox" class="check-to-enable-checkbox h-6 w-6 flex-none">
+                            <label for="comment-enable-checkbox-{{ root_comment.id }}" class="ml-3">I know you sell credits for users to contact others. So, I didn't include contact details in my reply. Let's help each other grow our businesses 😊</label>
+                        </div>
+                        <div class="font-semibold mt-2 text-center"><span class="text-red-500">WARNING:</span> phone numbers of users who share contact details in comments will be banned.</div>
+                    </div>
+
+                    <div class="mt-8 text-center">Replies do <span class="underline underline-offset-1">not</span> cost credits.</div>
+                    <div class="text-center">You've <span class="font-bold">{{ user.user.num_credits_left }} credits</span> left.</div>
+
+                    <div class="flex justify-center">
+                        <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
+                    </div>
+                </form>
+                {% comment %} end: reply box {% endcomment %}
+            </div>
+        {% endfor %}
+        {% comment %} end: root comments {% endcomment %}
+
+
+        
+        
+     
 
 
 
@@ -335,5 +324,70 @@ $(document).ready(function() {
 <script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
 <script>{% comment %} Embedded here because URL needs to be rendered into code. {% endcomment %}
 $(document).ready((function(){$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",url:"{% url 'users:toggle_save_user' lead.author.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})})),$toggle_save_lead=$("#toggle_save_lead"),$toggle_save_lead.click((function(){$.ajax({type:"POST",url:"{% url 'leads:toggle_save_lead' lead.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_lead.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Lead Saved"):$toggle_save_lead.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Lead")}})}))}));
+
+
+$(document).ready(function() {
+
+    // Enable or disable corresponding button based on checkbox state
+    function set_enable_button_checkbox(button, checkbox) {
+        if (checkbox.is(':checked')) {
+            button.removeAttr('disabled')
+            button.addClass('bg-blue-500 hover:bg-blue-600')
+            button.removeClass('bg-blue-200')
+        } else {
+            button.prop('disabled', true)
+            button.removeClass('bg-blue-500 hover:bg-blue-600')
+            button.addClass('bg-blue-200')
+        }
+    }
+
+    // Initialize each check-to-enable section
+    $('.check-to-enable').each(function () {        
+        // Initialize for the first time on page load
+        set_enable_button_checkbox(
+            $(this).find('.check-to-enable-button'),
+            $(this).find('.check-to-enable-checkbox')
+        )
+
+        // Initialize on checkbox change
+        $(this).find('.check-to-enable-checkbox').change(function () {
+            $button = $(this).closest('.check-to-enable')
+                .find('.check-to-enable-button')
+
+            set_enable_button_checkbox($button, $(this))
+        })
+    })
+
+    // Initialize comment reply boxes
+    $('.comment').each(function () {
+        if ($(this).attr('focus-comment-box') == 'yes') {
+            // Hide reply button on load
+            $(this).find('.reply-show').hide()
+
+            // Reply box is already shown
+
+            // Focus on this comment box
+            $('html, body').animate({
+                scrollTop: $(this).offset().top
+            }, 500)
+        } else {
+            // Hide reply box on load    
+            $(this).find('.reply-box').hide()
+
+            $(this).find('.reply-show').click(function () {
+                // Show reply box and hide self
+                $(this).closest('.comment').find('.reply-box').show()
+                $(this).hide()
+            })
+        }
+    })
+
+    // Scroll to focus if a target exists
+    {% if focus %}
+    $('html, body').animate({
+        scrollTop: $("#{{ focus }}").offset().top
+    }, 500)
+    {% endif %}
+})
 </script>
 {% endblock %}

@@ -249,3 +249,11 @@ class LeadForm(forms.Form):
             raise ValidationError(None)
 
         return self.cleaned_data
+
+class LeadCommentForm(forms.Form):
+    comment_id = forms.IntegerField(required=False)
+    body = forms.CharField()
+
+    # TODO check for invalid fields here
+    # prevent entry, because it's ugly for text to show censored contents
+    # we may have different algorithms which we run lazily over text later, to actively censor them
