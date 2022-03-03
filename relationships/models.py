@@ -582,6 +582,8 @@ class LeadComment(Standard):
         related_name='replies',
         related_query_name='replies',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         db_index=True
     )
 
