@@ -961,14 +961,6 @@ $(document).ready(function() {
         JsLoadingOverlay.show(configs);
     })
 
-    // ***** Growing text areas *****
-
-    $(".growing").keyup(function(e) {
-        while($(this).outerHeight() < this.scrollHeight + parseFloat($(this).css("borderTopWidth")) + parseFloat($(this).css("borderBottomWidth"))) {
-            $(this).height($(this).height()+1)
-        }
-    })
-    
     // ***** Setup image preview *****
 
     // The user will not see images when the page is reloaded due to errors.
@@ -1050,4 +1042,5 @@ $(document).ready(function() {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-loading-overlay@1.1.0/dist/js-loading-overlay.min.js"></script>
 <script src="{% static 'leads/js/lead_create.js' %}"></script>
+<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
 {% endblock %}
