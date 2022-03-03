@@ -1869,6 +1869,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 @media (min-width: 1024px) {
+  .lg\:visible {
+    visibility: visible;
+  }
+
   .lg\:sticky {
     position: -webkit-sticky;
     position: sticky;
@@ -1884,6 +1888,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .lg\:block {
     display: block;
+  }
+
+  .lg\:flex {
+    display: flex;
   }
 
   .lg\:hidden {

@@ -33,14 +33,10 @@ https://codebeautify.org/css-beautify-minify
 {% endblock %}
 
 {% block content %}
-
-{% comment %} SHALL I INCLUDE A FLOATING BUTTON THAT JUMPS TO THE USER SECTION IN MOBILE MODE? IN MOBILE WE DON'T REALLY WNAT TO SHOW USER ON TOP, BUT IT'S TOO FAR DOWN THE SCREEN {% endcomment %}
-
-{% comment %} SHOW THE USER SIDE BETWEEN COMMENTS AND DETAILS IN MOBILE {% endcomment %}
-
 <div class="flex flex-col lg:flex-row justify-center mt-10 mb-10 gap-2">
     {% comment %} start: user detail side {% endcomment %}
-    {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author %}
+    {% comment %} This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
+    {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
     {% comment %} end: user detail side {% endcomment %}
 
     {% comment %} start: details and comments {% endcomment %}
@@ -158,6 +154,11 @@ https://codebeautify.org/css-beautify-minify
         </div>
         {% comment %} end: details {% endcomment %}
 
+        {% comment %} start: user detail side {% endcomment %}
+        {% comment %} This user detail will only show on smaller screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
+        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author responsive_classes='lg:hidden mt-2' %}
+        {% comment %} end: user detail side {% endcomment %}
+
         {% comment %} start: main comment box
             For starting a new comment thread on this lead.
             Shown always, to this and detail user. I.e., anyone may start a new comment any time.
@@ -246,15 +247,6 @@ https://codebeautify.org/css-beautify-minify
             </div>
         {% endfor %}
         {% comment %} end: root comments {% endcomment %}
-
-
-        
-        
-     
-
-
-
-
     </div>
     {% comment %} end: details {% endcomment %}
 </div>
