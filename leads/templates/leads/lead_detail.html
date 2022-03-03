@@ -32,13 +32,18 @@ https://codebeautify.org/css-beautify-minify
 {% endblock %}
 
 {% block content %}
+
+{% comment %} SHALL I INCLUDE A FLOATING BUTTON THAT JUMPS TO THE USER SECTION IN MOBILE MODE? IN MOBILE WE DON'T REALLY WNAT TO SHOW USER ON TOP, BUT IT'S TOO FAR DOWN THE SCREEN {% endcomment %}
+
 <div class="flex flex-col lg:flex-row justify-center mt-10 mb-10 gap-2">
+    {% comment %} start: user detail side {% endcomment %}
     {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author %}
+    {% comment %} end: user detail side {% endcomment %}
 
-
-    {% comment %} SHALL I INCLUDE A FLOATING BUTTON THAT JUMPS TO THE USER SECTION IN MOBILE MODE? IN MOBILE WE DON'T REALLY WNAT TO SHOW USER ON TOP, BUT IT'S TOO FAR DOWN THE SCREEN {% endcomment %}
+    {% comment %} start: details and comments {% endcomment %}
     <div class="w-full lg:w-1/2 lg:mt-0 mt-4">
 
+        {% comment %} start: details {% endcomment %}
         <div class="bg-white rounded px-8 py-8 shadow-md">
             <div class="flex items-start justify-between">
                 <div class="text-xl font-bold">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
@@ -148,12 +153,121 @@ https://codebeautify.org/css-beautify-minify
                 {% endif %}
             </div>
         </div>
+        {% comment %} end: details {% endcomment %}
+
+        {% comment %} start: main comment box
+        For starting a new comment thread on this lead.
+        Shown always, to this and detail user. I.e., anyone may start a new comment any time.
+        {% endcomment %}
+        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+            <div class="text-xl font-bold text-center">Comment On This Lead</div>
+            <div class="flex flex-col items-center justify-center mt-2">
+                <textarea rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2"></textarea>
+                <button class="py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
+                <div class="flex justify-start px-2 mt-2">
+                    <input type="checkbox" class="h-6 w-6 flex-none">
+                    <label class="ml-3">I know you sell credits for users to contact others. So, I didn't include contact details in my comment. Let's help each other grow our businesses 😊</label>
+                </div>
+                <div class="mt-8">Comments do <span class="underline underline-offset-1">not</span> cost credits. You've <span class="font-bold">{{ user.user.num_credits_left }} credits</span> left.</div>
+
+                <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
+            </div>
+        </div>
+        {% comment %} end: main comment box {% endcomment %}
+
+
+        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+            <div class="flex justify-between items-center">
+                <div class="font-bold">John Doe, Australia</div>
+                <div class="text-sm">2d ago</div>
+            </div>
+            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
+
+            {% comment %} start: reply {% endcomment %}
+            <div class="mt-4">
+                <div class="flex justify-between items-center">
+                    <div class="font-bold ml-8">Arian Josimaya, Bangladesh</div>
+                    <div class="text-sm">3d ago</div>
+                </div>
+                <div class="mt-2 pl-8">Thanks for the compliment.</div>
+            </div>
+            {% comment %} end: reply {% endcomment %}
+
+            {% comment %} start: reply button
+            Anyone may reply to any message.
+            {% endcomment %}
+            <div class="flex justify-end">
+                <button class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Reply</button>
+            </div>
+            {% comment %} end: reply button {% endcomment %}
+        </div>
         
+        
+        
+        {% comment %}
+
+
+
+
+        Iterate comments for this lead
+        
+        
+        
+        
+        {% endcomment %}
+
+
+        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+            <div class="flex justify-between items-center">
+                <div class="font-bold">John Doe, Australia</div>
+                <div class="text-sm">2d ago</div>
+            </div>
+            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
+
+            <div class="flex justify-end">
+                <button class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Reply</button>
+            </div>
+        </div>
+
+
+
+
+        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+            <div class="flex justify-between items-center">
+                <div class="font-bold">John Doe, Australia</div>
+                <div class="text-sm">2d ago</div>
+            </div>
+            <div class="mt-2">Arian doesn't seem like a scam. I think we might be able to work together.</div>
+
+            {% comment %} start: reply {% endcomment %}
+            <div class="mt-4">
+                <div class="flex justify-between items-center">
+                    <div class="font-bold ml-8">Arian Josimaya, Bangladesh</div>
+                    <div class="text-sm">3d ago</div>
+                </div>
+                <div class="mt-2 pl-8">Thanks for the compliment.</div>
+            </div>
+            {% comment %} end: reply {% endcomment %}
+
+            <div class="flex flex-col items-center justify-center mt-2">
+                <textarea rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2"></textarea>
+                <button class="py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Reply</button>
+                <div class="flex justify-start px-2 mt-2">
+                    <input type="checkbox" class="h-6 w-6 flex-none">
+                    <label class="ml-3">I know you sell credits for users to contact others. So, I didn't include contact details in my comment. Let's help each other grow our businesses 😊 <span class="font-semibold ml-1"><span class="text-red-500">WARNING:</span> phone numbers of users who share contact details in posts will be banned.</span></label>
+                </div>
+                <div class="mt-8">Replies do <span class="underline underline-offset-1">not</span> cost credits. You've <span class="font-bold">{{ user.user.num_credits_left }} credits</span> left.</div>
+
+                <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
+            </div>
+        </div>
+
 
 
 
 
     </div>
+    {% comment %} end: details {% endcomment %}
 </div>
 {% comment %} PhotoSwipe library HTML code to be inserted before end of body tag. {% endcomment %}
 {% include 'includes/photoswipe.html' %}
@@ -218,6 +332,7 @@ $(document).ready(function() {
 <script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
 <script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
 <script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
+<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
 <script>{% comment %} Embedded here because URL needs to be rendered into code. {% endcomment %}
 $(document).ready((function(){$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",url:"{% url 'users:toggle_save_user' lead.author.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})})),$toggle_save_lead=$("#toggle_save_lead"),$toggle_save_lead.click((function(){$.ajax({type:"POST",url:"{% url 'leads:toggle_save_lead' lead.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_lead.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Lead Saved"):$toggle_save_lead.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Lead")}})}))}));
 </script>
