@@ -1,12 +1,10 @@
-import re
 from django import forms
 from django.core.exceptions import ValidationError
 from everybase import settings
 from files import models as fimods
 from files.utilities.cache_image import cache_image
 from files.utilities.delete_cached_image import delete_cached_image
-
-from email_scraper import scrape_emails
+from common.utilities.is_censored import is_censored
 
 class LeadForm(forms.Form):
     lead_type = forms.CharField()
@@ -259,92 +257,10 @@ class LeadCommentForm(forms.Form):
 
     def clean(self):
         super(LeadCommentForm, self).clean()
-
         body = self.cleaned_data.get('body')
-        emails = scrape_emails(body)
 
-        if len(emails) > 0:
+        if is_censored(body):
             self.add_error('body', 'No emails, phone numbers or URLs allowed.')
             raise ValidationError(None)
-
-        lbody = body.lower()
-
-        f = lambda s : lbody.find(s) != -1
-
-        # Check forbidden words
-        if f('@') or f('[a]') or f('(a)') or f('[at]') or f('(at)') or \
-            f('[ a ]') or f('( a )') or f('[ at ]') or f('( at )') or \
-            f('.com') or f('.org') or f('.edu') or f('.gov') or f('.uk') or \
-            f('.net') or f('.ca') or f('.de') or f('.jp') or f('.fr') or \
-            f('.au') or f('.us') or f('.ru') or f('.ch') or f('.it') or \
-            f('.nl') or f('.se') or f('.no') or f('.es') or f('.mil') or \
-            f('.co') or f('.xyz') or f('.site') or f('.top') or f('www') or \
-            f('http') or f('[dot]') or f('(dot)') or f('[ dot ]') or\
-            f('( dot )') or f('call me') or f('email me'):
-            self.add_error('body', 'No emails, phone numbers or URLs allowed.')
-            raise ValidationError(None)
-
-        # Defeat efforts to bypass phone number checks
-        pbody = lbody.replace('one', '1').replace('two', '2').\
-            replace('three', '3').replace('four', '4').replace('five', '5').\
-            replace('six', '6').replace('seven', '7').replace('eight', '8').\
-            replace('nine', '9').replace('zero', '0').replace('plus', '+')
-
-        # Extract tokens likely to be phone numbers
-        tokens = []
-        started = False
-        string = ''
-        for c in pbody:
-            if (c == '+' or c == '0' or c == '1' or c == '2' or c == '3' or \
-                c == '4' or c == '5' or c == '6' or c == '7' or c == '8' or \
-                c == '9' or c == ' ' or c == '-'):
-                if not started:
-                    started = True
-                string += c
-            else:
-                if started:
-                    started = False
-                    string = string.strip()
-                    if len(string) > 7:
-                        # Don't use tokens that are too short in case we prevent users from entering numbers
-                        tokens.append(string)
-                    string = ''
-
-        # Capture the final token
-        if started:
-            string = string.strip()
-            if len(string) > 0:
-                tokens.append(string)
-
-        # We'll try all these regular expressions on each token
-        ph_regexs = [
-            '^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$',
-            '^\s*(?:\+?(\d{1,3}))?[\W\D\s]*(\d[\W\D\s]*?\d[\D\W\s]*?\d)[\W\D\s]*(\d[\W\D\s]*?\d[\D\W\s]*?\d)[\W\D\s]*(\d[\W\D\s]*?\d[\D\W\s]*?\d[\W\D\s]*?\d)(?: *x(\d+))?\s*$',
-            '\s*(?:\+?(\d{1,3}))?[\W\D\s]^|()*(\d[\W\D\s]*?\d[\D\W\s]*?\d)[\W\D\s]*(\d[\W\D\s]*?\d[\D\W\s]*?\d)[\W\D\s]*(\d[\W\D\s]*?\d[\D\W\s]*?\d[\W\D\s]*?\d)(?: *x(\d+))?\s*$',
-            '((?:\d{3}|\(\d{3}\))?(?:\s|-|\.)?\d{3}(?:\s|-|\.)\d{4})',
-            '^(1-)?\d{3}-\d{3}-\d{4}$',
-            '^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$',
-            '/^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d+)\)?)[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/i',
-            '^\(*\+*[1-9]{0,3}\)*-*[1-9]{0,3}[-. /]*\(*[2-9]\d{2}\)*[-. /]*\d{3}[-. /]*\d{4} *e*x*t*\.* *\d{0,4}$',
-            '^([0-9\(\)\/\+ \-]*)$',
-            '/^[+#*\(\)\[\]]*([0-9][ ext+-pw#*\(\)\[\]]*){6,45}$/',
-            '/^\s*(?:\+?(\d{1,3}))?([-. (]*(\d{3})[-. )]*)?((\d{3})[-. ]*(\d{2,4})(?:[-.x ]*(\d+))?)\s*$/gm',
-            '/(\+*\d{1,})*([ |\(])*(\d{3})[^\d]*(\d{3})[^\d]*(\d{4})/',
-            '^((((\(\d{3}\))|(\d{3}-))\d{3}-\d{4})|(\+?\d{2}((-| )\d{1,8}){1,5}))(( x| ext)\d{1,5}){0,1}$',
-            '((\+[0-9]{2})|0)[.\- ]?9[0-9]{2}[.\- ]?[0-9]{3}[.\- ]?[0-9]{4}',
-            '^[0-9+\(\)#\.\s\/ext-]+$',
-            '^(\\(?\\d\\d\\d\\)?)( |-|\\.)?\\d\\d\\d( |-|\\.)?\\d{4,4}(( |-|\\.)?[ext\\.]+ ?\\d+)?$',
-            '\+?1?\s*\(?-*\.*(\d{3})\)?\.*-*\s*(\d{3})\.*-*\s*(\d{4})$',
-            '^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$',
-            '^(\+?[01])?[-.\s]?\(?[1-9]\d{2}\)?[-.\s]?\d{3}[-.\s]?\d{4}'
-        ]
-
-        for r in ph_regexs:
-            for t in tokens:
-                rx = re.compile(r)
-                search = rx.findall(t)
-                if len(search) > 0:
-                    self.add_error('body', 'No emails, phone numbers or URLs allowed.')
-                    raise ValidationError(None)
 
         return self.cleaned_data
