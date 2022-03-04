@@ -164,12 +164,15 @@ https://codebeautify.org/css-beautify-minify
             Shown always, to this and detail user. I.e., anyone may start a new comment any time.
         {% endcomment %}
         {% comment %} id="comment-starter" is used by our JavaScript code to focus on this section {% endcomment %}
-        <div id="comment-starter" class="bg-white rounded px-8 py-8 shadow-md mt-2">
+        <div id="comment-starter" class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if not form.comment_id.value and form.body.errors %} focus-comment-box="yes"{% endif %}>
             <div class="text-xl font-bold text-center">Comment On This Lead</div>
             <div class="flex flex-col items-center justify-center mt-2">
-                <form action="{% url 'leads:lead_detail' lead.id %}" class="check-to-enable" method="post">
+                <form action="{% url 'leads:lead_detail' lead.id %}" class="check-to-enable reply-box" method="post">
                     {% csrf_token %}
-                    <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments"></textarea>
+                    <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments">{% if not form.comment_id.value and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
+                    {% if not form.comment_id.value and form.body.errors is not None %}
+                        <div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>
+                    {% endif %}
                     <button type="submit" class="check-to-enable-button py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
                     <div class="flex flex-col items-center px-2 mt-2">
                         <div class="flex justify-start">
@@ -223,7 +226,7 @@ https://codebeautify.org/css-beautify-minify
                 <form id="comment-reply-box-{{ root_comment.id }}" action="{% url 'leads:lead_detail' lead.id %}" class="reply-box check-to-enable flex flex-col justify-center" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="comment_id" value="{{ root_comment.id }}">
-                    <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-4" placeholder="Enter reply"></textarea>
+                    <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-4" placeholder="Enter reply">{% if is_this_comment and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
                     {% if is_this_comment and form.body.errors is not None %}
                         <div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>
                     {% endif %}
@@ -282,7 +285,7 @@ $(document).ready(function() {
             }
         })
     })
-
+    
     // Save/unsave lead
     $toggle_save_lead = $('#toggle_save_lead')
     $toggle_save_lead.click(function () {
@@ -306,19 +309,6 @@ $(document).ready(function() {
             }
         })
     })
-})
-{% endcomment %}
-{% block other_script %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
-<script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
-<script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
-<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
-<script>{% comment %} Embedded here because URL needs to be rendered into code. {% endcomment %}
-$(document).ready((function(){$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",url:"{% url 'users:toggle_save_user' lead.author.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})})),$toggle_save_lead=$("#toggle_save_lead"),$toggle_save_lead.click((function(){$.ajax({type:"POST",url:"{% url 'leads:toggle_save_lead' lead.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_lead.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Lead Saved"):$toggle_save_lead.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Lead")}})}))}));
-
-
-$(document).ready(function() {
 
     // Enable or disable corresponding button based on checkbox state
     function set_enable_button_checkbox(button, checkbox) {
@@ -364,7 +354,7 @@ $(document).ready(function() {
                 scrollTop: $(this).find('.reply-box').offset().top - 180
             }, 500)
         } else {
-            // Hide reply box on load    
+            // Hide reply box on load
             $(this).find('.reply-box').hide()
 
             $(this).find('.reply-show').click(function () {
@@ -374,14 +364,28 @@ $(document).ready(function() {
             })
         }
     })
+})
 
+Code to focus on the right section of the page
+{% if focus %}
+$(document).ready(function() {
     // Scroll to focus if a target exists
-    {% if focus %}
     $('html, body').animate({
         // 180 pixel from top looks good
         scrollTop: $("#{{ focus }}").offset().top - 180
     }, 500)
-    {% endif %}
 })
+{% endif %}
+
+{% endcomment %}
+{% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
+<script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
+<script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
+<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
+<script>{% comment %} JS embedded here because server-side rendering is required. {% endcomment %}
+$(document).ready((function(){function e(e,t){t.is(":checked")?(e.removeAttr("disabled"),e.addClass("bg-blue-500 hover:bg-blue-600"),e.removeClass("bg-blue-200")):(e.prop("disabled",!0),e.removeClass("bg-blue-500 hover:bg-blue-600"),e.addClass("bg-blue-200"))}$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",url:"{% url 'users:toggle_save_user' lead.author.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})})),$toggle_save_lead=$("#toggle_save_lead"),$toggle_save_lead.click((function(){$.ajax({type:"POST",url:"{% url 'leads:toggle_save_lead' lead.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_lead.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Lead Saved"):$toggle_save_lead.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Lead")}})})),$(".check-to-enable").each((function(){e($(this).find(".check-to-enable-button"),$(this).find(".check-to-enable-checkbox")),$(this).find(".check-to-enable-checkbox").change((function(){$button=$(this).closest(".check-to-enable").find(".check-to-enable-button"),e($button,$(this))}))})),$(".comment").each((function(){"yes"==$(this).attr("focus-comment-box")?($(this).find(".reply-show").hide(),$("html, body").animate({scrollTop:$(this).find(".reply-box").offset().top-180},500)):($(this).find(".reply-box").hide(),$(this).find(".reply-show").click((function(){$(this).closest(".comment").find(".reply-box").show(),$(this).hide()})))}))}));
+{% comment %} Code to focus on the right section {% endcomment %}{% if focus %}$(document).ready((function(){$("html, body").animate({scrollTop:$("#{{ focus }}").offset().top-180},500)}));{% endif %}
 </script>
 {% endblock %}
