@@ -1,3 +1,4 @@
+from logging import exception
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -101,8 +102,7 @@ class RegisterForm(forms.Form):
             ).first()
 
             if user_w_ph is not None:
-                self.add_error('whatsapp_phone_number', 'This phone number \
-already exists. Please ensure you\'ve entered your phone number correctly.')
+                self.add_error('whatsapp_phone_number', 'This phone number belongs to an existing user. Please ensure you\'ve entered your phone number correctly.')
                 has_error = True
         except models.PhoneNumber.DoesNotExist:
             # Good - no user has this phone number
@@ -124,8 +124,7 @@ already exists. Please ensure you\'ve entered your phone number correctly.')
             ).first()
 
             if user_w_email is not None:
-                self.add_error('email', 'This email is in use. Please ensure \
-you \'ve entered your email correctly.')
+                self.add_error('email', 'This email belongs to an existing user. Please ensure you \'ve entered your email correctly.')
                 has_error = True
         except models.Email.DoesNotExist:
             # Good - no user has this email
@@ -139,3 +138,38 @@ you \'ve entered your email correctly.')
 class LoginForm(forms.Form):
     whatsapp_phone_number = PhoneNumberField(required=True)
     next = forms.CharField(required=False)
+
+    def clean(self):
+        super(LoginForm, self).clean()
+
+        # Parse phone number
+        try:
+            ph_str = self.cleaned_data.get('whatsapp_phone_number')
+            parsed_ph = phonenumbers.parse(str(ph_str), None)
+            ph_cc = parsed_ph.country_code
+            ph_nn = parsed_ph.national_number
+        except Exception as e:
+            raise ValidationError(None)
+
+        # Check existence of phone number
+        try:
+            phone_number = models.PhoneNumber.objects.get(
+                country_code=ph_cc,
+                national_number=ph_nn
+            )
+        except models.PhoneNumber.DoesNotExist:
+            self.add_error('whatsapp_phone_number', "Account don't exist.")
+            raise ValidationError(None)
+
+        user = models.User.objects.filter(
+            phone_number=phone_number.id, # User has phone number
+            registered__isnull=False, # User is registered
+            django_user__isnull=False # User has a Django user linked
+        ).first()
+
+        # Check existence of user
+        if user is None:
+            self.add_error('whatsapp_phone_number', "Account don't exist.")
+            raise ValidationError(None)
+
+        return self.cleaned_data
