@@ -16,7 +16,6 @@
 {% endblock %}
 
 {% block page_actions %}
-{% comment %} WRONG {% endcomment %}
 {% include 'relationships/includes/user_detail_actions.html' with detail_user=lead.author %}
 {% endblock %}
 
@@ -199,7 +198,6 @@
 
             <div class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if is_this_comment and form.body.errors %} focus-comment-box="yes"{% endif %}>
                 <div id="comment-{{ root_comment.id }}" class="flex justify-between items-center">
-                    {% comment %} TODO add link {% endcomment %}
                     <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold">{{ root_comment.commentor.first_name }} {{ root_comment.commentor.last_name }}, {{ root_comment.commentor.country.name }}</a>
                     <div class="text-sm">{{ root_comment.age_desc }}</div>
                 </div>
