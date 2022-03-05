@@ -216,20 +216,39 @@ def register(request):
             # Get or create an Everybase user
             user, _ = models.User.objects.get_or_create(
                 phone_number=phone_number)
-            
-            is_not_agent = form.cleaned_data.get('is_not_agent')
-            if is_not_agent is None:
-                is_not_agent = False
+
+            has_company = form.cleaned_data.get('has_company')
+            if has_company is None:
+                has_company = False
+
+            is_buy_agent = form.cleaned_data.get('is_buy_agent')
+            if is_buy_agent is None:
+                is_buy_agent = False
+
+            is_sell_agent = form.cleaned_data.get('is_sell_agent')
+            if is_sell_agent is None:
+                is_sell_agent = False
+
+            is_logistics_agent = form.cleaned_data.get('is_logistics_agent')
+            if is_logistics_agent is None:
+                is_logistics_agent = False
 
             # Override or set user details
             user.first_name = form.cleaned_data.get('first_name')
             user.last_name = form.cleaned_data.get('last_name')
             user.goods_string = form.cleaned_data.get('goods_string')
             user.languages_string = form.cleaned_data.get('languages_string')
-            user.is_agent = not is_not_agent
+            user.has_company = has_company
+            user.company_name = form.cleaned_data.get('company_name')
             user.phone_number = phone_number
             user.email = email
             user.country = country
+            user.is_buy_agent = is_buy_agent
+            user.buy_agent_details = form.cleaned_data.get('buy_agent_details')
+            user.is_sell_agent = is_sell_agent
+            user.sell_agent_details = form.cleaned_data.get('sell_agent_details')
+            user.is_logistics_agent = is_logistics_agent
+            user.logistics_agent_details = form.cleaned_data.get('logistics_agent_details')
             user.save()
 
             # Kill all tokens

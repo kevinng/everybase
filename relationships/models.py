@@ -209,12 +209,7 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    state_string = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
+
     phone_number = models.OneToOneField(
         'PhoneNumber',
         related_name='user',
@@ -285,6 +280,12 @@ class User(Standard):
         'common.Language',
         related_name='users_w_this_language',
         related_query_name='users_w_this_language',
+        blank=True,
+        db_index=True
+    )
+    state_string = models.CharField(
+        max_length=50,
+        null=True,
         blank=True,
         db_index=True
     )
