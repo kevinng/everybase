@@ -4,7 +4,6 @@
 {% load string_equal %}
 
 {% comment %} TODO {% endcomment %}
-
 {% comment %} Put in all the on-page SEO here {% endcomment %}
 {% comment %} Include keywords {% endcomment %}
 {% comment %}
@@ -15,17 +14,15 @@ Title is optimized for SEO purposes. String format:
 We want to cache the title, so the code doesn't have to run each and everytime the page is loaded
 {% endcomment %}
 
-{% comment %}
-CSS
-https://codebeautify.org/css-beautify-minify
+{% block title %}{{ lead.seo_title }}{% endblock %}
 
-{% endcomment %}
+{% block other_head_tags %}
+{% endblock %}
+
 {% block other_css %}
 <link href="{% static 'common/photoswipe/photoswipe.min.css' %}" rel="stylesheet" />
 <link href="{% static 'common/photoswipe/default-skin/default-skin.min.css' %}" rel="stylesheet" />
 {% endblock %}
-
-{% block title %}{% endblock %}
 
 {% block page_actions %}
 {% comment %} WRONG {% endcomment %}
@@ -79,7 +76,7 @@ https://codebeautify.org/css-beautify-minify
 
             {% comment %} start: details {% endcomment %}
             <div class="font-bold text-slate-400 mt-4">Goods/Services Details</div>
-            <div class="mt-1">{{ lead.details }}</div>
+            <div class="mt-1 break-words">{{ lead.details }}</div>
             {% comment %} end: details {% endcomment %}
             
             {% comment %} start: need_agent {% endcomment %}
@@ -110,13 +107,13 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: other_agent_details {% endcomment %}
                 <div class="font-bold text-slate-400 mt-4">Other Details For {% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %} Agent</div>
-                <div class="mt-1">{{ lead.other_agent_details }}</div>
+                <div class="mt-1 break-words">{{ lead.other_agent_details }}</div>
                 {% comment %} end: other_agent_details {% endcomment %}
 
                 {% elif lead.commission_type == 'other' %}
 
                 <div class="font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %} Agent Commission</div>
-                <div class="mt-1">{{ lead.commission_type_other }}</div>
+                <div class="mt-1 break-words">{{ lead.commission_type_other }}</div>
 
                 {% endif %}
 
@@ -133,7 +130,7 @@ https://codebeautify.org/css-beautify-minify
                 <div class="text-xl font-bold mt-6">I need logistics agents</div>
 
                 <div class="font-bold text-slate-400 mt-4">Logistics Needs</div>
-                <div class="mt-1">{{ lead.other_logistics_agent_details }}</div>
+                <div class="mt-1 break-words">{{ lead.other_logistics_agent_details }}</div>
             {% endif %}
 
             <div class="flex justify-end mt-8">
@@ -167,7 +164,7 @@ https://codebeautify.org/css-beautify-minify
         <div id="comment-starter" class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if not form.comment_id.value and form.body.errors %} focus-comment-box="yes"{% endif %}>
             <div class="text-xl font-bold text-center">Comment On This Lead</div>
             <div class="flex flex-col items-center justify-center mt-2">
-                <form action="{% url 'leads:lead_detail' lead.id %}" class="check-to-enable reply-box" method="post">
+                <form action="{% url 'leads:lead_detail' lead.slug_link %}" class="check-to-enable comment-box" method="post">
                     {% csrf_token %}
                     <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments">{% if not form.comment_id.value and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
                     {% if not form.comment_id.value and form.body.errors is not None %}
@@ -183,8 +180,7 @@ https://codebeautify.org/css-beautify-minify
                     </div>
                 </form>
 
-                <div class="mt-8 text-center">Replies do <span class="underline underline-offset-1">not</span> cost credits.</div>
-                <div class="text-center">You've <span class="font-bold">{{ user.user.num_credits_left }} credits</span> left.</div>
+                <div class="mt-8 text-center">Comments do <span class="underline underline-offset-1">not</span> cost credits.</div>
 
                 <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
             </div>
@@ -197,20 +193,20 @@ https://codebeautify.org/css-beautify-minify
             <div class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if is_this_comment and form.body.errors %} focus-comment-box="yes"{% endif %}>
                 <div id="comment-{{ root_comment.id }}" class="flex justify-between items-center">
                     {% comment %} TODO add link {% endcomment %}
-                    <div class="font-bold">{{ root_comment.commentor.first_name }} {{ root_comment.commentor.last_name }}, {{ root_comment.commentor.country.name }}</div>
+                    <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold">{{ root_comment.commentor.first_name }} {{ root_comment.commentor.last_name }}, {{ root_comment.commentor.country.name }}</a>
                     <div class="text-sm">{{ root_comment.age_desc }}</div>
                 </div>
-                <div class="mt-2">{{ root_comment.body }}</div>
+                <div class="mt-4 break-words">{{ root_comment.body }}</div>
 
                 {% comment %} start: replies {% endcomment %}
                 {% for reply in root_comment.reply_comments %}
                     {% comment %} id="comment-{{ reply.id }}" is used by our JavaScript code to focus on this section {% endcomment %}
                     <div id="comment-{{ reply.id }}" class="mt-4">
                         <div class="flex justify-between items-center">
-                            <div class="font-bold ml-8">{{ reply.commentor.first_name }} {{ reply.commentor.last_name }}, {{ reply.commentor.country.name }}</div>
+                            <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold ml-8">{{ reply.commentor.first_name }} {{ reply.commentor.last_name }}, {{ reply.commentor.country.name }}</a>
                             <div class="text-sm">{{ reply.age_desc }}</div>
                         </div>
-                        <div class="mt-2 pl-8">{{ reply.body }}</div>
+                        <div class="mt-2 pl-8 break-words">{{ reply.body }}</div>
                     </div>
                 {% endfor %}
                 {% comment %} end: replies {% endcomment %}
@@ -223,7 +219,7 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: reply box {% endcomment %}
                 {% comment %} id="comment-reply-box-{{ root_comment.id }}" is used by our JavaScript code to focus on this section {% endcomment %}
-                <form id="comment-reply-box-{{ root_comment.id }}" action="{% url 'leads:lead_detail' lead.id %}" class="reply-box check-to-enable flex flex-col justify-center" method="post">
+                <form id="comment-reply-box-{{ root_comment.id }}" action="{% url 'leads:lead_detail' lead.slug_link %}" class="reply-box check-to-enable flex flex-col justify-center" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="comment_id" value="{{ root_comment.id }}">
                     <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-4" placeholder="Enter reply">{% if is_this_comment and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
@@ -240,7 +236,6 @@ https://codebeautify.org/css-beautify-minify
                     </div>
 
                     <div class="mt-8 text-center">Replies do <span class="underline underline-offset-1">not</span> cost credits.</div>
-                    <div class="text-center">You've <span class="font-bold">{{ user.user.num_credits_left }} credits</span> left.</div>
 
                     <div class="flex justify-center">
                         <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
@@ -344,17 +339,30 @@ $(document).ready(function() {
     $('.comment').each(function () {
         if ($(this).attr('focus-comment-box') == 'yes') {
             // Hide reply button on load
-            $(this).find('.reply-show').hide()
+            $reply_show = $(this).find('.reply-show')
+            if ($reply_show.length > 0) {
+                $reply_show.hide()
+            }
 
             // Reply box is already shown
 
-            // Focus on this comment box
-            $('html, body').animate({
-                // 180 pixel from top looks good
-                scrollTop: $(this).find('.reply-box').offset().top - 180
-            }, 500)
+            // Focus on reply or comment box
+            $reply_box = $(this).find('.reply-box')
+            if ($reply_box.length > 0) {
+                $('html, body').animate({
+                    // 180 pixel from top looks good
+                    scrollTop: $reply_box.offset().top - 180
+                }, 500)
+            } else {
+                $comment_box = $(this).find('.comment-box')
+                $('html, body').animate({
+                    // 180 pixel from top looks good
+                    scrollTop: $comment_box.offset().top - 180
+                }, 500)
+            }
         } else {
-            // Hide reply box on load
+            // Hide reply boxes on load
+            // Note: the one comment box at the top is not hidden
             $(this).find('.reply-box').hide()
 
             $(this).find('.reply-show').click(function () {
@@ -385,7 +393,7 @@ $(document).ready(function() {
 <script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
 <script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
 <script>{% comment %} JS embedded here because server-side rendering is required. {% endcomment %}
-$(document).ready((function(){function e(e,t){t.is(":checked")?(e.removeAttr("disabled"),e.addClass("bg-blue-500 hover:bg-blue-600"),e.removeClass("bg-blue-200")):(e.prop("disabled",!0),e.removeClass("bg-blue-500 hover:bg-blue-600"),e.addClass("bg-blue-200"))}$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",url:"{% url 'users:toggle_save_user' lead.author.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})})),$toggle_save_lead=$("#toggle_save_lead"),$toggle_save_lead.click((function(){$.ajax({type:"POST",url:"{% url 'leads:toggle_save_lead' lead.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_lead.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Lead Saved"):$toggle_save_lead.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Lead")}})})),$(".check-to-enable").each((function(){e($(this).find(".check-to-enable-button"),$(this).find(".check-to-enable-checkbox")),$(this).find(".check-to-enable-checkbox").change((function(){$button=$(this).closest(".check-to-enable").find(".check-to-enable-button"),e($button,$(this))}))})),$(".comment").each((function(){"yes"==$(this).attr("focus-comment-box")?($(this).find(".reply-show").hide(),$("html, body").animate({scrollTop:$(this).find(".reply-box").offset().top-180},500)):($(this).find(".reply-box").hide(),$(this).find(".reply-show").click((function(){$(this).closest(".comment").find(".reply-box").show(),$(this).hide()})))}))}));
+$(document).ready((function(){function e(e,t){t.is(":checked")?(e.removeAttr("disabled"),e.addClass("bg-blue-500 hover:bg-blue-600"),e.removeClass("bg-blue-200")):(e.prop("disabled",!0),e.removeClass("bg-blue-500 hover:bg-blue-600"),e.addClass("bg-blue-200"))}$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",url:"{% url 'users:toggle_save_user' lead.author.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})})),$toggle_save_lead=$("#toggle_save_lead"),$toggle_save_lead.click((function(){$.ajax({type:"POST",url:"{% url 'leads:toggle_save_lead' lead.id %}",dataType:"json",success:function(e){1==e.s?$toggle_save_lead.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Lead Saved"):$toggle_save_lead.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Lead")}})})),$(".check-to-enable").each((function(){e($(this).find(".check-to-enable-button"),$(this).find(".check-to-enable-checkbox")),$(this).find(".check-to-enable-checkbox").change((function(){$button=$(this).closest(".check-to-enable").find(".check-to-enable-button"),e($button,$(this))}))})),$(".comment").each((function(){"yes"==$(this).attr("focus-comment-box")?($reply_show=$(this).find(".reply-show"),$reply_show.length>0&&$reply_show.hide(),$reply_box=$(this).find(".reply-box"),$reply_box.length>0?$("html, body").animate({scrollTop:$reply_box.offset().top-180},500):($comment_box=$(this).find(".comment-box"),$("html, body").animate({scrollTop:$comment_box.offset().top-180},500))):($(this).find(".reply-box").hide(),$(this).find(".reply-show").click((function(){$(this).closest(".comment").find(".reply-box").show(),$(this).hide()})))}))}));
 {% comment %} Code to focus on the right section {% endcomment %}{% if focus %}$(document).ready((function(){$("html, body").animate({scrollTop:$("#{{ focus }}").offset().top-180},500)}));{% endif %}
 </script>
 {% endblock %}

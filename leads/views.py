@@ -32,14 +32,14 @@ class LeadDetailView(DetailView):
     template_name = 'leads/lead_detail.html'
     model = models.Lead
 
-def lead_detail(request, pk):
-    lead = models.Lead.objects.get(pk=pk)
+def lead_detail(request, slug):
+    lead = models.Lead.objects.get(slug_link=slug)
     if request.method == 'POST':
         # User posted a comment
         form = forms.LeadCommentForm(request.POST)
         if form.is_valid():
             comment = models.LeadComment.objects.create(
-                lead=models.Lead.objects.get(pk=pk),
+                lead=models.Lead.objects.get(slug_link=slug),
                 commentor=request.user.user,
                 body=request.POST.get('body')
             )
@@ -51,7 +51,7 @@ def lead_detail(request, pk):
                 comment.save()
 
             # Focus on comment created
-            url = reverse('leads:lead_detail', args=(pk,)) + \
+            url = reverse('leads:lead_detail', args=(slug,)) + \
                 '?focus=comment-' + str(comment.id)
             return HttpResponseRedirect(url)
     else:
@@ -103,7 +103,7 @@ def lead_edit(request, pk):
             lead.save()
 
             return HttpResponseRedirect(
-                reverse('leads:lead_detail', args=(lead.id,)))
+                reverse('leads:lead_detail', args=(lead.slug_link,)))
     else:
         lead = models.Lead.objects.get(pk=pk)
 
@@ -324,7 +324,7 @@ def lead_create(request):
             save_user_agent(request, request.user.user)
 
             return HttpResponseRedirect(
-                reverse('leads:lead_detail', args=(lead.id,)))
+                reverse('leads:lead_detail', args=(lead.slug_link,)))
     else:
         form = forms.LeadForm()
 
@@ -481,16 +481,16 @@ class AgentListView(ListView):
 
 @login_required
 @csrf_exempt
-def toggle_save_lead(request, pk):
+def toggle_save_lead(request, slug):
     # Disallow saving of leads owned by the owner
     try:
-        lead = models.Lead.objects.get(pk=pk)
+        lead = models.Lead.objects.get(slug_link=slug)
         if lead.author.id == request.user.user.id:
-            HttpResponseRedirect(reverse('leads:lead_detail', args=(pk,)))
+            HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
     except models.Lead.DoesNotExist:
-        HttpResponseRedirect(reverse('leads:lead_detail', args=(pk,)))
+        HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
 
-    def toggle(pk):
+    def toggle():
         try:
             saved_lead = models.SavedLead.objects.get(
                 saver=request.user.user,
@@ -511,14 +511,14 @@ def toggle_save_lead(request, pk):
 
     if request.method == 'POST':
         # AJAX call, toggle save-unsave, return JSON.
-        return JsonResponse(toggle(pk))
+        return JsonResponse(toggle())
 
     # Unauthenticated call. User will be given the URL to click only if the
     # user is authenticated. Otherwise, a click on the 'save' button will
     # result in an AJAX post to this URL.
     #
     # Toggle save-unsave, redirect user to next URL.
-    toggle(pk)
+    toggle()
 
     # Read 'next' URL from GET parameters. Redirect user there if the
     # parameter exists. Other redirect user to default lead details page.
@@ -527,7 +527,7 @@ def toggle_save_lead(request, pk):
         return HttpResponseRedirect(next_url)
     else:
         return HttpResponseRedirect(
-            reverse('leads:lead_detail', args=(pk,)))
+            reverse('leads:lead_detail', args=(slug,)))
 
 
 

@@ -1,6 +1,7 @@
-import uuid
+import uuid as uuidlib
 from django.db import models
 from common.models import Standard
+from common.utilities.slugify import slugify
 
 class LeadComment(Standard):
     """Comment on a lead
@@ -38,14 +39,17 @@ class LeadComment(Standard):
         """Returns replies to this lead"""
         return LeadComment.objects.filter(reply_to=self).order_by('created')
 
+def _uuid_str():
+    return str(uuidlib.uuid4())
+    
 class Lead(Standard):
     """Lead.
 
-    Last updated: 24 February 2022, 5:06 AM
+    Last updated: 5 March 2022, 8:58 PM
     """
     uuid = models.UUIDField(
         unique=True,
-        default=uuid.uuid4,
+        default=uuidlib.uuid4,
         editable=False,
         db_index=True
     )
@@ -198,6 +202,16 @@ class Lead(Standard):
         db_index=True
     )
 
+    slug_link = models.CharField(
+        max_length=200,
+        unique=True,
+        db_index=True
+    )
+    slug_tokens = models.TextField(
+        null=True,
+        blank=True
+    )
+
     # Keep for data
     title = models.CharField(
         max_length=200,
@@ -216,6 +230,10 @@ class Lead(Standard):
         db_index=True
     )
 
+    def save(self, *args, **kwargs):
+        self.slug_link, self.slug_tokens = slugify(self.details, self.uuid)
+        return super().save(*args, **kwargs)
+
     def avg_deal_comm(self):
         return self.commission / 100 * self.avg_deal_size
 
@@ -227,6 +245,24 @@ class Lead(Standard):
             lead=self,
             reply_to__isnull=True
         ).order_by('created')
+
+    def seo_title(self):
+        """Returns SEO-optimized title"""
+        lead_type = 'Buyer' if self.lead_type == 'buying' else 'Seller'
+        country = self.buy_country.name if self.lead_type == 'buying' else self.sell_country.name
+        title = f'{ lead_type }, { country }'
+
+        if self.slug_tokens is not None and len(self.slug_tokens.strip()) != 0:
+            tokens = self.slug_tokens.split(',')
+            tokens = [t.strip() for t in tokens]
+            if len(tokens) > 0:
+                keywords = tokens[0]
+                for t in tokens[1:]:
+                    keywords += ' ' + t
+                
+                title += ' - ' + keywords
+
+        return title
 
 class LeadDetailView(Standard):
     """Lead detail view.

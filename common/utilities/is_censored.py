@@ -1,6 +1,26 @@
 import re
 from email_scraper import scrape_emails
 
+_shareable_forbidden_words = [
+    'call me',
+    'email me',
+    'email',
+    'facebook',
+    'mail',
+    'phone',
+    'phones',
+    'telegram',
+    'viber',
+    'we chat',
+    'wechat',
+    'whats app',
+    'whatsapp',
+    'you tube',
+    'youtube',
+    '微 信',
+    '微信',
+]
+
 def is_censored(body):
     """Returns True if body text is censored. False otherwise."""
     if body is None:
@@ -25,11 +45,48 @@ def is_censored(body):
         pbody = pbody.replace(r[0], r[1])
     
     # Check for forbidden keywords
-    forbidden_words = ['@', '[a]', '(a)', '[at]', '(at)', '[ a ]', '( a )',
-        '[ at ]', '( at )', '.com', '.org', '.edu', '.gov', '.uk' , '.net',
-        '.ca', '.de', '.jp', '.fr', '.au', '.us', '.ru', '.ch', '.it', '.nl',
-        '.se', '.no', '.es', '.mil', '.co', '.xyz', '.site', '.top', 'www',
-        'http', '[dot]', '(dot)', '[ dot ]', '( dot )', 'call me', 'email me']
+    forbidden_words = [
+        '( a )',
+        '( at )',
+        '( dot )'
+        '(a)',
+        '(at)',
+        '(dot)',
+        '.au',
+        '.ca',
+        '.ch',
+        '.co',
+        '.com',
+        '.de',
+        '.edu',
+        '.es',
+        '.fr',
+        '.gov',
+        '.it',
+        '.jp',
+        '.me'
+        '.mil',
+        '.net',
+        '.nl',
+        '.no',
+        '.org',
+        '.ru',
+        '.se',
+        '.site',
+        '.top',
+        '.uk' ,
+        '.us',
+        '.xyz',
+        '@',
+        '[ a ]',
+        '[ at ]',
+        '[ dot ]',
+        '[a]',
+        '[at]',
+        '[dot]',
+        'http',
+        'www',
+    ] + _shareable_forbidden_words
     for w in forbidden_words:
         if pbody.find(w) != -1:
             return True
@@ -69,8 +126,12 @@ def is_censored(body):
     # by a trigger of finding a character that's not a token character.
     if started:
         string = string.strip()
-        if len(string) > 0:
+        if len(string) > 7:
+            # Don't use tokens that're too short (in case regex matches against meaningful numbers).
+            # Phone numbers should need be above 7 characters, and it's not likely for a meaningful number to be above 10M-1.
             tokens.append(string)
+
+    print(tokens)
 
     # Regular expressions matching phone numbers
     ph_regexs = [
@@ -100,6 +161,7 @@ def is_censored(body):
         for t in tokens:
             rx = re.compile(r)
             search = rx.findall(t)
+            print(search)
             if len(search) > 0:
                 return True
 

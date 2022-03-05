@@ -30,6 +30,8 @@ _lead_fields = ['author', 'author_type', 'buy_country', 'sell_country',
 
     'saved_count', 'search_appearance_count', 'search_to_lead_details_count',
     'search_to_user_details_count',
+
+    'slug_link', 'slug_tokens',
     
     # Keep for future
     'title', 'country'
@@ -44,8 +46,8 @@ class LeadAdmin(comadm.StandardAdmin):
         'is_comm_negotiable', 'commission_payable_after',
         'need_logistics_agent', 'onboarding', 'onboarded']
     search_fields = comadm.standard_search_fields + ['details',
-        'other_agent_details', 'other_logistics_agent_details',
-        'internal_notes']
+        'other_agent_details', 'other_logistics_agent_details', 'slug_link',
+        'slug_tokens', 'internal_notes']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['uuid']
