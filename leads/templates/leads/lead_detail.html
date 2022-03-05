@@ -151,7 +151,7 @@
                         <button id="toggle_save_lead" class="py-2 px-4 mt-2 rounded-md shadow-md {% if has_saved_lead == True %}text-white bg-blue-500 hover:bg-blue-600{% else %}text-slate-600 bg-slate-100 hover:bg-slate-200{% endif %}">{% if has_saved_lead == True %}Lead Saved{% else %}Save Lead{% endif %}</button>
                     {% else %}
                         {% comment %} Direct user to login and come back to this page with lead saved {% endcomment %}
-                        <a href="{% url 'leads:toggle_save_lead' %}" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Lead</a>
+                    <a href="{% url 'leads:toggle_save_lead' lead.slug_link %}" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Lead</a>
                     {% endif %}
                 {% endif %}
             </div>
@@ -294,7 +294,7 @@ $(document).ready(function() {
         // Make AJAX call to save lead, and update button look.
         $.ajax({
             type: 'POST',
-            url: "{% url 'leads:toggle_save_lead' lead.id %}",
+            url: "{% url 'leads:toggle_save_lead' lead.slug_link %}",
             dataType: 'json',
             success: function (data) {
                 if (data['s'] == true) {

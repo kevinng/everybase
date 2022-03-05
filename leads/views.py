@@ -482,13 +482,14 @@ class AgentListView(ListView):
 @login_required
 @csrf_exempt
 def toggle_save_lead(request, slug):
-    # Disallow saving of leads owned by the owner
     try:
         lead = models.Lead.objects.get(slug_link=slug)
-        if lead.author.id == request.user.user.id:
-            HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
     except models.Lead.DoesNotExist:
-        HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+        return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+
+    # Disallow saving of leads owned by the owner
+    if lead.author.id == request.user.user.id:
+        return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
 
     def toggle():
         try:
