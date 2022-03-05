@@ -511,6 +511,10 @@ def is_logged_in(request, user_uuid):
 
 def log_out(request):
     logout(request)
+    next_url = request.GET.get('next')
+    if next_url is not None:
+        return HttpResponseRedirect(next_url)
+
     return HttpResponseRedirect(reverse('home'))
 
 @login_required

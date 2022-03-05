@@ -3,20 +3,11 @@
 {% load static %}
 {% load string_equal %}
 
-{% comment %} TODO {% endcomment %}
-{% comment %} Put in all the on-page SEO here {% endcomment %}
-{% comment %} Include keywords {% endcomment %}
-{% comment %}
-Title is optimized for SEO purposes. String format:
-- Buyer or seller
-- If buying, source country. If selling, destination country.
-- Goods/services keywords
-We want to cache the title, so the code doesn't have to run each and everytime the page is loaded
-{% endcomment %}
-
 {% block title %}{{ lead.seo_title }}{% endblock %}
 
+{% comment %} Meta description limit to 320 characters {% endcomment %}
 {% block other_head_tags %}
+<meta name="description" content="{{ lead.details|slice:'0:320' }}">
 {% endblock %}
 
 {% block other_css %}
@@ -31,8 +22,8 @@ We want to cache the title, so the code doesn't have to run each and everytime t
 
 {% block content %}
 <div class="flex flex-col lg:flex-row justify-center mt-10 mb-10 gap-2">
-    {% comment %} start: user detail side {% endcomment %}
-    {% comment %} This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
+    {% comment %} start: user detail side
+        This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
     {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
     {% comment %} end: user detail side {% endcomment %}
 
@@ -42,8 +33,15 @@ We want to cache the title, so the code doesn't have to run each and everytime t
         {% comment %} start: details {% endcomment %}
         <div class="bg-white rounded px-8 py-8 shadow-md">
             <div class="flex items-start justify-between">
+
+                {% comment %} start: lead_type, author_type {% endcomment %}
                 <div class="text-xl font-bold">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
+                {% comment %} end: lead_type, author_type {% endcomment %}
+                
+                {% comment %} start: age_desc {% endcomment %}
                 <div class="text-sm">{{ lead.age_desc }}</div>
+                {% comment %} end: age_desc {% endcomment %}
+
             </div>
 
             {% comment %} start: thumbnails {% endcomment %}
@@ -76,7 +74,7 @@ We want to cache the title, so the code doesn't have to run each and everytime t
 
             {% comment %} start: details {% endcomment %}
             <div class="font-bold text-slate-400 mt-4">Goods/Services Details</div>
-            <div class="mt-1 break-words">{{ lead.details }}</div>
+            <div class="mt-1 break-words">{{ lead.details|linebreaksbr }}</div>
             {% comment %} end: details {% endcomment %}
             
             {% comment %} start: need_agent {% endcomment %}
@@ -107,13 +105,15 @@ We want to cache the title, so the code doesn't have to run each and everytime t
 
                 {% comment %} start: other_agent_details {% endcomment %}
                 <div class="font-bold text-slate-400 mt-4">Other Details For {% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %} Agent</div>
-                <div class="mt-1 break-words">{{ lead.other_agent_details }}</div>
+                <div class="mt-1 break-words">{{ lead.other_agent_details|linebreaksbr }}</div>
                 {% comment %} end: other_agent_details {% endcomment %}
 
                 {% elif lead.commission_type == 'other' %}
 
+                {% comment %} start: lead.commission_type_other {% endcomment %}
                 <div class="font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %} Agent Commission</div>
-                <div class="mt-1 break-words">{{ lead.commission_type_other }}</div>
+                <div class="mt-1 break-words">{{ lead.commission_type_other|linebreaksbr }}</div>
+                {% comment %} end: lead.commission_type_other {% endcomment %}
 
                 {% endif %}
 
@@ -129,13 +129,20 @@ We want to cache the title, so the code doesn't have to run each and everytime t
             {% if lead.need_logistics_agent %}
                 <div class="text-xl font-bold mt-6">I need logistics agents</div>
 
+                {% comment %} start: lead.other_logistics_agent_details {% endcomment %}
                 <div class="font-bold text-slate-400 mt-4">Logistics Needs</div>
-                <div class="mt-1 break-words">{{ lead.other_logistics_agent_details }}</div>
+                <div class="mt-1 break-words">{{ lead.other_logistics_agent_details|linebreaksbr }}</div>
+                {% comment %} end: lead.other_logistics_agent_details {% endcomment %}
+
             {% endif %}
 
             <div class="flex justify-end mt-8">
                 {% if user.is_authenticated == True and user.user.id == lead.author.id %}
+
+                    {% comment %} start: edit button {% endcomment %}
                     <a href="{% url 'leads:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md">Edit</a>
+                    {% comment %} end: edit button {% endcomment %}
+
                 {% elif user.user.id != lead.author.id %}
                     {% if user.is_authenticated == True %}
                         {% comment %} Allow toggling of save-unsave asynchronously {% endcomment %}
@@ -144,15 +151,15 @@ We want to cache the title, so the code doesn't have to run each and everytime t
                         <button id="toggle_save_lead" class="py-2 px-4 mt-2 rounded-md shadow-md {% if has_saved_lead == True %}text-white bg-blue-500 hover:bg-blue-600{% else %}text-slate-600 bg-slate-100 hover:bg-slate-200{% endif %}">{% if has_saved_lead == True %}Lead Saved{% else %}Save Lead{% endif %}</button>
                     {% else %}
                         {% comment %} Direct user to login and come back to this page with lead saved {% endcomment %}
-                        <a href="" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Lead</a>
+                        <a href="{% url 'leads:toggle_save_lead' %}" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Lead</a>
                     {% endif %}
                 {% endif %}
             </div>
         </div>
         {% comment %} end: details {% endcomment %}
 
-        {% comment %} start: user detail side {% endcomment %}
-        {% comment %} This user detail will only show on smaller screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
+        {% comment %} start: user detail side
+            This user detail will only show on smaller screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
         {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author responsive_classes='lg:hidden mt-2' %}
         {% comment %} end: user detail side {% endcomment %}
 
