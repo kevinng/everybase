@@ -357,43 +357,37 @@ def log_in(request):
             ph_cc = parsed_ph.country_code
             ph_nn = parsed_ph.national_number
 
-            try:
-                phone_number = models.PhoneNumber.objects.get(
-                    country_code=ph_cc,
-                    national_number=ph_nn
-                )
+            phone_number = models.PhoneNumber.objects.get(
+                country_code=ph_cc,
+                national_number=ph_nn
+            )
 
-                user = models.User.objects.filter(
-                    phone_number=phone_number.id, # User has phone number
-                    registered__isnull=False, # User is registered
-                    django_user__isnull=False # User has a Django user linked
-                ).first()
-                
-                if user is None:
-                    messages.info(request, "Account don't exist.")
-                else:
-                    next_url = form.cleaned_data.get('next')
+            user = models.User.objects.filter(
+                phone_number=phone_number.id, # User has phone number
+                registered__isnull=False, # User is registered
+                django_user__isnull=False # User has a Django user linked
+            ).first()
+            
+            next_url = form.cleaned_data.get('next')
 
-                    # Kill all tokens
-                    kill_login_tokens(user)
+            # Kill all tokens
+            kill_login_tokens(user)
 
-                    # Create login token
-                    models.LoginToken.objects.create(user=user)
+            # Create login token
+            models.LoginToken.objects.create(user=user)
 
-                    # Send message
-                    send_login_message.delay(user.id)
+            # Send message
+            send_login_message.delay(user.id)
 
-                    confirm_login_url = reverse('confirm_login',
-                        kwargs={'user_uuid': user.uuid})
+            confirm_login_url = reverse('confirm_login',
+                kwargs={'user_uuid': user.uuid})
 
-                    if next_url is not None:
-                        confirm_login_url += f'?next={next_url}'
+            if next_url is not None:
+                confirm_login_url += f'?next={next_url}'
 
-                    save_user_agent(request, user)
-                    
-                    return HttpResponseRedirect(confirm_login_url)
-            except models.PhoneNumber.DoesNotExist:
-                messages.info(request, "Account don't exist.")
+            save_user_agent(request, user)
+            
+            return HttpResponseRedirect(confirm_login_url)
     else:
         form = forms.LoginForm()
 
