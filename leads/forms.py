@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from everybase import settings
 from files import models as fimods
 from files.utilities.cache_image import cache_image
-from files.utilities.delete_cached_image import delete_cached_image
+from files.utilities.delete_file import delete_file
 from common.utilities.is_censored import is_censored
 
 class LeadForm(forms.Form):
@@ -146,21 +146,23 @@ class LeadForm(forms.Form):
             # Image is not none
             if image_one_cache_file_id is not None and len(image_one_cache_file_id.strip()) != 0:
                 # If cache exists, delete it
-                delete_cached_image(image_one_cache_file_id)
+                delete_file(image_one_cache_file_id)
 
+            img_error = False
             if image_one.size > settings.MAX_UPLOAD_SIZE:
                 self.add_error('image_one', 'Please upload a smaller file')
+                img_error = True
                 has_error = True
             
             # Cache this image if it has no errors
-            cache_image_one = True if not has_error else False
+            cache_image_one = True if not img_error else False
         elif image_one_cache_file_id is not None and len(image_one_cache_file_id.strip()) != 0:
             # Cache exists
 
             file = fimods.File.objects.get(pk=image_one_cache_file_id)
             if file is not None and file.deleted is None and image_one_cache_use == 'no':
                 # Frontend indicated not to use cache, delete it
-                delete_cached_image(image_one_cache_file_id)
+                delete_file(image_one_cache_file_id)
         ##### end: image one #####
 
         ##### start: image two #####
@@ -169,21 +171,23 @@ class LeadForm(forms.Form):
             # Image is not none
             if image_two_cache_file_id is not None and len(image_two_cache_file_id.strip()) != 0:
                 # If cache exists, delete it
-                delete_cached_image(image_two_cache_file_id)
+                delete_file(image_two_cache_file_id)
 
+            img_error = False
             if image_two.size > settings.MAX_UPLOAD_SIZE:
                 self.add_error('image_two', 'Please upload a smaller file')
+                img_error = True
                 has_error = True
             
             # Cache this image if it has no errors
-            cache_image_two = True if not has_error else False
+            cache_image_two = True if not img_error else False
         elif image_two_cache_file_id is not None and len(image_two_cache_file_id.strip()) != 0:
             # Cache exists
 
             file = fimods.File.objects.get(pk=image_two_cache_file_id)
             if file is not None and file.deleted is None and image_two_cache_use == 'no':
                 # Frontend indicated not to use cache, delete it
-                delete_cached_image(image_two_cache_file_id)
+                delete_file(image_two_cache_file_id)
         ##### end: image two #####
 
         ##### start: image three #####
@@ -192,21 +196,23 @@ class LeadForm(forms.Form):
             # Image is not none
             if image_three_cache_file_id is not None and len(image_three_cache_file_id.strip()) != 0:
                 # If cache exists, delete it
-                delete_cached_image(image_three_cache_file_id)
+                delete_file(image_three_cache_file_id)
 
+            img_error = False
             if image_three.size > settings.MAX_UPLOAD_SIZE:
                 self.add_error('image_three', 'Please upload a smaller file')
+                img_error = True
                 has_error = True
             
             # Cache this image if it has no errors
-            cache_image_three = True if not has_error else False
+            cache_image_three = True if not img_error else False
         elif image_three_cache_file_id is not None and len(image_three_cache_file_id.strip()) != 0:
             # Cache exists
 
             file = fimods.File.objects.get(pk=image_three_cache_file_id)
             if file is not None and file.deleted is None and image_three_cache_use == 'no':
                 # Frontend indicated not to use cache, delete it
-                delete_cached_image(image_three_cache_file_id)
+                delete_file(image_three_cache_file_id)
         ##### end: image three #####
 
         # Cache image it necessary, pass cache details if there's error on form,
