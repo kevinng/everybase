@@ -3,6 +3,8 @@
 from django.db import migrations, models
 import leads.models
 
+def _uuid_str():
+    pass
 
 class Migration(migrations.Migration):
 
@@ -14,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='lead',
             name='slug_link',
-            field=models.CharField(db_index=True, default=leads.models._uuid_str, max_length=64, null=True),
+            field=models.CharField(db_index=True, default=_uuid_str, max_length=64, null=True),
         ),
     ]
