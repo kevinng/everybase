@@ -266,7 +266,7 @@ class LeadCommentForm(forms.Form):
         body = self.cleaned_data.get('body')
 
         if is_censored(body):
-            self.add_error('body', 'No emails, phone numbers or URLs allowed.')
+            self.add_error('body', 'Please do not specify emails, phone numbers or URLs. Users may contact you through your WhatsApp phone number.')
             raise ValidationError(None)
 
         return self.cleaned_data
