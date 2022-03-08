@@ -131,8 +131,6 @@ def is_censored(body):
             # Phone numbers should need be above 7 characters, and it's not likely for a meaningful number to be above 10M-1.
             tokens.append(string)
 
-    print(tokens)
-
     # Regular expressions matching phone numbers
     ph_regexs = [
         '^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$',
@@ -161,7 +159,6 @@ def is_censored(body):
         for t in tokens:
             rx = re.compile(r)
             search = rx.findall(t)
-            print(search)
             if len(search) > 0:
                 return True
 
