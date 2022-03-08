@@ -6,6 +6,9 @@ from files.utilities.cache_image import cache_image
 from files.utilities.delete_file import delete_file
 from common.utilities.is_censored import is_censored
 
+_require_msg = 'This field is required.'
+_censor_msg = 'Please do not specify emails, phone numbers or URLs. Users may contact you through your WhatsApp phone number.'
+
 def _handle_lead_image(form, image, file_id, cache_use):
     cache_if_form_error = False
     has_error = False
@@ -108,35 +111,35 @@ class LeadForm(forms.Form):
             ct = get('commission_type')
             if ct == 'other':
                 if is_empty_string(get('commission_type_other')):
-                    self.add_error('commission_type_other', 'This field is required.')
+                    self.add_error('commission_type_other', _require_msg)
                     has_error = True
             elif ct == 'percentage':
                 if get('commission') is None:
-                    self.add_error('commission', 'This field is required.')
+                    self.add_error('commission', _require_msg)
                     has_error = True
 
                 if get('avg_deal_size') is None:
-                    self.add_error('avg_deal_size', 'This field is required.')
+                    self.add_error('avg_deal_size', _require_msg)
                     has_error = True
 
             if get('commission_payable_after') == 'other':
                 if is_empty_string(get('commission_payable_after_other')):
-                    self.add_error('commission_payable_after_other', 'This field is required.')
+                    self.add_error('commission_payable_after_other', _require_msg)
                     has_error = True
 
             if get('author_type') == 'broker':
                 if is_empty_string(get('commission_payable_by')):
-                    self.add_error('commission_payable_by', 'This field is required.')
+                    self.add_error('commission_payable_by', _require_msg)
                     has_error = True
 
             if is_empty_string(get('commission_payable_after')):
-                self.add_error('commission_payable_after', 'This field is required.')
+                self.add_error('commission_payable_after', _require_msg)
                 has_error = True
 
         need_logistics_agent = get('need_logistics_agent')
         if need_logistics_agent == True:
             if is_empty_string(get('other_logistics_agent_details')):
-                self.add_error('other_logistics_agent_details', 'This field is required.')
+                self.add_error('other_logistics_agent_details', _require_msg)
 
         image_one = get('image_one')
         image_two = get('image_two')
@@ -248,7 +251,7 @@ class LeadCommentForm(forms.Form):
         body = self.cleaned_data.get('body')
 
         if is_censored(body):
-            self.add_error('body', 'Please do not specify emails, phone numbers or URLs. Users may contact you through your WhatsApp phone number.')
+            self.add_error('body', _censor_msg)
             raise ValidationError(None)
 
         return self.cleaned_data
