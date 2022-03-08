@@ -6,6 +6,34 @@ from files.utilities.cache_image import cache_image
 from files.utilities.delete_file import delete_file
 from common.utilities.is_censored import is_censored
 
+def _handle_lead_image(form, image, file_id, cache_use):
+    cache_if_form_error = False
+    has_error = False
+    deleted = False
+    if image is not None:
+        # Image is not none
+        if file_id is not None and len(file_id.strip()) != 0:
+            # If cache exists, delete it
+            delete_file(file_id)
+
+        if image.size > settings.MAX_UPLOAD_SIZE:
+            form.add_error('image_one', 'Please upload a smaller file')
+            has_error = True
+        
+        # Cache this image if it has no errors
+        cache_if_form_error = True if not has_error else False
+    elif file_id is not None and len(file_id.strip()) != 0:
+        # Cache exists
+
+        file = fimods.File.objects.get(pk=file_id)
+        if file is not None and file.deleted is None and cache_use == 'no':
+            # Frontend indicated not to use cache, delete it
+            delete_file(file_id)
+            deleted = True
+
+    # Will cache image and does image have error
+    return cache_if_form_error, has_error, deleted
+
 class LeadForm(forms.Form):
     lead_type = forms.CharField()
     author_type = forms.CharField()
@@ -140,113 +168,67 @@ class LeadForm(forms.Form):
         # says we shouldn't use it, the user has indicated to delete it in the
         # frontend - delete it.
 
-        ##### start: image one #####
-        cache_image_one = False
-        if image_one is not None:
-            # Image is not none
-            if image_one_cache_file_id is not None and len(image_one_cache_file_id.strip()) != 0:
-                # If cache exists, delete it
-                delete_file(image_one_cache_file_id)
+        # Image one
+        cache_image_one_if_form_error, image_one_has_error, _ = _handle_lead_image(
+            self,
+            image_one,
+            image_one_cache_file_id,
+            image_one_cache_use
+        )
+        has_error = image_one_has_error if image_one_has_error else has_error
 
-            img_error = False
-            if image_one.size > settings.MAX_UPLOAD_SIZE:
-                self.add_error('image_one', 'Please upload a smaller file')
-                img_error = True
-                has_error = True
-            
-            # Cache this image if it has no errors
-            cache_image_one = True if not img_error else False
-        elif image_one_cache_file_id is not None and len(image_one_cache_file_id.strip()) != 0:
-            # Cache exists
+        # Image two
+        cache_image_two_if_form_error, image_two_has_error, _ = _handle_lead_image(
+            self,
+            image_two,
+            image_two_cache_file_id,
+            image_two_cache_use
+        )
+        has_error = image_two_has_error if image_two_has_error else has_error
 
-            file = fimods.File.objects.get(pk=image_one_cache_file_id)
-            if file is not None and file.deleted is None and image_one_cache_use == 'no':
-                # Frontend indicated not to use cache, delete it
-                delete_file(image_one_cache_file_id)
-        ##### end: image one #####
-
-        ##### start: image two #####
-        cache_image_two = False
-        if image_two is not None:
-            # Image is not none
-            if image_two_cache_file_id is not None and len(image_two_cache_file_id.strip()) != 0:
-                # If cache exists, delete it
-                delete_file(image_two_cache_file_id)
-
-            img_error = False
-            if image_two.size > settings.MAX_UPLOAD_SIZE:
-                self.add_error('image_two', 'Please upload a smaller file')
-                img_error = True
-                has_error = True
-            
-            # Cache this image if it has no errors
-            cache_image_two = True if not img_error else False
-        elif image_two_cache_file_id is not None and len(image_two_cache_file_id.strip()) != 0:
-            # Cache exists
-
-            file = fimods.File.objects.get(pk=image_two_cache_file_id)
-            if file is not None and file.deleted is None and image_two_cache_use == 'no':
-                # Frontend indicated not to use cache, delete it
-                delete_file(image_two_cache_file_id)
-        ##### end: image two #####
-
-        ##### start: image three #####
-        cache_image_three = False
-        if image_three is not None:
-            # Image is not none
-            if image_three_cache_file_id is not None and len(image_three_cache_file_id.strip()) != 0:
-                # If cache exists, delete it
-                delete_file(image_three_cache_file_id)
-
-            img_error = False
-            if image_three.size > settings.MAX_UPLOAD_SIZE:
-                self.add_error('image_three', 'Please upload a smaller file')
-                img_error = True
-                has_error = True
-            
-            # Cache this image if it has no errors
-            cache_image_three = True if not img_error else False
-        elif image_three_cache_file_id is not None and len(image_three_cache_file_id.strip()) != 0:
-            # Cache exists
-
-            file = fimods.File.objects.get(pk=image_three_cache_file_id)
-            if file is not None and file.deleted is None and image_three_cache_use == 'no':
-                # Frontend indicated not to use cache, delete it
-                delete_file(image_three_cache_file_id)
-        ##### end: image three #####
+        # Image three
+        cache_image_three_if_form_error, image_three_has_error, _ = _handle_lead_image(
+            self,
+            image_three,
+            image_three_cache_file_id,
+            image_three_cache_use
+        )
+        has_error = image_three_has_error if image_three_has_error else has_error
 
         # Cache image it necessary, pass cache details if there's error on form,
         # whether or not it's caused by the image.
 
         if (has_error or len(self.errors) > 0):
-            # has_error tests for errors we test ourselves.
-            # len(self.errors) tests for errors from Django Form's default behaviors.
+            # has_error tests for custom errors
+            # len(self.errors) tests for Django default errors
 
-            if cache_image_one:
+            # Cache image or pass file ID/URL if it's not deleted
+
+            if cache_image_one_if_form_error:
                 fid, url = cache_image(image_one)
                 self.add_error('image_one_cache_file_id', fid)
                 self.add_error('image_one_cache_url', url)
-            elif image_one_cache_file_id is not None and len(image_one_cache_file_id.strip()) != 0:
+            elif not is_empty_string(image_one_cache_file_id):
                 file_one = fimods.File.objects.get(pk=image_one_cache_file_id)
                 if file_one.deleted is None:
                     self.add_error('image_one_cache_file_id', image_one_cache_file_id)
                     self.add_error('image_one_cache_url', image_one_cache_url)
 
-            if cache_image_two:
+            if cache_image_two_if_form_error:
                 fid, url = cache_image(image_two)
                 self.add_error('image_two_cache_file_id', fid)
                 self.add_error('image_two_cache_url', url)
-            elif image_two_cache_file_id is not None and len(image_two_cache_file_id.strip()) != 0:
+            elif not is_empty_string(image_two_cache_file_id):
                 file_two = fimods.File.objects.get(pk=image_two_cache_file_id)
                 if file_two.deleted is None:
                     self.add_error('image_two_cache_file_id', image_two_cache_file_id)
                     self.add_error('image_two_cache_url', image_two_cache_url)
 
-            if cache_image_three:
+            if cache_image_three_if_form_error:
                 fid, url = cache_image(image_three)
                 self.add_error('image_three_cache_file_id', fid)
                 self.add_error('image_three_cache_url', url)
-            elif image_three_cache_file_id is not None and len(image_three_cache_file_id.strip()) != 0:
+            elif not is_empty_string(image_three_cache_file_id):
                 file_three = fimods.File.objects.get(pk=image_three_cache_file_id)
                 if file_three.deleted is None:
                     self.add_error('image_three_cache_file_id', image_three_cache_file_id)
