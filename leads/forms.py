@@ -42,7 +42,7 @@ class LeadForm(forms.Form):
     author_type = forms.CharField()
     buy_country = forms.CharField()
     sell_country = forms.CharField()
-    details = forms.CharField()
+    details = forms.CharField() # Censorship-enforced
     image_one = forms.ImageField(required=False)
     image_two = forms.ImageField(required=False)
     image_three = forms.ImageField(required=False)
@@ -63,7 +63,7 @@ class LeadForm(forms.Form):
     image_three_cache_url = forms.CharField(required=False)
 
     # Not required whether we need agents or not
-    other_agent_details = forms.CharField(required=False)
+    other_agent_details = forms.CharField(required=False) # Censorship-enforced
 
     ## Following fields are only required if need_agent is True. All of them
     ## are required=False by default.
@@ -71,7 +71,7 @@ class LeadForm(forms.Form):
     commission_type = forms.CharField(required=False)
 
     # This field is required if commission_type is 'other'
-    commission_type_other = forms.CharField(required=False)
+    commission_type_other = forms.CharField(required=False) # Censorship-enforced
 
     # These fields are required if commission_type is 'percentage'
     commission = forms.FloatField(
@@ -85,7 +85,7 @@ class LeadForm(forms.Form):
     )
 
     # This field is required if commission_payable_after is 'other'
-    commission_payable_after_other = forms.CharField(required=False)
+    commission_payable_after_other = forms.CharField(required=False) # Censorship-enforced
 
     # Required if author_type is 'broker'
     commission_payable_by = forms.CharField(required=False)
@@ -94,7 +94,7 @@ class LeadForm(forms.Form):
     commission_payable_after = forms.CharField(required=False)
 
     need_logistics_agent = forms.BooleanField(required=False)
-    other_logistics_agent_details = forms.CharField(required=False)
+    other_logistics_agent_details = forms.CharField(required=False) # Censorship-enforced
 
     def clean(self):
         super(LeadForm, self).clean()
@@ -107,11 +107,25 @@ class LeadForm(forms.Form):
         # Helper function to test for empty string
         is_empty_string = lambda s : s is None or len(s.strip()) == 0
 
+        details = get('details')
+        if is_censored(details):
+            self.add_error('details', _censor_msg)
+            has_error = True
+
+        other_agent_details = get('other_agent_details')
+        if is_censored(other_agent_details):
+            self.add_error('other_agent_details', _censor_msg)
+            has_error = True
+
         if get('need_agent'):
             ct = get('commission_type')
             if ct == 'other':
-                if is_empty_string(get('commission_type_other')):
+                commission_type_other = get('commission_type_other')
+                if is_empty_string(commission_type_other):
                     self.add_error('commission_type_other', _require_msg)
+                    has_error = True
+                elif is_censored(commission_type_other):
+                    self.add_error('commission_type_other', _censor_msg)
                     has_error = True
             elif ct == 'percentage':
                 if get('commission') is None:
@@ -123,8 +137,12 @@ class LeadForm(forms.Form):
                     has_error = True
 
             if get('commission_payable_after') == 'other':
-                if is_empty_string(get('commission_payable_after_other')):
+                commission_payable_after_other = get('commission_payable_after_other')
+                if is_empty_string(commission_payable_after_other):
                     self.add_error('commission_payable_after_other', _require_msg)
+                    has_error = True
+                elif is_censored(commission_payable_after_other):
+                    self.add_error('commission_payable_after_other', _censor_msg)
                     has_error = True
 
             if get('author_type') == 'broker':
@@ -138,8 +156,13 @@ class LeadForm(forms.Form):
 
         need_logistics_agent = get('need_logistics_agent')
         if need_logistics_agent == True:
-            if is_empty_string(get('other_logistics_agent_details')):
+            other_logistics_agent_details = get('other_logistics_agent_details')
+            if is_empty_string(other_logistics_agent_details):
                 self.add_error('other_logistics_agent_details', _require_msg)
+                has_error = True
+            elif is_censored(other_logistics_agent_details):
+                self.add_error('other_logistics_agent_details', _censor_msg)
+                has_error = True
 
         image_one = get('image_one')
         image_two = get('image_two')
