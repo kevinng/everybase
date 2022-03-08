@@ -1,5 +1,6 @@
 import uuid as uuidlib
 from django.db import models
+import files.models as fimods
 from common.models import Standard
 from common.utilities.slugify import slugify
 
@@ -38,9 +39,6 @@ class LeadComment(Standard):
     def reply_comments(self):
         """Returns replies to this lead"""
         return LeadComment.objects.filter(reply_to=self).order_by('created')
-
-def _uuid_str():
-    return str(uuidlib.uuid4())
     
 class Lead(Standard):
     """Lead.
@@ -231,7 +229,11 @@ class Lead(Standard):
     )
 
     def save(self, *args, **kwargs):
-        self.slug_link, self.slug_tokens = slugify(self.details, self.uuid)
+        # We only generate the slug on creation and not update - so we don't
+        # confuse the user when their link stops working.
+        l = Lead.objects.get(slug_link=self.slug_link)
+        if l.slug_link is None or l.slug_link.strip() == '':
+            self.slug_link, self.slug_tokens = slugify(self.details, self.uuid)
         return super().save(*args, **kwargs)
 
     def avg_deal_comm(self):
@@ -263,6 +265,12 @@ class Lead(Standard):
                 title += ' - ' + keywords
 
         return title
+
+    def display_images(self):
+        """Returns display images"""
+        return fimods.File.objects\
+            .filter(lead=self, deleted__isnull=True)\
+            .order_by('-created')[:3]
 
 class LeadDetailView(Standard):
     """Lead detail view.
