@@ -14,7 +14,7 @@ Dependencies:
         {% comment %} start: thumbnails {% endcomment %}
         <div class="flex items-start justify-start gap-2">
             {% load thumbnail_url %}
-            {% for file in lead.files.all %}
+            {% for file in lead.display_images.all %}
                 {% thumbnail_url file as thumbnail_url %}
                 <img src='{{ thumbnail_url }}' class='border border-slate-50'>
             {% endfor %}
