@@ -1,4 +1,4 @@
-from statistics import mode
+from urllib.parse import urljoin
 import traceback, boto3
 from PIL import Image, ImageOps
 from io import BytesIO
@@ -11,12 +11,12 @@ from django.db.models.expressions import RawSQL
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
 
 from everybase import settings
 from common import models as commods
+from files.utilities.delete_file import delete_file
 from leads import models, forms
 from relationships import models as relmods
 from relationships.utilities.save_user_agent import save_user_agent
@@ -27,6 +27,174 @@ def get_countries():
     return commods.Country.objects.annotate(
         number_of_users=Count('users_w_this_country'))\
             .order_by('-number_of_users')
+
+def save_thumbnail(image, s3, thumb_key, mime_type, file):
+    # Resize and save thumbnail, and record sizes
+    with Image.open(image) as im:
+        # Resize preserving aspect ratio cropping from the center
+        thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
+        output = BytesIO()
+        thumbnail.save(output, format='PNG')
+        output.seek(0)
+
+        s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+            Key=thumb_key,
+            Body=output,
+            ContentType=mime_type
+        )
+
+        file.width, file.height = im.size
+        file.thumbnail_width, file.thumbnail_height = thumbnail.size
+        file.save()
+
+def save_img_if_exists(
+        image_key,
+        image_cache_use_key,
+        image_cache_file_id_key,
+        request,
+        lead,
+        form
+    ):
+
+    # We'll only reach here if form validation passes.
+    #
+    # A valid cache has its File model deleted field set to None.
+    # Otherwise, it's invalid.
+    #
+    # It's not possible to have a file with a valid cache. Since cache
+    # is deleted once we detect a file in the form, whether the file is
+    # valid or not. If we've a file, save it.
+    #
+    # If file does not exist, but a valid cache exists - use the cache
+    # by copying it to our desired location, and delete the cache.
+    #
+    # Though we're dealing with 'cache' images - i.e., cached images that's a
+    # result of failed form validation - 'cache' images can also refer to
+    # actual lead images. We set actual lead images as cache when we're editing
+    # a post.
+
+    # Helper to get cleaned data
+    get = lambda s : form.cleaned_data.get(s)
+
+    image = request.FILES.get(image_key)
+
+    image_cache_use = get(image_cache_use_key)
+
+    if image_cache_use is not None and image_cache_use == 'no':
+        # Doesn't matter if this image is a cache image (that's set as a
+        # result of failed form validation) or an actual lead image (that's
+        # set as a result of an edit operation), delete this image if the
+        # frontend indicates that we no longer need this image.
+        image_cache_file_id = get(image_cache_file_id_key)
+        delete_file(image_cache_file_id)
+
+    if image is not None:
+        mime_type = get_mime_type(image)
+
+        # Create lead file
+        file = fimods.File.objects.create(
+            uploader=request.user.user,
+            mime_type=mime_type,
+            filename=image.name,
+            lead=lead,
+            s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+            thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+        )
+
+        key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, file.id)
+        thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, file.id)
+
+        s3 = boto3.session.Session(
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        ).resource('s3')
+
+        # Upload lead image
+        lead_s3_obj = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+            Key=key,
+            Body=image,
+            ContentType=mime_type
+        )
+
+        # Update lead file with S3 results
+        file.s3_object_key = key
+        file.thumbnail_s3_object_key = thumb_key
+        file.s3_object_content_length = lead_s3_obj.content_length
+        file.e_tag = lead_s3_obj.e_tag
+        file.content_type = lead_s3_obj.content_type
+        file.last_modified = lead_s3_obj.last_modified
+        file.save()
+
+        save_thumbnail(image, s3, thumb_key, mime_type, file)
+    else:
+        # Image does not exist
+
+        image_cache_file_id = get(image_cache_file_id_key)
+
+        if image_cache_file_id is not None and \
+            len(image_cache_file_id.strip()) > 0 and \
+            image_cache_use == 'yes':
+            # Frontend indicates use-cache, and we have the details to do so.
+
+            cache_file = fimods.File.objects.get(pk=image_cache_file_id)
+
+            # If this file is NOT a cache, i.e. - its ID and URL were set in an
+            # edit operation, we do not need to copy it from a cache location
+            # to an actual lead image location. We create a test key here to
+            # ascertain if the cache file is located in an actual lead image
+            # location. If equal, the image is not a 'cache' that's created as a
+            # result of form validation failure (though we name it as such).
+            # Instead, the ID and URL were set in an edit operation.
+            test_key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, cache_file.id)
+            if cache_file.deleted is None and \
+                cache_file.s3_object_key != test_key:
+                # Cache is valid and not an actual lead image, copy cache
+                # to actual lead image location.
+                
+                # Create lead file model
+                lead_file = fimods.File.objects.create(
+                    uploader=request.user.user,
+                    mime_type=cache_file.mime_type,
+                    filename=cache_file.filename,
+                    lead=lead,
+                    s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                    thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                    s3_object_content_type = cache_file.s3_object_content_type,
+                    s3_object_content_length = cache_file.s3_object_content_length
+                )
+
+                lead_key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, lead_file.id)
+                cache_key = f'{cache_file.s3_bucket_name}/{cache_file.s3_object_key}'
+
+                s3 = boto3.session.Session(
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                ).resource('s3')
+
+                # Copy cache to lead file S3 location
+                lead_s3_obj = s3.Object(
+                    settings.AWS_STORAGE_BUCKET_NAME, lead_key)\
+                    .copy_from(CopySource=cache_key)
+
+                thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, lead_file.id)
+
+                # Update file model
+                lead_file.s3_object_key = lead_key
+                lead_file.thumbnail_s3_object_key = thumb_key
+                lead_file.e_tag = lead_s3_obj.get('ETag')
+                lead_file.last_modified = lead_s3_obj.get('LastModified')
+                lead_file.save()
+
+                # Download cache image for resize to thumbnail
+                cache = BytesIO()
+                s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)\
+                    .download_fileobj(cache_file.s3_object_key, cache)
+                cache.seek(0)
+
+                save_thumbnail(cache, s3, thumb_key, cache_file.mime_type, lead_file)
+
+                # Delete cache
+                delete_file(cache_file.id)
 
 class LeadDetailView(DetailView):
     template_name = 'leads/lead_detail.html'
@@ -69,72 +237,95 @@ def lead_detail(request, slug):
     return render(request, 'leads/lead_detail.html', params)
 
 @login_required
-def lead_edit(request, pk):
-    lead = models.Lead.objects.get(pk=pk)
+def lead_edit(request, slug):
+    lead = models.Lead.objects.get(slug_link=slug)
 
-    # If requester does not own lead - redirect to lead list
+    # If requester does not own lead - redirect to lead detail
     if request.user.user.id != lead.author.id:
-        return HttpResponseRedirect(reverse('leads:lead_list', args=()))
+        return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug)))
 
     if request.method == 'POST':
-        form = forms.LeadForm(request.POST)
+        form = forms.LeadForm(request.POST, request.FILES)
         if form.is_valid():
-            buy_country_str = form.cleaned_data.get('buy_country')
-            if buy_country_str != 'any_country':
-                lead.buy_country = commods.Country.objects.get(
-                    programmatic_key=buy_country_str)
-            else:
-                lead.buy_country = None
 
-            sell_country_str = form.cleaned_data.get('sell_country')
-            if sell_country_str != 'any_country':
-                lead.sell_country = commods.Country.objects.get(
-                    programmatic_key=sell_country_str)
-            else:
-                lead.sell_country = None
+            # Helper to get cleaned data
+            get = lambda s : form.cleaned_data.get(s)
 
-            lead.lead_type = form.cleaned_data.get('lead_type')
-            lead.avg_deal_size = form.cleaned_data.get('avg_deal_size')
-            lead.commissions = form.cleaned_data.get('commissions')
-            lead.details = form.cleaned_data.get('details')
-            lead.other_comm_details = form.cleaned_data.get(
-                'other_comm_details')
+            # Helper to get country or not (i.e., any country)
+            get_country = lambda c : commods.Country.objects.get(programmatic_key=c) if c != 'any_country' else None
 
+            # Update lead
+            need_agent = get('need_agent')
+            commission_type = get('commission_type')
+            author_type = get('author_type')
+            need_logistics_agent = get('need_logistics_agent')
+            lead.lead_type = get('lead_type')
+            lead.author_type = author_type
+            lead.buy_country = get_country(get('buy_country'))
+            lead.sell_country = get_country(get('sell_country'))
+            lead.details = get('details')
+            lead.need_agent = need_agent
+            lead.commission_type = commission_type if need_agent else None
+            lead.commission_type_other = get('commission_type_other') if need_agent and commission_type == 'other' else None
+            lead.commission = get('commission') if need_agent and commission_type == 'percentage' else None
+            lead.avg_deal_size = get('avg_deal_size') if need_agent and commission_type == 'percentage' else None
+            lead.is_comm_negotiable = get('is_comm_negotiable') if need_agent else None
+            lead.commission_payable_after = get('commission_payable_after') if need_agent else None
+            lead.commission_payable_after_other = get('commission_payable_after_other') if need_agent else None
+            lead.commission_payable_by = get('commission_payable_by') if need_agent and author_type == 'broker' else None
+            lead.other_agent_details = get('other_agent_details') if need_agent else None
+            lead.need_logistics_agent = need_logistics_agent
+            lead.other_logistics_agent_details=get('other_logistics_agent_details') if need_logistics_agent else None
             lead.save()
 
-            return HttpResponseRedirect(
-                reverse('leads:lead_detail', args=(lead.slug_link,)))
+            save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)
+            save_img_if_exists('image_two', 'image_two_cache_use', 'image_two_cache_file_id', request, lead, form)
+            save_img_if_exists('image_three', 'image_three_cache_use', 'image_three_cache_file_id', request, lead, form)
+
+            return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
     else:
-        lead = models.Lead.objects.get(pk=pk)
-
-        buy_country = 'any_country'
-        if lead.buy_country != None:
-            buy_country = lead.buy_country.programmatic_key
-
-        sell_country = 'any_country'
-        if lead.sell_country != None:
-            sell_country = lead.sell_country.programmatic_key
-
-        form = forms.LeadForm(initial={
+        initial = {
             'lead_type': lead.lead_type,
-            'buy_country': buy_country,
-            'sell_country': sell_country,
-            'avg_deal_size': lead.avg_deal_size,
-            'commissions': lead.commissions,
+            'author_type': lead.author_type,
+            'buy_country': lead.buy_country.programmatic_key,
+            'sell_country': lead.sell_country.programmatic_key,
             'details': lead.details,
-            'other_comm_details': lead.other_comm_details
-        })
+            'need_agent': lead.need_agent,
+            'commission_type': lead.commission_type,
+            'commission_type_other': lead.commission_type_other,
+            'commission': lead.commission,
+            'avg_deal_size': lead.avg_deal_size,
+            'is_comm_negotiable': lead.is_comm_negotiable,
+            'commission_payable_after': lead.commission_payable_after,
+            'commission_payable_after_other': lead.commission_payable_after_other,
+            'commission_payable_by': lead.commission_payable_by,
+            'other_agent_details': lead.other_agent_details,
+            'need_logistics_agent': lead.need_logistics_agent,
+            'other_logistics_agent_details': lead.other_logistics_agent_details
+        }
+
+        names = [
+            ('image_one_cache_file_id', 'image_one_cache_url'),
+            ('image_two_cache_file_id', 'image_two_cache_url'),
+            ('image_three_cache_file_id', 'image_three_cache_url')
+        ]
+        for i, f in enumerate(lead.display_images()):
+            # File ID
+            initial[names[i][0]] = f.id
+
+            # File URL
+            initial[names[i][1]] = urljoin(settings.MEDIA_URL, f.s3_object_key)
+
+        form = forms.LeadForm(initial=initial)
 
     return render(request, 'leads/lead_edit.html', {
-        'lead_pk': pk,
         'form': form,
+        'slug_link': lead.slug_link,
         'countries': get_countries()
     })
 
 @login_required
 def lead_create(request):
-    countries = get_countries()
-
     if request.method == 'POST':
         form = forms.LeadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -171,155 +362,9 @@ def lead_create(request):
                 other_logistics_agent_details=get('other_logistics_agent_details') if need_logistics_agent else None
             )
 
-            # We'll only reach here if form validation passes.
-            #
-            # A valid cache has its File model deleted field set to None.
-            # Otherwise, it's invalid.
-            #
-            # It's not possible to have a file with a valid cache. Since cache
-            # is deleted once we detect a file in the form, whether the file is
-            # valid or not. If we've a file, save it.
-            #
-            # If file does not exist, but a valid cache exists - use the cache
-            # by copying it to our desired location, and delete the cache.
-
-            def save_img_if_exists(image_key, image_cache_use_key, image_cache_file_id_key):
-                image = request.FILES.get(image_key)
-
-                if image is not None:
-                    mime_type = get_mime_type(image)
-
-                    # Create lead file
-                    file = fimods.File.objects.create(
-                        uploader=request.user.user,
-                        mime_type=mime_type,
-                        filename=image.name,
-                        lead=lead,
-                        s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-                        thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-                    )
-
-                    key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, file.id)
-                    thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, file.id)
-
-                    s3 = boto3.session.Session(
-                        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-                    ).resource('s3')
-
-                    # Upload lead image
-                    lead_s3_obj = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
-                        Key=key,
-                        Body=image,
-                        ContentType=mime_type
-                    )
-
-                    # Update lead file with S3 results
-                    file.s3_object_key = key
-                    file.thumbnail_s3_object_key = thumb_key
-                    file.s3_object_content_length = lead_s3_obj.content_length
-                    file.e_tag = lead_s3_obj.e_tag
-                    file.content_type = lead_s3_obj.content_type
-                    file.last_modified = lead_s3_obj.last_modified
-                    file.save()
-
-                    # Resize and save thumbnail, and record sizes
-                    with Image.open(image) as im:
-                        # Resize preserving aspect ratio cropping from the center
-                        thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
-                        output = BytesIO()
-                        thumbnail.save(output, format='PNG')
-                        output.seek(0)
-
-                        s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
-                            Key=thumb_key,
-                            Body=output,
-                            ContentType=mime_type
-                        )
-
-                        file.width, file.height = im.size
-                        file.thumbnail_width, file.thumbnail_height = thumbnail.size
-                        file.save()
-                else:
-                    # Image does not exist
-
-                    image_cache_use = get(image_cache_use_key)
-                    image_cache_file_id = get(image_cache_file_id_key)
-
-                    if image_cache_use == 'yes' and \
-                        image_cache_file_id is not None and \
-                        len(image_cache_file_id.strip()) > 0:
-                        # Frontend indicates use-cache, and we have the details to do so.
-
-                        cache_file = fimods.File.objects.get(pk=image_cache_file_id)
-                        if cache_file.deleted is None:
-                            # Cache is valid, use cache.
-                            
-                            # Create lead file model
-                            lead_file = fimods.File.objects.create(
-                                uploader=request.user.user,
-                                mime_type=cache_file.mime_type,
-                                filename=cache_file.filename,
-                                lead=lead,
-                                s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-                                thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-                                s3_object_content_type = cache_file.s3_object_content_type,
-                                s3_object_content_length = cache_file.s3_object_content_length
-                            )
-
-                            lead_key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, lead_file.id)
-                            cache_key = f'{cache_file.s3_bucket_name}/{cache_file.s3_object_key}'
-
-                            s3 = boto3.session.Session(
-                                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-                            ).resource('s3')
-
-                            # Copy cache to lead file S3 location
-                            lead_s3_obj = s3.Object(
-                                settings.AWS_STORAGE_BUCKET_NAME, lead_key)\
-                                .copy_from(CopySource=cache_key)
-
-                            thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, lead_file.id)
-
-                            # Update file model
-                            lead_file.s3_object_key = lead_key
-                            lead_file.thumbnail_s3_object_key = thumb_key
-                            lead_file.e_tag = lead_s3_obj.get('ETag')
-                            lead_file.last_modified = lead_s3_obj.get('LastModified')
-                            lead_file.save()
-
-                            # Download cache image for resize to thumbnail
-                            cache = BytesIO()
-                            s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)\
-                                .download_fileobj(cache_file.s3_object_key, cache)
-                            cache.seek(0)
-
-                            # Resize and save thumbnail, and record sizes
-                            with Image.open(cache) as im:
-                                # Resize preserving aspect ratio cropping from the center
-                                thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
-                                output = BytesIO()
-                                thumbnail.save(output, format='PNG')
-                                output.seek(0)
-
-                                s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
-                                    Key=thumb_key,
-                                    Body=output,
-                                    ContentType=cache_file.mime_type
-                                )
-
-                                file.width, file.height = im.size
-                                file.thumbnail_width, file.thumbnail_height = thumbnail.size
-                                file.save()
-
-                            # Delete cache
-                            s3.Object(settings.AWS_STORAGE_BUCKET_NAME,
-                                cache_file.s3_object_key).delete()
-
-            save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id')
-            save_img_if_exists('image_two', 'image_two_cache_use', 'image_two_cache_file_id')
-            save_img_if_exists('image_three', 'image_three_cache_use', 'image_three_cache_file_id')
+            save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)
+            save_img_if_exists('image_two', 'image_two_cache_use', 'image_two_cache_file_id', request, lead, form)
+            save_img_if_exists('image_three', 'image_three_cache_use', 'image_three_cache_file_id', request, lead, form)
 
             save_user_agent(request, request.user.user)
 
@@ -330,7 +375,7 @@ def lead_create(request):
 
     return render(request, 'leads/lead_create.html', {
         'form': form,
-        'countries': countries
+        'countries': get_countries()
     })
 
 class LeadListView(ListView):
