@@ -4,6 +4,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User as django_user
+from common.utilities.slugify import slugify
 
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField, Country)
@@ -308,6 +309,38 @@ class User(Standard):
         blank=True,
         db_index=True
     )
+
+    def save(self, *args, **kwargs):
+        # We only generate the slug on creation and not update - so we don't
+        # confuse the user when their link stops working.
+        if self.slug_link is None or self.slug_link.strip() == '':
+            # We append a hexadecimal representation of the integer ID (for concisiveness)
+            # to make the URL unique. We compute the ID of this instance because it's not
+            # yet. Race condition is possible (i.e., 2 leads getting the same ID) but
+            # collison is unlikely even if they have have the same details because slugify
+            # randomly picks words in random order to form the slug.
+            this_id = User.objects.all().order_by('-id').first().id + 1
+            
+            phrase = self.goods_string
+            if self.buy_agent_details is not None:
+                phrase += ' ' + self.buy_agent_details
+            if self.sell_agent_details is not None:
+                phrase += ' ' + self.sell_agent_details
+            if self.logistics_agent_details is not None:
+                phrase += ' ' + self.logistics_agent_details
+
+            c = self.country_from_phone_number()
+            country = c.name if c is not None else None
+
+            self.slug_link, self.slug_tokens = slugify(
+                phrase,
+                hex(this_id)[2:],
+                country=country,
+                is_buy_agent=self.is_buy_agent,
+                is_sell_agent=self.is_sell_agent,
+                is_logistics_agent=self.is_logistics_agent
+            )
+        return super().save(*args, **kwargs)
 
     def country_from_phone_number(self):
         try:

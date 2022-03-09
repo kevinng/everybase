@@ -63,6 +63,7 @@ def slugify(
         'importer',
         'importers',
         'kind',
+        'of'
         'only',
         'oversea',
         'overseas',
@@ -147,22 +148,22 @@ def slugify(
     # Remove tags
     tokens = [t[0] for t in tags]
 
-    if len(tokens) == 0:
-        return append_key, ''
-
     # We want a URL length of < 40 characters. 'everybase.co/leads' is 19
     # characters long. This leaves us with 31 characters to work with.
     # We ignore append key length because we don't expect the key to contribute
     # much to SEO.
-    slug = tokens[0]
+    slug = tokens[0] if len(tokens) > 0 else ''
     append_key = str(append_key)
     for t in tokens[1:]:
         if len(slug) < 31:
             slug += ' ' + t
         else:
             break
-
-    slug += ' ' + append_key
+    
+    if len(slug) > 0:
+        slug += ' '
+        
+    slug += append_key
 
     # Add model-specific variations
     if sell_country is not None \
@@ -172,13 +173,16 @@ def slugify(
         prefix = sell_country if is_selling else buy_country
         prefix += ' ' + buy_country if is_selling else sell_country
         slug = prefix + ' ' + slug
-    elif country is not None \
-        and is_buy_agent is not None \
+    elif is_buy_agent is not None \
         and is_sell_agent is not None \
         and is_logistics_agent is not None:
         # Add User model-specific variations
-        prefix = country
-        prefix += ' ' + 'buy' if is_buy_agent else 'sell'
+
+        # Country may be none if we're not able to ascertain the user's
+        # country from his phone number.
+        prefix = country + ' ' if country is not None else ''
+
+        prefix += 'buy' if is_buy_agent else 'sell'
         if is_logistics_agent:
             prefix += ' ' + 'logistics'
         slug = prefix + ' ' + slug
