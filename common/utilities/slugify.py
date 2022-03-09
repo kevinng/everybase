@@ -10,11 +10,22 @@ def slugify(
         append_key,
         buy_country=None,
         sell_country=None,
-        is_selling=None
+        is_selling=None,
+        country=None,
+        is_buy_agent=None,
+        is_sell_agent=None,
+        is_logistics_agent=None
     ):
-    """Slugify phrase into URL, then prefix the slug with buy_country and
-    sell_country in an order determined by is_selling. Finally append append_key
-    at the end of slugified URL for uniqueness.
+    """Generates and returns URL/SEO-friendly slug for phrase ending with
+    append_key.
+    
+    buy_country, sell_country, is_selling provides model-specific
+    variation for Lead model.
+
+    country, is_buy_agent, is_sell_agent, is_logistics_agent provides
+    model-specific variation for User model. User model phrase should be a
+    concatenation of all details we want to use - e.g., goods/services, and
+    other agent related details.
     """
     # Tokenize
     tokens = word_tokenize(phrase)
@@ -153,12 +164,24 @@ def slugify(
 
     slug += ' ' + append_key
 
+    # Add model-specific variations
     if sell_country is not None \
         and buy_country is not None \
         and is_selling is not None:
-        countries_prefix = sell_country if is_selling else buy_country
-        countries_prefix += ' ' + buy_country if is_selling else sell_country
-        slug = countries_prefix + ' ' + slug
+        # Add Lead model-specific variations
+        prefix = sell_country if is_selling else buy_country
+        prefix += ' ' + buy_country if is_selling else sell_country
+        slug = prefix + ' ' + slug
+    elif country is not None \
+        and is_buy_agent is not None \
+        and is_sell_agent is not None \
+        and is_logistics_agent is not None:
+        # Add User model-specific variations
+        prefix = country
+        prefix += ' ' + 'buy' if is_buy_agent else 'sell'
+        if is_logistics_agent:
+            prefix += ' ' + 'logistics'
+        slug = prefix + ' ' + slug
 
     slug = django_slugify(slug)
 
