@@ -124,22 +124,22 @@ def user_edit(request, slug):
         form = forms.UserEditForm(request.POST)
         if form.is_valid():
             # Get or create a new email for this user
-            email, _ = models.Email.objects.get_or_create(
-                email=form.cleaned_data.get('email')
-            )
+            # email, _ = models.Email.objects.get_or_create(
+            #     email=form.cleaned_data.get('email')
+            # )
 
-            is_not_agent = form.cleaned_data.get('is_not_agent')
-            if is_not_agent is None:
-                is_not_agent = False
+            # is_not_agent = form.cleaned_data.get('is_not_agent')
+            # if is_not_agent is None:
+            #     is_not_agent = False
 
-            models.User.objects.update(
-                first_name = form.cleaned_data.get('first_name'),
-                last_name = form.cleaned_data.get('last_name'),
-                email=email,
-                goods_string=form.cleaned_data.get('goods_string'),
-                languages_string=form.cleaned_data.get('languages_string'),
-                is_agent=not is_not_agent
-            )
+            # models.User.objects.update(
+            #     first_name = form.cleaned_data.get('first_name'),
+            #     last_name = form.cleaned_data.get('last_name'),
+            #     email=email,
+            #     goods_string=form.cleaned_data.get('goods_string'),
+            #     languages_string=form.cleaned_data.get('languages_string'),
+            #     is_agent=not is_not_agent
+            # )
 
             return HttpResponseRedirect(
                 reverse('users:user_detail', args=(slug,)))
@@ -147,17 +147,19 @@ def user_edit(request, slug):
         form = forms.UserEditForm(initial={
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'email': user.email.email,
             'goods_string': user.goods_string,
+            'has_company': user.has_company,
+            'company_name': user.company_name,
             'languages_string': user.languages_string,
-            'is_not_agent': not user.is_agent
+            'is_buy_agent': user.is_buy_agent,
+            'buy_agent_details': user.buy_agent_details,
+            'is_sell_agent': user.is_sell_agent,
+            'sell_agent_details': user.sell_agent_details,
+            'is_logistics_agent': user.is_logistics_agent,
+            'logistics_agent_details': user.logistics_agent_details
         })
 
-    return TemplateResponse(request, 'relationships/user_edit.html', {
-        'whatsapp_phone_number': str(user.phone_number.country_code) + \
-            str(user.phone_number.national_number),
-        'form': form
-    })
+    return render(request, 'relationships/user_edit.html', {'form': form})
 
 class UserLeadListView(ListView):
     template_name = 'relationships/user_detail_lead_list.html'
@@ -178,7 +180,7 @@ class UserLeadListView(ListView):
 
 def register(request):
     if request.method == 'POST':
-        form = forms.UserForm(request.POST)
+        form = forms.RegisterForm(request.POST)
         if form.is_valid():
             # Part of the form check includes checking if the phone number and
             # email belongs to a registered user. If so, is_valid() will return
@@ -213,10 +215,6 @@ def register(request):
             except commods.Country.DoesNotExist:
                 country = None
 
-            # Get or create an Everybase user
-            user, _ = models.User.objects.get_or_create(
-                phone_number=phone_number)
-
             has_company = form.cleaned_data.get('has_company')
             if has_company is None:
                 has_company = False
@@ -233,23 +231,24 @@ def register(request):
             if is_logistics_agent is None:
                 is_logistics_agent = False
 
-            # Override or set user details
-            user.first_name = form.cleaned_data.get('first_name')
-            user.last_name = form.cleaned_data.get('last_name')
-            user.goods_string = form.cleaned_data.get('goods_string')
-            user.languages_string = form.cleaned_data.get('languages_string')
-            user.has_company = has_company
-            user.company_name = form.cleaned_data.get('company_name')
-            user.phone_number = phone_number
-            user.email = email
-            user.country = country
-            user.is_buy_agent = is_buy_agent
-            user.buy_agent_details = form.cleaned_data.get('buy_agent_details')
-            user.is_sell_agent = is_sell_agent
-            user.sell_agent_details = form.cleaned_data.get('sell_agent_details')
-            user.is_logistics_agent = is_logistics_agent
-            user.logistics_agent_details = form.cleaned_data.get('logistics_agent_details')
-            user.save()
+            # Create an Everybase user
+            user = models.User.objects.create(
+                phone_number=phone_number,
+                first_name=form.cleaned_data.get('first_name'),
+                last_name=form.cleaned_data.get('last_name'),
+                goods_string=form.cleaned_data.get('goods_string'),
+                languages_string=form.cleaned_data.get('languages_string'),
+                has_company=has_company,
+                company_name=form.cleaned_data.get('company_name'),
+                email=email,
+                country=country,
+                is_buy_agent=is_buy_agent,
+                buy_agent_details=form.cleaned_data.get('buy_agent_details'),
+                is_sell_agent=is_sell_agent,
+                sell_agent_details=form.cleaned_data.get('sell_agent_details'),
+                is_logistics_agent=is_logistics_agent,
+                logistics_agent_details=form.cleaned_data.get('logistics_agent_details'),
+            )
 
             # Kill all tokens
             kill_register_tokens(user)
@@ -273,7 +272,7 @@ def register(request):
 
             return HttpResponseRedirect(confirm_register)
     else:
-        form = forms.UserForm()
+        form = forms.RegisterForm()
 
     params = {'form': form}
 
