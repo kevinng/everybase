@@ -242,9 +242,9 @@ class Lead(Standard):
             self.slug_link, self.slug_tokens = slugify(
                 self.details,
                 hex(this_id)[2:],
-                self.buy_country.name,
-                self.sell_country.name,
-                True if self.lead_type == 'selling' else False
+                buy_country=self.buy_country.name,
+                sell_country=self.sell_country.name,
+                is_selling=True if self.lead_type == 'selling' else False
             )
         return super().save(*args, **kwargs)
 
