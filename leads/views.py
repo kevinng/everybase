@@ -475,44 +475,46 @@ class AgentListView(ListView):
     paginate_by = 8
 
     def get_queryset(self, **kwargs):
-        search = self.request.GET.get('search')
-        country = self.request.GET.get('country')
+        # search = self.request.GET.get('search')
+        # country = self.request.GET.get('country')
 
-        users = relmods.User.objects
-        if country is not None and country != 'any_country':
-            users = users.filter(country__programmatic_key=country)
+        # users = relmods.User.objects
+        # if country is not None and country != 'any_country':
+        #     users = users.filter(country__programmatic_key=country)
 
-        # Save query
-        try:
-            if self.request.user.is_authenticated:
-                user = self.request.user.user
-            else:
-                user = None
+        # # Save query
+        # try:
+        #     if self.request.user.is_authenticated:
+        #         user = self.request.user.user
+        #     else:
+        #         user = None
 
-            if country == 'any_country' or country is None:
-                country_model = None
-            else:
-                country_model = commods.Country.objects.get(
-                    programmatic_key=country)
+        #     if country == 'any_country' or country is None:
+        #         country_model = None
+        #     else:
+        #         country_model = commods.Country.objects.get(
+        #             programmatic_key=country)
                 
-            if user is not None and search is not None and country is not None:
-                models.AgentQuery.objects.create(
-                    user=user,
-                    search=search,
-                    country=country_model
-                )
-        except:
-            traceback.print_exc()
+        #     if user is not None and search is not None and country is not None:
+        #         models.AgentQuery.objects.create(
+        #             user=user,
+        #             search=search,
+        #             country=country_model
+        #         )
+        # except:
+        #     traceback.print_exc()
 
-        vector = SearchVector('search_agents_veccol')
-        query = SearchQuery(search)
-        users = users.annotate(
-            search_agents_veccol=RawSQL('search_agents_veccol', [],
-                output_field=SearchVectorField()))\
-            .annotate(rank=SearchRank(vector, query))\
-            .order_by('-rank')
+        # vector = SearchVector('search_agents_veccol')
+        # query = SearchQuery(search)
+        # users = users.annotate(
+        #     search_agents_veccol=RawSQL('search_agents_veccol', [],
+        #         output_field=SearchVectorField()))\
+        #     .annotate(rank=SearchRank(vector, query))\
+        #     .order_by('-rank')
             
-        return users
+        # return users
+
+        return relmods.User.objects.all()
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -144,6 +144,8 @@ _user_fields = ['registered', 'django_user',
 
     'buy_agent_details', 'sell_agent_details', 'logistics_agent_details',
 
+    'slug_link', 'slug_tokens',
+
     'search_appearance_count', 'search_to_user_count', 'saved_count',
     'state']
 @admin.register(mod.User)

@@ -30,12 +30,12 @@ import phonenumbers
 from ratelimit.decorators import ratelimit
 
 @login_required
-def whatsapp(request, pk):
-    if request.user.user.id == pk:
+def whatsapp(request, slug):
+    if request.user.user.id == slug:
         # Disallow WhatsApp to self
-        return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
+        return HttpResponseRedirect(reverse('users:user_detail', args=(slug,)))
 
-    contactee = models.User.objects.get(pk=pk)
+    contactee = models.User.objects.get(slug_link=slug)
 
     if request.method == 'POST':
         form = forms.WhatsAppBodyForm(request.POST)
@@ -80,8 +80,8 @@ def whatsapp(request, pk):
 
     return render(request, 'relationships/message.html', params)
 
-def user_comments(request, pk):
-    user = models.User.objects.get(pk=pk)
+def user_comments(request, slug):
+    user = models.User.objects.get(slug_link=slug)
     template = 'relationships/user_detail_comment_list.html'
 
     if request.method == 'POST':
@@ -106,19 +106,19 @@ def user_comments(request, pk):
             )
 
             return HttpResponseRedirect(
-                reverse('users:user_comments', args=(pk,)))
+                reverse('users:user_detail', args=(slug,)))
     else:
         form = forms.CommentForm()
 
     return render(request, template, {'detail_user': user, 'form': form})
 
 @login_required
-def user_edit(request, pk):
-    if request.user.user.id != pk:
-        # Disallow edit of a profile that's not self
-        return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
+def user_edit(request, slug):
+    if request.user.user.slug_link != slug:
+        # Disallow user from editing another's profile
+        return HttpResponseRedirect(reverse('users:user_detail', args=(slug,)))
 
-    user = models.User.objects.get(pk=pk)
+    user = models.User.objects.get(slug_link=slug)
 
     if request.method == 'POST':
         form = forms.UserEditForm(request.POST)
@@ -142,7 +142,7 @@ def user_edit(request, pk):
             )
 
             return HttpResponseRedirect(
-                reverse('users:user_comments', args=(pk,)))
+                reverse('users:user_detail', args=(slug,)))
     else:
         form = forms.UserEditForm(initial={
             'first_name': user.first_name,
@@ -167,12 +167,12 @@ class UserLeadListView(ListView):
 
     def get_queryset(self, **kwargs):
         return lemods.Lead.objects.filter(
-            author=models.User.objects.get(pk=self.kwargs['pk'])
+            author=models.User.objects.get(slug_link=self.kwargs['slug'])
         ).order_by('-created')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = models.User.objects.get(pk=self.kwargs['pk'])
+        user = models.User.objects.get(slug_link=self.kwargs['slug'])
         context['detail_user'] = user
         return context
 
@@ -532,15 +532,15 @@ def log_out(request):
 
 @login_required
 @csrf_exempt
-def toggle_save_user(request, pk):
-    if request.user.user.id == pk:
+def toggle_save_user(request, slug):
+    if request.user.user.slug_link == slug:
         # Disallow saving of self
-        return HttpResponseRedirect(reverse('users:user_comments', args=(pk,)))
+        return HttpResponseRedirect(reverse('users:user_detail', args=(slug,)))
 
-    def toggle(pk):
+    def toggle():
         try:
             saved_user = models.SavedUser.objects.get(
-                savee=models.User.objects.get(pk=pk),
+                savee=models.User.objects.get(slug_link=slug),
                 saver=request.user.user
             )
 
@@ -549,7 +549,7 @@ def toggle_save_user(request, pk):
             saved_user.save()
         except models.SavedUser.DoesNotExist:
             saved_user = models.SavedUser.objects.create(
-                savee=models.User.objects.get(pk=pk),
+                savee=models.User.objects.get(slug_link=slug),
                 saver=request.user.user,
                 active=True
             )
@@ -558,14 +558,14 @@ def toggle_save_user(request, pk):
 
     if request.method == 'POST':
         # AJAX call, toggle save-unsave, return JSON.
-        return JsonResponse(toggle(pk))
+        return JsonResponse(toggle())
 
     # Unauthenticated call. User will be given the URL to click only if the
     # user is authenticated. Otherwise, a click on the 'save' button will
     # result in an AJAX post to this URL.
     #
     # Toggle save-unsave, redirect user to next URL.
-    toggle(pk)
+    toggle()
 
     # Read 'next' URL from GET parameters. Redirect user there if the
     # parameter exists. Other redirect user to default user details page.
@@ -574,4 +574,4 @@ def toggle_save_user(request, pk):
         return HttpResponseRedirect(next_url)
     else:
         return HttpResponseRedirect(
-            reverse('users:user_comments', args=(pk,)))
+            reverse('users:user_detail', args=(slug,)))

@@ -39,7 +39,7 @@
         <div class="hidden lg:block">
             <div class="flex items-center">
                 {% if request.user.is_authenticated %}
-                    <a ut-tag-id="nav_bar_desktop_my_profile_link" href="{% url 'users:user_comments' user.user.id %}" class="shadow-md text-white bg-blue-500 hover:bg-blue-600 rounded-md px-4 py-2 ml-2">Me</a>
+                    <a ut-tag-id="nav_bar_desktop_my_profile_link" href="{% url 'users:user_detail' user.user.slug_link %}" class="shadow-md text-white bg-blue-500 hover:bg-blue-600 rounded-md px-4 py-2 ml-2">Me</a>
                 {% else %}
                     <a ut-tag-id="nav_bar_desktop_register_link" href="{% url 'register' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2">Register</a>
                     <a ut-tag-id="nav_bar_desktop_login_link" href="{% url 'login' %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded-md px-4 py-2 ml-2">Login</a>
@@ -57,7 +57,7 @@
         <a ut-tag-id="nav_bar_mobile_leads_link" {% if request.resolver_match.view_name != 'pricing' %}href="{% url 'pricing' %}" {% endif %}class="{% if request.resolver_match.view_name == 'pricing' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Pricing</a>
         <div class="h-10"></div>
         {% if request.user.is_authenticated %}
-            <a ut-tag-id="nav_bar_mobile_my_profile_link" href="{% url 'users:user_comments' request.user.user.id %}" class="{% if request.resolver_match.view_name == 'users:user_comments' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Me</a>
+            <a ut-tag-id="nav_bar_mobile_my_profile_link" href="{% url 'users:user_detail' request.user.user.slug_link %}" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Me</a>
         {% else %}
             <a ut-tag-id="nav_bar_mobile_register_link" href="{% url 'register' %}" class="{% if request.resolver_match.view_name == 'register' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Register</a>
             <a ut-tag-id="nav_bar_mobile_login_link" href="{% url 'login' %}" class="{% if request.resolver_match.view_name == 'login' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Login</a>

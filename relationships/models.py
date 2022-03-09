@@ -148,7 +148,7 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 24 February 2022, 5:06 AM
+    Last updated: 9 March 2022, 4:33 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -258,6 +258,16 @@ class User(Standard):
         blank=True
     )
     logistics_agent_details = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    slug_link = models.CharField(
+        max_length=200,
+        unique=True,
+        db_index=True
+    )
+    slug_tokens = models.TextField(
         null=True,
         blank=True
     )

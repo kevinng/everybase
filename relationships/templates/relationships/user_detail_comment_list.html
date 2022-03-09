@@ -48,7 +48,7 @@ https://codebeautify.org/css-beautify-minify
         {% comment %} start: user is authenticated and not detail user {% endcomment %}
         {% if user.is_authenticated and user.user.id != detail_user.id %}
         <div class="bg-white p-5 mt-2">
-            <form action="{% url 'users:user_comments' detail_user.id %}" method="post">
+            <form action="{% url 'users:user_detail' detail_user.slug_link %}" method="post">
                 {% csrf_token %}
                 <div class="flex flex-col items-center justify-center">
                     <h2 class="font-bold text-xl">Leave a Private Comment</h2>

@@ -2,10 +2,83 @@
 
 {% load static %}
 
-{% block title %}Register on Everybase{% endblock %}
+{% block title %}Edit Profile{% endblock %}
 
 {% block content %}
-<form action="{% url 'users:user_edit' user.user.id %}" method="post">
+<div class="flex justify-center">
+    <div class="bg-white md:w-2/3 lg:w-1/2 xl:w-1/3 mt-10 mb-10 w-full p-10 shadow-md">
+        <h1 class="text-3xl font-bold text-center mt-5">Edit Profile</h1>
+
+        <div class="mt-7 flex flex-col justify-center">
+            <form action="{% url 'users:user_edit' user.user.slug_link %}" method="post">
+                {% csrf_token %}
+                <label for="whatsapp_phone_number" class="font-bold text-slate-400">WhatsApp Phone Number</label>
+                <input name="whatsapp_phone_number" value="{% if form.whatsapp_phone_number.value %}{{ form.whatsapp_phone_number.value }}{% endif %}" placeholder="E.g., +14155552671" type="text" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.whatsapp_phone_number.errors %}border-red-500{% endif %}">
+                <div class="mt-2">Please include + symbol. E.g., +14155552671.</div>
+                {% if form.whatsapp_phone_number.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.whatsapp_phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <label for="first_name" class="font-bold text-slate-400 mt-7 block">First Name</label>
+                <input name="first_name" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.first_name.errors %}border-red-500{% endif %}">
+                {% if form.first_name.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <label for="last_name" class="font-bold text-slate-400 mt-7 block">Last Name</label>
+                <input name="last_name" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.last_name.errors %}border-red-500{% endif %}">
+                {% if form.last_name.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <label for="email" class="font-bold text-slate-400 mt-7 block">Email</label>
+                <input name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" type="email" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.email.errors %}border-red-500{% endif %}">
+                {% if form.email.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <label for="email" class="font-bold text-slate-400 mt-7 block">Goods/Services Details</label>
+                <textarea rows="4" name="goods_string" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.goods_string.errors %}border-red-500{% endif %}">{% if form.goods_string.value %}{{ form.goods_string.value }}{% endif %}</textarea>
+                {% if form.goods_string.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.goods_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                <div class="mt-2">Describe goods/services you buy or sell</div>
+
+                <div class="mt-7 flex justify-start">
+                    <input id="has_company" name="has_company" type="checkbox" class="h-6 w-6" {% if form.has_company.value == True %} checked{% endif %}>
+                    <label for="has_company" class="ml-3">I have a company</label>
+                </div>
+
+                <label id="company_name__label" for="company_name" class="font-bold text-slate-400 mt-7 block">Company Name</label>
+                <input id="company_name" name="company_name" value="{% if form.company_name.value %}{{ form.company_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.company_name.errors %}border-red-500{% endif %}">
+                {% if form.company_name.errors %}<div id="company_name__error" class="w-full px-1 mt-2 text-red-500">{% for error in form.company_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <label for="email" class="font-bold text-slate-400 mt-7 block">Languages</label>
+                <textarea rows="4" name="languages_string" class="w-full border rounded-md py-3 px-5 mt-2 {% if form.languages_string.errors %}border-red-500{% endif %}">{% if form.languages_string.value %}{{ form.languages_string.value }}{% endif %}</textarea>
+                {% if form.languages_string.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.languages_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="mt-7 flex justify-start">
+                    <input id="is_buy_agent" name="is_buy_agent" type="checkbox" class="h-6 w-6" {% if form.is_buy_agent.value == True %} checked{% endif %}>
+                    <label for="is_buy_agent" class="ml-3">I'm a buying or sourcing agent</label>
+                </div>
+                <textarea rows="4" id="buy_agent_details" name="buy_agent_details" class="w-full border rounded-md py-3 px-5 mt-4 {% if form.buy_agent_details.errors %}border-red-500{% endif %}">{% if form.buy_agent_details.value %}{{ form.buy_agent_details.value }}{% endif %}</textarea>
+                {% if form.buy_agent_details.errors %}<div id="buy_agent_details__error" class="w-full px-1 mt-2 text-red-500">{% for error in form.buy_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                <div id="buy_agent_details__help" class="mt-2">Describe goods/services you help to buy or source and your charges.</div>
+
+                <div class="mt-7 flex justify-start">
+                    <input id="is_sell_agent" name="is_sell_agent" type="checkbox" class="h-6 w-6" {% if form.is_sell_agent.value == True %} checked{% endif %}>
+                    <label for="is_sell_agent" class="ml-3">I'm a selling or promoting agent</label>
+                </div>
+                <textarea rows="4" id="sell_agent_details" name="sell_agent_details" class="w-full border rounded-md py-3 px-5 mt-4 {% if form.sell_agent_details.errors %}border-red-500{% endif %}">{% if form.sell_agent_details.value %}{{ form.sell_agent_details.value }}{% endif %}</textarea>
+                {% if form.sell_agent_details.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.sell_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                <div id="sell_agent_details__help" class="mt-2">Describe goods/services you help to sell or promote and your charges.</div>
+
+                <div class="mt-7 flex justify-start">
+                    <input id="is_logistics_agent" name="is_logistics_agent" type="checkbox" class="h-6 w-6" {% if form.is_logistics_agent.value == True %} checked{% endif %}>
+                    <label for="is_logistics_agent" class="ml-3">I'm a logistics agent</label>
+                </div>
+                <textarea rows="4" id="logistics_agent_details" name="logistics_agent_details" class="w-full border rounded-md py-3 px-5 mt-4 {% if form.logistics_agent_details.errors %}border-red-500{% endif %}">{% if form.logistics_agent_details.value %}{{ form.logistics_agent_details.value }}{% endif %}</textarea>
+                {% if form.logistics_agent_details.errors %}<div id="logistics_agent_details__error" class="w-full px-1 mt-2 text-red-500">{% for error in form.logistics_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                <div id="logistics_agent_details__help" class="mt-2">Describe your logistics services and your charges.</div>
+
+                <button type="submit" class="w-full py-4 px-7 font-bold text-white rounded-md bg-green-500 hover:bg-green-600 mt-10 shadow-md">WhatsApp Me</button>
+                <div class="text-center mt-2 px-1">A confirmation message will be sent to your phone number via WhatsApp. Reply 'yes' to register and sign-in.</div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% comment %} <form action="{% url 'users:user_edit' user.user.id %}" method="post">
 <div class="flex justify-center">
     <div class="bg-white max-w-md w-full mt-10 p-10 shadow-md">
         <h1 class="text-3xl font-bold text-center mt-5">Edit Profile</h1>
@@ -47,5 +120,5 @@
         </div>
     </div>
 </div>
-</form>
+</form> {% endcomment %}
 {% endblock %}
