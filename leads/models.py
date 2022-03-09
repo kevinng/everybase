@@ -233,7 +233,19 @@ class Lead(Standard):
         # confuse the user when their link stops working.
         l = Lead.objects.get(slug_link=self.slug_link)
         if l.slug_link is None or l.slug_link.strip() == '':
-            self.slug_link, self.slug_tokens = slugify(self.details, self.uuid)
+            # We append a hexadecimal representation of the integer ID (for concisiveness)
+            # to make the URL unique. We compute the ID of this instance because it's not
+            # yet. Race condition is possible (i.e., 2 leads getting the same ID) but
+            # collison is unlikely even if they have have the same details because slugify
+            # randomly picks words in random order to form the slug.
+            this_id = Lead.objects.all().order_by('-id').first().id + 1
+            self.slug_link, self.slug_tokens = slugify(
+                self.details,
+                hex(this_id)[2:],
+                self.buy_country.name,
+                self.sell_country.name,
+                True if self.lead_type == 'selling' else False
+            )
         return super().save(*args, **kwargs)
 
     def avg_deal_comm(self):

@@ -5,9 +5,10 @@ from django.utils.text import slugify as django_slugify
 from common.models import Country
 from common.utilities.is_censored import _shareable_forbidden_words
 
-def slugify(phrase, append_key):
-    """Slugify phrase into URL and append append_key at the end of slugified
-    URL for uniqueness.
+def slugify(phrase, append_key, buy_country, sell_country, is_selling):
+    """Slugify phrase into URL, then prefix the slug with buy_country and
+    sell_country in an order determined by is_selling. Finally append append_key
+    at the end of slugified URL for uniqueness.
     """
     # Tokenize
     tokens = word_tokenize(phrase)
@@ -143,8 +144,10 @@ def slugify(phrase, append_key):
             slug += ' ' + t
         else:
             break
-    
-    slug = django_slugify(slug + ' ' + append_key)
+
+    countries_prefix = sell_country if is_selling else buy_country
+    countries_prefix += ' ' + buy_country if is_selling else sell_country
+    slug = django_slugify(countries_prefix + ' ' + slug + ' ' + append_key)
 
     sep = ', '
     return slug, sep.join(tokens)
