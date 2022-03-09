@@ -2,11 +2,7 @@
 
 {% load static %}
 
-{% block title %}Everybase Register{% endblock %}
-
-{% block other_css %}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-{% endblock %}
+{% block title %}Register{% endblock %}
 
 {% block content %}
 <div class="flex justify-center">
@@ -90,25 +86,47 @@ Dependencies:
     JQuery
 
 $(document).ready(function() {
+    $has_company = $('#has_company')
+    $company_name__label = $('#company_name__label')
+    $company_name = $('#company_name')
+    $company_name__error = $('#company_name__error')
+
     $is_buy_agent = $('#is_buy_agent')
     $buy_agent_details = $('#buy_agent_details')
     $buy_agent_details__help = $('#buy_agent_details__help')
+    $buy_agent_details__error = $('#buy_agent_details__error')
 
     $is_sell_agent = $('#is_sell_agent')
     $sell_agent_details = $('#sell_agent_details')
     $sell_agent_details__help = $('#sell_agent_details__help')
+    $sell_agent_details__error = $('#sell_agent_details__error')
 
     $is_logistics_agent = $('#is_logistics_agent')
     $logistics_agent_details = $('#logistics_agent_details')
     $logistics_agent_details__help = $('#logistics_agent_details__help')
+    $logistics_agent_details__error = $('#logistics_agent_details__error')
+
+    function set_has_company() {
+        if ($has_company.is(':checked')) {
+            $company_name__label.show()
+            $company_name.show()
+            $company_name__error.show()
+        } else {
+            $company_name__label.hide()
+            $company_name.hide()
+            $company_name__error.hide()
+        }
+    }
 
     function set_is_buy_agent() {
         if ($is_buy_agent.is(':checked')) {
             $buy_agent_details.show()
             $buy_agent_details__help.show()
+            $buy_agent_details__error.show()
         } else {
             $buy_agent_details.hide()
             $buy_agent_details__help.hide()
+            $buy_agent_details__error.hide()
         }
     }
 
@@ -116,9 +134,11 @@ $(document).ready(function() {
         if ($is_sell_agent.is(':checked')) {
             $sell_agent_details.show()
             $sell_agent_details__help.show()
+            $sell_agent_details__error.show()
         } else {
             $sell_agent_details.hide()
             $sell_agent_details__help.hide()
+            $sell_agent_details__error.hide()
         }
     }
 
@@ -126,18 +146,25 @@ $(document).ready(function() {
         if ($is_logistics_agent.is(':checked')) {
             $logistics_agent_details.show()
             $logistics_agent_details__help.show()
+            $logistics_agent_details__error.show()
         } else {
             $logistics_agent_details.hide()
             $logistics_agent_details__help.hide()
+            $logistics_agent_details__error.hide()
         }
     }
 
     // Run on load
+    set_has_company()
     set_is_buy_agent()
     set_is_sell_agent()
     set_is_logistics_agent()
 
     // Run on change
+    $has_company.change(function () {
+        set_has_company()
+    })
+
     $is_buy_agent.change(function () {
         set_is_buy_agent()
     })
@@ -153,99 +180,5 @@ $(document).ready(function() {
 {% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-{% comment %} <script src="{% static 'relationships/js/register.min.js' %}"></script> {% endcomment %}
-<script>
-    $(document).ready(function() {
-        $has_company = $('#has_company')
-        $company_name__label = $('#company_name__label')
-        $company_name = $('#company_name')
-        $company_name__error = $('#company_name__error')
-
-        $is_buy_agent = $('#is_buy_agent')
-        $buy_agent_details = $('#buy_agent_details')
-        $buy_agent_details__help = $('#buy_agent_details__help')
-        $buy_agent_details__error = $('#buy_agent_details__error')
-    
-        $is_sell_agent = $('#is_sell_agent')
-        $sell_agent_details = $('#sell_agent_details')
-        $sell_agent_details__help = $('#sell_agent_details__help')
-        $sell_agent_details__error = $('#sell_agent_details__error')
-    
-        $is_logistics_agent = $('#is_logistics_agent')
-        $logistics_agent_details = $('#logistics_agent_details')
-        $logistics_agent_details__help = $('#logistics_agent_details__help')
-        $logistics_agent_details__error = $('#logistics_agent_details__error')
-
-        function set_has_company() {
-            if ($has_company.is(':checked')) {
-                $company_name__label.show()
-                $company_name.show()
-                $company_name__error.show()
-            } else {
-                $company_name__label.hide()
-                $company_name.hide()
-                $company_name__error.hide()
-            }
-        }
-    
-        function set_is_buy_agent() {
-            if ($is_buy_agent.is(':checked')) {
-                $buy_agent_details.show()
-                $buy_agent_details__help.show()
-                $buy_agent_details__error.show()
-            } else {
-                $buy_agent_details.hide()
-                $buy_agent_details__help.hide()
-                $buy_agent_details__error.hide()
-            }
-        }
-    
-        function set_is_sell_agent() {
-            if ($is_sell_agent.is(':checked')) {
-                $sell_agent_details.show()
-                $sell_agent_details__help.show()
-                $sell_agent_details__error.show()
-            } else {
-                $sell_agent_details.hide()
-                $sell_agent_details__help.hide()
-                $sell_agent_details__error.hide()
-            }
-        }
-    
-        function set_is_logistics_agent() {
-            if ($is_logistics_agent.is(':checked')) {
-                $logistics_agent_details.show()
-                $logistics_agent_details__help.show()
-                $logistics_agent_details__error.show()
-            } else {
-                $logistics_agent_details.hide()
-                $logistics_agent_details__help.hide()
-                $logistics_agent_details__error.hide()
-            }
-        }
-    
-        // Run on load
-        set_has_company()
-        set_is_buy_agent()
-        set_is_sell_agent()
-        set_is_logistics_agent()
-    
-        // Run on change
-        $has_company.change(function () {
-            set_has_company()
-        })
-
-        $is_buy_agent.change(function () {
-            set_is_buy_agent()
-        })
-    
-        $is_sell_agent.change(function () {
-            set_is_sell_agent()
-        })
-    
-        $is_logistics_agent.change(function() {
-            set_is_logistics_agent()
-        })
-    })
-</script>
+<script src="{% static 'relationships/js/register.min.js' %}"></script>
 {% endblock %}

@@ -178,7 +178,7 @@ class UserLeadListView(ListView):
 
 def register(request):
     if request.method == 'POST':
-        form = forms.RegisterForm(request.POST)
+        form = forms.UserForm(request.POST)
         if form.is_valid():
             # Part of the form check includes checking if the phone number and
             # email belongs to a registered user. If so, is_valid() will return
@@ -273,7 +273,7 @@ def register(request):
 
             return HttpResponseRedirect(confirm_register)
     else:
-        form = forms.RegisterForm()
+        form = forms.UserForm()
 
     params = {'form': form}
 
