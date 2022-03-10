@@ -1,4 +1,4 @@
-import pytz, datetime
+import pytz
 from datetime import datetime, timedelta
 
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
@@ -7,8 +7,6 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib import messages
-from django.template.response import TemplateResponse
 from django.views.generic.list import ListView
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
@@ -80,37 +78,41 @@ def whatsapp(request, slug):
 
     return render(request, 'relationships/message.html', params)
 
-def user_comments(request, slug):
+def user_detail(request, slug):
     user = models.User.objects.get(slug_link=slug)
-    template = 'relationships/user_detail_comment_list.html'
-
     if request.method == 'POST':
-        # Disallow commenting on self
-        if not request.user.is_authenticated or user.id == request.user.user.id:
-            return render(request, template, {'detail_user': user})
-
-        form = forms.CommentForm(request.POST)
+        # User posted a comment
+        form = forms.UserCommentForm(request.POST)
         if form.is_valid():
-            body = form.cleaned_data.get('body')
-            is_public = form.cleaned_data.get('is_public')
-            if is_public is None:
-                is_public = False
-
-            commentor = request.user.user
-
-            models.Comment.objects.create(
-                commentee=user,
-                commentor=commentor,
-                body=body,
-                is_public=is_public
+            comment = models.UserComment.objects.create(
+                commentee=models.User.objects.get(slug_link=slug),
+                commentor=request.user.user,
+                body=request.POST.get('body')
             )
 
-            return HttpResponseRedirect(
-                reverse('users:user_detail', args=(slug,)))
-    else:
-        form = forms.CommentForm()
+            comment_id = request.POST.get('comment_id')
+            if comment_id is not None:
+                # This is a reply to a root comment
+                comment.reply_to = models.UserComment.objects.get(pk=comment_id)
+                comment.save()
 
-    return render(request, template, {'detail_user': user, 'form': form})
+            # Focus on comment created
+            url = reverse('users:user_detail', args=(slug,)) + \
+                '?focus=comment-' + str(comment.id)
+            return HttpResponseRedirect(url)
+    else:
+        form = forms.UserCommentForm()
+
+    params = {
+        'detail_user': user,
+        'form': form
+    }
+
+    focus = request.GET.get('focus')
+    if focus is not None:
+        params['focus'] = focus
+
+    return render(request, 'relationships/user_detail_comment_list.html', params)
 
 @login_required
 def user_edit(request, slug):
@@ -123,23 +125,22 @@ def user_edit(request, slug):
     if request.method == 'POST':
         form = forms.UserEditForm(request.POST)
         if form.is_valid():
-            # Get or create a new email for this user
-            # email, _ = models.Email.objects.get_or_create(
-            #     email=form.cleaned_data.get('email')
-            # )
+            get = lambda k : form.cleaned_data.get(k)
 
-            # is_not_agent = form.cleaned_data.get('is_not_agent')
-            # if is_not_agent is None:
-            #     is_not_agent = False
-
-            # models.User.objects.update(
-            #     first_name = form.cleaned_data.get('first_name'),
-            #     last_name = form.cleaned_data.get('last_name'),
-            #     email=email,
-            #     goods_string=form.cleaned_data.get('goods_string'),
-            #     languages_string=form.cleaned_data.get('languages_string'),
-            #     is_agent=not is_not_agent
-            # )
+            models.User.objects.update(
+                first_name=get('first_name'),
+                last_name=get('last_name'),
+                goods_string=get('goods_string'),
+                has_company=get('has_company'),
+                company_name=get('company_name'),
+                languages_string=get('languages_string'),
+                is_buy_agent=get('is_buy_agent'),
+                buy_agent_details=get('buy_agent_details'),
+                is_sell_agent=get('is_sell_agent'),
+                sell_agent_details=get('sell_agent_details'),
+                is_logistics_agent=get('is_logistics_agent'),
+                logistics_agent_details=get('logistics_agent_details')
+            )
 
             return HttpResponseRedirect(
                 reverse('users:user_detail', args=(slug,)))
