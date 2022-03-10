@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}WhatsApp {{ user.user.first_name }} {{ user.user.last_name }} ({{ user.user.country.name }}) {% endblock %}
+{% block title %}WhatsApp {{ user.user.first_name|title }} {{ user.user.last_name|title }} ({{ user.user.country.name }}) {% endblock %}
 
 {% block other_head_tags %}<meta name="robots" content="noindex">{% endblock %}
 
@@ -13,7 +13,7 @@
     <div class="bg-white max-w-md mt-10 w-full p-10 shadow-md">
         <h1 class="text-3xl font-bold text-center mt-5">Enter Message Body</h1>
         <div class="mt-7 flex flex-col justify-center">
-            <div>Hi {{ contactee.first_name }} {{ contactee.last_name }}, my name is {{ user.user.first_name }} {{ user.user.last_name }}.</div>
+            <div>Hi {{ contactee.first_name|title }} {{ contactee.last_name|title }}, my name is {{ user.user.first_name|title }} {{ user.user.last_name|title }}.</div>
             <div class="mt-2">I got your contact from - https://everybase.co</div>
             <label for="body" class="text-sm font-bold uppercase text-slate-400 mt-4">Message Body</label>
             <textarea id="body" name="body" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2 {% if form.body.errors %}border border-red-500{% endif %}"{% if form.body.value is not None %} value="{{ form.body.value }}"{% endif %}></textarea>
