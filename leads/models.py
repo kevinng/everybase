@@ -38,7 +38,10 @@ class LeadComment(Standard):
 
     def reply_comments(self):
         """Returns replies to this lead"""
-        return LeadComment.objects.filter(reply_to=self).order_by('created')
+        return LeadComment.objects.filter(
+            reply_to=self,
+            deleted__isnull=True
+        ).order_by('created')
     
 class Lead(Standard):
     """Lead.
@@ -261,7 +264,7 @@ class Lead(Standard):
 
     def seo_title(self):
         """Returns SEO-optimized title"""
-        lead_type = 'Buyer' if self.lead_type == 'buying' else 'Seller'
+        lead_type = 'Buyer Importer' if self.lead_type == 'buying' else 'Seller Exporter'
         country = self.buy_country.name if self.lead_type == 'buying' else self.sell_country.name
         title = f'{ lead_type }, { country }'
 
