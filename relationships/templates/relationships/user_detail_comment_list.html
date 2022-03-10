@@ -5,7 +5,7 @@
 
 {% comment %} SEO {% endcomment %}
 {% comment %} Use user's first and last name {% endcomment %}
-{% block title %}User Details{% endblock %}
+{% block title %}{{ detail_user.seo_title }}{% endblock %}
 
 {% block page_actions %}
 {% include 'relationships/includes/user_detail_actions.html' %}
@@ -220,108 +220,7 @@ $(document).ready(function() {
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>{% comment %} JS embedded here because server-side rendering is required. {% endcomment %}
-$(document).ready(function() {
-    // Save/unsave user
-    $toggle_save_user = $('#toggle_save_user')
-    $toggle_save_user.click(function () {
-        // Make AJAX call to save user, and update button look.
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'users:toggle_save_user' detail_user.slug_link %}",
-            dataType: 'json',
-            success: function (data) {
-                if (data['s'] == true) {
-                    $toggle_save_user
-                        .removeClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
-                        .addClass('text-white bg-blue-500 hover:bg-blue-600')
-                        .text('Person Saved')
-                } else {
-                    $toggle_save_user
-                        .addClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
-                        .removeClass('text-white bg-blue-500 hover:bg-blue-600')
-                        .text('Save Person')
-                }
-            }
-        })
-    })
-
-    // Enable or disable corresponding button based on checkbox state
-    function set_enable_button_checkbox(button, checkbox) {
-        if (checkbox.is(':checked')) {
-            button.removeAttr('disabled')
-            button.addClass('bg-blue-500 hover:bg-blue-600')
-            button.removeClass('bg-blue-200')
-        } else {
-            button.prop('disabled', true)
-            button.removeClass('bg-blue-500 hover:bg-blue-600')
-            button.addClass('bg-blue-200')
-        }
-    }
-
-    // Initialize each check-to-enable section
-    $('.check-to-enable').each(function () {        
-        // Initialize for the first time on page load
-        set_enable_button_checkbox(
-            $(this).find('.check-to-enable-button'),
-            $(this).find('.check-to-enable-checkbox')
-        )
-
-        // Initialize on checkbox change
-        $(this).find('.check-to-enable-checkbox').change(function () {
-            $button = $(this).closest('.check-to-enable')
-                .find('.check-to-enable-button')
-
-            set_enable_button_checkbox($button, $(this))
-        })
-    })
-
-    // Initialize comment reply boxes
-    $('.comment').each(function () {
-        if ($(this).attr('focus-comment-box') == 'yes') {
-            // Hide reply button on load
-            $reply_show = $(this).find('.reply-show')
-            if ($reply_show.length > 0) {
-                $reply_show.hide()
-            }
-
-            // Reply box is already shown
-
-            // Focus on reply or comment box
-            $reply_box = $(this).find('.reply-box')
-            if ($reply_box.length > 0) {
-                $('html, body').animate({
-                    // 180 pixel from top looks good
-                    scrollTop: $reply_box.offset().top - 180
-                }, 500)
-            } else {
-                $comment_box = $(this).find('.comment-box')
-                $('html, body').animate({
-                    // 180 pixel from top looks good
-                    scrollTop: $comment_box.offset().top - 180
-                }, 500)
-            }
-        } else {
-            // Hide reply boxes on load
-            // Note: the one comment box at the top is not hidden
-            $(this).find('.reply-box').hide()
-
-            $(this).find('.reply-show').click(function () {
-                // Show reply box and hide self
-                $(this).closest('.comment').find('.reply-box').show()
-                $(this).hide()
-            })
-        }
-    })
-})
-
-{% if focus %}
-$(document).ready(function() {
-    // Scroll to focus if a target exists
-    $('html, body').animate({
-        // 180 pixel from top looks good
-        scrollTop: $("#{{ focus }}").offset().top - 180
-    }, 500)
-})
-{% endif %}
+$(document).ready((function(){function e(e,t){t.is(":checked")?(e.removeAttr("disabled"),e.addClass("bg-blue-500 hover:bg-blue-600"),e.removeClass("bg-blue-200")):(e.prop("disabled",!0),e.removeClass("bg-blue-500 hover:bg-blue-600"),e.addClass("bg-blue-200"))}$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",url:"{% url 'users:toggle_save_user' detail_user.slug_link %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})})),$(".check-to-enable").each((function(){e($(this).find(".check-to-enable-button"),$(this).find(".check-to-enable-checkbox")),$(this).find(".check-to-enable-checkbox").change((function(){$button=$(this).closest(".check-to-enable").find(".check-to-enable-button"),e($button,$(this))}))})),$(".comment").each((function(){"yes"==$(this).attr("focus-comment-box")?($reply_show=$(this).find(".reply-show"),$reply_show.length>0&&$reply_show.hide(),$reply_box=$(this).find(".reply-box"),$reply_box.length>0?$("html, body").animate({scrollTop:$reply_box.offset().top-180},500):($comment_box=$(this).find(".comment-box"),$("html, body").animate({scrollTop:$comment_box.offset().top-180},500))):($(this).find(".reply-box").hide(),$(this).find(".reply-show").click((function(){$(this).closest(".comment").find(".reply-box").show(),$(this).hide()})))}))}));
+{% if focus %}$(document).ready((function(){$("html, body").animate({scrollTop:$("#{{ focus }}").offset().top-180},500)}));{% endif %}
 </script>
 {% endblock %}

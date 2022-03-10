@@ -274,7 +274,10 @@ class Lead(Standard):
             if len(tokens) > 0:
                 keywords = tokens[0]
                 for t in tokens[1:]:
-                    keywords += ' ' + t
+                    if len(keywords) < 40:
+                        keywords += ' ' + t
+                    else:
+                        break
                 
                 title += ' - ' + keywords
 
