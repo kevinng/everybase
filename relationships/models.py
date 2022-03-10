@@ -310,6 +310,15 @@ class User(Standard):
         db_index=True
     )
 
+    def root_comments(self):
+        """Returns root comments only (i.e., comments that are not replies to
+        a comment. We do not chain replies and all replies are to root comments.
+        """
+        return UserComment.objects.filter(
+            commentee=self,
+            reply_to__isnull=True
+        ).order_by('created')
+
     def save(self, *args, **kwargs):
         # We only generate the slug on creation and not update - so we don't
         # confuse the user when their link stops working.
@@ -596,8 +605,17 @@ class UserComment(Standard):
         related_name='replies',
         related_query_name='replies',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         db_index=True
     )
+
+    def reply_comments(self):
+        """Returns replies to this lead"""
+        return UserComment.objects.filter(
+                reply_to=self,
+                deleted__isnull=True
+            ).order_by('created')
 
 class UserDetailView(Standard):
     """User detail view
