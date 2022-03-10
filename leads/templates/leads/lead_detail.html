@@ -170,7 +170,7 @@
         {% endcomment %}
         {% comment %} id="comment-starter" is used by our JavaScript code to focus on this section {% endcomment %}
         <div id="comment-starter" class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if not form.comment_id.value and form.body.errors %} focus-comment-box="yes"{% endif %}>
-            <div class="text-xl font-bold text-center">Comment On This Lead</div>
+            <div class="text-xl font-bold text-center">Comment on this Lead</div>
             <div class="flex flex-col items-center justify-center mt-2">
                 <form action="{% url 'leads:lead_detail' lead.slug_link %}" class="check-to-enable comment-box" method="post">
                     {% csrf_token %}
@@ -200,7 +200,7 @@
 
             <div class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if is_this_comment and form.body.errors %} focus-comment-box="yes"{% endif %}>
                 <div id="comment-{{ root_comment.id }}" class="flex justify-between items-center">
-                    <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold">{{ root_comment.commentor.first_name }} {{ root_comment.commentor.last_name }}, {{ root_comment.commentor.country.name }}</a>
+                    <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold">{{ root_comment.commentor.first_name|title }} {{ root_comment.commentor.last_name|title }}, {{ root_comment.commentor.country.name }}</a>
                     <div class="text-sm">{{ root_comment.age_desc }}</div>
                 </div>
                 <div class="mt-4 break-words">{{ root_comment.body }}</div>
@@ -210,7 +210,7 @@
                     {% comment %} id="comment-{{ reply.id }}" is used by our JavaScript code to focus on this section {% endcomment %}
                     <div id="comment-{{ reply.id }}" class="mt-4">
                         <div class="flex justify-between items-center">
-                            <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold ml-8">{{ reply.commentor.first_name }} {{ reply.commentor.last_name }}, {{ reply.commentor.country.name }}</a>
+                            <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold ml-8">{{ reply.commentor.first_name|title }} {{ reply.commentor.last_name|title }}, {{ reply.commentor.country.name }}</a>
                             <div class="text-sm">{{ reply.age_desc }}</div>
                         </div>
                         <div class="mt-2 pl-8 break-words">{{ reply.body }}</div>
