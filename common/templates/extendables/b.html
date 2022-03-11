@@ -39,6 +39,7 @@
         <div class="hidden lg:block">
             <div class="flex items-center">
                 {% if request.user.is_authenticated %}
+                    <span class="mr-2">{{ request.user.user.num_credits_left }} credits left</span>
                     <a ut-tag-id="nav_bar_desktop_my_profile_link" href="{% url 'users:user_detail' user.user.slug_link %}" class="shadow-md text-white bg-blue-500 hover:bg-blue-600 rounded-md px-4 py-2 ml-2">Me</a>
                 {% else %}
                     <a ut-tag-id="nav_bar_desktop_register_link" href="{% url 'register' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2">Register</a>
