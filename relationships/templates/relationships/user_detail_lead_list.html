@@ -4,41 +4,15 @@
 
 {% block title %}{{ detail_user.first_name|title }} {{ detail_user.last_name|title }} Needs Agents{% endblock %}
 
-{% comment %}
-CSS
-https://codebeautify.org/css-beautify-minify
-
-#mobile-filter {
-    position: fixed;
-    top: 0;
-    left: 100%;
-    width: 100%;
-    min-height: 100vh;
-    display: block;
-    z-index: 98;
-    background-color: white;
-    padding-top: 100px;
-    transition: 0.3s;
-}
-
-#mobile-filter.is-active {
-    left: 0;
-}
-{% endcomment %}
-{% block other_css %}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<style>
-#mobile-filter{position:fixed;top:0;left:100%;width:100%;min-height:100vh;display:block;z-index:98;background-color:#fff;padding-top:100px;transition:0.3s}#mobile-filter.is-active{left:0}
-</style>
-{% endblock %}
-
 {% block page_actions %}
 {% include 'relationships/includes/user_detail_actions.html' %}
 {% endblock %}
 
 {% block content %}
 <div class="flex flex-col lg:flex-row justify-center mt-10 mb-10 gap-2">
-    {% include 'relationships/includes/user_detail_side.html' %}
+    {% comment %} start: user detail side {% endcomment %}
+    {% include 'relationships/includes/user_detail_side.html' with detail_user=detail_user responsive_classes='lg:w-1/3 xl:w-1/4 self-start' %}
+    {% comment %} end: user detail side {% endcomment %}
 
     <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
         {% include 'relationships/includes/user_detail_tabs.html' with selected='leads' %}
@@ -48,7 +22,7 @@ https://codebeautify.org/css-beautify-minify
             {% include 'includes/paginator.html' with other_css_classes='mt-5' %}
 
             {% for lead in page_obj %}
-                {% include 'leads/includes/lead_item.html' with summary=True more_css_classes='mt-2' %}
+                {% include 'leads/includes/lead_item.html' with more_css_classes='mt-2' %}
             {% endfor %}
 
             {% include 'includes/paginator.html' with other_css_classes='mt-5' %}
@@ -64,40 +38,6 @@ https://codebeautify.org/css-beautify-minify
 </div>
 {% endblock %}
 
-{% comment %}
-Javascript
-https://codebeautify.org/minify-js
-
-$(document).ready(function() {
-    $('.select2').select2();
-
-    $('.select2').one('select2:open', function(e) {
-        $('input.select2-search__field').prop('placeholder', 'Search here...');
-    });
-
-    $('#filter').click(function() {
-        t = $(this);
-        if (t.html() == 'Filter') {
-            t.html('Close');
-        } else {
-            t.html('Filter');
-        }
-
-        t.toggleClass('bg-blue-500');
-        t.toggleClass('text-white');
-        t.toggleClass('hover:bg-blue-600');
-        t.toggleClass('bg-slate-100');
-        t.toggleClass('text-slate-600');
-        t.toggleClass('hover:bg-slate-200');
-
-        $('#mobile-filter').toggleClass('is-active');
-    });
-});
-{% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script>
-$(document).ready((function(){$(".select2").select2(),$(".select2").one("select2:open",(function(e){$("input.select2-search__field").prop("placeholder","Search here...")})),$("#filter").click((function(){t=$(this),"Filter"==t.html()?t.html("Close"):t.html("Filter"),t.toggleClass("bg-blue-500"),t.toggleClass("text-white"),t.toggleClass("hover:bg-blue-600"),t.toggleClass("bg-slate-100"),t.toggleClass("text-slate-600"),t.toggleClass("hover:bg-slate-200"),$("#mobile-filter").toggleClass("is-active")}))}));
-</script>
 {% endblock %}
