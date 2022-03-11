@@ -4,51 +4,49 @@ Params:
     summary, if True showing summary
     more_css_classes, additional div CSS classes
 
-Dependencies:
-    lightGallery
+Note: thumbnails are not clickable.
 {% endcomment %}
-<div class="bg-white rounded px-8 py-8{% if more_css_classes is not None and more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
-    <div class="flex items-start justify-between">
-        {% comment %} <div class="font-bold">Help Me {% if lead.lead_type == 'buying' %}Buy{% elif lead.lead_type == 'selling' %}Sell{% endif %}</div> {% endcomment %}
+
+<a href="{% url 'leads:lead_detail' lead.slug_link %}">
+    <div class="bg-white hover:bg-blue-50 hover:outline hover:outline-1 hover:outline-blue-200 rounded px-8 py-8{% if more_css_classes is not None and more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
+
+        <div class="flex justify-between">
+            <div>{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}{% if lead.author.country %} ({{ lead.author.country.name }}){% endif %}</div>
+            <div>{{ lead.age_desc }}</div>
+        </div>
+
+        {% comment %} start: lead_type, author_type {% endcomment %}
+        <div class="text-xl font-bold">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
+        {% comment %} end: lead_type, author_type {% endcomment %}
+
+        {% comment %} start: buy_country, sell_country {% endcomment %}
+        <div>From {% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}any country{% endif %} to {% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}any country{% endif %}</div>
+        {% comment %} end: buy_country, sell_country {% endcomment %}
+
+        {% comment %} start: comments, comments from you {% endcomment %}
+        <div>{{ lead.num_comments }} comments{% if request.user.is_authenticated %}{% load num_comments_by %}{% num_comments_by lead request.user.user as num_comments_by %}{% if num_comments_by > 0 %}, {{ num_comments_by }} by you{% endif %}{% endif %}</div>
+        {% comment %} end: comments, comments from you {% endcomment %}
 
         {% comment %} start: thumbnails {% endcomment %}
-        <div class="flex items-start justify-start gap-2">
-            {% load thumbnail_url %}
-            {% for file in lead.display_images.all %}
-                {% thumbnail_url file as thumbnail_url %}
-                <img src='{{ thumbnail_url }}' class='border border-slate-50'>
-            {% endfor %}
-        </div>
+        {% if lead.display_images.all|length > 0 %}
+            <div class="flex items-start justify-start mt-2 gap-2">
+                {% load thumbnail_url %}
+                {% for file in lead.display_images.all %}
+                    {% thumbnail_url file as thumbnail_url %}
+                    <img src="{{ thumbnail_url }}" class="shadow-md">
+                {% endfor %}
+            </div>
+        {% endif %}
         {% comment %} end: thumbnails {% endcomment %}
-
-
-        <div class='text-sm'>{{ lead.age_desc }}</div>
-    </div>
-    <div>{% if lead.lead_type == 'buying' %}Buy from{% elif lead.lead_type == 'selling' %}Source is {% endif %} {% if lead.buy_country is None %}any country{% else %}{{ lead.buy_country.name }}{% endif %}</div>
-    <div>{% if lead.lead_type == 'buying' %}Destination is{% elif lead.lead_type == 'selling' %}Sell to{% endif %} {% if lead.sell_country is None %}any country{% else %}{{ lead.sell_country.name }}{% endif %}</div>
-    <div class="text-sm font-bold uppercase text-slate-400 mt-3">Details</div>
-    <div>{% if summary == True %}{{ lead.details|slice:':200' }}{% if lead.details|length > 200 %}...{% endif %}{% else %}{{ lead.details }}{% endif %}</div>
-    <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Agent Commission</div>
-    <div>{{ lead.commissions }} %</div>
-    {% if summary != True %}
-    <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Deal Size</div>
-    <div>USD {{ lead.avg_deal_size }}</div>
-    <div class="text-sm font-bold uppercase text-slate-400 mt-3">Average Commission Per Deal</div>
-    <div>USD {{ lead.commissions }}</div>
-    {% if lead.other_comm_details is not None and lead.other_comm_details|cut:' ' != '' %}
-        <div class="text-sm font-bold uppercase text-slate-400 mt-3">Other Commission Details</div>
-        <div>{{ lead.other_comm_details }}</div>
-    {% endif %}
-    {% endif %}
-    <div class="italic my-5">Actual commissions negotiated per deal.</div>
-    
-    <div class="flex justify-end">
-        {% if summary == True %}
-            <a href="{% url 'leads:lead_detail' lead.slug_link %}" class="px-6 py-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md">Details</a>
+        
+        {% comment %} start: need_agent, need_logistics_agent {% endcomment %}
+        {% if lead.need_agent or lead.need_logistics_agent %}
+        <div class="font-semibold mt-4">Need {% if lead.need_agent %}{% if lead.lead_type == 'buying' %}buying or sourcing{% elif lead.lead_type == 'selling' %}selling or promoting{% endif %} agent{% if lead.need_logistics_agent %}, logistics agent{% endif %}{% endif %}</div>
         {% endif %}
+        {% comment %} end: need_agent, need_logistics_agent {% endcomment %}
 
-        {% if user.is_authenticated and user.user.id == lead.author.id %}
-            <a href="{% url 'leads:lead_edit' lead.id %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md">Edit</a>
-        {% endif %}
+        {% comment %} start: details {% endcomment %}
+        <div class="mt-2">{{ lead.details|truncatechars:140 }}</div>
+        {% comment %} end: details {% endcomment %}
     </div>
-</div>
+</a>
