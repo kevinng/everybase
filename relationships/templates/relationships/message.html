@@ -9,19 +9,28 @@
 {% block content %}
 <form action="{% url 'users:whatsapp' contactee.slug_link %}" method="post">
 {% csrf_token %}
-<div class="flex justify-center">
-    <div class="bg-white max-w-md mt-10 w-full p-10 shadow-md">
-        <h1 class="text-3xl font-bold text-center mt-5">Enter Message Body</h1>
-        <div class="mt-7 flex flex-col justify-center">
-            <div>Hi {{ contactee.first_name|title }} {{ contactee.last_name|title }}, my name is {{ user.user.first_name|title }} {{ user.user.last_name|title }}.</div>
-            <div class="mt-2">I got your contact from - https://everybase.co</div>
-            <label for="body" class="text-sm font-bold uppercase text-slate-400 mt-4">Message Body</label>
+<div class="flex flex-col items-center justify-center">
+    <div class="text-3xl font-bold text-center mt-10">Connect with {{ contactee.first_name|title }} {{ contactee.last_name|title }}</div>
+    <div class="bg-white md:w-2/3 lg:w-1/2 xl:w-1/3 mt-10 mb-10 w-full px-8 py-8 shadow-md">
+        <div class="flex flex-col justify-center">
+            {% comment %} start: introduction {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4">Introduction</div>
+            <textarea disabled rows="2" class="growing border rounded-md py-3 px-5 block w-full whitespace-pre-wrap mt-2">Hi {{ contactee.first_name|title }} {{ contactee.last_name|title }}, my name is {{ user.user.first_name|title }} {{ user.user.last_name|title }}.
+I got your contact from - https://everybase.co</textarea>
+            <div class="px-2 mt-2">Your WhatsApp message will start with this message. <span class="italic">It can't be disabled.</span></div>
+            <div class="font-bold text-slate-400 mt-7">Message Body</div>
+            {% comment %} end: introduction {% endcomment %}
+            
+            {% comment %} start: message body {% endcomment %}
             <textarea id="body" name="body" rows="4" type="text" class="block w-full border rounded-md py-3 px-5 mt-2 {% if form.body.errors %}border border-red-500{% endif %}"{% if form.body.value is not None %} value="{{ form.body.value }}"{% endif %}></textarea>
             {% if form.body.errors %}<div class="font-sans text-base px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% if last_msg_body is not None %}
                 <div class="flex items-center justify-start mt-2"><input id="use_last_msg" name="use_last_msg" type="checkbox" class="focus:ring-blue-100 border-gray-300 h-6 w-6"><label for="use_last_msg" class="ml-2">Use last message</label></div>
             {% endif %}
-            <button type="submit" class="w-full py-4 px-7 font-bold text-white rounded-md bg-green-500 hover:bg-green-600 mt-6 shadow-md">Go to WhatsApp</button>
+            {% comment %} end: message body {% endcomment %}
+
+            <button type="submit" class="w-full py-2 px-4 text-white rounded-md bg-green-500 hover:bg-green-600 mt-6 shadow-md">Go to WhatsApp</button>
+            <div class="mt-2">Connecting with this user costs 1 credits. You've <span class="font-bold">{{ user.user.num_credits_left }} credits</span> left.</div>
         </div>
     </div>
 </div>
@@ -50,6 +59,7 @@ $(document).ready(function() {
 {% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
 <script>
 $(document).ready((function(){last_msg_body="{{ last_msg_body }}",entered_body="",$("#use_last_msg").change((function(){1==$(this).prop("checked")?(""!=$("#body").val().trim()&&(entered_body=$("#body").val()),$("#body").val(last_msg_body)):$("#body").val(entered_body)}))}));
 </script>
