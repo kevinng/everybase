@@ -289,6 +289,13 @@ class Lead(Standard):
             .filter(lead=self, deleted__isnull=True)\
             .order_by('-created')[:3]
 
+    def num_comments(self):
+        """Number of comments on this lead"""
+        return LeadComment.objects.filter(
+            lead=self,
+            deleted__isnull=True
+        ).count()
+
 class LeadDetailView(Standard):
     """Lead detail view.
 
