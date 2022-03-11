@@ -18,7 +18,7 @@
             <textarea disabled rows="2" class="growing border rounded-md py-3 px-5 block w-full whitespace-pre-wrap mt-2">Hi {{ contactee.first_name|title }} {{ contactee.last_name|title }}, my name is {{ user.user.first_name|title }} {{ user.user.last_name|title }}.
 I got your contact from - https://everybase.co</textarea>
             <div class="px-2 mt-2">Your WhatsApp message will start with this message. <span class="italic">It can't be disabled.</span></div>
-            <div class="font-bold text-slate-400 mt-7">Message Body</div>
+            <label for="body" class="font-bold text-slate-400 mt-7">Message Body</label>
             {% comment %} end: introduction {% endcomment %}
             
             {% comment %} start: message body {% endcomment %}
