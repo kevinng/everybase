@@ -16,7 +16,7 @@ Note: thumbnails are not clickable.
         </div>
 
         {% comment %} start: lead_type, author_type {% endcomment %}
-        <div class="text-xl font-bold">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
+        <div class="text-xl font-bold mt-2">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
         {% comment %} end: lead_type, author_type {% endcomment %}
 
         {% comment %} start: buy_country, sell_country {% endcomment %}
