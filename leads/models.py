@@ -365,41 +365,6 @@ class WhatsAppMessageBody(Standard):
     )
     body = models.TextField()
 
-class AgentQuery(Standard):
-    """Agent query
-
-    Last updated: 11 February 2022, 9:56 PM
-    """
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='agent_query',
-        related_query_name='agent_query',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    search = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        related_name='agent_queries',
-        related_query_name='agent_queries',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sort_by = models.CharField(
-        max_length=20,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
 class LeadQuery(Standard):
     """Lead query
 
