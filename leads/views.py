@@ -1,8 +1,9 @@
 from urllib.parse import urljoin
-import traceback, boto3
+import boto3
 from PIL import Image, ImageOps
 from io import BytesIO
 
+from django.core.paginator import Paginator
 from django.urls import reverse
 from django.shortcuts import render
 from django.db.models import Count
@@ -275,7 +276,7 @@ def lead_edit(request, slug):
             lead.commission_payable_by = get('commission_payable_by') if need_agent and author_type == 'broker' else None
             lead.other_agent_details = get('other_agent_details') if need_agent else None
             lead.need_logistics_agent = need_logistics_agent
-            lead.other_logistics_agent_details=get('other_logistics_agent_details') if need_logistics_agent else None
+            lead.logistics_agent_details=get('logistics_agent_details') if need_logistics_agent else None
             lead.save()
 
             save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)
@@ -301,7 +302,7 @@ def lead_edit(request, slug):
             'commission_payable_by': lead.commission_payable_by,
             'other_agent_details': lead.other_agent_details,
             'need_logistics_agent': lead.need_logistics_agent,
-            'other_logistics_agent_details': lead.other_logistics_agent_details
+            'logistics_agent_details': lead.logistics_agent_details
         }
 
         names = [
@@ -359,7 +360,7 @@ def lead_create(request):
                 commission_payable_by=get('commission_payable_by') if need_agent and author_type == 'broker' else None,
                 other_agent_details=get('other_agent_details') if need_agent else None,
                 need_logistics_agent=need_logistics_agent,
-                other_logistics_agent_details=get('other_logistics_agent_details') if need_logistics_agent else None
+                logistics_agent_details=get('logistics_agent_details') if need_logistics_agent else None
             )
 
             save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)
@@ -378,153 +379,301 @@ def lead_create(request):
         'countries': get_countries()
     })
 
-class LeadListView(ListView):
-    template_name = 'leads/lead_list.html'
-    model = relmods.Lead
-    paginate_by = 8
+def lead_list(request):
+    if request.method == 'GET':
+        user = request.user.user if request.user.is_authenticated else None
 
-    def get_queryset(self, **kwargs):
-#         if self.request.user.is_authenticated:
-#             user = self.request.user.user
-#         else:
-#             user = None
+        get = lambda s : request.GET.get(s)
 
-#         search = self.request.GET.get('search')
-#         wants_to = self.request.GET.get('wants_to')
-#         buy_country_str = self.request.GET.get('buy_country')
-#         sell_country_str = self.request.GET.get('sell_country')
-#         sort_by = self.request.GET.get('sort_by')
+        commented_only = get('commented_only')
 
-#         leads = relmods.Lead.objects
+        saved_only = get('saved_only')
+        buy_sell = get('buy_sell')
+        direct_middleman = get('direct_middleman')
+        buy_country = get('buy_country')
+        sell_country = get('sell_country')
+        goods_services = get('goods_services')
+        need_agent = get('need_agent')
+        commission_type = get('commission_type')
+        commission_type_other = get('commission_type_other')
+        min_commission = get('min_commission')
+        max_commission = get('max_commission')
+        min_avg_deal = get('min_avg_deal')
+        max_avg_deal = get('max_avg_deal')
+        comm_negotiable = get('comm_negotiable')
+        commission_payable_after = get('commission_payable_after')
+        commission_payable_after_other = get('commission_payable_after_other')
+        other_agent_details = get('other_agent_details')
+        need_logistics_agent = get('need_logistics_agent')
+        logistics_agent_details = get('logistics_agent_details')
 
-#         q = models.LeadQuery()
-#         q.user = user
-#         q.search = search
-#         q.sort_by = sort_by
+        leads = models.Lead.objects.all()
 
-# # TODO the lead query is not saved properly
-#         q.save()
+        is_not_empty = lambda s : s is not None and s.strip() != ''
+        match = lambda t, v: is_not_empty(t) and t == v
 
-#         if wants_to == 'buy':
-#             leads = leads.filter(lead_type='buying')
-#         elif wants_to == 'sell':
-#             leads = leads.filter(lead_type='selling')
-#         else:
-#             wants_to = 'buy_or_sell'
+        if user is not None:
+            # Allow commented-only and saved-only if the user is authenticated
 
-#         if buy_country_str != 'any_country' and buy_country_str != None and\
-#             buy_country_str.strip() != '':
-#             buy_country = commods.Country.objects.get(
-#                 programmatic_key=buy_country_str)
-#             leads = leads.filter(buy_country=buy_country)
-#             q.buy_country = buy_country
+            if match(commented_only, 'on'):
+                # Commented only is checked
+                commented_leads = models.LeadComment.objects.filter(
+                    commentor=user,
+                    deleted__isnull=True
+                ).values('lead')
 
-#         if sell_country_str != 'any_country' and sell_country_str != None and\
-#             sell_country_str.strip() != '':
-#             sell_country = commods.Country.objects.get(
-#                 programmatic_key=sell_country_str)
-#             leads = leads.filter(sell_country=sell_country)
-#             q.sell_country = sell_country
-
-#         vector = SearchVector('search_i_need_agents_veccol')
-#         query = SearchQuery(search)
-#         leads = leads.annotate(
-#             search_i_need_agents_veccol=RawSQL(
-#                 'search_i_need_agents_veccol', [],
-#                 output_field=SearchVectorField()))\
-#             .annotate(rank=SearchRank(vector, query))\
-#             .order_by('-rank')
-        
-# # TODO: the sort_by keys here are wrong
-#         if sort_by == 'timestamp':
-#             leads = leads.order_by('-created')
-#         elif sort_by == 'comm_percent_hi_lo':
-#             leads = leads.order_by('-commissions')
-#         elif sort_by == 'comm_percent_lo_hi':
-#             leads = leads.order_by('commissions')
-#         elif sort_by == 'comm_dollar_hi_lo':
-#             leads = leads.order_by('-avg_deal_comm')
-#         elif sort_by == 'comm_dollar_lo_hi':
-#             leads = leads.order_by('avg_deal_comm')
-#         elif sort_by == 'relevance':
-#             leads = leads.order_by('-rank')
-#         else:
-#             leads = leads.order_by('-created')
-
-#         save_user_agent(self.request, user)
-
-        return models.Lead.objects.all()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['countries'] = get_countries()
-
-        # Render search and country back into the template
-        context['search_value'] = self.request.GET.get('search')
-        context['wants_to_value'] = self.request.GET.get('wants_to')
-        context['buy_country_value'] = self.request.GET.get('buy_country')
-        context['sell_country_value'] = self.request.GET.get('sell_country')
-        context['sort_by_value'] = self.request.GET.get('sort_by')
-
-        return context
-
-class AgentListView(ListView):
-    template_name = 'leads/agent_list.html'
-    context_object_name = 'agents'
-    model = relmods.User
-    paginate_by = 8
-
-    def get_queryset(self, **kwargs):
-        # search = self.request.GET.get('search')
-        # country = self.request.GET.get('country')
-
-        # users = relmods.User.objects
-        # if country is not None and country != 'any_country':
-        #     users = users.filter(country__programmatic_key=country)
-
-        # # Save query
-        # try:
-        #     if self.request.user.is_authenticated:
-        #         user = self.request.user.user
-        #     else:
-        #         user = None
-
-        #     if country == 'any_country' or country is None:
-        #         country_model = None
-        #     else:
-        #         country_model = commods.Country.objects.get(
-        #             programmatic_key=country)
-                
-        #     if user is not None and search is not None and country is not None:
-        #         models.AgentQuery.objects.create(
-        #             user=user,
-        #             search=search,
-        #             country=country_model
-        #         )
-        # except:
-        #     traceback.print_exc()
-
-        # vector = SearchVector('search_agents_veccol')
-        # query = SearchQuery(search)
-        # users = users.annotate(
-        #     search_agents_veccol=RawSQL('search_agents_veccol', [],
-        #         output_field=SearchVectorField()))\
-        #     .annotate(rank=SearchRank(vector, query))\
-        #     .order_by('-rank')
+                leads = leads.filter(id__in=commented_leads)
             
-        # return users
+            if match(saved_only, 'on'):
+                # Saved only is checked
+                saved_leads = models.SavedLead.objects.filter(
+                    saver=user,
+                    deleted__isnull=True,
+                    active=True
+                ).values('lead')
 
-        return relmods.User.objects.all()
+                leads = leads.filter(id__in=saved_leads)
+
+        # Buy sell
+        if match(buy_sell, 'buy'):
+            leads = leads.filter(lead_type='buying')
+        elif buy_sell == 'sell':
+            leads = leads.filter(lead_type='selling')
+
+        # Direct middleman
+        if match(direct_middleman, 'direct'):
+            leads = leads.filter(author_type='direct')
+        elif direct_middleman == 'middleman':
+            leads = leads.filter(author_type='broker')
+
+        if is_not_empty(buy_country) and buy_country.strip() != 'any_country':
+            # Buy country is selected
+            c = commods.Country.objects.get(programmatic_key=buy_country)
+            leads = leads.filter(buy_country=c)
+
+        if is_not_empty(sell_country) and sell_country.strip() != 'any_country':
+            # Sell country is selected
+            c = commods.Country.objects.get(programmatic_key=sell_country)
+            leads = leads.filter(sell_country=c)
+
+        order_by = []
+
+        if is_not_empty(goods_services):
+            # Goods services details is filled
+            details_vec = SearchVector('details_vec')
+            goods_services_qry = SearchQuery(goods_services)
+            leads = leads.annotate(
+                details_vec=RawSQL('details_vec', [],
+                    output_field=SearchVectorField()))\
+                .annotate(goods_services_rank=SearchRank(details_vec, goods_services_qry))
+            
+            order_by.append('-goods_services_rank')
+
+        if match(need_agent, 'on'):
+            # Need agent is checked
+            leads = leads.filter(need_agent=True)
+
+        # Commission type
+        if match(commission_type, 'percentage'):
+            leads = leads.filter(commission_type='percentage')
+        elif commission_type == 'other':
+            leads = leads.filter(commission_type='other')
+
+        if is_not_empty(commission_type_other):
+            # Commission type other details is filled
+            commission_type_other_vec = SearchVector('commission_type_other_vec')
+            commission_type_other_qry = SearchQuery(commission_type_other)
+            leads = leads.annotate(
+                commission_type_other_vec=RawSQL('commission_type_other_vec', [],
+                    output_field=SearchVectorField()))\
+                .annotate(commission_type_other_rank=SearchRank(
+                    commission_type_other_vec,
+                    commission_type_other_qry
+                ))
+            
+            order_by.append('-commission_type_other_rank')
+
+        if is_not_empty(min_commission):
+            # Minimum commission is filled
+            try:
+                leads = leads.filter(commission__gte=float(min_commission))
+            except Exception:
+                pass
         
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['countries'] = get_countries()
+        if is_not_empty(max_commission):
+            # Maximum commission is filled
+            try:
+                leads = leads.filter(commission__lte=float(max_commission))
+            except Exception:
+                pass
 
-        # Render search and country back into the template
-        context['search_value'] = self.request.GET.get('search')
-        context['country_value'] = self.request.GET.get('country')
+        if is_not_empty(min_avg_deal):
+            # Minimum average deal is filled
+            try:
+                leads = leads.filter(avg_deal_size__gte=float(min_avg_deal))
+            except Exception:
+                pass
+        
+        if is_not_empty(max_avg_deal):
+            # Maximum average deal is filled
+            try:
+                leads = leads.filter(avg_deal_size__lte=float(max_avg_deal))
+            except Exception:
+                pass
+        
+        # Is commission negotiable
+        if match(comm_negotiable, 'not_negotiable'):
+            leads = leads.filter(is_comm_negotiable=False)
+        if comm_negotiable == 'negotiable':
+            leads = leads.filter(is_comm_negotiable=True)
 
-        return context
+        # Commission payable after
+        if match(commission_payable_after, 'initial_deposit_received'):
+            leads = leads.filter(commission_payable_after='initial_deposit_received')
+        elif commission_payable_after == 'goods_shipped':
+            leads = leads.filter(commission_payable_after='goods_shipped')
+        elif commission_payable_after == 'buyer_received_goods_services':
+            leads = leads.filter(commission_payable_after='buyer_received_goods_services')
+        elif commission_payable_after == 'full_payment_received':
+            leads = leads.filter(commission_payable_after='full_payment_received')
+        elif commission_payable_after == 'other':
+            leads = leads.filter(commission_payable_after='other')
+            if is_not_empty(commission_payable_after_other):
+                # Commission payable after other details is filled
+                commission_payable_after_other_vec = SearchVector('commission_payable_after_other_vec')
+                commission_payable_after_other_qry = SearchQuery(commission_payable_after_other)
+                leads = leads.annotate(
+                    commission_payable_after_other_vec=RawSQL('commission_payable_after_other_vec', [],
+                        output_field=SearchVectorField()))\
+                    .annotate(commission_payable_after_other_rank=SearchRank(
+                        commission_payable_after_other_vec,
+                        commission_payable_after_other_qry
+                    ))
+                
+                order_by.append('-commission_payable_after_other_rank')
+
+        if is_not_empty(other_agent_details):
+            # Other agent details is filled
+            other_agent_details_vec = SearchVector('other_agent_details_vec')
+            other_agent_details_qry = SearchQuery(other_agent_details)
+            leads = leads.annotate(
+                other_agent_details_vec=RawSQL('other_agent_details_vec', [],
+                    output_field=SearchVectorField()))\
+                .annotate(other_agent_details_rank=SearchRank(
+                    other_agent_details_vec,
+                    other_agent_details_qry
+                ))
+            
+            order_by.append('-other_agent_details_rank')
+        
+        if match(need_logistics_agent, 'on'):
+            # Need logistics agent is checked
+            leads = leads.filter(need_logistics_agent=True)
+
+            if is_not_empty(logistics_agent_details):
+                # Logistics agent details is filled
+                other_logistics_agent_details_vec = SearchVector('other_logistics_agent_details_vec')
+                other_logistics_agent_details_qry = SearchQuery(logistics_agent_details)
+                leads = leads.annotate(
+                    other_logistics_agent_details_vec=RawSQL('other_logistics_agent_details_vec', [],
+                        output_field=SearchVectorField()))\
+                    .annotate(other_logistics_agent_details_rank=SearchRank(
+                        other_logistics_agent_details_vec,
+                        other_logistics_agent_details_qry
+                    ))
+                
+                order_by.append('-other_logistics_agent_details_rank')
+
+        order_by.append('-created')
+
+        # Save lead query if it's not the default (empty) form post
+        if is_not_empty(commented_only) or is_not_empty(saved_only) or\
+            not match(buy_sell, 'all') or not match(direct_middleman, 'all') or\
+            not match(buy_country, 'any_country') or not match(sell_country, 'any_country') or\
+            is_not_empty(goods_services) or is_not_empty(need_agent) or\
+            not match(commission_type, 'all') or is_not_empty(commission_type_other) or\
+            is_not_empty(min_commission) or is_not_empty(max_commission) or\
+            is_not_empty(min_avg_deal) or is_not_empty(max_avg_deal) or\
+            not match(comm_negotiable, 'all') or not match(commission_payable_after, 'all') or\
+            is_not_empty(commission_payable_after_other) or is_not_empty(other_agent_details) or\
+            is_not_empty(need_logistics_agent) or is_not_empty(logistics_agent_details):
+            models.LeadQuery.objects.create(
+                user=user,
+                commented_only=commented_only,
+                saved_only=saved_only,
+                buy_sell=buy_sell,
+                direct_middleman=direct_middleman,
+                buy_country=buy_country,
+                sell_country=sell_country,
+                goods_services=goods_services,
+                need_agent=need_agent,
+                commission_type=commission_type,
+                commission_type_other=commission_type_other,
+                min_commission=min_commission,
+                max_commission=max_commission,
+                min_avg_deal=min_avg_deal,
+                max_avg_deal=max_avg_deal,
+                comm_negotiable=comm_negotiable,
+                commission_payable_after=commission_payable_after,
+                commission_payable_after_other=commission_payable_after_other,
+                other_agent_details=other_agent_details,
+                need_logistics_agent=need_logistics_agent,
+                logistics_agent_details=logistics_agent_details
+            )
+
+        # Order leads
+        leads = leads.order_by(*order_by)
+
+        # Set context parameters
+        params = {}
+
+        params['countries'] = get_countries()
+        params['commented_only'] = get('commented_only')
+        params['saved_only'] = get('saved_only')
+        params['buy_sell'] = get('buy_sell')
+        params['direct_middleman'] = get('direct_middleman')
+        params['buy_country'] = get('buy_country')
+        params['sell_country'] = get('sell_country')
+        params['goods_services'] = get('goods_services')
+
+        need_agent = get('need_agent')
+        params['need_agent'] = get('need_agent')
+
+        if match(need_agent, 'on'):
+            commission_type = get('commission_type')
+            params['commission_type'] = commission_type
+
+            if commission_type == 'others' or commission_type == 'all':
+                params['commission_type_other'] = get('commission_type_other')
+            
+            if commission_type == 'percentage' or commission_type == 'all':
+                params['min_commission'] = get('min_commission')
+                params['max_commission'] = get('max_commission')
+                params['min_avg_deal'] = get('min_avg_deal')
+                params['max_avg_deal'] = get('max_avg_deal')
+            
+            params['comm_negotiable'] = get('comm_negotiable')
+            params['commission_payable_after'] = get('commission_payable_after')
+            params['commission_payable_after_other'] = get('commission_payable_after_other')
+            params['other_agent_details'] = get('other_agent_details')
+        
+        need_logistics_agent = get('need_logistics_agent')
+        params['need_logistics_agent'] = need_logistics_agent
+
+        if match(need_logistics_agent, 'on'):
+            params['logistics_agent_details'] = get('logistics_agent_details')
+
+        # Paginate
+
+        leads_per_page = 8
+        paginator = Paginator(leads, leads_per_page)
+
+        page_number = request.GET.get('page')
+        
+        page_obj = paginator.get_page(page_number)
+        params['page_obj'] = page_obj
+
+        return render(request, 'leads/lead_list.html', params)
 
 @login_required
 @csrf_exempt
@@ -576,329 +725,3 @@ def toggle_save_lead(request, slug):
     else:
         return HttpResponseRedirect(
             reverse('leads:lead_detail', args=(slug,)))
-
-
-
-
-
-# Deprecated
-# class _LeadListView(ListView):
-#     model = models.Lead
-#     paginate_by = 54
-
-#     def get_queryset(self, **kwargs):
-#         title = self.request.GET.get('title')
-#         details = self.request.GET.get('details')
-#         buying = self.request.GET.get('buying')
-#         selling = self.request.GET.get('selling')
-#         direct = self.request.GET.get('direct')
-#         broker = self.request.GET.get('broker')
-#         user_country = self.request.GET.get('user_country')
-#         lead_country = self.request.GET.get('lead_country')
-
-#         cpa__initial_deposit_received = self.request.GET.get(
-#             'cpa__initial_deposit_received')
-#         cpa__goods_shipped = self.request.GET.get('cpa__goods_shipped')
-#         cpa__buyer_received_goods_services = self.request.GET.get(
-#             'cpa__buyer_received_goods_services')
-#         cpa__full_payment_received = self.request.GET.get(
-#             'cpa__full_payment_received')
-#         cpa__others = self.request.GET.get('cpa__others')
-
-#         leads = models.Lead.objects.all()
-
-#         ffp = models.FilterFormPost()
-
-#         if title is not None:
-#             leads = leads.filter(title__icontains=title)
-#             ffp.title = title
-
-#         if details is not None:
-#             leads = leads.filter(title__icontains=details)
-#             ffp.details = details
-
-#         if buying is not None and selling is not None:
-#             pass # No need to filter
-#         elif buying is not None:
-#             leads = leads.filter(lead_type='buying')
-#             ffp.is_buying = True
-#         elif selling is not None:
-#             leads = leads.filter(lead_type='selling')
-#             ffp.is_selling = True
-
-#         if direct is not None and broker is not None:
-#             pass # No need to filter
-#         elif direct is not None:
-#             leads = leads.filter(author_type='direct')
-#             ffp.is_direct = True
-#         elif broker is not None:
-#             leads = leads.filter(author_type='broker')
-#             ffp.is_agent = True
-
-#         if user_country is not None and user_country.strip() != '':
-#             leads = leads.filter(author__country__programmatic_key=user_country)
-#             ffp.user_country = user_country
-
-#         if lead_country is not None and lead_country.strip() != '':
-#             leads = leads.filter(country__programmatic_key=lead_country)
-#             ffp.lead_country = lead_country
-
-#         commission_payable_after_q = Q()
-#         if cpa__initial_deposit_received is not None:
-#             commission_payable_after_q = commission_payable_after_q |\
-#                 Q(commission_payable_after='initial_deposit_received')
-#             ffp.is_initial_deposit = True
-
-#         if cpa__goods_shipped is not None:
-#             commission_payable_after_q = commission_payable_after_q |\
-#                 Q(commission_payable_after='goods_shipped')
-#             ffp.is_goods_shipped = True
-
-#         if cpa__buyer_received_goods_services is not None:
-#             commission_payable_after_q = commission_payable_after_q |\
-#                 Q(commission_payable_after='buyer_received_goods_services')
-#             ffp.is_goods_received = True
-
-#         if cpa__full_payment_received is not None:
-#             commission_payable_after_q = commission_payable_after_q |\
-#                 Q(commission_payable_after='full_payment_received')
-#             ffp.is_payment_received = True
-
-#         if cpa__others is not None:
-#             commission_payable_after_q = commission_payable_after_q |\
-#                 Q(commission_payable_after='others')
-#             ffp.is_others = True
-
-#         leads = leads.filter(commission_payable_after_q)
-
-#         if self.request.user.is_authenticated:
-#             try:
-#                 ffp.user = self.request.user.user
-#             except relmods.User.DoesNotExist:
-#                 # Prevents error when I'm logging in as admin
-#                 pass
-        
-#         ffp.save()
-        
-#         return leads.order_by('-created')
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['countries'] = commods.Country.objects.order_by('name')
-#         context['amplitude_api_key'] = settings.AMPLITUDE_API_KEY
-#         if self.request.user.is_authenticated:
-#             try:
-#                 eb_user = self.request.user.user
-#                 context['amplitude_user_id'] = eb_user.uuid
-#                 context['country_code'] = eb_user.phone_number.country_code
-#                 context['register_date_time'] = eb_user.registered.isoformat()
-#                 sgtz = pytz.timezone(settings.TIME_ZONE)
-#                 context['last_seen_date_time'] = datetime.now(tz=sgtz).isoformat()
-#                 context['num_whatsapp_lead_author'] = \
-#                     eb_user.num_whatsapp_lead_author()
-#                 context['num_leads_created'] = eb_user.num_leads_created()
-#             except relmods.User.DoesNotExist:
-#                 # Prevents error when I'm logging in as admin
-#                 pass
-
-#         return context
-
-# Deprecated
-# @login_required
-# def create_lead(request):
-#     if request.method == 'POST':
-#         form = forms.OldLeadForm(request.POST)
-#         if form.is_valid():
-#             # reCaptcha check
-#             # Note: blocking
-#             client_response = request.POST.get('g-recaptcha-response')
-#             server_response = requests.post(
-#                 settings.RECAPTCHA_VERIFICATION_URL, {
-#                     'secret': settings.RECAPTCHA_SECRET,
-#                     'response': client_response
-#             })
-
-#             sr = json.loads(server_response.text)
-#             if sr.get('success') == True:
-#                 # Disable recaptcha
-#                 #  and sr.get('score') > \
-#                 # float(settings.RECAPTCHA_THRESHOLD):
-#                 lead = models.Lead.objects.create(
-#                     author=request.user.user,
-#                     title=form.cleaned_data.get('title'),
-#                     details=form.cleaned_data.get('details'),
-#                     lead_type=form.cleaned_data.get('lead_type'),
-#                     author_type=form.cleaned_data.get('author_type'),
-#                     country=commods.Country.objects.get(
-#                         programmatic_key=form.cleaned_data.get('country')),
-#                     commission_pct=form.cleaned_data.get('commission_pct'),
-#                     commission_payable_after=form.cleaned_data.\
-#                         get('commission_payable_after'),
-#                     commission_payable_after_others=form.cleaned_data.\
-#                         get('commission_payable_after_others'),
-#                     other_comm_details=form.cleaned_data.\
-#                         get('other_comm_details')
-#                 )
-
-#                 # Associate file with lead
-#                 files = form.cleaned_data.get('files')
-#                 if files.lower().strip() != '':
-#                     file_datas = json.loads(files)
-#                     for file_data in file_datas:
-#                         uuid, _, filename = file_data
-#                         file = fimods.File.objects.get(uuid=uuid)
-#                         file.lead = lead
-#                         file.filename = filename
-#                         file.save()
-                
-#                 messages.info(request, 'Your lead has been posted.')
-
-#                 return HttpResponseRedirect(reverse('leads__root:list'))
-#             else:
-#                 messages.info(request, 'Are you a robot? Please slow down. [' + str(sr.get('score')) + ']')
-#     else:
-#         form = forms.OldLeadForm()
-
-#     countries = commods.Country.objects.order_by('name')
-
-#     eb_user = request.user.user
-#     sgtz = pytz.timezone(settings.TIME_ZONE)
-
-#     return render(request, 'leads/create_lead.html', {
-#         'form': form,
-#         'countries': countries,
-#         'amplitude_api_key': settings.AMPLITUDE_API_KEY,
-#         'amplitude_user_id': eb_user.uuid,
-#         'country_code': eb_user.phone_number.country_code,
-#         'register_date_time': eb_user.registered.isoformat(),
-#         'last_seen_date_time': datetime.now(tz=sgtz).isoformat(),
-#         'num_whatsapp_lead_author': eb_user.num_whatsapp_lead_author(),
-#         'num_leads_created': eb_user.num_leads_created()
-#     })
-
-# Deprecated
-# @csrf_exempt
-# class WriteOnlyPresignedURLView(fiviews.WriteOnlyPresignedURLView):
-#     serializer_class = serializers.WriteOnlyPresignedURLSerializer
-
-# Deprecated
-# def lead_detail(request, uuid):
-#     try:
-#         lead = models.Lead.objects.get(uuid=uuid)
-#     except models.Lead.DoesNotExist:
-#         raise Http404('Lead does not exist')
-
-#     contact_request = None
-
-#     if request.method == 'POST':
-#         form = forms.ContactForm(request.POST)
-#         if form.is_valid():
-#             if is_connected(request.user.user, lead):
-#                 # Users are already connected - direct to WhatsApp.
-
-#                 # Set message as a GET parameter
-#                 message = form.cleaned_data.get('message')
-#                 request.GET._mutable = True
-#                 request.GET['text'] = message
-
-#                 # Direct user to WhatsApp with the message in body
-#                 HttpResponseRedirect(
-#                     get_create_whatsapp_link(request.user.user, lead.author))
-#             elif not has_contacted(request.user.user, lead):
-#                 # User should not be able to send a post request if he has
-#                 # already contacted the lead owner. Users are not connected
-#                 # and requester have not contacted this lead before.
-
-#                 # Create contact request
-#                 message = form.cleaned_data.get('message')
-#                 contact_request = models.ContactRequest.objects.create(
-#                     contactor=request.user.user,
-#                     lead=lead,
-#                     message=message
-#                 )
-
-#                 # Ask lead author to confirm contact request
-#                 send_contact_request_confirm(contact_request.id)
-
-#                 # Add message
-#                 messages.info(request, "Message sent. We'll notify you if the \
-# author agrees to exchange contacts with you.")
-#     else:
-#         if request.user.is_authenticated:
-#             # Update analytics for authenticated user
-#             try:
-#                 access = models.LeadDetailAccess.objects.get(
-#                     lead=lead,
-#                     accessor=request.user.user
-#                 )
-#                 access.access_count += 1
-#                 access.save()
-#             except models.LeadDetailAccess.DoesNotExist:
-#                 access = models.LeadDetailAccess.objects.create(
-#                     lead=lead,
-#                     accessor=request.user.user,
-#                     access_count=1
-#                 )
-
-#             if is_connected(request.user.user, lead):
-#                 # Users are already connected, show an empty form which will allow
-#                 # the requester to WhatsApp the lead author directly.
-#                 form = forms.ContactForm()
-#             elif has_contacted(request.user.user, lead):
-#                 # Users are not connected but requester have contacted this
-#                 # lead before. Users are not connected but requester have contacted
-#                 # this lead before.
-            
-#                 # Get contact request
-#                 contact_request = models.ContactRequest.objects.get(
-#                     contactor=request.user.user,
-#                     lead=lead
-#                 )
-
-#                 # Show message from contact request
-#                 form = forms.ContactForm({
-#                     'message': contact_request.message
-#                 })
-#             else:
-#                 form = forms.ContactForm()
-#         else:
-#             # User are not connected and requester have not contact lead author.
-#             # Show an empty form which will allow the requester to contact the
-#             # lead owner. Note: we do not merge this condition with is_connected
-#             # for clarity's sake.
-#             form = forms.ContactForm()
-
-#     return render(request, 'leads/lead_detail.html', {
-#         'lead': lead,
-#         'form': form,
-#         'contact_request': contact_request
-#     })
-
-# Deprecated
-# def contact_request_detail(request, uuid):
-#     contact_request = models.ContactRequest.objects.get(uuid=uuid)
-#     if request.method == 'POST':
-#         # Exchange contact with the contactor (requester is the lead owner).
-        
-#         contact_request.response = 'accept'
-#         contact_request.save()
-
-#         # Send message to both parties.
-#         send_contact_request_exchanged_author.delay(contact_request.id)
-#         send_contact_request_exchanged_contactor.delay(contact_request.id)
-
-#     return render(request, 'leads/contactrequest_detail.html', {
-#         'contact_request': contact_request,
-#         'whatsapp_link': get_create_whatsapp_link(
-#             contact_request.lead.author,
-#             contact_request.contactor)
-#     })
-
-# Deprecated
-# class ContactRequestListView(LoginRequiredMixin, ListView):
-#     model = models.ContactRequest
-#     paginate_by = 30
-
-#     def get_queryset(self):
-#         return models.ContactRequest.objects.filter(
-#             lead__author=self.request.user.user)
