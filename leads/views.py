@@ -9,7 +9,6 @@ from django.shortcuts import render
 from django.db.models import Count
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models.expressions import RawSQL
-from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -19,7 +18,6 @@ from everybase import settings
 from common import models as commods
 from files.utilities.delete_file import delete_file
 from leads import models, forms
-from relationships import models as relmods
 from relationships.utilities.save_user_agent import save_user_agent
 from files import models as fimods
 from files.utilities.get_mime_type import get_mime_type
@@ -386,7 +384,6 @@ def lead_list(request):
         get = lambda s : request.GET.get(s)
 
         commented_only = get('commented_only')
-
         saved_only = get('saved_only')
         buy_sell = get('buy_sell')
         direct_middleman = get('direct_middleman')
@@ -640,7 +637,6 @@ def lead_list(request):
         params['need_agent'] = get('need_agent')
 
         if match(need_agent, 'on'):
-            commission_type = get('commission_type')
             params['commission_type'] = commission_type
 
             if commission_type == 'others' or commission_type == 'all':
@@ -657,7 +653,6 @@ def lead_list(request):
             params['commission_payable_after_other'] = get('commission_payable_after_other')
             params['other_agent_details'] = get('other_agent_details')
         
-        need_logistics_agent = get('need_logistics_agent')
         params['need_logistics_agent'] = need_logistics_agent
 
         if match(need_logistics_agent, 'on'):
@@ -665,7 +660,7 @@ def lead_list(request):
 
         # Paginate
 
-        leads_per_page = 8
+        leads_per_page = 9
         paginator = Paginator(leads, leads_per_page)
 
         page_number = request.GET.get('page')
