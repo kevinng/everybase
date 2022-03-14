@@ -3,7 +3,7 @@ from relationships import views
 
 app_name = 'users'
 urlpatterns = [
-    path('persons', views.user_list, name='user_list'),
+    path('', views.user_list, name='user_list'),
     path('<slug:slug>', views.user_detail, name='user_detail'),
     path('<slug:slug>/leads', views.UserLeadListView.as_view(), name='user_leads'),
     path('<slug:slug>/whatsapp', views.whatsapp, name='whatsapp'),
