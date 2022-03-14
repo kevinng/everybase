@@ -160,8 +160,29 @@ class AgentQueryAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _agent_query_fields})]
     autocomplete_fields = ['user', 'country']
 
-_lead_query_fields = ['user', 'search', 'wants_to', 'buy_country',
-    'sell_country', 'sort_by']
+_lead_query_fields = [
+    'user',
+    'commented_only',
+    'saved_only',
+    'buy_sell',
+    'direct_middleman',
+    'buy_country',
+    'sell_country',
+    'goods_services',
+    'need_agent',
+    'commission_type',
+    'commission_type_other',
+    'min_commission',
+    'max_commission',
+    'min_avg_deal',
+    'max_avg_deal',
+    'comm_negotiable',
+    'commission_payable_after',
+    'commission_payable_after_other',
+    'other_agent_details',
+    'need_logistics_agent',
+    'logistics_agent_details'
+]
 @admin.register(models.LeadQuery)
 class LeadQueryAdmin(comadm.StandardAdmin):
     # List page settings
@@ -172,4 +193,4 @@ class LeadQueryAdmin(comadm.StandardAdmin):
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _lead_query_fields})]
-    autocomplete_fields = ['user', 'buy_country', 'sell_country']
+    autocomplete_fields = ['user']
