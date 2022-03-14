@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Everybase - we connect importers, exporters, agents worldwide{% endblock %}
+{% block title %}Importers, Exporters, Buying/Sourcing Agents, Selling/Promoting Agents{% endblock %}
 
 {% block content %}
 <div class="bg-gradient-to-t from-violet-800 to-fuchsia-600 pt-20 pb-20 px-10 flex flex-col items-center text-center">
@@ -40,13 +40,13 @@
 <div class="pt-20 pb-20 px-10 bg-sky-50 flex flex-col items-center">
     <div class="font-bold text-3xl text-center">Be found by buyers, sellers, agents - no limits*, no charge</div>
 
-    <div class="mt-12 flex justify-center gap-10">
+    <div class="mt-12 flex flex-col lg:flex-row justify-center items-center gap-10">
         {% comment %} start: attention image {% endcomment %}
-        <img src="{% static 'common/img/home/1.svg' %}" class="w-1/3">
+        <img src="{% static 'common/img/home/1.svg' %}" class="lg:w-1/3 w-full">
         {% comment %} end: attention image {% endcomment %}
 
         {% comment %} start: copywriting {% endcomment %}
-        <div class="mt-6">
+        <div class="lg:mt-6 lg:w-2/3 w-full">
             <div><span class="mr-2">➤</span> Sell, buy, or recruit agents - to help you buy, sell, handle logistics.</div>
             <div class="mt-4"><span class="mr-2">➤</span> Post leads, no limits*, no charge.</div>
             <div class="mt-4"><span class="mr-2">➤</span> Be contacted by other users, no limits, no charge.</div>
@@ -58,9 +58,9 @@
 <div class="pt-20 pb-20 px-10 bg-teal-50 flex flex-col items-center">
     <div class="font-bold text-3xl text-center">Better than crawling social networks and chatgroups for leads</div>
 
-    <div class="mt-12 flex justify-center gap-10">
+    <div class="mt-12 flex flex-col lg:flex-row justify-center items-center gap-10">
         {% comment %} start: copywriting {% endcomment %}
-        <div class="mt-6">
+        <div class="lg:mt-6 lg:w-2/3 w-full">
             <div><span class="mr-2">➤</span> We forward you to WhatsApp directly. No emails to send or phonecalls to make.</div>
             <div class="mt-4"><span class="mr-2">➤</span> Advanced search and filtering capabilities - find what you need, quickly.</div>
             <div class="mt-4"><span class="mr-2">➤</span> Save persons and leads for considerations.</div>
@@ -68,7 +68,7 @@
         {% comment %} end: copywriting {% endcomment %}
 
         {% comment %} start: attention image {% endcomment %}
-        <img src="{% static 'common/img/home/2.svg' %}" class="w-1/3">
+        <img src="{% static 'common/img/home/2.svg' %}" class="lg:w-1/3 w-full">
         {% comment %} end: attention image {% endcomment %}
     </div>
 </div>
