@@ -1,6 +1,7 @@
 import pytz
 from datetime import datetime, timedelta
 
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -10,6 +11,10 @@ from django.contrib.auth.models import User
 from django.views.generic.list import ListView
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
+from django.db.models import Count
+from django.db.models.expressions import RawSQL
+from django.contrib.postgres.search import (SearchVector, SearchQuery,
+    SearchRank, SearchVectorField)
 
 from everybase import settings
 from common import models as commods
@@ -26,6 +31,11 @@ from chat.tasks.send_login_message import send_login_message
 from sentry_sdk import capture_message
 import phonenumbers
 from ratelimit.decorators import ratelimit
+
+def get_countries():
+    return commods.Country.objects.annotate(
+        number_of_users=Count('users_w_this_country'))\
+            .order_by('-number_of_users')
 
 @login_required
 def whatsapp(request, slug):
@@ -577,62 +587,243 @@ def toggle_save_user(request, slug):
             reverse('users:user_detail', args=(slug,)))
 
 def user_list(request):
-    pass
+    user = request.user.user if request.user.is_authenticated else None
 
-# class AgentListView(ListView):
-#     template_name = 'leads/agent_list.html'
-#     context_object_name = 'agents'
-#     model = relmods.User
-#     paginate_by = 8
+    get = lambda s : request.GET.get(s)
 
-#     def get_queryset(self, **kwargs):
-#         # search = self.request.GET.get('search')
-#         # country = self.request.GET.get('country')
+    commented_only = get('commented_only')
+    saved_only = get('saved_only')
+    connected_only = get('connected_only')
+    first_name = get('first_name')    
+    last_name = get('last_name')
+    company_name = get('company_name')
+    country = get('country')
+    goods_string = get('goods_string')
+    languages = get('languages')
+    is_buy_agent = get('is_buy_agent')
+    buy_agent_details = get('buy_agent_details')
+    is_sell_agent = get('is_sell_agent')
+    sell_agent_details = get('sell_agent_details')
+    is_logistics_agent = get('is_logistics_agent')
+    logistics_agent_details = get('logistics_agent_details')
 
-#         # users = relmods.User.objects
-#         # if country is not None and country != 'any_country':
-#         #     users = users.filter(country__programmatic_key=country)
+    users = models.User.objects.all()
 
-#         # # Save query
-#         # try:
-#         #     if self.request.user.is_authenticated:
-#         #         user = self.request.user.user
-#         #     else:
-#         #         user = None
+    is_not_empty = lambda s : s is not None and s.strip() != ''
+    match = lambda t, v: is_not_empty(t) and t == v
 
-#         #     if country == 'any_country' or country is None:
-#         #         country_model = None
-#         #     else:
-#         #         country_model = commods.Country.objects.get(
-#         #             programmatic_key=country)
-                
-#         #     if user is not None and search is not None and country is not None:
-#         #         models.AgentQuery.objects.create(
-#         #             user=user,
-#         #             search=search,
-#         #             country=country_model
-#         #         )
-#         # except:
-#         #     traceback.print_exc()
+    if user is not None:
+        # Allow these options only if user is authenticated
 
-#         # vector = SearchVector('search_agents_veccol')
-#         # query = SearchQuery(search)
-#         # users = users.annotate(
-#         #     search_agents_veccol=RawSQL('search_agents_veccol', [],
-#         #         output_field=SearchVectorField()))\
-#         #     .annotate(rank=SearchRank(vector, query))\
-#         #     .order_by('-rank')
-            
-#         # return users
+        if match(commented_only, 'on'):
+            # Commented only is checked
+            commentees = models.UserComment.objects.filter(
+                commentor=user,
+                deleted__isnull=True
+            ).values('commentee')
 
-#         return relmods.User.objects.all()
+            users = users.filter(id__in=commentees)
         
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['countries'] = get_countries()
+        if match(saved_only, 'on'):
+            # Saved only is checked
+            savee = models.SavedUser.objects.filter(
+                saver=user,
+                deleted__isnull=True,
+                active=True
+            ).values('savee')
 
-#         # Render search and country back into the template
-#         context['search_value'] = self.request.GET.get('search')
-#         context['country_value'] = self.request.GET.get('country')
+            users = users.filter(id__in=savee)
 
-#         return context
+        if match(connected_only, 'on'):
+            # Connected only is checked
+            connections = lemods.WhatsAppMessageBody.objects\
+                .filter(contactee=user)\
+                .values('contactor')
+            
+            connections.union(lemods.WhatsAppMessageBody.objects\
+                .filter(contactor=user)\
+                .values('contactee'))
+
+            users = users.filter(id__in=connections)
+
+    order_by = []
+
+    # First name
+    if is_not_empty(first_name):
+        # First name is filled
+        first_name_vec = SearchVector('first_name_vec')
+        first_name_qry = SearchQuery(first_name)
+        users = users.annotate(
+            first_name_vec=RawSQL('first_name_vec', [],
+                output_field=SearchVectorField()))\
+            .annotate(first_name_rank=SearchRank(first_name_vec, first_name_qry))
+        
+        order_by.append('-first_name_rank')
+
+    # Last name
+    if is_not_empty(last_name):
+        # Last name is filled
+        last_name_vec = SearchVector('last_name_vec')
+        last_name_qry = SearchQuery(last_name)
+        users = users.annotate(
+            last_name_vec=RawSQL('last_name_vec', [],
+                output_field=SearchVectorField()))\
+            .annotate(last_name_rank=SearchRank(last_name_vec, last_name_qry))
+        
+        order_by.append('-last_name_rank')
+
+    # Company name
+    if is_not_empty(company_name):
+        # Company name is filled
+        company_name_vec = SearchVector('company_name_vec')
+        company_name_qry = SearchQuery(company_name)
+        users = users.annotate(
+            company_name_vec=RawSQL('company_name_vec', [],
+                output_field=SearchVectorField()))\
+            .annotate(company_name_rank=SearchRank(company_name_vec, company_name_qry))
+        
+        order_by.append('-company_name_rank')
+
+    # Country
+    if is_not_empty(country) and country.strip() != 'any_country':
+        # Buy country is selected
+        c = commods.Country.objects.get(programmatic_key=country)
+        users = users.filter(country=c)
+
+    # Goods and services
+    if is_not_empty(goods_string):
+        # Company name is filled
+        goods_string_vec = SearchVector('goods_string_vec')
+        goods_string_qry = SearchQuery(goods_string)
+        users = users.annotate(
+            goods_string_vec=RawSQL('goods_string_vec', [],
+                output_field=SearchVectorField()))\
+            .annotate(goods_string_rank=SearchRank(goods_string_vec, goods_string_qry))
+        
+        order_by.append('-goods_string_rank')
+
+    # Languages
+    if is_not_empty(languages):
+        # Company name is filled
+        languages_string_vec = SearchVector('languages_string_vec')
+        languages_qry = SearchQuery(languages)
+        users = users.annotate(
+            languages_string_vec=RawSQL('languages_string_vec', [],
+                output_field=SearchVectorField()))\
+            .annotate(languages_rank=SearchRank(languages_string_vec, languages_qry))
+        
+        order_by.append('-languages_rank')
+
+    if match(is_buy_agent, 'on'):
+        # Is buy agent is checked
+        users = users.filter(is_buy_agent=True)
+
+        if is_not_empty(buy_agent_details):
+            # Buy agent details not empty
+            buy_agent_details_vec = SearchVector('buy_agent_details_vec')
+            buy_agent_details_qry = SearchQuery(buy_agent_details)
+            users = users.annotate(
+                buy_agent_details_vec=RawSQL('buy_agent_details_vec', [],
+                    output_field=SearchVectorField()))\
+                .annotate(buy_agent_details_rank=SearchRank(buy_agent_details_vec, buy_agent_details_qry))
+            
+            order_by.append('-buy_agent_details_rank')
+
+    if match(is_sell_agent, 'on'):
+        # Is sell agent is checked
+        users = users.filter(is_sell_agent=True)
+
+        if is_not_empty(sell_agent_details):
+            # Sell agent details not empty
+            sell_agent_details_vec = SearchVector('sell_agent_details_vec')
+            sell_agent_details_qry = SearchQuery(sell_agent_details)
+            users = users.annotate(
+                sell_agent_details_vec=RawSQL('sell_agent_details_vec', [],
+                    output_field=SearchVectorField()))\
+                .annotate(sell_agent_details_rank=SearchRank(sell_agent_details_vec, sell_agent_details_qry))
+            
+            order_by.append('-sell_agent_details_rank')
+
+    if match(is_logistics_agent, 'on'):
+        # Is logistics agent is checked
+        users = users.filter(is_logistics_agent=True)
+
+        if is_not_empty(sell_agent_details):
+            # Logistics agent details not empty
+            logistics_agent_details_vec = SearchVector('logistics_agent_details_vec')
+            logistics_agent_details_qry = SearchQuery(logistics_agent_details)
+            users = users.annotate(
+                logistics_agent_details_vec=RawSQL('logistics_agent_details_vec', [],
+                    output_field=SearchVectorField()))\
+                .annotate(logistics_agent_details_rank=SearchRank(logistics_agent_details_vec, logistics_agent_details_qry))
+            
+            order_by.append('-logistics_agent_details_rank')
+
+    order_by.append('-created')
+
+    # Save lead query if it's not the default (empty) form post
+    if is_not_empty(commented_only) or is_not_empty(saved_only) or\
+        is_not_empty(connected_only) or is_not_empty(first_name) or\
+        is_not_empty(last_name) or is_not_empty(company_name) or\
+        not match(country, 'any_country') or is_not_empty(goods_string) or\
+        is_not_empty(languages) or is_not_empty(is_buy_agent) or\
+        is_not_empty(buy_agent_details) or is_not_empty(is_sell_agent) or\
+        is_not_empty(sell_agent_details) or is_not_empty(is_logistics_agent) or\
+        is_not_empty(logistics_agent_details):
+        models.UserQuery.objects.create(
+            user=user,
+            commented_only=commented_only,
+            saved_only=saved_only,
+            connected_only=connected_only,
+            first_name=first_name,
+            last_name=last_name,
+            company_name=company_name,
+            country=country,
+            goods_string=goods_string,
+            languages=languages,
+            is_buy_agent=is_buy_agent,
+            buy_agent_details=buy_agent_details,
+            is_sell_agent=is_sell_agent,
+            sell_agent_details=sell_agent_details,
+            is_logistics_agent=is_logistics_agent,
+            logistics_agent_details=logistics_agent_details
+        )
+
+    # Set contact parameters
+
+    params = {}
+    params['countries'] = get_countries()
+    params['commented_only'] = commented_only
+    params['saved_only'] = saved_only
+    params['connected_only'] = connected_only
+    params['first_name'] = first_name
+    params['last_name'] = last_name
+    params['company_name'] = company_name
+    params['country'] = country
+    params['goods_string'] = goods_string
+    params['languages'] = languages
+    params['is_buy_agent'] = is_buy_agent
+    if match(is_buy_agent, 'on'):
+        params['buy_agent_details'] = buy_agent_details
+    params['is_sell_agent'] = is_sell_agent
+    if match(is_sell_agent, 'on'):
+        params['sell_agent_details'] = sell_agent_details
+    params['is_logistics_agent'] = is_logistics_agent
+    if match(is_logistics_agent, 'on'):
+        params['logistics_agent_details'] = logistics_agent_details
+
+    # Order users
+
+    users = users.order_by(*order_by)
+
+    # Paginate
+
+    users_per_page = 9
+    paginator = Paginator(users, users_per_page)
+
+    page_number = request.GET.get('page')
+    
+    page_obj = paginator.get_page(page_number)
+    params['page_obj'] = page_obj
+
+    return render(request, 'relationships/user_list.html', params)
