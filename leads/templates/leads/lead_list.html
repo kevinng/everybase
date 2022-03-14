@@ -36,62 +36,187 @@ https://codebeautify.org/css-beautify-minify
 {% block page_actions %}
 <div class="flex lg:hidden">
     <a href="#" class="border border-blue-700 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2">New Post</a>
-    <button id="filter" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Filter</button>
+    <button id="search" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Search</button>
 </div>
 {% endblock %}
 
 {% block content %}
 <div class="flex justify-center my-10 gap-2">
     {% comment %} start: desktop search {% endcomment %}
-    <div class="bg-white hidden lg:block lg:w-4/12 xl:w-3/12 2xl:w-3/12 p-10 shadow-md sticky top-20 self-start">
-        <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-7 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">New Post</a>
-        <h1 class="text-3xl font-bold text-center mt-6">I-Need-Agents</h1>
-
+    <div class="bg-white rounded shadow-md lg:w-1/3 xl:w-1/4 self-start px-6 py-10">
+        <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-7 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">New Lead</a>
+        <h1 class="text-3xl font-bold text-center mt-6">Leads</h1>
         <div class="mt-7 flex flex-col justify-center">
             <form action="{% url 'leads:lead_list' %}" type="get">
-                <label for="search" class="text-sm font-bold uppercase text-slate-400">Search</label>
-                <input name="search"{% if search_value is not None and search_value|cut:' ' != '' %} value="{{ search_value }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                
+                {% if user.is_authenticated %}
+                    {% comment %} start: commented_only {% endcomment %}
+                    <div id="commented_only__elements" class="flex justify-start">
+                        <input id="commented_only" name="commented_only" type="checkbox" class="h-6 w-6" {% if commented_only == 'on' %} checked{% endif %}>
+                        <label id="commented_only__label" for="commented_only" class="ml-3">Leads I've commented on only</label>
+                    </div>
+                    {% comment %} end: commented_on {% endcomment %}
 
-                <label for="wants_to" class="text-sm font-bold uppercase text-slate-400 mt-5 block">User Wants To</label>
-                <div class="mt-2">
-                    <select name="wants_to" class="select2">
-                        <option value="buy_or_sell"{% if wants_to_value == 'buy_or_sell' %} selected{% endif %}>Buy or Sell</option>
-                        <option value="buy"{% if wants_to_value == 'buy' %} selected{% endif %}>Buy</option>
-                        <option value="sell"{% if wants_to_value == 'sell' %} selected{% endif %}>Sell</option>
+                    {% comment %} start: saved_only {% endcomment %}
+                    <div id="saved_only__elements" class="flex justify-start mt-4">
+                        <input id="saved_only" name="saved_only" type="checkbox" class="h-6 w-6" {% if saved_only == 'on' %} checked{% endif %}>
+                        <label id="saved_only__label" for="saved_only" class="ml-3">Leads I've saved only</label>
+                    </div>
+                    {% comment %} end: leads_ive_saved {% endcomment %}
+                {% endif %}
+
+                {% comment %} start: buy_sell {% endcomment %}
+                <label id="buy_sell__label" for="buy_sell" class="font-bold text-slate-400 mt-5 block">Buy, Sell</label>
+                <div id="buy_sell__elements" class="mt-2">
+                    <select name="buy_sell" class="select2">
+                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Buy or Sell</option>
+                        <option value="buy"{% if buy_sell == 'buy' %} selected{% endif %}>Buy</option>
+                        <option value="sell"{% if buy_sell == 'sell' %} selected{% endif %}>Sell</option>
                     </select>
                 </div>
+                {% comment %} end: buy_sell {% endcomment %}
 
-                <label for="buy_country" class="text-sm font-bold uppercase text-slate-400 mt-5 block">Buy From / Source Country</label>
-                <div class="mt-2">
-                    <select name="buy_country" class="select2">
-                        <option value="any_country"{% if buy_country_value == 'any_country' %} selected{% endif %}>Any Country</option>
+                {% comment %} start: direct_middleman {% endcomment %}
+                <label id="direct_middleman__label" for="direct_middleman" class="font-bold text-slate-400 mt-5 block">Direct, Middleman</label>
+                <div id="direct_middleman__elements" class="mt-2">
+                    <select name="direct_middleman" class="select2">
+                        <option value="all"{% if direct_middleman == 'all' %} selected{% endif %}>Direct or Middleman</option>
+                        <option value="direct"{% if direct_middleman == 'direct' %} selected{% endif %}>Direct Buyer/Seller</option>
+                        <option value="middleman"{% if direct_middleman == 'middleman' %} selected{% endif %}>Middleman</option>
+                    </select>
+                </div>
+                {% comment %} end: direct_middleman {% endcomment %}
+
+                {% comment %} start: buy_country {% endcomment %}
+                <label id="buy_country__label" for="buy_country" class="font-bold text-slate-400 mt-5 block">Buy or Source Country</label>
+                <div id="buy_country__elements" class="mt-2">
+                    <select id="buy_country" name="buy_country" class="select2">
+                        <option value="any_country"{% if buy_country == 'any_country' %} selected{% endif %}>Any Country</option>
                         {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if buy_country_value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                            <option value="{{ country.programmatic_key }}"{% if buy_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
+                {% comment %} end: buy_country {% endcomment %}
 
-                <label for="sell_country" class="text-sm font-bold uppercase text-slate-400 mt-5 block">Sell To / Destination Country</label>
-                <div class="mt-2">
+                {% comment %} start: sell_country {% endcomment %}
+                <label id="sell_country__label" for="sell_country" class="font-bold text-slate-400 mt-5 block">Sell or Destination Country</label>
+                <div id="sell_country__elements" class="mt-2">
                     <select name="sell_country" class="select2">
-                        <option value="any_country"{% if sell_country_value == 'any_country' %} selected{% endif %}>Any Country</option>
+                        <option value="any_country"{% if sell_country == 'any_country' %} selected{% endif %}>Any Country</option>
                         {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if sell_country_value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                            <option value="{{ country.programmatic_key }}"{% if sell_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
+                {% comment %} end: sell_country {% endcomment %}
 
-                <label for="sort_by" class="text-sm font-bold uppercase text-slate-400 mt-5 block">Sort By</label>
-                <div class="mt-2">
-                    <select name="sort_by" class="select2">
-                        <option value="timestamp"{% if sort_by_value == 'timestamp' %} selected{% endif %}>Timestamp</option>
-                        <option value="relevance"{% if sort_by_value == 'relevance' %} selected{% endif %}>Relevance</option>
-                        <option value="comm_percent_hi_lo"{% if sort_by_value == 'comm_percent_hi_lo' %} selected{% endif %}>Avg Comm % High to Low</option>
-                        <option value="comm_percent_lo_hi"{% if sort_by_value == 'comm_percent_lo_hi' %} selected{% endif %}>Avg Comm % Low to High</option>
-                        <option value="comm_dollar_hi_lo"{% if sort_by_value == 'comm_dollar_hi_lo' %} selected{% endif %}>Avg Comm $ High to Low</option>
-                        <option value="comm_dollar_lo_hi"{% if sort_by_value == 'comm_dollar_lo_hi' %} selected{% endif %}>Avg Comm $ Low to High</option>
+                {% comment %} start: goods_services {% endcomment %}
+                <label id="goods_services__label" for="goods_services" class="font-bold text-slate-400 mt-5 block">Goods & Services Details</label>
+                <input id="goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                {% comment %} end: goods_services {% endcomment %}
+
+                {% comment %} start: need_agent {% endcomment %}
+                <div id="need_agent__elements" class="flex justify-start mt-5">
+                    <input id="need_agent" name="need_agent" type="checkbox" class="h-6 w-6" {% if need_agent == 'on' %} checked{% endif %}>
+                    <label for="need_agent" id="need_agent__label" class="ml-3">Need buy/sell agents only</label>
+                </div>
+                {% comment %} end: need_agent {% endcomment %}
+
+                {% comment %} start: commission_type {% endcomment %}
+                <label id="commission_type__label" for="commission_type" class="font-bold text-slate-400 mt-5 block">How is agent commission calculated?</label>
+                <div id="commission_type__elements" class="mt-2">
+                    <select id="commission_type" name="commission_type" class="select2">
+                        <option value="all"{% if commission_type == 'all' %} selected{% endif %}>Any</option>
+                        <option value="percentage"{% if commission_type == 'percentage' %} selected{% endif %}>% Sales</option>
+                        <option value="others"{% if commission_type == 'others' %} selected{% endif %}>Others</option>
                     </select>
                 </div>
+                {% comment %} end: commission_type {% endcomment %}
+
+                {% comment %} start: commission_type_other {% endcomment %}
+                <label id="commission_type_other__label" for="commission_type_other" class="font-bold text-slate-400 mt-5 block">How is agent commission calculated?</label>
+                <input id="commission_type_other" name="commission_type_other"{% if commission_type_other is not None and commission_type_other|cut:' ' != '' %} value="{{ commission_type_other }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                {% comment %} end: commission_type_other {% endcomment %}
+
+                {% comment %} start: min_commission {% endcomment %}
+                <label id="min_commission__label" for="min_commission" class="font-bold text-slate-400 mt-5 block">Min Commission %</label>
+                <div id="min_commission__elements" class="flex items-center justify-between">
+                    <input id="min_commission" name="min_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if min_commission is not None and min_commission|cut:' ' != '' %} value="{{ min_commission }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
+                    <div class="font-extrabold text-xl">%</div>
+                </div>
+                {% comment %} end: min_commission {% endcomment %}
+
+                {% comment %} start: max_commission {% endcomment %}
+                <label id="max_commmission__label" for="max_commission" class="font-bold text-slate-400 mt-5 block">Max Commission %</label>
+                <div id="max_commission__elements" class="flex items-center justify-between">
+                    <input id="max_commission" name="max_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if max_commission is not None and max_commission|cut:' ' != '' %} value="{{ max_commission }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
+                    <div class="font-extrabold text-xl">%</div>
+                </div>
+                {% comment %} end: max_commission {% endcomment %}
+
+                {% comment %} start: min_avg_deal {% endcomment %}
+                <label id="min_avg_deal__label" for="min_avg_deal" class="font-bold text-slate-400 mt-5 block">Min Average Deal Size USD</label>
+                <div id="min_avg_deal__elements" class="flex items-center justify-between">
+                    <input id="min_avg_deal" name="min_avg_deal" placeholder="Leave blank for all" type="number" min="0" {% if min_avg_deal is not None and min_avg_deal|cut:' ' != '' %} value="{{ min_avg_deal }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
+                    <div class="font-extrabold text-xl">USD</div>
+                </div>
+                {% comment %} end: min_avg_deal {% endcomment %}
+
+                {% comment %} start: max_avg_deal {% endcomment %}
+                <label id="max_avg_deal__label" for="max_avg_deal" class="font-bold text-slate-400 mt-5 block">Max Average Deal Size USD</label>
+                <div id="max_avg_deal__elements" class="flex items-center justify-between">
+                    <input id="max_avg_deal" name="max_avg_deal" placeholder="Leave blank for all" type="number" min="0" {% if max_avg_deal is not None and max_avg_deal|cut:' ' != '' %} value="{{ max_avg_deal }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
+                    <div class="font-extrabold text-xl">USD</div>
+                </div>
+                {% comment %} end: max_avg_deal {% endcomment %}
+
+                {% comment %} start: comm_negotiable {% endcomment %}
+                <label id="comm_negotiable__label" for="comm_negotiable" class="font-bold text-slate-400 mt-5 block">Is commission negotiable?</label>
+                <div id="comm_negotiable__elements" class="mt-2">
+                    <select name="comm_negotiable" class="select2">
+                        <option value="all"{% if comm_negotiable == 'all' %} selected{% endif %}>All</option>
+                        <option value="not_negotiable"{% if comm_negotiable == 'not_negotiable' %} selected{% endif %}>Not Negotiable</option>
+                        <option value="negotiable"{% if comm_negotiable == 'negotiable' %} selected{% endif %}>Negotiable</option>
+                    </select>
+                </div>
+                {% comment %} end: comm_negotiable {% endcomment %}
+
+                {% comment %} start: commission_payable_after {% endcomment %}
+                <label id="commission_payable_after__label" for="commission_payable_after" class="font-bold text-slate-400 mt-5 block">Commission Payable After</label>
+                <div id="commission_payable_after__elements" class="mt-2">
+                    <select name="commission_payable_after" class="select2">
+                        <option value="all"{% if commission_payable_after == 'all' %} selected{% endif %}>Any</option>
+                        <option value="initial_deposit_received"{% if commission_payable_after == 'initial_deposit_received' %} selected{% endif %}>Initial deposit received</option>
+                        <option value="goods_shipped"{% if commission_payable_after == 'goods_shipped' %} selected{% endif %}>Goods shipped</option>
+                        <option value="buyer_received_goods_services"{% if commission_payable_after == 'buyer_received_goods_services' %} selected{% endif %}>Buyer received goods/services</option>
+                        <option value="full_payment_received"{% if commission_payable_after == 'full_payment_received' %} selected{% endif %}>Full payment received</option>
+                        <option value="other"{% if commission_payable_after == 'other' %} selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                {% comment %} end: commission_payable_after {% endcomment %}
+
+                {% comment %} start: commission_payable_after_other {% endcomment %}
+                <label id="commission_payable_after_other__label" for="commission_payable_after_other" class="font-bold text-slate-400 mt-5 block">Commission Payable After</label>
+                <input id="commission_payable_after_other" name="commission_payable_after_other"{% if commission_payable_after_other is not None and commission_payable_after_other|cut:' ' != '' %} value="{{ commission_payable_after_other }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                {% comment %} end: commission_payable_after_other {% endcomment %}
+
+                {% comment %} start: other_agent_details {% endcomment %}
+                <label id="other_agent_details__label" for="other_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Agents</label>
+                <input id="other_agent_details" name="other_agent_details"{% if other_agent_details is not None and other_agent_details|cut:' ' != '' %} value="{{ other_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                {% comment %} end: other_agent_details {% endcomment %}
+
+                {% comment %} start: need_logistics_agent {% endcomment %}
+                <div id="need_logistics_agent__elements" class="flex justify-start mt-5">
+                    <input id="need_logistics_agent" name="need_logistics_agent" type="checkbox" class="h-6 w-6" {% if need_logistics_agent == 'on' %} checked{% endif %}>
+                    <label id="need_logistics_agent__label" for="need_logistics_agent" class="ml-3">Need logistics agents only</label>
+                </div>
+                {% comment %} end: need_logistics_agent {% endcomment %}
+
+                {% comment %} start: logistics_agent_details {% endcomment %}
+                <label id="logistics_agent_details__label" for="logistics_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Logistics Agents</label>
+                <input id="logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                {% comment %} end: logistics_agent_details {% endcomment %}
 
                 <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
             </form>
@@ -100,57 +225,7 @@ https://codebeautify.org/css-beautify-minify
     {% comment %} end: desktop filter {% endcomment %}
     {% comment %} start: mobile filter {% endcomment %}
     <nav id="mobile-filter">
-        <h1 class="text-3xl font-bold text-center mt-6">I-Need-Agents</h1>
-
-        <div class="flex flex-col justify-center mt-7 mx-5">
-            <form action="{% url 'leads:lead_list' %}" type="get">
-                <label for="search" class="text-sm font-bold uppercase text-slate-400 block">Search</label>
-                <input name="search"{% if search_value is not None and search_value|cut:' ' != '' %} value="{{ search_value }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
-
-                <label for="wants_to" class="text-sm font-bold uppercase text-slate-400 mt-5 block">User Wants To</label>
-                <div class="mt-2">
-                    <select name="wants_to" class="select2">
-                        <option value="buy_or_sell"{% if wants_to_value == 'buy_or_sell' %} selected{% endif %}>Buy or Sell</option>
-                        <option value="buy"{% if wants_to_value == 'buy' %} selected{% endif %}>Buy</option>
-                        <option value="sell"{% if wants_to_value == 'sell' %} selected{% endif %}>Sell</option>
-                    </select>
-                </div>
-
-                <label for="buy_country" class="text-sm font-bold uppercase text-slate-400 mt-5 block">Buy From This Country</label>
-                <div class="mt-2">
-                    <select name="buy_country" class="select2">
-                        <option value="any_country"{% if sell_country_value == 'any_country' %} selected{% endif %}>Any Country</option>
-                        {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if buy_country_value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <label for="sell_country" class="text-sm font-bold uppercase text-slate-400 mt-5 block">Sell To This Country</label>
-                <div class="mt-2">
-                    <select name="sell_country" class="select2">
-                        <option value="any_country"{% if sell_country_value == 'any_country' %} selected{% endif %}>Any Country</option>
-                        {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if sell_country_value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <label for="sort_by" class="text-sm font-bold uppercase text-slate-400 mt-5 block">Sort By</label>
-                <div class="mt-2">
-                    <select name="sort_by" class="select2">
-                        <option value="timestamp"{% if sort_by_value == 'timestamp' %} selected{% endif %}>Timestamp</option>
-                        <option value="relevance"{% if sort_by_value == 'relevance' %} selected{% endif %}>Relevance</option>
-                        <option value="comm_percent_hi_lo"{% if sort_by_value == 'comm_percent_hi_lo' %} selected{% endif %}>Avg Comm % High to Low</option>
-                        <option value="comm_percent_lo_hi"{% if sort_by_value == 'comm_percent_lo_hi' %} selected{% endif %}>Avg Comm % Low to High</option>
-                        <option value="comm_dollar_hi_lo"{% if sort_by_value == 'comm_dollar_hi_lo' %} selected{% endif %}>Avg Comm $ High to Low</option>
-                        <option value="comm_dollar_lo_hi"{% if sort_by_value == 'comm_dollar_lo_hi' %} selected{% endif %}>Avg Comm $ Low to High</option>
-                    </select>
-                </div>
-
-                <button class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
-            </form>
-        </div>
+        
     </nav>
     {% comment %} end: mobile filter {% endcomment %}
 
@@ -163,17 +238,6 @@ https://codebeautify.org/css-beautify-minify
         {% for lead in page_obj %}
 
         <div class="mt-2">
-            <div class="flex justify-between bg-blue-100 w-full px-5">
-                <div class="flex flex-col py-3">
-                    <a href="{% url 'users:user_detail' lead.author.slug_link %}" class="font-bold">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</a>
-                    <div>{{ lead.author.country.name }}</div>
-                    <div class="text-slate-400">{{ lead.author.num_comments_as_commentee }} comments</div>
-                </div>
-                <div class="flex flex-col justify-center">
-                    <a href="{% url 'users:whatsapp' lead.author.slug_link %}" class="font-bold rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md py-2 px-5">WhatsApp</a>
-                </div>
-            </div>
-
             {% include 'leads/includes/lead_item.html' with summary=True %}
         </div>
 
@@ -226,6 +290,195 @@ $(document).ready(function() {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-$(document).ready((function(){$(".select2").select2(),$(".select2").one("select2:open",(function(e){$("input.select2-search__field").prop("placeholder","Search here...")})),$("#filter").click((function(){t=$(this),"Filter"==t.html()?t.html("Close"):t.html("Filter"),t.toggleClass("bg-blue-500"),t.toggleClass("text-white"),t.toggleClass("hover:bg-blue-600"),t.toggleClass("bg-slate-100"),t.toggleClass("text-slate-600"),t.toggleClass("hover:bg-slate-200"),$("#mobile-filter").toggleClass("is-active")}))}));
+$(document).ready(function() {
+    // Cache references
+    $select2 = $('.select2')
+    $search = $('#search')
+
+    $need_agent__elements = $('#need_agent__elements')
+    $need_agent = $('#need_agent')
+    $need_agent__label = $('#need_agent__label')
+
+    $commission_type__label = $('#commission_type__label')
+    $commission_type__elements = $('#commission_type__elements')
+    $commission_type = $('#commission_type')
+
+    $commission_type_other__label = $('#commission_type_other__label')
+    $commission_type_other = $('#commission_type_other')
+
+    $min_commission__label = $('#min_commission__label')
+    $min_commission__elements = $('#min_commission__elements')
+
+    $max_commmission__label = $('#max_commmission__label')
+    $max_commission__elements = $('#max_commission__elements')
+
+    $min_avg_deal__label = $('#min_avg_deal__label')
+    $min_avg_deal__elements = $('#min_avg_deal__elements')
+
+    $max_avg_deal__label = $('#max_avg_deal__label')
+    $max_avg_deal__elements = $('#max_avg_deal__elements')
+
+    $comm_negotiable__label = $('#comm_negotiable__label')
+    $comm_negotiable__elements = $('#comm_negotiable__elements')
+
+    $commission_payable_after__label = $('#commission_payable_after__label')
+    $commission_payable_after__elements = $('#commission_payable_after__elements')
+
+    $commission_payable_after_other__label = $('#commission_payable_after_other__label')
+    $commission_payable_after_other = $('#commission_payable_after_other')
+
+    $other_agent_details__label = $('#other_agent_details__label')
+    $other_agent_details = $('#other_agent_details')
+
+    $need_logistics_agent__elements = $('#need_logistics_agent__elements')
+
+    $logistics_agent_details__label = $('#logistics_agent_details__label')
+    $logistics_agent_details = $('#logistics_agent_details')
+
+    $sort_by__label = $('#sort_by__label')
+    $sort_by__elements = $('#sort_by__elements')
+
+    $need_logistics_agent = $('#need_logistics_agent')
+    $logistics_agent_details__label = $('#logistics_agent_details__label')
+    $logistics_agent_details = $('#logistics_agent_details')
+
+    // Initialize select2 checkboxes
+    $select2.select2();
+    $select2.one('select2:open', function(e) {
+        $('input.select2-search__field').prop('placeholder', 'Search here...');
+    });
+
+    // Mobile menu
+
+    $search.click(function() {
+        t = $(this);
+        if (t.html() == 'Search') {
+            t.html('Close');
+        } else {
+            t.html('Search');
+        }
+
+        t.toggleClass('bg-blue-500');
+        t.toggleClass('text-white');
+        t.toggleClass('hover:bg-blue-600');
+        t.toggleClass('bg-slate-100');
+        t.toggleClass('text-slate-600');
+        t.toggleClass('hover:bg-slate-200');
+
+        $('#mobile-filter').toggleClass('is-active');
+    });
+
+    function set_need_agent() {
+        if ($need_agent.is(':checked')) {
+            $commission_type__label.show()
+            $commission_type__elements.show()
+            
+            console.log($commission_type.val())
+            
+            if ($commission_type.val() == 'percentage' || $commission_type.val() == 'all') {
+                $min_commission__label.show()
+                $min_commission__elements.show()
+    
+                $max_commmission__label.show()
+                $max_commission__elements.show()
+    
+                $min_avg_deal__label.show()
+                $min_avg_deal__elements.show()
+    
+                $max_avg_deal__label.show()
+                $max_avg_deal__elements.show()
+            } else {
+                $min_commission__label.hide()
+                $min_commission__elements.hide()
+    
+                $max_commmission__label.hide()
+                $max_commission__elements.hide()
+    
+                $min_avg_deal__label.hide()
+                $min_avg_deal__elements.hide()
+    
+                $max_avg_deal__label.hide()
+                $max_avg_deal__elements.hide()
+            } 
+            
+            if ($commission_type.val() == 'others' || $commission_type.val() == 'all') {
+                $commission_type_other__label.show()
+                $commission_type_other.show()
+            } else {
+                $commission_type_other__label.hide()
+                $commission_type_other.hide()
+            }
+
+            $comm_negotiable__label.show()
+            $comm_negotiable__elements.show()
+
+            $commission_payable_after__label.show()
+            $commission_payable_after__elements.show()
+
+            $commission_payable_after_other__label.show()
+            $commission_payable_after_other.show()
+
+            $other_agent_details__label.show()
+            $other_agent_details.show()
+        } else {
+            $commission_type__label.hide()
+            $commission_type__elements.hide()
+
+            $commission_type_other__label.hide()
+            $commission_type_other.hide()
+
+            $min_commission__label.hide()
+            $min_commission__elements.hide()
+
+            $max_commmission__label.hide()
+            $max_commission__elements.hide()
+
+            $min_avg_deal__label.hide()
+            $min_avg_deal__elements.hide()
+
+            $max_avg_deal__label.hide()
+            $max_avg_deal__elements.hide()
+
+            $comm_negotiable__label.hide()
+            $comm_negotiable__elements.hide()
+
+            $commission_payable_after__label.hide()
+            $commission_payable_after__elements.hide()
+
+            $commission_payable_after_other__label.hide()
+            $commission_payable_after_other.hide()
+
+            $other_agent_details__label.hide()
+            $other_agent_details.hide()
+        }
+    }
+
+    function set_need_logistics_agent() {
+        if ($need_logistics_agent.is(':checked')) {
+            $logistics_agent_details__label.show()
+            $logistics_agent_details.show()
+        } else {
+            $logistics_agent_details__label.hide()
+            $logistics_agent_details.hide()
+        }
+    }
+
+    // On load
+    set_need_logistics_agent()
+    set_need_agent()
+
+    // On change
+    $need_agent.change(function() {
+        set_need_agent()
+    })
+
+    $need_logistics_agent.change(function() {
+        set_need_logistics_agent()
+    })
+
+    $commission_type.change(function() {
+        set_need_agent()
+    })
+})
 </script>
 {% endblock %}
