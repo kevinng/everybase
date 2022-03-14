@@ -1,10 +1,9 @@
 from django.urls import path
 from relationships import views
-from leads import views as leviews
 
 app_name = 'users'
 urlpatterns = [
-    path('agents', leviews.AgentListView.as_view(), name='agent_list'),
+    path('persons', views.user_list, name='user_list'),
     path('<slug:slug>', views.user_detail, name='user_detail'),
     path('<slug:slug>/leads', views.UserLeadListView.as_view(), name='user_leads'),
     path('<slug:slug>/whatsapp', views.whatsapp, name='whatsapp'),
