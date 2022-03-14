@@ -1,3 +1,4 @@
+from pyexpat import model
 import random, uuid
 
 from django.db import models
@@ -361,7 +362,7 @@ class User(Standard):
     def num_comments_as_commentee(self):
         return UserComment.objects.filter(commentee=self).count()
 
-    def num_leads_created(self):
+    def num_leads(self):
         return Lead.objects.filter(author=self.id).count()
 
     def num_credits_left(self):
@@ -697,3 +698,107 @@ class SavedUser(Standard):
 
     class Meta:
         unique_together = ('saver', 'savee')
+
+class UserQuery(Standard):
+    """User query
+
+    Last updated: 15 March 2022, 3:59 AM
+    """
+    user = models.ForeignKey(
+        'User',
+        related_name='user_queries',
+        related_query_name='user_queries',
+        on_delete=models.PROTECT,
+        db_index=True        
+    )
+
+    commented_only = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    saved_only = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    connected_only = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    first_name = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    last_name = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    company_name = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    goods_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    languages = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_buy_agent = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buy_agent_details = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_sell_agent = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sell_agent_details = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_logistics_agent = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    logistics_agent_details = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
