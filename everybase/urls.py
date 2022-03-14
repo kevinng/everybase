@@ -41,7 +41,7 @@ urlpatterns = [
     path('is_logged_in/<str:user_uuid>', relviews.is_logged_in,
         name='is_logged_in'),
     path('logout/', relviews.log_out, name='logout'),
-    path('users/', include('relationships.urls')),
+    path('persons/', include('relationships.urls')),
 
     # Chat
     path('chat/', include('chat.urls')),
