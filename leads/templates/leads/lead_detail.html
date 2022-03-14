@@ -34,7 +34,7 @@
             <div class="flex items-start justify-between">
 
                 {% comment %} start: lead_type, author_type {% endcomment %}
-                <div class="text-xl font-bold">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
+                <div class="font-bold">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
                 {% comment %} end: lead_type, author_type {% endcomment %}
                 
                 {% comment %} start: age_desc {% endcomment %}
@@ -80,7 +80,7 @@
             
             {% comment %} start: need_agent {% endcomment %}
             {% if lead.need_agent %}
-                <div class="text-xl font-bold mt-6">I need selling or promoting agents</div>
+                <div class="font-bold mt-6">I need selling or promoting agents</div>
 
                 {% if lead.commission_type == 'percentage' %}
 
@@ -128,13 +128,12 @@
             {% comment %} end: need_agent {% endcomment %}
 
             {% if lead.need_logistics_agent %}
-                <div class="text-xl font-bold mt-6">I need logistics agents</div>
+                <div class="font-bold mt-6">I need logistics agents</div>
 
                 {% comment %} start: lead.other_logistics_agent_details {% endcomment %}
                 <div class="font-bold text-slate-400 mt-4">Logistics Needs</div>
                 <div class="mt-1 break-words">{{ lead.other_logistics_agent_details|linebreaksbr }}</div>
                 {% comment %} end: lead.other_logistics_agent_details {% endcomment %}
-
             {% endif %}
 
             <div class="flex justify-end mt-8">
