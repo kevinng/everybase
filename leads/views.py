@@ -358,7 +358,7 @@ def lead_create(request):
                 commission_payable_by=get('commission_payable_by') if need_agent and author_type == 'broker' else None,
                 other_agent_details=get('other_agent_details') if need_agent else None,
                 need_logistics_agent=need_logistics_agent,
-                logistics_agent_details=get('logistics_agent_details') if need_logistics_agent else None
+                other_logistics_agent_details=get('logistics_agent_details') if need_logistics_agent else None
             )
 
             save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)

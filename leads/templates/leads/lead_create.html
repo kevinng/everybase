@@ -242,7 +242,9 @@
             {% if form.other_logistics_agent_details.errors %}<div id="other_logistics_agent_details__errors" class="px-1 mt-2 text-red-500">{% for error in form.other_logistics_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: other_logistics_agent_details {% endcomment %}
 
-            <button id="submit" type="submit" class="py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-12 shadow-md">Post</button>
+            {% load settings_value %}
+            {% settings_value 'RECAPTCHA_SITE_KEY' as RECAPTCHA_SITE_KEY %}
+            <button data-sitekey="{{ RECAPTCHA_SITE_KEY }}" data-callback="onSubmit" data-action="submit" id="submit" type="submit" class="g-recaptcha py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-12 shadow-md">Post</button>
 
             <div class="mt-4 flex justify-start">
                 <input id="friendly" type="checkbox" class="h-6 w-6 flex-none">
