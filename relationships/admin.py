@@ -276,3 +276,24 @@ class SavedUserAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _saved_user_fields})]
     autocomplete_fields = ['saver', 'savee']
+
+_user_query_fields = ['user', 'commented_only', 'saved_only', 'connected_only',
+'first_name', 'last_name', 'company_name', 'country', 'goods_string',
+'languages', 'is_buy_agent', 'buy_agent_details', 'is_sell_agent',
+'sell_agent_details', 'is_logistics_agent', 'logistics_agent_details']
+@admin.register(mod.UserQuery)
+class UserQueryAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _user_query_fields
+    list_editable = comadm.standard_list_editable + _user_query_fields
+    list_filter = comadm.standard_list_filter
+    search_fields = comadm.standard_search_fields + ['user__id',
+        'commented_only', 'saved_only', 'connected_only', 'first_name',
+        'last_name', 'company_name', 'country', 'goods_string', 'languages',
+        'is_buy_agent', 'buy_agent_details', 'is_sell_agent',
+        'sell_agent_details', 'is_logistics_agent', 'logistics_agent_details']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _user_query_fields})]
+    autocomplete_fields = ['user']
