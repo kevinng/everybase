@@ -147,19 +147,6 @@ class WhatsAppMessageBodyAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _whatsapp_message_body_fields})]
     autocomplete_fields = ['contactee', 'contactor']
 
-_agent_query_fields = ['user', 'search', 'country']
-@admin.register(models.AgentQuery)
-class AgentQueryAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _agent_query_fields
-    list_editable = comadm.standard_list_editable + _agent_query_fields
-    search_fields = comadm.standard_search_fields + _agent_query_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _agent_query_fields})]
-    autocomplete_fields = ['user', 'country']
-
 _lead_query_fields = [
     'user',
     'commented_only',
