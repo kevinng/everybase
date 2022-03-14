@@ -576,6 +576,9 @@ def toggle_save_user(request, slug):
         return HttpResponseRedirect(
             reverse('users:user_detail', args=(slug,)))
 
+def user_list(request):
+    pass
+
 # class AgentListView(ListView):
 #     template_name = 'leads/agent_list.html'
 #     context_object_name = 'agents'
