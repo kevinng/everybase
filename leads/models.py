@@ -403,7 +403,7 @@ class AgentQuery(Standard):
 class LeadQuery(Standard):
     """Lead query
 
-    Last updated: 24 February 2022, 6:00 PM
+    Last updated: 12 March 2022, 8:32 PM
     """
     user = models.ForeignKey(
         'relationships.User',
@@ -414,49 +414,131 @@ class LeadQuery(Standard):
         blank=True,
         db_index=True
     )
-    search = models.CharField(
+
+    commented_only = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    saved_only = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buy_sell = models.CharField(
         max_length=200,
         null=True,
-        blank=True
-    )
-    wants_to = models.CharField(
-        max_length=20,
-        choices=[
-            ('buy_or_sell', 'Buy or Sell'),
-            ('buy', 'Buy'),
-            ('sell', 'Sell')
-        ],
+        blank=True,
         db_index=True
     )
-    sort_by = models.CharField(
-        max_length=20,
-        choices=[
-            ('relevance', 'Relevance'),
-            ('comm_percent_hi_lo', 'Avg Comm % High to Low'),
-            ('comm_percent_lo_hi', 'Avg Comm % Low to High'),
-            ('comm_dollar_hi_lo', 'Avg Comm $ High to Low'),
-            ('comm_dollar_lo_hi', 'Avg Comm $ Low to High')
-        ],
+    direct_middleman = models.CharField(
+        max_length=200,
         null=True,
         blank=True,
         db_index=True
     )
-    buy_country = models.ForeignKey(
-        'common.Country',
-        related_name='lead_queries_buy_country',
-        related_query_name='lead_queries_buy_country',
+    buy_country = models.CharField(
+        max_length=200,
         null=True,
         blank=True,
-        on_delete=models.PROTECT,
         db_index=True
     )
-    sell_country = models.ForeignKey(
-        'common.Country',
-        related_name='lead_queries_sell_country',
-        related_query_name='lead_queries_sell_country',
+    sell_country = models.CharField(
+        max_length=200,
         null=True,
         blank=True,
-        on_delete=models.PROTECT,
+        db_index=True
+    )
+    goods_services = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    need_agent = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_type = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_type_other = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commented_only_other = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    min_commission = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    max_commission = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    min_avg_deal = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    max_avg_deal = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    comm_negotiable = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_payable_after = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_payable_after_other = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    other_agent_details = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    need_logistics_agent = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    logistics_agent_details = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
         db_index=True
     )
 
