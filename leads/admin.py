@@ -28,8 +28,7 @@ _lead_fields = ['author', 'author_type', 'buy_country', 'sell_country',
     
     'internal_notes', 'onboarding', 'onboarded',
 
-    'saved_count', 'search_appearance_count', 'search_to_lead_details_count',
-    'search_to_user_details_count',
+    'search_appearance_count', 'search_to_lead_details_count',
 
     'slug_link', 'slug_tokens',
     

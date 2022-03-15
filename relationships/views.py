@@ -13,6 +13,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
 from django.db.models import Count
 from django.db.models.expressions import RawSQL
+from django.db.models import DateTimeField
+from django.db.models.functions import Trunc
 from django.contrib.postgres.search import (SearchVector, SearchQuery,
     SearchRank, SearchVectorField)
 
@@ -646,7 +648,7 @@ def user_list(request):
 
             users = users.filter(id__in=connections)
 
-    order_by = []
+    order_by = [Trunc('created', 'month', output_field=DateTimeField()).desc()]
 
     # First name
     if is_not_empty(first_name):
@@ -758,8 +760,6 @@ def user_list(request):
                 .annotate(logistics_agent_details_rank=SearchRank(logistics_agent_details_vec, logistics_agent_details_qry))
             
             order_by.append('-logistics_agent_details_rank')
-
-    order_by.append('-created')
 
     # Save lead query if it's not the default (empty) form post
     if is_not_empty(commented_only) or is_not_empty(saved_only) or\

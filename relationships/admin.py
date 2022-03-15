@@ -146,8 +146,7 @@ _user_fields = ['registered', 'django_user',
 
     'slug_link', 'slug_tokens',
 
-    'search_appearance_count', 'search_to_user_count', 'saved_count',
-    'state']
+    'search_appearance_count', 'search_to_user_count', 'state']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings

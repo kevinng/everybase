@@ -150,7 +150,7 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 9 March 2022, 4:33 PM
+    Last updated: 15 March 2022, 2:40 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -279,10 +279,6 @@ class User(Standard):
         db_index=True
     )
     search_to_user_count = models.IntegerField(
-        default=0,
-        db_index=True
-    )
-    saved_count = models.IntegerField(
         default=0,
         db_index=True
     )

@@ -8,11 +8,14 @@ from django.urls import reverse
 from django.shortcuts import render
 from django.db.models import Count
 from django.http import HttpResponseRedirect, JsonResponse
+from django.db.models import DateTimeField
+from django.db.models.functions import Trunc
 from django.db.models.expressions import RawSQL
 from django.views.generic.detail import DetailView
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
+from django.contrib.postgres.search import (SearchVector, SearchQuery,
+    SearchRank, SearchVectorField)
 
 from everybase import settings
 from common import models as commods
@@ -453,7 +456,7 @@ def lead_list(request):
             c = commods.Country.objects.get(programmatic_key=sell_country)
             leads = leads.filter(sell_country=c)
 
-        order_by = []
+        order_by = [Trunc('created', 'month', output_field=DateTimeField()).desc()]
 
         if is_not_empty(goods_services):
             # Goods services details is filled
@@ -580,8 +583,6 @@ def lead_list(request):
                     ))
                 
                 order_by.append('-other_logistics_agent_details_rank')
-
-        order_by.append('-created')
 
         # Save lead query if it's not the default (empty) form post
         if is_not_empty(commented_only) or is_not_empty(saved_only) or\
