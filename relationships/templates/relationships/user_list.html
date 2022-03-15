@@ -69,17 +69,17 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: first_name {% endcomment %}
                 <label id="first_name__label" for="first_name" class="font-bold text-slate-400 mt-5 block">First Name</label>
-                <input id="first_name" name="first_name"{% if first_name is not None and first_name|cut:' ' != '' %} value="{{ first_name }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="first_name" name="first_name"{% if first_name is not None and first_name|cut:' ' != '' %} value="{{ first_name }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: first_name {% endcomment %}
 
                 {% comment %} start: last_name {% endcomment %}
                 <label id="last_name__label" for="last_name" class="font-bold text-slate-400 mt-5 block">Last Name</label>
-                <input id="last_name" name="last_name"{% if last_name is not None and last_name|cut:' ' != '' %} value="{{ last_name }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="last_name" name="last_name"{% if last_name is not None and last_name|cut:' ' != '' %} value="{{ last_name }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: last_name {% endcomment %}
 
                 {% comment %} start: company_name {% endcomment %}
                 <label id="company_name__label" for="company_name" class="font-bold text-slate-400 mt-5 block">Company Name</label>
-                <input id="company_name" name="company_name"{% if company_name is not None and company_name|cut:' ' != '' %} value="{{ company_name }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="company_name" name="company_name"{% if company_name is not None and company_name|cut:' ' != '' %} value="{{ company_name }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: company_name {% endcomment %}
 
                 {% comment %} start: country {% endcomment %}
@@ -96,12 +96,12 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: goods_string {% endcomment %}
                 <label id="goods_string__label" for="goods_string" class="font-bold text-slate-400 mt-5 block">Goods & Services</label>
-                <input id="goods_string" name="goods_string"{% if goods_string is not None and goods_string|cut:' ' != '' %} value="{{ goods_string }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="goods_string" name="goods_string"{% if goods_string is not None and goods_string|cut:' ' != '' %} value="{{ goods_string }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: goods_string {% endcomment %}
 
                 {% comment %} start: languages {% endcomment %}
                 <label id="languages__label" for="languages" class="font-bold text-slate-400 mt-5 block">Languages</label>
-                <input id="languages" name="languages"{% if languages is not None and languages|cut:' ' != '' %} value="{{ languages }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="languages" name="languages"{% if languages is not None and languages|cut:' ' != '' %} value="{{ languages }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: languages {% endcomment %}
 
                 {% comment %} start: is_buy_agent {% endcomment %}
@@ -113,7 +113,7 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: buy_agent_details {% endcomment %}
                 <label id="buy_agent_details__label" for="buy_agent_details" class="font-bold text-slate-400 mt-5 block">Buying or Sourcing Services</label>
-                <input id="buy_agent_details" name="buy_agent_details"{% if buy_agent_details is not None and buy_agent_details|cut:' ' != '' %} value="{{ buy_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="buy_agent_details" name="buy_agent_details"{% if buy_agent_details is not None and buy_agent_details|cut:' ' != '' %} value="{{ buy_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: buy_agent_details {% endcomment %}
 
                 {% comment %} start: is_sell_agent {% endcomment %}
@@ -125,7 +125,7 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: sell_agent_details {% endcomment %}
                 <label id="sell_agent_details__label" for="sell_agent_details" class="font-bold text-slate-400 mt-5 block">Selling or Promoting Services</label>
-                <input id="sell_agent_details" name="sell_agent_details"{% if sell_agent_details is not None and sell_agent_details|cut:' ' != '' %} value="{{ sell_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="sell_agent_details" name="sell_agent_details"{% if sell_agent_details is not None and sell_agent_details|cut:' ' != '' %} value="{{ sell_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: sell_agent_details {% endcomment %}
 
                 {% comment %} start: is_logistics_agent {% endcomment %}
@@ -137,7 +137,7 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: logistics_agent_details {% endcomment %}
                 <label id="logistics_agent_details__label" for="logistics_agent_details" class="font-bold text-slate-400 mt-5 block">Logistics Services</label>
-                <input id="logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: logistics_agent_details {% endcomment %}
 
                 <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
@@ -181,17 +181,17 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: first_name {% endcomment %}
                 <label id="mob__first_name__label" for="first_name" class="font-bold text-slate-400 mt-5 block">First Name</label>
-                <input id="mob__first_name" name="first_name"{% if first_name is not None and first_name|cut:' ' != '' %} value="{{ first_name }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__first_name" name="first_name"{% if first_name is not None and first_name|cut:' ' != '' %} value="{{ first_name }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: first_name {% endcomment %}
 
                 {% comment %} start: last_name {% endcomment %}
                 <label id="mob__last_name__label" for="last_name" class="font-bold text-slate-400 mt-5 block">Last Name</label>
-                <input id="mob__last_name" name="last_name"{% if last_name is not None and last_name|cut:' ' != '' %} value="{{ last_name }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__last_name" name="last_name"{% if last_name is not None and last_name|cut:' ' != '' %} value="{{ last_name }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: last_name {% endcomment %}
 
                 {% comment %} start: company_name {% endcomment %}
                 <label id="mob__company_name__label" for="company_name" class="font-bold text-slate-400 mt-5 block">Company Name</label>
-                <input id="mob__company_name" name="company_name"{% if company_name is not None and company_name|cut:' ' != '' %} value="{{ company_name }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__company_name" name="company_name"{% if company_name is not None and company_name|cut:' ' != '' %} value="{{ company_name }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: company_name {% endcomment %}
 
                 {% comment %} start: country {% endcomment %}
@@ -208,12 +208,12 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: goods_string {% endcomment %}
                 <label id="mob__goods_string__label" for="goods_string" class="font-bold text-slate-400 mt-5 block">Goods & Services</label>
-                <input id="mob__goods_string" name="goods_string"{% if goods_string is not None and goods_string|cut:' ' != '' %} value="{{ goods_string }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__goods_string" name="goods_string"{% if goods_string is not None and goods_string|cut:' ' != '' %} value="{{ goods_string }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: goods_string {% endcomment %}
 
                 {% comment %} start: languages {% endcomment %}
                 <label id="mob__languages__label" for="languages" class="font-bold text-slate-400 mt-5 block">Languages</label>
-                <input id="mob__languages" name="languages"{% if languages is not None and languages|cut:' ' != '' %} value="{{ languages }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__languages" name="languages"{% if languages is not None and languages|cut:' ' != '' %} value="{{ languages }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: languages {% endcomment %}
 
                 {% comment %} start: is_buy_agent {% endcomment %}
@@ -225,7 +225,7 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: buy_agent_details {% endcomment %}
                 <label id="mob__buy_agent_details__label" for="buy_agent_details" class="font-bold text-slate-400 mt-5 block">Buying or Sourcing Services</label>
-                <input id="mob__buy_agent_details" name="buy_agent_details"{% if buy_agent_details is not None and buy_agent_details|cut:' ' != '' %} value="{{ buy_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__buy_agent_details" name="buy_agent_details"{% if buy_agent_details is not None and buy_agent_details|cut:' ' != '' %} value="{{ buy_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: buy_agent_details {% endcomment %}
 
                 {% comment %} start: is_sell_agent {% endcomment %}
@@ -237,7 +237,7 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: sell_agent_details {% endcomment %}
                 <label id="mob__sell_agent_details__label" for="sell_agent_details" class="font-bold text-slate-400 mt-5 block">Selling or Promoting Services</label>
-                <input id="mob__sell_agent_details" name="sell_agent_details"{% if sell_agent_details is not None and sell_agent_details|cut:' ' != '' %} value="{{ sell_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__sell_agent_details" name="sell_agent_details"{% if sell_agent_details is not None and sell_agent_details|cut:' ' != '' %} value="{{ sell_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: sell_agent_details {% endcomment %}
 
                 {% comment %} start: is_logistics_agent {% endcomment %}
@@ -249,7 +249,7 @@ https://codebeautify.org/css-beautify-minify
 
                 {% comment %} start: logistics_agent_details {% endcomment %}
                 <label id="mob__logistics_agent_details__label" for="logistics_agent_details" class="font-bold text-slate-400 mt-5 block">Logistics Services</label>
-                <input id="mob__logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: logistics_agent_details {% endcomment %}
 
                 <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>

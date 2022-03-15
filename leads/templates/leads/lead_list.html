@@ -111,7 +111,7 @@ CSS
 
                 {% comment %} start: goods_services {% endcomment %}
                 <label id="goods_services__label" for="goods_services" class="font-bold text-slate-400 mt-5 block">Goods & Services Details</label>
-                <input id="goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: goods_services {% endcomment %}
 
                 {% comment %} start: need_agent {% endcomment %}
@@ -134,7 +134,7 @@ CSS
 
                 {% comment %} start: commission_type_other {% endcomment %}
                 <label id="commission_type_other__label" for="commission_type_other" class="font-bold text-slate-400 mt-5 block">How is agent commission calculated?</label>
-                <input id="commission_type_other" name="commission_type_other"{% if commission_type_other is not None and commission_type_other|cut:' ' != '' %} value="{{ commission_type_other }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="commission_type_other" name="commission_type_other"{% if commission_type_other is not None and commission_type_other|cut:' ' != '' %} value="{{ commission_type_other }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: commission_type_other {% endcomment %}
 
                 {% comment %} start: min_commission {% endcomment %}
@@ -196,12 +196,12 @@ CSS
 
                 {% comment %} start: commission_payable_after_other {% endcomment %}
                 <label id="commission_payable_after_other__label" for="commission_payable_after_other" class="font-bold text-slate-400 mt-5 block">Commission Payable After</label>
-                <input id="commission_payable_after_other" name="commission_payable_after_other"{% if commission_payable_after_other is not None and commission_payable_after_other|cut:' ' != '' %} value="{{ commission_payable_after_other }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="commission_payable_after_other" name="commission_payable_after_other"{% if commission_payable_after_other is not None and commission_payable_after_other|cut:' ' != '' %} value="{{ commission_payable_after_other }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: commission_payable_after_other {% endcomment %}
 
                 {% comment %} start: other_agent_details {% endcomment %}
                 <label id="other_agent_details__label" for="other_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Agents</label>
-                <input id="other_agent_details" name="other_agent_details"{% if other_agent_details is not None and other_agent_details|cut:' ' != '' %} value="{{ other_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="other_agent_details" name="other_agent_details"{% if other_agent_details is not None and other_agent_details|cut:' ' != '' %} value="{{ other_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: other_agent_details {% endcomment %}
 
                 {% comment %} start: need_logistics_agent {% endcomment %}
@@ -213,7 +213,7 @@ CSS
 
                 {% comment %} start: logistics_agent_details {% endcomment %}
                 <label id="logistics_agent_details__label" for="logistics_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Logistics Agents</label>
-                <input id="logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: logistics_agent_details {% endcomment %}
 
                 <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
@@ -296,7 +296,7 @@ CSS
 
                 {% comment %} start: goods_services {% endcomment %}
                 <label id="mob__goods_services__label" for="mob__goods_services" class="font-bold text-slate-400 mt-5 block">Goods & Services Details</label>
-                <input id="mob__goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: goods_services {% endcomment %}
 
                 {% comment %} start: need_agent {% endcomment %}
@@ -319,13 +319,13 @@ CSS
 
                 {% comment %} start: commission_type_other {% endcomment %}
                 <label id="mob__commission_type_other__label" for="mob__commission_type_other" class="font-bold text-slate-400 mt-5 block">How is agent commission calculated?</label>
-                <input id="mob__commission_type_other" name="commission_type_other"{% if commission_type_other is not None and commission_type_other|cut:' ' != '' %} value="{{ commission_type_other }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__commission_type_other" name="commission_type_other"{% if commission_type_other is not None and commission_type_other|cut:' ' != '' %} value="{{ commission_type_other }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: commission_type_other {% endcomment %}
 
                 {% comment %} start: min_commission {% endcomment %}
                 <label id="mob__min_commission__label" for="mob__min_commission" class="font-bold text-slate-400 mt-5 block">Min Commission %</label>
                 <div id="mob__min_commission__elements" class="flex items-center justify-between">
-                    <input id="mob__min_commission" name="min_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if min_commission is not None and min_commission|cut:' ' != '' %} value="{{ min_commission }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
+                    <input id="mob__min_commission" name="min_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if min_commission is not None and min_commission|cut:' ' != '' %} value="{{ min_commission }}"{% endif %} class="w-full border rounded-md py-3 px-5 mt-2 mr-3">
                     <div class="font-extrabold text-xl">%</div>
                 </div>
                 {% comment %} end: min_commission {% endcomment %}
@@ -333,7 +333,7 @@ CSS
                 {% comment %} start: max_commission {% endcomment %}
                 <label id="mob__max_commmission__label" for="mob__max_commission" class="font-bold text-slate-400 mt-5 block">Max Commission %</label>
                 <div id="mob__max_commission__elements" class="flex items-center justify-between">
-                    <input id="mob__max_commission" name="max_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if max_commission is not None and max_commission|cut:' ' != '' %} value="{{ max_commission }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
+                    <input id="mob__max_commission" name="max_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if max_commission is not None and max_commission|cut:' ' != '' %} value="{{ max_commission }}"{% endif %} class="w-full border rounded-md py-3 px-5 mt-2 mr-3">
                     <div class="font-extrabold text-xl">%</div>
                 </div>
                 {% comment %} end: max_commission {% endcomment %}
@@ -381,12 +381,12 @@ CSS
 
                 {% comment %} start: commission_payable_after_other {% endcomment %}
                 <label id="mob__commission_payable_after_other__label" for="mob__commission_payable_after_other" class="font-bold text-slate-400 mt-5 block">Commission Payable After</label>
-                <input id="mob__commission_payable_after_other" name="commission_payable_after_other"{% if commission_payable_after_other is not None and commission_payable_after_other|cut:' ' != '' %} value="{{ commission_payable_after_other }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__commission_payable_after_other" name="commission_payable_after_other"{% if commission_payable_after_other is not None and commission_payable_after_other|cut:' ' != '' %} value="{{ commission_payable_after_other }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: commission_payable_after_other {% endcomment %}
 
                 {% comment %} start: other_agent_details {% endcomment %}
                 <label id="mob__other_agent_details__label" for="mob__other_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Agents</label>
-                <input id="mob__other_agent_details" name="other_agent_details"{% if other_agent_details is not None and other_agent_details|cut:' ' != '' %} value="{{ other_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__other_agent_details" name="other_agent_details"{% if other_agent_details is not None and other_agent_details|cut:' ' != '' %} value="{{ other_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: other_agent_details {% endcomment %}
 
                 {% comment %} start: need_logistics_agent {% endcomment %}
@@ -398,7 +398,7 @@ CSS
 
                 {% comment %} start: logistics_agent_details {% endcomment %}
                 <label id="mob__logistics_agent_details__label" for="mob__logistics_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Logistics Agents</label>
-                <input id="mob__logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+                <input id="mob__logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
                 {% comment %} end: logistics_agent_details {% endcomment %}
 
                 <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
