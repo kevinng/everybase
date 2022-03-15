@@ -93,6 +93,13 @@ def whatsapp(request, slug):
 def user_detail(request, slug):
     user = models.User.objects.get(slug_link=slug)
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            # User is not authenticated. Direct user to login with next URL
+            # as this detail page.
+            url = reverse('login') + '?next=' + \
+                reverse('users:user_detail', args=(slug,))
+            return HttpResponseRedirect(url)
+
         # User posted a comment
         form = forms.UserCommentForm(request.POST)
         if form.is_valid():

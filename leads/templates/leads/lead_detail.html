@@ -169,18 +169,24 @@
         {% endcomment %}
         {% comment %} id="comment-starter" is used by our JavaScript code to focus on this section {% endcomment %}
         <div id="comment-starter" class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if not form.comment_id.value and form.body.errors %} focus-comment-box="yes"{% endif %}>
-            <div class="text-xl font-bold text-center">Comment on this Lead</div>
+            {% if not request.user.is_authenticated %}
+                <div class="flex flex-col items-center justify-center mb-8">
+                    <a href="{% url 'login' %}?next={% url 'leads:lead_detail' lead.slug_link %}#comment-starter" class="py-2 px-4 rounded-md shadow-md text-white bg-blue-500 hover:bg-blue-600 w-full text-lg text-center">Login to Comment</a>
+                </div>
+            {% endif %}
+
+            <div id="main_comment" class="text-xl font-bold text-center">Comment on this Lead</div>
             <div class="flex flex-col items-center justify-center mt-2">
                 <form action="{% url 'leads:lead_detail' lead.slug_link %}" class="check-to-enable comment-box" method="post">
                     {% csrf_token %}
-                    <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments">{% if not form.comment_id.value and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
+                    <textarea {% if not request.user.is_authenticated %}disabled{% endif %} name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments">{% if not form.comment_id.value and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
                     {% if not form.comment_id.value and form.body.errors is not None %}
                         <div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>
                     {% endif %}
-                    <button type="submit" class="check-to-enable-button py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
+                    <button {% if not request.user.is_authenticated %}disabled{% endif %} type="submit" class="check-to-enable-button py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
                     <div class="flex flex-col items-center px-2 mt-2">
                         <div class="flex justify-start">
-                            <input id="comment-enable-checkbox-starter" type="checkbox" class="check-to-enable-checkbox h-6 w-6 flex-none">
+                            <input {% if not request.user.is_authenticated %}disabled{% endif %} id="comment-enable-checkbox-starter" type="checkbox" class="check-to-enable-checkbox h-6 w-6 flex-none">
                             <label for="comment-enable-checkbox-starter" class="ml-3">I know Everybase charge credits to connect users, so I didn't include contact details in my post.</label>
                         </div>
                         <div class="font-semibold mt-2 text-center"><span class="text-red-500">WARNING:</span> phone numbers of users who share contact details in comments will be banned.</div>
@@ -219,7 +225,11 @@
                 
                 {% comment %} start: reply {% endcomment %}
                 <div class="flex justify-end">
-                    <button id="comment-reply-show-{{ root_comment.id }}" class="reply-show py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Reply</button>
+                    {% if request.user.is_authenticated %}
+                        <button id="comment-reply-show-{{ root_comment.id }}" class="reply-show py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Reply</button>
+                    {% else %}
+                        <a href="{% url 'login' %}?next={% url 'leads:lead_detail' lead.slug_link %}#comment-{{ root_comment.id }}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Login to Reply</a>
+                    {% endif %}
                 </div>
                 {% comment %} end: reply {% endcomment %}
 

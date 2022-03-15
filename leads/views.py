@@ -205,6 +205,13 @@ class LeadDetailView(DetailView):
 def lead_detail(request, slug):
     lead = models.Lead.objects.get(slug_link=slug)
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            # User is not authenticated. Direct user to login with next URL
+            # as this detail page.
+            url = reverse('login') + '?next=' + \
+                reverse('leads:lead_detail', args=(slug,))
+            return HttpResponseRedirect(url)
+
         # User posted a comment
         form = forms.LeadCommentForm(request.POST)
         if form.is_valid():
