@@ -14,8 +14,8 @@
     <div class="mt-12 flex flex-col items-center">
         <div class="font-bold text-white text-2xl">Sellers, Buyers</div>
         <div class="flex justify-center gap-2">
-            <a href="#" class="mt-4 py-2 px-6 text-white bg-pink-700 hover:bg-pink-600 text-md font-bold rounded-md">Find Buyers</a>
-            <a href="#" class="mt-4 py-2 px-6 text-white bg-yellow-600 hover:bg-yellow-500 text-md font-bold rounded-md">Find Sellers</a>
+            <a href="{% url 'leads:lead_list' %}?buy_sell=buy" class="mt-4 py-2 px-6 text-white bg-pink-700 hover:bg-pink-600 text-md font-bold rounded-md">Find Buyers</a>
+            <a href="{% url 'leads:lead_list' %}?buy_sell=sell" class="mt-4 py-2 px-6 text-white bg-yellow-600 hover:bg-yellow-500 text-md font-bold rounded-md">Find Sellers</a>
         </div>
     </div>
     {% comment %} end: sellers buyers, call-to-action {% endcomment %}
@@ -23,18 +23,19 @@
     {% comment %} start: agents, call-to-action {% endcomment %}
     <div class="mt-12 flex flex-col items-center">
         <div class="font-bold text-white text-2xl">Agents</div>
-        <a href="#" class="mt-4 py-2 px-6 text-white bg-emerald-600 hover:bg-emerald-500 text-md font-bold rounded-md">Find Buyers Who Needs Agents</a>
-        <a href="#" class="mt-4 py-2 px-6 text-white bg-amber-700 hover:bg-amber-600 text-md font-bold rounded-md">Find Sellers Who Needs Agents</a>
+        <a href="{% url 'leads:lead_list' %}?buy_sell=buy&need_agent=on" class="mt-4 py-2 px-6 text-white bg-emerald-600 hover:bg-emerald-500 text-md font-bold rounded-md">Find Buyers Who Needs Agents</a>
+        <a href="{% url 'leads:lead_list' %}?buy_sell=sell&need_agent=on" class="mt-4 py-2 px-6 text-white bg-amber-700 hover:bg-amber-600 text-md font-bold rounded-md">Find Sellers Who Needs Agents</a>
     </div>
     {% comment %} end: agents, call-to-action {% endcomment %}
 
     {% comment %} start: importers/exporters, call-to-action {% endcomment %}
     <div class="mt-12 flex flex-col items-center">
         <div class="font-bold text-white text-2xl">Importers, Exporters</div>
-        <a href="#" class="mt-4 py-2 px-6 text-white bg-sky-700 hover:bg-sky-600 text-md font-bold rounded-md">Find Agents to Help You Buy or Source</a>
-        <a href="#" class="mt-4 py-2 px-6 text-white bg-lime-700 hover:bg-lime-600 text-md font-bold rounded-md">Find Agents to Help You Sell or Promote</a>
-        <a href="#" class="mt-4 py-2 px-6 text-white bg-fuchsia-700 hover:bg-fuchsia-600 text-md font-bold rounded-md">Find Agents to Help You With Logistics</a>
+        <a href="{% url 'users:user_list' %}?is_buy_agent=on" class="mt-4 py-2 px-6 text-white bg-sky-700 hover:bg-sky-600 text-md font-bold rounded-md">Find Agents to Help You Buy or Source</a>
+        <a href="{% url 'users:user_list' %}?is_sell_agent=on" class="mt-4 py-2 px-6 text-white bg-lime-700 hover:bg-lime-600 text-md font-bold rounded-md">Find Agents to Help You Sell or Promote</a>
+        <a href="{% url 'users:user_list' %}?is_logistics_agent=on" class="mt-4 py-2 px-6 text-white bg-fuchsia-700 hover:bg-fuchsia-600 text-md font-bold rounded-md">Find Agents to Help You With Logistics</a>
     </div>
+    
     {% comment %} end: importers/exporters, call-to-action {% endcomment %}
 </div>
 <div class="pt-20 pb-20 px-10 bg-sky-50 flex flex-col items-center">
