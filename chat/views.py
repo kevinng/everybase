@@ -47,6 +47,9 @@ def reply(message, no_external_calls=False, no_task_calls=False, request=None):
     handler = get_handler(message, intent_key, message_key, no_external_calls,
         no_task_calls, request)
 
+    if handler is None:
+        return None
+
     # Run handler and get message body
     body = handler.run()
 
@@ -98,10 +101,9 @@ class TwilioIncomingMessageView(APIView):
             save_message_log(request, message)
             save_message_medias(request, message)
 
-            return HttpResponse(
-                reply(message, request=request),
-                status=HTTPStatus.OK,
-            )
+            r = reply(message, request=request)
+            if r is not None:
+                return HttpResponse(r, status=HTTPStatus.OK)
 
         except:
             traceback.print_exc()

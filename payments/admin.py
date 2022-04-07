@@ -82,3 +82,17 @@ class CreditsEventAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _credits_event_fields})]
     autocomplete_fields = ['user', 'session']
+
+_stripe_price_fields = ['api_id', 'name', 'description', 'currency', 'value']
+@admin.register(models.StripePrice)
+class StripePriceAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _stripe_price_fields
+    list_editable = comadm.standard_list_editable + _stripe_price_fields
+    search_fields = comadm.standard_search_fields + ['api_id', 'name',
+        'description', 'value']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _stripe_price_fields})]
+    autocomplete_fields = ['currency']

@@ -149,22 +149,18 @@ class StripePrice(Standard):
 class StripeCustomer(Standard):
     """Customer in Stripe
 
-    Updated: 2 March 2022, 9:20 PM
+    Updated: 15 March 2022, 10:24 PM
     """
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         'relationships.User',
-        related_name='stripe_customers',
-        related_query_name='stripe_customers',
         on_delete=models.PROTECT,
+        unique=True,
         db_index=True
     )
     api_id = models.CharField(
         max_length=200,
         db_index=True
     )
-
-    class Meta:
-        unique_together = ('user', 'api_id')
 
 class StripeCheckoutSessionLineItem(Standard):
     """Line item in Stripe session recorded on checkout

@@ -148,14 +148,14 @@ def slugify(
     # Remove tags
     tokens = [t[0] for t in tags]
 
-    # We want a URL length of < 40 characters. 'everybase.co/leads' is 19
-    # characters long. This leaves us with 31 characters to work with.
+    # We want a URL length of < 80 characters. 'everybase.co/leads' is 19
+    # characters long. This leaves us with 71 characters to work with.
     # We ignore append key length because we don't expect the key to contribute
     # much to SEO.
     slug = tokens[0] if len(tokens) > 0 else ''
     append_key = str(append_key)
     for t in tokens[1:]:
-        if len(slug) < 31:
+        if len(slug) < 71:
             slug += ' ' + t
         else:
             break

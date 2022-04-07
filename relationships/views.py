@@ -769,32 +769,32 @@ def user_list(request):
             order_by.append('-logistics_agent_details_rank')
 
     # Save lead query if it's not the default (empty) form post
-    if is_not_empty(commented_only) or is_not_empty(saved_only) or\
-        is_not_empty(connected_only) or is_not_empty(first_name) or\
-        is_not_empty(last_name) or is_not_empty(company_name) or\
-        not match(country, 'any_country') or is_not_empty(goods_string) or\
-        is_not_empty(languages) or is_not_empty(is_buy_agent) or\
-        is_not_empty(buy_agent_details) or is_not_empty(is_sell_agent) or\
-        is_not_empty(sell_agent_details) or is_not_empty(is_logistics_agent) or\
-        is_not_empty(logistics_agent_details):
-        models.UserQuery.objects.create(
-            user=user,
-            commented_only=commented_only,
-            saved_only=saved_only,
-            connected_only=connected_only,
-            first_name=first_name,
-            last_name=last_name,
-            company_name=company_name,
-            country=country,
-            goods_string=goods_string,
-            languages=languages,
-            is_buy_agent=is_buy_agent,
-            buy_agent_details=buy_agent_details,
-            is_sell_agent=is_sell_agent,
-            sell_agent_details=sell_agent_details,
-            is_logistics_agent=is_logistics_agent,
-            logistics_agent_details=logistics_agent_details
-        )
+    # if is_not_empty(commented_only) or is_not_empty(saved_only) or\
+    #     is_not_empty(connected_only) or is_not_empty(first_name) or\
+    #     is_not_empty(last_name) or is_not_empty(company_name) or\
+    #     not match(country, 'any_country') or is_not_empty(goods_string) or\
+    #     is_not_empty(languages) or is_not_empty(is_buy_agent) or\
+    #     is_not_empty(buy_agent_details) or is_not_empty(is_sell_agent) or\
+    #     is_not_empty(sell_agent_details) or is_not_empty(is_logistics_agent) or\
+    #     is_not_empty(logistics_agent_details):
+        # models.UserQuery.objects.create(
+        #     user=user,
+        #     commented_only=commented_only,
+        #     saved_only=saved_only,
+        #     connected_only=connected_only,
+        #     first_name=first_name,
+        #     last_name=last_name,
+        #     company_name=company_name,
+        #     country=country,
+        #     goods_string=goods_string,
+        #     languages=languages,
+        #     is_buy_agent=is_buy_agent,
+        #     buy_agent_details=buy_agent_details,
+        #     is_sell_agent=is_sell_agent,
+        #     sell_agent_details=sell_agent_details,
+        #     is_logistics_agent=is_logistics_agent,
+        #     logistics_agent_details=logistics_agent_details
+        # )
 
     # Set contact parameters
 

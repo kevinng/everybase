@@ -2092,7 +2092,7 @@
     "fields": {
       "programmatic_key": "US",
       "programmatic_details_md": "Programmatic key is ISO 3166-1 alpha-2",
-      "name": "United States of America",
+      "name": "United States of America (USA)",
       "cc_tld": ".us"
     }
   },

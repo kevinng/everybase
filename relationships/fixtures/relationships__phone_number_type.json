@@ -1,0 +1,12 @@
+[
+{
+    "model": "relationships.phonenumbertype",
+    "pk": 1,
+    "fields": {
+        "name": "WhatsApp",
+        "description": "",
+        "programmatic_key": "whatsapp",
+        "programmatic_details": ""
+    }
+}
+]

@@ -40,9 +40,10 @@ django-settings-export = "*"
 django-ipware = "*"
 django-loginas = "*"
 pillow = "*"
-python-magic = "*"
 email-scraper = "*"
 nltk = "*"
+psycopg2 = "*"
+python-magic = "*"
 
 [requires]
 python_version = "3.7"

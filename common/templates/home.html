@@ -5,6 +5,16 @@
 {% block title %}Importers, Exporters, Buying/Sourcing Agents, Selling/Promoting Agents{% endblock %}
 
 {% block content %}
+{% if messages %}
+<div class="w-full px-8 py-10 bg-orange-400 text-white text-center">
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
 <div class="bg-gradient-to-t from-violet-800 to-fuchsia-600 pt-20 pb-20 px-10 flex flex-col items-center text-center">
     {% comment %} start: header {% endcomment %}
     <div class="font-bold text-3xl text-white ">Connect buyers, sellers, agents worldwide</div>

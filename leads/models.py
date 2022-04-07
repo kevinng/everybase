@@ -232,7 +232,11 @@ class Lead(Standard):
             # yet. Race condition is possible (i.e., 2 leads getting the same ID) but
             # collison is unlikely even if they have have the same details because slugify
             # randomly picks words in random order to form the slug.
-            this_id = Lead.objects.all().order_by('-id').first().id + 1
+            first_lead = Lead.objects.all().order_by('-id').first()
+            if first_lead is not None:
+                this_id = Lead.objects.all().order_by('-id').first().id + 1
+            else:
+                this_id = 0
             self.slug_link, self.slug_tokens = slugify(
                 self.details,
                 hex(this_id)[2:],
