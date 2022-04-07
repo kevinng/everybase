@@ -13,6 +13,7 @@
     <link rel="manifest" href="{% static 'common/favicon/site.webmanifest' %}">
     {% block other_head_tags %}{% endblock %}
     <link href="{% static 'common/css/output.min.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.1/dist/flowbite.min.css" />
     {% block other_css %}{% endblock %}
 </head>
 <body class="bg-slate-100 flex flex-col">
@@ -29,9 +30,8 @@
 
         {% comment %} start: desktop menu {% endcomment %}
         <div class="justify-between hidden lg:block text-sm">
-            <a {% if request.resolver_match.view_name != 'users:user_list' %}href="{% url 'users:user_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base">Persons</a>
             <a {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7">Leads</a>
-            <a {% if request.resolver_match.view_name != 'pricing' %}href="{% url 'pricing' %}" {% endif %}class="{% if request.resolver_match.view_name == 'pricing' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7">Pricing</a>
+            <a href="#" class="hover:text-blue-600 text-base ml-7">Support</a>
         </div>
         {% comment %} end: desktop menu {% endcomment %}
 
@@ -39,11 +39,30 @@
         <div class="hidden lg:block">
             <div class="flex items-center">
                 {% if request.user.is_authenticated %}
-                    <span class="mr-2">{{ request.user.user.num_credits_left }} credits left</span>
-                    <a ut-tag-id="nav_bar_desktop_my_profile_link" href="{% url 'users:user_detail' user.user.slug_link %}" class="shadow-md text-white bg-blue-500 hover:bg-blue-600 rounded-md px-4 py-2 ml-2">Me</a>
+                    <a href="#" class="py-2 px-4 mr-4 rounded-md text-white bg-blue-500 hover:bg-blue-600">Post a Lead</a>
+                    <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar" class="flex justify-between items-center">Hi,&nbsp&nbsp<span class="font-bold">{{ request.user.user.first_name }}</span> <svg class="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
+                    <div id="dropdownNavbar" class="hidden z-10 bg-white rounded divide-y divide-gray-100 shadow" data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(981px, 2079px);">
+                        <ul class="py-1" aria-labelledby="dropdownLargeButton">
+                            <li>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_detail' user.user.slug_link %}" {% endif %}class="block py-2 px-6 {% if request.resolver_match.view_name == 'users:user_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base">My Profile & Leads</a>
+                            </li>
+                            <li> 
+                                <a href="#" class="block py-2 px-6 text-base hover:text-blue-600">My Applications to be an Agent</a>
+                            </li>
+                            <li>
+                                <a href="#" class="block py-2 px-6 text-base hover:text-blue-600">Agent Applications for My Leads</a>
+                            </li>
+                            <li>
+                                <a href="#" class="block py-2 px-6 text-base hover:text-blue-600">Edit Profile</a>
+                            </li>
+                        </ul>
+                        <div class="py-1">
+                            <a href="{% url 'logout' %}" class="block py-2 px-6 text-base hover:text-blue-600">Logout</a>
+                        </div>
+                    </div>
                 {% else %}
-                    <a ut-tag-id="nav_bar_desktop_register_link" href="{% url 'register' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2">Register</a>
-                    <a ut-tag-id="nav_bar_desktop_login_link" href="{% url 'login' %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded-md px-4 py-2 ml-2">Login</a>
+                    <a href="{% url 'register' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2">Register</a>
+                    <a href="{% url 'login' %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded-md px-4 py-2 ml-2">Login</a>
                 {% endif %}
             </div>
         </div>
@@ -53,15 +72,18 @@
     </div>
     {% comment %} start: mobile menu {% endcomment %}
     <nav class="mobile-nav text-base">
-        <a ut-tag-id="nav_bar_mobile_agents_link" {% if request.resolver_match.view_name != 'users:user_list' %}href="{% url 'users:user_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Persons</a>
-        <a ut-tag-id="nav_bar_mobile_leads_link" {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Leads</a>
-        <a ut-tag-id="nav_bar_mobile_leads_link" {% if request.resolver_match.view_name != 'pricing' %}href="{% url 'pricing' %}" {% endif %}class="{% if request.resolver_match.view_name == 'pricing' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Pricing</a>
+        <a {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Leads</a>
+        <a href="#" class="hover:text-blue-700 block px-4 py-4">Support</a>
         <div class="h-10"></div>
         {% if request.user.is_authenticated %}
-            <a ut-tag-id="nav_bar_mobile_my_profile_link" href="{% url 'users:user_detail' request.user.user.slug_link %}" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Me</a>
+            <a href="{% url 'users:user_detail' request.user.user.slug_link %}" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">My Profile & Leads</a>
+            <a href="#" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">My Applications to be an Agent</a>
+            <a href="#" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Agent Applications for my Leads</a>
+            <a href="#" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Edit Profile</a>
+            <a href="#" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Logout</a>
         {% else %}
-            <a ut-tag-id="nav_bar_mobile_register_link" href="{% url 'register' %}" class="{% if request.resolver_match.view_name == 'register' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Register</a>
-            <a ut-tag-id="nav_bar_mobile_login_link" href="{% url 'login' %}" class="{% if request.resolver_match.view_name == 'login' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Login</a>
+            <a href="{% url 'register' %}" class="{% if request.resolver_match.view_name == 'register' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Register</a>
+            <a href="{% url 'login' %}" class="{% if request.resolver_match.view_name == 'login' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Login</a>
         {% endif %}
     </nav>
     {% comment %} end: mobile menu {% endcomment %}
@@ -92,7 +114,8 @@ https://codebeautify.org/minify-js
     })
 </script>
 {% endcomment %}
-    <script src="{% static 'common/css/hamburger.min.css' %}"></script>
+    <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
+    <script src="{% static 'common/js/hamburger.min.js' %}"></script>
     {% block other_script %}{% endblock %}
 </body>
 {% endautoescape %}
