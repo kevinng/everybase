@@ -46,7 +46,7 @@ class LeadComment(Standard):
 class Lead(Standard):
     """Lead.
 
-    Last updated: 5 March 2022, 8:58 PM
+    Last updated: 1 April 2022, 4:59 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -54,6 +54,7 @@ class Lead(Standard):
         editable=False,
         db_index=True
     )
+
     author = models.ForeignKey(
         'relationships.User',
         related_name='leads_author',
@@ -61,6 +62,12 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    is_promoted = models.BooleanField(
+        blank=True,
+        null=True,
+        db_index=True
+    )
+
     lead_type = models.CharField(
         max_length=20,
         choices=[
@@ -96,8 +103,104 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    details = models.TextField()
+    details = models.TextField(
+        null=True,
+        blank=True
+    )
+    agent_job = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    commission_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('percentage', 'Percentage'),
+            ('other', 'Other')
+        ],
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_percentage = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_earnings = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_quantity_unit_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_type_other = models.TextField(
+        null=True,
+        blank=True
+    )
+    other_agent_details = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    is_comm_negotiable = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    impressions = models.IntegerField(
+        default=1, # Prevent division by 0
+        db_index=True
+    )
+    clicks = models.IntegerField(
+        default=0,
+        db_index=True
+    )
+
+    internal_notes = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    slug_link = models.CharField(
+        max_length=200,
+        unique=True,
+        db_index=True
+    )
+    slug_tokens = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    # Not in use
+
+    title = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
+    )
+
     need_agent = models.BooleanField(
+        db_index=True
+    )
+    country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='leads_country',
+        related_query_name='leads_country',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    avg_deal_size = models.FloatField(
+        null=True,
+        blank=True,
         db_index=True
     )
     commission_payable_by = models.CharField(
@@ -111,35 +214,7 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    commission_type = models.CharField(
-        max_length=20,
-        choices=[
-            ('percentage', 'Percentage'),
-            ('other', 'Other')
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_type_other = models.TextField(
-        null=True,
-        blank=True
-    )
-    is_comm_negotiable = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    avg_deal_size = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+
     commission_payable_after = models.CharField(
         max_length=50,
         choices=[
@@ -157,10 +232,6 @@ class Lead(Standard):
         null=True,
         blank=True
     )
-    other_agent_details = models.TextField(
-        null=True,
-        blank=True
-    )
     need_logistics_agent = models.BooleanField(
         null=True,
         blank=True,
@@ -169,58 +240,6 @@ class Lead(Standard):
     other_logistics_agent_details = models.TextField(
         null=True,
         blank=True
-    )
-
-    internal_notes = models.TextField(
-        null=True,
-        blank=True
-    )
-    onboarding = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    onboarded = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
-    search_appearance_count = models.IntegerField(
-        default=1, # Prevent division by 0
-        db_index=True
-    )
-    search_to_lead_details_count = models.IntegerField(
-        default=0,
-        db_index=True
-    )
-
-    slug_link = models.CharField(
-        max_length=200,
-        unique=True,
-        db_index=True
-    )
-    slug_tokens = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    # Keep for data
-    title = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True
-    )
-
-    # Keep for future
-    country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='leads_country',
-        related_query_name='leads_country',
-        null=True,
-        blank=True,
-        db_index=True
     )
 
     def save(self, *args, **kwargs):
@@ -318,6 +337,151 @@ class LeadDetailView(Standard):
 
     class Meta:
         unique_together = ('viewer', 'lead')
+
+class LeadQueryLog(Standard):
+    """Lead detail view.
+
+    Last updated: 7 April 2022, 10:06 PM
+    """
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='lead_query_logs',
+        related_query_name='lead_query_logs',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    search = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buy_sell = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buy_country = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sell_country = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+class ApplicationQueryLog(Standard):
+    """Application query log.
+
+    Last updated: 7 April 2022, 10:06 PM
+    """
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='application_query_logs',
+        related_query_name='application_query_logs',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    status = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+class Application(Standard):
+    """Agent application.
+
+    Last updated: 7 April 2022, 10:06 PM
+    """
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='applications',
+        related_query_name='applications',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    applicant = models.ForeignKey(
+        'relationships.User',
+        related_name='applications',
+        related_query_name='applications',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    question_1 = models.TextField(
+        blank=True,
+        null=True
+    )
+    answer_1 = models.TextField(
+        blank=True,
+        null=True
+    )
+    question_2 = models.TextField(
+        blank=True,
+        null=True
+    )
+    answer_2 = models.TextField(
+        blank=True,
+        null=True
+    )
+    other_questions = models.TextField(
+        blank=True,
+        null=True
+    )
+    other_answers = models.TextField(
+        blank=True,
+        null=True
+    )
+    applicant_comments = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    response = models.CharField(
+        max_length=200,
+        choices=[
+            ('rejected', 'Rejected'),
+            ('started_work', 'Started Work'),
+            ('stopped_work', 'Stopped Work'),
+        ],
+        blank=True,
+        null=True
+    )
+
+class ApplicationMessage(Standard):
+    """Application message.
+
+    Last updated: 7 April 2022, 10:06 PM
+    """
+    application = models.ForeignKey(
+        'Lead',
+        related_name='application_messages',
+        related_query_name='application_messages',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    author = models.ForeignKey(
+        'relationships.User',
+        related_name='application_messages',
+        related_query_name='application_messages',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    body = models.TextField(
+        blank=True,
+        null=True
+    )
+
+# Not in use
 
 class WhatsAppClick(Standard):
     """User's click on to WhatsApp button

@@ -150,14 +150,8 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 15 March 2022, 2:40 PM
+    Last updated: 7 April 2022, 9:17 PM
     """
-    uuid = models.UUIDField(
-        unique=True,
-        default=uuid.uuid4,
-        editable=False,
-        db_index=True
-    )
     registered = models.DateTimeField(
         null=True,
         blank=True,
@@ -173,6 +167,12 @@ class User(Standard):
         db_index=True
     )
 
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid.uuid4,
+        editable=False,
+        db_index=True
+    )
     first_name = models.CharField(
         max_length=20,
         db_index=True
@@ -181,6 +181,7 @@ class User(Standard):
         max_length=20,
         db_index=True
     )
+
     has_company = models.BooleanField(
         null=True,
         blank=True,
@@ -211,7 +212,12 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-
+    state_string = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     phone_number = models.OneToOneField(
         'PhoneNumber',
         related_name='user',
@@ -230,10 +236,32 @@ class User(Standard):
         blank=True,
         db_index=True
     )
+
     internal_notes = models.TextField(
         null=True,
         blank=True
     )
+
+    slug_link = models.CharField(
+        max_length=200,
+        unique=True,
+        db_index=True
+    )
+    slug_tokens = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    impressions = models.IntegerField(
+        default=1, # Prevent division by 0
+        db_index=True
+    )
+    clicks = models.IntegerField(
+        default=0,
+        db_index=True
+    )
+
+    # Not in Use
 
     is_buy_agent = models.BooleanField(
         null=True,
@@ -264,36 +292,11 @@ class User(Standard):
         blank=True
     )
 
-    slug_link = models.CharField(
-        max_length=200,
-        unique=True,
-        db_index=True
-    )
-    slug_tokens = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    search_appearance_count = models.IntegerField(
-        default=1, # Prevent division by 0
-        db_index=True
-    )
-    search_to_user_count = models.IntegerField(
-        default=0,
-        db_index=True
-    )
-
     # Save for future
     languages = models.ManyToManyField(
         'common.Language',
         related_name='users_w_this_language',
         related_query_name='users_w_this_language',
-        blank=True,
-        db_index=True
-    )
-    state_string = models.CharField(
-        max_length=50,
-        null=True,
         blank=True,
         db_index=True
     )
@@ -600,6 +603,37 @@ class RegisterToken(Standard):
         blank=True
     )
 
+class UserDetailView(Standard):
+    """User detail view
+    
+    Last updated: 28 February 2022, 12:17 AM
+    """
+    viewee = models.ForeignKey(
+        'User',
+        related_name='user_detail_views',
+        related_query_name='user_detail_views',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    viewer = models.ForeignKey(
+        'User',
+        related_name='user_detail_views_with_this_user_as_viewer',
+        related_query_name='user_detail_views_with_this_user_as_viewer',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    
+    comments_view_count = models.IntegerField(
+        default=0,
+        db_index=True    
+    )
+    leads_view_count = models.IntegerField(
+        default=0,
+        db_index=True    
+    )
+
+# Not in Use
+
 class UserComment(Standard):
     """Comment on a user
 
@@ -635,38 +669,9 @@ class UserComment(Standard):
     def reply_comments(self):
         """Returns replies to this lead"""
         return UserComment.objects.filter(
-                reply_to=self,
-                deleted__isnull=True
-            ).order_by('created')
-
-class UserDetailView(Standard):
-    """User detail view
-    
-    Last updated: 28 February 2022, 12:17 AM
-    """
-    viewee = models.ForeignKey(
-        'User',
-        related_name='user_detail_views',
-        related_query_name='user_detail_views',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    viewer = models.ForeignKey(
-        'User',
-        related_name='user_detail_views_with_this_user_as_viewer',
-        related_query_name='user_detail_views_with_this_user_as_viewer',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    
-    comments_view_count = models.IntegerField(
-        default=0,
-        db_index=True    
-    )
-    leads_view_count = models.IntegerField(
-        default=0,
-        db_index=True    
-    )
+            reply_to=self,
+            deleted__isnull=True
+        ).order_by('created')
 
 class SavedUser(Standard):
     """Saved user.

@@ -19,21 +19,32 @@ class LeadCommentAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['lead', 'commentor']
 
-_lead_fields = ['author', 'author_type', 'buy_country', 'sell_country',
-    'lead_type', 'details', 'need_agent', 'commission_payable_by',
-    'commission', 'commission_type', 'commission_type_other',
-    'is_comm_negotiable', 'avg_deal_size', 'commission_payable_after',
-    'commission_payable_after_other', 'other_agent_details',
-    'need_logistics_agent', 'other_logistics_agent_details',
-    
-    'internal_notes', 'onboarding', 'onboarded',
+_lead_fields = [
+    'author', 'is_promoted',
 
-    'search_appearance_count', 'search_to_lead_details_count',
+    'lead_type', 'author_type', 'buy_country', 'sell_country', 'details',
+    'agent_job',
 
-    'slug_link', 'slug_tokens',
-    
-    # Keep for future
-    'title', 'country'
+    'commission_type', 'commission_percentage', 'commission_earnings',
+    'commission_quantity_unit_string', 'commission_type_other', 'other_agent_details',
+
+    'is_comm_negotiable',
+
+    'impressions', 'clicks',
+
+    'internal_notes', 'slug_link', 'slug_tokens',
+
+    # Not in use
+
+    'title',
+
+    'need_agent', 'country',
+
+    'avg_deal_size', 'commission_payable_by',
+
+    'commission_payable_after', 'commission_payable_after_other',
+
+    'need_logistics_agent', 'other_logistics_agent_details'
 ]
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
@@ -42,8 +53,7 @@ class LeadAdmin(comadm.StandardAdmin):
     list_editable = comadm.standard_list_editable + _lead_fields
     list_filter = comadm.standard_list_filter + ['buy_country', 'sell_country',
         'lead_type', 'need_agent', 'commission_payable_by', 'commission_type',
-        'is_comm_negotiable', 'commission_payable_after',
-        'need_logistics_agent', 'onboarding', 'onboarded']
+        'is_comm_negotiable', 'commission_payable_after', 'need_logistics_agent']
     search_fields = comadm.standard_search_fields + ['details',
         'other_agent_details', 'other_logistics_agent_details', 'slug_link',
         'slug_tokens', 'internal_notes']
