@@ -7,7 +7,7 @@ from phonenumber_field.formfields import PhoneNumberField
 import phonenumbers
 
 _require_msg = 'This field is required.'
-_censor_msg = 'Please do not specify emails, phone numbers or URLs. Users may contact you through your WhatsApp phone number.'
+_censor_msg = 'Please do not specify emails, phone numbers or URLs. You may share your contact details when you\'ve connected with another user.'
 
 class UserEditForm(forms.Form):
     # Censorship applies
