@@ -7,7 +7,7 @@
 {% block content %}
 <div class="flex justify-center">
     <div class="bg-white md:w-2/3 lg:w-1/2 xl:w-1/3 mt-10 mb-10 w-full p-10 shadow-md">
-        <a href="https://everybase.co"><img class="mx-auto mt-5" src="{% static 'common/img/logo.png' %}"></a>
+        <img class="mx-auto mt-5" src="{% static 'common/img/logo.png' %}">
         <h1 class="text-3xl font-bold text-center mt-5">Register</h1>
 
         <div class="mt-7 flex flex-col justify-center">
@@ -27,15 +27,6 @@
                 <input name="last_name" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
                 {% if form.last_name.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <label for="email" class="font-bold text-slate-400 mt-7 block">Email</label>
-                <input name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" type="email" class="w-full border rounded-md py-3 px-5 mt-2">
-                {% if form.email.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
-                <label for="email" class="font-bold text-slate-400 mt-7 block">Goods/Services Details</label>
-                <textarea rows="4" name="goods_string" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.goods_string.value %}{{ form.goods_string.value }}{% endif %}</textarea>
-                {% if form.goods_string.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.goods_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                <div class="mt-2">Describe goods/services you buy or sell</div>
-
                 <div class="mt-7 flex justify-start">
                     <input id="has_company" name="has_company" type="checkbox" class="h-6 w-6" {% if form.has_company.value == True %} checked{% endif %}>
                     <label for="has_company" class="ml-3">I have a company</label>
@@ -45,33 +36,19 @@
                 <input id="company_name" name="company_name" value="{% if form.company_name.value %}{{ form.company_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
                 {% if form.company_name.errors %}<div id="company_name__error" class="w-full px-1 mt-2 text-red-500">{% for error in form.company_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <label for="email" class="font-bold text-slate-400 mt-7 block">Languages</label>
+                <label for="email" class="font-bold text-slate-400 mt-7 block">Email</label>
+                <input name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" type="email" class="w-full border rounded-md py-3 px-5 mt-2">
+                {% if form.email.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <label for="email" class="font-bold text-slate-400 mt-7 block">Goods & Services I Deal With</label>
+                <textarea rows="4" name="goods_string" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.goods_string.value %}{{ form.goods_string.value }}{% endif %}</textarea>
+                {% if form.goods_string.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.goods_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                <div class="mt-2">E.g., textiles, commodities.</div>
+
+                <label for="email" class="font-bold text-slate-400 mt-7 block">Languages I Speak</label>
                 <textarea rows="4" name="languages_string" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.languages_string.value %}{{ form.languages_string.value }}{% endif %}</textarea>
                 {% if form.languages_string.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.languages_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
-                <div class="mt-7 flex justify-start">
-                    <input id="is_buy_agent" name="is_buy_agent" type="checkbox" class="h-6 w-6" {% if form.is_buy_agent.value == True %} checked{% endif %}>
-                    <label for="is_buy_agent" class="ml-3">I'm a buying or sourcing agent</label>
-                </div>
-                <textarea rows="4" id="buy_agent_details" name="buy_agent_details" class="w-full border rounded-md py-3 px-5 mt-4">{% if form.buy_agent_details.value %}{{ form.buy_agent_details.value }}{% endif %}</textarea>
-                {% if form.buy_agent_details.errors %}<div id="buy_agent_details__error" class="w-full px-1 mt-2 text-red-500">{% for error in form.buy_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                <div id="buy_agent_details__help" class="mt-2">Describe goods/services you help to buy or source and your charges.</div>
-
-                <div class="mt-7 flex justify-start">
-                    <input id="is_sell_agent" name="is_sell_agent" type="checkbox" class="h-6 w-6" {% if form.is_sell_agent.value == True %} checked{% endif %}>
-                    <label for="is_sell_agent" class="ml-3">I'm a selling or promoting agent</label>
-                </div>
-                <textarea rows="4" id="sell_agent_details" name="sell_agent_details" class="w-full border rounded-md py-3 px-5 mt-4">{% if form.sell_agent_details.value %}{{ form.sell_agent_details.value }}{% endif %}</textarea>
-                {% if form.sell_agent_details.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.sell_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                <div id="sell_agent_details__help" class="mt-2">Describe goods/services you help to sell or promote and your charges.</div>
-
-                <div class="mt-7 flex justify-start">
-                    <input id="is_logistics_agent" name="is_logistics_agent" type="checkbox" class="h-6 w-6" {% if form.is_logistics_agent.value == True %} checked{% endif %}>
-                    <label for="is_logistics_agent" class="ml-3">I'm a logistics agent</label>
-                </div>
-                <textarea rows="4" id="logistics_agent_details" name="logistics_agent_details" class="w-full border rounded-md py-3 px-5 mt-4">{% if form.logistics_agent_details.value %}{{ form.logistics_agent_details.value }}{% endif %}</textarea>
-                {% if form.logistics_agent_details.errors %}<div id="logistics_agent_details__error" class="w-full px-1 mt-2 text-red-500">{% for error in form.logistics_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                <div id="logistics_agent_details__help" class="mt-2">Describe your logistics services and your charges.</div>
+                <div class="mt-2">E.g., English, Bahasa.</div>
 
                 <button type="submit" class="w-full py-4 px-7 font-bold text-white rounded-md bg-green-500 hover:bg-green-600 mt-10 shadow-md">WhatsApp Me</button>
                 <div class="text-center mt-2 px-1">A confirmation message will be sent to your phone number via WhatsApp. Reply 'yes' to register and sign-in.</div>
@@ -91,21 +68,6 @@ $(document).ready(function() {
     $company_name = $('#company_name')
     $company_name__error = $('#company_name__error')
 
-    $is_buy_agent = $('#is_buy_agent')
-    $buy_agent_details = $('#buy_agent_details')
-    $buy_agent_details__help = $('#buy_agent_details__help')
-    $buy_agent_details__error = $('#buy_agent_details__error')
-
-    $is_sell_agent = $('#is_sell_agent')
-    $sell_agent_details = $('#sell_agent_details')
-    $sell_agent_details__help = $('#sell_agent_details__help')
-    $sell_agent_details__error = $('#sell_agent_details__error')
-
-    $is_logistics_agent = $('#is_logistics_agent')
-    $logistics_agent_details = $('#logistics_agent_details')
-    $logistics_agent_details__help = $('#logistics_agent_details__help')
-    $logistics_agent_details__error = $('#logistics_agent_details__error')
-
     function set_has_company() {
         if ($has_company.is(':checked')) {
             $company_name__label.show()
@@ -118,63 +80,12 @@ $(document).ready(function() {
         }
     }
 
-    function set_is_buy_agent() {
-        if ($is_buy_agent.is(':checked')) {
-            $buy_agent_details.show()
-            $buy_agent_details__help.show()
-            $buy_agent_details__error.show()
-        } else {
-            $buy_agent_details.hide()
-            $buy_agent_details__help.hide()
-            $buy_agent_details__error.hide()
-        }
-    }
-
-    function set_is_sell_agent() {
-        if ($is_sell_agent.is(':checked')) {
-            $sell_agent_details.show()
-            $sell_agent_details__help.show()
-            $sell_agent_details__error.show()
-        } else {
-            $sell_agent_details.hide()
-            $sell_agent_details__help.hide()
-            $sell_agent_details__error.hide()
-        }
-    }
-
-    function set_is_logistics_agent() {
-        if ($is_logistics_agent.is(':checked')) {
-            $logistics_agent_details.show()
-            $logistics_agent_details__help.show()
-            $logistics_agent_details__error.show()
-        } else {
-            $logistics_agent_details.hide()
-            $logistics_agent_details__help.hide()
-            $logistics_agent_details__error.hide()
-        }
-    }
-
     // Run on load
     set_has_company()
-    set_is_buy_agent()
-    set_is_sell_agent()
-    set_is_logistics_agent()
 
     // Run on change
     $has_company.change(function () {
         set_has_company()
-    })
-
-    $is_buy_agent.change(function () {
-        set_is_buy_agent()
-    })
-
-    $is_sell_agent.change(function () {
-        set_is_sell_agent()
-    })
-
-    $is_logistics_agent.change(function() {
-        set_is_logistics_agent()
     })
 })
 {% endcomment %}

@@ -171,7 +171,7 @@ def slugify(
         and is_selling is not None:
         # Add Lead model-specific variations
         prefix = sell_country if is_selling else buy_country
-        prefix += ' ' + buy_country if is_selling else sell_country
+        prefix += ' ' + buy_country if is_selling else ' ' + sell_country
         slug = prefix + ' ' + slug
     elif is_buy_agent is not None \
         and is_sell_agent is not None \

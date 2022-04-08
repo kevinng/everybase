@@ -239,35 +239,17 @@ def register(request):
             if has_company is None:
                 has_company = False
 
-            is_buy_agent = form.cleaned_data.get('is_buy_agent')
-            if is_buy_agent is None:
-                is_buy_agent = False
-
-            is_sell_agent = form.cleaned_data.get('is_sell_agent')
-            if is_sell_agent is None:
-                is_sell_agent = False
-
-            is_logistics_agent = form.cleaned_data.get('is_logistics_agent')
-            if is_logistics_agent is None:
-                is_logistics_agent = False
-
             # Create an Everybase user
             user = models.User.objects.create(
                 phone_number=phone_number,
                 first_name=form.cleaned_data.get('first_name'),
                 last_name=form.cleaned_data.get('last_name'),
-                goods_string=form.cleaned_data.get('goods_string'),
-                languages_string=form.cleaned_data.get('languages_string'),
                 has_company=has_company,
                 company_name=form.cleaned_data.get('company_name'),
                 email=email,
-                country=country,
-                is_buy_agent=is_buy_agent,
-                buy_agent_details=form.cleaned_data.get('buy_agent_details'),
-                is_sell_agent=is_sell_agent,
-                sell_agent_details=form.cleaned_data.get('sell_agent_details'),
-                is_logistics_agent=is_logistics_agent,
-                logistics_agent_details=form.cleaned_data.get('logistics_agent_details'),
+                goods_string=form.cleaned_data.get('goods_string'),
+                languages_string=form.cleaned_data.get('languages_string'),
+                country=country
             )
 
             # Kill all tokens
