@@ -29,37 +29,37 @@ Dependencies:
             <a href="{% url 'logout' %}?next={{ request.path }}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2 mt-2">Logout</a>
             {% comment %} end: action buttons {% endcomment %}
 
-        {% elif user.user.id != detail_user.id %}
+        {% comment %} {% elif user.user.id != detail_user.id %} {% endcomment %}
             
             {% comment %} start: whatsapp {% endcomment %}
-            <a href="{% url 'users:whatsapp' detail_user.slug_link %}" class="py-2 px-4 mt-4 rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
+            {% comment %} <a href="{% url 'users:whatsapp' detail_user.slug_link %}" class="py-2 px-4 mt-4 rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a> {% endcomment %}
             {% comment %} end: whatsapp {% endcomment %}
 
-            {% if user.is_authenticated %}
+            {% comment %} {% if user.is_authenticated %} {% endcomment %}
 
                 {% comment %} start: last_contacted {% endcomment %}
-                {% load last_contacted %}
+                {% comment %} {% load last_contacted %}
                 {% last_contacted user.user detail_user as last_contacted %}
                 {% if last_contacted is not None %}
                     <div class="mt-2">
                         Contacted {% last_contacted user.user detail_user %}
                     </div>
-                {% endif %}
+                {% endif %} {% endcomment %}
                 {% comment %} end: last_contacted {% endcomment %}
 
-            {% endif %}
+            {% comment %} {% endif %} {% endcomment %}
         {% endif %}    
-        {% if user.user.id != detail_user.id %}
-            {% if user.is_authenticated %}
+        {% comment %} {% if user.user.id != detail_user.id %} {% endcomment %}
+            {% comment %} {% if user.is_authenticated %} {% endcomment %}
                 {% comment %} Allow toggling of save-unsave asynchronously {% endcomment %}
-                {% load has_saved_user %}
-                {% has_saved_user user.user detail_user as has_saved_user %}
-                <button id="toggle_save_user" class="py-2 px-4 mt-2 rounded-md shadow-md {% if has_saved_user == True %}text-white bg-blue-500 hover:bg-blue-600{% else %}text-slate-600 bg-slate-100 hover:bg-slate-200{% endif %}">{% if has_saved_user == True %}Person Saved{% else %}Save Person{% endif %}</button>
-            {% else %}
+                {% comment %} {% load has_saved_user %} {% endcomment %}
+                {% comment %} {% has_saved_user user.user detail_user as has_saved_user %} {% endcomment %}
+                {% comment %} <button id="toggle_save_user" class="py-2 px-4 mt-2 rounded-md shadow-md {% if has_saved_user == True %}text-white bg-blue-500 hover:bg-blue-600{% else %}text-slate-600 bg-slate-100 hover:bg-slate-200{% endif %}">{% if has_saved_user == True %}Person Saved{% else %}Save Person{% endif %}</button> {% endcomment %}
+            {% comment %} {% else %} {% endcomment %}
                 {% comment %} Direct user to login and come back to this page with user saved {% endcomment %}
-                <a href="{% url 'users:toggle_save_user' detail_user.slug_link %}" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Person</a>
-            {% endif %}
-        {% endif %}
+                {% comment %} <a href="{% url 'users:toggle_save_user' detail_user.slug_link %}" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Person</a> {% endcomment %}
+            {% comment %} {% endif %} {% endcomment %}
+        {% comment %} {% endif %} {% endcomment %}
     </div>
 
     <div class="bg-white px-8 pb-8 mt-8">

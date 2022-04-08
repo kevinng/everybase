@@ -131,7 +131,7 @@ def user_detail(request, slug):
     if focus is not None:
         params['focus'] = focus
 
-    return render(request, 'relationships/user_detail_comment_list.html', params)
+    return render(request, 'relationships/user_detail_lead_list.html', params)
 
 @login_required
 def user_edit(request, slug):
