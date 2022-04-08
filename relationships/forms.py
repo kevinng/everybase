@@ -44,17 +44,17 @@ class UserEditForm(forms.Form):
         max_length=200
     )
 
-    is_buy_agent = forms.BooleanField(required=False)
+    # is_buy_agent = forms.BooleanField(required=False)
     # Censorship applies
-    buy_agent_details = forms.CharField(required=False)
+    # buy_agent_details = forms.CharField(required=False)
 
-    is_sell_agent = forms.BooleanField(required=False)
+    # is_sell_agent = forms.BooleanField(required=False)
     # Censorship applies
-    sell_agent_details = forms.CharField(required=False)
+    # sell_agent_details = forms.CharField(required=False)
 
-    is_logistics_agent = forms.BooleanField(required=False)
+    # is_logistics_agent = forms.BooleanField(required=False)
     # Censorship applies
-    logistics_agent_details = forms.CharField(required=False)
+    # logistics_agent_details = forms.CharField(required=False)
 
     # Next URL after registration
     next = forms.CharField(required=False)
@@ -89,32 +89,32 @@ class UserEditForm(forms.Form):
             self.add_error('languages_string', _censor_msg)
             has_error = True
 
-        if self.cleaned_data.get('is_buy_agent'):
-            buy_agent_details = self.cleaned_data.get('buy_agent_details')
-            if buy_agent_details is None or buy_agent_details.strip() == '':
-                self.add_error('buy_agent_details', _require_msg)
-                has_error = True
-            elif is_censored(buy_agent_details):
-                self.add_error('buy_agent_details', _censor_msg)
-                has_error = True
+        # if self.cleaned_data.get('is_buy_agent'):
+        #     buy_agent_details = self.cleaned_data.get('buy_agent_details')
+        #     if buy_agent_details is None or buy_agent_details.strip() == '':
+        #         self.add_error('buy_agent_details', _require_msg)
+        #         has_error = True
+        #     elif is_censored(buy_agent_details):
+        #         self.add_error('buy_agent_details', _censor_msg)
+        #         has_error = True
 
-        if self.cleaned_data.get('is_sell_agent'):
-            sell_agent_details = self.cleaned_data.get('sell_agent_details')
-            if sell_agent_details is None or sell_agent_details.strip() == '':
-                self.add_error('sell_agent_details', _require_msg)
-                has_error = True
-            elif is_censored(sell_agent_details):
-                self.add_error('sell_agent_details', _censor_msg)
-                has_error = True
+        # if self.cleaned_data.get('is_sell_agent'):
+        #     sell_agent_details = self.cleaned_data.get('sell_agent_details')
+        #     if sell_agent_details is None or sell_agent_details.strip() == '':
+        #         self.add_error('sell_agent_details', _require_msg)
+        #         has_error = True
+        #     elif is_censored(sell_agent_details):
+        #         self.add_error('sell_agent_details', _censor_msg)
+        #         has_error = True
 
-        if self.cleaned_data.get('is_logistics_agent'):
-            logistics_agent_details = self.cleaned_data.get('logistics_agent_details')
-            if logistics_agent_details is None or logistics_agent_details.strip() == '':
-                self.add_error('logistics_agent_details', _require_msg)
-                has_error = True
-            elif is_censored(logistics_agent_details):
-                self.add_error('logistics_agent_details', _censor_msg)
-                has_error = True
+        # if self.cleaned_data.get('is_logistics_agent'):
+        #     logistics_agent_details = self.cleaned_data.get('logistics_agent_details')
+        #     if logistics_agent_details is None or logistics_agent_details.strip() == '':
+        #         self.add_error('logistics_agent_details', _require_msg)
+        #         has_error = True
+        #     elif is_censored(logistics_agent_details):
+        #         self.add_error('logistics_agent_details', _censor_msg)
+        #         has_error = True
 
         if has_error:
             raise ValidationError(None)

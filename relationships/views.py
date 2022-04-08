@@ -153,12 +153,12 @@ def user_edit(request, slug):
                 has_company=get('has_company'),
                 company_name=get('company_name'),
                 languages_string=get('languages_string'),
-                is_buy_agent=get('is_buy_agent'),
-                buy_agent_details=get('buy_agent_details'),
-                is_sell_agent=get('is_sell_agent'),
-                sell_agent_details=get('sell_agent_details'),
-                is_logistics_agent=get('is_logistics_agent'),
-                logistics_agent_details=get('logistics_agent_details')
+                # is_buy_agent=get('is_buy_agent'),
+                # buy_agent_details=get('buy_agent_details'),
+                # is_sell_agent=get('is_sell_agent'),
+                # sell_agent_details=get('sell_agent_details'),
+                # is_logistics_agent=get('is_logistics_agent'),
+                # logistics_agent_details=get('logistics_agent_details')
             )
 
             return HttpResponseRedirect(
@@ -171,12 +171,12 @@ def user_edit(request, slug):
             'has_company': user.has_company,
             'company_name': user.company_name,
             'languages_string': user.languages_string,
-            'is_buy_agent': user.is_buy_agent,
-            'buy_agent_details': user.buy_agent_details,
-            'is_sell_agent': user.is_sell_agent,
-            'sell_agent_details': user.sell_agent_details,
-            'is_logistics_agent': user.is_logistics_agent,
-            'logistics_agent_details': user.logistics_agent_details
+            # 'is_buy_agent': user.is_buy_agent,
+            # 'buy_agent_details': user.buy_agent_details,
+            # 'is_sell_agent': user.is_sell_agent,
+            # 'sell_agent_details': user.sell_agent_details,
+            # 'is_logistics_agent': user.is_logistics_agent,
+            # 'logistics_agent_details': user.logistics_agent_details
         })
 
     return render(request, 'relationships/user_edit.html', {'form': form})
