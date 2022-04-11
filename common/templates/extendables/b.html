@@ -44,7 +44,7 @@
                     <div id="dropdownNavbar" class="hidden z-10 bg-white rounded divide-y divide-gray-100 shadow" data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(981px, 2079px);">
                         <ul class="py-1" aria-labelledby="dropdownLargeButton">
                             <li>
-                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_detail' user.user.slug_link %}" {% endif %}class="block py-2 px-6 {% if request.resolver_match.view_name == 'users:user_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base">My Profile & Leads</a>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_detail' user.user.slug_link %}" {% endif %}class="block py-2 px-6 text-base hover:text-blue-600">My Profile & Leads</a>
                             </li>
                             <li> 
                                 <a href="#" class="block py-2 px-6 text-base hover:text-blue-600">My Applications to be an Agent</a>
@@ -53,7 +53,7 @@
                                 <a href="#" class="block py-2 px-6 text-base hover:text-blue-600">Agent Applications for My Leads</a>
                             </li>
                             <li>
-                                <a href="#" class="block py-2 px-6 text-base hover:text-blue-600">Edit Profile</a>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_edit' user.user.slug_link %}" {% endif %}class="block py-2 px-6 text-base hover:text-blue-600">Edit Profile</a>
                             </li>
                         </ul>
                         <div class="py-1">
