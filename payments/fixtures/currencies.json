@@ -1,0 +1,42 @@
+[
+{
+    "model": "payments.currency",
+    "pk": 1,
+    "fields": {
+        "name": "USD",
+        "description": "US Dollar",
+        "programmatic_key": "usd",
+        "programmatic_details": ""
+    }
+},
+{
+    "model": "payments.currency",
+    "pk": 2,
+    "fields": {
+        "name": "INR",
+        "description": "Indian Rupee",
+        "programmatic_key": "inr",
+        "programmatic_details": ""
+    }
+},
+{
+    "model": "payments.currency",
+    "pk": 3,
+    "fields": {
+        "name": "EUR",
+        "description": "Euro",
+        "programmatic_key": "eur",
+        "programmatic_details": ""
+    }
+},
+{
+    "model": "payments.currency",
+    "pk": 4,
+    "fields": {
+        "name": "RMB",
+        "description": "Chinese Renminbi",
+        "programmatic_key": "rmb",
+        "programmatic_details": ""
+    }
+}
+]
