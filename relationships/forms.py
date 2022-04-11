@@ -7,7 +7,7 @@ from phonenumber_field.formfields import PhoneNumberField
 import phonenumbers
 
 _require_msg = 'This field is required.'
-_censor_msg = 'Please do not specify emails, phone numbers or URLs. You may share your contact details when you\'ve connected with another user.'
+_censor_msg = 'Don\'t share contact details here. You may share contact details later.'
 
 class UserEditForm(forms.Form):
     # Censorship applies
@@ -124,38 +124,38 @@ class UserEditForm(forms.Form):
 class RegisterForm(forms.Form):
     whatsapp_phone_number = PhoneNumberField(required=True)
     
-    # Censorship applies
     first_name = forms.CharField(
         required=True,
         min_length=1,
         max_length=20
     )
-    # Censorship applies
     last_name = forms.CharField(
         required=True,
         min_length=1,
         max_length=20
     )
 
-    has_company = forms.BooleanField(
-        required=False
-    )
-    # Censorship applies
-    company_name = forms.CharField(
-        required=False
-    )
+    has_company = forms.BooleanField(required=False)
+
+    # Validated only if has_company is checked.
+    company_name = forms.CharField(required=False)
     
     email = forms.EmailField(
         required=True
     )
 
-    # Censorship applies
     goods_string = forms.CharField(
         required=True,
         min_length=1,
         max_length=200
     )
-    # Censorship applies
+
+    # No validations, for survey only.
+    is_buyer = forms.BooleanField(required=False)
+    is_seller = forms.BooleanField(required=False)
+    is_buy_agent = forms.BooleanField(required=False)
+    is_sell_agent = forms.BooleanField(required=False)
+
     languages_string = forms.CharField(
         required=True,
         min_length=1,
@@ -214,30 +214,11 @@ class RegisterForm(forms.Form):
                 # Good - no user has this email
                 pass
 
-        if is_censored(self.cleaned_data.get('first_name')):
-            self.add_error('first_name', _censor_msg)
-            has_error = True
-
-        if is_censored(self.cleaned_data.get('last_name')):
-            self.add_error('last_name', _censor_msg)
-            has_error = True
-
         if self.cleaned_data.get('has_company'):
             company_name = self.cleaned_data.get('company_name')
             if company_name is None or company_name.strip() == '':
                 self.add_error('company_name', _require_msg)
                 has_error = True
-            elif is_censored(self.cleaned_data.get('company_name')):
-                self.add_error('company_name', _censor_msg)
-                has_error = True
-
-        if is_censored(self.cleaned_data.get('goods_string')):
-            self.add_error('goods_string', _censor_msg)
-            has_error = True
-
-        if is_censored(self.cleaned_data.get('languages_string')):
-            self.add_error('languages_string', _censor_msg)
-            has_error = True
 
         if has_error:
             raise ValidationError(None)
