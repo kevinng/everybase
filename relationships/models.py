@@ -5,7 +5,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User as django_user
-from common.utilities.slugify import slugify
+from django.utils.text import slugify
 
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField, Country)
@@ -150,7 +150,7 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 7 April 2022, 9:17 PM
+    Last updated: 11 April 2022, 10:58 PM
     """
     registered = models.DateTimeField(
         null=True,
@@ -212,12 +212,6 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    state_string = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
     phone_number = models.OneToOneField(
         'PhoneNumber',
         related_name='user',
@@ -261,8 +255,16 @@ class User(Standard):
         db_index=True
     )
 
-    # Not in Use
-
+    is_buyer = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    is_seller = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     is_buy_agent = models.BooleanField(
         null=True,
         blank=True,
@@ -273,12 +275,21 @@ class User(Standard):
         blank=True,
         db_index=True
     )
+
+    # Not in Use
+
     is_logistics_agent = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
     )
 
+    state_string = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     buy_agent_details = models.TextField(
         null=True,
         blank=True
@@ -319,36 +330,25 @@ class User(Standard):
             reply_to__isnull=True
         ).order_by('created')
 
-    def save(self, *args, **kwargs):
-        # We only generate the slug on creation and not update - so we don't
-        # confuse the user when their link stops working.
-        if self.slug_link is None or self.slug_link.strip() == '':
-            # We append a hexadecimal representation of the integer ID (for concisiveness)
-            # to make the URL unique. We compute the ID of this instance because it's not
-            # yet. Race condition is possible (i.e., 2 leads getting the same ID) but
-            # collison is unlikely even if they have have the same details because slugify
-            # randomly picks words in random order to form the slug.
+    def refresh_slug(self):
+        first_user = User.objects.all().order_by('-id').first()
+        if first_user is None:
+            this_id = 0
+        elif self.id is None:
+            # Compute ID because it's not been set. Race condition and collison
+            # possible but very unlikely.
             this_id = User.objects.all().order_by('-id').first().id + 1
-            
-            phrase = self.goods_string
-            if self.buy_agent_details is not None:
-                phrase += ' ' + self.buy_agent_details
-            if self.sell_agent_details is not None:
-                phrase += ' ' + self.sell_agent_details
-            if self.logistics_agent_details is not None:
-                phrase += ' ' + self.logistics_agent_details
+        else:
+            this_id = self.id
 
-            c = self.country_from_phone_number()
-            country = c.name if c is not None else None
+        self.slug_tokens = f'{self.first_name} {self.last_name}'
+        if self.company_name is not None and len(self.company_name) > 0:
+            self.slug_tokens = f'{self.slug_tokens} {self.company_name}'
+        self.slug_tokens += f' {this_id}'
+        self.slug_link = slugify(self.slug_tokens)
 
-            self.slug_link, self.slug_tokens = slugify(
-                phrase,
-                hex(this_id)[2:],
-                country=country,
-                is_buy_agent=self.is_buy_agent,
-                is_sell_agent=self.is_sell_agent,
-                is_logistics_agent=self.is_logistics_agent
-            )
+    def save(self, *args, **kwargs):
+        self.refresh_slug()
         return super().save(*args, **kwargs)
 
     def country_from_phone_number(self):

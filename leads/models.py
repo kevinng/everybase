@@ -2,7 +2,7 @@ import uuid as uuidlib
 from django.db import models
 import files.models as fimods
 from common.models import Standard
-from common.utilities.slugify import slugify
+from django.utils.text import slugify as django_slugify
 
 class LeadComment(Standard):
     """Comment on a lead
@@ -46,7 +46,7 @@ class LeadComment(Standard):
 class Lead(Standard):
     """Lead.
 
-    Last updated: 1 April 2022, 4:59 PM
+    Last updated: 11 April 2022, 10:08 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -103,23 +103,20 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    details = models.TextField(
-        null=True,
-        blank=True
+    headline = models.CharField(
+        max_length=80,
+        db_index=True
     )
-    agent_job = models.TextField(
-        null=True,
-        blank=True
-    )
+    details = models.TextField()
+    agent_job = models.TextField()
 
     commission_type = models.CharField(
         max_length=20,
         choices=[
+            ('earning', 'Earning'),
             ('percentage', 'Percentage'),
             ('other', 'Other')
         ],
-        null=True,
-        blank=True,
         db_index=True
     )
     commission_percentage = models.FloatField(
@@ -152,6 +149,10 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
+
+    question_1 = models.TextField()
+    question_2 = models.TextField()
+    question_3 = models.TextField()
 
     impressions = models.IntegerField(
         default=1, # Prevent division by 0
@@ -241,28 +242,23 @@ class Lead(Standard):
         null=True,
         blank=True
     )
+    
+    def refresh_slug(self):
+        first_lead = Lead.objects.all().order_by('-id').first()
+        if first_lead is None:
+            this_id = 0
+        elif self.id is None:
+            # Compute ID because it's not been set. Race condition and collison
+            # possible but very unlikely.
+            this_id = Lead.objects.all().order_by('-id').first().id + 1
+        else:
+            this_id = self.id
+
+        self.slug_tokens = f'{self.headline} {this_id}'
+        self.slug_link = slugify(self.slug_tokens)
 
     def save(self, *args, **kwargs):
-        # We only generate the slug on creation and not update - so we don't
-        # confuse the user when their link stops working.
-        if self.slug_link is None or self.slug_link.strip() == '':
-            # We append a hexadecimal representation of the integer ID (for concisiveness)
-            # to make the URL unique. We compute the ID of this instance because it's not
-            # yet. Race condition is possible (i.e., 2 leads getting the same ID) but
-            # collison is unlikely even if they have have the same details because slugify
-            # randomly picks words in random order to form the slug.
-            first_lead = Lead.objects.all().order_by('-id').first()
-            if first_lead is not None:
-                this_id = Lead.objects.all().order_by('-id').first().id + 1
-            else:
-                this_id = 0
-            self.slug_link, self.slug_tokens = slugify(
-                self.details,
-                hex(this_id)[2:],
-                buy_country=self.buy_country.name,
-                sell_country=self.sell_country.name,
-                is_selling=True if self.lead_type == 'selling' else False
-            )
+        self.refresh_slug()
         return super().save(*args, **kwargs)
 
     def avg_deal_comm(self):
