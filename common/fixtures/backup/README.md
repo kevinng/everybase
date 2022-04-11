@@ -7,3 +7,5 @@ Updated: 11 Feb 2022, 1:42 PM
 
 common__countries_no_pk.json
     Country model JSON with no primary key
+
+Remember to load country phone number codes via scripts.
