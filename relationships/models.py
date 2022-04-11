@@ -373,30 +373,30 @@ class User(Standard):
 
         return sum['value__sum']
 
-    def seo_title(self):
-        """Returns SEO-optimized title"""
+    # def seo_title(self):
+    #     """Returns SEO-optimized title"""
 
-        title = 'Import/Export'
-        if self.is_buy_agent or self.is_sell_agent or self.is_logistics_agent:
-            if self.is_buy_agent:
-                title += ', Buying Agent'
-            if self.is_sell_agent:
-                title += ', Selling Agent'
-            if self.is_logistics_agent:
-                title += ', Logistics Agent'
+    #     title = 'Import/Export'
+    #     if self.is_buy_agent or self.is_sell_agent or self.is_logistics_agent:
+    #         if self.is_buy_agent:
+    #             title += ', Buying Agent'
+    #         if self.is_sell_agent:
+    #             title += ', Selling Agent'
+    #         if self.is_logistics_agent:
+    #             title += ', Logistics Agent'
 
-        if self.slug_tokens is not None and len(self.slug_tokens.strip()) != 0:
-            tokens = self.slug_tokens.split(',')
-            tokens = [t.strip() for t in tokens]
-            if len(tokens) > 0:
-                keywords = tokens[0]
-                for t in tokens[1:]:
-                    if len(keywords) < 40:
-                        keywords += ' ' + t
+    #     if self.slug_tokens is not None and len(self.slug_tokens.strip()) != 0:
+    #         tokens = self.slug_tokens.split(',')
+    #         tokens = [t.strip() for t in tokens]
+    #         if len(tokens) > 0:
+    #             keywords = tokens[0]
+    #             for t in tokens[1:]:
+    #                 if len(keywords) < 40:
+    #                     keywords += ' ' + t
                 
-                title += ' - ' + keywords
+    #             title += ' - ' + keywords
 
-        return title
+    #     return title
 
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email},\

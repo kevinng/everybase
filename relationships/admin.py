@@ -137,36 +137,32 @@ _user_fields = ['registered', 'django_user',
 
     'first_name', 'last_name', 'has_company', 'company_name',
 
-    'goods_string', 'languages_string', 'country', 'state_string',
-    'phone_number', 'email', 'internal_notes',
+    'goods_string', 'languages_string', 'country', 'phone_number',
+    'email', 'internal_notes',
 
-    'is_buy_agent', 'is_sell_agent', 'is_logistics_agent',
-
-    'buy_agent_details', 'sell_agent_details', 'logistics_agent_details',
+    'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent',
 
     'slug_link', 'slug_tokens',
 
-    'impressions', 'clicks', 'state']
+    'impressions', 'clicks']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['uuid'] + _user_fields
     list_editable = comadm.standard_list_editable + _user_fields
     list_filter = comadm.standard_list_filter + ['registered', 'has_company',
-        'is_buy_agent', 'is_sell_agent', 'is_logistics_agent']
+        'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent']
     search_fields = comadm.standard_search_fields + [
         'first_name', 'last_name', 'company_name', 'goods_string',
-        'languages_string', 'country__name', 'state_string', 'email__email',
+        'languages_string', 'country__name', 'email__email',
         'phone_number__country_code', 'phone_number__national_number',
-        'internal_notes', 'buy_agent_details', 'sell_agent_details',
-        'logistics_agent_details']
+        'internal_notes']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _user_fields + ['languages']})
+        ('Details', {'fields': _user_fields})
     ]
-    autocomplete_fields = ['django_user', 'languages', 'country', 'state',
-        'phone_number', 'email']
+    autocomplete_fields = ['django_user', 'country', 'phone_number', 'email']
 
 _login_token_fields = ['user', 'activated', 'killed','token']
 @admin.register(mod.LoginToken)

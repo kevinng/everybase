@@ -149,6 +149,10 @@ def user_edit(request, slug):
             user.first_name = get('first_name')
             user.last_name = get('last_name')
             user.goods_string = get('goods_string')
+            user.is_buyer = get('is_buyer')
+            user.is_seller = get('is_seller')
+            user.is_buy_agent = get('is_buy_agent')
+            user.is_sell_agent = get('is_sell_agent')
             user.has_company = get('has_company')
             user.company_name = get('company_name')
             user.languages_string = get('languages_string')
@@ -156,7 +160,7 @@ def user_edit(request, slug):
 
             user.save()
 
-            # Refernce slug_link here, it may have been updated.
+            # Reference slug_link here, it may have been updated.
             return HttpResponseRedirect(
                 reverse('users:user_detail', args=(user.slug_link,)))
     else:
@@ -164,6 +168,10 @@ def user_edit(request, slug):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'goods_string': user.goods_string,
+            'is_buyer': user.is_buyer,
+            'is_seller': user.is_seller,
+            'is_buy_agent': user.is_buy_agent,
+            'is_sell_agent': user.is_sell_agent,
             'has_company': user.has_company,
             'company_name': user.company_name,
             'languages_string': user.languages_string,

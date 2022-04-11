@@ -30,6 +30,24 @@
                 <input id="company_name" name="company_name" value="{% if form.company_name.value %}{{ form.company_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
                 {% if form.company_name.errors %}<div id="company_name__error" class="w-full px-1 mt-2 text-red-500">{% for error in form.company_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
+                <label class="font-bold text-slate-400 mt-7 block">I am a</label>
+                <div class="mt-2 flex justify-start">
+                    <input id="is_buyer" name="is_buyer" type="checkbox" class="h-6 w-6" {% if form.is_buyer.value == True %} checked{% endif %}>
+                    <label for="is_buyer" class="ml-3">Buyer</label>
+                </div>
+                <div class="mt-2 flex justify-start">
+                    <input id="is_seller" name="is_seller" type="checkbox" class="h-6 w-6" {% if form.is_seller.value == True %} checked{% endif %}>
+                    <label for="is_seller" class="ml-3">Seller</label>
+                </div>
+                <div class="mt-2 flex justify-start">
+                    <input id="is_buy_agent" name="is_buy_agent" type="checkbox" class="h-6 w-6" {% if form.is_buy_agent.value == True %} checked{% endif %}>
+                    <label for="is_buy_agent" class="ml-3">Buying Agent</label>
+                </div>
+                <div class="mt-2 flex justify-start">
+                    <input id="is_sell_agent" name="is_sell_agent" type="checkbox" class="h-6 w-6" {% if form.is_sell_agent.value == True %} checked{% endif %}>
+                    <label for="is_sell_agent" class="ml-3">Selling Agent</label>
+                </div>
+
                 <label for="email" class="font-bold text-slate-400 mt-7 block">Goods & Services I Deal With</label>
                 <textarea rows="4" name="goods_string" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.goods_string.value %}{{ form.goods_string.value }}{% endif %}</textarea>
                 {% if form.goods_string.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.goods_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}

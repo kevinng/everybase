@@ -2,9 +2,5 @@
 detail_user, user whose details we're showing.
 {% endcomment %}
 <div class="flex lg:hidden">
-    {% if user.user.id != detail_user.id %}
-        <a href="{% url 'users:whatsapp' detail_user.slug_link %}" class="py-2 px-5 font-bold rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a>
-    {% else %}
-        <a href="{% url 'users:user_edit' user.user.slug_link %}" class="py-2 px-5 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
-    {% endif %}
+    <a href="{% url 'users:user_edit' user.user.slug_link %}" class="py-2 px-5 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
 </div>
