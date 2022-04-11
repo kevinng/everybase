@@ -39,56 +39,56 @@ def get_countries():
         number_of_users=Count('users_w_this_country'))\
             .order_by('-number_of_users')
 
-@login_required
-def whatsapp(request, slug):
-    if request.user.user.id == slug:
-        # Disallow WhatsApp to self
-        return HttpResponseRedirect(reverse('users:user_detail', args=(slug,)))
+# @login_required
+# def whatsapp(request, slug):
+#     if request.user.user.id == slug:
+#         # Disallow WhatsApp to self
+#         return HttpResponseRedirect(reverse('users:user_detail', args=(slug,)))
 
-    contactee = models.User.objects.get(slug_link=slug)
+#     contactee = models.User.objects.get(slug_link=slug)
 
-    if request.method == 'POST':
-        form = forms.WhatsAppBodyForm(request.POST)
-        if form.is_valid():
-            body = form.cleaned_data.get('body')
-            contactor = request.user.user
+#     if request.method == 'POST':
+#         form = forms.WhatsAppBodyForm(request.POST)
+#         if form.is_valid():
+#             body = form.cleaned_data.get('body')
+#             contactor = request.user.user
 
-            lemods.WhatsAppMessageBody.objects.create(
-                contactor=contactor,
-                contactee=contactee,
-                body=body
-            )
+#             lemods.WhatsAppMessageBody.objects.create(
+#                 contactor=contactor,
+#                 contactee=contactee,
+#                 body=body
+#             )
             
-            response = HttpResponse(status=302) # Temporary redirect
-            response['Location'] = get_non_tracking_whatsapp_link(
-                contactee.phone_number.country_code,
-                contactee.phone_number.national_number
-            )
-            response['Location'] += '?text=' + render_to_string(
-                'chat/bodies/whatsapp_author.txt', {
-                    'contactee': contactee,
-                    'contactor': contactor,
-                    'body': body
-            }).replace('\n', '%0A').replace(' ', '%20')
+#             response = HttpResponse(status=302) # Temporary redirect
+#             response['Location'] = get_non_tracking_whatsapp_link(
+#                 contactee.phone_number.country_code,
+#                 contactee.phone_number.national_number
+#             )
+#             response['Location'] += '?text=' + render_to_string(
+#                 'chat/bodies/whatsapp_author.txt', {
+#                     'contactee': contactee,
+#                     'contactor': contactor,
+#                     'body': body
+#             }).replace('\n', '%0A').replace(' ', '%20')
 
-            return response
-    else:
-        form = forms.WhatsAppBodyForm()
+#             return response
+#     else:
+#         form = forms.WhatsAppBodyForm()
 
-    params = {
-        'contactee': contactee,
-        'form': form
-    }
+#     params = {
+#         'contactee': contactee,
+#         'form': form
+#     }
 
-    last_msg_body = lemods.WhatsAppMessageBody.objects.\
-        filter(contactor=request.user.user).\
-        order_by('-created').\
-        first()
+#     last_msg_body = lemods.WhatsAppMessageBody.objects.\
+#         filter(contactor=request.user.user).\
+#         order_by('-created').\
+#         first()
 
-    if last_msg_body is not None:
-        params['last_msg_body'] = last_msg_body.body
+#     if last_msg_body is not None:
+#         params['last_msg_body'] = last_msg_body.body
 
-    return render(request, 'relationships/message.html', params)
+#     return render(request, 'relationships/message.html', params)
 
 def user_detail(request, slug):
     user = models.User.objects.get(slug_link=slug)
@@ -146,23 +146,19 @@ def user_edit(request, slug):
         if form.is_valid():
             get = lambda k : form.cleaned_data.get(k)
 
-            models.User.objects.update(
-                first_name=get('first_name'),
-                last_name=get('last_name'),
-                goods_string=get('goods_string'),
-                has_company=get('has_company'),
-                company_name=get('company_name'),
-                languages_string=get('languages_string'),
-                # is_buy_agent=get('is_buy_agent'),
-                # buy_agent_details=get('buy_agent_details'),
-                # is_sell_agent=get('is_sell_agent'),
-                # sell_agent_details=get('sell_agent_details'),
-                # is_logistics_agent=get('is_logistics_agent'),
-                # logistics_agent_details=get('logistics_agent_details')
-            )
+            user.first_name = get('first_name')
+            user.last_name = get('last_name')
+            user.goods_string = get('goods_string')
+            user.has_company = get('has_company')
+            user.company_name = get('company_name')
+            user.languages_string = get('languages_string')
+            user.refresh_slug()
 
+            user.save()
+
+            # Refernce slug_link here, it may have been updated.
             return HttpResponseRedirect(
-                reverse('users:user_detail', args=(slug,)))
+                reverse('users:user_detail', args=(user.slug_link,)))
     else:
         form = forms.UserEditForm(initial={
             'first_name': user.first_name,
@@ -171,12 +167,6 @@ def user_edit(request, slug):
             'has_company': user.has_company,
             'company_name': user.company_name,
             'languages_string': user.languages_string,
-            # 'is_buy_agent': user.is_buy_agent,
-            # 'buy_agent_details': user.buy_agent_details,
-            # 'is_sell_agent': user.is_sell_agent,
-            # 'sell_agent_details': user.sell_agent_details,
-            # 'is_logistics_agent': user.is_logistics_agent,
-            # 'logistics_agent_details': user.logistics_agent_details
         })
 
     return render(request, 'relationships/user_edit.html', {'form': form})
@@ -248,6 +238,10 @@ def register(request):
                 company_name=form.cleaned_data.get('company_name'),
                 email=email,
                 goods_string=form.cleaned_data.get('goods_string'),
+                is_buyer=form.cleaned_data.get('is_buyer'),
+                is_seller=form.cleaned_data.get('is_seller'),
+                is_buy_agent=form.cleaned_data.get('is_buy_agent'),
+                is_sell_agent=form.cleaned_data.get('is_sell_agent'),
                 languages_string=form.cleaned_data.get('languages_string'),
                 country=country
             )
@@ -531,51 +525,51 @@ def log_out(request):
 
     return HttpResponseRedirect(reverse('home'))
 
-@login_required
-@csrf_exempt
-def toggle_save_user(request, slug):
-    if request.user.user.slug_link == slug:
-        # Disallow saving of self
-        return HttpResponseRedirect(reverse('users:user_detail', args=(slug,)))
+# @login_required
+# @csrf_exempt
+# def toggle_save_user(request, slug):
+#     if request.user.user.slug_link == slug:
+#         # Disallow saving of self
+#         return HttpResponseRedirect(reverse('users:user_detail', args=(slug,)))
 
-    def toggle():
-        try:
-            saved_user = models.SavedUser.objects.get(
-                savee=models.User.objects.get(slug_link=slug),
-                saver=request.user.user
-            )
+#     def toggle():
+#         try:
+#             saved_user = models.SavedUser.objects.get(
+#                 savee=models.User.objects.get(slug_link=slug),
+#                 saver=request.user.user
+#             )
 
-            # Toggle save-unsave
-            saved_user.active = not saved_user.active
-            saved_user.save()
-        except models.SavedUser.DoesNotExist:
-            saved_user = models.SavedUser.objects.create(
-                savee=models.User.objects.get(slug_link=slug),
-                saver=request.user.user,
-                active=True
-            )
+#             # Toggle save-unsave
+#             saved_user.active = not saved_user.active
+#             saved_user.save()
+#         except models.SavedUser.DoesNotExist:
+#             saved_user = models.SavedUser.objects.create(
+#                 savee=models.User.objects.get(slug_link=slug),
+#                 saver=request.user.user,
+#                 active=True
+#             )
         
-        return {'s': saved_user.active}
+#         return {'s': saved_user.active}
 
-    if request.method == 'POST':
-        # AJAX call, toggle save-unsave, return JSON.
-        return JsonResponse(toggle())
+#     if request.method == 'POST':
+#         # AJAX call, toggle save-unsave, return JSON.
+#         return JsonResponse(toggle())
 
-    # Unauthenticated call. User will be given the URL to click only if the
-    # user is authenticated. Otherwise, a click on the 'save' button will
-    # result in an AJAX post to this URL.
-    #
-    # Toggle save-unsave, redirect user to next URL.
-    toggle()
+#     # Unauthenticated call. User will be given the URL to click only if the
+#     # user is authenticated. Otherwise, a click on the 'save' button will
+#     # result in an AJAX post to this URL.
+#     #
+#     # Toggle save-unsave, redirect user to next URL.
+#     toggle()
 
-    # Read 'next' URL from GET parameters. Redirect user there if the
-    # parameter exists. Other redirect user to default user details page.
-    next_url = request.GET.get('next')
-    if next_url is not None and len(next_url.strip()) > 0:
-        return HttpResponseRedirect(next_url)
-    else:
-        return HttpResponseRedirect(
-            reverse('users:user_detail', args=(slug,)))
+#     # Read 'next' URL from GET parameters. Redirect user there if the
+#     # parameter exists. Other redirect user to default user details page.
+#     next_url = request.GET.get('next')
+#     if next_url is not None and len(next_url.strip()) > 0:
+#         return HttpResponseRedirect(next_url)
+#     else:
+#         return HttpResponseRedirect(
+#             reverse('users:user_detail', args=(slug,)))
 
 def user_list(request):
     user = request.user.user if request.user.is_authenticated else None
