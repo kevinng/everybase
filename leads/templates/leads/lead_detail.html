@@ -32,12 +32,16 @@
     {% comment %} end: user detail side {% endcomment %}
 
     {% comment %} start: details {% endcomment %}
-    {% comment %} <div class="w-full lg:w-1/2 lg:mt-0 mt-4"> {% endcomment %}
     <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
-        {% include 'leads/includes/lead_detail_tabs.html' %}
+
+        {% if user.user.id == lead.author.id %}
+            {% load get_application_count %}
+            {% get_application_count lead as application_count %}
+            {% include 'leads/includes/lead_detail_tabs.html' with selected='details' application_count=application_count %}
+        {% endif %}
 
         {% comment %} start: details {% endcomment %}
-        <div class="bg-white rounded pb-8 pt-4 mt-2 shadow-md">
+        <div class="bg-white rounded pb-8 pt-4 {% if user.user.id == lead.author.id %}mt-2 {% endif %}shadow-md">
 
             <div class="flex justify-end">
                 {% if user.is_authenticated == True and user.user.id == lead.author.id %}

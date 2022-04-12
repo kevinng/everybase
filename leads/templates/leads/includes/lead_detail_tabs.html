@@ -1,9 +1,10 @@
 {% comment %}
 Params:
     selected, selected tab
-    detail_user, user whose details are being shown.
+    lead, lead whose details we're showing
+    application_count, number of applications
 {% endcomment %}
 <div class="flex items-center justify-evenly">
-    {% comment %} <a {% if selected != 'comments' %}href="{% url 'users:user_detail' detail_user.slug_link %}" {% endif %}class="{% if selected == 'comments' %}font-bold text-blue-600 bg-slate-300 {% else %}text-slate-600 hover:bg-slate-300 bg-slate-200 {% endif %}w-1/2 text-center py-2 rounded-tl-md shadow-sm">Comments</a> {% endcomment %}
-    <a {% if selected != 'leads' %}href="{% url 'users:user_leads' detail_user.slug_link %}" {% endif %}class="{% if selected == 'leads' %}font-bold text-blue-600 bg-slate-300 {% else %}text-slate-600 hover:bg-slate-300 bg-slate-200 {% endif %}w-full text-center py-2 rounded-tr-md rounded-tl-md shadow-sm">Leads</a>
+    <a {% if selected != 'details' %}href="{% url 'leads:lead_detail' lead.slug_link %}" {% endif %}class="{% if selected == 'details' %}font-bold text-blue-600 bg-slate-300 {% else %}text-blue-500 hover:bg-slate-300 bg-slate-200 {% endif %}w-1/2 text-center py-2 rounded-tl-md shadow-sm">Lead Details</a>
+    <a {% if selected != 'applications' %}href="{% url 'leads:lead_applications' lead.slug_link %}" {% endif %}class="{% if selected == 'applications' %}font-bold text-blue-600 bg-slate-300 {% else %}text-blue-500 hover:bg-slate-300 bg-slate-200 {% endif %}w-1/2 text-center py-2 rounded-tr-md shadow-sm">Agent Applications ({{ application_count }})</a>
 </div>
