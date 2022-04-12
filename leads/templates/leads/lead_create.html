@@ -161,7 +161,6 @@
             <div class="w-full bg-slate-200 py-2 font-bold px-10 mt-12">Agent Commission</div>
             {% comment %} end: agent commission {% endcomment %}
 
-            
             {% comment %} start: commission_type {% endcomment %}
             <label id="commission_type__label" for="commission_type" class="font-bold text-slate-400 mt-12 px-10">How is agent commission calculated?</label>
             <div id="commission_type__input" class="mt-2 px-10">
@@ -180,14 +179,14 @@
             <div id="commission_type_other__help" class="mt-2 px-10">Describe how agent commission is calculated.</div>
             {% comment %} end: commission_type_other {% endcomment %}
 
-            {% comment %} start: commission % {% endcomment %}
+            {% comment %} start: commission percentage {% endcomment %}
             <label id="commission_percentage__label" for="commission" class="font-bold text-slate-400 mt-7 px-10">Commission</label>
             <div id="commission_percentage__input" class="flex items-center justify-start px-10">
                 <input id="commission_percentage" name="commission_percentage" placeholder="0" type="number" min="0" max="100" {% if form.commission_percentage.value %}value="{{ form.commission_percentage.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">% of Sales</div>
             </div>
             <div id="commission_percentage__js_errors" class="px-11 mt-2 text-red-500"></div>
             {% if form.commission_percentage.errors %}<div id="commission_percentage__errors" class="px-11 mt-2 text-red-500">{% for error in form.commission_percentage.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            {% comment %} end: commission % {% endcomment %}
+            {% comment %} end: commission percentage {% endcomment %}
 
             {% comment %} start: commission_earnings {% endcomment %}
             <label id="commission_earnings__label" for="commission_earnings" class="font-bold text-slate-400 mt-7 px-10">Commission</label>

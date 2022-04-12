@@ -28,7 +28,11 @@
 <div class="flex flex-col lg:flex-row justify-center mt-6 mb-10 gap-2">
     {% comment %} start: user detail side
         This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
-    {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
+    {% if lead.lead_type == 'selling' %}
+        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
+    {% else %}
+        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Buyer' responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
+    {% endif %}
     {% comment %} end: user detail side {% endcomment %}
 
     {% comment %} start: details {% endcomment %}

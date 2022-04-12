@@ -272,53 +272,57 @@ def lead_edit(request, slug):
             get_country = lambda c : commods.Country.objects.get(programmatic_key=c) if c != 'any_country' else None
 
             # Update lead
-            need_agent = get('need_agent')
-            commission_type = get('commission_type')
-            author_type = get('author_type')
-            need_logistics_agent = get('need_logistics_agent')
             lead.lead_type = get('lead_type')
-            lead.author_type = author_type
+            lead.currency = paymods.Currency.objects.get(programmatic_key=get('currency'))
+            lead.author_type = get('author_type')
             lead.buy_country = get_country(get('buy_country'))
             lead.sell_country = get_country(get('sell_country'))
+            lead.headline = get('headline')
             lead.details = get('details')
-            lead.need_agent = need_agent
-            lead.commission_type = commission_type if need_agent else None
-            lead.commission_type_other = get('commission_type_other') if need_agent and commission_type == 'other' else None
-            lead.commission = get('commission') if need_agent and commission_type == 'percentage' else None
-            lead.avg_deal_size = get('avg_deal_size') if need_agent and commission_type == 'percentage' else None
-            lead.is_comm_negotiable = get('is_comm_negotiable') if need_agent else None
-            lead.commission_payable_after = get('commission_payable_after') if need_agent else None
-            lead.commission_payable_after_other = get('commission_payable_after_other') if need_agent else None
-            lead.commission_payable_by = get('commission_payable_by') if need_agent and author_type == 'broker' else None
-            lead.other_agent_details = get('other_agent_details') if need_agent else None
-            lead.need_logistics_agent = need_logistics_agent
-            lead.logistics_agent_details=get('logistics_agent_details') if need_logistics_agent else None
+            lead.agent_job = get('agent_job')
+            lead.commission_type = get('commission_type')
+            lead.commission_percentage = get('commission_percentage')
+            lead.commission_earnings = get('commission_earnings')
+            lead.commission_quantity_unit_string = get('commission_quantity_unit_string')
+            lead.commission_type_other = get('commission_type_other')
+            lead.commission_payable_by = get('commission_payable_by')
+            lead.commission_payable_after = get('commission_payable_after')
+            lead.commission_payable_after_other = get('commission_payable_after_other')
+            lead.other_comm_details = get('other_comm_details')
+            lead.is_comm_negotiable = get('is_comm_negotiable')
+            lead.question_1 = get('question_1')
+            lead.question_2 = get('question_2')
+            lead.question_3 = get('question_3')
             lead.save()
 
             save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)
             save_img_if_exists('image_two', 'image_two_cache_use', 'image_two_cache_file_id', request, lead, form)
             save_img_if_exists('image_three', 'image_three_cache_use', 'image_three_cache_file_id', request, lead, form)
 
-            return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+            return HttpResponseRedirect(reverse('leads:lead_detail', args=(lead.slug_link,)))
     else:
         initial = {
             'lead_type': lead.lead_type,
+            'currency': lead.currency,
             'author_type': lead.author_type,
             'buy_country': lead.buy_country.programmatic_key,
             'sell_country': lead.sell_country.programmatic_key,
+            'headline': lead.headline,
             'details': lead.details,
-            'need_agent': lead.need_agent,
+            'agent_job': lead.agent_job,
             'commission_type': lead.commission_type,
+            'commission_percentage': lead.commission_percentage,
+            'commission_earnings': lead.commission_earnings,
+            'commission_quantity_unit_string': lead.commission_quantity_unit_string,
             'commission_type_other': lead.commission_type_other,
-            'commission': lead.commission,
-            'avg_deal_size': lead.avg_deal_size,
-            'is_comm_negotiable': lead.is_comm_negotiable,
+            'commission_payable_by': lead.commission_payable_by,
             'commission_payable_after': lead.commission_payable_after,
             'commission_payable_after_other': lead.commission_payable_after_other,
-            'commission_payable_by': lead.commission_payable_by,
-            'other_agent_details': lead.other_agent_details,
-            'need_logistics_agent': lead.need_logistics_agent,
-            'logistics_agent_details': lead.logistics_agent_details
+            'other_comm_details': lead.other_comm_details,
+            'is_comm_negotiable': lead.is_comm_negotiable,
+            'question_1': lead.question_1,
+            'question_2': lead.question_2,
+            'question_3': lead.question_3
         }
 
         names = [
