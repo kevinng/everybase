@@ -513,6 +513,11 @@ class UserAgent(Standard):
         db_index=True
     )
 
+    class Meta:
+        unique_together = ['user', 'ip_address', 'is_routable', 'is_mobile', 'is_tablet', 'is_touch_capable', 'is_pc',
+            'is_bot', 'browser', 'browser_family', 'browser_version', 'browser_version_string', 'os', 'os_family',
+            'os_version', 'os_version_string', 'device', 'device_family']
+
 _TOKEN_LENGTH = 24
 def get_token(length=_TOKEN_LENGTH):
     """Generates and returns a URL friendly token.

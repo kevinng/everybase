@@ -2,7 +2,7 @@ import uuid as uuidlib
 from django.db import models
 import files.models as fimods
 from common.models import Standard
-from django.utils.text import slugify as django_slugify
+from django.utils.text import slugify
 
 class LeadComment(Standard):
     """Comment on a lead
@@ -76,6 +76,13 @@ class Lead(Standard):
         ],
         db_index=True
     )
+    currency = models.ForeignKey(
+        'payments.Currency',
+        on_delete=models.PROTECT,
+        related_name='leads_currency',
+        related_query_name='leads_currency',
+        db_index=True
+    )
     author_type = models.CharField(
         max_length=20,
         default='direct',
@@ -139,7 +146,7 @@ class Lead(Standard):
         null=True,
         blank=True
     )
-    other_agent_details = models.TextField(
+    other_comm_details = models.TextField(
         null=True,
         blank=True
     )
@@ -187,7 +194,9 @@ class Lead(Standard):
     )
 
     need_agent = models.BooleanField(
-        db_index=True
+        db_index=True,
+        null=True,
+        blank=True
     )
     country = models.ForeignKey(
         'common.Country',
@@ -273,26 +282,26 @@ class Lead(Standard):
             reply_to__isnull=True
         ).order_by('created')
 
-    def seo_title(self):
-        """Returns SEO-optimized title"""
-        lead_type = 'Buyer Importer' if self.lead_type == 'buying' else 'Seller Exporter'
-        country = self.buy_country.name if self.lead_type == 'buying' else self.sell_country.name
-        title = f'{ lead_type }, { country }'
+    # def seo_title(self):
+    #     """Returns SEO-optimized title"""
+    #     lead_type = 'Buyer Importer' if self.lead_type == 'buying' else 'Seller Exporter'
+    #     country = self.buy_country.name if self.lead_type == 'buying' else self.sell_country.name
+    #     title = f'{ lead_type }, { country }'
 
-        if self.slug_tokens is not None and len(self.slug_tokens.strip()) != 0:
-            tokens = self.slug_tokens.split(',')
-            tokens = [t.strip() for t in tokens]
-            if len(tokens) > 0:
-                keywords = tokens[0]
-                for t in tokens[1:]:
-                    if len(keywords) < 40:
-                        keywords += ' ' + t
-                    else:
-                        break
+    #     if self.slug_tokens is not None and len(self.slug_tokens.strip()) != 0:
+    #         tokens = self.slug_tokens.split(',')
+    #         tokens = [t.strip() for t in tokens]
+    #         if len(tokens) > 0:
+    #             keywords = tokens[0]
+    #             for t in tokens[1:]:
+    #                 if len(keywords) < 40:
+    #                     keywords += ' ' + t
+    #                 else:
+    #                     break
                 
-                title += ' - ' + keywords
+    #             title += ' - ' + keywords
 
-        return title
+    #     return title
 
     def display_images(self):
         """Returns display images"""
@@ -428,11 +437,11 @@ class Application(Standard):
         blank=True,
         null=True
     )
-    other_questions = models.TextField(
+    question_3 = models.TextField(
         blank=True,
         null=True
     )
-    other_answers = models.TextField(
+    answer_3 = models.TextField(
         blank=True,
         null=True
     )

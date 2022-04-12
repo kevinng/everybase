@@ -713,6 +713,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 1.5rem;
 }
 
+.mx-10 {
+  margin-left: 2.5rem;
+  margin-right: 2.5rem;
+}
+
 .mt-12 {
   margin-top: 3rem;
 }
@@ -863,6 +868,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .ml-10 {
   margin-left: 2.5rem;
+}
+
+.mr-10 {
+  margin-right: 2.5rem;
+}
+
+.mr-8 {
+  margin-right: 2rem;
 }
 
 .block {
@@ -1907,6 +1920,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .hover\:outline-blue-200:hover {
   outline-color: #bfdbfe;
+}
+
+.hover\:outline-blue-500:hover {
+  outline-color: #3b82f6;
 }
 
 .focus\:ring-blue-100:focus {

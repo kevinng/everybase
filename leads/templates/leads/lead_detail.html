@@ -3,7 +3,7 @@
 {% load static %}
 {% load string_equal %}
 
-{% block title %}{{ lead.seo_title }}{% endblock %}
+{% block title %}Looking for {% if lead.lead_type == 'buying' %}Buying/Sourcing{% elif lead.lead_type == 'selling' %}Selling/Promoting{% endif %} Agent, {{ lead.headline }}{% endblock %}
 
 {% comment %} Meta description limit to 320 characters {% endcomment %}
 {% block other_head_tags %}
@@ -20,141 +20,127 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col lg:flex-row justify-center mt-10 mb-10 gap-2">
+{% comment %} start: title {% endcomment %}
+<div class="text-center text-2xl font-bold mt-10">{{ lead.headline }}</div>
+<div class="text-center text-base">{% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} is Looking for Agents</div>
+{% comment %} end: title {% endcomment %}
+
+<div class="flex flex-col lg:flex-row justify-center mt-6 mb-10 gap-2">
     {% comment %} start: user detail side
         This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
-    {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
+    {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
     {% comment %} end: user detail side {% endcomment %}
 
-    {% comment %} start: details and comments {% endcomment %}
+    {% comment %} start: details {% endcomment %}
     <div class="w-full lg:w-1/2 lg:mt-0 mt-4">
 
         {% comment %} start: details {% endcomment %}
-        <div class="bg-white rounded px-8 py-8 shadow-md">
-            <div class="flex items-start justify-between">
+        <div class="bg-white rounded pb-8 pt-4 shadow-md">
 
-                {% comment %} start: lead_type, author_type {% endcomment %}
-                <div class="font-bold">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
-                {% comment %} end: lead_type, author_type {% endcomment %}
+            <div class="flex justify-end">
+                {% if user.is_authenticated == True and user.user.id == lead.author.id %}
+                    {% comment %} start: edit button {% endcomment %}
+                    <a href="{% url 'leads:lead_edit' lead.slug_link %}" class="px-6 py-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mr-8">Edit</a>
+                    {% comment %} end: edit button {% endcomment %}
+                {% endif %}
+            </div>
+    
+
+            <div class="flex items-start justify-between px-8 mt-6">
+
+                {% comment %} start: thumbnails {% endcomment %}
+                {% if lead.display_images.all|length > 0 %}
+                    <div class="flex items-start justify-start gap-2 image-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+                        {% load thumbnail_url %}
+                        {% load image_url %}
+                        {% for file in lead.display_images.all %}
+                            {% thumbnail_url file as thumbnail_url %}
+                            {% image_url file as image_url %}
+                            <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                                <a href="{{ image_url }}" itemprop="contentUrl" data-size="{{ file.width }}x{{ file.height }}">
+                                    <img src="{{ thumbnail_url }}" itemprop="thumbnail" class="shadow-md">
+                                </a>
+                            </figure>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% comment %} Placeholder {% endcomment %}
+                    <div></div>
+                {% endif %}
+                {% comment %} end: thumbnails {% endcomment %}
                 
                 {% comment %} start: age_desc {% endcomment %}
                 <div class="text-sm">{{ lead.age_desc }}</div>
                 {% comment %} end: age_desc {% endcomment %}
-
             </div>
 
-            {% comment %} start: thumbnails {% endcomment %}
-            {% if lead.display_images.all|length > 0 %}
-                <div class="flex items-start justify-start mt-4 gap-2 image-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-                    {% load thumbnail_url %}
-                    {% load image_url %}
-                    {% for file in lead.display_images.all %}
-                        {% thumbnail_url file as thumbnail_url %}
-                        {% image_url file as image_url %}
-                        <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                            <a href="{{ image_url }}" itemprop="contentUrl" data-size="{{ file.width }}x{{ file.height }}">
-                                <img src="{{ thumbnail_url }}" itemprop="thumbnail" class="shadow-md">
-                            </a>
-                        </figure>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            {% comment %} end: thumbnails {% endcomment %}
+            {% comment %} start: lead_type {% endcomment %}
+            <div class="font-bold text-slate-400 mt-6 px-8">Selling or Buying?</div>
+            <div class="mt-1 px-8">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %}</div>
+            {% comment %} end: lead_type {% endcomment %}
+
+            {% comment %} start: author_type {% endcomment %}
+            <div class="font-bold text-slate-400 mt-6 px-8">Direct or Middleman?</div>
+            <div class="mt-1 px-8">{% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'selling' %}Seller{% elif lead.lead_type == 'buying' %}Buyer{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
+            {% comment %} end: author_type {% endcomment %}
 
             {% comment %} start: buy_country {% endcomment %}
-            <div class="font-bold text-slate-400 mt-6">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
-            <div class="mt-1">{% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}Any Country{% endif %}</div>
-            <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country the goods/services are exported from or based in.{% elif lead.lead_type == 'buying' %}Country buyer would like to buy or source from.{% endif %}</div>
+            <div class="font-bold text-slate-400 mt-6 px-8">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
+            <div class="mt-1 px-8">{% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}Any Country{% endif %}</div>
+            <div class="mt-1 italic px-8">{% if lead.lead_type == 'selling' %}Country the goods/services are exported from or based in.{% elif lead.lead_type == 'buying' %}Country buyer would like to buy or source from.{% endif %}</div>
             {% comment %} end: buy_country {% endcomment %}
 
             {% comment %} start: sell_country {% endcomment %}
-            <div class="font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Sell In This Country{% elif lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
-            <div class="mt-1">{% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}Any Country{% endif %}</div>
-            <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country seller would like to sell the goods/services in.{% elif lead.lead_type == 'buying' %}Country the goods/services are imported into or needed.{% endif %}</div>
+            <div class="font-bold text-slate-400 mt-4 px-8">{% if lead.lead_type == 'selling' %}Sell In This Country{% elif lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
+            <div class="mt-1 px-8">{% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}Any Country{% endif %}</div>
+            <div class="mt-1 italic px-8">{% if lead.lead_type == 'selling' %}Country seller would like to sell the goods/services in.{% elif lead.lead_type == 'buying' %}Country the goods/services are imported into or needed.{% endif %}</div>
             {% comment %} end: sell_country {% endcomment %}
 
             {% comment %} start: details {% endcomment %}
-            <div class="font-bold text-slate-400 mt-4">Goods/Services Details</div>
-            <div class="mt-1 break-words">{{ lead.details|linebreaksbr }}</div>
+            <div class="font-bold text-slate-400 mt-4 px-8">Goods & Services</div>
+            <div class="mt-1 break-words px-8">{{ lead.details|linebreaksbr }}</div>
             {% comment %} end: details {% endcomment %}
-            
-            {% comment %} start: need_agent {% endcomment %}
-            {% if lead.need_agent %}
-                <div class="font-bold mt-6">Need selling or promoting agents</div>
 
-                {% if lead.commission_type == 'percentage' %}
+            {% comment %} start: details {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">What {% if lead.lead_type == 'selling' %}seller{% elif lead.lead_type == 'buying' %}buyer{% endif %} would like the agent to do</div>
+            <div class="mt-1 break-words px-8">{{ lead.agent_job|linebreaksbr }}</div>
+            {% comment %} end: details {% endcomment %}
 
-                {% comment %} start: commission {% endcomment %}
-                <div class="font-bold text-slate-400 mt-4">Agent Commission</div>
-                <div class="mt-1">{{ lead.commission }} % of Sales</div>
-                {% comment %} end: commission {% endcomment %}
+            {% comment %} start: agent commission section {% endcomment %}
+            <div class="bg-slate-200 font-bold py-2 px-5 text-slate-500 mt-4">Agent Commission</div>
+            {% comment %} end: agent commission section {% endcomment %}
 
-                {% comment %} start: avg_deal_size {% endcomment %}
-                <div class="font-bold text-slate-400 mt-4">Average Deal Size</div>
-                <div class="mt-1">USD {{ lead.avg_deal_size|floatformat:2 }}</div>
-                {% comment %} end: avg_deal_size {% endcomment %}
+            {% comment %} start: commission {% endcomment %}
+            {% if lead.commission_type == 'percentage' %}
 
-                {% comment %} start: avg_deal_comm {% endcomment %}
-                <div class="font-bold text-slate-400 mt-4">Average Earnings Per Deal</div>
-                <div class="mt-1">USD {{ lead.avg_deal_comm|floatformat:2 }}</div>
-                {% comment %} end: avg_deal_comm {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
+                <div class="mt-1 px-8">{{ lead.commission_percentage|floatformat:0 }}% of Sales</div>
 
-                {% comment %} start: commission_payable_after {% endcomment %}
-                <div class="font-bold text-slate-400 mt-4">Commission Payable After</div>
-                <div class="mt-1">{% if lead.commission_payable_after == 'initial_deposit_received' %}Initial Deposit Received{% elif lead.commission_payable_after == 'goods_shipped' %}Goods Shipped{% elif lead.commission_payable_after == 'buyer_received_goods_services' %}Buyer Received Goods/Services{% elif lead.commission_payable_after == 'full_payment_received' %}Full Payment Received{% elif lead.commission_payable_after == 'other' %}{{ lead.commission_payable_after_other }}{% endif %}</div>
-                {% comment %} end: commission_payable_after {% endcomment %}
+            {% elif lead.commission_type == 'earning' %}
 
-                {% comment %} start: other_agent_details {% endcomment %}
-                <div class="font-bold text-slate-400 mt-4">Other Details For {% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %} Agent</div>
-                <div class="mt-1 break-words">{{ lead.other_agent_details|linebreaksbr }}</div>
-                {% comment %} end: other_agent_details {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
+                <div class="mt-1 px-8">{{ lead.currency.name }} {{ lead.commission_earnings|floatformat:2 }} per {{ lead.commission_quantity_unit_string }}</div>
 
-                {% elif lead.commission_type == 'other' %}
+            {% elif lead.commission_type == 'other' %}
 
-                {% comment %} start: lead.commission_type_other {% endcomment %}
-                <div class="font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %} Agent Commission</div>
-                <div class="mt-1 break-words">{{ lead.commission_type_other|linebreaksbr }}</div>
-                {% comment %} end: lead.commission_type_other {% endcomment %}
-
-                {% endif %}
-
-                {% comment %} start: is_comm_negotiable {% endcomment %}
-                {% if lead.is_comm_negotiable == True %}
-                <div class="italic mt-4">Commission may differ and is negotiable for each deal.</div>
-                {% endif %}
-                {% comment %} end: is_comm_negotiable {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
+                <div class="mt-1 px-8">{{ lead.commission_type_other }}</div>
 
             {% endif %}
-            {% comment %} end: need_agent {% endcomment %}
+            {% comment %} end: commission {% endcomment %}
 
-            {% if lead.need_logistics_agent %}
-                <div class="font-bold mt-6">Need logistics agents</div>
-
-                {% comment %} start: lead.other_logistics_agent_details {% endcomment %}
-                <div class="font-bold text-slate-400 mt-4">Logistics Needs</div>
-                <div class="mt-1 break-words">{{ lead.other_logistics_agent_details|linebreaksbr }}</div>
-                {% comment %} end: lead.other_logistics_agent_details {% endcomment %}
+            {% comment %} start: is_comm_negotiable {% endcomment %}
+            {% if lead.is_comm_negotiable == True %}
+                <div class="italic px-8">Commission may differ and is negotiable for each deal.</div>
             {% endif %}
+            {% comment %} end: is_comm_negotiable {% endcomment %}
 
-            <div class="flex justify-end mt-8">
-                {% if user.is_authenticated == True and user.user.id == lead.author.id %}
-
-                    {% comment %} start: edit button {% endcomment %}
-                    <a href="{% url 'leads:lead_edit' lead.slug_link %}" class="px-6 py-2 ml-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md">Edit</a>
-                    {% comment %} end: edit button {% endcomment %}
-
-                {% elif user.user.id != lead.author.id %}
-                    {% if user.is_authenticated == True %}
-                        {% comment %} Allow toggling of save-unsave asynchronously {% endcomment %}
-                        {% load has_saved_lead %}
-                        {% has_saved_lead user.user lead as has_saved_lead %}
-                        <button id="toggle_save_lead" class="py-2 px-4 mt-2 rounded-md shadow-md {% if has_saved_lead == True %}text-white bg-blue-500 hover:bg-blue-600{% else %}text-slate-600 bg-slate-100 hover:bg-slate-200{% endif %}">{% if has_saved_lead == True %}Lead Saved{% else %}Save Lead{% endif %}</button>
-                    {% else %}
-                        {% comment %} Direct user to login and come back to this page with lead saved {% endcomment %}
-                    <a href="{% url 'leads:toggle_save_lead' lead.slug_link %}" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Lead</a>
-                    {% endif %}
-                {% endif %}
-            </div>
+            {% comment %} start: other commission details {% endcomment %}
+            {% if lead.other_comm_details is not None and lead.other_agent_details|length > 0 %}
+                <div class="font-bold text-slate-400 mt-4 px-8">Other Commission Details</div>
+                <div class="mt-1 px-8">{{ lead.other_comm_details }}</div>
+            {% endif %}
+            {% comment %} end: other commission details {% endcomment %}
         </div>
         {% comment %} end: details {% endcomment %}
 
@@ -163,104 +149,56 @@
         {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author responsive_classes='lg:hidden mt-2' %}
         {% comment %} end: user detail side {% endcomment %}
 
-        {% comment %} start: main comment box
-            For starting a new comment thread on this lead.
-            Shown always, to this and detail user. I.e., anyone may start a new comment any time.
-        {% endcomment %}
-        {% comment %} id="comment-starter" is used by our JavaScript code to focus on this section {% endcomment %}
-        <div id="comment-starter" class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if not form.comment_id.value and form.body.errors %} focus-comment-box="yes"{% endif %}>
-            {% if not request.user.is_authenticated %}
-                <div class="flex flex-col items-center justify-center mb-8">
-                    <a href="{% url 'login' %}?next={% url 'leads:lead_detail' lead.slug_link %}#comment-starter" class="py-2 px-4 rounded-md shadow-md text-white bg-blue-500 hover:bg-blue-600 w-full text-lg text-center">Login to Comment</a>
-                </div>
-            {% endif %}
+        {% comment %} start: agent application form {% endcomment %}
+        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+            <div class="text-xl font-bold text-center">Apply to be a {% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %} Agent</div>
 
-            <div id="main_comment" class="text-xl font-bold text-center">Comment on this Lead</div>
-            <div class="flex flex-col items-center justify-center mt-2">
-                <form action="{% url 'leads:lead_detail' lead.slug_link %}" class="check-to-enable comment-box" method="post">
+            {% if lead.author != request.user.user %}
+
+                {% load has_applied_lead %}
+                {% has_applied_lead request.user.user lead as has_applied_lead %}
+                {% if has_applied_lead == False %}
+
+                <form action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
                     {% csrf_token %}
-                    <textarea {% if not request.user.is_authenticated %}disabled{% endif %} name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments">{% if not form.comment_id.value and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
-                    {% if not form.comment_id.value and form.body.errors is not None %}
-                        <div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>
-                    {% endif %}
-                    <button {% if not request.user.is_authenticated %}disabled{% endif %} type="submit" class="check-to-enable-button py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
-                    <div class="flex flex-col items-center px-2 mt-2">
-                        <div class="flex justify-start">
-                            <input {% if not request.user.is_authenticated %}disabled{% endif %} id="comment-enable-checkbox-starter" type="checkbox" class="check-to-enable-checkbox h-6 w-6 flex-none">
-                            <label for="comment-enable-checkbox-starter" class="ml-3">I know Everybase charge credits to connect users, so I didn't include contact details in my post.</label>
-                        </div>
-                        <div class="font-semibold mt-2 text-center"><span class="text-red-500">WARNING:</span> phone numbers of users who share contact details in comments will be banned.</div>
+                    <div class="flex flex-col justify-center mt-2">
+                        <label for="answer_1" class="font-bold text-slate-400 mt-4">{{ lead.question_1 }}</label>
+                        <textarea id="answer_1" name="answer_1" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
+                        {% if form.answer_1.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <label for="answer_2" class="font-bold text-slate-400 mt-4">{{ lead.question_2 }}</label>
+                        <textarea id="answer_2" name="answer_2" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
+                        {% if form.answer_2.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_2.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        {% if lead.question_3 is not None and lead.question_3|length > 0 %}
+                            <label for="answer_3" class="font-bold text-slate-400 mt-4">{{ lead.question_3 }}</label>
+                            <textarea id="answer_3" name="answer_3" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
+                            {% if form.answer_3.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_3.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                        {% endif %}
+
+                        <label for="applicant_comments" class="font-bold text-slate-400 mt-4">Comments for the {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} (Optional)</label>
+                        <textarea id="applicant_comments" name="applicant_comments" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments"></textarea>
+                        {% if form.applicant_comments.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                     </div>
+
+                    <button type="submit" class="py-2 px-4 rounded-md shadow-md mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Apply</button>
                 </form>
 
-                <div class="mt-8 text-center">Comments do <span class="underline underline-offset-1">not</span> cost credits.</div>
-
-                <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
-            </div>
-        </div>
-
-        {% comment %} start: root comments {% endcomment %}
-        {% for root_comment in lead.root_comments %}
-            {% string_equal form.comment_id.value root_comment.id as is_this_comment %}
-
-            <div class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if is_this_comment and form.body.errors %} focus-comment-box="yes"{% endif %}>
-                <div id="comment-{{ root_comment.id }}" class="flex justify-between items-center">
-                    <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold">{{ root_comment.commentor.first_name|title }} {{ root_comment.commentor.last_name|title }}, {{ root_comment.commentor.country.name }}</a>
-                    <div class="text-sm">{{ root_comment.age_desc }}</div>
-                </div>
-                <div class="mt-4 break-words">{{ root_comment.body }}</div>
-
-                {% comment %} start: replies {% endcomment %}
-                {% for reply in root_comment.reply_comments %}
-                    {% comment %} id="comment-{{ reply.id }}" is used by our JavaScript code to focus on this section {% endcomment %}
-                    <div id="comment-{{ reply.id }}" class="mt-4">
-                        <div class="flex justify-between items-center">
-                            <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold ml-8">{{ reply.commentor.first_name|title }} {{ reply.commentor.last_name|title }}, {{ reply.commentor.country.name }}</a>
-                            <div class="text-sm">{{ reply.age_desc }}</div>
-                        </div>
-                        <div class="mt-2 pl-8 break-words">{{ reply.body }}</div>
-                    </div>
-                {% endfor %}
-                {% comment %} end: replies {% endcomment %}
+                {% else %}
                 
-                {% comment %} start: reply {% endcomment %}
-                <div class="flex justify-end">
-                    {% if request.user.is_authenticated %}
-                        <button id="comment-reply-show-{{ root_comment.id }}" class="reply-show py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Reply</button>
-                    {% else %}
-                        <a href="{% url 'login' %}?next={% url 'leads:lead_detail' lead.slug_link %}#comment-{{ root_comment.id }}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Login to Reply</a>
-                    {% endif %}
+                <div class="mt-4">
+                    {% load get_application %}
+                    {% get_application request.user.user lead as application %}
+                    <a href="{% url 'leads:application_detail' lead.slug_link application.id %}" class="py-2 px-4 rounded-md shadow-md text-white bg-blue-500 hover:bg-blue-600 block w-full text-center text-lg">My Agent Application</a>
+                    <div class="mt-2 text-center">Applied {{ application.age_desc }}</div>
                 </div>
-                {% comment %} end: reply {% endcomment %}
 
-                {% comment %} start: reply box {% endcomment %}
-                {% comment %} id="comment-reply-box-{{ root_comment.id }}" is used by our JavaScript code to focus on this section {% endcomment %}
-                <form id="comment-reply-box-{{ root_comment.id }}" action="{% url 'leads:lead_detail' lead.slug_link %}" class="reply-box check-to-enable flex flex-col justify-center" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="comment_id" value="{{ root_comment.id }}">
-                    <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-4" placeholder="Enter reply">{% if is_this_comment and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
-                    {% if is_this_comment and form.body.errors is not None %}
-                        <div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>
-                    {% endif %}
-                    <button type="submit" class="check-to-enable-button py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
-                    <div class="flex flex-col items-center px-2 mt-2">
-                        <div class="flex justify-start">
-                            <input id="comment-enable-checkbox-{{ root_comment.id }}" type="checkbox" class="check-to-enable-checkbox h-6 w-6 flex-none">
-                            <label for="comment-enable-checkbox-{{ root_comment.id }}" class="ml-3">I know Everybase charge credits to connect users, so I didn't include contact details in my post.</label>
-                        </div>
-                        <div class="font-semibold mt-2 text-center"><span class="text-red-500">WARNING:</span> phone numbers of users who share contact details in comments will be banned.</div>
-                    </div>
+                {% endif %}
 
-                    <div class="mt-8 text-center">Replies do <span class="underline underline-offset-1">not</span> cost credits.</div>
+            {% endif %}
+        </div>
+        {% comment %} end: agent application form {% endcomment %}
 
-                    <div class="flex justify-center">
-                        <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
-                    </div>
-                </form>
-                {% comment %} end: reply box {% endcomment %}
-            </div>
-        {% endfor %}
-        {% comment %} end: root comments {% endcomment %}
     </div>
     {% comment %} end: details {% endcomment %}
 </div>
@@ -268,148 +206,10 @@
 {% include 'includes/photoswipe.html' %}
 {% endblock %}
 
-{% comment %}
-Dependences:
-    JQuery
-
-$(document).ready(function() {
-    // Save/unsave user
-    $toggle_save_user = $('#toggle_save_user')
-    $toggle_save_user.click(function () {
-        // Make AJAX call to save user, and update button look.
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'users:toggle_save_user' lead.author.slug_link %}",
-            dataType: 'json',
-            success: function (data) {
-                if (data['s'] == true) {
-                    $toggle_save_user
-                        .removeClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
-                        .addClass('text-white bg-blue-500 hover:bg-blue-600')
-                        .text('Person Saved')
-                } else {
-                    $toggle_save_user
-                        .addClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
-                        .removeClass('text-white bg-blue-500 hover:bg-blue-600')
-                        .text('Save Person')
-                }
-            }
-        })
-    })
-    
-    // Save/unsave lead
-    $toggle_save_lead = $('#toggle_save_lead')
-    $toggle_save_lead.click(function () {
-        // Make AJAX call to save lead, and update button look.
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'leads:toggle_save_lead' lead.slug_link %}",
-            dataType: 'json',
-            success: function (data) {
-                if (data['s'] == true) {
-                    $toggle_save_lead
-                        .removeClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
-                        .addClass('text-white bg-blue-500 hover:bg-blue-600')
-                        .text('Lead Saved')
-                } else {
-                    $toggle_save_lead
-                        .addClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
-                        .removeClass('text-white bg-blue-500 hover:bg-blue-600')
-                        .text('Save Lead')
-                }
-            }
-        })
-    })
-
-    // Enable or disable corresponding button based on checkbox state
-    function set_enable_button_checkbox(button, checkbox) {
-        if (checkbox.is(':checked')) {
-            button.removeAttr('disabled')
-            button.addClass('bg-blue-500 hover:bg-blue-600')
-            button.removeClass('bg-blue-200')
-        } else {
-            button.prop('disabled', true)
-            button.removeClass('bg-blue-500 hover:bg-blue-600')
-            button.addClass('bg-blue-200')
-        }
-    }
-
-    // Initialize each check-to-enable section
-    $('.check-to-enable').each(function () {        
-        // Initialize for the first time on page load
-        set_enable_button_checkbox(
-            $(this).find('.check-to-enable-button'),
-            $(this).find('.check-to-enable-checkbox')
-        )
-
-        // Initialize on checkbox change
-        $(this).find('.check-to-enable-checkbox').change(function () {
-            $button = $(this).closest('.check-to-enable')
-                .find('.check-to-enable-button')
-
-            set_enable_button_checkbox($button, $(this))
-        })
-    })
-
-    // Initialize comment reply boxes
-    $('.comment').each(function () {
-        if ($(this).attr('focus-comment-box') == 'yes') {
-            // Hide reply button on load
-            $reply_show = $(this).find('.reply-show')
-            if ($reply_show.length > 0) {
-                $reply_show.hide()
-            }
-
-            // Reply box is already shown
-
-            // Focus on reply or comment box
-            $reply_box = $(this).find('.reply-box')
-            if ($reply_box.length > 0) {
-                $('html, body').animate({
-                    // 180 pixel from top looks good
-                    scrollTop: $reply_box.offset().top - 180
-                }, 500)
-            } else {
-                $comment_box = $(this).find('.comment-box')
-                $('html, body').animate({
-                    // 180 pixel from top looks good
-                    scrollTop: $comment_box.offset().top - 180
-                }, 500)
-            }
-        } else {
-            // Hide reply boxes on load
-            // Note: the one comment box at the top is not hidden
-            $(this).find('.reply-box').hide()
-
-            $(this).find('.reply-show').click(function () {
-                // Show reply box and hide self
-                $(this).closest('.comment').find('.reply-box').show()
-                $(this).hide()
-            })
-        }
-    })
-})
-
-Code to focus on the right section of the page
-{% if focus %}
-$(document).ready(function() {
-    // Scroll to focus if a target exists
-    $('html, body').animate({
-        // 180 pixel from top looks good
-        scrollTop: $("#{{ focus }}").offset().top - 180
-    }, 500)
-})
-{% endif %}
-
-{% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
 <script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
 <script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
 <script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
-<script>{% comment %} JS embedded here because server-side rendering is required. {% endcomment %}
-$(document).ready((function(){function e(e,t){t.is(":checked")?(e.removeAttr("disabled"),e.addClass("bg-blue-500 hover:bg-blue-600"),e.removeClass("bg-blue-200")):(e.prop("disabled",!0),e.removeClass("bg-blue-500 hover:bg-blue-600"),e.addClass("bg-blue-200"))}$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",url:"{% url 'users:toggle_save_user' lead.author.slug_link %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})})),$toggle_save_lead=$("#toggle_save_lead"),$toggle_save_lead.click((function(){$.ajax({type:"POST",url:"{% url 'leads:toggle_save_lead' lead.slug_link %}",dataType:"json",success:function(e){1==e.s?$toggle_save_lead.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Lead Saved"):$toggle_save_lead.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Lead")}})})),$(".check-to-enable").each((function(){e($(this).find(".check-to-enable-button"),$(this).find(".check-to-enable-checkbox")),$(this).find(".check-to-enable-checkbox").change((function(){$button=$(this).closest(".check-to-enable").find(".check-to-enable-button"),e($button,$(this))}))})),$(".comment").each((function(){"yes"==$(this).attr("focus-comment-box")?($reply_show=$(this).find(".reply-show"),$reply_show.length>0&&$reply_show.hide(),$reply_box=$(this).find(".reply-box"),$reply_box.length>0?$("html, body").animate({scrollTop:$reply_box.offset().top-180},500):($comment_box=$(this).find(".comment-box"),$("html, body").animate({scrollTop:$comment_box.offset().top-180},500))):($(this).find(".reply-box").hide(),$(this).find(".reply-show").click((function(){$(this).closest(".comment").find(".reply-box").show(),$(this).hide()})))}))}));
-{% comment %} Code to focus on the right section {% endcomment %}{% if focus %}$(document).ready((function(){$("html, body").animate({scrollTop:$("#{{ focus }}").offset().top-180},500)}));{% endif %}
-</script>
 {% endblock %}

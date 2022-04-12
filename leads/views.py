@@ -7,23 +7,21 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from django.shortcuts import render
 from django.db.models import Count
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.db.models import DateTimeField
 from django.db.models.functions import Trunc
 from django.db.models.expressions import RawSQL
-from django.views.generic.detail import DetailView
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from django.contrib.postgres.search import (SearchVector, SearchQuery,
-    SearchRank, SearchVectorField)
+from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
 
 from everybase import settings
 from common import models as commods
-from files.utilities.delete_file import delete_file
+from payments import models as paymods
 from leads import models, forms
-from relationships.utilities.save_user_agent import save_user_agent
 from files import models as fimods
+from files.utilities.delete_file import delete_file
 from files.utilities.get_mime_type import get_mime_type
+from relationships.utilities.save_user_agent import save_user_agent
 
 def get_countries():
     return commods.Country.objects.annotate(
@@ -198,50 +196,60 @@ def save_img_if_exists(
                 # Delete cache
                 delete_file(cache_file.id)
 
-class LeadDetailView(DetailView):
-    template_name = 'leads/lead_detail.html'
-    model = models.Lead
-
 def lead_detail(request, slug):
     lead = models.Lead.objects.get(slug_link=slug)
+
+    # An application may have 2 or 3 required questions
+    has_3_questions = lead.question_3 is not None and len(lead.question_3) > 0
+
     if request.method == 'POST':
         if not request.user.is_authenticated:
-            # User is not authenticated. Direct user to login with next URL
-            # as this detail page.
+            # User is not authenticated. Direct user to login with next URL as this detail page.
             url = reverse('login') + '?next=' + \
                 reverse('leads:lead_detail', args=(slug,))
             return HttpResponseRedirect(url)
 
-        # User posted a comment
-        form = forms.LeadCommentForm(request.POST)
+        # User is applied to this lead
+
+        can_apply_lead = models.Application.objects.filter(
+            lead=lead,
+            applicant=request.user.user
+        ).count() == 0 and lead.author != request.user.user
+
+        if not can_apply_lead:
+            # User is not eligible to apply to this lead
+            return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+
+        if has_3_questions:
+            form = forms.ApplicationFormQ3(request.POST)
+        else:
+            form = forms.ApplicationFormNoQ3(request.POST)
+
         if form.is_valid():
-            comment = models.LeadComment.objects.create(
-                lead=models.Lead.objects.get(slug_link=slug),
-                commentor=request.user.user,
-                body=request.POST.get('body')
+            models.Application.objects.create(
+                lead=lead,
+                applicant=request.user.user,
+                question_1=lead.question_1,
+                answer_1=form.cleaned_data.get('answer_1'),
+                question_2=lead.question_2,
+                answer_2=form.cleaned_data.get('answer_2'),
+                question_3=lead.question_3,
+                answer_3=form.cleaned_data.get('answer_3'),
+                applicant_comments=form.cleaned_data.get('applicant_comments')
             )
 
-            comment_id = request.POST.get('comment_id')
-            if comment_id is not None:
-                # This is a reply to a root comment
-                comment.reply_to = models.LeadComment.objects.get(pk=comment_id)
-                comment.save()
-
-            # Focus on comment created
-            url = reverse('leads:lead_detail', args=(slug,)) + \
-                '?focus=comment-' + str(comment.id)
-            return HttpResponseRedirect(url)
+            # return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+            # need to go to the application page
     else:
-        form = forms.LeadCommentForm()
+        if has_3_questions:
+            form = forms.ApplicationFormQ3()
+        else:
+            form = forms.ApplicationFormNoQ3()
 
     params = {
         'lead': lead,
         'form': form
     }
-
-    focus = request.GET.get('focus')
-    if focus is not None:
-        params['focus'] = focus
 
     return render(request, 'leads/lead_detail.html', params)
 
@@ -346,29 +354,29 @@ def lead_create(request):
             get_country = lambda c : commods.Country.objects.get(programmatic_key=c) if c != 'any_country' else None
 
             # Create lead
-            need_agent = get('need_agent')
-            commission_type = get('commission_type')
-            author_type = get('author_type')
-            need_logistics_agent = get('need_logistics_agent')
             lead = models.Lead.objects.create(
                 author=request.user.user,
                 lead_type=get('lead_type'),
-                author_type=author_type,
+                currency=paymods.Currency.objects.get(programmatic_key=get('currency')),
+                author_type=get('author_type'),
                 buy_country=get_country(get('buy_country')),
                 sell_country=get_country(get('sell_country')),
+                headline=get('headline'),
                 details=get('details'),
-                need_agent=need_agent,
-                commission_type=commission_type if need_agent else None,
-                commission_type_other=get('commission_type_other') if need_agent and commission_type == 'other' else None,
-                commission=get('commission') if need_agent and commission_type == 'percentage' else None,
-                avg_deal_size=get('avg_deal_size') if need_agent and commission_type == 'percentage' else None,
-                is_comm_negotiable=get('is_comm_negotiable') if need_agent else None,
-                commission_payable_after=get('commission_payable_after') if need_agent else None,
-                commission_payable_after_other=get('commission_payable_after_other') if need_agent else None,
-                commission_payable_by=get('commission_payable_by') if need_agent and author_type == 'broker' else None,
-                other_agent_details=get('other_agent_details') if need_agent else None,
-                need_logistics_agent=need_logistics_agent,
-                other_logistics_agent_details=get('logistics_agent_details') if need_logistics_agent else None
+                agent_job=get('agent_job'),
+                commission_type=get('commission_type'),
+                commission_percentage=get('commission_percentage'),
+                commission_earnings=get('commission_earnings'),
+                commission_quantity_unit_string=get('commission_quantity_unit_string'),
+                commission_type_other=get('commission_type_other'),
+                other_comm_details=get('other_comm_details'),
+                commission_payable_by=get('commission_payable_by'),
+                commission_payable_after=get('commission_payable_after'),
+                commission_payable_after_other=get('commission_payable_after_other'),
+                is_comm_negotiable=get('is_comm_negotiable'),
+                question_1=get('question_1'),
+                question_2=get('question_2'),
+                question_3=get('question_3')
             )
 
             save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)
@@ -678,53 +686,56 @@ def lead_list(request):
 
         return render(request, 'leads/lead_list.html', params)
 
-@login_required
-@csrf_exempt
-def toggle_save_lead(request, slug):
-    try:
-        lead = models.Lead.objects.get(slug_link=slug)
-    except models.Lead.DoesNotExist:
-        return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+def application_detail(request, slug, aid):
+    pass
 
-    # Disallow saving of leads owned by the owner
-    if lead.author.id == request.user.user.id:
-        return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+# @login_required
+# @csrf_exempt
+# def toggle_save_lead(request, slug):
+#     try:
+#         lead = models.Lead.objects.get(slug_link=slug)
+#     except models.Lead.DoesNotExist:
+#         return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
 
-    def toggle():
-        try:
-            saved_lead = models.SavedLead.objects.get(
-                saver=request.user.user,
-                lead=lead
-            )
+#     # Disallow saving of leads owned by the owner
+#     if lead.author.id == request.user.user.id:
+#         return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
 
-            # Toggle save-unsave
-            saved_lead.active = not saved_lead.active
-            saved_lead.save()
-        except models.SavedLead.DoesNotExist:
-            saved_lead = models.SavedLead.objects.create(
-                saver=request.user.user,
-                lead=lead,
-                active=True
-            )
+#     def toggle():
+#         try:
+#             saved_lead = models.SavedLead.objects.get(
+#                 saver=request.user.user,
+#                 lead=lead
+#             )
+
+#             # Toggle save-unsave
+#             saved_lead.active = not saved_lead.active
+#             saved_lead.save()
+#         except models.SavedLead.DoesNotExist:
+#             saved_lead = models.SavedLead.objects.create(
+#                 saver=request.user.user,
+#                 lead=lead,
+#                 active=True
+#             )
         
-        return {'s': saved_lead.active}
+#         return {'s': saved_lead.active}
 
-    if request.method == 'POST':
-        # AJAX call, toggle save-unsave, return JSON.
-        return JsonResponse(toggle())
+#     if request.method == 'POST':
+#         # AJAX call, toggle save-unsave, return JSON.
+#         return JsonResponse(toggle())
 
-    # Unauthenticated call. User will be given the URL to click only if the
-    # user is authenticated. Otherwise, a click on the 'save' button will
-    # result in an AJAX post to this URL.
-    #
-    # Toggle save-unsave, redirect user to next URL.
-    toggle()
+#     # Unauthenticated call. User will be given the URL to click only if the
+#     # user is authenticated. Otherwise, a click on the 'save' button will
+#     # result in an AJAX post to this URL.
+#     #
+#     # Toggle save-unsave, redirect user to next URL.
+#     toggle()
 
-    # Read 'next' URL from GET parameters. Redirect user there if the
-    # parameter exists. Other redirect user to default lead details page.
-    next_url = request.GET.get('next')
-    if next_url is not None and len(next_url.strip()) > 0:
-        return HttpResponseRedirect(next_url)
-    else:
-        return HttpResponseRedirect(
-            reverse('leads:lead_detail', args=(slug,)))
+#     # Read 'next' URL from GET parameters. Redirect user there if the
+#     # parameter exists. Other redirect user to default lead details page.
+#     next_url = request.GET.get('next')
+#     if next_url is not None and len(next_url.strip()) > 0:
+#         return HttpResponseRedirect(next_url)
+#     else:
+#         return HttpResponseRedirect(
+#             reverse('leads:lead_detail', args=(slug,)))

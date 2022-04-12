@@ -7,7 +7,7 @@ from files.utilities.delete_file import delete_file
 from common.utilities.is_censored import is_censored
 
 _require_msg = 'This field is required.'
-_censor_msg = 'Please do not specify emails, phone numbers or URLs. Users may contact you through your WhatsApp phone number.'
+_censor_msg = 'Don\'t share contact details here. You may share contact details later.'
 
 def _handle_lead_image(form, image, file_id, cache_use):
     cache_if_form_error = False
@@ -39,14 +39,51 @@ def _handle_lead_image(form, image, file_id, cache_use):
 
 class LeadForm(forms.Form):
     lead_type = forms.CharField()
+    currency = forms.CharField()
     author_type = forms.CharField()
     buy_country = forms.CharField()
     sell_country = forms.CharField()
-    details = forms.CharField() # Censorship-enforced
+    headline = forms.CharField()
+    details = forms.CharField()
+    agent_job = forms.CharField()
+
     image_one = forms.ImageField(required=False)
     image_two = forms.ImageField(required=False)
     image_three = forms.ImageField(required=False)
-    need_agent = forms.BooleanField(required=False) # Unchecked is None
+
+    commission_type = forms.CharField(required=False)
+
+    # These fields are required if commission_type is 'earning'
+    commission_earnings = forms.FloatField(required=False)
+    commission_quantity_unit_string = forms.CharField(required=False)
+
+    # These field is required if commission_type is 'percentage'
+    commission_percentage = forms.FloatField(
+        required=False,
+        min_value=0.01,
+        max_value=100
+    )
+
+    # This field is required if commission_type is 'other'
+    commission_type_other = forms.CharField(required=False)
+
+    # Not required, only used if commission_type is NOT 'other'
+    other_comm_details = forms.CharField(required=False)
+
+    # Required if author_type is 'broker'
+    commission_payable_by = forms.CharField(required=False)
+
+    # Always required
+    commission_payable_after = forms.CharField(required=False)
+
+    # This field is required if commission_payable_after is 'other'
+    commission_payable_after_other = forms.CharField(required=False)
+
+    is_comm_negotiable = forms.BooleanField(required=False) # Unchecked is None
+
+    question_1 = forms.CharField()
+    question_2 = forms.CharField()
+    question_3 = forms.CharField(required=False) # Optional question
 
     # These fields will be set only if there are errors in the form. In that
     # case, we'll cache the images, and pass the file ID and cache image URL
@@ -62,40 +99,6 @@ class LeadForm(forms.Form):
     image_three_cache_file_id = forms.CharField(required=False)
     image_three_cache_url = forms.CharField(required=False)
 
-    # Not required whether we need agents or not
-    other_agent_details = forms.CharField(required=False) # Censorship-enforced
-
-    ## Following fields are only required if need_agent is True. All of them
-    ## are required=False by default.
-
-    commission_type = forms.CharField(required=False)
-
-    # This field is required if commission_type is 'other'
-    commission_type_other = forms.CharField(required=False) # Censorship-enforced
-
-    # These fields are required if commission_type is 'percentage'
-    commission = forms.FloatField(
-        required=False,
-        min_value=0.01,
-        max_value=100
-    )
-    avg_deal_size = forms.FloatField(
-        required=False,
-        min_value=1
-    )
-
-    # This field is required if commission_payable_after is 'other'
-    commission_payable_after_other = forms.CharField(required=False) # Censorship-enforced
-
-    # Required if author_type is 'broker'
-    commission_payable_by = forms.CharField(required=False)
-
-    is_comm_negotiable = forms.BooleanField(required=False) # Unchecked is None
-    commission_payable_after = forms.CharField(required=False)
-
-    need_logistics_agent = forms.BooleanField(required=False)
-    other_logistics_agent_details = forms.CharField(required=False) # Censorship-enforced
-
     def clean(self):
         super(LeadForm, self).clean()
 
@@ -105,63 +108,33 @@ class LeadForm(forms.Form):
         get = lambda s : self.cleaned_data.get(s)
 
         # Helper function to test for empty string
-        is_empty_string = lambda s : s is None or len(s.strip()) == 0
+        is_empty_string = lambda s : s is None or len(str(s).strip()) == 0
 
-        details = get('details')
-        if is_censored(details):
-            self.add_error('details', _censor_msg)
-            has_error = True
-
-        other_agent_details = get('other_agent_details')
-        if is_censored(other_agent_details):
-            self.add_error('other_agent_details', _censor_msg)
-            has_error = True
-
-        if get('need_agent'):
-            ct = get('commission_type')
-            if ct == 'other':
-                commission_type_other = get('commission_type_other')
-                if is_empty_string(commission_type_other):
-                    self.add_error('commission_type_other', _require_msg)
-                    has_error = True
-                elif is_censored(commission_type_other):
-                    self.add_error('commission_type_other', _censor_msg)
-                    has_error = True
-            elif ct == 'percentage':
-                if get('commission') is None:
-                    self.add_error('commission', _require_msg)
-                    has_error = True
-
-                if get('avg_deal_size') is None:
-                    self.add_error('avg_deal_size', _require_msg)
-                    has_error = True
-
-            if get('commission_payable_after') == 'other':
-                commission_payable_after_other = get('commission_payable_after_other')
-                if is_empty_string(commission_payable_after_other):
-                    self.add_error('commission_payable_after_other', _require_msg)
-                    has_error = True
-                elif is_censored(commission_payable_after_other):
-                    self.add_error('commission_payable_after_other', _censor_msg)
-                    has_error = True
-
-            if get('author_type') == 'broker':
-                if is_empty_string(get('commission_payable_by')):
-                    self.add_error('commission_payable_by', _require_msg)
-                    has_error = True
-
-            if is_empty_string(get('commission_payable_after')):
-                self.add_error('commission_payable_after', _require_msg)
+        ct = get('commission_type')
+        if ct == 'percentage':
+            if is_empty_string(get('commission_percentage')):
+                self.add_error('commission_percentage', _require_msg)
+                has_error = True
+        elif ct == 'earning':
+            if is_empty_string(get('commission_earnings')):
+                self.add_error('commission_earnings', _require_msg)
+                has_error = True
+            elif is_empty_string(get('commission_quantity_unit_string')):
+                self.add_error('commission_quantity_unit_string', _require_msg)
+                has_error = True
+        elif ct == 'other':
+            if is_empty_string(get('commission_type_other')):
+                self.add_error('commission_type_other', _require_msg)
                 has_error = True
 
-        need_logistics_agent = get('need_logistics_agent')
-        if need_logistics_agent == True:
-            other_logistics_agent_details = get('other_logistics_agent_details')
-            if is_empty_string(other_logistics_agent_details):
-                self.add_error('other_logistics_agent_details', _require_msg)
+        if get('commission_payable_after') == 'other':
+            if is_empty_string(get('commission_payable_after_other')):
+                self.add_error('commission_payable_after_other', _require_msg)
                 has_error = True
-            elif is_censored(other_logistics_agent_details):
-                self.add_error('other_logistics_agent_details', _censor_msg)
+
+        if get('author_type') == 'broker':
+            if is_empty_string(get('commission_payable_by')):
+                self.add_error('commission_payable_by', _require_msg)
                 has_error = True
 
         image_one = get('image_one')
@@ -265,16 +238,28 @@ class LeadForm(forms.Form):
 
         return self.cleaned_data
 
-class LeadCommentForm(forms.Form):
-    comment_id = forms.IntegerField(required=False)
-    body = forms.CharField()
+class ApplicationFormNoQ3(forms.Form):
+    answer_1 = forms.CharField()
+    answer_2 = forms.CharField()
+    answer_3 = forms.CharField(required=False)
+    applicant_comments = forms.CharField(required=False)
 
-    def clean(self):
-        super(LeadCommentForm, self).clean()
-        body = self.cleaned_data.get('body')
+class ApplicationFormQ3(forms.Form):
+    answer_1 = forms.CharField()
+    answer_2 = forms.CharField()
+    answer_3 = forms.CharField()
+    applicant_comments = forms.CharField(required=False)
 
-        if is_censored(body):
-            self.add_error('body', _censor_msg)
-            raise ValidationError(None)
+# class LeadCommentForm(forms.Form):
+#     comment_id = forms.IntegerField(required=False)
+#     body = forms.CharField()
 
-        return self.cleaned_data
+#     def clean(self):
+#         super(LeadCommentForm, self).clean()
+#         body = self.cleaned_data.get('body')
+
+#         if is_censored(body):
+#             self.add_error('body', _censor_msg)
+#             raise ValidationError(None)
+
+#         return self.cleaned_data

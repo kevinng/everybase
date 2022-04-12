@@ -12,34 +12,47 @@
 <form id="lead_form" enctype="multipart/form-data" action="{% url 'leads:lead_create' %}" method="post">
 {% csrf_token %}
 <div class="flex justify-center">
-    <div class="bg-white md:w-2/3 lg:w-1/2 xl:w-1/3 mt-10 mb-10 w-full p-10 shadow-md">
+    <div class="bg-white md:w-2/3 lg:w-1/2 xl:w-1/3 mt-10 mb-10 w-full py-10 shadow-md">
         <h1 class="text-3xl font-bold text-center mt-6">New Lead</h1>
         <div class="mt-7 flex flex-col justify-center">
             {% comment %} start: lead_type {% endcomment %}
-            <label for="lead_type" class="font-bold text-slate-400">Are you selling or buying?</label>
-            <div class="mt-2">
+            <label for="lead_type" class="font-bold text-slate-400 px-10">Are you selling or buying?</label>
+            <div class="mt-2 px-10">
                 <select id="lead_type" name="lead_type" class="select2">
                     <option value="selling"{% if form.lead_type.value == 'selling' %} selected{% endif %}>Selling</option>
                     <option value="buying"{% if form.lead_type.value == 'buying' %} selected{% endif %}>Buying</option>
                 </select>
             </div>
-            {% if form.lead_type.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.lead_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% if form.lead_type.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.lead_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: lead_type {% endcomment %}
 
+            {% comment %} start: currency {% endcomment %}
+            <label for="currency" class="font-bold text-slate-400 px-10 mt-7">Currency</label>
+            <div class="mt-2 px-10">
+                <select id="currency" name="currency" class="select2">
+                    <option value="usd"{% if form.currency.value == 'usd' %} selected{% endif %}>USD, US Dollar</option>
+                    <option value="rmb"{% if form.currency.value == 'rmb' %} selected{% endif %}>RMB, Chinese Renminbi</option>
+                    <option value="inr"{% if form.currency.value == 'inr' %} selected{% endif %}>INR, Indian Rupee</option>
+                    <option value="eur"{% if form.currency.value == 'eur' %} selected{% endif %}>EUR, Euro</option>
+                </select>
+            </div>
+            <div id="currency__help" class="mt-2 px-10 italic">I'm dealing in this currency.</div>
+            {% comment %} end: currency {% endcomment %}
+
             {% comment %} start: author_type {% endcomment %}
-            <label id="author_type__label" for="author_type" class="font-bold text-slate-400 mt-7">Are you a direct seller/buyer or a middleman?</label>
-            <div class="mt-2">
+            <label id="author_type__label" for="author_type" class="font-bold text-slate-400 mt-7 px-10">Are you a direct seller/buyer or a middleman?</label>
+            <div class="mt-2 px-10">
                 <select id="author_type" name="author_type" class="select2">
                     <option id="author_type__option__direct" value="direct"{% if form.author_type.value == 'direct' %} selected{% endif %}></option>
                     <option value="broker"{% if form.author_type.value == 'broker' %} selected{% endif %}>Middleman</option>
                 </select>
             </div>
-            {% if form.author_type.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.author_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% if form.author_type.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.author_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: author_type {% endcomment %}
 
             {% comment %} start: buy country {% endcomment %}
-            <label id="buy_country__label" for="buy_country" class="font-bold text-slate-400 mt-7">Buy From This Country</label>
-            <div class="mt-2">
+            <label id="buy_country__label" for="buy_country" class="font-bold text-slate-400 mt-7 px-10">Buy From This Country</label>
+            <div class="mt-2 px-10">
                 <select id="buy_country" name="buy_country" class="select2" data-placeholder="Choose country">
                     <option></option>
                     <option id="buy_country__option__any_country" value="any_country"{% if form.buy_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
@@ -48,13 +61,13 @@
                     {% endfor %}
                 </select>
             </div>
-            {% if form.buy_country.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.buy_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}            
-            <div id="buy_country__help" class="mt-2"></div>
+            {% if form.buy_country.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.buy_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}            
+            <div id="buy_country__help" class="mt-2 px-10"></div>
             {% comment %} end: buy country {% endcomment %}
 
             {% comment %} start: sell country {% endcomment %}
-            <label id="sell_country__label" for="sell_country" class="font-bold text-slate-400 mt-7">Sell In This Country</label>
-            <div class="mt-2">
+            <label id="sell_country__label" for="sell_country" class="font-bold text-slate-400 mt-7 px-10">Sell In This Country</label>
+            <div class="mt-2 px-10">
                 <select id="sell_country" name="sell_country" class="select2" data-placeholder="Choose country">
                     <option></option>
                     <option id="sell_country__option__any_country" value="any_country"{% if form.sell_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
@@ -63,20 +76,34 @@
                     {% endfor %}
                 </select>
             </div>
-            {% if form.sell_country.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.sell_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="sell_country__help" class="mt-2"></div>
+            {% if form.sell_country.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.sell_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="sell_country__help" class="mt-2 px-10"></div>
             {% comment %} end: sell country {% endcomment %}
 
+            {% comment %} start: headline {% endcomment %}
+            <label for="headline" class="font-bold text-slate-400 mt-7 px-10">Headline</label>
+            <div class="px-10"><input name="headline" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" value="{% if form.headline.value is not None and form.headline.value|cut:' ' != '' %}{{ form.headline.value }}{% endif %}"></div>
+            {% if form.headline.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.headline.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="headline__help" class="mt-2 px-10"></div>
+            {% comment %} end: headline {% endcomment %}
+
             {% comment %} start: details {% endcomment %}
-            <label for="details" class="font-bold text-slate-400 mt-7">Goods/Services Details</label>
-            <textarea name="details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None and form.details.value|cut:' ' != '' %}{{ form.details.value }}{% endif %}</textarea>
-            {% if form.details.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="details__help" class="mt-2"></div>
+            <label for="details" class="font-bold text-slate-400 mt-7 px-10">Goods & Services</label>
+            <div class="px-10"><textarea name="details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None and form.details.value|cut:' ' != '' %}{{ form.details.value }}{% endif %}</textarea></div>
+            {% if form.details.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="details__help" class="mt-2 px-10"></div>
             {% comment %} end: details {% endcomment %}
 
+            {% comment %} start: agent_job {% endcomment %}
+            <label for="agent_job" class="font-bold text-slate-400 mt-7 px-10">What would you like the agent to do for you?</label>
+            <div class="px-10"><textarea name="agent_job" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.agent_job.value is not None and form.agent_job.value|cut:' ' != '' %}{{ form.agent_job.value }}{% endif %}</textarea></div>
+            {% if form.agent_job.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.agent_job.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="agent_job__help" class="mt-2 px-10"></div>
+            {% comment %} end: agent_job {% endcomment %}
+
             {% comment %} start: images {% endcomment %}
-            <label class="font-bold text-slate-400 mt-7">Goods/Services Images</label>
-            <div class="flex flex-col items-center">
+            <label class="font-bold text-slate-400 mt-7 px-10">Images</label>
+            <div class="flex flex-col items-center px-10">
                 <div id="image_one_preview" class="mt-8">No image chosen</div>
                 <div id="image_one_remove" class="py-3 px-4 rounded-md font-bold bg-rose-100 hover:bg-rose-200 cursor-pointer mt-3">Remove Image 1</div>
                 <label id="image_one_input_label" for="image_one" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 1</label>
@@ -130,20 +157,17 @@
             </div>
             {% comment %} end: images {% endcomment %}
 
-            {% comment %} start: need_agent {% endcomment %}
-            <label id="need_agent__question" class="font-bold text-slate-400 mt-12"></label>
-            <div class="mt-4 flex justify-start">
-                <input id="need_agent" name="need_agent" type="checkbox" class="h-6 w-6 flex-none" {% if form.need_agent.value == True %} checked{% endif %}>
-                <label id="need_agent__label" for="need_agent" class="ml-3"></label>
-            </div>
-            <div id="need_agent__help" class="mt-2"></div>
-            {% comment %} end: need_agent {% endcomment %}
+            {% comment %} start: agent commission {% endcomment %}
+            <div class="w-full bg-slate-200 py-2 font-bold px-10 mt-12">Agent Commission</div>
+            {% comment %} end: agent commission {% endcomment %}
 
+            
             {% comment %} start: commission_type {% endcomment %}
-            <label id="commission_type__label" for="commission_type" class="font-bold text-slate-400 mt-7">How is agent commission calculated?</label>
-            <div id="commission_type__input" class="mt-2">
+            <label id="commission_type__label" for="commission_type" class="font-bold text-slate-400 mt-12 px-10">How is agent commission calculated?</label>
+            <div id="commission_type__input" class="mt-2 px-10">
                 <select id="commission_type" name="commission_type" class="select2">
                     <option value="percentage"{% if form.commission_type.value == 'percentage' %} selected{% endif %}>% of Sales</option>
+                    <option value="earning"{% if form.commission_type.value == 'earning' %} selected{% endif %}>Earnings by Quantity</option>
                     <option value="other"{% if form.commission_type.value == 'other' %} selected{% endif %}>Other</option>
                 </select>
             </div>
@@ -151,59 +175,53 @@
             {% comment %} end: commission_type {% endcomment %}
 
             {% comment %} start: commission_type_other {% endcomment %}
-            <textarea id="commission_type_other" name="commission_type_other" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.commission_type_other.value is not None and form.commission_type_other.value|cut:' ' != '' %}{{ form.commission_type_other.value }}{% endif %}</textarea>
+            <div class="px-10"><textarea id="commission_type_other" name="commission_type_other" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.commission_type_other.value is not None and form.commission_type_other.value|cut:' ' != '' %}{{ form.commission_type_other.value }}{% endif %}</textarea></div>
             {% if form.commission_type_other.errors %}<div id="commission_type_other__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_type_other.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="commission_type_other__help" class="mt-2">Describe how agent commission is calculated.</div>
+            <div id="commission_type_other__help" class="mt-2 px-10">Describe how agent commission is calculated.</div>
             {% comment %} end: commission_type_other {% endcomment %}
 
             {% comment %} start: commission % {% endcomment %}
-            <label id="commission__label" for="commission" class="font-bold text-slate-400 mt-7">Agent Commission</label>
-            <div id="commission__input" class="flex items-center justify-start">
-                <input id="commission" name="commission" placeholder="0" type="number" min="0" max="100" {% if form.commission.value %}value="{{ form.commission.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">% of Sales</div>
+            <label id="commission_percentage__label" for="commission" class="font-bold text-slate-400 mt-7 px-10">Commission</label>
+            <div id="commission_percentage__input" class="flex items-center justify-start px-10">
+                <input id="commission_percentage" name="commission_percentage" placeholder="0" type="number" min="0" max="100" {% if form.commission_percentage.value %}value="{{ form.commission_percentage.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">% of Sales</div>
             </div>
-            <div id="commission__js_errors" class="px-1 mt-2 text-red-500"></div>
-            {% if form.commission.errors %}<div id="commission__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="commission__help" class="mt-2">E.g., agent sold $1000 x 10% commission = $100 earned</div>
+            <div id="commission_percentage__js_errors" class="px-11 mt-2 text-red-500"></div>
+            {% if form.commission_percentage.errors %}<div id="commission_percentage__errors" class="px-11 mt-2 text-red-500">{% for error in form.commission_percentage.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             {% comment %} end: commission % {% endcomment %}
 
-            {% comment %} start: avg_deal_size {% endcomment %}
-            <label id="avg_deal_size__label" for="avg_deal_size" class="font-bold text-slate-400 mt-7">Average Deal Size</label>
-            <div id="avg_deal_size__input" class="flex items-center justify-start">
-                <div class="mr-3 font-bold text-2xl">USD</div><input id="avg_deal_size" name="avg_deal_size" placeholder="0" type="number" {% if form.avg_deal_size.value %}value="{{ form.avg_deal_size.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2">
+            {% comment %} start: commission_earnings {% endcomment %}
+            <label id="commission_earnings__label" for="commission_earnings" class="font-bold text-slate-400 mt-7 px-10">Commission</label>
+            <div id="commission_earnings__input" class="flex items-center justify-start px-10">
+                <div class="commission_earnings__currency font-bold text-2xl">USD</div><input id="commission_earnings" name="commission_earnings" placeholder="e.g., 5" type="number" {% if form.commission_earnings.value %}value="{{ form.commission_earnings.value }}"{% endif %} class="w-1/4 border rounded-md py-3 px-5 mt-2 ml-3"><div class="font-bold text-2xl ml-3">per</div><input id="commission_quantity_unit_string" name="commission_quantity_unit_string" placeholder="e.g., KG" {% if form.commission_quantity_unit_string.value %}value="{{ form.commission_quantity_unit_string.value }}"{% endif %} class="w-1/4 border rounded-md py-3 px-5 mt-2 ml-3">
             </div>
-            {% if form.avg_deal_size.errors %}<div id="avg_deal_size__errors" class="px-1 mt-2 text-red-500">{% for error in form.avg_deal_size.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="avg_deal_size__help" class="mt-2">On average, what's a typical deal size or order value? This helps an agent calculate how much he can make per deal.</div>
-            {% comment %} end: avg_deal_size {% endcomment %}
-
-            {% comment %} start: average earnings per deal {% endcomment %}
-            <label id="avg_earnings__label" class="font-bold text-slate-400 mt-7">Average Agent Earnings Per Deal</label>
-            <div id="avg_earnings__value" class="mt-2 font-bold text-2xl">USD <span id="avg_earnings__value_1">0.00</span></div>
-            <div id="avg_earnings__help" class="mt-2">On average, an agent makes <span class="font-bold">USD <span id="avg_earnings__value_2">0.00</span></span> per deal. <span class="italic">This is a guide only</span>.</div>
-            {% comment %} end: average earnings per deal {% endcomment %}
+            {% if form.commission_earnings.errors %}<div id="commission_earnings__errors" class="px-11 mt-2 text-red-500">{% for error in form.commission_earnings.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% if form.commission_quantity_unit_string.errors %}<div id="commission_quantity_unit_string__errors" class="px-11 mt-2 text-red-500">{% for error in form.commission_quantity_unit_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission_earnings__help" class="mt-2 px-10">E.g., <span class="commission_earnings__currency">USD</span> 5 per KG</div>
+            {% comment %} end: commission_earnings {% endcomment %}
 
             {% comment %} start: is_comm_negotiable {% endcomment %}
-            <label id="is_comm_negotiable__label" for="commission" class="font-bold text-slate-400 mt-7">Is commission negotiable for each deal?</label>
-            <div id="is_comm_negotiable__input" class="mt-4 flex justify-start">
+            <label id="is_comm_negotiable__label" for="is_comm_negotiable" class="font-bold text-slate-400 mt-7 px-10">Is commission negotiable for each deal?</label>
+            <div id="is_comm_negotiable__input" class="mt-4 flex justify-start px-10">
                 <input id="is_comm_negotiable" name="is_comm_negotiable" type="checkbox" class="h-6 w-6" {% if form.is_comm_negotiable.value == True %} checked{% endif %}>
                 <label for="is_comm_negotiable" class="ml-3">Yes, commission <span class="italic">may</span> differ and is negotiable for each deal.</label>
             </div>
             {% comment %} end: is_comm_negotiable {% endcomment %}
 
             {% comment %} start: commission_payable_by {% endcomment %}
-            <label id="commission_payable_by__label" for="commission_payable_by" class="font-bold text-slate-400 mt-7">Commission Payable By</label>
-            <div id="commission_payable_by__input" class="mt-2">
+            <label id="commission_payable_by__label" for="commission_payable_by" class="font-bold text-slate-400 mt-7 px-10">Commission Payable By</label>
+            <div id="commission_payable_by__input" class="mt-2 px-10">
                 <select id="commission_payable_by" name="commission_payable_by" class="select2">
                     <option value="me"{% if form.commission_payable_by.value == 'me' %} selected{% endif %}>Me</option>
                     <option id="commission_payable_by__option__counter_party" value="counter_party"{% if form.commission_payable_by.value == 'counter_party' %} selected{% endif %}>Seller/Buyer</option>
                 </select>
             </div>
             {% if form.commission_payable_by.errors %}<div id="commission_payable_by__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_payable_by.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="commission_payable_by__help" class="mt-2"></div>
+            <div id="commission_payable_by__help" class="mt-2 px-10"></div>
             {% comment %} end: commission_payable_by {% endcomment %}
 
             {% comment %} start: commission_payable_after {% endcomment %}
-            <label id="commission_payable_after__label" for="commission_payable_after" class="font-bold text-slate-400 mt-7">When will commissions be paid?</label>
-            <div id="commission_payable_after__input" class="mt-2">
+            <label id="commission_payable_after__label" for="commission_payable_after" class="font-bold text-slate-400 mt-7 px-10">When will commissions be paid?</label>
+            <div id="commission_payable_after__input" class="mt-2 px-10">
                 <select id="commission_payable_after" name="commission_payable_after" class="select2">
                     <option value="initial_deposit_received"{% if form.commission_payable_after.value == 'initial_deposit_received' %} selected{% endif %}>Initial Deposit Received</option>
                     <option value="goods_shipped"{% if form.commission_payable_after.value == 'goods_shipped' %} selected{% endif %}>Goods Shipped</option>
@@ -216,47 +234,46 @@
             {% comment %} end: commission_payable_after {% endcomment %}
 
             {% comment %} start: commission_payable_after_other {% endcomment %}
-            <textarea id="commission_payable_after_other" name="commission_payable_after_other" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.commission_payable_after_other.value is not None and form.commission_payable_after_other.value|cut:' ' != '' %}{{ form.commission_payable_after_other.value }}{% endif %}</textarea>
-            {% if form.commission_payable_after_other.errors %}<div id="commission_payable_after_other__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_payable_after_other.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            <div id="commission_payable_after_other__help" class="mt-2">Describe when agent commission is paid.</div>
+            <div class="px-10"><textarea id="commission_payable_after_other" name="commission_payable_after_other" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.commission_payable_after_other.value is not None and form.commission_payable_after_other.value|cut:' ' != '' %}{{ form.commission_payable_after_other.value }}{% endif %}</textarea></div>
+            {% if form.commission_payable_after_other.errors %}<div id="commission_payable_after_other__errors" class="px-11 mt-2 text-red-500">{% for error in form.commission_payable_after_other.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission_payable_after_other__help" class="mt-2 px-10">Describe when agent commission is paid.</div>
             {% comment %} end: commission_payable_after_other {% endcomment %}
 
-            {% comment %} start: other_agent_details {% endcomment %}
-            <label id="other_agent_details__label" for="other_agent_details" class="font-bold text-slate-400 mt-7">Other details you'd like the agent to know</label>
-            <textarea id="other_agent_details" name="other_agent_details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.other_agent_details.value is not None %}{{ form.other_agent_details.value }}{% endif %}</textarea>
-            {% if form.other_agent_details.errors %}<div id="other_agent_details__errors" class="px-1 mt-2 text-red-500">{% for error in form.other_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            {% comment %} end: other_agent_details {% endcomment %}
+            {% comment %} start: other_comm_details {% endcomment %}
+            <label id="other_comm_details__label" for="other_comm_details" class="font-bold text-slate-400 mt-7 px-10">Other Commission Details (Optional)</label>
+            <div class="px-10"><textarea id="other_comm_details" name="other_comm_details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.other_comm_details.value is not None %}{{ form.other_comm_details.value }}{% endif %}</textarea></div>
+            {% if form.other_comm_details.errors %}<div id="other_comm_details__errors" class="px-1 mt-2 text-red-500">{% for error in form.other_comm_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: other_comm_details {% endcomment %}
 
-            {% comment %} start: need_logistics_agent {% endcomment %}
-            <label class="font-bold text-slate-400 mt-12">Do you need agents to help you with logistics?</label>
-            <div class="mt-4 flex justify-start">
-                <input id="need_logistics_agent" name="need_logistics_agent" type="checkbox" class="h-6 w-6 flex-none" {% if form.need_logistics_agent.value == True %} checked{% endif %}>
-                <label for="need_logistics_agent" class="ml-3">Yes, I need agents to help me with logistics</label>
-            </div>
-            <div class="mt-2">E.g., exporting, goods inspection.</div>
-            {% comment %} end: need_logistics_agent {% endcomment %}
+            {% comment %} start: interview questions {% endcomment %}
+            <div class="w-full bg-slate-200 py-2 font-bold px-10 mt-12">Interview Questions</div>
+            <div class="mt-2 px-10">A user must answer these questions when applying to be an agent.</div>
+            {% comment %} end: interview questions {% endcomment %}
 
-            {% comment %} start: other_logistics_agent_details {% endcomment %}
-            <label id="other_logistics_agent_details__label" for="other_logistics_agent_details" class="font-bold text-slate-400 mt-7">What logistics needs do you have?</label>
-            <textarea id="other_logistics_agent_details" name="other_logistics_agent_details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.other_logistics_agent_details.value is not None %}{{ form.other_logistics_agent_details.value }}{% endif %}</textarea>
-            {% if form.other_logistics_agent_details.errors %}<div id="other_logistics_agent_details__errors" class="px-1 mt-2 text-red-500">{% for error in form.other_logistics_agent_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-            {% comment %} end: other_logistics_agent_details {% endcomment %}
+            {% comment %} start: question 1 {% endcomment %}
+            <label for="question_1" class="font-bold text-slate-400 mt-7 px-10">Question 1</label>
+            <div class="px-10"><textarea id="question_1" name="question_1" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.question_1.value is not None %}{{ form.question_1.value }}{% else %}Have you dealt with this or similar goods or services before?{% endif %}</textarea></div>
+            {% if form.question_1.errors %}<div id="question_1__errors" class="px-11 mt-2 text-red-500">{% for error in form.question_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: question 1 {% endcomment %}
 
-            {% load settings_value %}
-            {% settings_value 'RECAPTCHA_SITE_KEY' as RECAPTCHA_SITE_KEY %}
-            <button data-sitekey="{{ RECAPTCHA_SITE_KEY }}" data-callback="onSubmit" data-action="submit" id="submit" type="submit" class="g-recaptcha py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-12 shadow-md">Post</button>
+            {% comment %} start: question 2 {% endcomment %}
+            <label for="question_2" class="font-bold text-slate-400 mt-7 px-10">Question 2</label>
+            <div class="px-10"><textarea id="question_2" name="question_2" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.question_2.value is not None %}{{ form.question_2.value }}{% else %}Do you know any potential buyers?{% endif %}</textarea></div>
+            {% if form.question_2.errors %}<div id="question_2__errors" class="px-11 mt-2 text-red-500">{% for error in form.question_2.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: question 2 {% endcomment %}
 
-            <div class="mt-4 flex justify-start">
-                <input id="friendly" type="checkbox" class="h-6 w-6 flex-none">
-                <label for="friendly" class="ml-3 font-semibold">I know Everybase charge credits to connect users, so I didn't include contact details in my post.</label>
-            </div>
-            <div class="mt-6 font-extrabold text-center"><span class="text-red-500">WARNING:</span> Phone numbers of users who share contact details in posts will be banned.</div>
+            {% comment %} start: optional question {% endcomment %}
+            <label for="question_3" class="font-bold text-slate-400 mt-7 px-10">Optional Question</label>
+            <div class="px-10"><textarea id="question_3" name="question_3" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.question_3.value is not None %}{{ form.question_3.value }}{% endif %}</textarea></div>
+            {% if form.question_3.errors %}<div id="question_3__errors" class="px-11 mt-2 text-red-500">{% for error in form.question_3.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: optional question {% endcomment %}
+
+            <div class="px-10"><button id="submit" type="submit" class="g-recaptcha py-3 px-7 w-full rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-12 shadow-md">Post</button></div>
         </div>
     </div>
 </div>
 </form>
 {% endblock %}
-
 {% comment %}
 leads/js/lead_create_edit.min.js
 
@@ -271,6 +288,9 @@ $(document).ready(function() {
 
     // Lead type
     $lead_type = $('#lead_type')
+
+    // Currency
+    $currency = $('#currency')
 
     // Author type
     $author_type = $('#author_type')
@@ -325,16 +345,23 @@ $(document).ready(function() {
     $image_three_cache_url = $('#image_three_cache_url')
     $image_three_remove = $('#image_three_remove')
 
-    // Need agent
-    $need_agent__question = $('#need_agent__question')
-    $need_agent = $('#need_agent')
-    $need_agent__help = $('#need_agent__help')
-    $need_agent__label = $('#need_agent__label')
-
     // Commission type
     $commission_type__label = $('#commission_type__label')
     $commission_type__input = $('#commission_type__input')
     $commission_type__errors = $('#commission_type__errors')
+    
+    // Commission percentage
+    $commission_percentage = $('#commission_percentage')
+    $commission_percentage__label = $('#commission_percentage__label')
+    $commission_percentage__input = $('#commission_percentage__input')
+    $commission_percentage__errors = $('#commission_percentage__errors')
+    $commission_percentage__js_errors = $('#commission_percentage__js_errors')
+
+    // Commission earnings
+    $commission_earnings__label = $('#commission_earnings__label')
+    $commission_earnings__input = $('#commission_earnings__input')
+    $commission_earnings__help = $('#commission_earnings__help')
+    $commission_earnings__currency = $('.commission_earnings__currency')
 
     // Commission type other
     $commission_type = $('#commission_type')
@@ -348,14 +375,6 @@ $(document).ready(function() {
     $commission_payable_by__option__counter_party = $('#commission_payable_by__option__counter_party')
     $commission_payable_by__help = $('#commission_payable_by__help')
     $commission_payable_by__errors = $('#commission_payable_by__errors')
-
-    // Commission
-    $commission = $('#commission')
-    $commission__label = $('#commission__label')
-    $commission__input = $('#commission__input')
-    $commission__errors = $('#commission__errors')
-    $commission__js_errors = $('#commission__js_errors')
-    $commission__help = $('#commission__help')
 
     // Average deal size
     $avg_deal_size = $('#avg_deal_size')
@@ -386,11 +405,6 @@ $(document).ready(function() {
     $commission_payable_after_other__errors = $('#commission_payable_after_other__errors')
     $commission_payable_after_other__help = $('#commission_payable_after_other__help')
 
-    // Other agent details
-    $other_agent_details = $('#other_agent_details')
-    $other_agent_details__label = $('#other_agent_details__label')
-    $other_agent_details__errors = $('#other_agent_details__errors')
-
     // Friendly
     $friendly = $('#friendly')
 
@@ -415,40 +429,59 @@ $(document).ready(function() {
         $('input.select2-search__field').prop('placeholder', 'Search here...')
     })
 
-    // ***** Functions to set the state of each section *****
+    // Author type
 
-    // author_type
-
-    function set_section__author_type__is_buying() {
+    function update_author_type_ui__lead_type__buying() {
+        // Update 'author type' UI when 'lead type' has changed to 'buying'.
         $author_type__label.text('Are you a direct buyer or a middleman?')
         $author_type__option__direct.text('Direct Buyer')
         $author_type.select2() // Refresh
     }
 
-    function set_section__author_type__is_selling() {
+    function update_author_type_ui__lead_type__selling() {
+        // Update 'author type' UI when 'lead type' has changed to 'selling'.
         $author_type__label.text('Are you a direct seller or a middleman?')
         $author_type__option__direct.text('Direct Seller')
         $author_type.select2() // Refresh
     }
 
-    function set_section__author_type() {
+    function author_type_val__changed() {
+        // Update relevant UI elements when 'author type' value changed.
         author_type_val = $author_type.val()
         if (author_type_val == 'direct') {
-            set_section__commission_payable_by__direct()
-        } else if (author_type_val == 'broker' && $need_agent.is(':checked')) {
-            set_section__commission_payable_by__broker()
+            update_commission_payable_by_ui__author_type__direct()
+        } else if (author_type_val == 'broker') {
+            update_commission_payable_by_ui__author_type__broker()
         }
     }
 
-    // buy_country
+    // Currency type
 
-    function set_section__buy_country__buying() {
+    function currency_val__changed() {
+        // Update relevant UI elements when 'currency' value changed.
+        currency_val = $currency.val()
+        if (currency_val == 'usd') {
+            $commission_earnings__currency.text('USD')
+        } else if (currency_val == 'rmb') {
+            $commission_earnings__currency.text('RMB')
+        } else if (currency_val == 'inr') {
+            $commission_earnings__currency.text('INR')
+        } else if (currency_val == 'eur') {
+            $commission_earnings__currency.text('EUR')
+        }
+    }
+
+    // Buy country
+
+    function update_buy_country_ui__lead_type__buying() {
+        // Update 'buy country' UI elements when 'lead type' has changed to 'buying'.
         $buy_country__label.text('Buy From This Country')
         $buy_country__option__any_country.attr('disabled', false)
         $buy_country__help.text("Country you'd like to buy or source from.")
     }
 
-    function set_section__buy_country__selling() {
+    function update_buy_country_ui__lead_type__selling() {
+        // Update 'buy country' UI elements when 'lead type' has changed to 'selling'.
         $buy_country__label.text('Source Country')
         $buy_country__option__any_country.attr('disabled', true)
         if ($buy_country.find('option:selected').val() == 'any_country') {
@@ -457,495 +490,245 @@ $(document).ready(function() {
         $buy_country__help.text("Country your goods/services are exported from or based in.")
     }
 
-    // sell_country
+    // Sell country
 
-    function set_section__sell_country__buying() {
+    function update_sell_country_ui__lead_type__buying() {
+        // Update 'sell country' UI elements when 'lead type' has changed to 'buying'.
         $sell_country__label.text('Destination Country')
         $sell_country__option__any_country.attr('disabled', true)
         if ($sell_country.find('option:selected').val() == 'any_country') {
             $sell_country.val(null).trigger('change') // Clear selections
         }
-        $sell_country__help.text("Country your goods/services are imported into or needed.")
+        $sell_country__help.text('Country your goods/services are imported into or needed.')
     }
 
-    function set_section__sell_country__selling() {
+    function update_sell_country_ui__lead_type__selling() {
+        // Update 'sell country' UI elements when 'lead type' has changed to 'selling'.
         $sell_country__label.text('Sell In This Country')
         $sell_country__option__any_country.attr('disabled', false)
         $sell_country__help.text("Country you'd like to sell your goods/services in.")
     }
     
-    // details
+    // Details
 
-    function set_section__details__buying() {
-        $details__help.text("Describe goods/services you'd like to buy")
+    function update_details_ui__lead_type__buying() {
+        // Update 'details' UI elements when 'lead type' has changed to 'buying'.
+        $details__help.text("Describe goods/services you're like to buy.")
     }
 
-    function set_section__details__selling() {
-        $details__help.text("Describe goods/services you'd like to sell")
+    function update_details_ui__lead_type__selling() {
+        // Update 'details' UI elements when 'lead type' has changed to 'selling'.
+        $details__help.text("Describe goods/services you'd like to sell.")
     }
 
-    // need_agent
+    // Commission percentage
 
-    function set_section__need_agent__buying() {
-        $need_agent__question.text('Do you need agents to help you buy or source?')
-        $need_agent__label.text('Yes, I need agents to help me buy')
-        $need_agent__help.text('Agents help you buy or source for goods/services for commissions.')
+    function update_commission_percentage_ui__comm_type__percentage() {
+        // Update 'commission percentage' UI elements when 'commission type' has changed to 'percentage'.
+        $commission_percentage__label.show()
+        $commission_percentage__input.show()
+        $commission_percentage__errors.show()
     }
 
-    function set_section__need_agent__selling() {
-        $need_agent__question.text('Do you need agents to help you sell or promote?')
-        $need_agent__label.text('Yes, I need agents to help me sell')
-        $need_agent__help.text('Agents help you sell or promote your goods/services for commissions.')
+    function update_commission_percentage_ui__comm_type__earning() {
+        // Update 'commission percentage' UI elements when 'commission type' has changed to 'earning'.
+        $commission_percentage__label.hide()
+        $commission_percentage__input.hide()
+        $commission_percentage__errors.hide()
     }
 
-    // commission_type
-
-    function set_section__commission_type__need_agent() {
-        $commission_type__label.show()
-        $commission_type__input.show()
-        $commission_type__errors.show()
+    function update_commission_percentage_ui__comm_type__other() {
+        // Update 'commission percentage' UI elements when 'commission type' has changed to 'other'.
+        $commission_percentage__label.hide()
+        $commission_percentage__input.hide()
+        $commission_percentage__errors.hide()
     }
 
-    function set_section__commission_type__not_need_agent() {
-        $commission_type__label.hide()
-        $commission_type__input.hide()
-        $commission_type__errors.hide()
+    function commission_percentage_val__changed() {
+        if ($commission_percentage.val() == '') {
+            // We have 2 conditions hiding the error because the textfield
+            // starts blank. We only want to check if commission is between
+            // 0.01 and 100 if it's not blank. Where it passes the test,
+            // we want to hide it.
+            $commission_percentage__js_errors.hide()
+        } else if ($commission_percentage.val() < 0.01 || $commission_percentage.val() > 100) {
+            $commission_percentage__js_errors.text('Agent commission must be between 0.01% and 100%')
+            $commission_percentage__js_errors.show()
+            return   
+        } else {
+            $commission_percentage__js_errors.hide()
+        }
     }
 
-    // commission_type_other
+    // Commission earnings
 
-    function set_section__commission_type_other__comm_type_percentage() {
+    function update_commission_earnings_ui__comm_type__percentage() {
+        // Update 'commission earnings' UI elements when 'commission type' has changed to 'percentage'.
+        $commission_earnings__label.hide()
+        $commission_earnings__input.hide()
+        $commission_earnings__help.hide()
+    }
+
+    function update_commission_earnings_ui__comm_type__earning() {
+        // Update 'commission earnings' UI elements when 'commission type' has changed to 'earning'.
+        $commission_earnings__label.show()
+        $commission_earnings__input.show()
+        $commission_earnings__help.show()
+    }
+
+    function update_commission_earnings_ui__comm_type__other() {
+        // Update 'commission earnings' UI elements when 'commission type' has changed to 'other'.
+        $commission_earnings__label.hide()
+        $commission_earnings__input.hide()
+        $commission_earnings__help.hide()
+    }
+
+    // Commission type other
+
+    function update_commission_type_other_ui__comm_type__percentage() {
+        // Update 'commission type other' UI elements when 'commission type' has changed to 'percentage'.
         $commission_type_other.hide()
         $commission_type_other__errors.hide()
         $commission_type_other__help.hide()
     }
 
-    function set_section__commission_type_other__comm_type_other() {
+    function update_commission_type_other_ui__comm_type__earning() {
+        // Update 'commission type other' UI elements when 'commission type' has changed to 'earning'.
+        $commission_type_other.hide()
+        $commission_type_other__errors.hide()
+        $commission_type_other__help.hide()
+    }
+
+    function update_commission_type_other_ui__comm_type__other() {
+        // Update 'commission type other' UI elements when 'commission type' has changed to 'other'.
         $commission_type_other.show()
         $commission_type_other__errors.show()
         $commission_type_other__help.show()
     }
 
-    function set_section__commission_type_other__need_agent() {
-        if ($commission_type.val() == 'other') {
-            $commission_type_other.show()
-            $commission_type_other__errors.show()
-            $commission_type_other__help.show()
-        }
-    }
+    // Commission payable by
 
-    function set_section__commission_type_other__not_need_agent() {
-        $commission_type_other.hide()
-        $commission_type_other__errors.hide()
-        $commission_type_other__help.hide()
-    }
-
-    // commission
-
-    function set_section__commission__comm_type_percentage() {
-        $commission__label.show()
-        $commission__input.show()
-        $commission__errors.show()
-        $commission__help.show()
-    }
-
-    function set_section__commission__comm_type_other() {
-        $commission__label.hide()
-        $commission__input.hide()
-        $commission__errors.hide()
-        $commission__help.hide()
-    }
-
-    function set_section__commission__need_agent() {
-        if ($commission_type.val() != 'other') {
-            $commission__label.show()
-            $commission__input.show()
-            $commission__errors.show()
-            $commission__help.show()
-        }
-    }
-
-    function set_section__commission__not_need_agent() {
-        $commission__label.hide()
-        $commission__input.hide()
-        $commission__errors.hide()
-        $commission__help.hide()
-    }
-
-    // avg_deal_size
-
-    function set_section__avg_deal_size__comm_type_percentage() {
-        $avg_deal_size__label.show()
-        $avg_deal_size__input.show()
-        $avg_deal_size__errors.show()
-        $avg_deal_size__help.show()
-    }
-
-    function set_section__avg_deal_size__comm_type_other() {
-        $avg_deal_size__label.hide()
-        $avg_deal_size__input.hide()
-        $avg_deal_size__errors.hide()
-        $avg_deal_size__help.hide()
-    }
-
-    function set_section__avg_deal_size__need_agent() {
-        if ($commission_type.val() != 'other') {
-            $avg_deal_size__label.show()
-            $avg_deal_size__input.show()
-            $avg_deal_size__errors.show()
-            $avg_deal_size__help.show()
-        }
-    }
-
-    function set_section__avg_deal_size__not_need_agent() {
-        $avg_deal_size__label.hide()
-        $avg_deal_size__input.hide()
-        $avg_deal_size__errors.hide()
-        $avg_deal_size__help.hide()
-    }
-
-    // avg_earnings
-
-    function set_section__avg_earnings__comm_type_percentage() {
-        $avg_earnings__label.show()
-        $avg_earnings__value.show()
-        $avg_earnings__help.show()
-    }
-
-    function set_section__avg_earnings__comm_type_other() {
-        $avg_earnings__label.hide()
-        $avg_earnings__value.hide()
-        $avg_earnings__help.hide()
-    }
-
-    function set_section__avg_earnings__need_agent() {
-        if ($commission_type.val() != 'other') {
-            $avg_earnings__label.show()
-            $avg_earnings__value.show()
-            $avg_earnings__help.show()
-        }
-    }
-
-    function set_section__avg_earnings__not_need_agent() {
-        $avg_earnings__label.hide()
-        $avg_earnings__value.hide()
-        $avg_earnings__help.hide()
-    }
-
-    // is_comm_negotiable
-
-    function set_section__is_comm_negotiable__need_agent() {
-        $is_comm_negotiable__label.show()
-        $is_comm_negotiable__input.show()
-    }
-
-    function set_section__is_comm_negotiable__not_need_agent() {
-        $is_comm_negotiable__label.hide()
-        $is_comm_negotiable__input.hide()
-    }
-
-    // commission_payable_by
-
-    function set_section__commission_payable_by__buying() {
+    function update_commission_payable_by_ui__lead_type__buying() {
+        // Update 'commission payable by' UI elements when 'lead type' has changed to 'buying'.
         $commission_payable_by__help.text("You're a middleman. Will commission be paid by you or the buyer?")
         $commission_payable_by__option__counter_party.text('Buyer')
         $commission_payable_by__option__counter_party.val('buyer')
         $commission_payable_by__option__counter_party.select2() // Refresh
     }
 
-    function set_section__commission_payable_by__selling() {
+    function update_commission_payable_by_ui__lead_type__selling() {
+        // Update 'commmission payable by' UI elements when 'lead type' has changed to 'selling'.
         $commission_payable_by__help.text("You're a middleman. Will commission be paid by you or the seller?")
         $commission_payable_by__option__counter_party.text('Seller')
         $commission_payable_by__option__counter_party.val('seller')
         $commission_payable_by__option__counter_party.select2() // Refresh
     }
 
-    function set_section__commission_payable_by__direct() {
+    function update_commission_payable_by_ui__author_type__direct() {
+        // Update 'commission payable by' UI elements when 'author type' has changed to 'direct'.
         $commission_payable_by__label.hide()
         $commission_payable_by__input.hide()
         $commission_payable_by__help.hide()
         $commission_payable_by__errors.hide()
     }
 
-    function set_section__commission_payable_by__broker() {
+    function update_commission_payable_by_ui__author_type__broker() {
+        // Update 'commission payable by' UI elements when 'author type' has changed to 'broker'.
         $commission_payable_by__label.show()
         $commission_payable_by__input.show()
         $commission_payable_by__help.show()
         $commission_payable_by__errors.show()
     }
 
-    function set_section__commission_payable_by__not_need_agent() {
-        $commission_payable_by__label.hide()
-        $commission_payable_by__input.hide()
-        $commission_payable_by__help.hide()
-        $commission_payable_by__errors.hide()
-    }
+    // Lead type
 
-    // commission_payable_after
-
-    function set_section__commission_payable_after__need_agent() {
-        $commission_payable_after__label.show()
-        $commission_payable_after__input.show()
-        $commission_payable_after__errors.show()
-    }
-
-    function set_section__commission_payable_after__not_need_agent() {
-        $commission_payable_after__label.hide()
-        $commission_payable_after__input.hide()
-        $commission_payable_after__errors.hide()
-    }
-
-    // commission_payable_after_other
-
-    function set_section__commission_payable_after_other__comm_pay_aft_other() {
-        $commission_payable_after_other.show()
-        $commission_payable_after_other__errors.show()
-        $commission_payable_after_other__help.show()
-    }
-
-    function set_section__commission_payable_after_other__comm_pay_aft_not_other() {
-        $commission_payable_after_other.hide()
-        $commission_payable_after_other__errors.hide()
-        $commission_payable_after_other__help.hide()
-    }
-
-    function set_section__commission_payable_after_other__not_need_agent() {
-        $commission_payable_after_other.hide()
-        $commission_payable_after_other__errors.hide()
-        $commission_payable_after_other__help.hide()
-    }
-
-    // other_agent_details
-
-    function set_section__other_agent_details__need_agent() {
-        $other_agent_details__label.show()
-        $other_agent_details.show()
-        $other_agent_details__errors.show()
-    }
-
-    function set_section__other_agent_details__not_need_agent() {
-        $other_agent_details__label.hide()
-        $other_agent_details.hide()
-        $other_agent_details__errors.hide()
-    }
-
-    // other_logistics_agent_details
-
-    function set_section__other_logistics_agent_details__need_logistics_agent() {
-        $other_logistics_agent_details__label.show()
-        $other_logistics_agent_details.show()
-        $other_logistics_agent_details__errors.show()
-    }
-
-    function set_section__other_logistics_agent_details__not_need_logistics_agent() {
-        $other_logistics_agent_details__label.hide()
-        $other_logistics_agent_details.hide()
-        $other_logistics_agent_details__errors.hide()
-    }
-
-    // ***** Functions to set the state of the page *****
-
-    // Buying, selling
-
-    function set_page__buying() {
-        set_section__author_type__is_buying()
-        set_section__buy_country__buying()
-        set_section__sell_country__buying()
-        set_section__details__buying()
-        set_section__need_agent__buying()
-        set_section__commission_payable_by__buying()
-    }
-
-    function set_page__selling() {
-        set_section__sell_country__selling()
-        set_section__buy_country__selling()
-        set_section__details__selling()
-        set_section__author_type__is_selling()
-        set_section__need_agent__selling()
-        set_section__commission_payable_by__selling()
-    }
-
-    function set_page__lead_type() {
+    function lead_type_val__changed() {
+        // Update relevant UI elements when 'lead type' value changed.
         choice = $lead_type.val()
         if (choice == 'buying') {
-            set_page__buying()
+            update_author_type_ui__lead_type__buying()
+            update_buy_country_ui__lead_type__buying()
+            update_sell_country_ui__lead_type__buying()
+            update_details_ui__lead_type__buying()
+            update_commission_payable_by_ui__lead_type__buying()
         } else if (choice == 'selling') {
-            set_page__selling()
-        }
-    }
-
-    // Need agent
-
-    function set_page__need_agent() {
-        set_section__author_type()
-        set_section__commission_type__need_agent()
-        set_section__commission_type_other__need_agent()
-        set_section__commission__need_agent()
-        set_section__avg_deal_size__need_agent()
-        set_section__avg_earnings__need_agent()
-        set_section__is_comm_negotiable__need_agent()
-        set_section__other_agent_details__need_agent()
-        set_section__commission_payable_after__need_agent()
-        set_page__commission_payable_after()
-    }
-
-    function set_page__not_need_agent() {
-        set_section__commission_type__not_need_agent()
-        set_section__commission_type_other__not_need_agent()
-        set_section__commission__not_need_agent()
-        set_section__avg_deal_size__not_need_agent()
-        set_section__avg_earnings__not_need_agent()
-        set_section__is_comm_negotiable__not_need_agent()
-        set_section__other_agent_details__not_need_agent()
-        set_section__commission_payable_after__not_need_agent()
-        set_section__commission_payable_by__not_need_agent()
-        set_section__commission_payable_after_other__not_need_agent()
-    }
-
-    function set_need_agent() {
-        if ($need_agent.is(':checked')) {
-            set_page__need_agent()
-        } else {
-            set_page__not_need_agent()
+            update_sell_country_ui__lead_type__selling()
+            update_buy_country_ui__lead_type__selling()
+            update_details_ui__lead_type__selling()
+            update_author_type_ui__lead_type__selling()
+            update_commission_payable_by_ui__lead_type__selling()
         }
     }
 
     // Commission type
 
-    function set_page__comm_type_percentage() {
-        set_section__commission_type_other__comm_type_percentage()
-        set_section__commission__comm_type_percentage()
-        set_section__avg_deal_size__comm_type_percentage()
-        set_section__avg_earnings__comm_type_percentage()
-    }
-
-    function set_page__comm_type_other() {
-        set_section__commission_type_other__comm_type_other()
-        set_section__commission__comm_type_other()
-        set_section__avg_deal_size__comm_type_other()
-        set_section__avg_earnings__comm_type_other()
-    }
-
-    function set_page__commission_type() {
+    function commission_type_val__changed() {
+        // Update relevant UI elements when 'commission type' changed.
         choice = $commission_type.val()
         if (choice == 'percentage') {
-            set_page__comm_type_percentage()
+            update_commission_percentage_ui__comm_type__percentage()
+            update_commission_earnings_ui__comm_type__percentage()
+            update_commission_type_other_ui__comm_type__percentage()
+        } else if (choice == 'earning') {
+            update_commission_percentage_ui__comm_type__earning()
+            update_commission_earnings_ui__comm_type__earning()
+            update_commission_type_other_ui__comm_type__earning()
         } else if (choice == 'other') {
-            set_page__comm_type_other()
+            update_commission_type_other_ui__comm_type__other()
+            update_commission_earnings_ui__comm_type__other()
+            update_commission_percentage_ui__comm_type__other()
         }
-    }
-
-    // Update average earnings calculation
-
-    function set_page__commission() {
-        if ($commission.val() == '') {
-            // We have 2 conditions hiding the error because the textfield
-            // starts blank. We only want to check if commission is between
-            // 0.01 and 100 if it's not blank. Where it passes the test,
-            // we want to hide it.
-            $commission__js_errors.hide()
-        } else if ($commission.val() < 0.01 || $commission.val() > 100) {
-            $avg_earnings__value_1.text('?')
-            $avg_earnings__value_2.text('?')
-            $commission__js_errors.text('Agent commission must be between 0.01% and 100%')
-            $commission__js_errors.show()
-            return   
-        } else {
-            $commission__js_errors.hide()
-        }
-
-        avg_earnings = 0
-        if (!isNaN($avg_deal_size.val())) {
-            avg_earnings = $commission.val() / 100 * $avg_deal_size.val()
-        }
-        avg_earnings = avg_earnings.toFixed(0)
-        $avg_earnings__value_1.text(avg_earnings)
-        $avg_earnings__value_2.text(avg_earnings)
     }
 
     // Commission payable after
 
-    function set_page__commission_payable_after() {
+    function commission_payable_after_val__changed() {
+        // Update relevant UI elements when 'commission payable after' changed.
         if ($commission_payable_after.val() == 'other') {
-            set_section__commission_payable_after_other__comm_pay_aft_other()
+            $commission_payable_after_other.show()
+            $commission_payable_after_other__errors.show()
+            $commission_payable_after_other__help.show()
         } else {
-            set_section__commission_payable_after_other__comm_pay_aft_not_other()
-        }
-    }
-
-    // Set need logistics agents
-
-    function set_page__need_logistics_agent() {
-        if ($need_logistics_agent.is(':checked')) {
-            set_section__other_logistics_agent_details__need_logistics_agent()
-        } else {
-            set_section__other_logistics_agent_details__not_need_logistics_agent()
-        }
-    }
-
-    // Submit button
-
-    function set_submit() {
-        if ($friendly.is(':checked')) {
-            $submit.removeAttr('disabled')
-            $submit.addClass('bg-blue-500 hover:bg-blue-600')
-            $submit.removeClass('bg-blue-200')
-        } else {
-            $submit.prop('disabled', true)
-            $submit.removeClass('bg-blue-500 hover:bg-blue-600')
-            $submit.addClass('bg-blue-200')
+            $commission_payable_after_other.hide()
+            $commission_payable_after_other__errors.hide()
+            $commission_payable_after_other__help.hide()
         }
     }
 
     // ***** Run on load *****
     // Note: order matters
 
-    set_page__lead_type()
-    set_section__author_type()
-    set_page__commission()
-    set_page__commission_payable_after()
-    set_page__commission_type()
-    set_need_agent()
-    set_page__need_logistics_agent()
-    set_submit()
+    lead_type_val__changed()
+    author_type_val__changed()
+    currency_val__changed()
+    commission_percentage_val__changed()
+    commission_payable_after_val__changed()
+    commission_type_val__changed()
 
     // ***** Run on change *****
 
     $lead_type.change(function() {
-        set_page__lead_type()
+        lead_type_val__changed()
     })
 
     $author_type.change(function() {
-        set_section__author_type()
+        author_type_val__changed()
     })
 
-    $need_agent.change(function() {
-        set_section__author_type()
-        set_need_agent()
+    $currency.change(function() {
+        currency_val__changed()
     })
 
     $commission_type.change(function() {
-        set_page__commission_type()
+        commission_type_val__changed()
     })
 
-    $commission.on('input', function() {
-        set_page__commission()
-    })
-
-    $avg_deal_size.on('input', function() {
-        set_page__commission()
+    $commission_percentage.on('input', function() {
+        commission_percentage_val__changed()
     })
 
     $commission_payable_after.change(function() {
-        set_page__commission_payable_after()
-    })
-
-    $friendly.change(function() {
-        set_submit()
-    })
-
-    $need_logistics_agent.change(function() {
-        set_page__need_logistics_agent()
+        commission_payable_after_val__changed()
     })
 
     $lead_form.submit(function () {

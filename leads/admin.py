@@ -3,6 +3,49 @@ from common import admin as comadm
 from files import admin as fiadm
 from leads import models
 
+_application_query_log_fields = ['user', 'status']
+@admin.register(models.ApplicationQueryLog)
+class ApplicationQueryLogAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _application_query_log_fields
+    list_editable = comadm.standard_list_editable + _application_query_log_fields
+    list_filter = comadm.standard_list_filter + ['status']
+    search_fields = comadm.standard_search_fields + ['user__first_name',
+        'user__last_name', 'user__id']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _application_query_log_fields})]
+
+_application_fields = ['lead', 'applicant', 'question_1', 'answer_1', 'question_2',
+    'answer_2', 'question_3', 'answer_3', 'applicant_comments', 'response']
+@admin.register(models.Application)
+class ApplicationAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _application_fields
+    list_editable = comadm.standard_list_editable + _application_fields
+    list_filter = comadm.standard_list_filter + ['response']
+    search_fields = comadm.standard_search_fields + ['lead', 'applicant',
+        'question_1', 'answer_1', 'question_2', 'answer_2', 'question_3',
+        'answer_3', 'applicant_comments']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _application_fields})]
+
+_application_message_fields = ['application', 'author']
+@admin.register(models.ApplicationMessage)
+class ApplicationMessageAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _application_message_fields
+    list_editable = comadm.standard_list_editable + _application_message_fields
+    search_fields = comadm.standard_search_fields + ['application__id',
+        'author__first_name', 'author__last_name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _application_message_fields})]
+
 _lead_comment_fields = ['lead', 'commentor', 'body']
 @admin.register(models.LeadComment)
 class LeadCommentAdmin(comadm.StandardAdmin):
@@ -22,13 +65,15 @@ class LeadCommentAdmin(comadm.StandardAdmin):
 _lead_fields = [
     'author', 'is_promoted',
 
-    'lead_type', 'author_type', 'buy_country', 'sell_country', 'details',
+    'lead_type', 'currency', 'author_type', 'buy_country', 'sell_country', 'details',
     'agent_job',
 
     'commission_type', 'commission_percentage', 'commission_earnings',
-    'commission_quantity_unit_string', 'commission_type_other', 'other_agent_details',
+    'commission_quantity_unit_string', 'commission_type_other', 'other_comm_details',
 
     'is_comm_negotiable',
+
+    'question_1', 'question_2', 'question_3',
 
     'impressions', 'clicks',
 
@@ -62,7 +107,7 @@ class LeadAdmin(comadm.StandardAdmin):
     readonly_fields = comadm.standard_readonly_fields + ['uuid']
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _lead_fields})]
-    autocomplete_fields = ['author', 'buy_country', 'sell_country']
+    autocomplete_fields = ['author', 'currency', 'buy_country', 'sell_country']
     inlines = [fiadm.FileInlineAdmin]
 
 _saved_lead_fields = ['active', 'saver', 'lead']

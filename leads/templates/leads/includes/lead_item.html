@@ -7,7 +7,7 @@ Note: thumbnails are not clickable.
 {% endcomment %}
 
 <a href="{% url 'leads:lead_detail' lead.slug_link %}">
-    <div class="bg-white hover:bg-blue-50 hover:outline hover:outline-1 hover:outline-blue-200 shadow-md rounded{% if more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
+    <div class="bg-white hover:outline hover:outline-1 hover:outline-blue-500 shadow-md rounded{% if more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
 
         <div class="flex justify-between bg-blue-50 w-full px-8 py-4">
             <div class="flex flex-col justify-start items-start">
@@ -51,7 +51,7 @@ Note: thumbnails are not clickable.
                 
                 {% comment %} start: need_agent, need_logistics_agent {% endcomment %}
                 {% if lead.need_agent or lead.need_logistics_agent %}
-                <div class="italic mt-4">Need {% if lead.need_agent %}{% if lead.lead_type == 'buying' %}buying or sourcing{% elif lead.lead_type == 'selling' %}selling or promoting{% endif %} agent{% if lead.need_logistics_agent %}, logistics agent{% endif %}{% endif %}</div>
+                <div class="italic mt-4">Need {% if lead.need_agent %}{% if lead.lead_type == 'buying' %}buying{% elif lead.lead_type == 'selling' %}selling{% endif %} agent{% if lead.need_logistics_agent %}, logistics agent{% endif %}{% endif %}</div>
                 {% endif %}
                 {% comment %} end: need_agent, need_logistics_agent {% endcomment %}
 

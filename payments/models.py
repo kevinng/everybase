@@ -3,7 +3,9 @@ from django.db import models
 from common.models import Standard, Choice
 
 class Currency(Choice):
-    pass
+    class Meta:
+        verbose_name = 'Currencies'
+        verbose_name_plural = 'Currencies'
 
 class StripeCallbackSession(Standard):
     """Stripe session object details recorded on callback
