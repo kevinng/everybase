@@ -149,11 +149,11 @@
         {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author responsive_classes='lg:hidden mt-2' %}
         {% comment %} end: user detail side {% endcomment %}
 
+        {% if lead.author != request.user.user %}
+
         {% comment %} start: agent application form {% endcomment %}
         <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
             <div class="text-xl font-bold text-center">Apply to be a {% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %} Agent</div>
-
-            {% if lead.author != request.user.user %}
 
                 {% load has_applied_lead %}
                 {% has_applied_lead request.user.user lead as has_applied_lead %}
@@ -194,10 +194,10 @@
                 </div>
 
                 {% endif %}
-
-            {% endif %}
         </div>
         {% comment %} end: agent application form {% endcomment %}
+
+        {% endif %}
 
     </div>
     {% comment %} end: details {% endcomment %}
