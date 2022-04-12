@@ -22,7 +22,7 @@
 {% block content %}
 {% comment %} start: title {% endcomment %}
 <div class="text-center text-2xl font-bold mt-10">{{ lead.headline }}</div>
-<div class="text-center text-base">{% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} is Looking for Agents</div>
+<div class="text-center text-base">{% if lead.author.id == request.user.user.id %}You're{% else %}{% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} is{% endif%} Looking for Agents</div>
 {% comment %} end: title {% endcomment %}
 
 <div class="flex flex-col lg:flex-row justify-center mt-6 mb-10 gap-2">
