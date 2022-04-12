@@ -1,0 +1,87 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+{% load string_equal %}
+
+{% block title %}Looking for {% if lead.lead_type == 'buying' %}Buying/Sourcing{% elif lead.lead_type == 'selling' %}Selling/Promoting{% endif %} Agent, {{ lead.headline }}{% endblock %}
+
+{% comment %} Meta description limit to 320 characters {% endcomment %}
+{% block other_head_tags %}
+<meta name="description" content="{{ lead.details|slice:'0:320' }}">
+{% endblock %}
+
+{% block other_css %}
+<link href="{% static 'common/photoswipe/photoswipe.min.css' %}" rel="stylesheet" />
+<link href="{% static 'common/photoswipe/default-skin/default-skin.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block page_actions %}
+{% include 'relationships/includes/user_detail_actions.html' with detail_user=lead.author %}
+{% endblock %}
+
+{% block content %}
+{% comment %} start: title {% endcomment %}
+<div class="text-center text-2xl font-bold mt-10">{{ lead.headline }}</div>
+<div class="text-center text-base">{% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} is Looking for Agents</div>
+{% comment %} end: title {% endcomment %}
+
+<div class="flex flex-col lg:flex-row justify-center mt-6 mb-10 gap-2">
+    {% comment %} start: user detail side
+        This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
+    {% if lead.lead_type == 'selling' %}
+        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
+    {% else %}
+        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Buyer' responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
+    {% endif %}
+    {% comment %} end: user detail side {% endcomment %}
+
+    {% comment %} start: details {% endcomment %}
+    <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
+
+        {% if user.user.id == lead.author.id %}
+            {% load get_application_count %}
+            {% get_application_count lead as application_count %}
+            {% include 'leads/includes/lead_detail_tabs.html' with selected='applications' application_count=application_count %}
+        {% endif %}
+
+        {% comment %} start: user detail side
+            This user detail will only show on smaller screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
+        {% if lead.lead_type == 'selling' %}
+            {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='lg:hidden mt-2' %}
+        {% else %}
+            {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Buyer' responsive_classes='lg:hidden mt-2' %}
+        {% endif %}
+        {% comment %} end: user detail side {% endcomment %}
+
+        {% if applications|length > 0 %}
+
+            {% include 'includes/paginator.html' with other_css_classes='mt-5' %}
+
+            {% for application in applications %}
+                {% include 'leads/includes/lead_application_item.html' with other_css_classes='mt-2' %}
+            {% endfor %}
+
+            {% include 'includes/paginator.html' with other_css_classes='mt-5' %}
+
+        {% else %}
+
+        <div class="flex flex-col items-center justify-center mt-10">
+            <h2 class="text-lg">You have no applications for this lead</h2>
+        </div>
+
+        {% endif %}
+
+    </div>
+    {% comment %} end: details {% endcomment %}
+</div>
+{% comment %} PhotoSwipe library HTML code to be inserted before end of body tag. {% endcomment %}
+{% include 'includes/photoswipe.html' %}
+{% endblock %}
+
+{% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
+<script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
+<script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
+<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
+{% endblock %}

@@ -2,15 +2,13 @@ import pytz
 from datetime import datetime, timedelta
 
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.generic.list import ListView
-from django.views.decorators.csrf import csrf_exempt
-from django.template.loader import render_to_string
 from django.db.models import Count
 from django.db.models.expressions import RawSQL
 from django.db.models import DateTimeField
@@ -23,8 +21,6 @@ from common import models as commods
 from leads import models as lemods
 from relationships import forms, models
 from relationships.utilities.save_user_agent import save_user_agent
-from relationships.utilities.get_non_tracking_whatsapp_link import \
-    get_non_tracking_whatsapp_link
 from relationships.utilities.kill_login_tokens import kill_login_tokens
 from relationships.utilities.kill_register_tokens import kill_register_tokens
 from chat.tasks.send_register_message import send_register_message

@@ -28,6 +28,7 @@ urlpatterns = [
 
     # Leads
     path('leads/', include('leads.urls')),
+    path('applications/', include('leads.urls_application')),
 
     # Relationships
     path('register/', relviews.register, name='register'),

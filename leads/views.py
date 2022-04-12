@@ -13,8 +13,10 @@ from django.db.models.functions import Trunc
 from django.db.models.expressions import RawSQL
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
+from django.views.generic.list import ListView
 
 from everybase import settings
+from relationships import models as relmods
 from common import models as commods
 from payments import models as paymods
 from leads import models, forms
@@ -690,8 +692,24 @@ def lead_list(request):
 
         return render(request, 'leads/lead_list.html', params)
 
-def application_detail(request, slug, aid):
-    pass
+class LeadApplicationListView(ListView):
+    template_name = 'leads/lead_detail_application_list.html'
+    context_object_name = 'applications'
+    model = models.Application
+    paginate_by = 8
+
+    def get_queryset(self, **kwargs):
+        return models.Application.objects.filter(
+            lead=models.Lead.objects.get(slug_link=self.kwargs['slug'])
+        ).order_by('-created')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['lead'] = models.Lead.objects.get(slug_link=self.kwargs['slug'])
+        return context
+
+def application_detail(request, aid):
+    return render(request, 'leads/application_detail.html', {})
 
 # @login_required
 # @csrf_exempt

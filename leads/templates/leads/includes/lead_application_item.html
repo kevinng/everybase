@@ -1,0 +1,24 @@
+{% comment %} 
+Params:
+    lead, lead to display
+    more_css_classes, additional div CSS classes
+
+Note: thumbnails are not clickable.
+{% endcomment %}
+<a href="{% url 'applications:application_detail' application.id %}">
+    <div class="bg-white hover:outline hover:outline-1 hover:outline-blue-500 shadow-md rounded{% if other_css_classes|cut:' ' != '' %} {{ other_css_classes }}{% endif %}">
+        <div class="flex justify-between w-full px-8 py-4">
+            <div class="flex flex-col justify-start items-start">
+                <div class="text-sm font-semibold">{{ application.applicant.first_name|title }} {{ application.applicant.last_name|title }}</div>
+                {% if application.applicant.country and application.applicant.country.name|cut:' ' != '' %}
+                    <div class="text-sm">{{ application.applicant.country.name }}</div>
+                {% endif %}
+                {% if application.applicant.company_name and application.applicant.company_name|cut:' ' != '' %}
+                    <div class="text-sm">{{ application.applicant.company_name }}</div>
+                {% endif %}
+            </div>
+
+            <div class="text-sm">{{ application.age_desc }}</div>
+        </div>
+    </div>
+</a>
