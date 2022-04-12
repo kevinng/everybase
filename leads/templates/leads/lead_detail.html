@@ -32,19 +32,20 @@
     {% comment %} end: user detail side {% endcomment %}
 
     {% comment %} start: details {% endcomment %}
-    <div class="w-full lg:w-1/2 lg:mt-0 mt-4">
+    {% comment %} <div class="w-full lg:w-1/2 lg:mt-0 mt-4"> {% endcomment %}
+    <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
+        {% include 'leads/includes/lead_detail_tabs.html' %}
 
         {% comment %} start: details {% endcomment %}
-        <div class="bg-white rounded pb-8 pt-4 shadow-md">
+        <div class="bg-white rounded pb-8 pt-4 mt-2 shadow-md">
 
             <div class="flex justify-end">
                 {% if user.is_authenticated == True and user.user.id == lead.author.id %}
                     {% comment %} start: edit button {% endcomment %}
-                    <a href="{% url 'leads:lead_edit' lead.slug_link %}" class="px-6 py-2 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mr-8">Edit</a>
+                    <a href="{% url 'leads:lead_edit' lead.slug_link %}" class="px-6 py-2 text-blue-500 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mr-8">Edit</a>
                     {% comment %} end: edit button {% endcomment %}
                 {% endif %}
             </div>
-    
 
             <div class="flex items-start justify-between px-8 mt-6">
 
