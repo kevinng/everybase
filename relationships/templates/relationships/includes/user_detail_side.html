@@ -30,8 +30,8 @@ Dependencies:
         {% if user.is_authenticated and user.user.id == detail_user.id %}
 
             {% comment %} start: action buttons {% endcomment %}
-            <a href="{% url 'users:user_edit' user.user.slug_link %}" class="py-2 px-4 mt-4 rounded-md shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
-            <a href="{% url 'logout' %}?next={{ request.path }}" class="shadow-md bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2 mt-2">Logout</a>
+            <a href="{% url 'users:user_edit' user.user.slug_link %}" class="py-2 px-4 mt-4 text-blue-500 rounded-md shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a>
+            <a href="{% url 'logout' %}?next={{ request.path }}" class="shadow-md text-blue-500 bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2 mt-2">Logout</a>
             {% comment %} end: action buttons {% endcomment %}
 
         {% comment %} {% elif user.user.id != detail_user.id %} {% endcomment %}
