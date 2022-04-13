@@ -4,7 +4,7 @@ from PIL import Image, ImageOps
 from io import BytesIO
 
 from django.core.paginator import Paginator
-from django.urls import reverse, resolve
+from django.urls import reverse
 from django.shortcuts import render
 from django.db.models import Count
 from django.http import HttpResponseRedirect
