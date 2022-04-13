@@ -4,7 +4,7 @@ from PIL import Image, ImageOps
 from io import BytesIO
 
 from django.core.paginator import Paginator
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.shortcuts import render
 from django.db.models import Count
 from django.http import HttpResponseRedirect
@@ -228,7 +228,7 @@ def lead_detail(request, slug):
             form = forms.ApplicationFormNoQ3(request.POST)
 
         if form.is_valid():
-            models.Application.objects.create(
+            a = models.Application.objects.create(
                 lead=lead,
                 applicant=request.user.user,
                 question_1=lead.question_1,
@@ -240,8 +240,8 @@ def lead_detail(request, slug):
                 applicant_comments=form.cleaned_data.get('applicant_comments')
             )
 
-            # return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
-            # need to go to the application page
+            return HttpResponseRedirect(
+                reverse('applications:application_detail', args=(a.id,)))
     else:
         if has_3_questions:
             form = forms.ApplicationFormQ3()
@@ -708,8 +708,54 @@ class LeadApplicationListView(ListView):
         context['lead'] = models.Lead.objects.get(slug_link=self.kwargs['slug'])
         return context
 
-def application_detail(request, aid):
-    return render(request, 'leads/application_detail.html', {})
+@login_required
+def application_detail(request, pk):
+    application = models.Application.objects.get(pk=pk)
+
+    if application.applicant.id != request.user.user.id and \
+        application.lead.author.id != request.user.user.id:
+        # Only allow the author or applicant to access to this page
+        return HttpResponseRedirect(
+            reverse('leads:lead_detail',
+            args=(application.lead.slug_link,)))
+
+    if request.method == 'POST':
+        form = forms.ApplicationDetailForm(request.POST)
+        if form.is_valid():
+            purpose = form.cleaned_data.get('purpose')
+            if purpose == 'reject':
+                application.response = 'rejected'
+                application.save()
+            elif purpose == 'start_work':
+                application.response = 'started_work'
+                application.save()
+            elif purpose == 'stop_work':
+                application.response = 'stopped_work'
+                application.save()
+            elif purpose == 'message':
+                models.ApplicationMessage.objects.create(
+                    application=application,
+                    author=request.user.user,
+                    body=form.cleaned_data.get('body')
+                )
+
+            # TODO send WhatsApp
+
+            return HttpResponseRedirect(
+                reverse('applications:application_detail',
+                    args=(application.id,)))
+    else:
+        form = forms.ApplicationDetailForm()
+
+    params = {
+        'application': application,
+        'form': form
+    }
+
+    return render(request, 'leads/application_detail.html', params)
+
+def application_my_leads_list(request):
+    pass
 
 # @login_required
 # @csrf_exempt

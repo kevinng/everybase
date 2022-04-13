@@ -467,7 +467,7 @@ class ApplicationMessage(Standard):
     Last updated: 7 April 2022, 10:06 PM
     """
     application = models.ForeignKey(
-        'Lead',
+        'Application',
         related_name='application_messages',
         related_query_name='application_messages',
         on_delete=models.PROTECT,

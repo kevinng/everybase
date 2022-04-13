@@ -15,11 +15,12 @@
 <link href="{% static 'common/photoswipe/default-skin/default-skin.min.css' %}" rel="stylesheet" />
 {% endblock %}
 
-{% block page_actions %}
-{% include 'relationships/includes/user_detail_actions.html' with detail_user=lead.author %}
-{% endblock %}
-
 {% block content %}
+
+{% comment %} start: breadcrumbs {% endcomment %}
+<div class="ml-10 mt-10"><a href="{% url 'leads:lead_list' %}" class="font-bold">Leads</a> > {{ lead.headline }}</div>
+{% comment %} end: breadcrumbs {% endcomment %}
+
 {% comment %} start: title {% endcomment %}
 <div class="text-center text-2xl font-bold mt-10">{{ lead.headline }}</div>
 <div class="text-center text-base">{% if lead.author.id == request.user.user.id %}You're{% else %}{% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} is{% endif%} Looking for Agents</div>
@@ -29,9 +30,10 @@
     {% comment %} start: user detail side
         This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
     {% if lead.lead_type == 'selling' %}
-        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
+        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='lg:w-1/3 xl:w-1/4 lg:self-start' %}
+        {% comment %} hidden lg:block {% endcomment %}
     {% else %}
-        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Buyer' responsive_classes='hidden lg:block lg:w-1/3 xl:w-1/4 lg:self-start' %}
+        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Buyer' responsive_classes='lg:w-1/3 xl:w-1/4 lg:self-start' %}
     {% endif %}
     {% comment %} end: user detail side {% endcomment %}
 
@@ -133,7 +135,7 @@
             {% elif lead.commission_type == 'other' %}
 
                 <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
-                <div class="mt-1 px-8">{{ lead.commission_type_other }}</div>
+                <div class="mt-1 px-8 break-words">{{ lead.commission_type_other|linebreaksbr }}</div>
 
             {% endif %}
             {% comment %} end: commission {% endcomment %}
@@ -147,15 +149,19 @@
             {% comment %} start: other commission details {% endcomment %}
             {% if lead.other_comm_details is not None and lead.other_agent_details|length > 0 %}
                 <div class="font-bold text-slate-400 mt-4 px-8">Other Commission Details</div>
-                <div class="mt-1 px-8">{{ lead.other_comm_details }}</div>
+                <div class="mt-1 px-8 break-words">{{ lead.other_comm_details|linebreaksbr }}</div>
             {% endif %}
             {% comment %} end: other commission details {% endcomment %}
         </div>
         {% comment %} end: details {% endcomment %}
 
         {% comment %} start: user detail side
-            This user detail will only show on smaller screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
-        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author responsive_classes='lg:hidden mt-2' %}
+        This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
+        {% comment %} {% if lead.lead_type == 'selling' %}
+            {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='lg:hidden mt-2' %}
+        {% else %}
+            {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Buyer' responsive_classes='lg:hidden mt-2' %}
+        {% endif %} {% endcomment %}
         {% comment %} end: user detail side {% endcomment %}
 
         {% if lead.author != request.user.user %}
@@ -168,7 +174,7 @@
                 {% has_applied_lead request.user.user lead as has_applied_lead %}
                 {% if has_applied_lead == False %}
 
-                <form action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
+                <form action="{% url 'leads:lead_apply' lead.slug_link %}" method="post">
                     {% csrf_token %}
                     <div class="flex flex-col justify-center mt-2">
                         <label for="answer_1" class="font-bold text-slate-400 mt-4">{{ lead.question_1 }}</label>

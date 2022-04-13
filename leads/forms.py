@@ -250,16 +250,24 @@ class ApplicationFormQ3(forms.Form):
     answer_3 = forms.CharField()
     applicant_comments = forms.CharField(required=False)
 
-# class LeadCommentForm(forms.Form):
-#     comment_id = forms.IntegerField(required=False)
-#     body = forms.CharField()
+class ApplicationDetailForm(forms.Form):
+    purpose = forms.CharField()
 
-#     def clean(self):
-#         super(LeadCommentForm, self).clean()
-#         body = self.cleaned_data.get('body')
+    # Required if purpose is 'message'
+    body = forms.CharField(required=False)
 
-#         if is_censored(body):
-#             self.add_error('body', _censor_msg)
-#             raise ValidationError(None)
+    def clean(self):
+        super(ApplicationDetailForm, self).clean()
 
-#         return self.cleaned_data
+        has_error = False
+
+        if self.cleaned_data.get('purpose') == 'message':
+            body = self.cleaned_data.get('body')
+            if body is None or body.strip() == '':
+                self.add_error('body', _require_msg)
+                has_error = True
+
+        if has_error:
+            raise ValidationError(None)
+
+        return self.cleaned_data

@@ -1,1 +1,238 @@
-application detail
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+{% load string_equal %}
+
+{% block title %}Looking for {% if lead.lead_type == 'buying' %}Buying/Sourcing{% elif lead.lead_type == 'selling' %}Selling/Promoting{% endif %} Agent, {{ lead.headline }}{% endblock %}
+
+{% comment %} Meta description limit to 320 characters {% endcomment %}
+{% block other_head_tags %}
+<meta name="description" content="{{ lead.details|slice:'0:320' }}">
+{% endblock %}
+
+{% block other_css %}
+<link href="{% static 'common/photoswipe/photoswipe.min.css' %}" rel="stylesheet" />
+<link href="{% static 'common/photoswipe/default-skin/default-skin.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+
+{% comment %} start: breadcrumbs {% endcomment %}
+<div class="ml-10 mt-10"><a href="{% url 'applications:application_my_leads_list' %}" class="font-bold">Applications for My Leads</a> > {{ application.lead.headline }}</div>
+{% comment %} end: breadcrumbs {% endcomment %}
+
+{% comment %} start: title {% endcomment %}
+<div class="text-center text-lg font-bold mt-10">Agent Application</div>
+<div class="text-center text-2xl font-bold">{{ application.lead.headline }}</div>
+{% comment %} end: title {% endcomment %}
+
+<div class="flex flex-col lg:flex-row justify-center mt-6 mb-10 gap-2">
+
+    {% comment %} start: user sides {% endcomment %}
+    <div class="flex flex-col justify-start lg:w-1/3 xl:w-1/4 gap-2">
+        {% include 'relationships/includes/user_detail_side.html' with detail_user=application.applicant header='Agent' responsive_classes='lg:self-start' %}
+
+        {% if application.lead.lead_type == 'selling' %}
+            {% include 'relationships/includes/user_detail_side.html' with detail_user=application.lead.author header='Seller' responsive_classes='lg:self-start' %}
+            {% comment %} hidden lg:block {% endcomment %}
+        {% else %}
+            {% include 'relationships/includes/user_detail_side.html' with detail_user=application.lead.author header='Buyer' responsive_classes='lg:self-start' %}
+        {% endif %}
+    </div>
+    {% comment %} end: user sides {% endcomment %}
+
+    <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
+        {% comment %} start: details {% endcomment %}
+        <div class="bg-white rounded pb-8 pt-4 shadow-md">
+
+            <div class="flex justify-between">
+                <div class="ml-8 flex items-center text-sm font-bold mt-4">{% if application.response is None %}Work Not Started{% elif application.response == 'started_work' %}Work Started{% elif application.response == 'stopped_work' %}Work Stopped{% elif application.response == 'rejected' %}Rejected{% endif %}</div>
+                <div class="flex justify-end">
+                    {% if user.user.id == application.lead.author.id %}
+                        {% comment %} start: action buttons {% endcomment %}
+                        {% if application.response is None or application.response|length == 0 %}
+                            <form action="{% url 'applications:application_detail' application.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="purpose" value="reject">
+                                <button type="submit" class="px-6 py-2 text-blue-500 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mr-2">Reject</button>
+                            </form>
+                            <form action="{% url 'applications:application_detail' application.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="purpose" value="start_work">
+                                <button type="submit" class="px-6 py-2 font-bold text-white bg-blue-500 shadow-md hover:bg-blue-600 rounded-md mr-8">Start Work</button>
+                            </form>
+                        {% elif application.response == 'started_work' %}
+                            <form action="{% url 'applications:application_detail' application.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="purpose" value="stop_work">
+                                <button type="submit" class="px-6 py-2 font-bold text-white bg-blue-500 shadow-md hover:bg-blue-600 rounded-md mr-8">Stop Work</button>
+                            </form>
+                        {% endif %}
+                        {% comment %} end: action buttons {% endcomment %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="flex items-start justify-between px-8 mt-6">
+
+                {% comment %} start: thumbnails {% endcomment %}
+                {% if application.lead.display_images.all|length > 0 %}
+                    <div class="flex items-start justify-start gap-2 image-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+                        {% load thumbnail_url %}
+                        {% load image_url %}
+                        {% for file in application.lead.display_images.all %}
+                            {% thumbnail_url file as thumbnail_url %}
+                            {% image_url file as image_url %}
+                            <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+                                <a href="{{ image_url }}" itemprop="contentUrl" data-size="{{ file.width }}x{{ file.height }}">
+                                    <img src="{{ thumbnail_url }}" itemprop="thumbnail" class="shadow-md">
+                                </a>
+                            </figure>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% comment %} Placeholder {% endcomment %}
+                    <div></div>
+                {% endif %}
+                {% comment %} end: thumbnails {% endcomment %}
+                
+                {% comment %} start: age_desc {% endcomment %}
+                <div class="text-sm">{{ application.lead.age_desc }}</div>
+                {% comment %} end: age_desc {% endcomment %}
+            </div>
+
+            {% comment %} start: lead_type {% endcomment %}
+            <div class="font-bold text-slate-400 mt-6 px-8">Selling or Buying?</div>
+            <div class="mt-1 px-8">{% if application.lead.lead_type == 'selling' %}Selling{% elif application.lead.lead_type == 'buying' %}Buying{% endif %}</div>
+            {% comment %} end: lead_type {% endcomment %}
+
+            {% comment %} start: author_type {% endcomment %}
+            <div class="font-bold text-slate-400 mt-6 px-8">Direct or Middleman?</div>
+            <div class="mt-1 px-8">{% if application.lead.author_type == 'direct' %}Direct {% if application.lead.lead_type == 'selling' %}Seller{% elif application.lead.lead_type == 'buying' %}Buyer{% endif %}{% elif application.lead.author_type == 'broker' %}Middleman{% endif %}</div>
+            {% comment %} end: author_type {% endcomment %}
+
+            {% comment %} start: buy_country {% endcomment %}
+            <div class="font-bold text-slate-400 mt-6 px-8">{% if application.lead.lead_type == 'selling' %}Source Country{% elif application.lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
+            <div class="mt-1 px-8">{% if application.lead.buy_country is not None %}{{ application.lead.buy_country.name }}{% else %}Any Country{% endif %}</div>
+            <div class="mt-1 italic px-8">{% if application.lead.lead_type == 'selling' %}Country the goods/services are exported from or based in.{% elif application.lead.lead_type == 'buying' %}Country buyer would like to buy or source from.{% endif %}</div>
+            {% comment %} end: buy_country {% endcomment %}
+
+            {% comment %} start: sell_country {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">{% if application.lead.lead_type == 'selling' %}Sell In This Country{% elif application.lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
+            <div class="mt-1 px-8">{% if application.lead.sell_country is not None %}{{ application.lead.sell_country.name }}{% else %}Any Country{% endif %}</div>
+            <div class="mt-1 italic px-8">{% if application.lead.lead_type == 'selling' %}Country seller would like to sell the goods/services in.{% elif application.lead.lead_type == 'buying' %}Country the goods/services are imported into or needed.{% endif %}</div>
+            {% comment %} end: sell_country {% endcomment %}
+
+            {% comment %} start: details {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">Goods & Services</div>
+            <div class="mt-1 break-words px-8">{{ application.lead.details|linebreaksbr }}</div>
+            {% comment %} end: details {% endcomment %}
+
+            {% comment %} start: details {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">What {% if application.lead.lead_type == 'selling' %}seller{% elif application.lead.lead_type == 'buying' %}buyer{% endif %} would like the agent to do</div>
+            <div class="mt-1 break-words px-8">{{ application.lead.agent_job|linebreaksbr }}</div>
+            {% comment %} end: details {% endcomment %}
+
+            {% comment %} start: agent commission section {% endcomment %}
+            <div class="bg-slate-200 font-bold py-2 px-5 text-slate-500 mt-4">Agent Commission</div>
+            {% comment %} end: agent commission section {% endcomment %}
+
+            {% comment %} start: commission {% endcomment %}
+            {% if application.lead.commission_type == 'percentage' %}
+
+                <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
+                <div class="mt-1 px-8">{{ application.lead.commission_percentage|floatformat:0 }}% of Sales</div>
+
+            {% elif application.lead.commission_type == 'earning' %}
+
+                <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
+                <div class="mt-1 px-8">{{ application.lead.currency.name }} {{ application.lead.commission_earnings|floatformat:2 }} per {{ application.lead.commission_quantity_unit_string }}</div>
+
+            {% elif application.lead.commission_type == 'other' %}
+
+                <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
+                <div class="mt-1 px-8 break-words">{{ application.lead.commission_type_other|linebreaksbr }}</div>
+
+            {% endif %}
+            {% comment %} end: commission {% endcomment %}
+
+            {% comment %} start: is_comm_negotiable {% endcomment %}
+            {% if application.lead.is_comm_negotiable == True %}
+                <div class="italic px-8">Commission may differ and is negotiable for each deal.</div>
+            {% endif %}
+            {% comment %} end: is_comm_negotiable {% endcomment %}
+
+            {% comment %} start: other commission details {% endcomment %}
+            {% if application.lead.other_comm_details is not None and application.lead.other_agent_details|length > 0 %}
+                <div class="font-bold text-slate-400 mt-4 px-8">Other Commission Details</div>
+                <div class="mt-1 px-8 break-words">{{ application.lead.other_comm_details|linebreaksbr }}</div>
+            {% endif %}
+            {% comment %} end: other commission details {% endcomment %}
+
+            {% comment %} start: interview questions {% endcomment %}
+            <div class="bg-slate-200 font-bold py-2 px-5 text-slate-500 mt-4">Interview Questions</div>
+            {% comment %} end: interview questions {% endcomment %}
+
+            {% comment %} start: question_1 {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">{{ application.question_1 }}</div>
+            <div class="mt-1 break-words px-8">{{ application.answer_1|linebreaksbr }}</div>
+            {% comment %} end: question_1 {% endcomment %}
+
+            {% comment %} start: question_2 {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">{{ application.question_2 }}</div>
+            <div class="mt-1 break-words px-8">{{ application.answer_2|linebreaksbr }}</div>
+            {% comment %} end: question_2 {% endcomment %}
+
+            {% comment %} start: question_2 {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">{{ application.question_2 }}</div>
+            <div class="mt-1 break-words px-8">{{ application.answer_3|linebreaksbr }}</div>
+            {% comment %} end: question_2 {% endcomment %}
+        </div>
+
+        {% comment %} start: message form {% endcomment %}
+        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+            {% if request.user.user.id != application.lead.author.id %}
+                <div class="text-xl font-bold text-center">Message {% if application.lead.lead_type == 'buying' %}Buyer{% elif application.lead.lead_type == 'selling' %}Seller{% endif %}</div>
+            {% else %}
+                <div class="text-xl font-bold text-center">Message Agent</div>
+            {% endif %}
+            <form action="{% url 'applications:application_detail' application.id %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="purpose" value="message">
+                <div class="flex flex-col justify-center mt-2">
+                    <textarea id="body" name="body" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter message"></textarea>
+                    {% if form.body.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                </div>
+
+                <button type="submit" class="py-2 px-4 rounded-md shadow-md mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Message</button>
+            </form>
+        </div>
+        {% comment %} end: message form {% endcomment %}
+
+        {% comment %} start: messages {% endcomment %}
+        {% load get_application_messages %}
+        {% get_application_messages application.id as messages %}
+        {% for message in messages %}
+            <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+                <div class="flex justify-between">
+                    <div class="font-bold text-sm"><a href="{% url 'users:user_detail' message.author.slug_link %}">{{ message.author.first_name|title }} {{ message.author.last_name|title }}</a></div>
+                    <div class="text-sm">{{ message.age_desc }}</div>
+                </div>
+                <div class="mt-2 break-words">{{ message.body|linebreaksbr }}</div>
+            </div>
+        {% endfor %}
+        {% comment %} end: messages {% endcomment %}
+    </div>
+</div>
+
+{% comment %} PhotoSwipe library HTML code to be inserted before end of body tag. {% endcomment %}
+{% include 'includes/photoswipe.html' %}
+{% endblock %}
+
+{% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
+<script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
+<script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
+<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
+{% endblock %}
