@@ -17,11 +17,11 @@
     <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
         {% include 'relationships/includes/user_detail_tabs.html' with selected='leads' %}
 
-        {% if page_obj|length > 0 %}
+        {% if leads|length > 0 %}
 
             {% include 'includes/paginator.html' with other_css_classes='mt-5' %}
 
-            {% for lead in page_obj %}
+            {% for lead in leads %}
                 {% include 'leads/includes/lead_item.html' with more_css_classes='mt-2' %}
             {% endfor %}
 

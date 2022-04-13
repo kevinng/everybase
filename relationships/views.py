@@ -86,46 +86,14 @@ def get_countries():
 
 #     return render(request, 'relationships/message.html', params)
 
-def user_detail(request, slug):
+def user_detail_lead_list(request, slug):
     user = models.User.objects.get(slug_link=slug)
-    if request.method == 'POST':
-        if not request.user.is_authenticated:
-            # User is not authenticated. Direct user to login with next URL
-            # as this detail page.
-            url = reverse('login') + '?next=' + \
-                reverse('users:user_detail', args=(slug,))
-            return HttpResponseRedirect(url)
-
-        # User posted a comment
-        form = forms.UserCommentForm(request.POST)
-        if form.is_valid():
-            comment = models.UserComment.objects.create(
-                commentee=models.User.objects.get(slug_link=slug),
-                commentor=request.user.user,
-                body=request.POST.get('body')
-            )
-
-            comment_id = request.POST.get('comment_id')
-            if comment_id is not None:
-                # This is a reply to a root comment
-                comment.reply_to = models.UserComment.objects.get(pk=comment_id)
-                comment.save()
-
-            # Focus on comment created
-            url = reverse('users:user_detail', args=(slug,)) + \
-                '?focus=comment-' + str(comment.id)
-            return HttpResponseRedirect(url)
-    else:
-        form = forms.UserCommentForm()
+    leads = models.Lead.objects.filter(author=user)
 
     params = {
         'detail_user': user,
-        'form': form
+        'leads': leads
     }
-
-    focus = request.GET.get('focus')
-    if focus is not None:
-        params['focus'] = focus
 
     return render(request, 'relationships/user_detail_lead_list.html', params)
 

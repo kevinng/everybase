@@ -9,7 +9,7 @@ Note: thumbnails are not clickable.
 <a href="{% url 'leads:lead_detail' lead.slug_link %}">
     <div class="bg-white hover:outline hover:outline-1 hover:outline-blue-500 shadow-md rounded{% if more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
 
-        <div class="flex justify-between bg-blue-50 w-full px-8 py-4">
+        {% comment %} <div class="flex justify-between bg-blue-50 w-full px-8 py-4">
             <div class="flex flex-col justify-start items-start">
                 <div class="text-sm font-semibold">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</div>
                 {% if lead.author.country and lead.author.country.name|cut:' ' != '' %}
@@ -19,27 +19,25 @@ Note: thumbnails are not clickable.
                     <div class="text-sm">{{ lead.author.company_name }}</div>
                 {% endif %}
             </div>
-        </div>
+        </div> {% endcomment %}
 
         <div class="px-8 pb-8 flex justify-between items-start">
             <div>
-                {% comment %} start: lead_type, author_type {% endcomment %}
-                <div class="mt-4">{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}, {% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
-                {% comment %} end: lead_type, author_type {% endcomment %}
+                {% comment %} start: author {% endcomment %}
+                <div class="text-sm mt-4">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</div>
+                {% comment %} end: author {% endcomment %}
 
-                {% comment %} start: buy_country, sell_country {% endcomment %}
-                <div class="text-sm">From {% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}any country{% endif %} to {% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}any country{% endif %}</div>
-                {% comment %} end: buy_country, sell_country {% endcomment %}
-
-                {% comment %} start: comments, comments from you {% endcomment %}
-                {% load has_saved_lead %}
-                {% has_saved_lead user.user lead as has_saved_lead %}
-                <div class="text-sm">{{ lead.num_comments }} comments{% if request.user.is_authenticated %}{% load num_lead_comments_by %}{% num_lead_comments_by lead request.user.user as num_lead_comments_by %}{% if num_lead_comments_by > 0 %}, {{ num_lead_comments_by }} by you{% endif %}{% endif %}{% if has_saved_lead %}, saved{% endif %}</div>
-                {% comment %} end: comments, comments from you {% endcomment %}
+                {% comment %} start: country {% endcomment %}
+                <div class="text-sm">{{ lead.author.country.name }}</div>
+                {% comment %} end: country {% endcomment %}
+                
+                {% comment %} start: headline {% endcomment %}
+                <div class="mt-2 font-bold text-lg">{{ lead.headline }}</div>
+                {% comment %} end: headline {% endcomment %}
 
                 {% comment %} start: thumbnails {% endcomment %}
                 {% if lead.display_images.all|length > 0 %}
-                    <div class="flex items-start justify-start mt-4 gap-2">
+                    <div class="flex items-start justify-start mt-2 gap-2">
                         {% load thumbnail_url %}
                         {% for file in lead.display_images.all %}
                             {% thumbnail_url file as thumbnail_url %}
@@ -48,65 +46,48 @@ Note: thumbnails are not clickable.
                     </div>
                 {% endif %}
                 {% comment %} end: thumbnails {% endcomment %}
+
+                {% comment %} start: description {% endcomment %}
+                <div class="break-words mt-2">{% if lead.details|length > 140 %}{{ lead.details|linebreaksbr|truncatechars:140 }}...{% else %}{{ lead.details }}{% endif %}</div>
+                {% comment %} end: description {% endcomment %}
                 
-                {% comment %} start: need_agent, need_logistics_agent {% endcomment %}
-                {% if lead.need_agent or lead.need_logistics_agent %}
-                <div class="italic mt-4">Need {% if lead.need_agent %}{% if lead.lead_type == 'buying' %}buying{% elif lead.lead_type == 'selling' %}selling{% endif %} agent{% if lead.need_logistics_agent %}, logistics agent{% endif %}{% endif %}</div>
+                {% comment %} start: buy_country {% endcomment %}
+                <div class="font-bold text-slate-400 mt-6">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
+                <div class="mt-1">{% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}Any Country{% endif %}</div>
+                <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country the goods/services are exported from or based in.{% elif lead.lead_type == 'buying' %}Country buyer would like to buy or source from.{% endif %}</div>
+                {% comment %} end: buy_country {% endcomment %}
+
+                {% comment %} start: sell_country {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Sell In This Country{% elif lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
+                <div class="mt-1">{% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}Any Country{% endif %}</div>
+                <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country seller would like to sell the goods/services in.{% elif lead.lead_type == 'buying' %}Country the goods/services are imported into or needed.{% endif %}</div>
+                {% comment %} end: sell_country {% endcomment %}
+
+                {% comment %} start: commission {% endcomment %}
+                {% if lead.commission_type == 'percentage' %}
+
+                    <div class="font-bold text-slate-400 mt-4">Commission</div>
+                    <div class="mt-1">{{ lead.commission_percentage|floatformat:0 }}% of Sales</div>
+
+                {% elif lead.commission_type == 'earning' %}
+
+                    <div class="font-bold text-slate-400 mt-4">Commission</div>
+                    <div class="mt-1">{{ lead.currency.name }} {{ lead.commission_earnings|floatformat:2 }} per {{ lead.commission_quantity_unit_string }}</div>
+
+                {% elif lead.commission_type == 'other' %}
+
+                    <div class="font-bold text-slate-400 mt-4">Commission</div>
+                    <div class="mt-1 break-words">{{ lead.commission_type_other|linebreaksbr }}</div>
+
                 {% endif %}
-                {% comment %} end: need_agent, need_logistics_agent {% endcomment %}
+                {% comment %} end: commission {% endcomment %}
 
-                {% comment %} start: details {% endcomment %}
-                <div class="mt-2">{{ lead.details|linebreaksbr|truncatechars:140 }}{% if lead.details|length > 140 %}...{% endif %}</div>
-                {% comment %} end: details {% endcomment %}
-
-                {% if commission_type and commission_type == 'percentage' or min_commission and min_commission|cut:' ' != '' or max_commission and max_commission|cut:' ' != '' %}
-                    {% if lead.commission %}
-                        {% comment %} start: commission {% endcomment %}
-                        <div class="font-bold text-slate-400 mt-4">Agent Commission</div>
-                        <div class="mt-1">{{ lead.commission }} % of Sales</div>
-                        {% comment %} end: commission {% endcomment %}
-                    {% endif %}
+                {% comment %} start: is_comm_negotiable {% endcomment %}
+                {% if lead.is_comm_negotiable == True %}
+                    <div class="italic">Commission may differ and is negotiable for each deal.</div>
                 {% endif %}
+                {% comment %} end: is_comm_negotiable {% endcomment %}
 
-                {% if min_avg_deal and min_avg_deal|cut:' ' != '' or max_avg_deal and max_avg_deal|cut:' ' != '' %}
-                    {% if lead.avg_deal_size %}
-                        {% comment %} start: avg_deal_size {% endcomment %}
-                        <div class="font-bold text-slate-400 mt-4">Average Deal Size</div>
-                        <div class="mt-1">USD {{ lead.avg_deal_size|floatformat:2 }}</div>
-                        {% comment %} end: avg_deal_size {% endcomment %}
-                    {% endif %}
-                {% endif %}
-
-                {% if commission_payable_after and commission_payable_after|cut:' ' != '' and commission_payable_after != 'all' or commission_payable_after_other and commission_payable_after_other|cut:' ' != ''  %}
-                    {% if lead.commission_payable_after %}
-                        {% comment %} start: commission_payable_after {% endcomment %}
-                        <div class="font-bold text-slate-400 mt-4">Commission Payable After</div>
-                        <div class="mt-1">{% if lead.commission_payable_after == 'initial_deposit_received' %}Initial Deposit Received{% elif lead.commission_payable_after == 'goods_shipped' %}Goods Shipped{% elif lead.commission_payable_after == 'buyer_received_goods_services' %}Buyer Received Goods/Services{% elif lead.commission_payable_after == 'full_payment_received' %}Full Payment Received{% elif lead.commission_payable_after == 'other' %}{{ lead.commission_payable_after_other|linebreaksbr|truncatechars:140 }}{% if lead.commission_payable_after_other|length > 140 %}...{% endif %}{% endif %}</div>
-                        {% comment %} end: commission_payable_after {% endcomment %}
-                    {% endif %}
-                {% endif %}
-
-                {% comment %} start: other_agent_details {% endcomment %}
-                {% if other_agent_details and other_agent_details|cut:' ' != '' %}
-                    <div class="font-bold text-slate-400 mt-4">Other Details For {% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %} Agent</div>
-                    <div class="mt-1 break-words">{{ lead.other_agent_details|linebreaksbr|truncatechars:140 }}{% if lead.other_agent_details|length > 140 %}...{% endif %}</div>
-                {% endif %}
-                {% comment %} end: other_agent_details {% endcomment %}
-
-                {% comment %} start: comm_negotiable {% endcomment %}
-                {% if comm_negotiable and comm_negotiable == 'negotiable' %}
-                    <div class="italic mt-4">Commission may differ and is negotiable for each deal.</div>
-                {% endif %}
-                {% comment %} end: comm_negotiable {% endcomment %}
-
-                {% if need_logistics_agent and need_logistics_agent == 'on' %}
-                    <div class="font-bold mt-6">I need logistics agents</div>
-
-                    {% comment %} start: lead.other_logistics_agent_details {% endcomment %}
-                    <div class="font-bold text-slate-400 mt-4">Logistics Needs</div>
-                    <div class="mt-1 break-words">{{ lead.other_logistics_agent_details|linebreaksbr|truncatechars:140 }}{% if lead.other_logistics_agent_details|length %}...{% endif %}</div>
-                    {% comment %} end: lead.other_logistics_agent_details {% endcomment %}
-                {% endif %}
             </div>
 
             <div class="text-sm mt-4 whitespace-nowrap">{{ lead.age_desc }}</div>

@@ -208,17 +208,3 @@ class LoginForm(forms.Form):
             raise ValidationError(None)
 
         return self.cleaned_data
-
-class UserCommentForm(forms.Form):
-    comment_id = forms.IntegerField(required=False)
-    body = forms.CharField()
-
-    def clean(self):
-        super(UserCommentForm, self).clean()
-        body = self.cleaned_data.get('body')
-
-        if is_censored(body):
-            self.add_error('body', _censor_msg)
-            raise ValidationError(None)
-
-        return self.cleaned_data
