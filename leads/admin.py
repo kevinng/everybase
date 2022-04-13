@@ -235,3 +235,22 @@ class LeadQueryAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _lead_query_fields})]
     autocomplete_fields = ['user']
+
+_lead_query_log_fields = [
+    'user',
+    'goods_services',
+    'buy_sell',
+    'buy_country',
+    'sell_country',
+]
+@admin.register(models.LeadQueryLog)
+class LeadQueryAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _lead_query_log_fields
+    list_editable = comadm.standard_list_editable + _lead_query_log_fields
+    search_fields = comadm.standard_search_fields + _lead_query_log_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _lead_query_log_fields})]
+    autocomplete_fields = ['user']

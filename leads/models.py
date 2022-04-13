@@ -352,11 +352,13 @@ class LeadQueryLog(Standard):
         'relationships.User',
         related_name='lead_query_logs',
         related_query_name='lead_query_logs',
+        blank=True,
+        null=True,
         on_delete=models.PROTECT,
         db_index=True
     )
 
-    search = models.CharField(
+    goods_services = models.CharField(
         max_length=200,
         null=True,
         blank=True,

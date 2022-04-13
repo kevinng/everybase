@@ -16,7 +16,6 @@ from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRan
 from django.views.generic.list import ListView
 
 from everybase import settings
-from relationships import models as relmods
 from common import models as commods
 from payments import models as paymods
 from leads import models, forms
@@ -389,8 +388,6 @@ def lead_create(request):
             save_img_if_exists('image_two', 'image_two_cache_use', 'image_two_cache_file_id', request, lead, form)
             save_img_if_exists('image_three', 'image_three_cache_use', 'image_three_cache_file_id', request, lead, form)
 
-            save_user_agent(request, request.user.user)
-
             return HttpResponseRedirect(
                 reverse('leads:lead_detail', args=(lead.slug_link,)))
     else:
@@ -407,65 +404,21 @@ def lead_list(request):
 
         get = lambda s : request.GET.get(s)
 
-        commented_only = get('commented_only')
-        saved_only = get('saved_only')
+        goods_services = get('goods_services') # labelled 'search'
         buy_sell = get('buy_sell')
-        direct_middleman = get('direct_middleman')
         buy_country = get('buy_country')
         sell_country = get('sell_country')
-        goods_services = get('goods_services')
-        need_agent = get('need_agent')
-        commission_type = get('commission_type')
-        commission_type_other = get('commission_type_other')
-        min_commission = get('min_commission')
-        max_commission = get('max_commission')
-        min_avg_deal = get('min_avg_deal')
-        max_avg_deal = get('max_avg_deal')
-        comm_negotiable = get('comm_negotiable')
-        commission_payable_after = get('commission_payable_after')
-        commission_payable_after_other = get('commission_payable_after_other')
-        other_agent_details = get('other_agent_details')
-        need_logistics_agent = get('need_logistics_agent')
-        logistics_agent_details = get('logistics_agent_details')
 
         leads = models.Lead.objects.all()
 
         is_not_empty = lambda s : s is not None and s.strip() != ''
         match = lambda t, v: is_not_empty(t) and t == v
 
-        if user is not None:
-            # Allow commented-only and saved-only if the user is authenticated
-
-            if match(commented_only, 'on'):
-                # Commented only is checked
-                commented_leads = models.LeadComment.objects.filter(
-                    commentor=user,
-                    deleted__isnull=True
-                ).values('lead')
-
-                leads = leads.filter(id__in=commented_leads)
-            
-            if match(saved_only, 'on'):
-                # Saved only is checked
-                saved_leads = models.SavedLead.objects.filter(
-                    saver=user,
-                    deleted__isnull=True,
-                    active=True
-                ).values('lead')
-
-                leads = leads.filter(id__in=saved_leads)
-
         # Buy sell
         if match(buy_sell, 'buy'):
             leads = leads.filter(lead_type='buying')
         elif buy_sell == 'sell':
             leads = leads.filter(lead_type='selling')
-
-        # Direct middleman
-        if match(direct_middleman, 'direct'):
-            leads = leads.filter(author_type='direct')
-        elif direct_middleman == 'middleman':
-            leads = leads.filter(author_type='broker')
 
         if is_not_empty(buy_country) and buy_country.strip() != 'any_country':
             # Buy country is selected
@@ -490,154 +443,14 @@ def lead_list(request):
             
             order_by.append('-goods_services_rank')
 
-        if match(need_agent, 'on'):
-            # Need agent is checked
-            leads = leads.filter(need_agent=True)
-
-        # Commission type
-        if match(commission_type, 'percentage'):
-            leads = leads.filter(commission_type='percentage')
-        elif commission_type == 'other':
-            leads = leads.filter(commission_type='other')
-
-        if is_not_empty(commission_type_other):
-            # Commission type other details is filled
-            commission_type_other_vec = SearchVector('commission_type_other_vec')
-            commission_type_other_qry = SearchQuery(commission_type_other)
-            leads = leads.annotate(
-                commission_type_other_vec=RawSQL('commission_type_other_vec', [],
-                    output_field=SearchVectorField()))\
-                .annotate(commission_type_other_rank=SearchRank(
-                    commission_type_other_vec,
-                    commission_type_other_qry
-                ))
-            
-            order_by.append('-commission_type_other_rank')
-
-        if is_not_empty(min_commission):
-            # Minimum commission is filled
-            try:
-                leads = leads.filter(commission__gte=float(min_commission))
-            except Exception:
-                pass
-        
-        if is_not_empty(max_commission):
-            # Maximum commission is filled
-            try:
-                leads = leads.filter(commission__lte=float(max_commission))
-            except Exception:
-                pass
-
-        if is_not_empty(min_avg_deal):
-            # Minimum average deal is filled
-            try:
-                leads = leads.filter(avg_deal_size__gte=float(min_avg_deal))
-            except Exception:
-                pass
-        
-        if is_not_empty(max_avg_deal):
-            # Maximum average deal is filled
-            try:
-                leads = leads.filter(avg_deal_size__lte=float(max_avg_deal))
-            except Exception:
-                pass
-        
-        # Is commission negotiable
-        if match(comm_negotiable, 'not_negotiable'):
-            leads = leads.filter(is_comm_negotiable=False)
-        if comm_negotiable == 'negotiable':
-            leads = leads.filter(is_comm_negotiable=True)
-
-        # Commission payable after
-        if match(commission_payable_after, 'initial_deposit_received'):
-            leads = leads.filter(commission_payable_after='initial_deposit_received')
-        elif commission_payable_after == 'goods_shipped':
-            leads = leads.filter(commission_payable_after='goods_shipped')
-        elif commission_payable_after == 'buyer_received_goods_services':
-            leads = leads.filter(commission_payable_after='buyer_received_goods_services')
-        elif commission_payable_after == 'full_payment_received':
-            leads = leads.filter(commission_payable_after='full_payment_received')
-        elif commission_payable_after == 'other':
-            leads = leads.filter(commission_payable_after='other')
-            if is_not_empty(commission_payable_after_other):
-                # Commission payable after other details is filled
-                commission_payable_after_other_vec = SearchVector('commission_payable_after_other_vec')
-                commission_payable_after_other_qry = SearchQuery(commission_payable_after_other)
-                leads = leads.annotate(
-                    commission_payable_after_other_vec=RawSQL('commission_payable_after_other_vec', [],
-                        output_field=SearchVectorField()))\
-                    .annotate(commission_payable_after_other_rank=SearchRank(
-                        commission_payable_after_other_vec,
-                        commission_payable_after_other_qry
-                    ))
-                
-                order_by.append('-commission_payable_after_other_rank')
-
-        if is_not_empty(other_agent_details):
-            # Other agent details is filled
-            other_agent_details_vec = SearchVector('other_agent_details_vec')
-            other_agent_details_qry = SearchQuery(other_agent_details)
-            leads = leads.annotate(
-                other_agent_details_vec=RawSQL('other_agent_details_vec', [],
-                    output_field=SearchVectorField()))\
-                .annotate(other_agent_details_rank=SearchRank(
-                    other_agent_details_vec,
-                    other_agent_details_qry
-                ))
-            
-            order_by.append('-other_agent_details_rank')
-        
-        if match(need_logistics_agent, 'on'):
-            # Need logistics agent is checked
-            leads = leads.filter(need_logistics_agent=True)
-
-            if is_not_empty(logistics_agent_details):
-                # Logistics agent details is filled
-                other_logistics_agent_details_vec = SearchVector('other_logistics_agent_details_vec')
-                other_logistics_agent_details_qry = SearchQuery(logistics_agent_details)
-                leads = leads.annotate(
-                    other_logistics_agent_details_vec=RawSQL('other_logistics_agent_details_vec', [],
-                        output_field=SearchVectorField()))\
-                    .annotate(other_logistics_agent_details_rank=SearchRank(
-                        other_logistics_agent_details_vec,
-                        other_logistics_agent_details_qry
-                    ))
-                
-                order_by.append('-other_logistics_agent_details_rank')
-
-        # Save lead query if it's not the default (empty) form post
-        if is_not_empty(commented_only) or is_not_empty(saved_only) or\
-            not match(buy_sell, 'all') or not match(direct_middleman, 'all') or\
-            not match(buy_country, 'any_country') or not match(sell_country, 'any_country') or\
-            is_not_empty(goods_services) or is_not_empty(need_agent) or\
-            not match(commission_type, 'all') or is_not_empty(commission_type_other) or\
-            is_not_empty(min_commission) or is_not_empty(max_commission) or\
-            is_not_empty(min_avg_deal) or is_not_empty(max_avg_deal) or\
-            not match(comm_negotiable, 'all') or not match(commission_payable_after, 'all') or\
-            is_not_empty(commission_payable_after_other) or is_not_empty(other_agent_details) or\
-            is_not_empty(need_logistics_agent) or is_not_empty(logistics_agent_details):
-            models.LeadQuery.objects.create(
+        # Save lead query, if search (i.e., goods_services is set)
+        if goods_services is not None and len(goods_services) > 0:
+            models.LeadQueryLog.objects.create(
                 user=user,
-                commented_only=commented_only,
-                saved_only=saved_only,
-                buy_sell=buy_sell,
-                direct_middleman=direct_middleman,
-                buy_country=buy_country,
-                sell_country=sell_country,
                 goods_services=goods_services,
-                need_agent=need_agent,
-                commission_type=commission_type,
-                commission_type_other=commission_type_other,
-                min_commission=min_commission,
-                max_commission=max_commission,
-                min_avg_deal=min_avg_deal,
-                max_avg_deal=max_avg_deal,
-                comm_negotiable=comm_negotiable,
-                commission_payable_after=commission_payable_after,
-                commission_payable_after_other=commission_payable_after_other,
-                other_agent_details=other_agent_details,
-                need_logistics_agent=need_logistics_agent,
-                logistics_agent_details=logistics_agent_details
+                buy_sell=buy_sell,
+                buy_country=buy_country,
+                sell_country=sell_country
             )
 
         # Order leads
@@ -647,42 +460,14 @@ def lead_list(request):
         params = {}
 
         params['countries'] = get_countries()
-        params['commented_only'] = get('commented_only')
-        params['saved_only'] = get('saved_only')
+        params['goods_services'] = get('goods_services')
         params['buy_sell'] = get('buy_sell')
-        params['direct_middleman'] = get('direct_middleman')
         params['buy_country'] = get('buy_country')
         params['sell_country'] = get('sell_country')
-        params['goods_services'] = get('goods_services')
-
-        need_agent = get('need_agent')
-        params['need_agent'] = get('need_agent')
-
-        if match(need_agent, 'on'):
-            params['commission_type'] = commission_type
-
-            if commission_type == 'others' or commission_type == 'all':
-                params['commission_type_other'] = get('commission_type_other')
-            
-            if commission_type == 'percentage' or commission_type == 'all':
-                params['min_commission'] = get('min_commission')
-                params['max_commission'] = get('max_commission')
-                params['min_avg_deal'] = get('min_avg_deal')
-                params['max_avg_deal'] = get('max_avg_deal')
-            
-            params['comm_negotiable'] = get('comm_negotiable')
-            params['commission_payable_after'] = get('commission_payable_after')
-            params['commission_payable_after_other'] = get('commission_payable_after_other')
-            params['other_agent_details'] = get('other_agent_details')
-        
-        params['need_logistics_agent'] = need_logistics_agent
-
-        if match(need_logistics_agent, 'on'):
-            params['logistics_agent_details'] = get('logistics_agent_details')
 
         # Paginate
 
-        leads_per_page = 9
+        leads_per_page = 12
         paginator = Paginator(leads, leads_per_page)
 
         page_number = request.GET.get('page')

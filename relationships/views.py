@@ -1,3 +1,4 @@
+from urllib import request
 import pytz
 from datetime import datetime, timedelta
 
@@ -9,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.db.models import Count
 from django.db.models.expressions import RawSQL
 from django.db.models import DateTimeField
@@ -90,10 +92,17 @@ def user_detail_lead_list(request, slug):
     user = models.User.objects.get(slug_link=slug)
     leads = models.Lead.objects.filter(author=user)
 
-    params = {
-        'detail_user': user,
-        'leads': leads
-    }
+    params = {'detail_user': user}
+
+    # Paginate
+
+    leads_per_page = 12
+    paginator = Paginator(leads, leads_per_page)
+
+    page_number = request.GET.get('page')
+    
+    page_obj = paginator.get_page(page_number)
+    params['page_obj'] = page_obj
 
     return render(request, 'relationships/user_detail_lead_list.html', params)
 
