@@ -553,6 +553,11 @@ def application_for_my_leads_list(request):
                 lead__author=request.user.user,
                 response='stopped_work'
             )
+        elif status == 'rejected':
+            applications = models.Application.objects.filter(
+                lead__author=request.user.user,
+                response='rejected'
+            )
         else:
             applications = models.Application.objects.filter(
                 lead__author=request.user.user
@@ -568,14 +573,22 @@ def application_for_my_leads_list(request):
             .filter(lead__author=request.user.user)\
             .exclude(response='started_work')\
             .exclude(response='stopped_work')\
+            .exclude(response='rejected')\
             .count()
 
         started_work_count = models.Application.objects\
+            .filter(lead__author=request.user.user)\
             .filter(response='started_work')\
             .count()
 
         stopped_work_count = models.Application.objects\
+            .filter(lead__author=request.user.user)\
             .filter(response='stopped_work')\
+            .count()
+
+        rejected_count = models.Application.objects\
+            .filter(lead__author=request.user.user)\
+            .filter(response='rejected')\
             .count()
 
         params = {
@@ -583,7 +596,8 @@ def application_for_my_leads_list(request):
             'all_statuses_count': all_statuses_count,
             'new_count': new_count,
             'started_work_count': started_work_count,
-            'stopped_work_count': stopped_work_count
+            'stopped_work_count': stopped_work_count,
+            'rejected_count': rejected_count
         }
 
         # Paginate
@@ -599,7 +613,77 @@ def application_for_my_leads_list(request):
         return render(request, 'leads/application_for_my_leads_list.html', params)
 
 def application_from_me_as_an_agent_list(request):
-    return render(request, 'leads/application_from_me_as_an_agent_list.html', {})
+    if request.method == 'GET':
+        status = request.GET.get('status')
+
+        if status == 'started_work':
+            applications = models.Application.objects.filter(
+                applicant=request.user.user,
+                response='started_work'
+            )
+        elif status == 'stopped_work':
+            applications = models.Application.objects.filter(
+                applicant=request.user.user,
+                response='stopped_work'
+            )
+        elif status == 'rejected':
+            applications = models.Application.objects.filter(
+                applicant=request.user.user,
+                response='rejected'
+            )
+        else:
+            applications = models.Application.objects.filter(
+                applicant=request.user.user
+            )
+
+        # Status counts
+
+        all_statuses_count = models.Application.objects.filter(
+            applicant=request.user.user
+        ).count()
+
+        new_count = models.Application.objects\
+            .filter(applicant=request.user.user)\
+            .exclude(response='started_work')\
+            .exclude(response='stopped_work')\
+            .exclude(response='rejected')\
+            .count()
+
+        started_work_count = models.Application.objects\
+            .filter(applicant=request.user.user)\
+            .filter(response='started_work')\
+            .count()
+
+        stopped_work_count = models.Application.objects\
+            .filter(applicant=request.user.user)\
+            .filter(response='stopped_work')\
+            .count()
+
+        rejected_count = models.Application.objects\
+            .filter(applicant=request.user.user)\
+            .filter(response='rejected')\
+            .count()
+
+        params = {
+            'status': status,
+            'all_statuses_count': all_statuses_count,
+            'new_count': new_count,
+            'started_work_count': started_work_count,
+            'stopped_work_count': stopped_work_count,
+            'rejected_count': rejected_count
+        }
+
+        # Paginate
+
+        applications_per_page = 12
+        paginator = Paginator(applications, applications_per_page)
+
+        page_number = request.GET.get('page')
+        
+        page_obj = paginator.get_page(page_number)
+        params['page_obj'] = page_obj
+
+    return render(request, 'leads/application_from_me_as_an_agent_list.html', params)
 
 # @login_required
 # @csrf_exempt

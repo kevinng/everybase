@@ -50,7 +50,7 @@
         <div class="bg-white rounded pb-8 pt-4 shadow-md">
 
             <div class="flex justify-between">
-                <div class="ml-8 flex items-center text-sm font-bold mt-4">{% if application.response is None %}Work Not Started{% elif application.response == 'started_work' %}Work Started{% elif application.response == 'stopped_work' %}Work Stopped{% elif application.response == 'rejected' %}Rejected{% endif %}</div>
+                <div class="ml-8 flex items-center mt-4"><span class="text-sm font-bold text-slate-500 bg-blue-200 px-2 py-1 rounded">{% if application.response is None %}New{% elif application.response == 'started_work' %}Work Started{% elif application.response == 'stopped_work' %}Work Stopped{% elif application.response == 'rejected' %}Rejected{% endif %}</span></div>
                 <div class="flex justify-end">
                     {% if user.user.id == application.lead.author.id %}
                         {% comment %} start: action buttons {% endcomment %}

@@ -1,0 +1,27 @@
+{% comment %} 
+Params:
+    application, application to display
+    more_css_classes, additional div CSS classes
+{% endcomment %}
+<a href="{% url 'applications:application_detail' application.id %}">
+    <div class="bg-white hover:outline hover:outline-1 hover:outline-blue-500 shadow-md rounded{% if other_css_classes|cut:' ' != '' %} {{ other_css_classes }}{% endif %}">
+        <div class="flex justify-between bg-slate-200 py-2 px-5 text-slate-500">
+            <div class="font-bold"><span class="text-sm font-bold text-slate-500 bg-blue-200 px-2 py-1 rounded">{% if application.response is None or application.response|length == 0 %}New{% elif application.response == 'started_work' %}Started Work{% elif application.response == 'stopped_work' %}Stopped Work{% elif application.response == 'rejected' %}Rejected{% endif %}</span> Applying to be {% if application.lead.lead_type == 'selling' %}Selling{% elif application.lead.lead_type == 'buying' %}Buying{% endif %} Agent</div>
+            <div class="text-sm flex flex-col justify-center">Applied {{ application.age_desc }}</div>
+        </div>
+        <div class="pb-8 pt-2">
+            {% comment %} start: applicant {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">Applicant</div>
+            <div class="mt-1 px-8 font-bold">{{ application.applicant.first_name|title }} {{ application.applicant.last_name|title }}</div>
+            <div class="mt-1 px-8">{{ application.applicant.country.name }}</div>
+            <div class="mt-1 px-8">{% if application.applicant.company_name|length > 0 %}{{ application.applicant.company_name }}{% endif %}</div>
+            {% comment %} end: applicant {% endcomment %}
+
+            {% comment %} start: lead {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">Lead</div>
+            <div class="mt-1 px-8 font-bold">{{ application.lead.headline }}</div>
+            <div class="mt-1 px-8 break-words">{{ application.lead.details|linebreaksbr|truncatechars:140 }}{% if application.lead.details|length > 140 %}...{% endif %}</div>
+            {% comment %} end: lead {% endcomment %}
+        </div>
+    </div>
+</a>

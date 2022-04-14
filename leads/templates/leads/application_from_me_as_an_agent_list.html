@@ -33,64 +33,33 @@ CSS
 
 {% block page_actions %}
 <div class="flex lg:hidden">
-    <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-4 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">New Post</a>
-    <button id="search" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Search</button>
+    <button id="search" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Filter</button>
 </div>
 {% endblock %}
 
 {% block content %}
-<div class="flex justify-center my-10 gap-2">
+<div class="text-3xl font-bold text-center mt-10">Applications from me as an Agent</div>
+<div class="text-center mt-2">Leads you've applied to be an agent for</div>
+<div class="flex justify-center mb-10 mt-10 gap-2">
     {% comment %} start: desktop search {% endcomment %}
-    <div class="bg-white rounded shadow-md hidden lg:block lg:w-1/3 xl:w-1/4 self-start px-6 py-10">
-        <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-7 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">Post a Lead</a>
-        <h1 class="text-3xl font-bold text-center mt-6">Leads</h1>
-        <div class="mt-7 flex flex-col justify-center">
-            <form action="{% url 'leads:lead_list' %}" type="get">
-
-                {% comment %} start: search {% endcomment %}
-                <label id="search__label" for="search" class="font-bold text-slate-400 mt-5 block">Search</label>
-                <input id="search" name="search"{% if search is not None and search|cut:' ' != '' %} value="{{ search }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: search {% endcomment %}
-                
-                {% comment %} start: buy_sell {% endcomment %}
-                <label id="buy_sell__label" for="buy_sell" class="font-bold text-slate-400 mt-5 block">Buying or Selling?</label>
-                <div id="buy_sell__elements" class="mt-2">
-                    <select name="buy_sell" class="select2">
-                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Any</option>
-                        <option value="buy"{% if buy_sell == 'buy' %} selected{% endif %}>Buy</option>
-                        <option value="sell"{% if buy_sell == 'sell' %} selected{% endif %}>Sell</option>
+    <div class="bg-white rounded shadow-md hidden lg:block lg:w-1/3 xl:w-1/4 self-start px-6 pt-6 py-10">
+        <div class="flex flex-col justify-center">
+            <form action="{% url 'applications:application_from_me_as_an_agent_list' %}" type="get">
+                {% comment %} start: status {% endcomment %}
+                <label id="status__label" for="status" class="font-bold text-slate-400 mt-5 block">Status</label>
+                <div id="status__elements" class="mt-2">
+                    <select name="status" class="select2">
+                        <option value="all"{% if status == 'all' %} selected{% endif %}>All Statuses ({{ all_statuses_count }})</option>
+                        <option value="new"{% if status == 'new' %} selected{% endif %}>New ({{ new_count }})</option>
+                        <option value="started_work"{% if status == 'started_work' %} selected{% endif %}>Started Work ({{ started_work_count }})</option>
+                        <option value="stopped_work"{% if status == 'stopped_work' %} selected{% endif %}>Stopped Work ({{ stopped_work_count }})</option>
+                        <option value="rejected"{% if status == 'rejected' %} selected{% endif %}>Rejected ({{ rejected_count }})</option>
                     </select>
                 </div>
-                {% comment %} end: buy_sell {% endcomment %}
-
-                {% comment %} start: buy_country {% endcomment %}
-                <label id="buy_country__label" for="buy_country" class="font-bold text-slate-400 mt-5 block">Buy or Source Country</label>
-                <div id="buy_country__elements" class="mt-2">
-                    <select id="buy_country" name="buy_country" class="select2">
-                        <option value="any_country"{% if buy_country == 'any_country' %} selected{% endif %}>Any Country</option>
-                        {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if buy_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% comment %} end: buy_country {% endcomment %}
-
-                {% comment %} start: sell_country {% endcomment %}
-                <label id="sell_country__label" for="sell_country" class="font-bold text-slate-400 mt-5 block">Sell or Destination Country</label>
-                <div id="sell_country__elements" class="mt-2">
-                    <select name="sell_country" class="select2">
-                        <option value="any_country"{% if sell_country == 'any_country' %} selected{% endif %}>Any Country</option>
-                        {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if sell_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% comment %} end: sell_country {% endcomment %}
-
-                <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
-
-                <div class="mt-2 flex justify-center">
-                    <a href="{% url 'leads:lead_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Reset</a>
+                {% comment %} end: status {% endcomment %}
+                <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Filter</button>
+                <div class="mt-4 flex justify-center">
+                    <a href="{% url 'applications:application_from_me_as_an_agent_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Reset</a>
                 </div>
             </form>
         </div>
@@ -98,56 +67,28 @@ CSS
     {% comment %} end: desktop filter {% endcomment %}
     {% comment %} start: mobile filter {% endcomment %}
     <nav id="mobile-filter" class="px-10 py-10">
-        <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-7 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">New Lead</a>
-        <h1 class="text-3xl font-bold text-center mt-6">Leads</h1>
+        <div class="text-3xl font-bold text-center mt-6">Applications from me as an Agent</div>
+        <div class="text-center mt-2">Leads you've applied to be an agent for</div>
         <div class="mt-7 flex flex-col justify-center">
-            <form action="{% url 'leads:lead_list' %}" type="get">
-
-                {% comment %} start: goods_services {% endcomment %}
-                <label id="mob__goods_services__label" for="mob__goods_services" class="font-bold text-slate-400 mt-5 block">Search</label>
-                <input id="mob__goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: goods_services {% endcomment %}                
-                
-                {% comment %} start: buy_sell {% endcomment %}
-                <label id="mob__buy_sell__label" for="mob__buy_sell" class="font-bold text-slate-400 mt-5 block">Buying or Selling?</label>
-                <div id="mob__buy_sell__elements" class="mt-2">
-                    <select id="mob__buy_sell" name="buy_sell" class="select2">
-                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Any</option>
-                        <option value="buy"{% if buy_sell == 'buy' %} selected{% endif %}>Buy</option>
-                        <option value="sell"{% if buy_sell == 'sell' %} selected{% endif %}>Sell</option>
-                    </select>
-                </div>
-                {% comment %} end: buy_sell {% endcomment %}
-
-                {% comment %} start: buy_country {% endcomment %}
-                <label id="mob__buy_country__label" for="mob__buy_country" class="font-bold text-slate-400 mt-5 block">Buy or Source Country</label>
-                <div id="mob__buy_country__elements" class="mt-2">
-                    <select id="mob__buy_country" name="buy_country" class="select2">
-                        <option value="any_country"{% if buy_country == 'any_country' %} selected{% endif %}>Any Country</option>
-                        {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if buy_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% comment %} end: buy_country {% endcomment %}
-
-                {% comment %} start: sell_country {% endcomment %}
-                <label id="mob__sell_country__label" for="mob__sell_country" class="font-bold text-slate-400 mt-5 block">Sell or Destination Country</label>
-                <div id="mob__sell_country__elements" class="mt-2">
-                    <select id="mob__sell_country" name="sell_country" class="select2">
-                        <option value="any_country"{% if sell_country == 'any_country' %} selected{% endif %}>Any Country</option>
-                        {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if sell_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% comment %} end: sell_country {% endcomment %}
-
-                <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
-
-                <div class="mt-4 flex justify-center">
-                    <a href="{% url 'leads:lead_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Reset</a>
-                </div>
+            <form action="{% url 'applications:application_from_me_as_an_agent_list' %}" type="get">
+                <form action="{% url 'applications:application_for_my_leads_list' %}" type="get">
+                    {% comment %} start: status {% endcomment %}
+                    <label id="mob__status__label" for="mob__status" class="font-bold text-slate-400 mt-5 block">Status</label>
+                    <div id="mob__status__elements" class="mt-2">
+                        <select id="mob__status" name="status" class="select2">
+                            <option value="all"{% if status == 'all' %} selected{% endif %}>All Statuses ({{ all_statuses_count }})</option>
+                            <option value="new"{% if status == 'new' %} selected{% endif %}>New ({{ new_count }})</option>
+                            <option value="started_work"{% if status == 'started_work' %} selected{% endif %}>Started Work ({{ started_work_count }})</option>
+                            <option value="stopped_work"{% if status == 'stopped_work' %} selected{% endif %}>Stopped Work ({{ stopped_work_count }})</option>
+                            <option value="rejected"{% if status == 'rejected' %} selected{% endif %}>Rejected ({{ rejected_count }})</option>
+                        </select>
+                    </div>
+                    {% comment %} end: status {% endcomment %}
+                    <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Filter</button>
+                    <div class="mt-4 flex justify-center">
+                        <a href="{% url 'applications:application_for_my_leads_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Reset</a>
+                    </div>
+                </form>
             </form>
         </div>
     </nav>
@@ -159,10 +100,10 @@ CSS
 
         {% include 'includes/paginator.html' %}
 
-        {% for lead in page_obj %}
+        {% for application in page_obj %}
 
         <div class="mt-2">
-            {% include 'leads/includes/lead_item.html' %}
+            {% include 'leads/includes/application_from_me_as_an_agent_item.html' %}
         </div>
 
         {% endfor %}
@@ -172,7 +113,7 @@ CSS
         {% else %}
         {% comment %} else: page item count <= 0 {% endcomment %}
 
-        <div class="text-lg text-center">You've not applied to be an agent for any leads</div>   
+        <div class="text-lg text-center">No agent has applied to your leads</div>   
 
         {% endif %}
         {% comment %} end: page item count > 0 {% endcomment %}

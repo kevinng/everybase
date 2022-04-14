@@ -33,8 +33,7 @@ CSS
 
 {% block page_actions %}
 <div class="flex lg:hidden">
-    <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-4 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">New Post</a>
-    <button id="search" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Search</button>
+    <button id="search" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Filter</button>
 </div>
 {% endblock %}
 
@@ -54,7 +53,8 @@ CSS
                         <option value="all"{% if status == 'all' %} selected{% endif %}>All Statuses ({{ all_statuses_count }})</option>
                         <option value="new"{% if status == 'new' %} selected{% endif %}>New ({{ new_count }})</option>
                         <option value="started_work"{% if status == 'started_work' %} selected{% endif %}>Started Work ({{ started_work_count }})</option>
-                        <option value="stopped_work"{% if status == 'stopped_work' %} selected{% endif %}>Started Work ({{ stopped_work_count }})</option>
+                        <option value="stopped_work"{% if status == 'stopped_work' %} selected{% endif %}>Stopped Work ({{ stopped_work_count }})</option>
+                        <option value="rejected"{% if status == 'rejected' %} selected{% endif %}>Rejected ({{ rejected_count }})</option>
                     </select>
                 </div>
                 {% comment %} end: status {% endcomment %}
@@ -76,13 +76,14 @@ CSS
             <form action="{% url 'applications:application_for_my_leads_list' %}" type="get">
 
                 {% comment %} start: status {% endcomment %}
-                <label id="mob__status__label" for="mob__status" class="font-bold text-slate-400 mt-5 block">Buying or Selling?</label>
+                <label id="mob__status__label" for="mob__status" class="font-bold text-slate-400 mt-5 block">Status</label>
                 <div id="mob__status__elements" class="mt-2">
                     <select id="mob__status" name="status" class="select2">
                         <option value="all"{% if status == 'all' %} selected{% endif %}>All Statuses ({{ all_statuses_count }})</option>
                         <option value="new"{% if status == 'new' %} selected{% endif %}>New ({{ new_count }})</option>
                         <option value="started_work"{% if status == 'started_work' %} selected{% endif %}>Started Work ({{ started_work_count }})</option>
-                        <option value="stopped_work"{% if status == 'stopped_work' %} selected{% endif %}>Started Work ({{ stopped_work_count }})</option>
+                        <option value="stopped_work"{% if status == 'stopped_work' %} selected{% endif %}>Stopped Work ({{ stopped_work_count }})</option>
+                        <option value="rejected"{% if status == 'rejected' %} selected{% endif %}>Rejected ({{ rejected_count }})</option>
                     </select>
                 </div>
                 {% comment %} end: status {% endcomment %}
@@ -106,7 +107,7 @@ CSS
         {% for application in page_obj %}
 
         <div class="mt-2">
-            {% include 'leads/includes/application_item.html' %}
+            {% include 'leads/includes/application_for_my_lead_item.html' %}
         </div>
 
         {% endfor %}
