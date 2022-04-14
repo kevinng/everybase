@@ -44,16 +44,16 @@
                     <div id="dropdownNavbar" class="hidden z-10 bg-white rounded divide-y divide-gray-100 shadow" data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(981px, 2079px);">
                         <ul class="py-1" aria-labelledby="dropdownLargeButton">
                             <li>
-                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_detail' user.user.slug_link %}" {% endif %}class="block py-2 px-6 text-base hover:text-blue-600">My Profile & Leads</a>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_detail' user.user.slug_link %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block py-2 px-6 text-base hover:text-blue-600">My Profile & Leads</a>
                             </li>
                             <li> 
-                                <a href="#" class="block py-2 px-6 text-base hover:text-blue-600">My Applications to be an Agent</a>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'applications:application_from_me_as_an_agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'applications:application_from_me_as_an_agent_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block py-2 px-6 text-base hover:text-blue-600">Applications from me as an Agent</a>
                             </li>
                             <li>
-                                <a href="#" class="block py-2 px-6 text-base hover:text-blue-600">Agent Applications for My Leads</a>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'applications:application_for_my_leads_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'applications:application_for_my_leads_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block py-2 px-6 text-base hover:text-blue-600">Agent Applications for My Leads</a>
                             </li>
                             <li>
-                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_edit' user.user.slug_link %}" {% endif %}class="block py-2 px-6 text-base hover:text-blue-600">Edit Profile</a>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_edit' user.user.slug_link %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_edit' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block py-2 px-6 text-base hover:text-blue-600">Edit Profile</a>
                             </li>
                         </ul>
                         <div class="py-1">
@@ -76,11 +76,11 @@
         <a href="#" class="hover:text-blue-700 block px-4 py-4">Support</a>
         <div class="h-10"></div>
         {% if request.user.is_authenticated %}
-            <a href="{% url 'users:user_detail' request.user.user.slug_link %}" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">My Profile & Leads</a>
-            <a href="#" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">My Applications to be an Agent</a>
-            <a href="#" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Agent Applications for my Leads</a>
-            <a href="#" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Edit Profile</a>
-            <a href="#" class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Logout</a>
+            <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_detail' user.user.slug_link %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">My Profile & Leads</a>
+            <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'applications:application_from_me_as_an_agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'applications:application_from_me_as_an_agent_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Applications from me as an Agent</a>
+            <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'applications:application_for_my_leads_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'applications:application_for_my_leads_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Agent Applications for my Leads</a>
+            <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_edit' user.user.slug_link %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_edit' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Edit Profile</a>
+            <a href="{% url 'logout' %}" class="hover:text-blue-700 block px-4 py-4">Logout</a>
         {% else %}
             <a href="{% url 'register' %}" class="{% if request.resolver_match.view_name == 'register' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Register</a>
             <a href="{% url 'login' %}" class="{% if request.resolver_match.view_name == 'login' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Login</a>

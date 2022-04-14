@@ -18,7 +18,11 @@
 {% block content %}
 
 {% comment %} start: breadcrumbs {% endcomment %}
-<div class="ml-10 mt-10"><a href="{% url 'applications:application_my_leads_list' %}" class="font-bold">Applications for My Leads</a> > {{ application.lead.headline }}</div>
+{% if application.applicant.id == request.user.user.id %}
+    <div class="ml-10 mt-10"><a href="{% url 'applications:application_from_me_as_an_agent_list' %}" class="font-bold">Applications from me as an Agent</a> > {{ application.lead.headline }}</div>
+{% else %}
+    <div class="ml-10 mt-10"><a href="{% url 'applications:application_for_my_leads_list' %}" class="font-bold">Applications for My Leads</a> > {{ application.lead.headline }}</div>
+{% endif %}
 {% comment %} end: breadcrumbs {% endcomment %}
 
 {% comment %} start: title {% endcomment %}

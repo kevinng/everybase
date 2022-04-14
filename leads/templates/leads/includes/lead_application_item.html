@@ -1,9 +1,7 @@
 {% comment %} 
 Params:
-    lead, lead to display
+    application, application to display
     more_css_classes, additional div CSS classes
-
-Note: thumbnails are not clickable.
 {% endcomment %}
 <a href="{% url 'applications:application_detail' application.id %}">
     <div class="bg-white hover:outline hover:outline-1 hover:outline-blue-500 shadow-md rounded{% if other_css_classes|cut:' ' != '' %} {{ other_css_classes }}{% endif %}">

@@ -539,8 +539,67 @@ def application_detail(request, pk):
 
     return render(request, 'leads/application_detail.html', params)
 
-def application_my_leads_list(request):
-    pass
+def application_for_my_leads_list(request):
+    if request.method == 'GET':
+        status = request.GET.get('status')
+
+        if status == 'started_work':
+            applications = models.Application.objects.filter(
+                lead__author=request.user.user,
+                response='started_work'
+            )
+        elif status == 'stopped_work':
+            applications = models.Application.objects.filter(
+                lead__author=request.user.user,
+                response='stopped_work'
+            )
+        else:
+            applications = models.Application.objects.filter(
+                lead__author=request.user.user
+            )
+
+        # Status counts
+
+        all_statuses_count = models.Application.objects.filter(
+            lead__author=request.user.user
+        ).count()
+
+        new_count = models.Application.objects\
+            .filter(lead__author=request.user.user)\
+            .exclude(response='started_work')\
+            .exclude(response='stopped_work')\
+            .count()
+
+        started_work_count = models.Application.objects\
+            .filter(response='started_work')\
+            .count()
+
+        stopped_work_count = models.Application.objects\
+            .filter(response='stopped_work')\
+            .count()
+
+        params = {
+            'status': status,
+            'all_statuses_count': all_statuses_count,
+            'new_count': new_count,
+            'started_work_count': started_work_count,
+            'stopped_work_count': stopped_work_count
+        }
+
+        # Paginate
+
+        applications_per_page = 12
+        paginator = Paginator(applications, applications_per_page)
+
+        page_number = request.GET.get('page')
+        
+        page_obj = paginator.get_page(page_number)
+        params['page_obj'] = page_obj
+
+        return render(request, 'leads/application_for_my_leads_list.html', params)
+
+def application_from_me_as_an_agent_list(request):
+    return render(request, 'leads/application_from_me_as_an_agent_list.html', {})
 
 # @login_required
 # @csrf_exempt

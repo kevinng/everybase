@@ -1,0 +1,166 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}Importers/Exporters Need Agents{% endblock %}
+
+{% comment %}
+CSS
+
+#mobile-filter {
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    min-height: 100vh;
+    display: block;
+    z-index: 98;
+    background-color: white;
+    padding-top: 100px;
+    transition: 0.3s;
+    max-height: 100%;
+    overflow-y: scroll;
+}
+
+#mobile-filter.is-active {
+    left: 0;
+}
+{% endcomment %}
+{% block other_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="{% static 'common/css/mobile_filter.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block page_actions %}
+<div class="flex lg:hidden">
+    <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-4 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">New Post</a>
+    <button id="search" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Search</button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="text-3xl font-bold text-center mt-10">Agent Applications for My Leads</div>
+<div class="text-center mt-2">Agents who want to help you buy or sell</div>
+<div class="flex justify-center mb-10 mt-10 gap-2">
+    {% comment %} start: desktop search {% endcomment %}
+    <div class="bg-white rounded shadow-md hidden lg:block lg:w-1/3 xl:w-1/4 self-start px-6 pt-6 pb-10">
+        <div class="flex flex-col justify-center">
+            <form action="{% url 'applications:application_for_my_leads_list' %}" type="get">
+
+                {% comment %} start: status {% endcomment %}
+                <label id="status__label" for="status" class="font-bold text-slate-400 mt-5 block">Status</label>
+                <div id="status__elements" class="mt-2">
+                    <select name="status" class="select2">
+                        <option value="all"{% if status == 'all' %} selected{% endif %}>All Statuses ({{ all_statuses_count }})</option>
+                        <option value="new"{% if status == 'new' %} selected{% endif %}>New ({{ new_count }})</option>
+                        <option value="started_work"{% if status == 'started_work' %} selected{% endif %}>Started Work ({{ started_work_count }})</option>
+                        <option value="stopped_work"{% if status == 'stopped_work' %} selected{% endif %}>Started Work ({{ stopped_work_count }})</option>
+                    </select>
+                </div>
+                {% comment %} end: status {% endcomment %}
+
+                <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Filter</button>
+
+                <div class="mt-2 flex justify-center">
+                    <a href="{% url 'applications:application_for_my_leads_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Show All</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% comment %} end: desktop filter {% endcomment %}
+    {% comment %} start: mobile filter {% endcomment %}
+    <nav id="mobile-filter" class="px-10 py-10">
+        <div class="text-3xl font-bold text-center mt-6">Agent Applications for My Leads</div>
+        <div class="text-center mt-2">Agents who want to help you buy or sell</div>
+        <div class="mt-7 flex flex-col justify-center">
+            <form action="{% url 'applications:application_for_my_leads_list' %}" type="get">
+
+                {% comment %} start: status {% endcomment %}
+                <label id="mob__status__label" for="mob__status" class="font-bold text-slate-400 mt-5 block">Buying or Selling?</label>
+                <div id="mob__status__elements" class="mt-2">
+                    <select id="mob__status" name="status" class="select2">
+                        <option value="all"{% if status == 'all' %} selected{% endif %}>All Statuses ({{ all_statuses_count }})</option>
+                        <option value="new"{% if status == 'new' %} selected{% endif %}>New ({{ new_count }})</option>
+                        <option value="started_work"{% if status == 'started_work' %} selected{% endif %}>Started Work ({{ started_work_count }})</option>
+                        <option value="stopped_work"{% if status == 'stopped_work' %} selected{% endif %}>Started Work ({{ stopped_work_count }})</option>
+                    </select>
+                </div>
+                {% comment %} end: status {% endcomment %}
+
+                <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Filter</button>
+
+                <div class="mt-4 flex justify-center">
+                    <a href="{% url 'applications:application_for_my_leads_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Reset</a>
+                </div>
+            </form>
+        </div>
+    </nav>
+    {% comment %} end: mobile filter {% endcomment %}
+
+    <div class="w-5/6 lg:w-6/12 xl:w-7/12 2xl:w-6/12">
+        {% comment %} start: page item count > 0 {% endcomment %}
+        {% if page_obj|length > 0 %}
+
+        {% include 'includes/paginator.html' %}
+
+        {% for application in page_obj %}
+
+        <div class="mt-2">
+            {% include 'leads/includes/application_item.html' %}
+        </div>
+
+        {% endfor %}
+
+        {% include 'includes/paginator.html' with other_css_classes='mt-5' %}
+        
+        {% else %}
+        {% comment %} else: page item count <= 0 {% endcomment %}
+
+        <div class="text-lg text-center">No agent has applied to your leads</div>   
+
+        {% endif %}
+        {% comment %} end: page item count > 0 {% endcomment %}
+    </div>
+</div>
+{% endblock %}
+
+{% comment %}
+Javascript
+https://codebeautify.org/minify-js
+
+$(document).ready(function() {
+    // Cache references
+    $select2 = $('.select2')
+    $search = $('#search')
+
+    // Initialize select2 checkboxes
+    $select2.select2();
+    $select2.one('select2:open', function(e) {
+        $('input.select2-search__field').prop('placeholder', 'Search here...');
+    });
+
+    // Mobile menu
+    $search.click(function() {
+        t = $(this)
+        if (t.html() == 'Search') {
+            t.html('Close')
+        } else {
+            t.html('Search')
+        }
+
+        t.toggleClass('bg-blue-500')
+        t.toggleClass('text-white')
+        t.toggleClass('hover:bg-blue-600')
+        t.toggleClass('bg-slate-100')
+        t.toggleClass('text-slate-600')
+        t.toggleClass('hover:bg-slate-200')
+
+        $('#mobile-filter').toggleClass('is-active')
+    })
+})
+{% endcomment %}
+{% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{% static 'leads/js/lead_list.min.js' %}"></script>
+{% endblock %}

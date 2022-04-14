@@ -39,12 +39,11 @@ CSS
 {% endblock %}
 
 {% block content %}
-<div class="text-3xl font-bold text-center mt-10">Leads</div>
-<div class="text-center mt-2">Buyers and sellers looking for agents</div>
-<div class="flex justify-center mb-10 mt-10 gap-2">
+<div class="flex justify-center my-10 gap-2">
     {% comment %} start: desktop search {% endcomment %}
     <div class="bg-white rounded shadow-md hidden lg:block lg:w-1/3 xl:w-1/4 self-start px-6 py-10">
         <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-7 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">Post a Lead</a>
+        <h1 class="text-3xl font-bold text-center mt-6">Leads</h1>
         <div class="mt-7 flex flex-col justify-center">
             <form action="{% url 'leads:lead_list' %}" type="get">
 
@@ -57,7 +56,7 @@ CSS
                 <label id="buy_sell__label" for="buy_sell" class="font-bold text-slate-400 mt-5 block">Buying or Selling?</label>
                 <div id="buy_sell__elements" class="mt-2">
                     <select name="buy_sell" class="select2">
-                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Buy or Sell</option>
+                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Any</option>
                         <option value="buy"{% if buy_sell == 'buy' %} selected{% endif %}>Buy</option>
                         <option value="sell"{% if buy_sell == 'sell' %} selected{% endif %}>Sell</option>
                     </select>
@@ -113,7 +112,7 @@ CSS
                 <label id="mob__buy_sell__label" for="mob__buy_sell" class="font-bold text-slate-400 mt-5 block">Buying or Selling?</label>
                 <div id="mob__buy_sell__elements" class="mt-2">
                     <select id="mob__buy_sell" name="buy_sell" class="select2">
-                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Buy or Sell</option>
+                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Any</option>
                         <option value="buy"{% if buy_sell == 'buy' %} selected{% endif %}>Buy</option>
                         <option value="sell"{% if buy_sell == 'sell' %} selected{% endif %}>Sell</option>
                     </select>
@@ -173,7 +172,7 @@ CSS
         {% else %}
         {% comment %} else: page item count <= 0 {% endcomment %}
 
-        <div class="text-lg text-center">No results</div>   
+        <div class="text-lg text-center">You've not applied to be an agent for any leads</div>   
 
         {% endif %}
         {% comment %} end: page item count > 0 {% endcomment %}

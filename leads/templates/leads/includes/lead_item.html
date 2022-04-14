@@ -24,7 +24,7 @@ Note: thumbnails are not clickable.
         <div class="px-8 pb-8 flex justify-between items-start">
             <div>
                 {% comment %} start: author {% endcomment %}
-                <div class="text-sm mt-4">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</div>
+                <div class="text-sm font-bold mt-4">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</div>
                 {% comment %} end: author {% endcomment %}
 
                 {% comment %} start: country {% endcomment %}
@@ -32,7 +32,7 @@ Note: thumbnails are not clickable.
                 {% comment %} end: country {% endcomment %}
                 
                 {% comment %} start: headline {% endcomment %}
-                <div class="mt-2 font-bold text-lg">{{ lead.headline }}</div>
+                <div class="mt-6 font-bold text-lg">{{ lead.headline }}</div>
                 {% comment %} end: headline {% endcomment %}
 
                 {% comment %} start: thumbnails {% endcomment %}
