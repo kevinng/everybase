@@ -1,3 +1,4 @@
+from django.urls import reverse
 from celery import shared_task
 from everybase import settings
 from chat.constants import intents, messages

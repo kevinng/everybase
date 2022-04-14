@@ -1,3 +1,13 @@
-Registration confirmed.
+*PLEASE ADD THIS PHONE NUMBER TO YOUR CONTACT BOOK*
 
-https://everybase.co/
+Welcome to https://everybase.co/
+
+If you're an importer/exporter, hire agents to help you buy or sell.
+
+Post a lead:
+{{ base_url }}{{ lead_create }}
+
+If you're an agent, help importers/exporters buy or sell:
+
+Search leads:
+{{ base_url }}{{ lead_list }}
