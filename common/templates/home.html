@@ -17,70 +17,39 @@
 
 <div class="bg-gradient-to-t from-violet-800 to-fuchsia-600 pt-20 pb-20 px-10 flex flex-col items-center text-center">
     {% comment %} start: header {% endcomment %}
-    <div class="font-bold text-3xl text-white ">Connect buyers, sellers, agents worldwide</div>
+    <div class="font-bold text-3xl text-white ">We connect importers/exporters agents worldwide</div>
     {% comment %} end: header {% endcomment %}
 
     {% comment %} start: sellers buyers, call-to-action {% endcomment %}
-    <div class="mt-12 flex flex-col items-center">
-        <div class="font-bold text-white text-2xl">Sellers, Buyers</div>
-        <div class="flex justify-center gap-2">
-            <a href="{% url 'leads:lead_list' %}?buy_sell=buy" class="mt-4 py-2 px-6 text-white bg-pink-700 hover:bg-pink-600 text-md font-bold rounded-md">Find Buyers</a>
-            <a href="{% url 'leads:lead_list' %}?buy_sell=sell" class="mt-4 py-2 px-6 text-white bg-yellow-600 hover:bg-yellow-500 text-md font-bold rounded-md">Find Sellers</a>
-        </div>
+    <div class="mt-12 w-3/4 lg:w-1/2 flex flex-col items-center">
+        <div class="font-bold text-white text-2xl">Agents</div>
+        <div class="text-white">Help importers/exporters buy or sell for commissions</div>
+        <form class="w-full" action="{% url 'leads:lead_list' %}" method="get">
+            {% csrf_token %}
+            <input name="search" placeholder="E.g., aluminium" type="text" maxlength="50" type="input" class="block w-full border rounded-md py-3 px-5 mt-2">
+            <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 shadow-md mt-2">Search Leads</button>
+        </form>
     </div>
     {% comment %} end: sellers buyers, call-to-action {% endcomment %}
 
     {% comment %} start: agents, call-to-action {% endcomment %}
     <div class="mt-12 flex flex-col items-center">
-        <div class="font-bold text-white text-2xl">Agents</div>
-        <a href="{% url 'leads:lead_list' %}?buy_sell=buy&need_agent=on" class="mt-4 py-2 px-6 text-white bg-emerald-600 hover:bg-emerald-500 text-md font-bold rounded-md">Find Buyers Who Needs Agents</a>
-        <a href="{% url 'leads:lead_list' %}?buy_sell=sell&need_agent=on" class="mt-4 py-2 px-6 text-white bg-amber-700 hover:bg-amber-600 text-md font-bold rounded-md">Find Sellers Who Needs Agents</a>
+        <div class="font-bold text-white text-2xl">Importers/Exporters</div>
+        <div class="text-white">Recruit agents to help you buy or sell</div>
+        <a href="{% url 'leads:lead_create' %}" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 shadow-md mt-2">Post a Lead</a>
     </div>
     {% comment %} end: agents, call-to-action {% endcomment %}
-
-    {% comment %} start: importers/exporters, call-to-action {% endcomment %}
-    <div class="mt-12 flex flex-col items-center">
-        <div class="font-bold text-white text-2xl">Importers, Exporters</div>
-        <a href="{% url 'users:user_list' %}?is_buy_agent=on" class="mt-4 py-2 px-6 text-white bg-sky-700 hover:bg-sky-600 text-md font-bold rounded-md">Find Agents to Help You Buy or Source</a>
-        <a href="{% url 'users:user_list' %}?is_sell_agent=on" class="mt-4 py-2 px-6 text-white bg-lime-700 hover:bg-lime-600 text-md font-bold rounded-md">Find Agents to Help You Sell or Promote</a>
-        <a href="{% url 'users:user_list' %}?is_logistics_agent=on" class="mt-4 py-2 px-6 text-white bg-fuchsia-700 hover:bg-fuchsia-600 text-md font-bold rounded-md">Find Agents to Help You With Logistics</a>
-    </div>
-    
-    {% comment %} end: importers/exporters, call-to-action {% endcomment %}
 </div>
 <div class="pt-20 pb-20 px-10 bg-sky-50 flex flex-col items-center">
-    <div class="font-bold text-3xl text-center">Be found by buyers, sellers, agents - no limits*, no charge</div>
-
-    <div class="mt-12 flex flex-col lg:flex-row justify-center items-center gap-10">
-        {% comment %} start: attention image {% endcomment %}
-        <img src="{% static 'common/img/home/1.svg' %}" class="lg:w-1/3 w-full">
-        {% comment %} end: attention image {% endcomment %}
-
-        {% comment %} start: copywriting {% endcomment %}
-        <div class="lg:mt-6 lg:w-2/3 w-full">
-            <div><span class="mr-2">➤</span> Sell, buy, or recruit agents - to help you buy, sell, handle logistics.</div>
-            <div class="mt-4"><span class="mr-2">➤</span> Post leads, no limits*, no charge.</div>
-            <div class="mt-4"><span class="mr-2">➤</span> Be contacted by other users, no limits, no charge.</div>
-            <div class="mt-6 font-bold">*Phone numbers of spammers will be banned!</div>
-        </div>
-        {% comment %} end: copywriting {% endcomment %}
-    </div>
-</div>
-<div class="pt-20 pb-20 px-10 bg-teal-50 flex flex-col items-center">
-    <div class="font-bold text-3xl text-center">Better than crawling social networks and chatgroups for leads</div>
-
-    <div class="mt-12 flex flex-col lg:flex-row justify-center items-center gap-10">
-        {% comment %} start: copywriting {% endcomment %}
-        <div class="lg:mt-6 lg:w-2/3 w-full">
-            <div><span class="mr-2">➤</span> We forward you to WhatsApp directly. No emails to send or phonecalls to make.</div>
-            <div class="mt-4"><span class="mr-2">➤</span> Advanced search and filtering capabilities - find what you need, quickly.</div>
-            <div class="mt-4"><span class="mr-2">➤</span> Save persons and leads for considerations.</div>
-        </div>
-        {% comment %} end: copywriting {% endcomment %}
-
-        {% comment %} start: attention image {% endcomment %}
-        <img src="{% static 'common/img/home/2.svg' %}" class="lg:w-1/3 w-full">
-        {% comment %} end: attention image {% endcomment %}
+    <div class="font-bold text-3xl text-center">Promoted Leads</div>
+    <div class="mt-4">
+        {% load promoted_leads %}
+        {% promoted_leads as promoted_leads %}
+        {% for lead in promoted_leads %}
+            <div class="mt-2">
+                {% include 'leads/includes/lead_item.html' %}
+            </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
