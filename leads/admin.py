@@ -238,7 +238,7 @@ class LeadQueryAdmin(comadm.StandardAdmin):
 
 _lead_query_log_fields = [
     'user',
-    'goods_services',
+    'search',
     'buy_sell',
     'buy_country',
     'sell_country',

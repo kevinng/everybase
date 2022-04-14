@@ -404,7 +404,7 @@ def lead_list(request):
 
         get = lambda s : request.GET.get(s)
 
-        goods_services = get('goods_services') # labelled 'search'
+        search = get('search') # labelled 'search'
         buy_sell = get('buy_sell')
         buy_country = get('buy_country')
         sell_country = get('sell_country')
@@ -432,22 +432,22 @@ def lead_list(request):
 
         order_by = [Trunc('created', 'month', output_field=DateTimeField()).desc()]
 
-        if is_not_empty(goods_services):
+        if is_not_empty(search):
             # Goods services details is filled
-            details_vec = SearchVector('details_vec')
-            goods_services_qry = SearchQuery(goods_services)
+            headline_details_vec = SearchVector('headline_details_vec')
+            search_query = SearchQuery(search)
             leads = leads.annotate(
-                details_vec=RawSQL('details_vec', [],
+                headline_details_vec=RawSQL('headline_details_vec', [],
                     output_field=SearchVectorField()))\
-                .annotate(goods_services_rank=SearchRank(details_vec, goods_services_qry))
+                .annotate(goods_services_rank=SearchRank(headline_details_vec, search_query))
             
             order_by.append('-goods_services_rank')
 
-        # Save lead query, if search (i.e., goods_services is set)
-        if goods_services is not None and len(goods_services) > 0:
+        # Save lead query if search
+        if search is not None and len(search) > 0:
             models.LeadQueryLog.objects.create(
                 user=user,
-                goods_services=goods_services,
+                search=search,
                 buy_sell=buy_sell,
                 buy_country=buy_country,
                 sell_country=sell_country
@@ -460,7 +460,7 @@ def lead_list(request):
         params = {}
 
         params['countries'] = get_countries()
-        params['goods_services'] = get('goods_services')
+        params['search'] = get('search')
         params['buy_sell'] = get('buy_sell')
         params['buy_country'] = get('buy_country')
         params['sell_country'] = get('sell_country')

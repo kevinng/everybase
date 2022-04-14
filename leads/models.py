@@ -358,7 +358,7 @@ class LeadQueryLog(Standard):
         db_index=True
     )
 
-    goods_services = models.CharField(
+    search = models.CharField(
         max_length=200,
         null=True,
         blank=True,

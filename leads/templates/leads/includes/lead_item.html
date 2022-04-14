@@ -50,6 +50,11 @@ Note: thumbnails are not clickable.
                 {% comment %} start: description {% endcomment %}
                 <div class="break-words mt-2">{% if lead.details|length > 140 %}{{ lead.details|linebreaksbr|truncatechars:140 }}...{% else %}{{ lead.details }}{% endif %}</div>
                 {% comment %} end: description {% endcomment %}
+
+                {% comment %} start: lead_type {% endcomment %}
+                <div class="font-bold text-slate-400 mt-6">Selling or Buying?</div>
+                <div class="mt-1">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %}</div>
+                {% comment %} end: lead_type {% endcomment %}
                 
                 {% comment %} start: buy_country {% endcomment %}
                 <div class="font-bold text-slate-400 mt-6">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>

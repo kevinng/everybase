@@ -42,48 +42,26 @@ CSS
 <div class="flex justify-center my-10 gap-2">
     {% comment %} start: desktop search {% endcomment %}
     <div class="bg-white rounded shadow-md hidden lg:block lg:w-1/3 xl:w-1/4 self-start px-6 py-10">
-        <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-7 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">New Lead</a>
+        <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-7 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">Post a Lead</a>
         <h1 class="text-3xl font-bold text-center mt-6">Leads</h1>
         <div class="mt-7 flex flex-col justify-center">
             <form action="{% url 'leads:lead_list' %}" type="get">
+
+                {% comment %} start: search {% endcomment %}
+                <label id="search__label" for="search" class="font-bold text-slate-400 mt-5 block">Search</label>
+                <input id="search" name="search"{% if search is not None and search|cut:' ' != '' %} value="{{ search }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
+                {% comment %} end: search {% endcomment %}
                 
-                {% if user.is_authenticated %}
-                    {% comment %} start: commented_only {% endcomment %}
-                    <div id="commented_only__elements" class="flex justify-start">
-                        <input id="commented_only" name="commented_only" type="checkbox" class="h-6 w-6" {% if commented_only == 'on' %} checked{% endif %}>
-                        <label id="commented_only__label" for="commented_only" class="ml-3">Leads I've commented on only</label>
-                    </div>
-                    {% comment %} end: commented_on {% endcomment %}
-
-                    {% comment %} start: saved_only {% endcomment %}
-                    <div id="saved_only__elements" class="flex justify-start mt-4">
-                        <input id="saved_only" name="saved_only" type="checkbox" class="h-6 w-6" {% if saved_only == 'on' %} checked{% endif %}>
-                        <label id="saved_only__label" for="saved_only" class="ml-3">Leads I've saved only</label>
-                    </div>
-                    {% comment %} end: leads_ive_saved {% endcomment %}
-                {% endif %}
-
                 {% comment %} start: buy_sell {% endcomment %}
-                <label id="buy_sell__label" for="buy_sell" class="font-bold text-slate-400 mt-5 block">Buy, Sell</label>
+                <label id="buy_sell__label" for="buy_sell" class="font-bold text-slate-400 mt-5 block">Buying or Selling?</label>
                 <div id="buy_sell__elements" class="mt-2">
                     <select name="buy_sell" class="select2">
-                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Buy or Sell</option>
+                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Any</option>
                         <option value="buy"{% if buy_sell == 'buy' %} selected{% endif %}>Buy</option>
                         <option value="sell"{% if buy_sell == 'sell' %} selected{% endif %}>Sell</option>
                     </select>
                 </div>
                 {% comment %} end: buy_sell {% endcomment %}
-
-                {% comment %} start: direct_middleman {% endcomment %}
-                <label id="direct_middleman__label" for="direct_middleman" class="font-bold text-slate-400 mt-5 block">Direct, Middleman</label>
-                <div id="direct_middleman__elements" class="mt-2">
-                    <select name="direct_middleman" class="select2">
-                        <option value="all"{% if direct_middleman == 'all' %} selected{% endif %}>Direct or Middleman</option>
-                        <option value="direct"{% if direct_middleman == 'direct' %} selected{% endif %}>Direct Buyer/Seller</option>
-                        <option value="middleman"{% if direct_middleman == 'middleman' %} selected{% endif %}>Middleman</option>
-                    </select>
-                </div>
-                {% comment %} end: direct_middleman {% endcomment %}
 
                 {% comment %} start: buy_country {% endcomment %}
                 <label id="buy_country__label" for="buy_country" class="font-bold text-slate-400 mt-5 block">Buy or Source Country</label>
@@ -109,116 +87,9 @@ CSS
                 </div>
                 {% comment %} end: sell_country {% endcomment %}
 
-                {% comment %} start: goods_services {% endcomment %}
-                <label id="goods_services__label" for="goods_services" class="font-bold text-slate-400 mt-5 block">Goods & Services Details</label>
-                <input id="goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: goods_services {% endcomment %}
-
-                {% comment %} start: need_agent {% endcomment %}
-                <div id="need_agent__elements" class="flex justify-start mt-5">
-                    <input id="need_agent" name="need_agent" type="checkbox" class="h-6 w-6" {% if need_agent == 'on' %} checked{% endif %}>
-                    <label for="need_agent" id="need_agent__label" class="ml-3">Need buy/sell agents only</label>
-                </div>
-                {% comment %} end: need_agent {% endcomment %}
-
-                {% comment %} start: commission_type {% endcomment %}
-                <label id="commission_type__label" for="commission_type" class="font-bold text-slate-400 mt-5 block">How is agent commission calculated?</label>
-                <div id="commission_type__elements" class="mt-2">
-                    <select id="commission_type" name="commission_type" class="select2">
-                        <option value="all"{% if commission_type == 'all' %} selected{% endif %}>Any</option>
-                        <option value="percentage"{% if commission_type == 'percentage' %} selected{% endif %}>% Sales</option>
-                        <option value="other"{% if commission_type == 'other' %} selected{% endif %}>Other</option>
-                    </select>
-                </div>
-                {% comment %} end: commission_type {% endcomment %}
-
-                {% comment %} start: commission_type_other {% endcomment %}
-                <label id="commission_type_other__label" for="commission_type_other" class="font-bold text-slate-400 mt-5 block">How is agent commission calculated?</label>
-                <input id="commission_type_other" name="commission_type_other"{% if commission_type_other is not None and commission_type_other|cut:' ' != '' %} value="{{ commission_type_other }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: commission_type_other {% endcomment %}
-
-                {% comment %} start: min_commission {% endcomment %}
-                <label id="min_commission__label" for="min_commission" class="font-bold text-slate-400 mt-5 block">Min Commission %</label>
-                <div id="min_commission__elements" class="flex items-center justify-between">
-                    <input id="min_commission" name="min_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if min_commission is not None and min_commission|cut:' ' != '' %} value="{{ min_commission }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
-                    <div class="font-extrabold text-xl">%</div>
-                </div>
-                {% comment %} end: min_commission {% endcomment %}
-
-                {% comment %} start: max_commission {% endcomment %}
-                <label id="max_commmission__label" for="max_commission" class="font-bold text-slate-400 mt-5 block">Max Commission %</label>
-                <div id="max_commission__elements" class="flex items-center justify-between">
-                    <input id="max_commission" name="max_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if max_commission is not None and max_commission|cut:' ' != '' %} value="{{ max_commission }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
-                    <div class="font-extrabold text-xl">%</div>
-                </div>
-                {% comment %} end: max_commission {% endcomment %}
-
-                {% comment %} start: min_avg_deal {% endcomment %}
-                <label id="min_avg_deal__label" for="min_avg_deal" class="font-bold text-slate-400 mt-5 block">Min Average Deal Size USD</label>
-                <div id="min_avg_deal__elements" class="flex items-center justify-between">
-                    <input id="min_avg_deal" name="min_avg_deal" placeholder="Leave blank for all" type="number" min="0" {% if min_avg_deal is not None and min_avg_deal|cut:' ' != '' %} value="{{ min_avg_deal }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
-                    <div class="font-extrabold text-xl">USD</div>
-                </div>
-                {% comment %} end: min_avg_deal {% endcomment %}
-
-                {% comment %} start: max_avg_deal {% endcomment %}
-                <label id="max_avg_deal__label" for="max_avg_deal" class="font-bold text-slate-400 mt-5 block">Max Average Deal Size USD</label>
-                <div id="max_avg_deal__elements" class="flex items-center justify-between">
-                    <input id="max_avg_deal" name="max_avg_deal" placeholder="Leave blank for all" type="number" min="0" {% if max_avg_deal is not None and max_avg_deal|cut:' ' != '' %} value="{{ max_avg_deal }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
-                    <div class="font-extrabold text-xl">USD</div>
-                </div>
-                {% comment %} end: max_avg_deal {% endcomment %}
-
-                {% comment %} start: comm_negotiable {% endcomment %}
-                <label id="comm_negotiable__label" for="comm_negotiable" class="font-bold text-slate-400 mt-5 block">Is commission negotiable?</label>
-                <div id="comm_negotiable__elements" class="mt-2">
-                    <select name="comm_negotiable" class="select2">
-                        <option value="all"{% if comm_negotiable == 'all' %} selected{% endif %}>All</option>
-                        <option value="not_negotiable"{% if comm_negotiable == 'not_negotiable' %} selected{% endif %}>Not Negotiable</option>
-                        <option value="negotiable"{% if comm_negotiable == 'negotiable' %} selected{% endif %}>Negotiable</option>
-                    </select>
-                </div>
-                {% comment %} end: comm_negotiable {% endcomment %}
-
-                {% comment %} start: commission_payable_after {% endcomment %}
-                <label id="commission_payable_after__label" for="commission_payable_after" class="font-bold text-slate-400 mt-5 block">Commission Payable After</label>
-                <div id="commission_payable_after__elements" class="mt-2">
-                    <select name="commission_payable_after" class="select2">
-                        <option value="all"{% if commission_payable_after == 'all' %} selected{% endif %}>Any</option>
-                        <option value="initial_deposit_received"{% if commission_payable_after == 'initial_deposit_received' %} selected{% endif %}>Initial deposit received</option>
-                        <option value="goods_shipped"{% if commission_payable_after == 'goods_shipped' %} selected{% endif %}>Goods shipped</option>
-                        <option value="buyer_received_goods_services"{% if commission_payable_after == 'buyer_received_goods_services' %} selected{% endif %}>Buyer received goods/services</option>
-                        <option value="full_payment_received"{% if commission_payable_after == 'full_payment_received' %} selected{% endif %}>Full payment received</option>
-                        <option value="other"{% if commission_payable_after == 'other' %} selected{% endif %}>Other</option>
-                    </select>
-                </div>
-                {% comment %} end: commission_payable_after {% endcomment %}
-
-                {% comment %} start: commission_payable_after_other {% endcomment %}
-                <label id="commission_payable_after_other__label" for="commission_payable_after_other" class="font-bold text-slate-400 mt-5 block">Commission Payable After</label>
-                <input id="commission_payable_after_other" name="commission_payable_after_other"{% if commission_payable_after_other is not None and commission_payable_after_other|cut:' ' != '' %} value="{{ commission_payable_after_other }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: commission_payable_after_other {% endcomment %}
-
-                {% comment %} start: other_agent_details {% endcomment %}
-                <label id="other_agent_details__label" for="other_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Agents</label>
-                <input id="other_agent_details" name="other_agent_details"{% if other_agent_details is not None and other_agent_details|cut:' ' != '' %} value="{{ other_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: other_agent_details {% endcomment %}
-
-                {% comment %} start: need_logistics_agent {% endcomment %}
-                <div id="need_logistics_agent__elements" class="flex justify-start mt-5">
-                    <input id="need_logistics_agent" name="need_logistics_agent" type="checkbox" class="h-6 w-6" {% if need_logistics_agent == 'on' %} checked{% endif %}>
-                    <label id="need_logistics_agent__label" for="need_logistics_agent" class="ml-3">Need logistics agents only</label>
-                </div>
-                {% comment %} end: need_logistics_agent {% endcomment %}
-
-                {% comment %} start: logistics_agent_details {% endcomment %}
-                <label id="logistics_agent_details__label" for="logistics_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Logistics Agents</label>
-                <input id="logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: logistics_agent_details {% endcomment %}
-
                 <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
 
-                <div class="mt-10 flex justify-center">
+                <div class="mt-2 flex justify-center">
                     <a href="{% url 'leads:lead_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Reset</a>
                 </div>
             </form>
@@ -231,44 +102,22 @@ CSS
         <h1 class="text-3xl font-bold text-center mt-6">Leads</h1>
         <div class="mt-7 flex flex-col justify-center">
             <form action="{% url 'leads:lead_list' %}" type="get">
+
+                {% comment %} start: goods_services {% endcomment %}
+                <label id="mob__goods_services__label" for="mob__goods_services" class="font-bold text-slate-400 mt-5 block">Search</label>
+                <input id="mob__goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
+                {% comment %} end: goods_services {% endcomment %}                
                 
-                {% if user.is_authenticated %}
-                    {% comment %} start: commented_only {% endcomment %}
-                    <div id="mob__commented_only__elements" class="flex justify-start">
-                        <input id="mob__commented_only" name="commented_only" type="checkbox" class="h-6 w-6" {% if commented_only == 'on' %} checked{% endif %}>
-                        <label id="mob__commented_only__label" for="mob__commented_only" class="ml-3">Leads I've commented on only</label>
-                    </div>
-                    {% comment %} end: commented_on {% endcomment %}
-
-                    {% comment %} start: saved_only {% endcomment %}
-                    <div id="mob__saved_only__elements" class="flex justify-start mt-4">
-                        <input id="mob__saved_only" name="saved_only" type="checkbox" class="h-6 w-6" {% if saved_only == 'on' %} checked{% endif %}>
-                        <label id="mob__saved_only__label" for="mob__saved_only" class="ml-3">Leads I've saved only</label>
-                    </div>
-                    {% comment %} end: saved_only {% endcomment %}
-                {% endif %}
-
                 {% comment %} start: buy_sell {% endcomment %}
-                <label id="mob__buy_sell__label" for="mob__buy_sell" class="font-bold text-slate-400 mt-5 block">Buy, Sell</label>
+                <label id="mob__buy_sell__label" for="mob__buy_sell" class="font-bold text-slate-400 mt-5 block">Buying or Selling?</label>
                 <div id="mob__buy_sell__elements" class="mt-2">
                     <select id="mob__buy_sell" name="buy_sell" class="select2">
-                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Buy or Sell</option>
+                        <option value="all"{% if buy_sell == 'all' %} selected{% endif %}>Any</option>
                         <option value="buy"{% if buy_sell == 'buy' %} selected{% endif %}>Buy</option>
                         <option value="sell"{% if buy_sell == 'sell' %} selected{% endif %}>Sell</option>
                     </select>
                 </div>
                 {% comment %} end: buy_sell {% endcomment %}
-
-                {% comment %} start: direct_middleman {% endcomment %}
-                <label id="mob__direct_middleman__label" for="mob__direct_middleman" class="font-bold text-slate-400 mt-5 block">Direct, Middleman</label>
-                <div id="mob__direct_middleman__elements" class="mt-2">
-                    <select id="mob__direct_middleman" name="direct_middleman" class="select2">
-                        <option value="all"{% if direct_middleman == 'all' %} selected{% endif %}>Direct or Middleman</option>
-                        <option value="direct"{% if direct_middleman == 'direct' %} selected{% endif %}>Direct Buyer/Seller</option>
-                        <option value="middleman"{% if direct_middleman == 'middleman' %} selected{% endif %}>Middleman</option>
-                    </select>
-                </div>
-                {% comment %} end: direct_middleman {% endcomment %}
 
                 {% comment %} start: buy_country {% endcomment %}
                 <label id="mob__buy_country__label" for="mob__buy_country" class="font-bold text-slate-400 mt-5 block">Buy or Source Country</label>
@@ -294,116 +143,9 @@ CSS
                 </div>
                 {% comment %} end: sell_country {% endcomment %}
 
-                {% comment %} start: goods_services {% endcomment %}
-                <label id="mob__goods_services__label" for="mob__goods_services" class="font-bold text-slate-400 mt-5 block">Goods & Services Details</label>
-                <input id="mob__goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: goods_services {% endcomment %}
-
-                {% comment %} start: need_agent {% endcomment %}
-                <div id="mob__need_agent__elements" class="flex justify-start mt-5">
-                    <input id="mob__need_agent" name="need_agent" type="checkbox" class="h-6 w-6" {% if need_agent == 'on' %} checked{% endif %}>
-                    <label id="mob__need_agent__label" for="mob__need_agent" class="ml-3">Need buy/sell agents only</label>
-                </div>
-                {% comment %} end: need_agent {% endcomment %}
-
-                {% comment %} start: commission_type {% endcomment %}
-                <label id="mob__commission_type__label" for="mob__commission_type" class="font-bold text-slate-400 mt-5 block">How is agent commission calculated?</label>
-                <div id="mob__commission_type__elements" class="mt-2">
-                    <select id="mob__commission_type" name="commission_type" class="select2">
-                        <option value="all"{% if commission_type == 'all' %} selected{% endif %}>Any</option>
-                        <option value="percentage"{% if commission_type == 'percentage' %} selected{% endif %}>% Sales</option>
-                        <option value="others"{% if commission_type == 'others' %} selected{% endif %}>Others</option>
-                    </select>
-                </div>
-                {% comment %} end: commission_type {% endcomment %}
-
-                {% comment %} start: commission_type_other {% endcomment %}
-                <label id="mob__commission_type_other__label" for="mob__commission_type_other" class="font-bold text-slate-400 mt-5 block">How is agent commission calculated?</label>
-                <input id="mob__commission_type_other" name="commission_type_other"{% if commission_type_other is not None and commission_type_other|cut:' ' != '' %} value="{{ commission_type_other }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: commission_type_other {% endcomment %}
-
-                {% comment %} start: min_commission {% endcomment %}
-                <label id="mob__min_commission__label" for="mob__min_commission" class="font-bold text-slate-400 mt-5 block">Min Commission %</label>
-                <div id="mob__min_commission__elements" class="flex items-center justify-between">
-                    <input id="mob__min_commission" name="min_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if min_commission is not None and min_commission|cut:' ' != '' %} value="{{ min_commission }}"{% endif %} class="w-full border rounded-md py-3 px-5 mt-2 mr-3">
-                    <div class="font-extrabold text-xl">%</div>
-                </div>
-                {% comment %} end: min_commission {% endcomment %}
-
-                {% comment %} start: max_commission {% endcomment %}
-                <label id="mob__max_commmission__label" for="mob__max_commission" class="font-bold text-slate-400 mt-5 block">Max Commission %</label>
-                <div id="mob__max_commission__elements" class="flex items-center justify-between">
-                    <input id="mob__max_commission" name="max_commission" placeholder="Leave blank for all" type="number" min="0" max="100" {% if max_commission is not None and max_commission|cut:' ' != '' %} value="{{ max_commission }}"{% endif %} class="w-full border rounded-md py-3 px-5 mt-2 mr-3">
-                    <div class="font-extrabold text-xl">%</div>
-                </div>
-                {% comment %} end: max_commission {% endcomment %}
-
-                {% comment %} start: min_avg_deal {% endcomment %}
-                <label id="mob__min_avg_deal__label" for="mob__min_avg_deal" class="font-bold text-slate-400 mt-5 block">Min Average Deal Size USD</label>
-                <div id="mob__min_avg_deal__elements" class="flex items-center justify-between">
-                    <input id="mob__min_avg_deal" name="min_avg_deal" placeholder="Leave blank for all" type="number" min="0" {% if min_avg_deal is not None and min_avg_deal|cut:' ' != '' %} value="{{ min_avg_deal }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
-                    <div class="font-extrabold text-xl">USD</div>
-                </div>
-                {% comment %} end: min_avg_deal {% endcomment %}
-
-                {% comment %} start: max_avg_deal {% endcomment %}
-                <label id="mob__max_avg_deal__label" for="mob__max_avg_deal" class="font-bold text-slate-400 mt-5 block">Max Average Deal Size USD</label>
-                <div id="mob__max_avg_deal__elements" class="flex items-center justify-between">
-                    <input id="mob__max_avg_deal" name="max_avg_deal" placeholder="Leave blank for all" type="number" min="0" {% if max_avg_deal is not None and max_avg_deal|cut:' ' != '' %} value="{{ max_avg_deal }}"{% endif %} class="w-full  border rounded-md py-3 px-5 mt-2 mr-3">
-                    <div class="font-extrabold text-xl">USD</div>
-                </div>
-                {% comment %} end: max_avg_deal {% endcomment %}
-
-                {% comment %} start: comm_negotiable {% endcomment %}
-                <label id="mob__comm_negotiable__label" for="mob__comm_negotiable" class="font-bold text-slate-400 mt-5 block">Is commission negotiable?</label>
-                <div id="mob__comm_negotiable__elements" class="mt-2">
-                    <select id="mob__comm_negotiable" name="comm_negotiable" class="select2">
-                        <option value="all"{% if comm_negotiable == 'all' %} selected{% endif %}>All</option>
-                        <option value="not_negotiable"{% if comm_negotiable == 'not_negotiable' %} selected{% endif %}>Not Negotiable</option>
-                        <option value="negotiable"{% if comm_negotiable == 'negotiable' %} selected{% endif %}>Negotiable</option>
-                    </select>
-                </div>
-                {% comment %} end: comm_negotiable {% endcomment %}
-
-                {% comment %} start: commission_payable_after {% endcomment %}
-                <label id="mob__commission_payable_after__label" for="mob__commission_payable_after" class="font-bold text-slate-400 mt-5 block">Commission Payable After</label>
-                <div id="mob__commission_payable_after__elements" class="mt-2">
-                    <select id="mob__commission_payable_after" name="commission_payable_after" class="select2">
-                        <option value="all"{% if commission_payable_after == 'all' %} selected{% endif %}>Any</option>
-                        <option value="initial_deposit_received"{% if commission_payable_after == 'initial_deposit_received' %} selected{% endif %}>Initial deposit received</option>
-                        <option value="goods_shipped"{% if commission_payable_after == 'goods_shipped' %} selected{% endif %}>Goods shipped</option>
-                        <option value="buyer_received_goods_services"{% if commission_payable_after == 'buyer_received_goods_services' %} selected{% endif %}>Buyer received goods/services</option>
-                        <option value="full_payment_received"{% if commission_payable_after == 'full_payment_received' %} selected{% endif %}>Full payment received</option>
-                        <option value="other"{% if commission_payable_after == 'other' %} selected{% endif %}>Other</option>
-                    </select>
-                </div>
-                {% comment %} end: commission_payable_after {% endcomment %}
-
-                {% comment %} start: commission_payable_after_other {% endcomment %}
-                <label id="mob__commission_payable_after_other__label" for="mob__commission_payable_after_other" class="font-bold text-slate-400 mt-5 block">Commission Payable After</label>
-                <input id="mob__commission_payable_after_other" name="commission_payable_after_other"{% if commission_payable_after_other is not None and commission_payable_after_other|cut:' ' != '' %} value="{{ commission_payable_after_other }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: commission_payable_after_other {% endcomment %}
-
-                {% comment %} start: other_agent_details {% endcomment %}
-                <label id="mob__other_agent_details__label" for="mob__other_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Agents</label>
-                <input id="mob__other_agent_details" name="other_agent_details"{% if other_agent_details is not None and other_agent_details|cut:' ' != '' %} value="{{ other_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: other_agent_details {% endcomment %}
-
-                {% comment %} start: need_logistics_agent {% endcomment %}
-                <div id="mob__need_logistics_agent__elements" class="flex justify-start mt-5">
-                    <input id="mob__need_logistics_agent" name="need_logistics_agent" type="checkbox" class="h-6 w-6" {% if need_logistics_agent == 'on' %} checked{% endif %}>
-                    <label id="mob__need_logistics_agent__label" for="mob__need_logistics_agent" class="ml-3">Need logistics agents only</label>
-                </div>
-                {% comment %} end: need_logistics_agent {% endcomment %}
-
-                {% comment %} start: logistics_agent_details {% endcomment %}
-                <label id="mob__logistics_agent_details__label" for="mob__logistics_agent_details" class="font-bold text-slate-400 mt-5 block">Other Details for Logistics Agents</label>
-                <input id="mob__logistics_agent_details" name="logistics_agent_details"{% if logistics_agent_details is not None and logistics_agent_details|cut:' ' != '' %} value="{{ logistics_agent_details }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: logistics_agent_details {% endcomment %}
-
                 <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
 
-                <div class="mt-10 flex justify-center">
+                <div class="mt-4 flex justify-center">
                     <a href="{% url 'leads:lead_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Reset</a>
                 </div>
             </form>
@@ -442,113 +184,7 @@ CSS
 Javascript
 https://codebeautify.org/minify-js
 
-$(document).ready(function() {
-    // Cache references
-    $select2 = $('.select2')
-    $search = $('#search')
-
-    // Desktop
-    $need_agent__elements = $('#need_agent__elements')
-    $need_agent = $('#need_agent')
-    $need_agent__label = $('#need_agent__label')
-    // Mobile
-    $mob__need_agent__elements = $('#mob__need_agent__elements')
-    $mob__need_agent = $('#mob__need_agent')
-    $mob__need_agent__label = $('#mob__need_agent__label')
-
-    // Desktop
-    $commission_type__label = $('#commission_type__label')
-    $commission_type__elements = $('#commission_type__elements')
-    $commission_type = $('#commission_type')
-    // Mobile
-    $mob__commission_type__label = $('#mob__commission_type__label')
-    $mob__commission_type__elements = $('#mob__commission_type__elements')
-    $mob__commission_type = $('#mob__commission_type')
-
-    // Desktop
-    $commission_type_other__label = $('#commission_type_other__label')
-    $commission_type_other = $('#commission_type_other')
-    // Mobile
-    $mob__commission_type_other__label = $('#mob__commission_type_other__label')
-    $mob__commission_type_other = $('#mob__commission_type_other')
-
-    // Desktop
-    $min_commission__label = $('#min_commission__label')
-    $min_commission__elements = $('#min_commission__elements')
-    // Mobile
-    $mob__min_commission__label = $('#mob__min_commission__label')
-    $mob__min_commission__elements = $('#mob__min_commission__elements')
-
-    // Desktop
-    $max_commmission__label = $('#max_commmission__label')
-    $max_commission__elements = $('#max_commission__elements')
-    // Mobile
-    $mob__max_commmission__label = $('#mob__max_commmission__label')
-    $mob__max_commission__elements = $('#mob__max_commission__elements')
-
-    // Desktop
-    $min_avg_deal__label = $('#min_avg_deal__label')
-    $min_avg_deal__elements = $('#min_avg_deal__elements')
-    // Mobile
-    $mob__min_avg_deal__label = $('#mob__min_avg_deal__label')
-    $mob__min_avg_deal__elements = $('#mob__min_avg_deal__elements')
-
-    // Desktop
-    $max_avg_deal__label = $('#max_avg_deal__label')
-    $max_avg_deal__elements = $('#max_avg_deal__elements')
-    // Mobile
-    $mob__max_avg_deal__label = $('#mob__max_avg_deal__label')
-    $mob__max_avg_deal__elements = $('#mob__max_avg_deal__elements')
-
-    // Desktop
-    $comm_negotiable__label = $('#comm_negotiable__label')
-    $comm_negotiable__elements = $('#comm_negotiable__elements')
-    // Mobile
-    $mob__comm_negotiable__label = $('#mob__comm_negotiable__label')
-    $mob__comm_negotiable__elements = $('#mob__comm_negotiable__elements')
-
-    // Desktop
-    $commission_payable_after__label = $('#commission_payable_after__label')
-    $commission_payable_after__elements = $('#commission_payable_after__elements')
-    // Mobile
-    $mob__commission_payable_after__label = $('#mob__commission_payable_after__label')
-    $mob__commission_payable_after__elements = $('#mob__commission_payable_after__elements')
-
-    // Desktop
-    $commission_payable_after_other__label = $('#commission_payable_after_other__label')
-    $commission_payable_after_other = $('#commission_payable_after_other')
-    // Mobile
-    $mob__commission_payable_after_other__label = $('#mob__commission_payable_after_other__label')
-    $mob__commission_payable_after_other = $('#mob__commission_payable_after_other')
-
-    // Desktop
-    $other_agent_details__label = $('#other_agent_details__label')
-    $other_agent_details = $('#other_agent_details')
-    // Mobile
-    $mob__other_agent_details__label = $('#mob__other_agent_details__label')
-    $mob__other_agent_details = $('#mob__other_agent_details')
-
-    // Desktop
-    $need_logistics_agent__elements = $('#need_logistics_agent__elements')
-    // Mobile
-    $mob__need_logistics_agent__elements = $('#mob__need_logistics_agent__elements')
-
-    // Desktop
-    $logistics_agent_details__label = $('#logistics_agent_details__label')
-    $logistics_agent_details = $('#logistics_agent_details')
-    // Mobile
-    $mob__logistics_agent_details__label = $('#mob__logistics_agent_details__label')
-    $mob__logistics_agent_details = $('#mob__logistics_agent_details')
-
-    // Desktop
-    $need_logistics_agent = $('#need_logistics_agent')
-    $logistics_agent_details__label = $('#logistics_agent_details__label')
-    $logistics_agent_details = $('#logistics_agent_details')
-    // Mobile
-    $mob__need_logistics_agent = $('#mob__need_logistics_agent')
-    $mob__logistics_agent_details__label = $('#mob__logistics_agent_details__label')
-    $mob__logistics_agent_details = $('#mob__logistics_agent_details')
-
+$(document).ready(function() {    
     // Initialize select2 checkboxes
     $select2.select2();
     $select2.one('select2:open', function(e) {
@@ -556,241 +192,22 @@ $(document).ready(function() {
     });
 
     // Mobile menu
-
     $search.click(function() {
-        t = $(this);
+        t = $(this)
         if (t.html() == 'Search') {
-            t.html('Close');
+            t.html('Close')
         } else {
-            t.html('Search');
+            t.html('Search')
         }
 
-        t.toggleClass('bg-blue-500');
-        t.toggleClass('text-white');
-        t.toggleClass('hover:bg-blue-600');
-        t.toggleClass('bg-slate-100');
-        t.toggleClass('text-slate-600');
-        t.toggleClass('hover:bg-slate-200');
+        t.toggleClass('bg-blue-500')
+        t.toggleClass('text-white')
+        t.toggleClass('hover:bg-blue-600')
+        t.toggleClass('bg-slate-100')
+        t.toggleClass('text-slate-600')
+        t.toggleClass('hover:bg-slate-200')
 
-        $('#mobile-filter').toggleClass('is-active');
-    });
-
-    function set_need_agent() {
-        if ($need_agent.is(':checked')) {
-            $commission_type__label.show()
-            $commission_type__elements.show()
-            
-            if ($commission_type.val() == 'percentage' || $commission_type.val() == 'all') {
-                $min_commission__label.show()
-                $min_commission__elements.show()
-    
-                $max_commmission__label.show()
-                $max_commission__elements.show()
-    
-                $min_avg_deal__label.show()
-                $min_avg_deal__elements.show()
-    
-                $max_avg_deal__label.show()
-                $max_avg_deal__elements.show()
-            } else {
-                $min_commission__label.hide()
-                $min_commission__elements.hide()
-    
-                $max_commmission__label.hide()
-                $max_commission__elements.hide()
-    
-                $min_avg_deal__label.hide()
-                $min_avg_deal__elements.hide()
-    
-                $max_avg_deal__label.hide()
-                $max_avg_deal__elements.hide()
-            } 
-            
-            if ($commission_type.val() == 'others' || $commission_type.val() == 'all') {
-                $commission_type_other__label.show()
-                $commission_type_other.show()
-            } else {
-                $commission_type_other__label.hide()
-                $commission_type_other.hide()
-            }
-
-            $comm_negotiable__label.show()
-            $comm_negotiable__elements.show()
-
-            $commission_payable_after__label.show()
-            $commission_payable_after__elements.show()
-
-            $commission_payable_after_other__label.show()
-            $commission_payable_after_other.show()
-
-            $other_agent_details__label.show()
-            $other_agent_details.show()
-        } else {
-            $commission_type__label.hide()
-            $commission_type__elements.hide()
-
-            $commission_type_other__label.hide()
-            $commission_type_other.hide()
-
-            $min_commission__label.hide()
-            $min_commission__elements.hide()
-
-            $max_commmission__label.hide()
-            $max_commission__elements.hide()
-
-            $min_avg_deal__label.hide()
-            $min_avg_deal__elements.hide()
-
-            $max_avg_deal__label.hide()
-            $max_avg_deal__elements.hide()
-
-            $comm_negotiable__label.hide()
-            $comm_negotiable__elements.hide()
-
-            $commission_payable_after__label.hide()
-            $commission_payable_after__elements.hide()
-
-            $commission_payable_after_other__label.hide()
-            $commission_payable_after_other.hide()
-
-            $other_agent_details__label.hide()
-            $other_agent_details.hide()
-        }
-    }
-
-    function mob__set_need_agent() {
-        if ($mob__need_agent.is(':checked')) {
-            $mob__commission_type__label.show()
-            $mob__commission_type__elements.show()
-            
-            if ($mob__commission_type.val() == 'percentage' || $mob__commission_type.val() == 'all') {
-                $mob__min_commission__label.show()
-                $mob__min_commission__elements.show()
-    
-                $mob__max_commmission__label.show()
-                $mob__max_commission__elements.show()
-    
-                $mob__min_avg_deal__label.show()
-                $mob__min_avg_deal__elements.show()
-    
-                $mob__max_avg_deal__label.show()
-                $mob__max_avg_deal__elements.show()
-            } else {
-                $mob__min_commission__label.hide()
-                $mob__min_commission__elements.hide()
-    
-                $mob__max_commmission__label.hide()
-                $mob__max_commission__elements.hide()
-    
-                $mob__min_avg_deal__label.hide()
-                $mob__min_avg_deal__elements.hide()
-    
-                $mob__max_avg_deal__label.hide()
-                $mob__max_avg_deal__elements.hide()
-            } 
-            
-            if ($mob__commission_type.val() == 'others' || $mob__commission_type.val() == 'all') {
-                $mob__commission_type_other__label.show()
-                $mob__commission_type_other.show()
-            } else {
-                $mob__commission_type_other__label.hide()
-                $mob__commission_type_other.hide()
-            }
-
-            $mob__comm_negotiable__label.show()
-            $mob__comm_negotiable__elements.show()
-
-            $mob__commission_payable_after__label.show()
-            $mob__commission_payable_after__elements.show()
-
-            $mob__commission_payable_after_other__label.show()
-            $mob__commission_payable_after_other.show()
-
-            $mob__other_agent_details__label.show()
-            $mob__other_agent_details.show()
-        } else {
-            $mob__commission_type__label.hide()
-            $mob__commission_type__elements.hide()
-
-            $mob__commission_type_other__label.hide()
-            $mob__commission_type_other.hide()
-
-            $mob__min_commission__label.hide()
-            $mob__min_commission__elements.hide()
-
-            $mob__max_commmission__label.hide()
-            $mob__max_commission__elements.hide()
-
-            $mob__min_avg_deal__label.hide()
-            $mob__min_avg_deal__elements.hide()
-
-            $mob__max_avg_deal__label.hide()
-            $mob__max_avg_deal__elements.hide()
-
-            $mob__comm_negotiable__label.hide()
-            $mob__comm_negotiable__elements.hide()
-
-            $mob__commission_payable_after__label.hide()
-            $mob__commission_payable_after__elements.hide()
-
-            $mob__commission_payable_after_other__label.hide()
-            $mob__commission_payable_after_other.hide()
-
-            $mob__other_agent_details__label.hide()
-            $mob__other_agent_details.hide()
-        }
-    }
-
-    function set_need_logistics_agent() {
-        if ($need_logistics_agent.is(':checked')) {
-            $logistics_agent_details__label.show()
-            $logistics_agent_details.show()
-        } else {
-            $logistics_agent_details__label.hide()
-            $logistics_agent_details.hide()
-        }
-    }
-
-    function mob__set_need_logistics_agent() {
-        if ($mob__need_logistics_agent.is(':checked')) {
-            $mob__logistics_agent_details__label.show()
-            $mob__logistics_agent_details.show()
-        } else {
-            $mob__logistics_agent_details__label.hide()
-            $mob__logistics_agent_details.hide()
-        }
-    }
-
-    // On load
-    set_need_logistics_agent()
-    set_need_agent()
-    mob__set_need_logistics_agent()
-    mob__set_need_agent()
-
-    // On change
-    $need_agent.change(function() {
-        set_need_agent()
-    })
-
-    $need_logistics_agent.change(function() {
-        set_need_logistics_agent()
-    })
-
-    $commission_type.change(function() {
-        set_need_agent()
-    })
-
-    $mob__need_agent.change(function() {
-        console.log('hekhrekjh')
-        mob__set_need_agent()
-    })
-
-    $mob__need_logistics_agent.change(function() {
-        mob__set_need_logistics_agent()
-    })
-
-    $mob__commission_type.change(function() {
-        mob__set_need_agent()
+        $('#mobile-filter').toggleClass('is-active')
     })
 })
 {% endcomment %}
