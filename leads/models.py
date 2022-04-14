@@ -146,6 +146,34 @@ class Lead(Standard):
         null=True,
         blank=True
     )
+    commission_payable_by = models.CharField(
+        max_length=20,
+        choices=[
+            ('me', 'Me'),
+            ('buyer', 'Buyer'),
+            ('seller', 'Seller')
+        ],
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_payable_after = models.CharField(
+        max_length=50,
+        choices=[
+            ('initial_deposit_received', 'Initial deposit received'),
+            ('goods_shipped', 'Goods shipped'),
+            ('buyer_received_goods_services', 'Buyer received goods/services'),
+            ('full_payment_received', 'Full payment received'),
+            ('other', 'Other')
+        ],
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    commission_payable_after_other = models.TextField(
+        null=True,
+        blank=True
+    )
     other_comm_details = models.TextField(
         null=True,
         blank=True
@@ -213,35 +241,7 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    commission_payable_by = models.CharField(
-        max_length=20,
-        choices=[
-            ('me', 'Me'),
-            ('buyer', 'Buyer'),
-            ('seller', 'Seller')
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
 
-    commission_payable_after = models.CharField(
-        max_length=50,
-        choices=[
-            ('initial_deposit_received', 'Initial deposit received'),
-            ('goods_shipped', 'Goods shipped'),
-            ('buyer_received_goods_services', 'Buyer received goods/services'),
-            ('full_payment_received', 'Full payment received'),
-            ('other', 'Other')
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_payable_after_other = models.TextField(
-        null=True,
-        blank=True
-    )
     need_logistics_agent = models.BooleanField(
         null=True,
         blank=True,

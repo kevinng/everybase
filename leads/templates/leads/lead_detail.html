@@ -146,8 +146,20 @@
             {% endif %}
             {% comment %} end: is_comm_negotiable {% endcomment %}
 
+            {% comment %} start: commission_payable_by {% endcomment %}
+            {% if lead.author_type == 'broker' %}
+                <div class="font-bold text-slate-400 mt-4 px-8">Commission Payable By</div>
+                <div class="mt-1 px-8 break-words">{% if lead.commission_payable_by == 'me' %}Me (as a middleman){% elif lead.commission_payable_by == 'buyer' %}Buyer (this user is a middleman){% elif lead.commission_payable_by == 'seller' %}Seller (this user is a middleman{% endif %}</div>
+            {% endif %}
+            {% comment %} end: commission_payable_by {% endcomment %}
+
+            {% comment %} start: commission_payable_after {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4 px-8">When will commissions be paid?</div>
+            <div class="mt-1 px-8">{% if lead.commission_payable_after == 'initial_deposit_received' %}Initial Deposit Received{% elif lead.commission_payable_after == 'goods_shipped' %}Goods Shipped{% elif lead.commission_payable_after == 'buyer_received_goods_services' %}Buyer Received Goods and Services{% elif lead.commission_payable_after == 'full_payment_received' %}Full Payment Received{% elif lead.commission_payable_after == 'other' %}{{ lead.commission_payable_after_other }}{% endif %} </div>
+            {% comment %} end: commission_payable_after {% endcomment %}
+
             {% comment %} start: other commission details {% endcomment %}
-            {% if lead.other_comm_details is not None and lead.other_agent_details|length > 0 %}
+            {% if lead.other_comm_details is not None and lead.other_comm_details|length > 0 %}
                 <div class="font-bold text-slate-400 mt-4 px-8">Other Commission Details</div>
                 <div class="mt-1 px-8 break-words">{{ lead.other_comm_details|linebreaksbr }}</div>
             {% endif %}
