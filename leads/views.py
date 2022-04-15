@@ -22,7 +22,7 @@ from leads import models, forms
 from files import models as fimods
 from files.utilities.delete_file import delete_file
 from files.utilities.get_mime_type import get_mime_type
-from relationships.utilities.save_user_agent import save_user_agent
+from chat.tasks.send_lead_created_message import send_lead_created_message
 
 def get_countries():
     return commods.Country.objects.annotate(
@@ -387,6 +387,9 @@ def lead_create(request):
             save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)
             save_img_if_exists('image_two', 'image_two_cache_use', 'image_two_cache_file_id', request, lead, form)
             save_img_if_exists('image_three', 'image_three_cache_use', 'image_three_cache_file_id', request, lead, form)
+
+            # Send message to user
+            send_lead_created_message.delay(lead.id)
 
             return HttpResponseRedirect(
                 reverse('leads:lead_detail', args=(lead.slug_link,)))

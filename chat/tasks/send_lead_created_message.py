@@ -1,24 +1,26 @@
 from celery import shared_task
 from everybase import settings
+from django.urls import reverse
 from chat.constants import intents, messages
 from chat.utilities.send_message import send_message
 from chat.utilities.render_message import render_message
 from chat.utilities.done_to_context import done_to_context
+from leads import models as lemods
 from relationships import models as relmods
 
-_USER_DOES_NOT_EXIST = -1
+_LEAD_DOES_NOT_EXIST = -1
 _CHATBOT_USER_DOES_NOT_EXIST = -2
 
 @shared_task
-def send_register_message(
-        user_id: int,
+def send_lead_created_message(
+        lead_id: int,
         no_external_calls: bool = False
     ):
 
     try:
-        user = relmods.User.objects.get(pk=user_id)
-    except relmods.User.DoesNotExist:
-        return _USER_DOES_NOT_EXIST
+        lead = lemods.Lead.objects.get(pk=lead_id)
+    except lemods.Lead.DoesNotExist:
+        return _LEAD_DOES_NOT_EXIST
 
     try:
         chatbot = relmods.User.objects.get(pk=settings.CHATBOT_USER_PK)
@@ -26,22 +28,23 @@ def send_register_message(
         return _CHATBOT_USER_DOES_NOT_EXIST
 
     done_to_context(
-        user,
-        intents.REGISTER,
-        messages.REGISTER__CONFIRM
+        lead.author,
+        intents.LEAD,
+        messages.LEAD__CREATED
     )
 
     params = {
-        'first_name': user.first_name,
-        'last_name': user.last_name
+        'base_url': settings.BASE_URL,
+        'lead_headline': lead.headline,
+        'lead_detail_url': reverse('leads:lead_detail', args=(lead.slug_link,))
     }
 
     return send_message(
-        render_message(messages.REGISTER__CONFIRM, params),
+        render_message(messages.LEAD__CREATED, params),
         chatbot,
-        user,
-        intents.REGISTER,
-        messages.REGISTER__CONFIRM,
+        lead.author,
+        intents.LEAD,
+        messages.LEAD__CREATED,
         None,
         no_external_calls
     )
