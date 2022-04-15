@@ -1,13 +1,7 @@
-*PLEASE ADD THIS PHONE NUMBER TO YOUR CONTACT BOOK*
-
 Welcome back to https://everybase.co/
 
-If you're an importer/exporter, hire agents to help you buy or sell.
+If you're an importer/exporter, we can help you hire buying/selling agents.
 
-Post a lead:
-{{ base_url }}{{ lead_create }}
+If you're an agent, we can help you find importers/exporters looking for buying/selling agents.
 
-If you're an agent, help importers/exporters buy or sell:
-
-Search leads:
-{{ base_url }}{{ lead_list }}
+_Please add this phone number to your contact book._

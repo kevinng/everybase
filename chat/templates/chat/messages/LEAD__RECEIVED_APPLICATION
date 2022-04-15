@@ -1,0 +1,6 @@
+Agent *{{ first name }} {{ last_name }} ({{ country }})* applied to help you {{ buy_sell }}.
+
+Message agent at this link:
+{{ base_url }}{{ application_detail_url }}
+
+_Please add this phone number to your contact book._
