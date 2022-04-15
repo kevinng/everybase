@@ -204,6 +204,16 @@ def save_img_if_exists(
 def lead_detail(request, slug):
     lead = models.Lead.objects.get(slug_link=slug)
 
+    # Track who've seen this lead
+    if request.user.is_authenticated:
+        v, _ = models.LeadDetailView.objects.get_or_create(
+            lead=lead,
+            viewer=request.user.user
+        )
+
+        v.count += 1
+        v.save()
+
     # An application may have 2 or 3 required questions
     has_3_questions = lead.question_3 is not None and len(lead.question_3) > 0
 

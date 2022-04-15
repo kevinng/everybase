@@ -337,6 +337,7 @@ class LeadDetailView(Standard):
     )
 
     count = models.IntegerField(
+        default=0,
         db_index=True
     )
 
