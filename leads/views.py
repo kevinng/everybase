@@ -14,6 +14,7 @@ from django.db.models.expressions import RawSQL
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
 from django.views.generic.list import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from everybase import settings
 from common import models as commods
@@ -480,7 +481,7 @@ def lead_list(request):
 
         return render(request, 'leads/lead_list.html', params)
 
-class LeadApplicationListView(ListView):
+class LeadApplicationListView(LoginRequiredMixin, ListView):
     template_name = 'leads/lead_detail_application_list.html'
     context_object_name = 'applications'
     model = models.Application
@@ -527,7 +528,7 @@ def application_detail(request, pk):
                     body=form.cleaned_data.get('body')
                 )
 
-            # TODO send WhatsApp
+                # TODO send msg
 
             return HttpResponseRedirect(
                 reverse('applications:application_detail',
@@ -542,6 +543,7 @@ def application_detail(request, pk):
 
     return render(request, 'leads/application_detail.html', params)
 
+@login_required
 def application_for_my_leads_list(request):
     if request.method == 'GET':
         status = request.GET.get('status')
@@ -615,6 +617,7 @@ def application_for_my_leads_list(request):
 
         return render(request, 'leads/application_for_my_leads_list.html', params)
 
+@login_required
 def application_from_me_as_an_agent_list(request):
     if request.method == 'GET':
         status = request.GET.get('status')

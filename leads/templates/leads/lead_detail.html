@@ -176,53 +176,59 @@
         {% endif %} {% endcomment %}
         {% comment %} end: user detail side {% endcomment %}
 
-        {% if lead.author != request.user.user %}
+        {% if request.user.is_authenticated and lead.author != request.user.user %}
 
         {% comment %} start: agent application form {% endcomment %}
-        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+        <div id="agent_application_form" class="bg-white rounded px-8 py-8 shadow-md mt-2">
             <div class="text-xl font-bold text-center">Apply to be a {% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %} Agent</div>
 
-                {% load has_applied_lead %}
-                {% has_applied_lead request.user.user lead as has_applied_lead %}
-                {% if has_applied_lead == False %}
+            {% load has_applied_lead %}
+            {% has_applied_lead request.user.user lead as has_applied_lead %}
+            {% if has_applied_lead == False %}
 
-                <form action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
-                    {% csrf_token %}
-                    <div class="flex flex-col justify-center mt-2">
-                        <label for="answer_1" class="font-bold text-slate-400 mt-4">{{ lead.question_1 }}</label>
-                        <textarea id="answer_1" name="answer_1" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
-                        {% if form.answer_1.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <form action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
+                {% csrf_token %}
+                <div class="flex flex-col justify-center mt-2">
+                    <label for="answer_1" class="font-bold text-slate-400 mt-4">{{ lead.question_1 }}</label>
+                    <textarea id="answer_1" name="answer_1" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
+                    {% if form.answer_1.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                        <label for="answer_2" class="font-bold text-slate-400 mt-4">{{ lead.question_2 }}</label>
-                        <textarea id="answer_2" name="answer_2" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
-                        {% if form.answer_2.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_2.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                    <label for="answer_2" class="font-bold text-slate-400 mt-4">{{ lead.question_2 }}</label>
+                    <textarea id="answer_2" name="answer_2" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
+                    {% if form.answer_2.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_2.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                        {% if lead.question_3 is not None and lead.question_3|length > 0 %}
-                            <label for="answer_3" class="font-bold text-slate-400 mt-4">{{ lead.question_3 }}</label>
-                            <textarea id="answer_3" name="answer_3" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
-                            {% if form.answer_3.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_3.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                        {% endif %}
+                    {% if lead.question_3 is not None and lead.question_3|length > 0 %}
+                        <label for="answer_3" class="font-bold text-slate-400 mt-4">{{ lead.question_3 }}</label>
+                        <textarea id="answer_3" name="answer_3" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
+                        {% if form.answer_3.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_3.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                    {% endif %}
 
-                        <label for="applicant_comments" class="font-bold text-slate-400 mt-4">Comments for the {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} (Optional)</label>
-                        <textarea id="applicant_comments" name="applicant_comments" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments"></textarea>
-                        {% if form.applicant_comments.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                    </div>
-
-                    <button type="submit" class="py-2 px-4 rounded-md shadow-md mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Apply</button>
-                </form>
-
-                {% else %}
-                
-                <div class="mt-4">
-                    {% load get_application %}
-                    {% get_application request.user.user lead as application %}
-                    <a href="{% url 'applications:application_detail' application.id %}" class="py-2 px-4 rounded-md shadow-md text-white bg-blue-500 hover:bg-blue-600 block w-full text-center text-lg">My Agent Application</a>
-                    <div class="mt-2 text-center">Applied {{ application.age_desc }}</div>
+                    <label for="applicant_comments" class="font-bold text-slate-400 mt-4">Comments for the {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} (Optional)</label>
+                    <textarea id="applicant_comments" name="applicant_comments" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments"></textarea>
+                    {% if form.applicant_comments.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                 </div>
 
-                {% endif %}
+                <button type="submit" class="py-2 px-4 rounded-md shadow-md mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Apply</button>
+            </form>
+
+            {% else %}
+            
+            <div class="mt-4">
+                {% load get_application %}
+                {% get_application request.user.user lead as application %}
+                <a href="{% url 'applications:application_detail' application.id %}" class="py-2 px-4 rounded-md shadow-md text-white bg-blue-500 hover:bg-blue-600 block w-full text-center text-lg">My Agent Application</a>
+                <div class="mt-2 text-center">Applied {{ application.age_desc }}</div>
+            </div>
+
+            {% endif %}
         </div>
         {% comment %} end: agent application form {% endcomment %}
+
+        {% elif not request.user.is_authenticated %}
+
+        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
+            <a href="{% url 'login' %}?next={% url 'leads:lead_detail' lead.slug_link %}#agent_application_form" class="py-2 px-4 rounded-md shadow-md block text-center mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Apply to be a {% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %} Agent</a>
+        </div>
 
         {% endif %}
 
