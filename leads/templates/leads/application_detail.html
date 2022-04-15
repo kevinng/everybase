@@ -3,7 +3,7 @@
 {% load static %}
 {% load string_equal %}
 
-{% block title %}Looking for {% if lead.lead_type == 'buying' %}Buying/Sourcing{% elif lead.lead_type == 'selling' %}Selling/Promoting{% endif %} Agent, {{ lead.headline }}{% endblock %}
+{% block title %}Looking for {% if application.lead.lead_type == 'buying' %}Buying/Sourcing{% elif application.lead.lead_type == 'selling' %}Selling/Promoting{% endif %} Agent, {{ application.lead.headline }}{% endblock %}
 
 {% comment %} Meta description limit to 320 characters {% endcomment %}
 {% block other_head_tags %}
