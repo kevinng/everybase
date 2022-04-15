@@ -72,7 +72,7 @@
     </div>
     {% comment %} start: mobile menu {% endcomment %}
     <nav class="mobile-nav text-base">
-        <a {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Leads</a>
+        <a {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Leads</a>
         <a href="#" class="hover:text-blue-700 block px-4 py-4">Support</a>
         <div class="h-10"></div>
         {% if request.user.is_authenticated %}
