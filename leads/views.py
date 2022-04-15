@@ -464,15 +464,17 @@ def lead_list(request):
             
             order_by.append('-goods_services_rank')
 
-        # Save lead query if search
-        if search is not None and len(search) > 0:
-            models.LeadQueryLog.objects.create(
-                user=user,
-                search=search,
-                buy_sell=buy_sell,
-                buy_country=buy_country,
-                sell_country=sell_country
-            )
+        # Log unique search
+        l, _ = models.LeadQueryLog.objects.get_or_create(
+            user=user,
+            search=search,
+            buy_sell=buy_sell,
+            buy_country=buy_country,
+            sell_country=sell_country
+        )
+
+        l.count += 1
+        l.save()
 
         # Order leads
         leads = leads.order_by(*order_by)

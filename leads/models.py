@@ -345,9 +345,9 @@ class LeadDetailView(Standard):
         unique_together = ('viewer', 'lead')
 
 class LeadQueryLog(Standard):
-    """Lead detail view.
+    """Lead query log.
 
-    Last updated: 7 April 2022, 10:06 PM
+    Last updated: 15 April 2022, 11:03 PM
     """
     user = models.ForeignKey(
         'relationships.User',
@@ -358,7 +358,6 @@ class LeadQueryLog(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-
     search = models.CharField(
         max_length=200,
         null=True,
@@ -383,6 +382,14 @@ class LeadQueryLog(Standard):
         blank=True,
         db_index=True
     )
+
+    count = models.IntegerField(
+        default=0,
+        db_index=True
+    )
+
+    class Meta:
+        unique_together = ('user', 'search', 'buy_sell', 'buy_country', 'sell_country')
 
 class ApplicationQueryLog(Standard):
     """Application query log.

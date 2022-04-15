@@ -242,9 +242,10 @@ _lead_query_log_fields = [
     'buy_sell',
     'buy_country',
     'sell_country',
+    'count'
 ]
 @admin.register(models.LeadQueryLog)
-class LeadQueryAdmin(comadm.StandardAdmin):
+class LeadQueryLogAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _lead_query_log_fields
     list_editable = comadm.standard_list_editable + _lead_query_log_fields
