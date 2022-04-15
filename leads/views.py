@@ -26,6 +26,7 @@ from files.utilities.get_mime_type import get_mime_type
 from chat.tasks.send_lead_created_message import send_lead_created_message
 from chat.tasks.send_agent_application_alert_to_agent import send_agent_application_alert_to_agent
 from chat.tasks.send_agent_application_alert_to_lead_author import send_agent_application_alert_to_lead_author
+from chat.tasks.send_agent_application_message import send_agent_application_message
 
 def get_countries():
     return commods.Country.objects.annotate(
@@ -528,13 +529,13 @@ def application_detail(request, pk):
                 application.response = 'stopped_work'
                 application.save()
             elif purpose == 'message':
-                models.ApplicationMessage.objects.create(
+                am = models.ApplicationMessage.objects.create(
                     application=application,
                     author=request.user.user,
                     body=form.cleaned_data.get('body')
                 )
 
-                # TODO send msg
+                send_agent_application_message.delay(am.id)
 
             return HttpResponseRedirect(
                 reverse('applications:application_detail',

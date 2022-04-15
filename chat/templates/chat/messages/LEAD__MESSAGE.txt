@@ -1,4 +1,4 @@
-You've received a message from {{ first_name }} {{ last_name }} ({{ country }}) for {{ lead_headline }}:
+You've received a message from *{{ first_name }} {{ last_name }} ({{ country }})* for *{{ lead_headline }}*:
 
 _{{ message_body }}_
 
