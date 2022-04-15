@@ -24,6 +24,8 @@ from files import models as fimods
 from files.utilities.delete_file import delete_file
 from files.utilities.get_mime_type import get_mime_type
 from chat.tasks.send_lead_created_message import send_lead_created_message
+from chat.tasks.send_agent_application_alert_to_agent import send_agent_application_alert_to_agent
+from chat.tasks.send_agent_application_alert_to_lead_author import send_agent_application_alert_to_lead_author
 
 def get_countries():
     return commods.Country.objects.annotate(
@@ -211,7 +213,7 @@ def lead_detail(request, slug):
                 reverse('leads:lead_detail', args=(slug,))
             return HttpResponseRedirect(url)
 
-        # User is applied to this lead
+        # User is applying to this lead
 
         can_apply_lead = models.Application.objects.filter(
             lead=lead,
@@ -239,6 +241,10 @@ def lead_detail(request, slug):
                 answer_3=form.cleaned_data.get('answer_3'),
                 applicant_comments=form.cleaned_data.get('applicant_comments')
             )
+
+            # Send message to both parties
+            send_agent_application_alert_to_lead_author.delay(a.id)
+            send_agent_application_alert_to_agent.delay(a.id)
 
             return HttpResponseRedirect(
                 reverse('applications:application_detail', args=(a.id,)))

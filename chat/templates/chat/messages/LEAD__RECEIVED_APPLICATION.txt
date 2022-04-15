@@ -1,4 +1,4 @@
-Agent *{{ first name }} {{ last_name }} ({{ country }})* applied to help you {{ buy_sell }}.
+Agent *{{ first_name }} {{ last_name }} ({{ country }})* applied to *{{ lead_headline }}* to help you {{ buy_sell }}.
 
 Message agent at this link:
 {{ base_url }}{{ application_detail_url }}
