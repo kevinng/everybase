@@ -2,7 +2,6 @@ import pytz
 from datetime import datetime, timedelta
 from everybase import settings
 from chat.constants import intents, messages
-from django.urls import reverse
 from chat.utilities.render_message import render_message
 from chat.handlers.library import MessageHandler
 from django.contrib.auth.models import User
@@ -58,17 +57,9 @@ class Handler(MessageHandler):
             # Kill all tokens
             kill_register_tokens(user)
 
-            def params_func():
-                return {
-                    'base_url': settings.BASE_URL,
-                    'lead_create': reverse('leads:lead_create'),
-                    'lead_list': reverse('leads:lead_list')
-                }
-
             return self.done_reply(
                 intents.REGISTER,
-                messages.REGISTER__CONFIRMED,
-                params_func=params_func
+                messages.REGISTER__CONFIRMED
             )
 
         return render_message(messages.REGISTER__DO_NOT_UNDERSTAND, None)

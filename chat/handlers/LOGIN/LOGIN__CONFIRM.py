@@ -28,8 +28,8 @@ class Handler(MessageHandler):
                 def params_func():
                     return {
                         'base_url': settings.BASE_URL,
-                        'lead_create': reverse('leads:lead_create'),
-                        'lead_list': reverse('leads:lead_list')
+                        'lead_create_url': reverse('leads:lead_create'),
+                        'lead_list_url': reverse('leads:lead_list')
                     }
 
                 return self.done_reply(
