@@ -104,10 +104,10 @@ CSS
         <div class="mt-7 flex flex-col justify-center">
             <form action="{% url 'leads:lead_list' %}" type="get">
 
-                {% comment %} start: goods_services {% endcomment %}
-                <label id="mob__goods_services__label" for="mob__goods_services" class="font-bold text-slate-400 mt-5 block">Search</label>
-                <input id="mob__goods_services" name="goods_services"{% if goods_services is not None and goods_services|cut:' ' != '' %} value="{{ goods_services }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
-                {% comment %} end: goods_services {% endcomment %}                
+                {% comment %} start: search {% endcomment %}
+                <label id="mob__search__label" for="mob__search" class="font-bold text-slate-400 mt-5 block">Search</label>
+                <input id="mob__search" name="search"{% if search is not None and search|cut:' ' != '' %} value="{{ search }}"{% endif %} placeholder="Leave blank for all" type="text" maxlength="50" class="block w-full border rounded-md py-3 px-5 mt-2">
+                {% comment %} end: search {% endcomment %}                
                 
                 {% comment %} start: buy_sell {% endcomment %}
                 <label id="mob__buy_sell__label" for="mob__buy_sell" class="font-bold text-slate-400 mt-5 block">Buying or Selling?</label>
