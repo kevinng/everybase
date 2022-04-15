@@ -37,10 +37,10 @@
         {% include 'relationships/includes/user_detail_side.html' with detail_user=application.applicant header='Agent' responsive_classes='lg:self-start w-full' %}
 
         {% if application.lead.lead_type == 'selling' %}
-            {% include 'relationships/includes/user_detail_side.html' with detail_user=application.lead.author header='Seller' responsive_classes='lg:self-start mt-2' %}
+            {% include 'relationships/includes/user_detail_side.html' with detail_user=application.lead.author header='Seller' responsive_classes='lg:self-start mt-2 w-full' %}
             {% comment %} hidden lg:block {% endcomment %}
         {% else %}
-            {% include 'relationships/includes/user_detail_side.html' with detail_user=application.lead.author header='Buyer' responsive_classes='lg:self-start mt-2' %}
+            {% include 'relationships/includes/user_detail_side.html' with detail_user=application.lead.author header='Buyer' responsive_classes='lg:self-start mt-2 w-full' %}
         {% endif %}
     </div>
     {% comment %} end: user sides {% endcomment %}
