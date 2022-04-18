@@ -179,27 +179,27 @@
         {% if request.user.is_authenticated and lead.author != request.user.user %}
 
         {% comment %} start: agent application form {% endcomment %}
-        <div id="agent_application_form" class="bg-white rounded px-8 py-8 shadow-md mt-2">
+        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
             <div class="text-xl font-bold text-center">Apply to be a {% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %} Agent</div>
 
             {% load has_applied_lead %}
             {% has_applied_lead request.user.user lead as has_applied_lead %}
             {% if has_applied_lead == False %}
 
-            <form action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
+            <form id="agent_application_form" action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
                 {% csrf_token %}
                 <div class="flex flex-col justify-center mt-2">
                     <label for="answer_1" class="font-bold text-slate-400 mt-4">{{ lead.question_1 }}</label>
-                    <textarea id="answer_1" name="answer_1" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
+                    <textarea id="answer_1" name="answer_1" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer">{% if form.answer_1.value is not None %}{{ form.answer_1.value }}{% endif %}</textarea>
                     {% if form.answer_1.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                     <label for="answer_2" class="font-bold text-slate-400 mt-4">{{ lead.question_2 }}</label>
-                    <textarea id="answer_2" name="answer_2" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
+                    <textarea id="answer_2" name="answer_2" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer">{% if form.answer_2.value is not None %}{{ form.answer_2.value }}{% endif %}</textarea>
                     {% if form.answer_2.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_2.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                     {% if lead.question_3 is not None and lead.question_3|length > 0 %}
                         <label for="answer_3" class="font-bold text-slate-400 mt-4">{{ lead.question_3 }}</label>
-                        <textarea id="answer_3" name="answer_3" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer"></textarea>
+                        <textarea id="answer_3" name="answer_3" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer">{% if form.answer_3.value %}{{ form.answer_3.value }}{% endif %}</textarea>
                         {% if form.answer_3.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_3.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                     {% endif %}
 
@@ -208,7 +208,9 @@
                     {% if form.applicant_comments.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                 </div>
 
-                <button type="submit" class="py-2 px-4 rounded-md shadow-md mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Apply</button>
+                <button data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}" data-callback='onSubmit' data-action='submit' type="submit" class="g-recaptcha py-2 px-4 rounded-md shadow-md mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Apply</button>
+
+                {% if form.non_field_errors %}<div class="mt-2 text-red-500 px-1 text-center">{{ form.non_field_errors }}</div>{% endif %}
             </form>
 
             {% else %}
@@ -269,4 +271,12 @@ $(document).ready(function() {
 })
 {% endcomment %}
 <script>$(document).ready((function(){amplitude.getInstance().logEvent("discovery - viewed lead detail",{lead_id:"{{ lead.id }}",buy_sell:"{{ lead.lead_type }}",buy_country:"{{ lead.buy_country.programmatic_key }}",sell_country:"{{ lead.sell_country.programmatic_key }}",commission_type:"{{ lead.commission_type }}",commission_percentage:"{% if lead.commission_percentage is None %}{% else %}{{ lead.commission_percentage }}{% endif %}",commission_earnings:"{% if lead.commission_earnings is None %}{% else %}{{ lead.commission_earnings }}{% endif %}",commission_quantity_unit_string:"{% if lead.commission_quantity_unit_string is None %}{% else %}{{ lead.commission_quantity_unit_string }}{% endif %}",is_comm_negotiable:"{% if lead.is_comm_negotiable is None %}False{% else %}{{ lead.is_comm_negotiable }}{% endif %}"})}));</script>
+{% comment %}
+reCAPTCHA implementation
+
+function onSubmit(token) {
+    document.getElementById("agent_application_form").submit();
+}
+{% endcomment %}
+<script>function onSubmit(t){document.getElementById("agent_application_form").submit()}</script>
 {% endblock %}

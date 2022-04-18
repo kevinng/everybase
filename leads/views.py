@@ -1,5 +1,5 @@
 from urllib.parse import urljoin
-import boto3
+import boto3, requests, json
 from PIL import Image, ImageOps
 from io import BytesIO
 
@@ -28,6 +28,8 @@ from chat.tasks.send_lead_created_message import send_lead_created_message
 from chat.tasks.send_agent_application_alert_to_agent import send_agent_application_alert_to_agent
 from chat.tasks.send_agent_application_alert_to_lead_author import send_agent_application_alert_to_lead_author
 from chat.tasks.send_agent_application_message import send_agent_application_message
+
+_recaptcha_failed_msg = "We suspect you're a bot. Please wait a short while before posting."
 
 def get_countries():
     return commods.Country.objects.annotate(
@@ -241,7 +243,20 @@ def lead_detail(request, slug):
         else:
             form = forms.ApplicationFormNoQ3(request.POST)
 
-        if form.is_valid():
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        recaptcha_call = requests.post('https://www.google.com/recaptcha/api/siteverify', params={
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        })
+        recaptcha_results = json.loads(recaptcha_call.text)
+        if recaptcha_results.get('success') is not True or\
+            recaptcha_results.get('score') is None:
+            form.add_error(None, _recaptcha_failed_msg)
+        elif recaptcha_results.get('success') is True and\
+            recaptcha_results.get('score') is not None and\
+            float(recaptcha_results.get('score')) < float(settings.RECAPTCHA_THRESHOLD):
+            form.add_error(None, _recaptcha_failed_msg)
+        elif form.is_valid():
             a = models.Application.objects.create(
                 lead=lead,
                 applicant=request.user.user,
@@ -554,7 +569,20 @@ def application_detail(request, pk):
 
     if request.method == 'POST':
         form = forms.ApplicationDetailForm(request.POST)
-        if form.is_valid():
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        recaptcha_call = requests.post('https://www.google.com/recaptcha/api/siteverify', params={
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        })
+        recaptcha_results = json.loads(recaptcha_call.text)
+        if recaptcha_results.get('success') is not True or\
+            recaptcha_results.get('score') is None:
+            form.add_error(None, _recaptcha_failed_msg)
+        elif recaptcha_results.get('success') is True and\
+            recaptcha_results.get('score') is not None and\
+            float(recaptcha_results.get('score')) < float(settings.RECAPTCHA_THRESHOLD):
+            form.add_error(None, _recaptcha_failed_msg)
+        elif form.is_valid():
             purpose = form.cleaned_data.get('purpose')
             if purpose == 'reject':
                 application.response = 'rejected'

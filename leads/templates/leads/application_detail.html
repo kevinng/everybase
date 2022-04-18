@@ -200,15 +200,17 @@
             {% else %}
                 <div class="text-xl font-bold text-center">Message Agent</div>
             {% endif %}
-            <form action="{% url 'applications:application_detail' application.id %}" method="post">
+            <form id="message_form" action="{% url 'applications:application_detail' application.id %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="purpose" value="message">
                 <div class="flex flex-col justify-center mt-2">
-                    <textarea id="body" name="body" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter message"></textarea>
+                    <textarea id="body" name="body" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter message">{% if form.body.value is not None %}{{ form.body.value }}{% endif %}</textarea>
                     {% if form.body.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                 </div>
 
-                <button type="submit" class="py-2 px-4 rounded-md shadow-md mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Message</button>
+                <button data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}" data-callback='onSubmit' data-action='submit' type="submit" class="g-recaptcha py-2 px-4 rounded-md shadow-md mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Message</button>
+
+                {% if form.non_field_errors %}<div class="mt-2 text-red-500 px-1 text-center">{{ form.non_field_errors }}</div>{% endif %}
             </form>
         </div>
         {% comment %} end: message form {% endcomment %}
@@ -300,4 +302,12 @@ $(document).ready(function() {
 })
 {% endcomment %}
 <script>$(document).ready((function(){amplitude.getInstance().logEvent("discovery - viewed application detail",{application_id:"{{ application.id }}",lead_id:"{{ application.lead.id }}",buy_sell:"{{ application.lead.lead_type }}",buy_country:"{{ application.lead.buy_country.programmatic_key }}",sell_country:"{{ application.lead.sell_country.programmatic_key }}",commission_type:"{{ application.lead.commission_type }}",commission_percentage:"{% if application.lead.commission_percentage is None %}{% else %}{{ application.lead.commission_percentage }}{% endif %}",commission_earnings:"{% if application.lead.commission_earnings is None %}{% else %}{{ application.lead.commission_earnings }}{% endif %}",commission_quantity_unit_string:"{% if application.lead.commission_quantity_unit_string is None %}{% else %}{{ application.lead.commission_quantity_unit_string }}{% endif %}",is_comm_negotiable:"{% if application.lead.is_comm_negotiable is None %}False{% else %}{{ application.lead.is_comm_negotiable }}{% endif %}"}),$("#reject").click((function(){amplitude.getInstance().logEvent("agent application - rejected",{application_id:"{{ application.id }}"})})),$("#start_work").click((function(){amplitude.getInstance().logEvent("agent application - started work",{application_id:"{{ application.id }}"})})),$("#stop_work").click((function(){amplitude.getInstance().logEvent("agent application - stopped work",{application_id:"{{ application.id }}"})}))}));</script>
+{% comment %}
+reCAPTCHA implementation
+
+function onSubmit(token) {
+    document.getElementById("message_form").submit();
+}
+{% endcomment %}
+<script>function onSubmit(t){document.getElementById("message_form").submit()}</script>
 {% endblock %}
