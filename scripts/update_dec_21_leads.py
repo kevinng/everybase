@@ -4,7 +4,7 @@ def run():
     ls = models.Lead.objects.all()
     for l in ls:
         # Copy headline from title
-        l.headline = l.title
+        l.headline = l.title[:80]
 
         # Generate agent_job from lead_type
         if l.lead_type == 'buying':
