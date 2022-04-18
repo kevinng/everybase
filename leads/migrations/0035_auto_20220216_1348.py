@@ -15,15 +15,13 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='lead',
             name='buy_country',
-            # field=models.ForeignKey(default=696, on_delete=django.db.models.deletion.PROTECT, related_name='lead_with_this_buy_country', related_query_name='lead_with_this_buy_country', to='common.country'),
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='lead_with_this_buy_country', related_query_name='lead_with_this_buy_country', to='common.country'),
+            field=models.ForeignKey(default=696, on_delete=django.db.models.deletion.PROTECT, related_name='lead_with_this_buy_country', related_query_name='lead_with_this_buy_country', to='common.country'),
             preserve_default=False,
         ),
         migrations.AlterField(
             model_name='lead',
             name='sell_country',
-            # field=models.ForeignKey(default=696, on_delete=django.db.models.deletion.PROTECT, related_name='lead_with_this_sell_country', related_query_name='lead_with_this_sell_country', to='common.country'),
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='lead_with_this_sell_country', related_query_name='lead_with_this_sell_country', to='common.country'),
+            field=models.ForeignKey(default=696, on_delete=django.db.models.deletion.PROTECT, related_name='lead_with_this_sell_country', related_query_name='lead_with_this_sell_country', to='common.country'),
             preserve_default=False,
         ),
     ]
