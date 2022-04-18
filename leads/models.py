@@ -185,9 +185,18 @@ class Lead(Standard):
         db_index=True
     )
 
-    question_1 = models.TextField()
-    question_2 = models.TextField()
-    question_3 = models.TextField()
+    question_1 = models.TextField(
+        blank=True,
+        null=True
+    )
+    question_2 = models.TextField(
+        blank=True,
+        null=True
+    )
+    question_3 = models.TextField(
+        blank=True,
+        null=True
+    )
 
     impressions = models.IntegerField(
         default=1, # Prevent division by 0
