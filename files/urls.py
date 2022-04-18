@@ -4,8 +4,7 @@ from . import views
 
 app_name = 'files'
 urlpatterns = [
-    path('<str:uuid>', views.get_file, name='get_file'),
-
+    # path('<str:uuid>', views.get_file, name='get_file'),
     # path('read/', views.ReadOnlyPresignedURLView.as_view()),
     # path('write/', views.WriteOnlyPresignedURLView.as_view()),
     # path('file/', views.FileList.as_view()),

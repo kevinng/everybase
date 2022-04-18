@@ -1,10 +1,14 @@
 from chat.constants import intents, messages
 from chat.tests.library import ChatTest
-from chat.tasks.send_login_confirm import send_login_confirm
+from chat.tasks.send_login_message import send_login_message
+from relationships import models
 
 class LoginTest(ChatTest):
     def setUp(self):
         super().setUp(intents.LOGIN, messages.LOGIN__CONFIRM)
+
+        # User requests for a login token
+        models.LoginToken.objects.create(user=self.user)
 
     def test_enter_yes(self):
         self.receive_reply_assert(
@@ -22,17 +26,11 @@ class LoginTest(ChatTest):
         )
 
 class LoginConfirmTest(ChatTest):
-    fixtures = [
-        'setup/20210527__relationships__phonenumber',
-        'setup/20210527__relationships__phonenumbertype',
-        'setup/20211126__relationships__user'
-    ]
-    
     def setUp(self):
         super().setUp(intents.NO_INTENT, messages.NO_MESSAGE)
 
-    def test_send_login_confirm(self):
-        msg = send_login_confirm(self.user.id, True)
+    def test_send_login_message(self):
+        msg = send_login_message(self.user.id, True)
         self.assert_context_body(
             intents.LOGIN,
             messages.LOGIN__CONFIRM,

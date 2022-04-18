@@ -1,0 +1,106 @@
+{% comment %}
+Params:
+    detail_user, user whose details are being shown
+    responsive_classes, classes to deal with responsiveness
+
+Dependencies:
+    relationships/templates/relationships/includes/js/user_detail_side.js
+{% endcomment %}
+<div class="bg-white rounded shadow-md{% if responsive_classes is not None and responsive_classes|cut:' ' != '' %} {{ responsive_classes }}{% endif %}">
+    <div class="flex flex-col items-center">
+
+        {% if header is not None and header|cut:' ' != '' %}
+            <div class="bg-slate-200 w-full py-3 px-5 font-bold text-slate-500">{{ header }}</div>
+        {% endif %}
+
+        {% comment %} start: first_name, last_name {% endcomment %}
+        <a href="{% url 'users:user_detail' detail_user.slug_link %}" class="text-2xl font-bold text-center mt-10 px-10">{{ detail_user.first_name|title }} {{ detail_user.last_name|title }}</a>
+        {% comment %} end: first_name, last_name {% endcomment %}
+
+        {% comment %} start: country {% endcomment %}
+        <div class="mt-2">{{ detail_user.country.name }}{% if detail_user.state_string is not None %}, {{ detail_user.state_string }}{% endif %}</div>
+        {% comment %} end: country {% endcomment %}
+
+        {% comment %} start: company_name {% endcomment %}
+        {% if detail_user.company_name %}
+            <div class="">{{ detail_user.company_name }}</div>
+        {% endif %}
+        {% comment %} end: company_name {% endcomment %}
+
+        {% comment %} {% if user.is_authenticated and user.user.id == detail_user.id %} {% endcomment %}
+
+            {% comment %} start: action buttons {% endcomment %}
+            {% comment %} <a href="{% url 'users:user_edit' user.user.slug_link %}" class="py-2 px-4 mt-4 text-blue-500 rounded-md shadow-md bg-slate-100 hover:bg-slate-200">Edit Profile</a> {% endcomment %}
+            {% comment %} <a href="{% url 'logout' %}?next={{ request.path }}" class="shadow-md text-blue-500 bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2 mt-2">Logout</a> {% endcomment %}
+            {% comment %} end: action buttons {% endcomment %}
+
+        {% comment %} {% elif user.user.id != detail_user.id %} {% endcomment %}
+            
+            {% comment %} start: whatsapp {% endcomment %}
+            {% comment %} <a href="{% url 'users:whatsapp' detail_user.slug_link %}" class="py-2 px-4 mt-4 rounded-md text-white bg-green-500 hover:bg-green-600 shadow-md">WhatsApp</a> {% endcomment %}
+            {% comment %} end: whatsapp {% endcomment %}
+
+            {% comment %} {% if user.is_authenticated %} {% endcomment %}
+
+                {% comment %} start: last_contacted {% endcomment %}
+                {% comment %} {% load last_contacted %}
+                {% last_contacted user.user detail_user as last_contacted %}
+                {% if last_contacted is not None %}
+                    <div class="mt-2">
+                        Contacted {% last_contacted user.user detail_user %}
+                    </div>
+                {% endif %} {% endcomment %}
+                {% comment %} end: last_contacted {% endcomment %}
+
+            {% comment %} {% endif %} {% endcomment %}
+        {% comment %} {% endif %} {% endcomment %}
+        {% comment %} {% if user.user.id != detail_user.id %} {% endcomment %}
+            {% comment %} {% if user.is_authenticated %} {% endcomment %}
+                {% comment %} Allow toggling of save-unsave asynchronously {% endcomment %}
+                {% comment %} {% load has_saved_user %} {% endcomment %}
+                {% comment %} {% has_saved_user user.user detail_user as has_saved_user %} {% endcomment %}
+                {% comment %} <button id="toggle_save_user" class="py-2 px-4 mt-2 rounded-md shadow-md {% if has_saved_user == True %}text-white bg-blue-500 hover:bg-blue-600{% else %}text-slate-600 bg-slate-100 hover:bg-slate-200{% endif %}">{% if has_saved_user == True %}Person Saved{% else %}Save Person{% endif %}</button> {% endcomment %}
+            {% comment %} {% else %} {% endcomment %}
+                {% comment %} Direct user to login and come back to this page with user saved {% endcomment %}
+                {% comment %} <a href="{% url 'users:toggle_save_user' detail_user.slug_link %}" class="py-2 px-4 mt-2 rounded-md text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200">Save Person</a> {% endcomment %}
+            {% comment %} {% endif %} {% endcomment %}
+        {% comment %} {% endif %} {% endcomment %}
+    </div>
+
+    <div class="bg-white px-8 pb-8 mt-8">
+        {% comment %} start: goods_string {% endcomment %}
+        {% if detail_user.goods_string is not None and detail_user.goods_string|cut:' ' != '' %}
+            <div class="font-bold text-slate-400">Goods & Services</div>
+            <div class="mt-1 break-words">{{ detail_user.goods_string|linebreaksbr }}</div>
+        {% endif %}
+        {% comment %} end: goods_string {% endcomment %}
+
+        {% comment %} start: languages_string {% endcomment %}
+        {% if detail_user.languages_string is not None and detail_user.languages_string|cut:' ' != '' %}
+        <div class="font-bold text-slate-400 mt-4">Languages</div>
+        <div class="mt-1">{{ detail_user.languages_string }}</div>
+        {% endif %}
+        {% comment %} end: languages_string {% endcomment %}
+
+        {% comment %} start: is_buy_agent and buy_agent_details {% endcomment %}
+        {% comment %} {% if detail_user.is_buy_agent == True %}
+        <div class="font-bold text-slate-400 mt-4">Buying or Sourcing Agent</div>
+        <div class="mt-1">{% if detail_user.buy_agent_details is not None and detail_user.buy_agent_details|cut:' ' != '' %}{{ detail_user.buy_agent_details|linebreaksbr }}{% else %}<span class='italic'>Contact user for more details.</span>{% endif %}</div>
+        {% endif %} {% endcomment %}
+        {% comment %} end: is_buy_agent and buy_agent_details {% endcomment %}
+
+        {% comment %} start: is_sell_agent and sell_agent_details {% endcomment %}
+        {% comment %} {% if detail_user.is_sell_agent == True %}
+        <div class="font-bold text-slate-400 mt-4">Selling or Promoting Agent</div>
+        <div class="mt-1 break-words">{% if detail_user.sell_agent_details is not None and detail_user.sell_agent_details|cut:' ' != '' %}{{ detail_user.sell_agent_details|linebreaksbr }}{% else %}<span class='italic'>Contact user for more details.</span>{% endif %}</div>
+        {% endif %} {% endcomment %}
+        {% comment %} end: is_sell_agent and sell_agent_details {% endcomment %}
+
+        {% comment %} start: is_logistics_agent and logistics_agent_details {% endcomment %}
+        {% comment %} {% if detail_user.is_logistics_agent == True %}
+        <div class="font-bold text-slate-400 mt-4">Logistics Agent</div>
+        <div class="mt-1 break-words">{% if detail_user.logistics_agent_details is not None and detail_user.logistics_agent_details|cut:' ' != '' %}{{ detail_user.logistics_agent_details|linebreaksbr }}{% else %}<span class='italic'>Contact user for more details.</span>{% endif %}</div>
+        {% endif %} {% endcomment %}
+        {% comment %} end: is_logistics_agent and logistics_agent_details {% endcomment %}
+    </div>
+</div>

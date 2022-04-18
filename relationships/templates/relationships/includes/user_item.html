@@ -1,0 +1,68 @@
+{% comment %} 
+Params:
+    lead, lead to display
+    more_css_classes, additional div CSS classes
+
+Note: thumbnails are not clickable.
+{% endcomment %}
+
+<a href="{% url 'users:user_detail' user.slug_link %}">
+    <div class="bg-white hover:bg-blue-50 hover:outline hover:outline-1 hover:outline-blue-200 shadow-md rounded{% if more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
+        <div class="flex justify-between bg-blue-50 w-full px-8 py-4">
+            <div class="flex flex-col justify-start items-start">
+                <div class="text-sm font-semibold">{{ user.first_name|title }} {{ user.last_name|title }}</div>
+                {% if user.country and user.country.name|cut:' ' != '' %}
+                    <div class="text-sm">{{ user.country.name }}</div>
+                {% endif %}
+                {% if user.company_name and user.company_name|cut:' ' != '' %}
+                    <div class="text-sm">{{ user.company_name }}</div>
+                {% endif %}
+            </div>
+            <div class="text-sm flex flex-col justify-start items-end">
+                <div>{% load num_user_comments_by %}{% num_user_comments_by user request.user.user as num_user_comments_by %}{{ user.num_comments_as_commentee }} comments{% if num_user_comments_by > 0 %}, {{ num_user_comments_by }} by you{% endif %}</div>
+                {% load is_connected_user %}
+                {% load has_saved_user %}
+                {% is_connected_user request.user.user user as is_connected_user %}
+                {% has_saved_user request.user.user user as has_saved_user %}
+                {% if is_connected_user == True or has_saved_user == True %}
+                    <div>{% if is_connected_user == True %}Connected{% endif %}{% if is_connected_user == True and has_saved_user == True %}, saved{% elif is_connected_user == False and has_saved_user == True %}Saved{% endif %}</div>
+                {% endif %}
+                <div>{{ user.num_leads }} leads</div>
+            </div>
+
+        </div>
+        <div class="px-8 pb-8">
+            {% comment %} start: goods_string {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4">Goods & Services</div>
+            <div class="mt-1">{{ user.goods_string|linebreaksbr|truncatechars:140 }}{% if user.goods_string|length > 140 %}...{% endif %}</div>
+            {% comment %} end: goods_string {% endcomment %}
+
+            {% comment %} start: languages_string {% endcomment %}
+            <div class="font-bold text-slate-400 mt-4">Languages</div>
+            <div class="mt-1">{{ user.languages_string }}</div>
+            {% comment %} end: languages_string {% endcomment %}
+
+            {% if user.is_buy_agent and user.is_buy_agent == True and user.buy_agent_details and user.buy_agent_details|cut:' ' != '' %}
+                {% comment %} start: buy_agent_details {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">Buying or Sourcing Agent Services</div>
+                <div class="mt-1">{{ user.buy_agent_details|linebreaksbr|truncatechars:140 }}{% if user.buy_agent_details|length > 140 %}...{% endif %}</div>
+                {% comment %} end: buy_agent_details {% endcomment %}
+            {% endif %}
+
+            {% if user.is_sell_agent and user.is_sell_agent == True and user.sell_agent_details and user.sell_agent_details|cut:' ' != '' %}
+                {% comment %} start: sell_agent_details {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">Selling or Promoting Agent Services</div>
+                <div class="mt-1">{{ user.sell_agent_details|linebreaksbr|truncatechars:140 }}{% if user.sell_agent_details|length > 140 %}...{% endif %}</div>
+                {% comment %} end: sell_agent_details {% endcomment %}
+            {% endif %}
+
+            {% if user.is_logistics_agent and user.is_logistics_agent == True and user.logistics_agent_details and user.logistics_agent_details|cut:' ' != '' %}
+                {% comment %} start: logistics_agent_details {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">Logistics Services</div>
+                <div class="mt-1">{{ user.logistics_agent_details|linebreaksbr|truncatechars:140 }}{% if user.logistics_agent_details|length > 140 %}...{% endif %}</div>
+                {% comment %} end: logistics_agent_details {% endcomment %}
+        {% endif %}
+        </div>
+
+    </div>
+</a>

@@ -39,6 +39,7 @@ class WriteOnlyPresignedURLView(
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+# TODO not in use
 def get_file(_, uuid):
     """Redirect user to file in S3 with a pre-signed URL"""
     s3 = boto3.client('s3',

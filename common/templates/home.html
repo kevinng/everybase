@@ -1,0 +1,55 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}Importers, Exporters, Buying Agents, Selling Agents{% endblock %}
+
+{% block content %}
+{% if messages %}
+<div class="w-full px-8 py-10 bg-orange-400 text-white text-center">
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="bg-gradient-to-t from-violet-800 to-fuchsia-600 pt-20 pb-20 px-10 flex flex-col items-center text-center">
+    {% comment %} start: header {% endcomment %}
+    <div class="font-bold text-3xl text-white ">We connect importers/exporters agents worldwide</div>
+    {% comment %} end: header {% endcomment %}
+
+    {% comment %} start: sellers buyers, call-to-action {% endcomment %}
+    <div class="mt-12 w-3/4 lg:w-1/2 flex flex-col items-center">
+        <div class="font-bold text-white text-2xl">Agents</div>
+        <div class="text-white">Help importers/exporters buy or sell for commissions</div>
+        <form class="w-full" action="{% url 'leads:lead_list' %}" method="get">
+            {% csrf_token %}
+            <input name="search" placeholder="E.g., aluminium" type="text" maxlength="50" type="input" class="block w-full border rounded-md py-3 px-5 mt-2">
+            <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 shadow-md mt-2">Search Leads</button>
+        </form>
+    </div>
+    {% comment %} end: sellers buyers, call-to-action {% endcomment %}
+
+    {% comment %} start: agents, call-to-action {% endcomment %}
+    <div class="mt-12 flex flex-col items-center">
+        <div class="font-bold text-white text-2xl">Importers/Exporters</div>
+        <div class="text-white">Recruit agents to help you buy or sell</div>
+        <a href="{% url 'leads:lead_create' %}" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 shadow-md mt-2">Post a Lead</a>
+    </div>
+    {% comment %} end: agents, call-to-action {% endcomment %}
+</div>
+<div class="pt-20 pb-20 px-10 bg-sky-50 flex flex-col items-center">
+    <div class="font-bold text-3xl text-center">Promoted Leads</div>
+    <div class="mt-4">
+        {% load promoted_leads %}
+        {% promoted_leads as promoted_leads %}
+        {% for lead in promoted_leads %}
+            <div class="mt-2">
+                {% include 'leads/includes/lead_item.html' %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

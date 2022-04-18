@@ -1,6 +1,7 @@
-import pytz, datetime
 from django.db import models
-from everybase import settings
+from common.utilities.diff_now import diff_now
+from common.utilities.diff_now_desc import diff_now_desc
+from common.utilities.diff_now_in_days import diff_now_in_days
 
 # --- Start: Helper functions ---
 
@@ -48,48 +49,14 @@ class Standard(models.Model):
         db_index=True
     )
 
-    def created_now_difference(self):
-        sgtz = pytz.timezone(settings.TIME_ZONE)
-        now = datetime.datetime.now(tz=sgtz)
-        difference = (now - self.created).total_seconds()
-        
-        weeks, rest = divmod(difference, 604800)
-        days, rest = divmod(rest, 86400)
-        hours, rest = divmod(rest, 3600)
-        minutes, seconds = divmod(rest, 60)
+    def age(self):
+        return diff_now(self.created)
 
-        return (weeks, days, hours, minutes, seconds)
+    def age_desc(self):
+        return diff_now_desc(self.created)
 
-    def create_now_difference_display_text(self):
-        weeks, days, hours, minutes, seconds = self.created_now_difference()
-
-        if weeks > 0 and weeks < 4:
-            if weeks == 1:
-                return '1 week ago'
-
-            return '%d weeks ago' % weeks
-        elif days > 0:
-            if days == 1:
-                return '1 day ago'
-
-            return '%d days ago' % days
-        elif hours > 0:
-            if hours == 1:
-                return '1 hour ago'
-
-            return '%d hours ago' % hours
-        elif minutes > 0:
-            if minutes == 1:
-                return '1 minute ago'
-
-            return '%d minutes ago' % minutes
-        elif seconds > 0:
-            if seconds == 1:
-                return '1 second ago'
-
-            return '%d seconds ago' % seconds
-
-        return self.created.strftime('%d %b %Y')
+    def age_days(self):
+        return diff_now_in_days(self.created)
 
     class Meta:
         abstract = True

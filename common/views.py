@@ -58,3 +58,9 @@ def e(request, file_to_render):
 def m(request, file_to_render):
     template_name = 'mock_ups/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
+
+def home(request):
+    return TemplateResponse(request, 'home.html', {})
+
+def pricing(request):
+    return TemplateResponse(request, 'pricing.html', {})

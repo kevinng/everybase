@@ -1,0 +1,5 @@
+Hi {{ contactee.first_name }} {{ contactee.last_name }}, my name is {{ contactor.first_name }} {{ contactor.last_name }}.
+
+I got your contact from - https://everybase.co
+
+{{ body }}

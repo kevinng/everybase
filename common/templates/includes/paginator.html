@@ -1,0 +1,15 @@
+{% comment %}
+Params:
+    page_obj, page object
+    other_css_classes, other CSS classes
+{% endcomment %}
+{% load query_transform %}
+<div class="flex items-center justify-center gap-3 mb-4 mr-4 sticky top-20{% if other_css_classes is not None %} {{ other_css_classes }}{% endif %}">
+    {% if page_obj.has_previous %}
+        <a href="?{% query_transform page=page_obj.previous_page_number %}" class="shadow-md bg-slate-200 hover:bg-slate-300 rounded px-4 py-2 prev_page">Prev</a>
+    {% endif %}
+    <div class="font-bold">Page {{ page_obj.number }}</div>
+    {% if page_obj.has_next %}
+        <a href="?{% query_transform page=page_obj.next_page_number %}" class="shadow-md bg-slate-200 hover:bg-slate-300 rounded px-4 py-2 next_page">Next</a>
+    {% endif %}
+</div>

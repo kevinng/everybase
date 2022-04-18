@@ -1,0 +1,37 @@
+from chat.constants import intents, messages
+from chat.tests.library import ChatTest
+from chat.tasks.send_register_message import send_register_message
+
+class RegisterTest(ChatTest):
+    def setUp(self):
+        super().setUp(intents.REGISTER, messages.REGISTER__CONFIRM)
+
+    def test_enter_yes(self):
+        self.receive_reply_assert(
+            'yes',
+            intents.REGISTER,
+            messages.REGISTER__CONFIRMED
+        )
+
+    def test_enter_unrecognized_input(self):
+        self.receive_reply_assert(
+            'huh',
+            intents.REGISTER,
+            messages.REGISTER__CONFIRM,
+            target_body_message_key=messages.REGISTER__DO_NOT_UNDERSTAND
+        )
+
+class SendRegisterConfirmTest(ChatTest):
+    def setUp(self):
+        super().setUp(intents.NO_INTENT, messages.NO_MESSAGE)
+
+    def test_send_register_confirm(self):
+        msg = send_register_message(self.user.id, True)
+        self.assert_context_body(
+            intents.REGISTER,
+            messages.REGISTER__CONFIRM,
+            msg.body, {
+                'first_name': self.user.first_name,
+                'last_name': self.user.last_name
+            }
+        )

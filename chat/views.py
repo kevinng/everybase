@@ -1,15 +1,10 @@
 import traceback
 from http import HTTPStatus
-from urllib.parse import urljoin, quote
+from urllib.parse import urljoin
 
 from django.urls import reverse
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.template.loader import render_to_string
-from django.shortcuts import redirect
 from rest_framework.views import APIView
-
-from ratelimit.decorators import ratelimit
 
 from everybase import settings
 
@@ -22,14 +17,6 @@ from chat.utilities.get_handler import get_handler
 from chat.utilities.save_status_callback import save_status_callback
 from chat.utilities.save_status_callback_log import save_status_callback_log
 from chat.tasks.copy_post_request_data import copy_post_request_data
-
-from relationships import models as relmods
-from relationships.utilities.get_non_tracking_whatsapp_link import \
-    get_non_tracking_whatsapp_link
-from relationships.utilities.get_create_whatsapp_link import \
-    get_create_whatsapp_link
-
-from leads import models as lemods
 
 from twilio.request_validator import RequestValidator
 from twilio.twiml.messaging_response import MessagingResponse
@@ -59,6 +46,9 @@ def reply(message, no_external_calls=False, no_task_calls=False, request=None):
     # Get handler for context
     handler = get_handler(message, intent_key, message_key, no_external_calls,
         no_task_calls, request)
+
+    if handler is None:
+        return None
 
     # Run handler and get message body
     body = handler.run()
@@ -111,10 +101,9 @@ class TwilioIncomingMessageView(APIView):
             save_message_log(request, message)
             save_message_medias(request, message)
 
-            return HttpResponse(
-                reply(message, request=request),
-                status=HTTPStatus.OK,
-            )
+            r = reply(message, request=request)
+            if r is not None:
+                return HttpResponse(r, status=HTTPStatus.OK)
 
         except:
             traceback.print_exc()
@@ -134,7 +123,7 @@ class TwilioIncomingStatusView(APIView):
 
         if msg_id is None:
             # Validate for the general URL - this status update is for a message
-            # we sent our explicitly, so we have its Twilio message SID at the
+            # we sent out explicitly, so we have its Twilio message SID at the
             # time of sending.
             this_url = settings.TWILIO_WEBHOOK_STATUS_UPDATE_URL
         else:
@@ -160,55 +149,182 @@ class TwilioIncomingStatusView(APIView):
             traceback.print_exc()
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
-def redirect_whatsapp_phone_number(request, id):
-    """Redirects user from our short tracking URL to WhatsApp"""
-    hash = relmods.PhoneNumberHash.objects.get(pk=id)
-    
-    # Note: we use temporary redirects so search engines do not associate our
-    # URLs with WhatsApp phone number links
-    response = HttpResponse(status=302) # Temporary redirect
-    response['Location'] = get_non_tracking_whatsapp_link(
-        hash.phone_number.country_code,
-        hash.phone_number.national_number
-    )
+# def redirect_checkout_page(request, id):
+#     """Redirect user to the Stripe checkout page"""
+#     # Log access
+#     ua = request.user_agent
+#     access = paymods.PaymentLinkAccess(
+#         ip_address=get_ip_address(request),
+#         is_mobile=ua.is_mobile,
+#         is_tablet=ua.is_tablet,
+#         is_touch_capable=ua.is_touch_capable,
+#         is_pc=ua.is_pc,
+#         is_bot=ua.is_bot,
+#         browser=ua.browser,
+#         browser_family=ua.browser.family,
+#         browser_version=ua.browser.version,
+#         browser_version_string=ua.browser.version_string,
+#         os=ua.os,
+#         os_family=ua.os.family,
+#         os_version=ua.os.version,
+#         os_version_string=ua.os.version_string,
+#         device=ua.device,
+#         device_family=ua.device.family
+#     )
 
-    text = request.GET.get('text')
-    if text is not None:
-        response['Location'] += '?text=' + text
+#     try:
+#         hash = paymods.PaymentHash.objects.get(pk=id)
+#         access.hash = hash
+#         access.save()
 
-    return response
+#         sph = get_support_phone_number()
+#         params = { 'whatsapp_url': get_non_tracking_whatsapp_link(
+#             sph.country_code, sph.national_number) }
 
-@login_required
-@ratelimit(key='user_or_ip', rate='50/h', block=True)
-def whatsapp_lead_author(request, lead_uuid):
-    lead = lemods.Lead.objects.get(uuid=lead_uuid)
-    requester = request.user.user
-    whatsapp_link = get_create_whatsapp_link(requester, lead.author)
+#         # Make Amplitude call
+#         send_event.delay(
+#             user_id=hash.user.id,
+#             event_type=events.CLICKED_PAYMENT_LINK,
+#             user_properties={
+#                 keys.COUNTRY_CODE: hash.user.phone_number.country_code
+#             },
+#             app_version=settings.APP_VERSION
+#         )
 
-    click, _ = lemods.WhatsAppLeadAuthorClick.objects.get_or_create(
-        lead=lead,
-        contactor=requester
-    )
+#         if hash.expired is not None:
+#             return render(request, 'chat/pages/expired.html', params)
+#         elif hash.price is None:
+#             return render(request, 'chat/pages/error.html', params)
+#         elif hash.succeeded is not None:
+#             return render(request, 'chat/pages/paid.html', params)
 
-    click.access_count += 1
-    click.save()
+#     except paymods.PaymentHash.DoesNotExist as err:
+#         sentry_sdk.capture_exception(err)
 
-    def is_author_registered():
-        return lead.author is not None and\
-            lead.author.registered is not None and\
-            lead.author.django_user is not None
+#         # Update log status
+#         access.outcome = paymods.PAYMENT_LINK_ACCESS_FAILED
+#         access.save()
 
-    params = {
-        'registered': is_author_registered(),
-        'lead_type': lead.lead_type,
-        'title': lead.title
-    }
-    text = quote(render_to_string(
-        'chat/bodies/whatsapp_lead_author.txt', params))
+#         return render(request, 'chat/pages/error.html', {})
 
-    # Note: we use temporary redirects so search engines do not associate our
-    # URLs with WhatsApp phone number links
-    response = HttpResponse(status=302) # Temporary redirect
-    response['Location'] = whatsapp_link + '?text=' + text
+#     # Chatbot phone number - for success/cancel URL
+#     chatbot_ph = relmods.PhoneNumber.objects.get(
+#         pk=settings.CHATBOT_PHONE_NUMBER_PK)
+#     end_url = get_non_tracking_whatsapp_link(
+#         chatbot_ph.country_code,
+#         chatbot_ph.national_number)
 
-    return response
+#     # Create session
+#     session = stripe.checkout.Session.create(
+#         payment_method_types=settings.STRIPE_PAYMENT_METHOD_TYPES,
+#         line_items=[{
+#             'price': hash.price.programmatic_key,
+#             'quantity': 1
+#         }],
+#         mode='payment',
+#         success_url=end_url,
+#         cancel_url=end_url,
+#         api_key = settings.STRIPE_SECRET_API_KEY
+#     )
+
+#     # Update hash
+#     sgtz = pytz.timezone(settings.TIME_ZONE)
+#     hash.started = datetime.datetime.now(tz=sgtz)
+#     hash.session_id = session.id
+#     hash.save()
+
+#     # Update log status
+#     access.outcome = paymods.PAYMENT_LINK_ACCESS_SUCCESSFUL
+#     access.save()
+
+#     context = {
+#         'session_id': session.id,
+#         'stripe_publishable_api_key': settings.STRIPE_PUBLISHABLE_API_KEY
+#     }
+
+#     return render(request, 'chat/pages/checkout.html', context)
+
+# class StripeFulfilmentCallbackView(APIView):
+#     """Webhook to receive Stripe fuilfilment callback."""
+#     def post(self, request):
+
+#         endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+#         payload = request.body
+#         sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+#         event = None
+
+#         try:
+#             event = stripe.Webhook.construct_event(
+#                 payload, sig_header, endpoint_secret
+#             )
+#         except ValueError as e:
+#             # Invalid payload
+#             return HttpResponse(status=400)
+#         except stripe.error.SignatureVerificationError as e:
+#             # Invalid signature
+#             return HttpResponse(status=400)
+
+#         if event['type'] == 'checkout.session.completed':
+#             s = event['data']['object']
+#             cd = s.get('customer_details')
+#             session = paymods.StripeCallbackCheckoutSession.objects.create(
+#                 session_id=s.get('id'),
+#                 amount_total=s.get('amount_total'),
+#                 currency=s.get('currency'),
+#                 customer=s.get('customer'),
+#                 customer_details_email=cd.get('email') if cd is not None else None,
+#                 mode=s.get('mode'),
+#                 payment_intent=s.get('payment_intent'),
+#                 payment_status=s.get('payment_status'),
+#                 success_url=s.get('success_url'),
+#                 cancel_url=s.get('cancel_url')
+#             )
+
+#             try:
+#                 hash = paymods.PaymentHash.objects.get(
+#                     session_id=session.session_id)
+#             except Exception as e:
+#                 sentry_sdk.capture_exception(e)
+
+#             sgtz = pytz.timezone(settings.TIME_ZONE)
+#             now = datetime.datetime.now(tz=sgtz)
+
+#             if session.payment_status == \
+#                 paymods.StripeCallbackCheckoutSession_Paid:
+#                 hash.succeeded = now
+#                 match = hash.match
+
+#                 # Make Amplitude call
+#                 send_event.delay(
+#                     user_id=hash.user.id,
+#                     event_type=events.PAID,
+#                     user_properties={
+#                         keys.COUNTRY_CODE: hash.user.phone_number.country_code
+#                     },
+#                     app_version=settings.APP_VERSION,
+#                     product_id=hash.price.id,
+#                     revenue=hash.price.value
+#                 )
+
+#                 # Fulfill order
+#                 exchange_contacts.delay(match.id)
+
+#                 # Update match
+#                 if hash.user.id == match.supply.user.id:
+#                     # Seller paid
+#                     match.seller_bought_contact = now
+#                     match.seller_payment_hash = hash
+#                 else:
+#                     # Buyer paid
+#                     match.buyer_bought_contact = now
+#                     match.buyer_payment_hash = hash
+
+#                 match.save()
+#             elif session.payment_status == \
+#                 paymods.StripeCallbackCheckoutSession_Unpaid:
+#                 hash.failed = now
+
+#             hash.save()
+
+#         # Passed signature verification
+#         return HttpResponse(status=200)

@@ -2,7 +2,7 @@ import typing
 from abc import abstractmethod
 
 from django.http.request import HttpRequest
-from common.libraries.get_ip_address import get_ip_address
+from common.utilities.get_ip_address import get_ip_address
 
 from amplitude.tasks.send_event import send_event
 from amplitude.utilities import get_user_properties

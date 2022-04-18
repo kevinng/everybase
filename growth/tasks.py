@@ -12,7 +12,7 @@ from everybase.settings import (TIME_ZONE, SYSTS_LAST_UPDATED_GMASS_BOUNCES,
 from relationships.shared import record_email
 from growth.models import GmassCampaign, GmassCampaignResult, GmassEmailStatus
 from common.models import SystemTimestamp
-from common.tasks import send_email
+from common.tasks.send_email import send_email
 
 app = Celery()
 

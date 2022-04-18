@@ -1,11 +1,8 @@
-import pytz, datetime
 from django.test import TestCase
-import common
 
-from everybase import settings
 from relationships import models as relmods
-from leads import models as lemods
 from common import models as commods
+from common.utilities.tear_down import tear_down
 from chat import models, views
 from chat.utilities.start_context import start_context
 from chat.utilities.get_context import get_context
@@ -15,19 +12,19 @@ from chat.tests.library.get_target_message_body import get_target_message_body
 
 class ChatTest(TestCase):
     """Base class for chatbot automated test cases."""
+    fixtures = [
+        'test/auth__user',
+        'test/relationships__email',
+        'test/relationships__phone_number_type',
+        'test/relationships__phone_number',
+        'test/relationships__user',
+        'test/common__country'
+    ]
 
     def setUp(
             self,
             intent_key : str = None,
             message_key : str = None,
-            first_name : str = 'Kevin',
-            last_name : str = 'Ng',
-            country_code : str = '12345',
-            national_number : str = '1234567890',
-            first_name_2 : str = 'Kevin 2',
-            last_name_2 : str = 'Ng 2',
-            country_code_2 : str = '123452',
-            national_number_2 : str = '12345678902',
             registered : bool = True
         ):
         """TestCase setUp method with additonal parameters for overriding.
@@ -38,12 +35,6 @@ class ChatTest(TestCase):
             Intent key of this context.
         message_key
             Message key of this context.
-        name
-            Name of the mock user.
-        country_code
-            Country code of the mock user's phone number.
-        national_number
-            National number of the mock user's phone number.
         registered
             If true, user is registered.
         """
@@ -58,54 +49,19 @@ class ChatTest(TestCase):
         self.inbound_messages = {}
         self.outbound_messages = {}
 
+        # Note: we need to reload the country fixtures in the child class if
+        # we're overriding the fixtures property.
         self.country = commods.Country.objects.get(pk=511) # Australia
 
-        phone_number = relmods.PhoneNumber.objects.create(
-            country_code=country_code,
-            national_number=national_number
-        )
-
-        self.user = relmods.User.objects.create(
-            first_name=first_name,
-            last_name=last_name,
-            phone_number=phone_number,
-            country=self.country
-        )
-
-        phone_number_2 = relmods.PhoneNumber.objects.create(
-            country_code=country_code_2,
-            national_number=national_number_2
-        )
-
-        self.user_2 = relmods.User.objects.create(
-            first_name=first_name_2,
-            last_name=last_name_2,
-            phone_number=phone_number_2,
-            country=self.country
-        )
-
-        if registered:
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            self.user.registered = datetime.datetime.now(tz=sgtz)
-            self.user.save()
+        user_pk = 3 if registered else 6
+        self.user = relmods.User.objects.get(pk=user_pk)
+        self.user_2 = relmods.User.objects.get(pk=4)
 
         if intent_key is not None and message_key is not None:
             start_context(self.user, intent_key, message_key)
 
     def tearDown(self):
-        # Delete all models - order matters
-        lemods.ContactRequest.objects.all().delete()
-        lemods.Lead.objects.all().delete()
-        relmods.PhoneNumberHash.objects.all().delete()
-        models.UserContext.objects.all().delete()
-        models.TwilioInboundMessageMedia.objects.all().delete()
-        models.TwilioOutboundMessage.objects.all().delete()
-        models.TwilioInboundMessage.objects.all().delete()
-        relmods.Connection.objects.all().delete()
-        relmods.PhoneNumberHash.objects.all().delete()
-        relmods.User.objects.all().delete()
-        relmods.PhoneNumber.objects.all().delete()
-        commods.Country.objects.all().delete()
+        tear_down()
 
     def assert_context(
             self,

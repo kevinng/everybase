@@ -1,0 +1,46 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}Register on Everybase{% endblock %}
+
+{% block other_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+
+<!-- start: login -->
+<div class="flex justify-center">
+    <div class="bg-white max-w-md w-full mt-10 lg:rounded-xl p-10 shadow-md">
+        <button class="w-full py-3 px-7 rounded-xl text-slate-600 shadow-md bg-slate-200 hover:bg-slate-300">Back to Profile</button>
+        <h1 class="font-sans text-3xl font-bold text-center mt-6">Edit Profile</h1>
+
+        <div class="mt-7 flex flex-col justify-center">
+            <label for="whatsapp_phone_number" class="font-sans text-sm font-bold uppercase text-slate-400">WhatsApp Phone Number</label>
+            <input name="whatsapp_phone_number" value="+14155552671" type="text" class="block w-full border rounded-md py-3 px-5 mt-2" disabled>
+
+            <label for="first_name" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">First Name</label>
+            <input name="first_name" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+
+            <label for="last_name" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Last Name</label>
+            <input name="last_name" type="text" class="block w-full border rounded-md py-3 px-5 mt-2">
+
+            <label for="email" class="font-sans text-sm font-bold uppercase text-slate-400 mt-5">Email</label>
+            <input name="email" type="email" class="block w-full border rounded-md py-3 px-5 mt-2 border-red-500">
+            <div class="font-sans text-base mt-2 text-red-500 px-1 w-full">Please enter a valid email.</div>
+
+            <div class="font-sans text-base mt-10 px-1 w-full">Agents help buy and sell for commissions.</div>
+
+            <div class="mt-10 flex justify-start">
+                <input type="checkbox" class="focus:ring-blue-100 border-gray-300 h-6 w-6">
+                <label class="ml-3">I'm NOT an agent</label>
+            </div>
+            <div class="font-sans text-base mt-2 px-1 w-full">Check this box if you do NOT want to be asked to be an agent.</div>
+
+            <button class="w-full py-4 px-7 font-bold text-neutral-50 rounded-xl bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Update</button>
+        </div>
+    </div>
+</div>
+<!-- end: login -->
+{% endblock %}

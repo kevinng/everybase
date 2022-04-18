@@ -1,0 +1,8 @@
+You've received a message from *{{ first_name }} {{ last_name }} ({{ country }})* for *{{ lead_headline }}*:
+
+_{{ message_body }}_
+
+Reply at this link:
+{{ base_url }}{{ application_detail_url }}
+
+_Please add this phone number to your contact book._

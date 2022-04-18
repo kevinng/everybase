@@ -1,343 +1,827 @@
-from datetime import datetime
-import json, requests, pytz
+from urllib.parse import urljoin
+import boto3, requests, json
+from PIL import Image, ImageOps
+from io import BytesIO
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
-from django.http.response import Http404
-from django.views.generic.list import ListView
+from django.core.paginator import Paginator
 from django.urls import reverse
 from django.shortcuts import render
-from django.contrib import messages
+from django.db.models import Count
+from django.http import HttpResponseRedirect
+from django.db.models import DateTimeField
+from django.db.models.functions import Trunc
+from django.db.models.expressions import RawSQL
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
+from django.views.generic.list import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from everybase import settings
 from common import models as commods
-from files import views as fiviews, models as fimods
-from leads import serializers, models, forms
-from leads.utilities.is_connected import is_connected
-from leads.utilities.has_contacted import has_contacted
-from relationships.utilities.get_create_whatsapp_link import \
-    get_create_whatsapp_link
-from chat.tasks.send_contact_request_confirm import send_contact_request_confirm
-from chat.tasks.send_contact_request_exchanged_author import \
-    send_contact_request_exchanged_author
-from chat.tasks.send_contact_request_exchanged_contactor import \
-    send_contact_request_exchanged_contactor
-from relationships import models as relmods
+from payments import models as paymods
+from leads import models, forms
+from files import models as fimods
+from common.tasks.send_amplitude_event import send_amplitude_event
+from files.utilities.delete_file import delete_file
+from files.utilities.get_mime_type import get_mime_type
+from chat.tasks.send_lead_created_message import send_lead_created_message
+from chat.tasks.send_agent_application_alert_to_agent import send_agent_application_alert_to_agent
+from chat.tasks.send_agent_application_alert_to_lead_author import send_agent_application_alert_to_lead_author
+from chat.tasks.send_agent_application_message import send_agent_application_message
 
-class LeadListView(ListView):
-    model = models.Lead
-    paginate_by = 9
+_recaptcha_failed_msg = "We suspect you're a bot. Please wait a short while before posting."
 
-    def get_queryset(self, **kwargs):
-        title = self.request.GET.get('title')
-        details = self.request.GET.get('details')
-        buying = self.request.GET.get('buying')
-        selling = self.request.GET.get('selling')
-        direct = self.request.GET.get('direct')
-        broker = self.request.GET.get('broker')
-        user_country = self.request.GET.get('user_country')
-        lead_country = self.request.GET.get('lead_country')
+def get_countries():
+    return commods.Country.objects.annotate(
+        number_of_users=Count('users_w_this_country'))\
+            .order_by('-number_of_users')
 
-        cpa__initial_deposit_received = self.request.GET.get(
-            'cpa__initial_deposit_received')
-        cpa__goods_shipped = self.request.GET.get('cpa__goods_shipped')
-        cpa__buyer_received_goods_services = self.request.GET.get(
-            'cpa__buyer_received_goods_services')
-        cpa__full_payment_received = self.request.GET.get(
-            'cpa__full_payment_received')
-        cpa__others = self.request.GET.get('cpa__others')
+def save_thumbnail(image, s3, thumb_key, mime_type, file):
+    # Resize and save thumbnail, and record sizes
+    with Image.open(image) as im:
+        # Resize preserving aspect ratio cropping from the center
+        thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
+        output = BytesIO()
+        thumbnail.save(output, format='PNG')
+        output.seek(0)
 
-        leads = models.Lead.objects.all()
+        s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+            Key=thumb_key,
+            Body=output,
+            ContentType=mime_type
+        )
 
-        ffp = models.FilterFormPost()
+        file.width, file.height = im.size
+        file.thumbnail_width, file.thumbnail_height = thumbnail.size
+        file.save()
 
-        if title is not None:
-            leads = leads.filter(title__icontains=title)
-            ffp.title = title
+def save_img_if_exists(
+        image_key,
+        image_cache_use_key,
+        image_cache_file_id_key,
+        request,
+        lead,
+        form
+    ):
 
-        if details is not None:
-            leads = leads.filter(title__icontains=details)
-            ffp.details = details
+    # We'll only reach here if form validation passes.
+    #
+    # A valid cache has its File model deleted field set to None.
+    # Otherwise, it's invalid.
+    #
+    # It's not possible to have a file with a valid cache. Since cache
+    # is deleted once we detect a file in the form, whether the file is
+    # valid or not. If we've a file, save it.
+    #
+    # If file does not exist, but a valid cache exists - use the cache
+    # by copying it to our desired location, and delete the cache.
+    #
+    # Though we're dealing with 'cache' images - i.e., cached images that's a
+    # result of failed form validation - 'cache' images can also refer to
+    # actual lead images. We set actual lead images as cache when we're editing
+    # a post.
 
-        if buying is not None and selling is not None:
-            pass # No need to filter
-        elif buying is not None:
-            leads = leads.filter(lead_type='buying')
-            ffp.is_buying = True
-        elif selling is not None:
-            leads = leads.filter(lead_type='selling')
-            ffp.is_selling = True
+    # Helper to get cleaned data
+    get = lambda s : form.cleaned_data.get(s)
 
-        if direct is not None and broker is not None:
-            pass # No need to filter
-        elif direct is not None:
-            leads = leads.filter(author_type='direct')
-            ffp.is_direct = True
-        elif broker is not None:
-            leads = leads.filter(author_type='broker')
-            ffp.is_agent = True
+    image = request.FILES.get(image_key)
 
-        if user_country is not None and user_country.strip() != '':
-            leads = leads.filter(author__country__programmatic_key=user_country)
-            ffp.user_country = user_country
+    image_cache_use = get(image_cache_use_key)
 
-        if lead_country is not None and lead_country.strip() != '':
-            leads = leads.filter(country__programmatic_key=lead_country)
-            ffp.lead_country = lead_country
+    if image_cache_use is not None and image_cache_use == 'no':
+        # Doesn't matter if this image is a cache image (that's set as a
+        # result of failed form validation) or an actual lead image (that's
+        # set as a result of an edit operation), delete this image if the
+        # frontend indicates that we no longer need this image.
+        image_cache_file_id = get(image_cache_file_id_key)
+        delete_file(image_cache_file_id)
 
-        commission_payable_after_q = Q()
-        if cpa__initial_deposit_received is not None:
-            commission_payable_after_q = commission_payable_after_q |\
-                Q(commission_payable_after='initial_deposit_received')
-            ffp.is_initial_deposit = True
+    if image is not None:
+        mime_type = get_mime_type(image)
 
-        if cpa__goods_shipped is not None:
-            commission_payable_after_q = commission_payable_after_q |\
-                Q(commission_payable_after='goods_shipped')
-            ffp.is_goods_shipped = True
+        # Create lead file
+        file = fimods.File.objects.create(
+            uploader=request.user.user,
+            mime_type=mime_type,
+            filename=image.name,
+            lead=lead,
+            s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+            thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+        )
 
-        if cpa__buyer_received_goods_services is not None:
-            commission_payable_after_q = commission_payable_after_q |\
-                Q(commission_payable_after='buyer_received_goods_services')
-            ffp.is_goods_received = True
+        key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, file.id)
+        thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, file.id)
 
-        if cpa__full_payment_received is not None:
-            commission_payable_after_q = commission_payable_after_q |\
-                Q(commission_payable_after='full_payment_received')
-            ffp.is_payment_received = True
+        s3 = boto3.session.Session(
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        ).resource('s3')
 
-        if cpa__others is not None:
-            commission_payable_after_q = commission_payable_after_q |\
-                Q(commission_payable_after='others')
-            ffp.is_others = True
+        # Upload lead image
+        lead_s3_obj = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+            Key=key,
+            Body=image,
+            ContentType=mime_type
+        )
 
-        leads = leads.filter(commission_payable_after_q)
+        # Update lead file with S3 results
+        file.s3_object_key = key
+        file.thumbnail_s3_object_key = thumb_key
+        file.s3_object_content_length = lead_s3_obj.content_length
+        file.e_tag = lead_s3_obj.e_tag
+        file.content_type = lead_s3_obj.content_type
+        file.last_modified = lead_s3_obj.last_modified
+        file.save()
 
-        if self.request.user.is_authenticated:
-            try:
-                ffp.user = self.request.user.user
-            except relmods.User.DoesNotExist:
-                # Prevents error when I'm logging in as admin
-                pass
-        
-        ffp.save()
-        
-        return leads.order_by('-created')
+        save_thumbnail(image, s3, thumb_key, mime_type, file)
+    else:
+        # Image does not exist
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['countries'] = commods.Country.objects.order_by('name')
-        context['amplitude_api_key'] = settings.AMPLITUDE_API_KEY
-        if self.request.user.is_authenticated:
-            try:
-                eb_user = self.request.user.user
-                context['amplitude_user_id'] = eb_user.uuid
-                context['country_code'] = eb_user.phone_number.country_code
-                context['register_date_time'] = eb_user.registered.isoformat()
-                sgtz = pytz.timezone(settings.TIME_ZONE)
-                context['last_seen_date_time'] = datetime.now(tz=sgtz).isoformat()
-                context['num_whatsapp_lead_author'] = \
-                    eb_user.num_whatsapp_lead_author()
-                context['num_leads_created'] = eb_user.num_leads_created()
-            except relmods.User.DoesNotExist:
-                # Prevents error when I'm logging in as admin
-                pass
+        image_cache_file_id = get(image_cache_file_id_key)
 
-        return context
+        if image_cache_file_id is not None and \
+            len(image_cache_file_id.strip()) > 0 and \
+            image_cache_use == 'yes':
+            # Frontend indicates use-cache, and we have the details to do so.
 
-@login_required
-def create_lead(request):
-    if request.method == 'POST':
-        form = forms.LeadForm(request.POST)
-        if form.is_valid():
-            # reCaptcha check
-            # Note: blocking
-            client_response = request.POST.get('g-recaptcha-response')
-            server_response = requests.post(
-                settings.RECAPTCHA_VERIFICATION_URL, {
-                    'secret': settings.RECAPTCHA_SECRET,
-                    'response': client_response
-            })
+            cache_file = fimods.File.objects.get(pk=image_cache_file_id)
 
-            sr = json.loads(server_response.text)
-            if sr.get('success') == True:
-                # Disable recaptcha
-                #  and sr.get('score') > \
-                # float(settings.RECAPTCHA_THRESHOLD):
-                lead = models.Lead.objects.create(
-                    author=request.user.user,
-                    title=form.cleaned_data.get('title'),
-                    details=form.cleaned_data.get('details'),
-                    lead_type=form.cleaned_data.get('lead_type'),
-                    author_type=form.cleaned_data.get('author_type'),
-                    country=commods.Country.objects.get(
-                        programmatic_key=form.cleaned_data.get('country')),
-                    commission_pct=form.cleaned_data.get('commission_pct'),
-                    commission_payable_after=form.cleaned_data.\
-                        get('commission_payable_after'),
-                    commission_payable_after_others=form.cleaned_data.\
-                        get('commission_payable_after_others'),
-                    other_commission_details=form.cleaned_data.\
-                        get('other_commission_details')
+            # If this file is NOT a cache, i.e. - its ID and URL were set in an
+            # edit operation, we do not need to copy it from a cache location
+            # to an actual lead image location. We create a test key here to
+            # ascertain if the cache file is located in an actual lead image
+            # location. If equal, the image is not a 'cache' that's created as a
+            # result of form validation failure (though we name it as such).
+            # Instead, the ID and URL were set in an edit operation.
+            test_key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, cache_file.id)
+            if cache_file.deleted is None and \
+                cache_file.s3_object_key != test_key:
+                # Cache is valid and not an actual lead image, copy cache
+                # to actual lead image location.
+                
+                # Create lead file model
+                lead_file = fimods.File.objects.create(
+                    uploader=request.user.user,
+                    mime_type=cache_file.mime_type,
+                    filename=cache_file.filename,
+                    lead=lead,
+                    s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                    thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                    s3_object_content_type = cache_file.s3_object_content_type,
+                    s3_object_content_length = cache_file.s3_object_content_length
                 )
 
-                # Associate file with lead
-                files = form.cleaned_data.get('files')
-                if files.lower().strip() != '':
-                    file_datas = json.loads(files)
-                    for file_data in file_datas:
-                        uuid, _, filename = file_data
-                        file = fimods.File.objects.get(uuid=uuid)
-                        file.lead = lead
-                        file.filename = filename
-                        file.save()
-                
-                messages.info(request, 'Your lead has been posted.')
+                lead_key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, lead_file.id)
+                cache_key = f'{cache_file.s3_bucket_name}/{cache_file.s3_object_key}'
 
-                return HttpResponseRedirect(reverse('leads__root:list'))
-            else:
-                messages.info(request, 'Are you a robot? Please slow down. [' + str(sr.get('score')) + ']')
+                s3 = boto3.session.Session(
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                ).resource('s3')
+
+                # Copy cache to lead file S3 location
+                lead_s3_obj = s3.Object(
+                    settings.AWS_STORAGE_BUCKET_NAME, lead_key)\
+                    .copy_from(CopySource=cache_key)
+
+                thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, lead_file.id)
+
+                # Update file model
+                lead_file.s3_object_key = lead_key
+                lead_file.thumbnail_s3_object_key = thumb_key
+                lead_file.e_tag = lead_s3_obj.get('ETag')
+                lead_file.last_modified = lead_s3_obj.get('LastModified')
+                lead_file.save()
+
+                # Download cache image for resize to thumbnail
+                cache = BytesIO()
+                s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME)\
+                    .download_fileobj(cache_file.s3_object_key, cache)
+                cache.seek(0)
+
+                save_thumbnail(cache, s3, thumb_key, cache_file.mime_type, lead_file)
+
+                # Delete cache
+                delete_file(cache_file.id)
+
+def lead_detail(request, slug):
+    lead = models.Lead.objects.get(slug_link=slug)
+
+    # Track who've seen this lead
+    if request.user.is_authenticated:
+        v, _ = models.LeadDetailView.objects.get_or_create(
+            lead=lead,
+            viewer=request.user.user
+        )
+
+        v.count += 1
+        v.save()
+
+    # An application may have 2 or 3 required questions
+    has_3_questions = lead.question_3 is not None and len(lead.question_3) > 0
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            # User is not authenticated. Direct user to login with next URL as this detail page.
+            url = reverse('login') + '?next=' + \
+                reverse('leads:lead_detail', args=(slug,))
+            return HttpResponseRedirect(url)
+
+        # User is applying to this lead
+
+        can_apply_lead = models.Application.objects.filter(
+            lead=lead,
+            applicant=request.user.user
+        ).count() == 0 and lead.author != request.user.user
+
+        if not can_apply_lead:
+            # User is not eligible to apply to this lead
+            return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+
+        if has_3_questions:
+            form = forms.ApplicationFormQ3(request.POST)
+        else:
+            form = forms.ApplicationFormNoQ3(request.POST)
+
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        recaptcha_call = requests.post('https://www.google.com/recaptcha/api/siteverify', params={
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        })
+        recaptcha_results = json.loads(recaptcha_call.text)
+        if recaptcha_results.get('success') is not True or\
+            recaptcha_results.get('score') is None:
+            form.add_error(None, _recaptcha_failed_msg)
+        elif recaptcha_results.get('success') is True and\
+            recaptcha_results.get('score') is not None and\
+            float(recaptcha_results.get('score')) < float(settings.RECAPTCHA_THRESHOLD):
+            form.add_error(None, _recaptcha_failed_msg)
+        elif form.is_valid():
+            a = models.Application.objects.create(
+                lead=lead,
+                applicant=request.user.user,
+                question_1=lead.question_1,
+                answer_1=form.cleaned_data.get('answer_1'),
+                question_2=lead.question_2,
+                answer_2=form.cleaned_data.get('answer_2'),
+                question_3=lead.question_3,
+                answer_3=form.cleaned_data.get('answer_3'),
+                applicant_comments=form.cleaned_data.get('applicant_comments')
+            )
+
+            # Send message to both parties
+            send_agent_application_alert_to_lead_author.delay(a.id)
+            send_agent_application_alert_to_agent.delay(a.id)
+
+            # Amplitude call
+            send_amplitude_event.delay(
+                'agent application - applied as an agent',
+                user_uuid=request.user.user.uuid,
+                event_properties={
+                    'application_id': a.lead.id,
+                    'buy_sell': lead.lead_type,
+                    'buy_country': '' if lead.buy_country is None else lead.buy_country.programmatic_key,
+                    'sell_country': '' if lead.sell_country is None else lead.sell_country.programmatic_key
+                }
+            )
+
+            return HttpResponseRedirect(
+                reverse('applications:application_detail', args=(a.id,)))
+    else:
+        if has_3_questions:
+            form = forms.ApplicationFormQ3()
+        else:
+            form = forms.ApplicationFormNoQ3()
+
+    params = {
+        'lead': lead,
+        'form': form
+    }
+
+    return render(request, 'leads/lead_detail.html', params)
+
+@login_required
+def lead_edit(request, slug):
+    lead = models.Lead.objects.get(slug_link=slug)
+
+    # If requester does not own lead - redirect to lead detail
+    if request.user.user.id != lead.author.id:
+        return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug)))
+
+    if request.method == 'POST':
+        form = forms.LeadForm(request.POST, request.FILES)
+        if form.is_valid():
+
+            # Helper to get cleaned data
+            get = lambda s : form.cleaned_data.get(s)
+
+            # Helper to get country or not (i.e., any country)
+            get_country = lambda c : commods.Country.objects.get(programmatic_key=c) if c != 'any_country' else None
+
+            # Update lead
+            lead.lead_type = get('lead_type')
+            lead.currency = paymods.Currency.objects.get(programmatic_key=get('currency'))
+            lead.author_type = get('author_type')
+            lead.buy_country = get_country(get('buy_country'))
+            lead.sell_country = get_country(get('sell_country'))
+            lead.headline = get('headline')
+            lead.details = get('details')
+            lead.agent_job = get('agent_job')
+            lead.commission_type = get('commission_type')
+            lead.commission_percentage = get('commission_percentage')
+            lead.commission_earnings = get('commission_earnings')
+            lead.commission_quantity_unit_string = get('commission_quantity_unit_string')
+            lead.commission_type_other = get('commission_type_other')
+            lead.commission_payable_by = get('commission_payable_by')
+            lead.commission_payable_after = get('commission_payable_after')
+            lead.commission_payable_after_other = get('commission_payable_after_other')
+            lead.other_comm_details = get('other_comm_details')
+            lead.is_comm_negotiable = get('is_comm_negotiable')
+            lead.question_1 = get('question_1')
+            lead.question_2 = get('question_2')
+            lead.question_3 = get('question_3')
+            lead.save()
+
+            save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)
+            save_img_if_exists('image_two', 'image_two_cache_use', 'image_two_cache_file_id', request, lead, form)
+            save_img_if_exists('image_three', 'image_three_cache_use', 'image_three_cache_file_id', request, lead, form)
+
+            return HttpResponseRedirect(reverse('leads:lead_detail', args=(lead.slug_link,)))
+    else:
+        initial = {
+            'lead_type': lead.lead_type,
+            'currency': lead.currency,
+            'author_type': lead.author_type,
+            'buy_country': lead.buy_country.programmatic_key,
+            'sell_country': lead.sell_country.programmatic_key,
+            'headline': lead.headline,
+            'details': lead.details,
+            'agent_job': lead.agent_job,
+            'commission_type': lead.commission_type,
+            'commission_percentage': lead.commission_percentage,
+            'commission_earnings': lead.commission_earnings,
+            'commission_quantity_unit_string': lead.commission_quantity_unit_string,
+            'commission_type_other': lead.commission_type_other,
+            'commission_payable_by': lead.commission_payable_by,
+            'commission_payable_after': lead.commission_payable_after,
+            'commission_payable_after_other': lead.commission_payable_after_other,
+            'other_comm_details': lead.other_comm_details,
+            'is_comm_negotiable': lead.is_comm_negotiable,
+            'question_1': lead.question_1,
+            'question_2': lead.question_2,
+            'question_3': lead.question_3
+        }
+
+        names = [
+            ('image_one_cache_file_id', 'image_one_cache_url'),
+            ('image_two_cache_file_id', 'image_two_cache_url'),
+            ('image_three_cache_file_id', 'image_three_cache_url')
+        ]
+        for i, f in enumerate(lead.display_images()):
+            # File ID
+            initial[names[i][0]] = f.id
+
+            # File URL
+            initial[names[i][1]] = urljoin(settings.MEDIA_URL, f.s3_object_key)
+
+        form = forms.LeadForm(initial=initial)
+
+    return render(request, 'leads/lead_edit.html', {
+        'form': form,
+        'slug_link': lead.slug_link,
+        'countries': get_countries()
+    })
+
+@login_required
+def lead_create(request):
+    if request.method == 'POST':
+        form = forms.LeadForm(request.POST, request.FILES)
+        if form.is_valid():
+
+            # Helper to get cleaned data
+            get = lambda s : form.cleaned_data.get(s)
+
+            # Helper to get country or not (i.e., any country)
+            get_country = lambda c : commods.Country.objects.get(programmatic_key=c) if c != 'any_country' else None
+
+            # Create lead
+            lead = models.Lead.objects.create(
+                author=request.user.user,
+                lead_type=get('lead_type'),
+                currency=paymods.Currency.objects.get(programmatic_key=get('currency')),
+                author_type=get('author_type'),
+                buy_country=get_country(get('buy_country')),
+                sell_country=get_country(get('sell_country')),
+                headline=get('headline'),
+                details=get('details'),
+                agent_job=get('agent_job'),
+                commission_type=get('commission_type'),
+                commission_percentage=get('commission_percentage'),
+                commission_earnings=get('commission_earnings'),
+                commission_quantity_unit_string=get('commission_quantity_unit_string'),
+                commission_type_other=get('commission_type_other'),
+                other_comm_details=get('other_comm_details'),
+                commission_payable_by=get('commission_payable_by'),
+                commission_payable_after=get('commission_payable_after'),
+                commission_payable_after_other=get('commission_payable_after_other'),
+                is_comm_negotiable=get('is_comm_negotiable'),
+                question_1=get('question_1'),
+                question_2=get('question_2'),
+                question_3=get('question_3')
+            )
+
+            save_img_if_exists('image_one', 'image_one_cache_use', 'image_one_cache_file_id', request, lead, form)
+            save_img_if_exists('image_two', 'image_two_cache_use', 'image_two_cache_file_id', request, lead, form)
+            save_img_if_exists('image_three', 'image_three_cache_use', 'image_three_cache_file_id', request, lead, form)
+
+            # Send message to user
+            send_lead_created_message.delay(lead.id)
+
+            # Amplitude call
+            send_amplitude_event.delay(
+                'discovery - created lead',
+                user_uuid=request.user.user.uuid,
+                event_properties={
+                    'lead_id': lead.id,
+                    'buy_sell': lead.lead_type,
+                    'buy_country': '' if lead.buy_country is None else lead.buy_country.programmatic_key,
+                    'sell_country': '' if lead.sell_country is None else lead.sell_country.programmatic_key
+                }
+            )
+
+            return HttpResponseRedirect(
+                reverse('leads:lead_detail', args=(lead.slug_link,)))
     else:
         form = forms.LeadForm()
 
-    countries = commods.Country.objects.order_by('name')
-
-    eb_user = request.user.user
-    sgtz = pytz.timezone(settings.TIME_ZONE)
-
-    return render(request, 'leads/create_lead.html', {
+    return render(request, 'leads/lead_create.html', {
         'form': form,
-        'countries': countries,
-        'amplitude_api_key': settings.AMPLITUDE_API_KEY,
-        'amplitude_user_id': eb_user.uuid,
-        'country_code': eb_user.phone_number.country_code,
-        'register_date_time': eb_user.registered.isoformat(),
-        'last_seen_date_time': datetime.now(tz=sgtz).isoformat(),
-        'num_whatsapp_lead_author': eb_user.num_whatsapp_lead_author(),
-        'num_leads_created': eb_user.num_leads_created()
+        'countries': get_countries()
     })
 
-# @csrf_exempt
-class WriteOnlyPresignedURLView(fiviews.WriteOnlyPresignedURLView):
-    serializer_class = serializers.WriteOnlyPresignedURLSerializer
+def lead_list(request):
+    if request.method == 'GET':
+        user = request.user.user if request.user.is_authenticated else None
 
-def lead_detail(request, uuid):
-    try:
-        lead = models.Lead.objects.get(uuid=uuid)
-    except models.Lead.DoesNotExist:
-        raise Http404('Lead does not exist')
+        get = lambda s : request.GET.get(s)
 
-    contact_request = None
+        search = get('search') # labelled 'search'
+        buy_sell = get('buy_sell')
+        buy_country = get('buy_country')
+        sell_country = get('sell_country')
 
-    if request.method == 'POST':
-        form = forms.ContactForm(request.POST)
-        if form.is_valid():
-            if is_connected(request.user.user, lead):
-                # Users are already connected - direct to WhatsApp.
+        leads = models.Lead.objects.all()
 
-                # Set message as a GET parameter
-                message = form.cleaned_data.get('message')
-                request.GET._mutable = True
-                request.GET['text'] = message
+        is_not_empty = lambda s : s is not None and s.strip() != ''
+        match = lambda t, v: is_not_empty(t) and t == v
 
-                # Direct user to WhatsApp with the message in body
-                HttpResponseRedirect(
-                    get_create_whatsapp_link(request.user.user, lead.author))
-            elif not has_contacted(request.user.user, lead):
-                # User should not be able to send a post request if he has
-                # already contacted the lead owner. Users are not connected
-                # and requester have not contacted this lead before.
+        # Buy sell
+        if match(buy_sell, 'buy'):
+            leads = leads.filter(lead_type='buying')
+        elif buy_sell == 'sell':
+            leads = leads.filter(lead_type='selling')
 
-                # Create contact request
-                message = form.cleaned_data.get('message')
-                contact_request = models.ContactRequest.objects.create(
-                    contactor=request.user.user,
-                    lead=lead,
-                    message=message
-                )
+        if is_not_empty(buy_country) and buy_country.strip() != 'any_country':
+            # Buy country is selected
+            c = commods.Country.objects.get(programmatic_key=buy_country)
+            leads = leads.filter(buy_country=c)
 
-                # Ask lead author to confirm contact request
-                send_contact_request_confirm(contact_request.id)
+        if is_not_empty(sell_country) and sell_country.strip() != 'any_country':
+            # Sell country is selected
+            c = commods.Country.objects.get(programmatic_key=sell_country)
+            leads = leads.filter(sell_country=c)
 
-                # Add message
-                messages.info(request, "Message sent. We'll notify you if the \
-author agrees to exchange contacts with you.")
-    else:
-        if request.user.is_authenticated:
-            # Update analytics for authenticated user
-            try:
-                access = models.LeadDetailAccess.objects.get(
-                    lead=lead,
-                    accessor=request.user.user
-                )
-                access.access_count += 1
-                access.save()
-            except models.LeadDetailAccess.DoesNotExist:
-                access = models.LeadDetailAccess.objects.create(
-                    lead=lead,
-                    accessor=request.user.user,
-                    access_count=1
-                )
+        order_by = [Trunc('created', 'month', output_field=DateTimeField()).desc()]
 
-            if is_connected(request.user.user, lead):
-                # Users are already connected, show an empty form which will allow
-                # the requester to WhatsApp the lead author directly.
-                form = forms.ContactForm()
-            elif has_contacted(request.user.user, lead):
-                # Users are not connected but requester have contacted this
-                # lead before. Users are not connected but requester have contacted
-                # this lead before.
+        if is_not_empty(search):
+            # Goods services details is filled
+            headline_details_vec = SearchVector('headline_details_vec')
+            search_query = SearchQuery(search)
+            leads = leads.annotate(
+                headline_details_vec=RawSQL('headline_details_vec', [],
+                    output_field=SearchVectorField()))\
+                .annotate(goods_services_rank=SearchRank(headline_details_vec, search_query))
             
-                # Get contact request
-                contact_request = models.ContactRequest.objects.get(
-                    contactor=request.user.user,
-                    lead=lead
+            order_by.append('-goods_services_rank')
+
+        # Log unique search
+        l, _ = models.LeadQueryLog.objects.get_or_create(
+            user=user,
+            search=search,
+            buy_sell=buy_sell,
+            buy_country=buy_country,
+            sell_country=sell_country
+        )
+
+        l.count += 1
+        l.save()
+
+        # Order leads
+        leads = leads.order_by(*order_by)
+
+        # Set context parameters
+        params = {}
+
+        params['countries'] = get_countries()
+        params['search'] = get('search')
+        params['buy_sell'] = get('buy_sell')
+        params['buy_country'] = get('buy_country')
+        params['sell_country'] = get('sell_country')
+
+        # Paginate
+
+        leads_per_page = 12
+        paginator = Paginator(leads, leads_per_page)
+
+        page_number = request.GET.get('page')
+        
+        page_obj = paginator.get_page(page_number)
+        params['page_obj'] = page_obj
+
+        return render(request, 'leads/lead_list.html', params)
+
+class LeadApplicationListView(LoginRequiredMixin, ListView):
+    template_name = 'leads/lead_detail_application_list.html'
+    context_object_name = 'applications'
+    model = models.Application
+    paginate_by = 8
+
+    def get_queryset(self, **kwargs):
+        return models.Application.objects.filter(
+            lead=models.Lead.objects.get(slug_link=self.kwargs['slug'])
+        ).order_by('-created')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['lead'] = models.Lead.objects.get(slug_link=self.kwargs['slug'])
+        return context
+
+@login_required
+def application_detail(request, pk):
+    application = models.Application.objects.get(pk=pk)
+
+    if application.applicant.id != request.user.user.id and \
+        application.lead.author.id != request.user.user.id:
+        # Only allow the author or applicant to access to this page
+        return HttpResponseRedirect(
+            reverse('leads:lead_detail',
+            args=(application.lead.slug_link,)))
+
+    if request.method == 'POST':
+        form = forms.ApplicationDetailForm(request.POST)
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        recaptcha_call = requests.post('https://www.google.com/recaptcha/api/siteverify', params={
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        })
+        recaptcha_results = json.loads(recaptcha_call.text)
+        if recaptcha_results.get('success') is not True or\
+            recaptcha_results.get('score') is None:
+            form.add_error(None, _recaptcha_failed_msg)
+        elif recaptcha_results.get('success') is True and\
+            recaptcha_results.get('score') is not None and\
+            float(recaptcha_results.get('score')) < float(settings.RECAPTCHA_THRESHOLD):
+            form.add_error(None, _recaptcha_failed_msg)
+        elif form.is_valid():
+            purpose = form.cleaned_data.get('purpose')
+            if purpose == 'reject':
+                application.response = 'rejected'
+                application.save()
+            elif purpose == 'start_work':
+                application.response = 'started_work'
+                application.save()
+            elif purpose == 'stop_work':
+                application.response = 'stopped_work'
+                application.save()
+            elif purpose == 'message':
+                am = models.ApplicationMessage.objects.create(
+                    application=application,
+                    author=request.user.user,
+                    body=form.cleaned_data.get('body')
                 )
 
-                # Show message from contact request
-                form = forms.ContactForm({
-                    'message': contact_request.message
-                })
-            else:
-                form = forms.ContactForm()
+                send_agent_application_message.delay(am.id)
+
+                # Amplitude call
+                send_amplitude_event.delay(
+                    'agent application - messaged counterparty',
+                    user_uuid=request.user.user.uuid,
+                    event_properties={
+                        'application_id': application.lead.id,
+                        'buy_sell': application.lead.lead_type,
+                        'buy_country': '' if application.lead.buy_country is None else application.lead.buy_country.programmatic_key,
+                        'sell_country': '' if application.lead.sell_country is None else application.lead.sell_country.programmatic_key
+                    }
+                )
+
+            return HttpResponseRedirect(
+                reverse('applications:application_detail',
+                    args=(application.id,)))
+    else:
+        form = forms.ApplicationDetailForm()
+
+    params = {
+        'application': application,
+        'form': form
+    }
+
+    return render(request, 'leads/application_detail.html', params)
+
+@login_required
+def application_for_my_leads_list(request):
+    if request.method == 'GET':
+        status = request.GET.get('status')
+
+        if status == 'started_work':
+            applications = models.Application.objects.filter(
+                lead__author=request.user.user,
+                response='started_work'
+            )
+        elif status == 'stopped_work':
+            applications = models.Application.objects.filter(
+                lead__author=request.user.user,
+                response='stopped_work'
+            )
+        elif status == 'rejected':
+            applications = models.Application.objects.filter(
+                lead__author=request.user.user,
+                response='rejected'
+            )
         else:
-            # User are not connected and requester have not contact lead author.
-            # Show an empty form which will allow the requester to contact the
-            # lead owner. Note: we do not merge this condition with is_connected
-            # for clarity's sake.
-            form = forms.ContactForm()
+            applications = models.Application.objects.filter(
+                lead__author=request.user.user
+            )
 
-    return render(request, 'leads/lead_detail.html', {
-        'lead': lead,
-        'form': form,
-        'contact_request': contact_request
-    })
+        # Status counts
 
-def contact_request_detail(request, uuid):
-    contact_request = models.ContactRequest.objects.get(uuid=uuid)
-    if request.method == 'POST':
-        # Exchange contact with the contactor (requester is the lead owner).
+        all_statuses_count = models.Application.objects.filter(
+            lead__author=request.user.user
+        ).count()
+
+        new_count = models.Application.objects\
+            .filter(lead__author=request.user.user)\
+            .exclude(response='started_work')\
+            .exclude(response='stopped_work')\
+            .exclude(response='rejected')\
+            .count()
+
+        started_work_count = models.Application.objects\
+            .filter(lead__author=request.user.user)\
+            .filter(response='started_work')\
+            .count()
+
+        stopped_work_count = models.Application.objects\
+            .filter(lead__author=request.user.user)\
+            .filter(response='stopped_work')\
+            .count()
+
+        rejected_count = models.Application.objects\
+            .filter(lead__author=request.user.user)\
+            .filter(response='rejected')\
+            .count()
+
+        params = {
+            'status': status,
+            'all_statuses_count': all_statuses_count,
+            'new_count': new_count,
+            'started_work_count': started_work_count,
+            'stopped_work_count': stopped_work_count,
+            'rejected_count': rejected_count
+        }
+
+        # Paginate
+
+        applications_per_page = 12
+        paginator = Paginator(applications, applications_per_page)
+
+        page_number = request.GET.get('page')
         
-        contact_request.response = 'accept'
-        contact_request.save()
+        page_obj = paginator.get_page(page_number)
+        params['page_obj'] = page_obj
 
-        # Send message to both parties.
-        send_contact_request_exchanged_author.delay(contact_request.id)
-        send_contact_request_exchanged_contactor.delay(contact_request.id)
+        return render(request, 'leads/application_for_my_leads_list.html', params)
 
-    return render(request, 'leads/contactrequest_detail.html', {
-        'contact_request': contact_request,
-        'whatsapp_link': get_create_whatsapp_link(
-            contact_request.lead.author,
-            contact_request.contactor)
-    })
+@login_required
+def application_from_me_as_an_agent_list(request):
+    if request.method == 'GET':
+        status = request.GET.get('status')
 
-class ContactRequestListView(LoginRequiredMixin, ListView):
-    model = models.ContactRequest
-    paginate_by = 30
+        if status == 'started_work':
+            applications = models.Application.objects.filter(
+                applicant=request.user.user,
+                response='started_work'
+            )
+        elif status == 'stopped_work':
+            applications = models.Application.objects.filter(
+                applicant=request.user.user,
+                response='stopped_work'
+            )
+        elif status == 'rejected':
+            applications = models.Application.objects.filter(
+                applicant=request.user.user,
+                response='rejected'
+            )
+        else:
+            applications = models.Application.objects.filter(
+                applicant=request.user.user
+            )
 
-    def get_queryset(self):
-        return models.ContactRequest.objects.filter(
-            lead__author=self.request.user.user)
+        # Status counts
+
+        all_statuses_count = models.Application.objects.filter(
+            applicant=request.user.user
+        ).count()
+
+        new_count = models.Application.objects\
+            .filter(applicant=request.user.user)\
+            .exclude(response='started_work')\
+            .exclude(response='stopped_work')\
+            .exclude(response='rejected')\
+            .count()
+
+        started_work_count = models.Application.objects\
+            .filter(applicant=request.user.user)\
+            .filter(response='started_work')\
+            .count()
+
+        stopped_work_count = models.Application.objects\
+            .filter(applicant=request.user.user)\
+            .filter(response='stopped_work')\
+            .count()
+
+        rejected_count = models.Application.objects\
+            .filter(applicant=request.user.user)\
+            .filter(response='rejected')\
+            .count()
+
+        params = {
+            'status': status,
+            'all_statuses_count': all_statuses_count,
+            'new_count': new_count,
+            'started_work_count': started_work_count,
+            'stopped_work_count': stopped_work_count,
+            'rejected_count': rejected_count
+        }
+
+        # Paginate
+
+        applications_per_page = 12
+        paginator = Paginator(applications, applications_per_page)
+
+        page_number = request.GET.get('page')
+        
+        page_obj = paginator.get_page(page_number)
+        params['page_obj'] = page_obj
+
+    return render(request, 'leads/application_from_me_as_an_agent_list.html', params)
+
+# @login_required
+# @csrf_exempt
+# def toggle_save_lead(request, slug):
+#     try:
+#         lead = models.Lead.objects.get(slug_link=slug)
+#     except models.Lead.DoesNotExist:
+#         return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+
+#     # Disallow saving of leads owned by the owner
+#     if lead.author.id == request.user.user.id:
+#         return HttpResponseRedirect(reverse('leads:lead_detail', args=(slug,)))
+
+#     def toggle():
+#         try:
+#             saved_lead = models.SavedLead.objects.get(
+#                 saver=request.user.user,
+#                 lead=lead
+#             )
+
+#             # Toggle save-unsave
+#             saved_lead.active = not saved_lead.active
+#             saved_lead.save()
+#         except models.SavedLead.DoesNotExist:
+#             saved_lead = models.SavedLead.objects.create(
+#                 saver=request.user.user,
+#                 lead=lead,
+#                 active=True
+#             )
+        
+#         return {'s': saved_lead.active}
+
+#     if request.method == 'POST':
+#         # AJAX call, toggle save-unsave, return JSON.
+#         return JsonResponse(toggle())
+
+#     # Unauthenticated call. User will be given the URL to click only if the
+#     # user is authenticated. Otherwise, a click on the 'save' button will
+#     # result in an AJAX post to this URL.
+#     #
+#     # Toggle save-unsave, redirect user to next URL.
+#     toggle()
+
+#     # Read 'next' URL from GET parameters. Redirect user there if the
+#     # parameter exists. Other redirect user to default lead details page.
+#     next_url = request.GET.get('next')
+#     if next_url is not None and len(next_url.strip()) > 0:
+#         return HttpResponseRedirect(next_url)
+#     else:
+#         return HttpResponseRedirect(
+#             reverse('leads:lead_detail', args=(slug,)))

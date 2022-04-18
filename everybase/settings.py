@@ -55,7 +55,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'storages',
     'django_user_agents',
-    'phonenumber_field'
+    'phonenumber_field',
+    'loginas',
+    'payments.apps.PaymentsConfig'
 ]
 
 MIDDLEWARE = [
@@ -149,23 +151,53 @@ USE_TZ = True
 # Activate Django-Heroku.
 django_heroku.settings(locals())
 
+# Custom AWS settings
+AWS_REGION_NAME = config('AWS_REGION')
+AWS_PRESIGNED_URL_EXPIRES_IN = config('AWS_PRESIGNED_URL_EXPIRES_IN')
+# django-storages AWS settings
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.us-east-1.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'static'
+# See: https://stackoverflow.com/questions/48722355/aws-s3-and-django-returns-an-error-occurred-accessdenied-when-calling-the-put
+AWS_DEFAULT_ACL = None
+
+# Media URL
+MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+
+# Root for all files uploaded via the 'files' app.
+AWS_S3_FILES_ROOT = 'files'
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Static folder relative to app
 STATIC_URL = '/static/'
 
-# Extra places for collectstatic to find static files.
+# Static files that aren't tied to apps
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static'),
 # )
 
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
+# Notes:
+#   - Use whitenoise for development, but AWS S3 for production
+#   - We only use django-storages to help use collectstatic assets, not upload
+#       or manage media from users
+STATICFILES_STORAGE = config('STATICFILES_STORAGE')
+DEFAULT_FILE_STORAGE = 'everybase.storage_backends.MediaStorage'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# Object key format of lead image objects in AWS S3. String positions, in order:
+#   lead ID
+#   file ID
+AWS_S3_KEY_LEAD_IMAGE = 'leads/%s/%s'
+AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL = 'leads/%s/t/%s'
+AWS_S3_KEY_CACHE_IMAGE = 'cache/%s'
+
+# Lead image thumbnail size
+LEAD_IMAGE_THUMBNAIL_SIZE = 80, 80
 
 # Override message tags
 MESSAGE_TAGS = {
@@ -186,10 +218,10 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
 CELERY_BEAT_SCHEDULE = {
-    'schedule-load-gmass-campaign-main-report': {
-        'task': 'growth.tasks.update_gmass_data',
-        'schedule': 43200.0 # 12-hour interval
-    }
+    # 'schedule-load-gmass-campaign-main-report': {
+    #     'task': 'growth.tasks.update_gmass_data',
+    #     'schedule': 43200.0 # 12-hour interval
+    # }
 }
 
 # Email-related configurations
@@ -217,19 +249,6 @@ if DEBUG == False:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 LOGIN_URL = '/login'
-
-AWS_REGION_NAME = config('AWS_REGION')
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.us-east-1.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-AWS_PRESIGNED_URL_EXPIRES_IN = config('AWS_PRESIGNED_URL_EXPIRES_IN')
-
-# Media URL
-MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
-
-# Root for all files uploaded via the 'files' app.
-AWS_S3_FILES_ROOT = 'files'
 
 # List of persons to notify when someone signs up as a lead
 LEAD_SIGN_UP_NOTIFICATION_LIST = ['kevin@everybase.co']
@@ -301,7 +320,8 @@ REGISTER_TOKEN_EXPIRY_SECS = 900 # 15 minutes
 # S3 path for lead files
 LEADS_FILES_S3_PATH = 'leads'
 
-RECAPTCHA_SECRET = config('RECAPTCHA_SECRET')
+RECAPTCHA_SITE_KEY = config('RECAPTCHA_SITE_KEY')
+RECAPTCHA_SECRET_KEY = config('RECAPTCHA_SECRET_KEY')
 RECAPTCHA_VERIFICATION_URL = config('RECAPTCHA_VERIFICATION_URL')
 RECAPTCHA_THRESHOLD = config('RECAPTCHA_THRESHOLD')
 
@@ -310,5 +330,9 @@ GA4_STREAM_MEASUREMENT_ID = config('GA4_STREAM_MEASUREMENT_ID')
 
 # Export parameters that can be used in templates
 SETTINGS_EXPORT = [
-    'GA4_STREAM_MEASUREMENT_ID'
+    'GA4_STREAM_MEASUREMENT_ID',
+    'RECAPTCHA_SITE_KEY'
 ]
+
+# 5 MB 5242880
+MAX_UPLOAD_SIZE = 5242880

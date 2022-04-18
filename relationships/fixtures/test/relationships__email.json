@@ -1,0 +1,58 @@
+[
+{
+    "model": "relationships.email",
+    "pk": 1,
+    "fields": {
+        "created": "2022-02-14T08:18:15.040Z",
+        "updated": "2022-02-14T08:48:06.907Z",
+        "deleted": null,
+        "verified": null,
+        "email": "shang@chi.com",
+        "notes": "",
+        "invalid_email": null,
+        "import_job": null
+    }
+},
+{
+    "model": "relationships.email",
+    "pk": 2,
+    "fields": {
+        "created": "2022-02-14T08:49:00.816Z",
+        "updated": "2022-02-14T08:49:00.816Z",
+        "deleted": null,
+        "verified": null,
+        "email": "tony@stark.com",
+        "notes": null,
+        "invalid_email": null,
+        "import_job": null
+    }
+},
+{
+    "model": "relationships.email",
+    "pk": 3,
+    "fields": {
+        "created": "2022-02-14T08:52:31.710Z",
+        "updated": "2022-02-14T08:52:31.710Z",
+        "deleted": null,
+        "verified": null,
+        "email": "thanos@snappy.com",
+        "notes": null,
+        "invalid_email": null,
+        "import_job": null
+    }
+},
+{
+    "model": "relationships.email",
+    "pk": 4,
+    "fields": {
+        "created": "2022-02-14T08:54:24.382Z",
+        "updated": "2022-02-14T08:54:24.382Z",
+        "deleted": null,
+        "verified": null,
+        "email": "thor@odinson.com",
+        "notes": null,
+        "invalid_email": null,
+        "import_job": null
+    }
+}
+]

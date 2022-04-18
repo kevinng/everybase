@@ -1,0 +1,86 @@
+[
+{
+    "model": "relationships.phonenumber",
+    "pk": 1,
+    "fields": {
+        "created": "2021-04-19T03:26:11.857Z",
+        "updated": "2021-05-27T08:47:48.250Z",
+        "deleted": null,
+        "country_code": "1",
+        "national_number": "4155238886",
+        "types": [
+            1
+        ]
+    }
+},
+{
+    "model": "relationships.phonenumber",
+    "pk": 2,
+    "fields": {
+        "created": "2021-05-27T08:47:41.447Z",
+        "updated": "2021-05-27T08:47:41.447Z",
+        "deleted": null,
+        "country_code": "65",
+        "national_number": "88933466",
+        "types": [
+            1
+        ]
+    }
+},
+{
+    "model": "relationships.phonenumber",
+    "pk": 3,
+    "fields": {
+        "created": "2022-02-14T08:18:15.027Z",
+        "updated": "2022-02-14T08:47:50.508Z",
+        "deleted": null,
+        "country_code": "65",
+        "national_number": "91234567",
+        "types": [
+            1
+        ]
+    }
+},
+{
+    "model": "relationships.phonenumber",
+    "pk": 4,
+    "fields": {
+        "created": "2022-02-14T08:49:00.803Z",
+        "updated": "2022-02-14T08:51:46.663Z",
+        "deleted": null,
+        "country_code": "65",
+        "national_number": "92345678",
+        "types": [
+            1
+        ]
+    }
+},
+{
+    "model": "relationships.phonenumber",
+    "pk": 5,
+    "fields": {
+        "created": "2022-02-14T08:52:31.699Z",
+        "updated": "2022-02-14T08:53:48.767Z",
+        "deleted": null,
+        "country_code": "65",
+        "national_number": "93456789",
+        "types": [
+            1
+        ]
+    }
+},
+{
+    "model": "relationships.phonenumber",
+    "pk": 6,
+    "fields": {
+        "created": "2022-02-14T08:54:24.370Z",
+        "updated": "2022-02-14T08:54:24.379Z",
+        "deleted": null,
+        "country_code": "65",
+        "national_number": "94567890",
+        "types": [
+            1
+        ]
+    }
+}
+]

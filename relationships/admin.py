@@ -1,9 +1,3 @@
-from everybase.settings import BASE_URL
-from urllib.parse import urljoin
-from django.urls import reverse
-from django.utils.html import format_html
-
-from files.models import File
 from django.contrib import admin
 
 from . import models as mod
@@ -148,88 +142,40 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['import_job']
     inlines = [EmailInlineAdmin]
 
-_user_fields = ['registered', 'django_user', 'first_name', 'last_name',
-    'languages_string', 'country', 'state', 'state_string', 'phone_number',
-    'email', 'is_direct_buyer', 'is_direct_seller', 'is_buying_agent',
-    'is_selling_agent', 'internal_notes']
+_user_fields = ['registered', 'django_user',
+
+    'first_name', 'last_name', 'has_company', 'company_name',
+
+    'goods_string', 'languages_string', 'country', 'phone_number',
+    'email', 'internal_notes',
+
+    'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent',
+
+    'slug_link', 'slug_tokens',
+
+    'impressions', 'clicks']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _user_fields
+    list_display = comadm.standard_list_display + ['uuid'] + _user_fields
     list_editable = comadm.standard_list_editable + _user_fields
-    list_filter = comadm.standard_list_filter + ['registered',
-        'is_direct_buyer', 'is_direct_seller', 'is_buying_agent',
-        'is_selling_agent']
+    list_filter = comadm.standard_list_filter + ['registered', 'has_company',
+        'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent']
     search_fields = comadm.standard_search_fields + [
-        'first_name', 'last_name', 'country__name', 'state__name',
-        'state_string', 'phone_number__country_code',
-        'phone_number__national_number', 'email__email', 'internal_notes']
+        'first_name', 'last_name', 'company_name', 'goods_string',
+        'languages_string', 'country__name', 'email__email',
+        'phone_number__country_code', 'phone_number__national_number',
+        'internal_notes', 'uuid']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _user_fields + ['languages']})
+        ('Details', {'fields': _user_fields})
     ]
-    autocomplete_fields = ['django_user', 'languages', 'country', 'state',
-        'phone_number', 'email']
+    autocomplete_fields = ['django_user', 'country', 'phone_number', 'email']
 
-_phone_number_hash_fields = ['user', 'phone_number_type', 'phone_number']
-@admin.register(mod.PhoneNumberHash)
-class PhoneNumberHashAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + ['uuid'] + \
-        _phone_number_hash_fields
-    list_editable = comadm.standard_list_editable + _phone_number_hash_fields
-    list_filter = comadm.standard_list_filter + ['phone_number_type']
-    search_fields = comadm.standard_search_fields + ['user__id', 'uuid',
-        'phone_number__country_code', 'phone_number__national_number']
-
-    # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['uuid']
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': ['uuid'] + _phone_number_hash_fields})
-    ]
-    autocomplete_fields = ['user', 'phone_number']
-
-# TODO: refactor to file module
-class FileInlineAdmin(admin.TabularInline):
-    model = File
-    extra = 1
-    fields = ['file_url', 'upload_confirmed', 's3_bucket_name',
-        's3_object_key', 's3_object_content_length', 's3_object_e_tag',
-        's3_object_content_type', 's3_object_last_modified']
-    readonly_fields = ['uuid', 'file_url']
-
-    def file_url(self, obj):
-        if obj.id is None:
-            return None
-
-        url = urljoin(
-            BASE_URL, reverse('files:get_file', args=[obj.uuid]))
-        return format_html(f'<a href="{url}" target="{url}">{url}</a>')
-
-_connection_fields = ['user_one', 'user_two']
-@admin.register(mod.Connection)
-class ConnectionAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + \
-        _connection_fields
-    list_editable = comadm.standard_list_editable + _connection_fields
-    list_filter = comadm.standard_list_filter + ['created']
-    search_fields = comadm.standard_search_fields + [
-        'user_one__first_given_name', 'user_one__last_family_name',
-        'user_two__first_given_name', 'user_two__last_family_name',
-        'user_one__id', 'user_two__id']
-
-    # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['created']
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _connection_fields})
-    ]
-    autocomplete_fields = ['user_one', 'user_two']
-
-_login_token_fields = ['user', 'activated', 'token', 'expiry_secs']
+_login_token_fields = ['user', 'activated', 'killed','token']
 @admin.register(mod.LoginToken)
-class LoginToken(comadm.StandardAdmin):
+class LoginTokenAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _login_token_fields
     list_editable = comadm.standard_list_editable + _login_token_fields
@@ -243,18 +189,115 @@ class LoginToken(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
-_register_token_fields = ['user', 'activated', 'token', 'expiry_secs']
+_register_token_fields = ['user', 'activated', 'killed', 'token']
 @admin.register(mod.RegisterToken)
-class RegisterToken(comadm.StandardAdmin):
+class RegisterTokenAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _register_token_fields
     list_editable = comadm.standard_list_editable + _register_token_fields
     list_filter = comadm.standard_list_filter + ['created']
-    search_fields = comadm.standard_search_fields + ['token']
+    search_fields = comadm.standard_search_fields + ['user__first_name',
+        'user__last_name', 'token']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['created']
     fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': _register_token_fields})
     ]
+    autocomplete_fields = ['user']
+
+_user_agent_fields = ['user', 'ip_address', 'is_routable', 'is_mobile',
+    'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot', 'browser',
+    'browser_family', 'browser_version', 'browser_version_string',
+    'os', 'os_family', 'os_version', 'os_version_string', 'device',
+    'device_family']
+@admin.register(mod.UserAgent)
+class UserAgentAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _user_agent_fields
+    list_editable = comadm.standard_list_editable + _user_agent_fields
+    list_filter = comadm.standard_list_filter + ['ip_address', 'is_routable',
+        'is_mobile', 'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot',
+        'browser', 'browser_family', 'browser_version',
+        'browser_version_string', 'os', 'os_family', 'os_version',
+        'os_version_string', 'device', 'device_family']
+    search_fields = comadm.standard_search_fields + ['ip_address',
+        'browser', 'browser_family', 'browser_version',
+        'browser_version_string', 'os', 'os_family', 'os_version',
+        'os_version_string', 'device', 'device_family']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _user_agent_fields})
+    ]
+    autocomplete_fields = ['user']
+
+_user_comment_fields = ['commentee', 'commentor', 'body']
+@admin.register(mod.UserComment)
+class UserCommentAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _user_comment_fields
+    list_editable = comadm.standard_list_editable + _user_comment_fields
+    search_fields = comadm.standard_search_fields + ['commentee__first_name',
+        'commentee__last_name', 'commentor__first_name', 'commentor__last_name',
+        'body']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _user_comment_fields})
+    ]
+    autocomplete_fields = ['commentee', 'commentor']
+
+_user_detail_views_fields = ['viewee', 'viewer', 'comments_view_count',
+    'leads_view_count']
+@admin.register(mod.UserDetailView)
+class UserDetailViewAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _user_detail_views_fields
+    list_editable = comadm.standard_list_editable + _user_detail_views_fields
+    list_filter = comadm.standard_list_filter
+    search_fields = comadm.standard_search_fields + ['viewee__first_name',
+        'viewee__last_name', 'viewer__first_name', 'viewer__last_name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _user_detail_views_fields})
+    ]
+    autocomplete_fields = ['viewee', 'viewer']
+
+_saved_user_fields = ['active', 'saver', 'savee']
+@admin.register(mod.SavedUser)
+class SavedUserAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _saved_user_fields
+    list_editable = comadm.standard_list_editable + _saved_user_fields
+    list_filter = comadm.standard_list_filter + ['active']
+    search_fields = comadm.standard_search_fields + ['saver__id',
+        'saver__family_first_name', 'saver__family_last_name', 'savee__id',
+        'savee__family_first_name', 'savee__family_last_name',]
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _saved_user_fields})]
+    autocomplete_fields = ['saver', 'savee']
+
+_user_query_fields = ['user', 'commented_only', 'saved_only', 'connected_only',
+'first_name', 'last_name', 'company_name', 'country', 'goods_string',
+'languages', 'is_buy_agent', 'buy_agent_details', 'is_sell_agent',
+'sell_agent_details', 'is_logistics_agent', 'logistics_agent_details']
+@admin.register(mod.UserQuery)
+class UserQueryAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _user_query_fields
+    list_editable = comadm.standard_list_editable + _user_query_fields
+    list_filter = comadm.standard_list_filter
+    search_fields = comadm.standard_search_fields + ['user__id',
+        'commented_only', 'saved_only', 'connected_only', 'first_name',
+        'last_name', 'company_name', 'country', 'goods_string', 'languages',
+        'is_buy_agent', 'buy_agent_details', 'is_sell_agent',
+        'sell_agent_details', 'is_logistics_agent', 'logistics_agent_details']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _user_query_fields})]
     autocomplete_fields = ['user']

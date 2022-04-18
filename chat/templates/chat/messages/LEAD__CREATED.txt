@@ -1,0 +1,8 @@
+You've successfully posted *{{ lead_headline }}*.
+
+Link to your lead:
+{{ base_url }}{{ lead_detail_url }}
+
+We'll message you when agents apply.
+
+_Please add this phone number to your contact book._

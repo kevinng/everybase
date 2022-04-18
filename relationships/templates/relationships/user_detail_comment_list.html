@@ -1,0 +1,242 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+{% load string_equal %}
+
+{% block title %}{{ detail_user.seo_title }}{% endblock %}
+
+{% comment %} Meta description limit to 320 characters {% endcomment %}
+{% block other_head_tags %}
+<meta name="description" content="{{ detail_user.goods_string|slice:'0:320' }}">
+{% endblock %}
+
+{% block page_actions %}
+{% include 'relationships/includes/user_detail_actions.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row justify-center mt-10 mb-10 gap-2">
+    {% comment %} start: user detail side {% endcomment %}
+    {% include 'relationships/includes/user_detail_side.html' with detail_user=detail_user responsive_classes='lg:w-1/3 xl:w-1/4 self-start' %}
+    {% comment %} end: user detail side {% endcomment %}
+
+    <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
+        {% include 'relationships/includes/user_detail_tabs.html' with selected='comments' %}
+
+        <div id="comment-starter" class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if not form.comment_id.value and form.body.errors %} focus-comment-box="yes"{% endif %}>
+            {% if not request.user.is_authenticated %}
+                <div class="flex flex-col items-center justify-center mb-8">
+                    <a href="{% url 'login' %}?next={% url 'users:user_detail' detail_user.slug_link %}#comment-starter" class="py-2 px-4 rounded-md shadow-md text-white bg-blue-500 hover:bg-blue-600 w-full text-lg text-center">Login to Comment</a>
+                </div>
+            {% endif %}
+
+            <div class="text-xl font-bold text-center">Comment for User</div>
+            <div class="flex flex-col items-center justify-center mt-2">
+                <form action="{% url 'users:user_detail' detail_user.slug_link %}" class="check-to-enable comment-box" method="post">
+                    {% csrf_token %}
+                    <textarea {% if not request.user.is_authenticated %}disabled{% endif %} name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments">{% if not form.comment_id.value and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
+                    {% if not form.comment_id.value and form.body.errors is not None %}
+                        <div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>
+                    {% endif %}
+                    <button {% if not request.user.is_authenticated %}disabled{% endif %} type="submit" class="check-to-enable-button py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
+                    <div class="flex flex-col items-center px-2 mt-2">
+                        <div class="flex justify-start">
+                            <input {% if not request.user.is_authenticated %}disabled{% endif %} id="comment-enable-checkbox-starter" type="checkbox" class="check-to-enable-checkbox h-6 w-6 flex-none">
+                            <label for="comment-enable-checkbox-starter" class="ml-3">I know Everybase charge credits to connect users, so I didn't include contact details in my post.</label>
+                        </div>
+                        <div class="font-semibold mt-2 text-center"><span class="text-red-500">WARNING:</span> phone numbers of users who share contact details in comments will be banned.</div>
+                    </div>
+                </form>
+
+                <div class="mt-8 text-center">Comments do <span class="underline underline-offset-1">not</span> cost credits.</div>
+
+                <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
+            </div>
+        </div>
+
+        {% comment %} start: root comments {% endcomment %}
+        {% for root_comment in detail_user.root_comments %}
+            {% string_equal form.comment_id.value root_comment.id as is_this_comment %}
+
+            <div class="comment bg-white rounded px-8 py-8 shadow-md mt-2"{% if is_this_comment and form.body.errors %} focus-comment-box="yes"{% endif %}>
+                <div id="comment-{{ root_comment.id }}" class="flex justify-between items-center">
+                    <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold">{{ root_comment.commentor.first_name|title }} {{ root_comment.commentor.last_name|title }}, {{ root_comment.commentor.country.name }}</a>
+                    <div class="text-sm">{{ root_comment.age_desc }}</div>
+                </div>
+                <div class="mt-4 break-words">{{ root_comment.body }}</div>
+
+                {% comment %} start: replies {% endcomment %}
+                {% for reply in root_comment.reply_comments %}
+                    {% comment %} id="comment-{{ reply.id }}" is used by our JavaScript code to focus on this section {% endcomment %}
+                    <div id="comment-{{ reply.id }}" class="mt-4">
+                        <div class="flex justify-between items-center">
+                            <a href="{% url 'users:user_detail' root_comment.commentor.id %}" class="font-bold ml-8">{{ reply.commentor.first_name|title }} {{ reply.commentor.last_name|title }}, {{ reply.commentor.country.name }}</a>
+                            <div class="text-sm">{{ reply.age_desc }}</div>
+                        </div>
+                        <div class="mt-2 pl-8 break-words">{{ reply.body }}</div>
+                    </div>
+                {% endfor %}
+                {% comment %} end: replies {% endcomment %}
+                
+                {% comment %} start: reply {% endcomment %}
+                
+                <div class="flex justify-end">
+                    {% if request.user.is_authenticated %}
+                        <button id="comment-reply-show-{{ root_comment.id }}" class="reply-show py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Reply</button>
+                    {% else %}
+                        <a href="{% url 'login' %}?next={% url 'users:user_detail' detail_user.slug_link %}#comment-{{ root_comment.id }}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Login to Reply</a>
+                    {% endif %}
+                </div>
+                
+                {% comment %} end: reply {% endcomment %}
+
+                {% comment %} start: reply box {% endcomment %}
+                {% comment %} id="comment-reply-box-{{ root_comment.id }}" is used by our JavaScript code to focus on this section {% endcomment %}
+                <form id="comment-reply-box-{{ root_comment.id }}" action="{% url 'users:user_detail' detail_user.slug_link %}" class="reply-box check-to-enable flex flex-col justify-center" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="comment_id" value="{{ root_comment.id }}">
+                    <textarea name="body" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-4" placeholder="Enter reply">{% if is_this_comment and form.body.value %}{{ form.body.value }}{% endif %}</textarea>
+                    {% if is_this_comment and form.body.errors is not None %}
+                        <div class="px-1 mt-2 text-red-500">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>
+                    {% endif %}
+                    <button type="submit" class="check-to-enable-button py-2 px-4 rounded-md shadow-md mt-2 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Comment</button>
+                    <div class="flex flex-col items-center px-2 mt-2">
+                        <div class="flex justify-start">
+                            <input id="comment-enable-checkbox-{{ root_comment.id }}" type="checkbox" class="check-to-enable-checkbox h-6 w-6 flex-none">
+                            <label for="comment-enable-checkbox-{{ root_comment.id }}" class="ml-3">I know Everybase charge credits to connect users, so I didn't include contact details in my post.</label>
+                        </div>
+                        <div class="font-semibold mt-2 text-center"><span class="text-red-500">WARNING:</span> phone numbers of users who share contact details in comments will be banned.</div>
+                    </div>
+
+                    <div class="mt-8 text-center">Replies do <span class="underline underline-offset-1">not</span> cost credits.</div>
+
+                    <div class="flex justify-center">
+                        <a href="{% url 'pricing' %}" class="py-2 px-3 text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mt-4">Learn About Credits</a>
+                    </div>
+                </form>
+                {% comment %} end: reply box {% endcomment %}
+            </div>
+        {% endfor %}
+        {% comment %} end: root comments {% endcomment %}
+    </div>
+</div>
+{% endblock %}
+
+{% comment %}
+Params:
+    url, URL for save/unsave user endpoint
+
+$(document).ready(function() {
+    // Save/unsave user
+    $toggle_save_user = $('#toggle_save_user')
+    $toggle_save_user.click(function () {
+        // Make AJAX call to save user, and update button look.
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'users:toggle_save_user' detail_user.slug_link %}",
+            dataType: 'json',
+            success: function (data) {
+                if (data['s'] == true) {
+                    $toggle_save_user
+                        .removeClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
+                        .addClass('text-white bg-blue-500 hover:bg-blue-600')
+                        .text('Person Saved')
+                } else {
+                    $toggle_save_user
+                        .addClass('text-slate-600 bg-slate-100 hover:bg-slate-200')
+                        .removeClass('text-white bg-blue-500 hover:bg-blue-600')
+                        .text('Save Person')
+                }
+            }
+        })
+    })
+
+    // Enable or disable corresponding button based on checkbox state
+    function set_enable_button_checkbox(button, checkbox) {
+        if (checkbox.is(':checked')) {
+            button.removeAttr('disabled')
+            button.addClass('bg-blue-500 hover:bg-blue-600')
+            button.removeClass('bg-blue-200')
+        } else {
+            button.prop('disabled', true)
+            button.removeClass('bg-blue-500 hover:bg-blue-600')
+            button.addClass('bg-blue-200')
+        }
+    }
+
+    // Initialize each check-to-enable section
+    $('.check-to-enable').each(function () {        
+        // Initialize for the first time on page load
+        set_enable_button_checkbox(
+            $(this).find('.check-to-enable-button'),
+            $(this).find('.check-to-enable-checkbox')
+        )
+
+        // Initialize on checkbox change
+        $(this).find('.check-to-enable-checkbox').change(function () {
+            $button = $(this).closest('.check-to-enable')
+                .find('.check-to-enable-button')
+
+            set_enable_button_checkbox($button, $(this))
+        })
+    })
+
+    // Initialize comment reply boxes
+    $('.comment').each(function () {
+        if ($(this).attr('focus-comment-box') == 'yes') {
+            // Hide reply button on load
+            $reply_show = $(this).find('.reply-show')
+            if ($reply_show.length > 0) {
+                $reply_show.hide()
+            }
+
+            // Reply box is already shown
+
+            // Focus on reply or comment box
+            $reply_box = $(this).find('.reply-box')
+            if ($reply_box.length > 0) {
+                $('html, body').animate({
+                    // 180 pixel from top looks good
+                    scrollTop: $reply_box.offset().top - 180
+                }, 500)
+            } else {
+                $comment_box = $(this).find('.comment-box')
+                $('html, body').animate({
+                    // 180 pixel from top looks good
+                    scrollTop: $comment_box.offset().top - 180
+                }, 500)
+            }
+        } else {
+            // Hide reply boxes on load
+            // Note: the one comment box at the top is not hidden
+            $(this).find('.reply-box').hide()
+
+            $(this).find('.reply-show').click(function () {
+                // Show reply box and hide self
+                $(this).closest('.comment').find('.reply-box').show()
+                $(this).hide()
+            })
+        }
+    })
+})
+
+Code to focus on the right section of the page
+{% if focus %}
+$(document).ready(function() {
+    // Scroll to focus if a target exists
+    $('html, body').animate({
+        // 180 pixel from top looks good
+        scrollTop: $("#{{ focus }}").offset().top - 180
+    }, 500)
+})
+{% endif %}
+
+{% endcomment %}
+{% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
+<script>{% comment %} JS embedded here because server-side rendering is required. {% endcomment %}
+$(document).ready((function(){function e(e,t){t.is(":checked")?(e.removeAttr("disabled"),e.addClass("bg-blue-500 hover:bg-blue-600"),e.removeClass("bg-blue-200")):(e.prop("disabled",!0),e.removeClass("bg-blue-500 hover:bg-blue-600"),e.addClass("bg-blue-200"))}$toggle_save_user=$("#toggle_save_user"),$toggle_save_user.click((function(){$.ajax({type:"POST",url:"{% url 'users:toggle_save_user' detail_user.slug_link %}",dataType:"json",success:function(e){1==e.s?$toggle_save_user.removeClass("text-slate-600 bg-slate-100 hover:bg-slate-200").addClass("text-white bg-blue-500 hover:bg-blue-600").text("Person Saved"):$toggle_save_user.addClass("text-slate-600 bg-slate-100 hover:bg-slate-200").removeClass("text-white bg-blue-500 hover:bg-blue-600").text("Save Person")}})})),$(".check-to-enable").each((function(){e($(this).find(".check-to-enable-button"),$(this).find(".check-to-enable-checkbox")),$(this).find(".check-to-enable-checkbox").change((function(){$button=$(this).closest(".check-to-enable").find(".check-to-enable-button"),e($button,$(this))}))})),$(".comment").each((function(){"yes"==$(this).attr("focus-comment-box")?($reply_show=$(this).find(".reply-show"),$reply_show.length>0&&$reply_show.hide(),$reply_box=$(this).find(".reply-box"),$reply_box.length>0?$("html, body").animate({scrollTop:$reply_box.offset().top-180},500):($comment_box=$(this).find(".comment-box"),$("html, body").animate({scrollTop:$comment_box.offset().top-180},500))):($(this).find(".reply-box").hide(),$(this).find(".reply-show").click((function(){$(this).closest(".comment").find(".reply-box").show(),$(this).hide()})))}))}));
+{% if focus %}$(document).ready((function(){$("html, body").animate({scrollTop:$("#{{ focus }}").offset().top-180},500)}));{% endif %}
+</script>
+{% endblock %}

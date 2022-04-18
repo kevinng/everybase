@@ -1,0 +1,833 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}New Lead{% endblock %}
+
+{% block other_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<form id="lead_form" enctype="multipart/form-data" action="{% url 'leads:lead_create' %}" method="post">
+{% csrf_token %}
+<div class="flex justify-center">
+    <div class="bg-white md:w-2/3 lg:w-1/2 xl:w-1/3 mt-10 mb-10 w-full py-10 shadow-md">
+        <h1 class="text-3xl font-bold text-center mt-6">New Lead</h1>
+        <div class="mt-7 flex flex-col justify-center">
+            {% comment %} start: lead_type {% endcomment %}
+            <label for="lead_type" class="font-bold text-slate-400 px-10">Are you selling or buying?</label>
+            <div class="mt-2 px-10">
+                <select id="lead_type" name="lead_type" class="select2">
+                    <option value="selling"{% if form.lead_type.value == 'selling' %} selected{% endif %}>Selling</option>
+                    <option value="buying"{% if form.lead_type.value == 'buying' %} selected{% endif %}>Buying</option>
+                </select>
+            </div>
+            {% if form.lead_type.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.lead_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: lead_type {% endcomment %}
+
+            {% comment %} start: currency {% endcomment %}
+            <label for="currency" class="font-bold text-slate-400 px-10 mt-7">Currency</label>
+            <div class="mt-2 px-10">
+                <select id="currency" name="currency" class="select2">
+                    <option value="usd"{% if form.currency.value == 'usd' %} selected{% endif %}>USD, US Dollar</option>
+                    <option value="rmb"{% if form.currency.value == 'rmb' %} selected{% endif %}>RMB, Chinese Renminbi</option>
+                    <option value="inr"{% if form.currency.value == 'inr' %} selected{% endif %}>INR, Indian Rupee</option>
+                    <option value="eur"{% if form.currency.value == 'eur' %} selected{% endif %}>EUR, Euro</option>
+                </select>
+            </div>
+            <div id="currency__help" class="mt-2 px-10 italic">I'm dealing in this currency.</div>
+            {% comment %} end: currency {% endcomment %}
+
+            {% comment %} start: author_type {% endcomment %}
+            <label id="author_type__label" for="author_type" class="font-bold text-slate-400 mt-7 px-10">Are you a direct seller/buyer or a middleman?</label>
+            <div class="mt-2 px-10">
+                <select id="author_type" name="author_type" class="select2">
+                    <option id="author_type__option__direct" value="direct"{% if form.author_type.value == 'direct' %} selected{% endif %}></option>
+                    <option value="broker"{% if form.author_type.value == 'broker' %} selected{% endif %}>Middleman</option>
+                </select>
+            </div>
+            {% if form.author_type.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.author_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: author_type {% endcomment %}
+
+            {% comment %} start: buy country {% endcomment %}
+            <label id="buy_country__label" for="buy_country" class="font-bold text-slate-400 mt-7 px-10">Buy From This Country</label>
+            <div class="mt-2 px-10">
+                <select id="buy_country" name="buy_country" class="select2" data-placeholder="Choose country">
+                    <option></option>
+                    <option id="buy_country__option__any_country" value="any_country"{% if form.buy_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
+                    {% for country in countries %}
+                        <option value="{{ country.programmatic_key }}"{% if form.buy_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% if form.buy_country.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.buy_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}            
+            <div id="buy_country__help" class="mt-2 px-10"></div>
+            {% comment %} end: buy country {% endcomment %}
+
+            {% comment %} start: sell country {% endcomment %}
+            <label id="sell_country__label" for="sell_country" class="font-bold text-slate-400 mt-7 px-10">Sell In This Country</label>
+            <div class="mt-2 px-10">
+                <select id="sell_country" name="sell_country" class="select2" data-placeholder="Choose country">
+                    <option></option>
+                    <option id="sell_country__option__any_country" value="any_country"{% if form.sell_country.value == 'any_country' %} selected{% endif %}>Any Country</option>
+                    {% for country in countries %}
+                        <option value="{{ country.programmatic_key }}"{% if form.sell_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% if form.sell_country.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.sell_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="sell_country__help" class="mt-2 px-10"></div>
+            {% comment %} end: sell country {% endcomment %}
+
+            {% comment %} start: headline {% endcomment %}
+            <label for="headline" class="font-bold text-slate-400 mt-7 px-10">Headline</label>
+            <div class="px-10"><input name="headline" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2" value="{% if form.headline.value is not None and form.headline.value|cut:' ' != '' %}{{ form.headline.value }}{% endif %}"></div>
+            {% if form.headline.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.headline.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="headline__help" class="mt-2 px-10"></div>
+            {% comment %} end: headline {% endcomment %}
+
+            {% comment %} start: details {% endcomment %}
+            <label for="details" class="font-bold text-slate-400 mt-7 px-10">Goods & Services</label>
+            <div class="px-10"><textarea name="details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.details.value is not None and form.details.value|cut:' ' != '' %}{{ form.details.value }}{% endif %}</textarea></div>
+            {% if form.details.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="details__help" class="mt-2 px-10"></div>
+            {% comment %} end: details {% endcomment %}
+
+            {% comment %} start: agent_job {% endcomment %}
+            <label for="agent_job" class="font-bold text-slate-400 mt-7 px-10">What would you like the agent to do for you?</label>
+            <div class="px-10"><textarea name="agent_job" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.agent_job.value is not None and form.agent_job.value|cut:' ' != '' %}{{ form.agent_job.value }}{% endif %}</textarea></div>
+            {% if form.agent_job.errors %}<div class="px-11 mt-2 text-red-500">{% for error in form.agent_job.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="agent_job__help" class="mt-2 px-10"></div>
+            {% comment %} end: agent_job {% endcomment %}
+
+            {% comment %} start: images {% endcomment %}
+            <label class="font-bold text-slate-400 mt-7 px-10">Images</label>
+            <div class="flex flex-col items-center px-10">
+                <div id="image_one_preview" class="mt-8">No image chosen</div>
+                <div id="image_one_remove" class="py-3 px-4 rounded-md font-bold bg-rose-100 hover:bg-rose-200 cursor-pointer mt-3">Remove Image 1</div>
+                <label id="image_one_input_label" for="image_one" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 1</label>
+                <input id="image_one" name="image_one" type="file" accept="image/png, image/gif, image/jpeg" style="opacity: 0; width: 0; height: 0;" value=''>{% comment %} We set value='' so use may select the same file again in the event of a validaton fail {% endcomment %}
+                {% if form.image_one.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.image_one.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                
+                {% comment %} Only one error, we use error to pass the ID of the file model for this cache image {% endcomment %}
+                {% if form.image_one_cache_file_id.errors|length > 0 %}
+                    <input id="image_one_cache_use" name="image_one_cache_use" type="hidden" value="yes">
+                    <input id="image_one_cache_file_id" name="image_one_cache_file_id" type="hidden" value="{{ form.image_one_cache_file_id.errors.0 }}">
+                {% endif %}
+
+                {% comment %} Only one error, we use error to pass the URL for this cache image {% endcomment %}
+                {% if form.image_one_cache_url.errors|length > 0 %}
+                    <input id="image_one_cache_url" name="image_one_cache_url" type="hidden" value="{{ form.image_one_cache_url.errors.0 }}">
+                {% endif %}
+
+                <div id="image_two_preview" class="mt-8">No image chosen</div>
+                <div id="image_two_remove" class="py-3 px-4 rounded-md font-bold bg-rose-100 hover:bg-rose-200 cursor-pointer mt-3">Remove Image 2</div>
+                <label id="image_two_input_label" for="image_two" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 2</label>
+                <input id="image_two" name="image_two" type="file" accept="image/png, image/gif, image/jpeg" style="opacity: 0; width: 0; height: 0;" value=''>{% comment %} We set value='' so use may select the same file again in the event of a validaton fail {% endcomment %}
+                {% if form.image_two.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.image_two.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                {% comment %} Only one error, we use error to pass the ID of the file model for this cache image {% endcomment %}
+                {% if form.image_two_cache_file_id.errors|length > 0 %}
+                    <input id="image_two_cache_use" name="image_two_cache_use" type="hidden" value="yes">
+                    <input id="image_two_cache_file_id" name="image_two_cache_file_id" type="hidden" value="{{ form.image_two_cache_file_id.errors.0 }}">
+                {% endif %}
+
+                {% comment %} Only one error, we use error to pass the URL of this cache image {% endcomment %}
+                {% if form.image_two_cache_url.errors|length > 0 %}
+                    <input id="image_two_cache_url" name="image_two_cache_url" type="hidden" value="{{ form.image_two_cache_url.errors.0 }}">
+                {% endif %}
+
+                <div id="image_three_preview" class="mt-8">No image chosen</div>
+                <div id="image_three_remove" class="py-3 px-4 rounded-md font-bold bg-rose-100 hover:bg-rose-200 cursor-pointer mt-3">Remove Image 3</div>
+                <label id="image_three_input_label" for="image_three" class="py-3 px-4 rounded-md font-bold bg-slate-100 hover:bg-slate-200 cursor-pointer mt-3">Choose Image 3</label>
+                <input id="image_three" name="image_three" type="file" accept="image/png, image/gif, image/jpeg" style="opacity: 0; width: 0; height: 0;" value=''>{% comment %} We set value='' so use may select the same file again in the event of a validaton fail {% endcomment %}
+                {% if form.image_three.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.image_three.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                {% comment %} Only one error, we use error to pass the ID of the file model for this cache image {% endcomment %}
+                {% if form.image_three_cache_file_id.errors|length > 0 %}
+                    <input id="image_three_cache_use" name="image_three_cache_use" type="hidden" value="yes">
+                    <input id="image_three_cache_file_id" name="image_three_cache_file_id" type="hidden" value="{{ form.image_three_cache_file_id.errors.0 }}">
+                {% endif %}
+
+                {% comment %} Only one error, we use error to pass the URL of this cache image {% endcomment %}
+                {% if form.image_three_cache_url.errors|length > 0 %}
+                    <input id="image_three_cache_url" name="image_three_cache_url" type="hidden" value="{{ form.image_three_cache_url.errors.0 }}">
+                {% endif %}
+            </div>
+            {% comment %} end: images {% endcomment %}
+
+            {% comment %} start: agent commission {% endcomment %}
+            <div class="w-full bg-slate-200 py-2 font-bold px-10 mt-12">Agent Commission</div>
+            {% comment %} end: agent commission {% endcomment %}
+
+            {% comment %} start: commission_type {% endcomment %}
+            <label id="commission_type__label" for="commission_type" class="font-bold text-slate-400 mt-12 px-10">How is agent commission calculated?</label>
+            <div id="commission_type__input" class="mt-2 px-10">
+                <select id="commission_type" name="commission_type" class="select2">
+                    <option value="percentage"{% if form.commission_type.value == 'percentage' %} selected{% endif %}>% of Sales</option>
+                    <option value="earning"{% if form.commission_type.value == 'earning' %} selected{% endif %}>Earnings by Quantity</option>
+                    <option value="other"{% if form.commission_type.value == 'other' %} selected{% endif %}>Other</option>
+                </select>
+            </div>
+            {% if form.commission_type.errors %}<div id="commission_type__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: commission_type {% endcomment %}
+
+            {% comment %} start: commission_type_other {% endcomment %}
+            <div class="px-10"><textarea id="commission_type_other" name="commission_type_other" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.commission_type_other.value is not None and form.commission_type_other.value|cut:' ' != '' %}{{ form.commission_type_other.value }}{% endif %}</textarea></div>
+            {% if form.commission_type_other.errors %}<div id="commission_type_other__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_type_other.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission_type_other__help" class="mt-2 px-10">Describe how agent commission is calculated.</div>
+            {% comment %} end: commission_type_other {% endcomment %}
+
+            {% comment %} start: commission percentage {% endcomment %}
+            <label id="commission_percentage__label" for="commission" class="font-bold text-slate-400 mt-7 px-10">Commission</label>
+            <div id="commission_percentage__input" class="flex items-center justify-start px-10">
+                <input id="commission_percentage" name="commission_percentage" placeholder="0" type="number" min="0" max="100" {% if form.commission_percentage.value %}value="{{ form.commission_percentage.value }}"{% endif %} class="w-1/2 border rounded-md py-3 px-5 mt-2 mr-3"><div class="font-bold text-2xl">% of Sales</div>
+            </div>
+            <div id="commission_percentage__js_errors" class="px-11 mt-2 text-red-500"></div>
+            {% if form.commission_percentage.errors %}<div id="commission_percentage__errors" class="px-11 mt-2 text-red-500">{% for error in form.commission_percentage.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: commission percentage {% endcomment %}
+
+            {% comment %} start: commission_earnings {% endcomment %}
+            <label id="commission_earnings__label" for="commission_earnings" class="font-bold text-slate-400 mt-7 px-10">Commission</label>
+            <div id="commission_earnings__input" class="flex items-center justify-start px-10">
+                <div class="commission_earnings__currency font-bold text-2xl">USD</div><input id="commission_earnings" name="commission_earnings" placeholder="e.g., 5" type="number" {% if form.commission_earnings.value %}value="{{ form.commission_earnings.value }}"{% endif %} class="w-1/4 border rounded-md py-3 px-5 mt-2 ml-3"><div class="font-bold text-2xl ml-3">per</div><input id="commission_quantity_unit_string" name="commission_quantity_unit_string" placeholder="e.g., KG" {% if form.commission_quantity_unit_string.value %}value="{{ form.commission_quantity_unit_string.value }}"{% endif %} class="w-1/4 border rounded-md py-3 px-5 mt-2 ml-3">
+            </div>
+            {% if form.commission_earnings.errors %}<div id="commission_earnings__errors" class="px-11 mt-2 text-red-500">{% for error in form.commission_earnings.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% if form.commission_quantity_unit_string.errors %}<div id="commission_quantity_unit_string__errors" class="px-11 mt-2 text-red-500">{% for error in form.commission_quantity_unit_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission_earnings__help" class="mt-2 px-10">E.g., <span class="commission_earnings__currency">USD</span> 5 per KG</div>
+            {% comment %} end: commission_earnings {% endcomment %}
+
+            {% comment %} start: is_comm_negotiable {% endcomment %}
+            <label id="is_comm_negotiable__label" for="is_comm_negotiable" class="font-bold text-slate-400 mt-7 px-10">Is commission negotiable for each deal?</label>
+            <div id="is_comm_negotiable__input" class="mt-4 flex justify-start px-10">
+                <input id="is_comm_negotiable" name="is_comm_negotiable" type="checkbox" class="h-6 w-6" {% if form.is_comm_negotiable.value == True %} checked{% endif %}>
+                <label for="is_comm_negotiable" class="ml-3">Yes, commission <span class="italic">may</span> differ and is negotiable for each deal.</label>
+            </div>
+            {% comment %} end: is_comm_negotiable {% endcomment %}
+
+            {% comment %} start: commission_payable_by {% endcomment %}
+            <label id="commission_payable_by__label" for="commission_payable_by" class="font-bold text-slate-400 mt-7 px-10">Commission Payable By</label>
+            <div id="commission_payable_by__input" class="mt-2 px-10">
+                <select id="commission_payable_by" name="commission_payable_by" class="select2">
+                    <option value="me"{% if form.commission_payable_by.value == 'me' %} selected{% endif %}>Me</option>
+                    <option id="commission_payable_by__option__counter_party" value="counter_party"{% if form.commission_payable_by.value == 'counter_party' %} selected{% endif %}>Seller/Buyer</option>
+                </select>
+            </div>
+            {% if form.commission_payable_by.errors %}<div id="commission_payable_by__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_payable_by.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission_payable_by__help" class="mt-2 px-10"></div>
+            {% comment %} end: commission_payable_by {% endcomment %}
+
+            {% comment %} start: commission_payable_after {% endcomment %}
+            <label id="commission_payable_after__label" for="commission_payable_after" class="font-bold text-slate-400 mt-7 px-10">When will commissions be paid?</label>
+            <div id="commission_payable_after__input" class="mt-2 px-10">
+                <select id="commission_payable_after" name="commission_payable_after" class="select2">
+                    <option value="initial_deposit_received"{% if form.commission_payable_after.value == 'initial_deposit_received' %} selected{% endif %}>Initial Deposit Received</option>
+                    <option value="goods_shipped"{% if form.commission_payable_after.value == 'goods_shipped' %} selected{% endif %}>Goods Shipped</option>
+                    <option value="buyer_received_goods_services"{% if form.commission_payable_after.value == 'buyer_received_goods_services' %} selected{% endif %}>Buyer Received Goods/Services</option>
+                    <option value="full_payment_received"{% if form.commission_payable_after.value == 'full_payment_received' %} selected{% endif %}>Full Payment Received</option>
+                    <option value="other"{% if form.commission_payable_after.value == 'other' %} selected{% endif %}>Other</option>
+                </select>
+            </div>
+            {% if form.commission_payable_after.errors %}<div id="commission_payable_after__errors" class="px-1 mt-2 text-red-500">{% for error in form.commission_payable_after.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: commission_payable_after {% endcomment %}
+
+            {% comment %} start: commission_payable_after_other {% endcomment %}
+            <div class="px-10"><textarea id="commission_payable_after_other" name="commission_payable_after_other" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.commission_payable_after_other.value is not None and form.commission_payable_after_other.value|cut:' ' != '' %}{{ form.commission_payable_after_other.value }}{% endif %}</textarea></div>
+            {% if form.commission_payable_after_other.errors %}<div id="commission_payable_after_other__errors" class="px-11 mt-2 text-red-500">{% for error in form.commission_payable_after_other.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div id="commission_payable_after_other__help" class="mt-2 px-10">Describe when agent commission is paid.</div>
+            {% comment %} end: commission_payable_after_other {% endcomment %}
+
+            {% comment %} start: other_comm_details {% endcomment %}
+            <label id="other_comm_details__label" for="other_comm_details" class="font-bold text-slate-400 mt-7 px-10">Other Commission Details (Optional)</label>
+            <div class="px-10"><textarea id="other_comm_details" name="other_comm_details" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.other_comm_details.value is not None %}{{ form.other_comm_details.value }}{% endif %}</textarea></div>
+            {% if form.other_comm_details.errors %}<div id="other_comm_details__errors" class="px-1 mt-2 text-red-500">{% for error in form.other_comm_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: other_comm_details {% endcomment %}
+
+            {% comment %} start: interview questions {% endcomment %}
+            <div class="w-full bg-slate-200 py-2 font-bold px-10 mt-12">Interview Questions</div>
+            <div class="mt-2 px-10">A user must answer these questions when applying to be an agent.</div>
+            {% comment %} end: interview questions {% endcomment %}
+
+            {% comment %} start: question 1 {% endcomment %}
+            <label for="question_1" class="font-bold text-slate-400 mt-7 px-10">Question 1</label>
+            <div class="px-10"><textarea id="question_1" name="question_1" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.question_1.value is not None %}{{ form.question_1.value }}{% else %}Have you dealt with this or similar goods or services before?{% endif %}</textarea></div>
+            {% if form.question_1.errors %}<div id="question_1__errors" class="px-11 mt-2 text-red-500">{% for error in form.question_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: question 1 {% endcomment %}
+
+            {% comment %} start: question 2 {% endcomment %}
+            <label for="question_2" class="font-bold text-slate-400 mt-7 px-10">Question 2</label>
+            <div class="px-10"><textarea id="question_2" name="question_2" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.question_2.value is not None %}{{ form.question_2.value }}{% else %}Do you know any potential buyers?{% endif %}</textarea></div>
+            {% if form.question_2.errors %}<div id="question_2__errors" class="px-11 mt-2 text-red-500">{% for error in form.question_2.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: question 2 {% endcomment %}
+
+            {% comment %} start: optional question {% endcomment %}
+            <label for="question_3" class="font-bold text-slate-400 mt-7 px-10">Optional Question</label>
+            <div class="px-10"><textarea id="question_3" name="question_3" rows="4" type="text" class="growing w-full border rounded-md py-3 px-5 mt-2">{% if form.question_3.value is not None %}{{ form.question_3.value }}{% endif %}</textarea></div>
+            {% if form.question_3.errors %}<div id="question_3__errors" class="px-11 mt-2 text-red-500">{% for error in form.question_3.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            {% comment %} end: optional question {% endcomment %}
+
+            <div class="px-10"><button id="submit" type="submit" class="g-recaptcha py-3 px-7 w-full rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-12 shadow-md">Post</button></div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}
+{% comment %}
+leads/js/lead_create_edit.min.js
+
+Dependencies:
+    JQuery
+
+$(document).ready(function() {
+    // ***** Cache jQuery objects (prefix $) *****
+
+    // Lead create
+    $lead_form = $('#lead_form')
+
+    // Lead type
+    $lead_type = $('#lead_type')
+
+    // Currency
+    $currency = $('#currency')
+
+    // Author type
+    $author_type = $('#author_type')
+    $author_type__label = $('#author_type__label')
+    $author_type__option__direct = $('#author_type__option__direct')
+
+    // Buy country
+    $buy_country = $('#buy_country')
+    $buy_country__label = $('#buy_country__label')
+    $buy_country__option__any_country = $('#buy_country__option__any_country')
+    $buy_country__help = $('#buy_country__help')
+
+    // Sell country
+    $sell_country = $('#sell_country')
+    $sell_country__label = $('#sell_country__label')
+    $sell_country__option__any_country = $('#sell_country__option__any_country')
+    $sell_country__help = $('#sell_country__help')
+
+    // Details
+    $details__help = $('#details__help')
+
+    // Image one and preview
+    $image_one_input_label = $('#image_one_input_label')
+    $image_one_preview = $('#image_one_preview')
+    $image_one = $('#image_one')
+
+    // Image two
+    $image_two_input_label = $('#image_two_input_label')
+    $image_two_preview = $('#image_two_preview')
+    $image_two = $('#image_two')
+
+    // Image three
+    $image_three_input_label = $('#image_three_input_label')
+    $image_three_preview = $('#image_three_preview')
+    $image_three = $('#image_three')
+
+    // Image one cache
+    $image_one_cache_use = $('#image_one_cache_use')
+    $image_one_cache_file_id = $('#image_one_cache_file_id')
+    $image_one_cache_url = $('#image_one_cache_url')
+    $image_one_remove = $('#image_one_remove')
+
+    // Image two cache
+    $image_two_cache_use = $('#image_two_cache_use')
+    $image_two_cache_file_id = $('#image_two_cache_file_id')
+    $image_two_cache_url = $('#image_two_cache_url')
+    $image_two_remove = $('#image_two_remove')
+
+    // Image three cache
+    $image_three_cache_use = $('#image_three_cache_use')
+    $image_three_cache_file_id = $('#image_three_cache_file_id')
+    $image_three_cache_url = $('#image_three_cache_url')
+    $image_three_remove = $('#image_three_remove')
+
+    // Commission type
+    $commission_type__label = $('#commission_type__label')
+    $commission_type__input = $('#commission_type__input')
+    $commission_type__errors = $('#commission_type__errors')
+    
+    // Commission percentage
+    $commission_percentage = $('#commission_percentage')
+    $commission_percentage__label = $('#commission_percentage__label')
+    $commission_percentage__input = $('#commission_percentage__input')
+    $commission_percentage__errors = $('#commission_percentage__errors')
+    $commission_percentage__js_errors = $('#commission_percentage__js_errors')
+
+    // Commission earnings
+    $commission_earnings__label = $('#commission_earnings__label')
+    $commission_earnings__input = $('#commission_earnings__input')
+    $commission_earnings__help = $('#commission_earnings__help')
+    $commission_earnings__currency = $('.commission_earnings__currency')
+
+    // Commission type other
+    $commission_type = $('#commission_type')
+    $commission_type_other = $('#commission_type_other')
+    $commission_type_other__errors = $('#commission_type_other__errors')
+    $commission_type_other__help = $('#commission_type_other__help')
+
+    // Commission payable by
+    $commission_payable_by__label = $('#commission_payable_by__label')
+    $commission_payable_by__input = $('#commission_payable_by__input')
+    $commission_payable_by__option__counter_party = $('#commission_payable_by__option__counter_party')
+    $commission_payable_by__help = $('#commission_payable_by__help')
+    $commission_payable_by__errors = $('#commission_payable_by__errors')
+
+    // Average deal size
+    $avg_deal_size = $('#avg_deal_size')
+    $avg_deal_size__label = $('#avg_deal_size__label')
+    $avg_deal_size__input = $('#avg_deal_size__input')
+    $avg_deal_size__errors = $('#avg_deal_size__errors')
+    $avg_deal_size__help = $('#avg_deal_size__help')
+
+    // Average earnings
+    $avg_earnings__label = $('#avg_earnings__label')
+    $avg_earnings__value = $('#avg_earnings__value')
+    $avg_earnings__value_1 = $('#avg_earnings__value_1')
+    $avg_earnings__value_2 = $('#avg_earnings__value_2')
+    $avg_earnings__help = $('#avg_earnings__help')
+
+    // Is commission negotiable
+    $is_comm_negotiable__label = $('#is_comm_negotiable__label')
+    $is_comm_negotiable__input = $('#is_comm_negotiable__input')
+
+    // Commission payable after
+    $commission_payable_after = $('#commission_payable_after')
+    $commission_payable_after__label = $('#commission_payable_after__label')
+    $commission_payable_after__input = $('#commission_payable_after__input')
+    $commission_payable_after__errors = $('#commission_payable_after__errors')
+
+    // Commission payable after other
+    $commission_payable_after_other = $('#commission_payable_after_other')
+    $commission_payable_after_other__errors = $('#commission_payable_after_other__errors')
+    $commission_payable_after_other__help = $('#commission_payable_after_other__help')
+
+    // Friendly
+    $friendly = $('#friendly')
+
+    // Need logistics agent
+    $need_logistics_agent = $('#need_logistics_agent')
+
+    // Other logistics agent details
+    $other_logistics_agent_details = $('#other_logistics_agent_details')
+    $other_logistics_agent_details__label = $('#other_logistics_agent_details__label')
+    $other_logistics_agent_details__errors = $('#other_logistics_agent_details__errors')
+
+    // Submit
+    $submit = $('#submit')
+
+    // ***** Initialize select2 comboboxes *****
+
+    $select2 = $('.select2')
+
+    $select2.select2()
+
+    $select2.one('select2:open', function(e) {
+        $('input.select2-search__field').prop('placeholder', 'Search here...')
+    })
+
+    // Author type
+
+    function update_author_type_ui__lead_type__buying() {
+        // Update 'author type' UI when 'lead type' has changed to 'buying'.
+        $author_type__label.text('Are you a direct buyer or a middleman?')
+        $author_type__option__direct.text('Direct Buyer')
+        $author_type.select2() // Refresh
+    }
+
+    function update_author_type_ui__lead_type__selling() {
+        // Update 'author type' UI when 'lead type' has changed to 'selling'.
+        $author_type__label.text('Are you a direct seller or a middleman?')
+        $author_type__option__direct.text('Direct Seller')
+        $author_type.select2() // Refresh
+    }
+
+    function author_type_val__changed() {
+        // Update relevant UI elements when 'author type' value changed.
+        author_type_val = $author_type.val()
+        if (author_type_val == 'direct') {
+            update_commission_payable_by_ui__author_type__direct()
+        } else if (author_type_val == 'broker') {
+            update_commission_payable_by_ui__author_type__broker()
+        }
+    }
+
+    // Currency type
+
+    function currency_val__changed() {
+        // Update relevant UI elements when 'currency' value changed.
+        currency_val = $currency.val()
+        if (currency_val == 'usd') {
+            $commission_earnings__currency.text('USD')
+        } else if (currency_val == 'rmb') {
+            $commission_earnings__currency.text('RMB')
+        } else if (currency_val == 'inr') {
+            $commission_earnings__currency.text('INR')
+        } else if (currency_val == 'eur') {
+            $commission_earnings__currency.text('EUR')
+        }
+    }
+
+    // Buy country
+
+    function update_buy_country_ui__lead_type__buying() {
+        // Update 'buy country' UI elements when 'lead type' has changed to 'buying'.
+        $buy_country__label.text('Buy From This Country')
+        $buy_country__option__any_country.attr('disabled', false)
+        $buy_country__help.text("Country you'd like to buy or source from.")
+    }
+
+    function update_buy_country_ui__lead_type__selling() {
+        // Update 'buy country' UI elements when 'lead type' has changed to 'selling'.
+        $buy_country__label.text('Source Country')
+        $buy_country__option__any_country.attr('disabled', true)
+        if ($buy_country.find('option:selected').val() == 'any_country') {
+            $buy_country.val(null).trigger('change') // Clear selection
+        }
+        $buy_country__help.text("Country your goods/services are exported from or based in.")
+    }
+
+    // Sell country
+
+    function update_sell_country_ui__lead_type__buying() {
+        // Update 'sell country' UI elements when 'lead type' has changed to 'buying'.
+        $sell_country__label.text('Destination Country')
+        $sell_country__option__any_country.attr('disabled', true)
+        if ($sell_country.find('option:selected').val() == 'any_country') {
+            $sell_country.val(null).trigger('change') // Clear selections
+        }
+        $sell_country__help.text('Country your goods/services are imported into or needed.')
+    }
+
+    function update_sell_country_ui__lead_type__selling() {
+        // Update 'sell country' UI elements when 'lead type' has changed to 'selling'.
+        $sell_country__label.text('Sell In This Country')
+        $sell_country__option__any_country.attr('disabled', false)
+        $sell_country__help.text("Country you'd like to sell your goods/services in.")
+    }
+    
+    // Details
+
+    function update_details_ui__lead_type__buying() {
+        // Update 'details' UI elements when 'lead type' has changed to 'buying'.
+        $details__help.text("Describe goods/services you're like to buy.")
+    }
+
+    function update_details_ui__lead_type__selling() {
+        // Update 'details' UI elements when 'lead type' has changed to 'selling'.
+        $details__help.text("Describe goods/services you'd like to sell.")
+    }
+
+    // Commission percentage
+
+    function update_commission_percentage_ui__comm_type__percentage() {
+        // Update 'commission percentage' UI elements when 'commission type' has changed to 'percentage'.
+        $commission_percentage__label.show()
+        $commission_percentage__input.show()
+        $commission_percentage__errors.show()
+    }
+
+    function update_commission_percentage_ui__comm_type__earning() {
+        // Update 'commission percentage' UI elements when 'commission type' has changed to 'earning'.
+        $commission_percentage__label.hide()
+        $commission_percentage__input.hide()
+        $commission_percentage__errors.hide()
+    }
+
+    function update_commission_percentage_ui__comm_type__other() {
+        // Update 'commission percentage' UI elements when 'commission type' has changed to 'other'.
+        $commission_percentage__label.hide()
+        $commission_percentage__input.hide()
+        $commission_percentage__errors.hide()
+    }
+
+    function commission_percentage_val__changed() {
+        if ($commission_percentage.val() == '') {
+            // We have 2 conditions hiding the error because the textfield
+            // starts blank. We only want to check if commission is between
+            // 0.01 and 100 if it's not blank. Where it passes the test,
+            // we want to hide it.
+            $commission_percentage__js_errors.hide()
+        } else if ($commission_percentage.val() < 0.01 || $commission_percentage.val() > 100) {
+            $commission_percentage__js_errors.text('Agent commission must be between 0.01% and 100%')
+            $commission_percentage__js_errors.show()
+            return   
+        } else {
+            $commission_percentage__js_errors.hide()
+        }
+    }
+
+    // Commission earnings
+
+    function update_commission_earnings_ui__comm_type__percentage() {
+        // Update 'commission earnings' UI elements when 'commission type' has changed to 'percentage'.
+        $commission_earnings__label.hide()
+        $commission_earnings__input.hide()
+        $commission_earnings__help.hide()
+    }
+
+    function update_commission_earnings_ui__comm_type__earning() {
+        // Update 'commission earnings' UI elements when 'commission type' has changed to 'earning'.
+        $commission_earnings__label.show()
+        $commission_earnings__input.show()
+        $commission_earnings__help.show()
+    }
+
+    function update_commission_earnings_ui__comm_type__other() {
+        // Update 'commission earnings' UI elements when 'commission type' has changed to 'other'.
+        $commission_earnings__label.hide()
+        $commission_earnings__input.hide()
+        $commission_earnings__help.hide()
+    }
+
+    // Commission type other
+
+    function update_commission_type_other_ui__comm_type__percentage() {
+        // Update 'commission type other' UI elements when 'commission type' has changed to 'percentage'.
+        $commission_type_other.hide()
+        $commission_type_other__errors.hide()
+        $commission_type_other__help.hide()
+    }
+
+    function update_commission_type_other_ui__comm_type__earning() {
+        // Update 'commission type other' UI elements when 'commission type' has changed to 'earning'.
+        $commission_type_other.hide()
+        $commission_type_other__errors.hide()
+        $commission_type_other__help.hide()
+    }
+
+    function update_commission_type_other_ui__comm_type__other() {
+        // Update 'commission type other' UI elements when 'commission type' has changed to 'other'.
+        $commission_type_other.show()
+        $commission_type_other__errors.show()
+        $commission_type_other__help.show()
+    }
+
+    // Commission payable by
+
+    function update_commission_payable_by_ui__lead_type__buying() {
+        // Update 'commission payable by' UI elements when 'lead type' has changed to 'buying'.
+        $commission_payable_by__help.text("You're a middleman. Will commission be paid by you or the buyer?")
+        $commission_payable_by__option__counter_party.text('Buyer')
+        $commission_payable_by__option__counter_party.val('buyer')
+        $commission_payable_by__option__counter_party.select2() // Refresh
+    }
+
+    function update_commission_payable_by_ui__lead_type__selling() {
+        // Update 'commmission payable by' UI elements when 'lead type' has changed to 'selling'.
+        $commission_payable_by__help.text("You're a middleman. Will commission be paid by you or the seller?")
+        $commission_payable_by__option__counter_party.text('Seller')
+        $commission_payable_by__option__counter_party.val('seller')
+        $commission_payable_by__option__counter_party.select2() // Refresh
+    }
+
+    function update_commission_payable_by_ui__author_type__direct() {
+        // Update 'commission payable by' UI elements when 'author type' has changed to 'direct'.
+        $commission_payable_by__label.hide()
+        $commission_payable_by__input.hide()
+        $commission_payable_by__help.hide()
+        $commission_payable_by__errors.hide()
+    }
+
+    function update_commission_payable_by_ui__author_type__broker() {
+        // Update 'commission payable by' UI elements when 'author type' has changed to 'broker'.
+        $commission_payable_by__label.show()
+        $commission_payable_by__input.show()
+        $commission_payable_by__help.show()
+        $commission_payable_by__errors.show()
+    }
+
+    // Lead type
+
+    function lead_type_val__changed() {
+        // Update relevant UI elements when 'lead type' value changed.
+        choice = $lead_type.val()
+        if (choice == 'buying') {
+            update_author_type_ui__lead_type__buying()
+            update_buy_country_ui__lead_type__buying()
+            update_sell_country_ui__lead_type__buying()
+            update_details_ui__lead_type__buying()
+            update_commission_payable_by_ui__lead_type__buying()
+        } else if (choice == 'selling') {
+            update_sell_country_ui__lead_type__selling()
+            update_buy_country_ui__lead_type__selling()
+            update_details_ui__lead_type__selling()
+            update_author_type_ui__lead_type__selling()
+            update_commission_payable_by_ui__lead_type__selling()
+        }
+    }
+
+    // Commission type
+
+    function commission_type_val__changed() {
+        // Update relevant UI elements when 'commission type' changed.
+        choice = $commission_type.val()
+        if (choice == 'percentage') {
+            update_commission_percentage_ui__comm_type__percentage()
+            update_commission_earnings_ui__comm_type__percentage()
+            update_commission_type_other_ui__comm_type__percentage()
+        } else if (choice == 'earning') {
+            update_commission_percentage_ui__comm_type__earning()
+            update_commission_earnings_ui__comm_type__earning()
+            update_commission_type_other_ui__comm_type__earning()
+        } else if (choice == 'other') {
+            update_commission_type_other_ui__comm_type__other()
+            update_commission_earnings_ui__comm_type__other()
+            update_commission_percentage_ui__comm_type__other()
+        }
+    }
+
+    // Commission payable after
+
+    function commission_payable_after_val__changed() {
+        // Update relevant UI elements when 'commission payable after' changed.
+        if ($commission_payable_after.val() == 'other') {
+            $commission_payable_after_other.show()
+            $commission_payable_after_other__errors.show()
+            $commission_payable_after_other__help.show()
+        } else {
+            $commission_payable_after_other.hide()
+            $commission_payable_after_other__errors.hide()
+            $commission_payable_after_other__help.hide()
+        }
+    }
+
+    // ***** Run on load *****
+    // Note: order matters
+
+    lead_type_val__changed()
+    author_type_val__changed()
+    currency_val__changed()
+    commission_percentage_val__changed()
+    commission_payable_after_val__changed()
+    commission_type_val__changed()
+
+    // ***** Run on change *****
+
+    $lead_type.change(function() {
+        lead_type_val__changed()
+    })
+
+    $author_type.change(function() {
+        author_type_val__changed()
+    })
+
+    $currency.change(function() {
+        currency_val__changed()
+    })
+
+    $commission_type.change(function() {
+        commission_type_val__changed()
+    })
+
+    $commission_percentage.on('input', function() {
+        commission_percentage_val__changed()
+    })
+
+    $commission_payable_after.change(function() {
+        commission_payable_after_val__changed()
+    })
+
+    $lead_form.submit(function () {
+        var configs = {
+            'overlayBackgroundColor': '#666666',
+            'overlayOpacity': 0.6,
+            'spinnerIcon': 'ball-circus',
+            'spinnerColor': '#000',
+            'spinnerSize': '3x',
+            'overlayIDName': 'overlay',
+            'spinnerIDName': 'spinner',
+            'offsetY': 0,
+            'offsetX': 0,
+            'lockScroll': false,
+            'containerID': null,
+        };
+        
+        JsLoadingOverlay.show(configs);
+    })
+
+    // ***** Setup image preview *****
+
+    // The user will not see images when the page is reloaded due to errors.
+
+    // We cache images in the backend, pass references to the template, and
+    // use those references to render the message.
+
+    // Should the user click on the 'remove' button on a cached image, a
+    // 'no' flag is set to indicate that we should delete this cache on the
+    // backend when the form is next posted.
+
+    function clear_image_preview($preview, $cache_use, $remove, $input_label) {
+        $preview.find(':first-child').remove() // Remove image
+        $preview.text('No image chosen')
+        if ($cache_use.length > 0) {
+            // Cache-use hidden input present
+            $cache_use.val('no') // Use image from input and not cache
+        }
+        $remove.hide()
+        $input_label.show()
+    }
+
+    function set_image_preview($preview, url, $remove, $input_label) {
+        img = '<img src="' + url + '">'
+        $preview.text('')
+        $preview.append(img)
+        $remove.show()
+        $input_label.hide()
+    }
+
+    function set_image_preview_on_input_change($input, $preview, $cache_use, $remove, $input_label) {
+        $input.click(function (){
+            $input.val('') // Clear input so we may select the same file again
+        })
+
+        $input.change(function() {
+            clear_image_preview($preview, $cache_use, $remove, $input_label)
+            files = $input.prop('files')
+            if (files.length > 0) {
+                // Only 1 file
+                set_image_preview($preview, URL.createObjectURL(files[0]), $remove, $input_label)
+            }
+        })
+    }
+
+    function remove_image_preview_on_remove_change($remove, $preview, $cache_use, $input_label) {
+        $remove.click(function() {
+            clear_image_preview($preview, $cache_use, $remove, $input_label)
+        })
+    }
+
+    function set_image_preview_with_cache($image_cache_url, $preview, $cache_use, $remove, $input_label) {
+        if ($image_cache_url.length > 0) {
+            // Cache URL is present
+            set_image_preview($preview, $image_cache_url.val(), $remove, $input_label)
+        } else {
+            clear_image_preview($preview, $cache_use, $remove, $input_label)
+        }
+    }
+
+    // Run on change
+    set_image_preview_on_input_change($image_one, $image_one_preview, $image_one_cache_use, $image_one_remove, $image_one_input_label)
+    set_image_preview_on_input_change($image_two, $image_two_preview, $image_two_cache_use, $image_two_remove, $image_two_input_label)
+    set_image_preview_on_input_change($image_three, $image_three_preview, $image_three_cache_use, $image_three_remove, $image_three_input_label)
+
+    // Set image previews if their corresponding cache is present
+    set_image_preview_with_cache($image_one_cache_url, $image_one_preview, $image_one_cache_use, $image_one_remove, $image_one_input_label)
+    set_image_preview_with_cache($image_two_cache_url, $image_two_preview, $image_two_cache_use, $image_two_remove, $image_two_input_label)
+    set_image_preview_with_cache($image_three_cache_url, $image_three_preview, $image_three_cache_use, $image_three_remove, $image_three_input_label)
+
+    // Remove image previews on button click
+    remove_image_preview_on_remove_change($image_one_remove, $image_one_preview, $image_one_cache_use, $image_one_input_label)
+    remove_image_preview_on_remove_change($image_two_remove, $image_two_preview, $image_two_cache_use, $image_two_input_label)
+    remove_image_preview_on_remove_change($image_three_remove, $image_three_preview, $image_three_cache_use, $image_three_input_label)
+})
+{% endcomment %}
+{% block other_script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-loading-overlay@1.1.0/dist/js-loading-overlay.min.js"></script>
+<script src="{% static 'leads/js/lead_create_edit.min.js' %}"></script>
+<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
+{% endblock %}
