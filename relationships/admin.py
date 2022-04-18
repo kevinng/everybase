@@ -156,7 +156,7 @@ class UserAdmin(comadm.StandardAdmin):
         'first_name', 'last_name', 'company_name', 'goods_string',
         'languages_string', 'country__name', 'email__email',
         'phone_number__country_code', 'phone_number__national_number',
-        'internal_notes']
+        'internal_notes', 'uuid']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
