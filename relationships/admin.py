@@ -88,7 +88,7 @@ class UserInlineAdmin(admin.TabularInline):
     # model = gromods.EmailStatus.emails.through
     model = mod.User
     extra = 1
-    autocomplete_fields = ['django_user', 'profile_picture', 'languages',
+    autocomplete_fields = ['django_user', 'languages',
         'country', 'state', 'phone_number', 'email']
 
 _email_fields = ['verified', 'email', 'notes', 'invalid_email',
