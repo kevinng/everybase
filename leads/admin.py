@@ -65,8 +65,8 @@ class LeadCommentAdmin(comadm.StandardAdmin):
 _lead_fields = [
     'author', 'is_promoted',
 
-    'lead_type', 'currency', 'author_type', 'buy_country', 'sell_country', 'details',
-    'agent_job',
+    'lead_type', 'currency', 'author_type', 'buy_country', 'sell_country', 'headline',
+    'details', 'agent_job',
 
     'commission_type', 'commission_percentage', 'commission_earnings',
     'commission_quantity_unit_string', 'commission_type_other', 'other_comm_details',
