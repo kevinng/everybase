@@ -1,4 +1,3 @@
-from urllib import request
 import pytz
 from datetime import datetime, timedelta
 
@@ -10,7 +9,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
 from django.db.models import Count
 from django.db.models.expressions import RawSQL
 from django.db.models import DateTimeField
@@ -22,6 +20,8 @@ from everybase import settings
 from common import models as commods
 from leads import models as lemods
 from relationships import forms, models
+from common.tasks.send_amplitude_event import send_amplitude_event
+from common.utilities.get_ip_address import get_ip_address
 from relationships.utilities.save_user_agent import save_user_agent
 from relationships.utilities.kill_login_tokens import kill_login_tokens
 from relationships.utilities.kill_register_tokens import kill_register_tokens
@@ -236,6 +236,22 @@ def register(request):
             # Send message
             send_register_message.delay(user.id)
 
+            # Amplitude call
+            send_amplitude_event.delay(
+                'account - registered',
+                user_uuid=user.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'country_code': user.phone_number.country_code,
+                    'country': '' if user.country is None else user.country.programmatic_key,
+                    'has_company': '' if user.has_company is None else user.has_company,
+                    'is_buyer': '' if user.is_buyer is None else user.is_buyer,
+                    'is_seller': '' if user.is_seller is None else user.is_seller,
+                    'is_sell_agent': '' if user.is_sell_agent is None else user.is_sell_agent,
+                    'is_buy_agent': '' if user.is_buy_agent is None else user.is_buy_agent
+                }
+            )
+
             # Append next URL
             next_url = form.cleaned_data.get('next')
             confirm_register = reverse('confirm_register',
@@ -373,6 +389,13 @@ def log_in(request):
 
             # Send message
             send_login_message.delay(user.id)
+
+            # Amplitude call
+            send_amplitude_event.delay(
+                'account - logged in',
+                user_uuid=user.uuid,
+                ip=get_ip_address(request)
+            )
 
             confirm_login_url = reverse('confirm_login',
                 kwargs={'user_uuid': user.uuid})

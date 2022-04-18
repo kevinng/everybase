@@ -21,6 +21,7 @@ from common import models as commods
 from payments import models as paymods
 from leads import models, forms
 from files import models as fimods
+from common.tasks.send_amplitude_event import send_amplitude_event
 from files.utilities.delete_file import delete_file
 from files.utilities.get_mime_type import get_mime_type
 from chat.tasks.send_lead_created_message import send_lead_created_message
@@ -257,6 +258,18 @@ def lead_detail(request, slug):
             send_agent_application_alert_to_lead_author.delay(a.id)
             send_agent_application_alert_to_agent.delay(a.id)
 
+            # Amplitude call
+            send_amplitude_event.delay(
+                'agent application - applied as an agent',
+                user_uuid=request.user.user.uuid,
+                event_properties={
+                    'application_id': a.lead.id,
+                    'buy_sell': lead.lead_type,
+                    'buy_country': '' if lead.buy_country is None else lead.buy_country.programmatic_key,
+                    'sell_country': '' if lead.sell_country is None else lead.sell_country.programmatic_key
+                }
+            )
+
             return HttpResponseRedirect(
                 reverse('applications:application_detail', args=(a.id,)))
     else:
@@ -409,6 +422,18 @@ def lead_create(request):
             # Send message to user
             send_lead_created_message.delay(lead.id)
 
+            # Amplitude call
+            send_amplitude_event.delay(
+                'discovery - created lead',
+                user_uuid=request.user.user.uuid,
+                event_properties={
+                    'lead_id': lead.id,
+                    'buy_sell': lead.lead_type,
+                    'buy_country': '' if lead.buy_country is None else lead.buy_country.programmatic_key,
+                    'sell_country': '' if lead.sell_country is None else lead.sell_country.programmatic_key
+                }
+            )
+
             return HttpResponseRedirect(
                 reverse('leads:lead_detail', args=(lead.slug_link,)))
     else:
@@ -548,6 +573,18 @@ def application_detail(request, pk):
                 )
 
                 send_agent_application_message.delay(am.id)
+
+                # Amplitude call
+                send_amplitude_event.delay(
+                    'agent application - messaged counterparty',
+                    user_uuid=request.user.user.uuid,
+                    event_properties={
+                        'application_id': application.lead.id,
+                        'buy_sell': application.lead.lead_type,
+                        'buy_country': '' if application.lead.buy_country is None else application.lead.buy_country.programmatic_key,
+                        'sell_country': '' if application.lead.sell_country is None else application.lead.sell_country.programmatic_key
+                    }
+                )
 
             return HttpResponseRedirect(
                 reverse('applications:application_detail',
