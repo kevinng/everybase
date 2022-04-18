@@ -239,4 +239,29 @@
 <script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
 <script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
 <script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
+{% comment %}
+Amplitude instrumentation. Rendered inline because there are rendered values.
+
+$(document).ready(function() {
+    // Amplitude call on document ready
+    function document_readied() {
+        var event = 'discovery - viewed application detail'
+        var props = {
+            'application_id': '{{ application.id }}',
+            'lead_id': '{{ application.lead.id }}',
+            'buy_sell': '{{ application.lead.lead_type }}',
+            'buy_country': '{{ application.lead.buy_country.programmatic_key }}',
+            'sell_country': '{{ application.lead.sell_country.programmatic_key }}',
+            'commission_type': '{{ application.lead.commission_type }}',
+            'commission_percentage': '{% if application.lead.commission_percentage is None %}{% else %}{{ application.lead.commission_percentage }}{% endif %}',
+            'commission_earnings': '{% if application.lead.commission_earnings is None %}{% else %}{{ application.lead.commission_earnings }}{% endif %}',
+            'commission_quantity_unit_string': '{% if application.lead.commission_quantity_unit_string is None %}{% else %}{{ application.lead.commission_quantity_unit_string }}{% endif %}',
+            'is_comm_negotiable': '{% if application.lead.is_comm_negotiable is None %}False{% else %}{{ application.lead.is_comm_negotiable }}{% endif %}'
+        }
+        amplitude.getInstance().logEvent(event, props)
+    }
+    document_readied()
+})
+{% endcomment %}
+<script>$(document).ready((function(){amplitude.getInstance().logEvent("discovery - viewed application detail",{application_id:"{{ application.id }}",lead_id:"{{ application.lead.id }}",buy_sell:"{{ application.lead.lead_type }}",buy_country:"{{ application.lead.buy_country.programmatic_key }}",sell_country:"{{ application.lead.sell_country.programmatic_key }}",commission_type:"{{ application.lead.commission_type }}",commission_percentage:"{% if application.lead.commission_percentage is None %}{% else %}{{ application.lead.commission_percentage }}{% endif %}",commission_earnings:"{% if application.lead.commission_earnings is None %}{% else %}{{ application.lead.commission_earnings }}{% endif %}",commission_quantity_unit_string:"{% if application.lead.commission_quantity_unit_string is None %}{% else %}{{ application.lead.commission_quantity_unit_string }}{% endif %}",is_comm_negotiable:"{% if application.lead.is_comm_negotiable is None %}False{% else %}{{ application.lead.is_comm_negotiable }}{% endif %}"})}));</script>
 {% endblock %}

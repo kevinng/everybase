@@ -245,4 +245,28 @@
 <script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
 <script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
 <script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
+{% comment %}
+Amplitude instrumentation. Rendered inline because there are rendered values.
+
+$(document).ready(function() {
+    // Amplitude call on document ready
+    function document_readied() {
+        var event = 'discovery - viewed lead detail'
+        var props = {
+            'lead_id': '{{ lead.id }}',
+            'buy_sell': '{{ lead.lead_type }}',
+            'buy_country': '{{ lead.buy_country.programmatic_key }}',
+            'sell_country': '{{ lead.sell_country.programmatic_key }}',
+            'commission_type': '{{ lead.commission_type }}',
+            'commission_percentage': '{% if lead.commission_percentage is None %}{% else %}{{ lead.commission_percentage }}{% endif %}',
+            'commission_earnings': '{% if lead.commission_earnings is None %}{% else %}{{ lead.commission_earnings }}{% endif %}',
+            'commission_quantity_unit_string': '{% if lead.commission_quantity_unit_string is None %}{% else %}{{ lead.commission_quantity_unit_string }}{% endif %}',
+            'is_comm_negotiable': '{% if lead.is_comm_negotiable is None %}False{% else %}{{ lead.is_comm_negotiable }}{% endif %}',
+        }
+        amplitude.getInstance().logEvent(event, props)
+    }
+    document_readied()
+})
+{% endcomment %}
+<script>$(document).ready((function(){amplitude.getInstance().logEvent("discovery - viewed lead detail",{lead_id:"{{ lead.id }}",buy_sell:"{{ lead.lead_type }}",buy_country:"{{ lead.buy_country.programmatic_key }}",sell_country:"{{ lead.sell_country.programmatic_key }}",commission_type:"{{ lead.commission_type }}",commission_percentage:"{% if lead.commission_percentage is None %}{% else %}{{ lead.commission_percentage }}{% endif %}",commission_earnings:"{% if lead.commission_earnings is None %}{% else %}{{ lead.commission_earnings }}{% endif %}",commission_quantity_unit_string:"{% if lead.commission_quantity_unit_string is None %}{% else %}{{ lead.commission_quantity_unit_string }}{% endif %}",is_comm_negotiable:"{% if lead.is_comm_negotiable is None %}False{% else %}{{ lead.is_comm_negotiable }}{% endif %}"})}));</script>
 {% endblock %}

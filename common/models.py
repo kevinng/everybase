@@ -1,6 +1,7 @@
 from django.db import models
 from common.utilities.diff_now import diff_now
 from common.utilities.diff_now_desc import diff_now_desc
+from common.utilities.diff_now_in_days import diff_now_in_days
 
 # --- Start: Helper functions ---
 
@@ -53,6 +54,9 @@ class Standard(models.Model):
 
     def age_desc(self):
         return diff_now_desc(self.created)
+
+    def age_days(self):
+        return diff_now_in_days(self.created)
 
     class Meta:
         abstract = True

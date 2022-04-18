@@ -5,8 +5,7 @@ Params:
 
 Note: thumbnails are not clickable.
 {% endcomment %}
-
-<a href="{% url 'leads:lead_detail' lead.slug_link %}">
+<a href="{% url 'leads:lead_detail' lead.slug_link %}" class="lead_item" data-lead-id="{{ lead.id }}" data-position="{{ position }}" data-num-images="{{ lead.num_images }}" data-age-days="{{ lead.age_days }}" data-buy-sell="{{ lead.lead_type }}" data-buy-country="{{ lead.buy_country.programmatic_key }}" data-sell-country="{{ lead.sell_country.programmatic_key }}" data-commission-type="{{ lead.commission_type }}" data-commission-percentage="{% if lead.commission_percentage is None %}{% else %}{{ lead.commission_percentage }}{% endif %}" data-commission-earnings="{% if lead.commission_earnings is None %}{% else %}{{ lead.commission_earnings }}{% endif %}" data-commission-quantity-unit-string="{{ lead.commission_quantity_unit_string }}" data-is-comm-negotiable="{% if lead.is_comm_negotiable is None or lead.is_comm_negotiable == '' %}False{% else %}{{ lead.is_comm_negotiable }}{% endif %}">
     <div class="bg-white hover:outline hover:outline-1 hover:outline-blue-500 shadow-md rounded{% if more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
 
         {% comment %} <div class="flex justify-between bg-blue-50 w-full px-8 py-4">

@@ -33,7 +33,7 @@ CSS
 
 {% block page_actions %}
 <div class="flex lg:hidden">
-    <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-4 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">New Post</a>
+    <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-4 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">Post a Lead</a>
     <button id="search" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Search</button>
 </div>
 {% endblock %}
@@ -88,7 +88,7 @@ CSS
                 </div>
                 {% comment %} end: sell_country {% endcomment %}
 
-                <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
+                <button id="submit" type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
 
                 <div class="mt-2 flex justify-center">
                     <a href="{% url 'leads:lead_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Reset</a>
@@ -99,7 +99,7 @@ CSS
     {% comment %} end: desktop filter {% endcomment %}
     {% comment %} start: mobile filter {% endcomment %}
     <nav id="mobile-filter" class="px-10 py-10">
-        <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-7 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">New Lead</a>
+        <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-7 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">Post a Lead</a>
         <h1 class="text-3xl font-bold text-center mt-6">Leads</h1>
         <div class="mt-7 flex flex-col justify-center">
             <form action="{% url 'leads:lead_list' %}" type="get">
@@ -144,9 +144,10 @@ CSS
                 </div>
                 {% comment %} end: sell_country {% endcomment %}
 
-                <button type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
+                <button id="mob__submit" type="submit" class="w-full py-3 px-7 rounded-md text-white bg-blue-500 hover:bg-blue-600 mt-6 shadow-md">Search</button>
 
                 <div class="mt-4 flex justify-center">
+                    {% comment %} Won't trigger an Amplitude call {% endcomment %}
                     <a href="{% url 'leads:lead_list' %}" class="py-3 px-7 w-full text-center bg-slate-200 hover:bg-slate-300 rounded-md">Reset</a>
                 </div>
             </form>
@@ -163,7 +164,7 @@ CSS
         {% for lead in page_obj %}
 
         <div class="mt-2">
-            {% include 'leads/includes/lead_item.html' %}
+            {% include 'leads/includes/lead_item.html' with position=forloop.counter %}
         </div>
 
         {% endfor %}
@@ -185,6 +186,8 @@ CSS
 Javascript
 https://codebeautify.org/minify-js
 
+// Minified and reference, no rendered values
+
 $(document).ready(function() {
     // Cache references
     $select2 = $('.select2')
@@ -194,7 +197,7 @@ $(document).ready(function() {
     $select2.select2();
     $select2.one('select2:open', function(e) {
         $('input.select2-search__field').prop('placeholder', 'Search here...');
-    });
+    })
 
     // Mobile menu
     $search.click(function() {
@@ -215,9 +218,110 @@ $(document).ready(function() {
         $('#mobile-filter').toggleClass('is-active')
     })
 })
+
+// Rendered inline, have rendered values
+
+$(document).ready(function() {
+    // Cache references
+    $mob__submit = $('#mob__submit')
+    $submit = $('#submit')
+    $next_page = $('.next_page')
+    $prev_page = $('.prev_page')
+    $lead_item = $('.lead_item')
+
+    // Amplitude call on form submit
+    function submit_clicked(menu_type) {
+        var event = 'discovery - searched leads'
+        var props = {
+            'search': '{% if search is None %}{% else %}{{ search }}{% endif %}',
+            'buy_sell': '{% if search is None %}{% else %}{{ buy_sell }}{% endif %}',
+            'buy_country': '{% if search is None %}{% else %}{{ buy_country }}{% endif %}',
+            'sell_country': '{% if search is None %}{% else %}{{ sell_country }}{% endif %}',
+            'menu_type': menu_type
+        }
+        console.log(props)
+        amplitude.getInstance().logEvent(event, props)
+    }
+    $mob__submit.click(function() { submit_clicked('mobile') })
+    $submit.click(function() { submit_clicked('desktop') })
+
+    // Amplitude call on next page
+    function next_page_clicked() {
+        var event = 'discovery - clicked lead list next page'
+        var props = {
+            'current_page': '{{ page_obj.number }}'
+        }
+        amplitude.getInstance().logEvent(event, props)
+    }
+    $next_page.click(function() { next_page_clicked() })
+
+    // Amplitude call on previous page
+    function previous_page_clicked() {
+        var event = 'discovery - clicked lead list previous page'
+        var props = {
+            'current_page': '{{ page_obj.number }}'
+        }
+        amplitude.getInstance().logEvent(event, props)
+    }
+    $prev_page.click(function() { previous_page_clicked() })
+
+    // Amplitude call on item clicked
+    function item_clicked(
+        lead_id,
+        page,
+        position,
+        num_images,
+        age_days,
+        buy_sell,
+        buy_country,
+        sell_country,
+        commission_type,
+        commission_percentage,
+        commission_earnings,
+        commission_quantity_unit_string,
+        is_comm_negotiable
+    ) {
+        var event = 'discovery - clicked lead item'
+        var props = {
+            'lead_id': lead_id,
+            'page': page,
+            'position': position,
+            'num_images': num_images,
+            'age_days': age_days,
+            'buy_sell': buy_sell,
+            'buy_country': buy_country,
+            'sell_country': sell_country,
+            'commission_type': commission_type,
+            'commission_percentage': commission_percentage,
+            'commission_earnings': commission_earnings,
+            'commission_quantity_unit_string': commission_quantity_unit_string,
+            'is_comm_negotiable': is_comm_negotiable
+        }
+        amplitude.getInstance().logEvent(event, props)
+    }
+    $lead_item.click(function() {
+        t = $(this)
+        item_clicked(
+            t.attr('data-lead-id'),
+            '{{ page_obj.number }}',
+            t.attr('data-position'),
+            t.attr('data-num-images'),
+            t.attr('data-age-days'),
+            t.attr('data-buy-sell'),
+            t.attr('data-buy-country'),
+            t.attr('data-sell-country'),
+            t.attr('data-commission-type'),
+            t.attr('data-commission-percentage'),
+            t.attr('data-commission-earnings'),
+            t.attr('data-commission-quantity-unit-string'),
+            t.attr('data-is-comm-negotiable')
+        )
+    })
+})
 {% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{% static 'leads/js/lead_list.min.js' %}"></script>
+<script>$(document).ready((function(){function e(e){var t={search:"{% if search is None %}{% else %}{{ search }}{% endif %}",buy_sell:"{% if search is None %}{% else %}{{ buy_sell }}{% endif %}",buy_country:"{% if search is None %}{% else %}{{ buy_country }}{% endif %}",sell_country:"{% if search is None %}{% else %}{{ sell_country }}{% endif %}",menu_type:e};console.log(t),amplitude.getInstance().logEvent("discovery - searched leads",t)}$mob__submit=$("#mob__submit"),$submit=$("#submit"),$next_page=$(".next_page"),$prev_page=$(".prev_page"),$lead_item=$(".lead_item"),$mob__submit.click((function(){e("mobile")})),$submit.click((function(){e("desktop")})),$next_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list next page",{current_page:"{{ page_obj.number }}"})})),$prev_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list previous page",{current_page:"{{ page_obj.number }}"})})),$lead_item.click((function(){var e,a,i,n,s,o,c,l,r,m,u,d,_,g;t=$(this),e=t.attr("data-lead-id"),a="{{ page_obj.number }}",i=t.attr("data-position"),n=t.attr("data-num-images"),s=t.attr("data-age-days"),o=t.attr("data-buy-sell"),c=t.attr("data-buy-country"),l=t.attr("data-sell-country"),r=t.attr("data-commission-type"),m=t.attr("data-commission-percentage"),u=t.attr("data-commission-earnings"),d=t.attr("data-commission-quantity-unit-string"),_=t.attr("data-is-comm-negotiable"),g={lead_id:e,page:a,position:i,num_images:n,age_days:s,buy_sell:o,buy_country:c,sell_country:l,commission_type:r,commission_percentage:m,commission_earnings:u,commission_quantity_unit_string:d,is_comm_negotiable:_},amplitude.getInstance().logEvent("discovery - clicked lead item",g)}))}));</script>
 {% endblock %}

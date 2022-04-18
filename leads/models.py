@@ -308,6 +308,12 @@ class Lead(Standard):
         return fimods.File.objects\
             .filter(lead=self, deleted__isnull=True)\
             .order_by('-created')[:3]
+    
+    def num_images(self):
+        """Returns the number of display images for this lead"""
+        return fimods.File.objects\
+            .filter(lead=self, deleted__isnull=True)\
+            .order_by('-created')[:3].count()
 
     def num_comments(self):
         """Number of comments on this lead"""
