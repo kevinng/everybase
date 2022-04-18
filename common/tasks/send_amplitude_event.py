@@ -1,11 +1,11 @@
-import pytz, datetime, requests
+import time, requests
 from celery import shared_task
 from everybase import settings
 
 @shared_task
 def send_amplitude_event(
         event_type : str,
-        user_id : int = None,
+        user_uuid : int = None,
         device_id : str = None,
         session_id : str = None,
         event_properties : dict = None,
@@ -40,18 +40,14 @@ def send_amplitude_event(
         settings.AMPLITUDE_API_KEY.strip() == '':
         return None
 
-    # Current time
-    sgtz = pytz.timezone(settings.TIME_ZONE)
-    now = datetime.datetime.now(tz=sgtz)
-    epoch = sgtz.localize(datetime.datetime(1970, 1, 1))
-    now_epoch = int((now - epoch).total_seconds())
-
     # Amplitude posting function
     def post_amplitude():
-        e = {'time': now_epoch}
+        e = {}
         
-        if user_id is not None:
-            e['user_id'] = user_id
+        if user_uuid is not None:
+            # Note: user ID must be 5 characters or longer.
+            # We use UUID instead of id.
+            e['user_id'] = str(user_uuid)
         
         if session_id is not None:
             e['session_id'] = session_id
@@ -142,6 +138,8 @@ def send_amplitude_event(
 
         if android_id is not None:
             e['android_id'] = android_id
+
+        print(e)
 
         return requests.post('https://api2.amplitude.com/2/httpapi', json={
             'api_key': settings.AMPLITUDE_API_KEY,
