@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='lead',
             name='search_appearance_count',
-            field=models.IntegerField(db_index=True, default=0),
+            field=models.IntegerField(db_index=True, default=1),
         ),
         migrations.AddField(
             model_name='lead',
