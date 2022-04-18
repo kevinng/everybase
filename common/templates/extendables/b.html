@@ -153,9 +153,9 @@ https://codebeautify.org/minify-js
     })
 </script>
 {% endcomment %}
-    <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
-    <script src="{% static 'common/js/hamburger.min.js' %}"></script>
-    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script async src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
+    <script defer src="{% static 'common/js/hamburger.min.js' %}"></script>
+    <script async src="https://www.google.com/recaptcha/api.js"></script>
     {% block other_script %}{% endblock %}
 </body>
 {% endautoescape %}

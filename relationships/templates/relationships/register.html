@@ -108,6 +108,6 @@ $(document).ready(function() {
 })
 {% endcomment %}
 {% block other_script %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'relationships/js/user_create_edit.min.js' %}"></script>
+<script async src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script defer src="{% static 'relationships/js/user_create_edit.min.js' %}"></script>
 {% endblock %}
