@@ -23,7 +23,7 @@ def run():
 
         if not f.mime_type.startswith('image'):
             # Skip this file, it's not an image
-            print('File is not an image - skip file' + str(f.id))
+            print('File is not an image - skip file ' + str(f.id))
             continue
 
         f.presigned_url_issued = None
@@ -34,11 +34,15 @@ def run():
         key = settings.AWS_S3_KEY_LEAD_IMAGE % (f.lead.id, f.id)
 
         # Copy from current location
-        lead_s3_obj = s3.Object(settings.AWS_STORAGE_BUCKET_NAME, key)\
-            .copy_from(CopySource={
-                'Bucket': 'ebproduction', # Current bucket, access should be given temporarily
-                'Key': f.s3_object_key # Current key
-            })
+        try:
+            lead_s3_obj = s3.Object(settings.AWS_STORAGE_BUCKET_NAME, key)\
+                .copy_from(CopySource={
+                    'Bucket': 'ebproduction', # Current bucket, access should be given temporarily
+                    'Key': f.s3_object_key # Current key
+                })
+        except Exception as e:
+            print(e)
+            print('File key does not exist - skip file ' + str(f.id))
 
         thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (f.lead.id, f.id)
 
