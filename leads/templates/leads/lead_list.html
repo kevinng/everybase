@@ -320,8 +320,8 @@ $(document).ready(function() {
 })
 {% endcomment %}
 {% block other_script %}
-<script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script defer src="{% static 'leads/js/lead_list.min.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{% static 'leads/js/lead_list.min.js' %}"></script>
 <script>$(document).ready((function(){function e(e){var t={search:"{% if search is None %}{% else %}{{ search }}{% endif %}",buy_sell:"{% if search is None %}{% else %}{{ buy_sell }}{% endif %}",buy_country:"{% if search is None %}{% else %}{{ buy_country }}{% endif %}",sell_country:"{% if search is None %}{% else %}{{ sell_country }}{% endif %}",menu_type:e};console.log(t),amplitude.getInstance().logEvent("discovery - searched leads",t)}$mob__submit=$("#mob__submit"),$submit=$("#submit"),$next_page=$(".next_page"),$prev_page=$(".prev_page"),$lead_item=$(".lead_item"),$mob__submit.click((function(){e("mobile")})),$submit.click((function(){e("desktop")})),$next_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list next page",{current_page:"{{ page_obj.number }}"})})),$prev_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list previous page",{current_page:"{{ page_obj.number }}"})})),$lead_item.click((function(){var e,a,i,n,s,o,c,l,r,m,u,d,_,g;t=$(this),e=t.attr("data-lead-id"),a="{{ page_obj.number }}",i=t.attr("data-position"),n=t.attr("data-num-images"),s=t.attr("data-age-days"),o=t.attr("data-buy-sell"),c=t.attr("data-buy-country"),l=t.attr("data-sell-country"),r=t.attr("data-commission-type"),m=t.attr("data-commission-percentage"),u=t.attr("data-commission-earnings"),d=t.attr("data-commission-quantity-unit-string"),_=t.attr("data-is-comm-negotiable"),g={lead_id:e,page:a,position:i,num_images:n,age_days:s,buy_sell:o,buy_country:c,sell_country:l,commission_type:r,commission_percentage:m,commission_earnings:u,commission_quantity_unit_string:d,is_comm_negotiable:_},amplitude.getInstance().logEvent("discovery - clicked lead item",g)}))}));</script>
 {% endblock %}

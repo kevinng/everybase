@@ -48,8 +48,8 @@ $(document).ready(function () {
 })
 {% endcomment %}
 {% block other_script %}
-<script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready((function(){var e=1e3,n=setInterval((function(){console.log("{% url 'is_logged_in' user_uuid %}");$.get("{% url 'is_logged_in' user_uuid %}",(function(e){1==e.l&&window.location.replace("{{ next }}")})),--e<0&&clearInterval(n)}),3e3)}));
+$(document).ready((function(){var e=1e3,n=setInterval((function(){$.get("{% url 'is_logged_in' user_uuid %}",(function(e){1==e.l&&window.location.replace("{{ next }}")})),--e<0&&clearInterval(n)}),3e3)}));
 </script>
 {% endblock %}
