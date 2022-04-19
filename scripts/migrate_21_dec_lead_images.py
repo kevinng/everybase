@@ -43,6 +43,7 @@ def run():
         except Exception as e:
             print(e)
             print('File key does not exist - skip file ' + str(f.id))
+            continue
 
         thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (f.lead.id, f.id)
 
