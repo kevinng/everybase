@@ -18,7 +18,12 @@ def run():
 
         if f.lead is None:
             # Skip this file, it's not associated with any lead
-            print('Skipping file ' + str(f.id))
+            print('Lead is none - skipping file ' + str(f.id))
+            continue
+
+        if not f.mime_type.startswith('image'):
+            # Skip this file, it's not an image
+            print('File is not an image - skip file' + str(f.id))
             continue
 
         f.presigned_url_issued = None
