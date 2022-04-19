@@ -61,6 +61,21 @@ return n._iq[e]};e.amplitude=n})(window,document);
 {% endcomment %}
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4994829786974999" crossorigin="anonymous"></script>
 {% comment %} end: Adsense {% endcomment %}
+{% comment %} start: Google Analytics {% endcomment %}
+{% comment %}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.GA_WEB_STREAM_ID }}"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '{{ settings.GA_WEB_STREAM_ID }}');
+</script>
+{% endcomment %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.GA_WEB_STREAM_ID }}"></script>
+    <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","{{ settings.GA_WEB_STREAM_ID }}");</script>
+{% comment %} end: Google Analytics {% endcomment %}
 </head>
 <body class="bg-slate-100 flex flex-col">
     {% comment %} start: header {% endcomment %}
