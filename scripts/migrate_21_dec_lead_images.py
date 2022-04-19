@@ -16,6 +16,11 @@ def run():
     for f in fs:
         print('Processing file ' + str(f.id))
 
+        if f.lead is None:
+            # Skip this file, it's not associated with any lead
+            print('Skipping file ' + str(f.id))
+            continue
+
         f.presigned_url_issued = None
         f.presigned_url_lifespan = None
         f.presigned_url_response = None
