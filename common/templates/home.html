@@ -40,11 +40,13 @@
     </div>
     {% comment %} end: agents, call-to-action {% endcomment %}
 </div>
+{% load promoted_leads %}
+{% promoted_leads as promoted_leads %}
+{% if promoted_leads|length > 0 %}
 <div class="pt-20 pb-20 px-10 bg-sky-50 flex flex-col items-center">
     <div class="font-bold text-3xl text-center">Promoted Leads</div>
     <div class="mt-4">
-        {% load promoted_leads %}
-        {% promoted_leads as promoted_leads %}
+
         {% for lead in promoted_leads %}
             <div class="mt-2">
                 {% include 'leads/includes/lead_item.html' %}
@@ -52,4 +54,5 @@
         {% endfor %}
     </div>
 </div>
+{% endif %}
 {% endblock %}
