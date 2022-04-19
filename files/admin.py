@@ -37,7 +37,8 @@ class FileAdmin(comadm.StandardAdmin):
     list_filter = comadm.standard_list_filter + ['mime_type',
         'presigned_url_issued']
     search_fields = ['id', 'uuid', 'mime_type', 'filename', 's3_bucket_name',
-        's3_object_key', 'thumbnail_s3_bucket_name', 'thumbnail_s3_object_key']
+        's3_object_key', 'thumbnail_s3_bucket_name', 'thumbnail_s3_object_key',
+        'lead__headline', 'lead__id']
     list_per_page = 50
     ordering = comadm.standard_ordering
     show_full_result_count = True
