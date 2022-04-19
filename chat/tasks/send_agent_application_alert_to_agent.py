@@ -1,6 +1,7 @@
 from celery import shared_task
 from everybase import settings
 from django.urls import reverse
+from urllib.parse import urljoin
 from chat.constants import intents, messages
 from chat.utilities.send_message import send_message
 from chat.utilities.render_message import render_message
@@ -36,8 +37,8 @@ def send_agent_application_alert_to_agent(
     params = {
         'lead_headline': application.lead.headline,
         'buyer_seller': 'seller' if application.lead.lead_type == 'selling' else 'buyer',
-        'base_url': settings.BASE_URL,
-        'application_detail_url': reverse('applications:application_detail', args=(application.id,))
+        'application_detail_url': urljoin(settings.BASE_URL,
+            reverse('applications:application_detail', args=(application.id,)))
     }
 
     return send_message(

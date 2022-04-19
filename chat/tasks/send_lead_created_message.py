@@ -1,6 +1,7 @@
 from celery import shared_task
 from everybase import settings
 from django.urls import reverse
+from urllib.parse import urljoin
 from chat.constants import intents, messages
 from chat.utilities.send_message import send_message
 from chat.utilities.render_message import render_message
@@ -34,9 +35,9 @@ def send_lead_created_message(
     )
 
     params = {
-        'base_url': settings.BASE_URL,
         'lead_headline': lead.headline,
-        'lead_detail_url': reverse('leads:lead_detail', args=(lead.slug_link,))
+        'lead_detail_url': urljoin(settings.BASE_URL,
+            reverse('leads:lead_detail', args=(lead.slug_link,)))
     }
 
     return send_message(

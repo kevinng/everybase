@@ -1,6 +1,6 @@
 You've applied to be an agent for *{{ lead_headline }}*.
 
 Message {{ buyer_seller }} at this link:
-{{ base_url }}{{ application_detail_url }}
+{{ application_detail_url }}
 
 _Please add this phone number to your contact book._

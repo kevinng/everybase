@@ -1,6 +1,5 @@
 import datetime
 import pytz, datetime
-from django.urls import reverse
 from everybase import settings
 from chat.constants import intents, messages
 from chat.utilities.render_message import render_message
@@ -25,17 +24,9 @@ class Handler(MessageHandler):
                 # Kill other tokens
                 kill_login_tokens(self.message.from_user, token.id)
 
-                def params_func():
-                    return {
-                        'base_url': settings.BASE_URL,
-                        'lead_create_url': reverse('leads:lead_create'),
-                        'lead_list_url': reverse('leads:lead_list')
-                    }
-
                 return self.done_reply(
                     intents.LOGIN,
-                    messages.LOGIN__CONFIRMED,
-                    params_func=params_func
+                    messages.LOGIN__CONFIRMED
                 )
 
             return self.done_reply(
