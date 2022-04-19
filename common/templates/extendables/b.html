@@ -71,7 +71,7 @@ return n._iq[e]};e.amplitude=n})(window,document);
         {% comment %} start: desktop menu {% endcomment %}
         <div class="justify-between hidden lg:block text-sm">
             <a {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7">Leads</a>
-            <a href="#" class="hover:text-blue-600 text-base ml-7">Support</a>
+            <a href="https://everybase.freshdesk.com/support/home" class="hover:text-blue-600 text-base ml-7">Support</a>
         </div>
         {% comment %} end: desktop menu {% endcomment %}
 
@@ -113,7 +113,7 @@ return n._iq[e]};e.amplitude=n})(window,document);
     {% comment %} start: mobile menu {% endcomment %}
     <nav class="mobile-nav text-base">
         <a {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Leads</a>
-        <a href="#" class="hover:text-blue-700 block px-4 py-4">Support</a>
+        <a href="https://everybase.freshdesk.com/support/home" class="hover:text-blue-700 block px-4 py-4">Support</a>
         <div class="h-10"></div>
         {% if request.user.is_authenticated %}
             <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_detail' user.user.slug_link %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">My Profile & Leads</a>
