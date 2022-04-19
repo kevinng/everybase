@@ -100,8 +100,8 @@ class LeadAdmin(comadm.StandardAdmin):
         'lead_type', 'need_agent', 'commission_payable_by', 'commission_type',
         'is_comm_negotiable', 'commission_payable_after', 'need_logistics_agent']
     search_fields = comadm.standard_search_fields + ['details',
-        'other_agent_details', 'other_logistics_agent_details', 'slug_link',
-        'slug_tokens', 'internal_notes']
+        'other_comm_details', 'other_logistics_agent_details', 'slug_link',
+        'slug_tokens', 'internal_notes', 'author__first_name', 'author__last_name']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['uuid']
