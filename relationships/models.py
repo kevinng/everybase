@@ -188,7 +188,7 @@ class User(Standard):
         db_index=True
     )
     company_name = models.CharField(
-        max_length=20,
+        max_length=50,
         null=True,
         blank=True,
         db_index=True

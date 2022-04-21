@@ -24,7 +24,10 @@ class UserEditForm(forms.Form):
     has_company = forms.BooleanField(required=False)
 
     # Validated only if has_company is checked.
-    company_name = forms.CharField(required=False)
+    company_name = forms.CharField(
+        required=False,
+        max_length=50
+    )
 
     goods_string = forms.CharField(
         required=True,

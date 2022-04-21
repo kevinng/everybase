@@ -4,7 +4,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('relationships', '0041_auto_20220228_0048'),
+        ('relationships', '0058_auto_20220421_2337'),
     ]
 
     operations = [
@@ -17,9 +17,8 @@ class Migration(migrations.Migration):
                 CREATE INDEX company_name_vec_idx ON relationships_user USING GIN (company_name_vec);
             ''',
 
-            # Dropping company_name_vec in 0057
-            # reverse_sql = '''
-            #     ALTER TABLE relationships_user DROP COLUMN company_name_vec CASCADE;
-            # '''
+            reverse_sql = '''
+                ALTER TABLE relationships_user DROP COLUMN company_name_vec CASCADE;
+            '''
         )
     ]

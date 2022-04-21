@@ -17,8 +17,9 @@ class Migration(migrations.Migration):
                 CREATE INDEX company_name_vec_idx ON relationships_user USING GIN (company_name_vec);
             ''',
 
-            reverse_sql = '''
-                ALTER TABLE relationships_user DROP COLUMN company_name_vec CASCADE;
-            '''
+            # Dropping company_name_vec in 0057
+            # reverse_sql = '''
+            #     ALTER TABLE relationships_user DROP COLUMN company_name_vec CASCADE;
+            # '''
         )
     ]
