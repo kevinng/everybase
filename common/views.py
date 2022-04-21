@@ -67,7 +67,7 @@ def pricing(request):
     return TemplateResponse(request, 'pricing.html', {})
 
 def ads_txt(request):
-    filename = "ads.txt"
+    filename = 'ads.txt'
     content = 'google.com, pub-4994829786974999, DIRECT, f08c47fec0942fa0'
     response = HttpResponse(content, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
