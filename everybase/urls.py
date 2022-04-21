@@ -25,6 +25,7 @@ urlpatterns = [
     # Common
     path('', comviews.home, name='home'),
     path('pricing', comviews.pricing, name='pricing'),
+    path('ads.txt', comviews.ads_txt, name='ads_txt'), # For Adsense
 
     # Leads
     path('leads/', include('leads.urls')),
