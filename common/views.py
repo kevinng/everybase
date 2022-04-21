@@ -1,9 +1,10 @@
 from . import models
 from . import serializers
-from django.http import JsonResponse
+# from django.http import JsonResponse
 from django.template.response import TemplateResponse
-from rest_framework.parsers import JSONParser
-from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+# from rest_framework.parsers import JSONParser
+# from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, permissions
 
 class CountryAPI():
@@ -66,4 +67,8 @@ def pricing(request):
     return TemplateResponse(request, 'pricing.html', {})
 
 def ads_txt(request):
-    return TemplateResponse(request, 'ads.txt', {}, content_type='text/plain')
+    filename = "ads.txt"
+    content = 'google.com, pub-4994829786974999, DIRECT, f08c47fec0942fa0'
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
+    return response
