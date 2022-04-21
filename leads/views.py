@@ -636,21 +636,21 @@ def application_for_my_leads_list(request):
             applications = models.Application.objects.filter(
                 lead__author=request.user.user,
                 response='started_work'
-            )
+            ).order_by('-created')
         elif status == 'stopped_work':
             applications = models.Application.objects.filter(
                 lead__author=request.user.user,
                 response='stopped_work'
-            )
+            ).order_by('-created')
         elif status == 'rejected':
             applications = models.Application.objects.filter(
                 lead__author=request.user.user,
                 response='rejected'
-            )
+            ).order_by('-created')
         else:
             applications = models.Application.objects.filter(
                 lead__author=request.user.user
-            )
+            ).order_by('-created')
 
         # Status counts
 
@@ -710,21 +710,21 @@ def application_from_me_as_an_agent_list(request):
             applications = models.Application.objects.filter(
                 applicant=request.user.user,
                 response='started_work'
-            )
+            ).order_by('-created')
         elif status == 'stopped_work':
             applications = models.Application.objects.filter(
                 applicant=request.user.user,
                 response='stopped_work'
-            )
+            ).order_by('-created')
         elif status == 'rejected':
             applications = models.Application.objects.filter(
                 applicant=request.user.user,
                 response='rejected'
-            )
+            ).order_by('-created')
         else:
             applications = models.Application.objects.filter(
                 applicant=request.user.user
-            )
+            ).order_by('-created')
 
         # Status counts
 
