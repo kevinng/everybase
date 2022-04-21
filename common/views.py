@@ -66,4 +66,4 @@ def pricing(request):
     return TemplateResponse(request, 'pricing.html', {})
 
 def ads_txt(request):
-    return TemplateResponse(request, 'ads.txt', {})
+    return TemplateResponse(request, 'ads.txt', {}, content_type='text/plain')
