@@ -154,11 +154,14 @@ _user_fields = ['registered', 'django_user',
     'slug_link', 'slug_tokens',
 
     'impressions', 'clicks']
+_user_display_editable_fields = ['first_name', 'last_name', 'goods_string',
+    'languages_string', 'is_seller', 'is_sell_agent', 'internal_notes',
+    'is_buyer', 'is_buy_agent']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['uuid'] + _user_fields
-    list_editable = comadm.standard_list_editable + _user_fields
+    list_display = ['id'] + _user_display_editable_fields
+    list_editable = _user_display_editable_fields
     list_filter = comadm.standard_list_filter + ['registered', 'has_company',
         'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent']
     search_fields = comadm.standard_search_fields + [
