@@ -33,7 +33,7 @@ CSS
 
 {% block page_actions %}
 <div class="flex lg:hidden">
-    <button id="search" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Filter</button>
+    <button id="mob__filter" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Filter</button>
 </div>
 {% endblock %}
 
@@ -125,43 +125,9 @@ CSS
 </div>
 {% endblock %}
 
-{% comment %}
-Javascript
-https://codebeautify.org/minify-js
-
-$(document).ready(function() {
-    // Cache references
-    $select2 = $('.select2')
-    $search = $('#search')
-
-    // Initialize select2 checkboxes
-    $select2.select2();
-    $select2.one('select2:open', function(e) {
-        $('input.select2-search__field').prop('placeholder', 'Search here...');
-    });
-
-    // Mobile menu
-    $search.click(function() {
-        t = $(this)
-        if (t.html() == 'Search') {
-            t.html('Close')
-        } else {
-            t.html('Search')
-        }
-
-        t.toggleClass('bg-blue-500')
-        t.toggleClass('text-white')
-        t.toggleClass('hover:bg-blue-600')
-        t.toggleClass('bg-slate-100')
-        t.toggleClass('text-slate-600')
-        t.toggleClass('hover:bg-slate-200')
-
-        $('#mobile-filter').toggleClass('is-active')
-    })
-})
-{% endcomment %}
 {% block other_script %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% comment %} See lead list for code {% endcomment %}
 <script src="{% static 'leads/js/lead_list.min.js' %}"></script>
 {% endblock %}

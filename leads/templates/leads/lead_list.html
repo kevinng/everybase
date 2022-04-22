@@ -34,7 +34,7 @@ CSS
 {% block page_actions %}
 <div class="flex lg:hidden">
     <a href="{% url 'leads:lead_create' %}" class="w-full py-2 px-4 rounded-md bg-blue-100 border border-blue-700 hover:bg-blue-200 shadow-md text-center block">Post a Lead</a>
-    <button id="search" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Search</button>
+    <button id="mob__filter" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded px-4 py-2 ml-2">Filter</button>
 </div>
 {% endblock %}
 
@@ -209,7 +209,7 @@ https://codebeautify.org/minify-js
 $(document).ready(function() {
     // Cache references
     $select2 = $('.select2')
-    $search = $('#search')
+    $mob__filter = $('#mob__filter')
 
     // Initialize select2 checkboxes
     $select2.select2();
@@ -218,12 +218,12 @@ $(document).ready(function() {
     })
 
     // Mobile menu
-    $search.click(function() {
+    $mob__filter.click(function() {
         t = $(this)
-        if (t.html() == 'Search') {
+        if (t.html() == 'Filter') {
             t.html('Close')
         } else {
-            t.html('Search')
+            t.html('Filter')
         }
 
         t.toggleClass('bg-blue-500')
