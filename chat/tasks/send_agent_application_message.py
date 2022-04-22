@@ -40,9 +40,9 @@ def send_agent_application_message(
     )
 
     params = {
-        'first_name': receiver.first_name,
-        'last_name': receiver.last_name,
-        'country': receiver.country.name,
+        'first_name': am.author.first_name,
+        'last_name': am.author.last_name,
+        'country': am.author.country.name,
         'lead_headline': am.application.lead.headline,
         'message_body': am.body,
         'application_detail_url': urljoin(settings.BASE_URL,
