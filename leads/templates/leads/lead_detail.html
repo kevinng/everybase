@@ -47,7 +47,8 @@
         {% endif %}
 
         {% comment %} start: Adsense ad unit {% endcomment %}
-        <div class="mt-2">
+        {% comment %} Note: does not respond to size change properly {% endcomment %}
+        {% comment %} <div class="mt-2">
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4994829786974999"
                 crossorigin="anonymous"></script>
             <ins class="adsbygoogle"
@@ -57,7 +58,7 @@
                 data-ad-client="ca-pub-4994829786974999"
                 data-ad-slot="6351103973"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
+        </div> {% endcomment %}
         {% comment %} end: Adsense ad unit {% endcomment %}
 
         {% comment %} start: details {% endcomment %}
