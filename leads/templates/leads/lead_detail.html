@@ -46,6 +46,20 @@
             {% include 'leads/includes/lead_detail_tabs.html' with selected='details' application_count=application_count %}
         {% endif %}
 
+        {% comment %} start: Adsense ad unit {% endcomment %}
+        <div>
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4994829786974999"
+                crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                style="display:block; text-align:center;"
+                data-ad-layout="in-article"
+                data-ad-format="fluid"
+                data-ad-client="ca-pub-4994829786974999"
+                data-ad-slot="6351103973"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+        {% comment %} end: Adsense ad unit {% endcomment %}
+
         {% comment %} start: details {% endcomment %}
         <div class="bg-white rounded pb-8 pt-4 {% if user.user.id == lead.author.id %}mt-2 {% endif %}shadow-md">
 
