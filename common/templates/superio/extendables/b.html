@@ -1,0 +1,147 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Everybase - we help exporters find agents to sell their products overseas{% endblock %}</title>
+
+    {% comment %} Stylesheets {% endcomment %}
+    <link href="{% static 'common/superio/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'common/superio/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'common/superio/css/responsive.css' %}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{% static 'common/superio/images/favicon.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'common/superio/images/favicon.png' %}" type="image/x-icon">
+
+    {% comment %} Responsive {% endcomment %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="{% static 'common/superio/js/respond.js' %}"></script><![endif]-->
+</head>
+
+<body data-anm=".anm">
+    {% comment %} Start: Page wrapper {% endcomment %}
+    <div class="page-wrapper {% block page_wrapper_classes %}{% endblock %}">
+
+        {% comment %} Preloader {% endcomment %}
+        <div class="preloader"></div>
+
+        {% comment %} Header span {% endcomment %}
+        <span class="header-span"></span>
+
+        {% comment %} Start: Main header {% endcomment %}
+        <header class="main-header alternate -type-12">
+            <div class="auto-container">
+                {% comment %} Main box {% endcomment %}
+                <div class="main-box">
+                    {% comment %} Nav outer {% endcomment %}
+                    <div class="nav-outer">
+                        <div class="logo-box">
+                            <div class="logo"><a href="/"><img src="{% static 'common/img/logo.png' %}" alt="Everybase" title="Everybase"></a></div>
+                        </div>
+                    </div>
+                    <div class="outer-box">
+                        <nav class="nav main-menu">
+                            <ul class="navigation" id="navbar">
+                                <li class="current">
+                                    <a href="#"><span>Products</span></a>
+                                </li>
+
+                                <li>
+                                    <a href="https://everybase.freshdesk.com/support/home" target="everybase_support"><span>Support</span></a>
+                                </li>
+
+                                {% comment %} Mobile view {% endcomment %}
+                                <li class="mm-add-listing">
+                                    <span>
+                                        <span class="contact-info">
+                                            <span class="address">Singapore</span>
+                                            <a href="mailto:friend@everybase.co" class="email">friend@everybase.co</a>
+                                        </span>
+                                        <span class="social-links">
+                                            <a href="https://www.facebook.com/everybase.co/"><span class="fab fa-facebook-f"></span></a>
+                                            <a href="https://twitter.com/everybase_co"><span class="fab fa-twitter"></span></a>
+                                            <a href="https://www.linkedin.com/company/everybase"><span class="fab fa-linkedin-in"></span></a>
+                                        </span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        {% comment %} Login/Register {% endcomment %}
+                        <div class="btn-box">
+                            <a href="register-popup.html" class="theme-btn btn-style-three call-modal">Register</a>
+                            <a href="login-popup.html" class="theme-btn btn-style-one call-modal">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% comment %} Mobile header {% endcomment %}
+            <div class="mobile-header">
+                <div class="logo"><a href="/"><img src="{% static 'common/superio/images/logo.svg' %}" alt="Everybase - we help exporters find agents to sell their products overseas" title="Everybase - we help exporters find agents to sell their products overseas"></a></div>                
+                {% comment %} Nav box {% endcomment %}
+                <div class="nav-outer clearfix">
+                    <div class="outer-box">
+                        {% comment %} Login/Register {% endcomment %}
+                        <div class="login-box">
+                            <a href="login-popup.html" class="call-modal"><span class="icon-user"></span></a>
+                        </div>
+                        <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span class="flaticon-menu-1"></span></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Nav -->
+            <div id="nav-mobile"></div>
+        </header>
+        {% comment %} End: Main header {% endcomment %}
+
+        {% block contents %}{% endblock %}
+
+        {% block footer %}
+        {% comment %} Start: Main footer {% endcomment %}
+        <footer class="main-footer style-five">
+            <div class="footer-bottom">
+                <div class="auto-container">
+                    <div class="outer-box">
+                    <div class="copyright-text">© 2022 Everybase Pte Ltd. All Rights Reserved.</div>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/everybase.co/"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/everybase_co"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/company/everybase"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-to-top scroll-to-target" data-target="html"><span class="fa fa-angle-up"></span></div>
+        </footer>
+        {% comment %} End: Main footer {% endcomment %}
+        {% endblock %}
+
+    </div>
+    {% comment %} End: Page wrapper {% endcomment %}
+
+    <script src="{% static 'common/superio/js/jquery.js' %}"></script>
+    <script src="{% static 'common/superio/js/popper.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/chosen.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/jquery.fancybox.js' %}"></script>
+    <script src="{% static 'common/superio/js/jquery.modal.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/mmenu.polyfills.js' %}"></script>
+    <script src="{% static 'common/superio/js/mmenu.js' %}"></script>
+    <script src="{% static 'common/superio/js/appear.js' %}"></script>
+    <script src="{% static 'common/superio/js/anm.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/ScrollMagic.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/rellax.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/owl.js' %}"></script>
+    <script src="{% static 'common/superio/js/wow.js' %}"></script>
+    <script src="{% static 'common/superio/js/knob.js' %}"></script>
+    <script src="{% static 'common/superio/js/script.js' %}"></script>
+</body>
+
+</html>

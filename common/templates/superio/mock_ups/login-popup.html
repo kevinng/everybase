@@ -1,0 +1,53 @@
+<div class="model">
+  <!-- Login modal -->
+  <div id="login-modal">
+    <!-- Login Form -->
+    <div class="login-form default-form">
+      <div class="form-inner">
+        <h3>Login</h3>
+        <!--Login Form-->
+        <form method="post" action="add-parcel.html">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Username" required>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input id="password-field" type="password" name="password" value="" placeholder="Password">
+          </div>
+
+          <div class="form-group">
+            <div class="field-outer">
+              <a href="#" class="pwd">Forgot password?</a>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button class="theme-btn btn-style-one" type="submit">Login</button>
+          </div>
+        </form>
+
+        <div class="bottom-box">
+          <div class="text">Don't have an account? <a href="register-popup.html" class="call-modal signup">Sign up</a></div>
+        </div>
+      </div>
+    </div>
+    <!--End Login Form -->
+  </div>
+  <!-- End Login Module -->
+
+  <script type="text/javascript">
+    // Open modal in AJAX callback
+    jQuery('.call-modal.signup').on('click', function(event) {
+      event.preventDefault();
+      this.blur();
+      jQuery.get(this.href, function(html) {
+        jQuery(html).appendTo('body').modal({
+          fadeDuration: 300,
+          fadeDelay: 0.15
+        });
+      });
+    });
+  </script>
+</div>

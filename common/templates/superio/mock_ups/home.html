@@ -1,0 +1,242 @@
+{% extends 'superio/extendables/b.html' %}
+
+{% load static %}
+
+{% block contents %}
+
+{% comment %} Start: Hero {% endcomment %}
+<section class="banner-section-three -type-12">
+    <div class="bg-image">
+        <img src="{% static 'common/superio/images/index-12/header/bg.png' %}" alt="image">
+        <figure class="main-image wow fadeInRight" data-wow-delay="1500ms"><img src="{% static 'common/superio/images/hero.png' %}" alt=""></figure>
+    </div>
+
+    <div class="auto-container">
+        <div class="row">
+            <div class="content-column col-lg-7 col-md-12 col-sm-12">
+                <div class="inner-column">
+                    <div class="title-box wow fadeInUp">
+                        <h3>We Help Exporters Find Agents to Sell Their Products Overseas</h3>
+                        <div class="text">Access overseas market by recruiting agents to sell your products in their home country</div>
+                    </div>
+
+                    {% comment %} Job search form {% endcomment %}
+                    <div class="job-search-form-two wow fadeInUp" data-wow-delay="500ms">
+                        <form method="post" action="job-list-v10.html">
+                            <div class="row">
+                            <div class="form-group col-lg-9 col-md-12 col-sm-12">
+                                <label class="title">Product</label>
+                                <span class="icon flaticon-search-1"></span>
+                                <input type="text" name="products" placeholder="Find products to sell">
+                            </div>
+                            {% comment %} Form group {% endcomment %}
+                            <div class="form-group col-lg-3 col-md-12 col-sm-12 btn-box">
+                                <button type="submit" class="theme-btn btn-style-one"><span class="btn-title">Find</span></button>
+                            </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% comment %} End: Hero {% endcomment %}
+
+{% comment %} Start: How Everybase works {% endcomment %}
+<section class="layout-pt-60 layout-pb-60">
+    <div class="auto-container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="sec-title text-center">
+                    <h2>How Everybase Works</h2>
+                    <div class="text">Agents help exporters sell their products overseas for commissions.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row grid-base wow fadeInUp">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="work-block -type-2 mb-0">
+                    <div class="inner-box">
+                    <div class="icon-wrap -blue">
+                        <span class="icon icon-case"></span>
+                    </div>
+                    <h5>Find Agents or Products</h5>
+                    <p>Search and review agent or product details.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="work-block -type-2 mb-0">
+                    <div class="inner-box">
+                        <div class="icon-wrap -red">
+                            <span class="icon icon-contact"></span>
+                        </div>
+                        <h5>Discuss Requirements</h5>
+                        <p>Agree to a working arrangement and renumeration.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="work-block -type-2 mb-0">
+                    <div class="inner-box">
+                        <div class="icon-wrap -yellow">
+                            <span class="icon icon-doc"></span>
+                        </div>
+                        <h5>Work Together</h5>
+                        <p>Collaborate for mutual benefit.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% comment %} End: How Everybase works {% endcomment %}
+
+{% comment %} Start: Latest products {% endcomment %}
+<section class="layout-pt-120 layout-pb-120">
+    <div class="auto-container">
+        <div class="row justify-content-between align-items-end">
+            <div class="col-lg-6">
+                <div class="">
+                <h2 class="fw-700">Latest Products</h2>
+                </div>
+            </div>
+
+            <div class="col-auto">
+                <a href="#" class="button-icon -arrow">
+                    See More
+                    <span class="fa fa-angle-right"></span>
+                </a>
+            </div>
+        </div>
+
+        <div class="row grid-base pt-50 wow fadeInUp">
+            <div class="news-block col-lg-4 col-md-6 col-sm-12">
+                <div class="inner-box">
+                  <div class="image-box">
+                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
+                  </div>
+                  <div class="lower-content">
+                    <ul class="post-meta">
+                      <li><a href="#">Li Wung Quan</a></li>
+                      <li><a href="#">China</a></li>
+                    </ul>
+                    <h3><a href="#">Wireless earbuds</a></h3>
+                  </div>
+                </div>
+            </div>
+
+            <div class="news-block col-lg-4 col-md-6 col-sm-12">
+                <div class="inner-box">
+                  <div class="image-box">
+                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
+                  </div>
+                  <div class="lower-content">
+                    <ul class="post-meta">
+                      <li><a href="#">Li Wung Quan</a></li>
+                      <li><a href="#">China</a></li>
+                    </ul>
+                    <h3><a href="#">Wireless earbuds</a></h3>
+                  </div>
+                </div>
+            </div>
+
+            <div class="news-block col-lg-4 col-md-6 col-sm-12">
+                <div class="inner-box">
+                  <div class="image-box">
+                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
+                  </div>
+                  <div class="lower-content">
+                    <ul class="post-meta">
+                      <li><a href="#">Li Wung Quan</a></li>
+                      <li><a href="#">China</a></li>
+                    </ul>
+                    <h3><a href="#">Wireless earbuds</a></h3>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row grid-base pt-50 wow fadeInUp">
+            <div class="news-block col-lg-4 col-md-6 col-sm-12">
+                <div class="inner-box">
+                  <div class="image-box">
+                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
+                  </div>
+                  <div class="lower-content">
+                    <ul class="post-meta">
+                      <li><a href="#">Li Wung Quan</a></li>
+                      <li><a href="#">China</a></li>
+                    </ul>
+                    <h3><a href="#">Wireless earbuds</a></h3>
+                  </div>
+                </div>
+            </div>
+
+            <div class="news-block col-lg-4 col-md-6 col-sm-12">
+                <div class="inner-box">
+                  <div class="image-box">
+                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
+                  </div>
+                  <div class="lower-content">
+                    <ul class="post-meta">
+                      <li><a href="#">Li Wung Quan</a></li>
+                      <li><a href="#">China</a></li>
+                    </ul>
+                    <h3><a href="#">Wireless earbuds</a></h3>
+                  </div>
+                </div>
+            </div>
+
+            <div class="news-block col-lg-4 col-md-6 col-sm-12">
+                <div class="inner-box">
+                  <div class="image-box">
+                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
+                  </div>
+                  <div class="lower-content">
+                    <ul class="post-meta">
+                      <li><a href="#">Li Wung Quan</a></li>
+                      <li><a href="#">China</a></li>
+                    </ul>
+                    <h3><a href="#">Wireless earbuds</a></h3>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% comment %} End: Latest products {% endcomment %}
+
+{% comment %} Start: Register {% endcomment %}
+<section class="layout-pt-60 layout-pb-60">
+    <div class="auto-container">
+        <div class="row wow fadeInUp">
+            <div class="banner-style-one -type-2 col-lg-6 col-md-12 col-sm-12">
+                <div class="inner-box" style="background-image:url('images/index-13/banner/bg-1.png')">
+                    <div class="content">
+                        <h3>Agents</h3>
+                        <p>Help exporters sell their products in your home country.</p>
+                        <a href="register-popup.html" class="theme-btn btn-style-five call-modal">Register Account</a>
+                    </div>
+                    <figure class="image"><img src="{% static 'common/superio/images/resource/employ.png' %}" alt=""></figure>
+                </div>
+            </div>
+            <div class="banner-style-two -type-2 col-lg-6 col-md-12 col-sm-12">
+                <div class="inner-box" style="background-image:url('images/index-13/banner/bg-2.png')">
+                    <div class="content">
+                        <h3 class="color-dark-1">Exporter</h3>
+                        <p class="color-dark-2">Find agents to help you sell your products overseas.</p>
+                        <a href="register-popup.html" class="theme-btn btn-style-five color-dark-1 call-modal">Register Account</a>
+                    </div>
+                    <figure class="image"><img src="{% static 'common/superio/images/resource/candidate.png' %}" alt=""></figure>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% comment %} End: Register {% endcomment %}
+{% endblock %}

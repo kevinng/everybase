@@ -112,3 +112,4 @@ venv.bak/
 
 # Static Assets - which will be recollected on deployment
 staticfiles/
+node_modules

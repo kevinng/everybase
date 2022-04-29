@@ -20,5 +20,6 @@ urlpatterns = [
 
     path('e/<str:file_to_render>', views.e),
     path('m/<str:file_to_render>', views.m),
+    path('sm/<str:file_to_render>', views.sm),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
