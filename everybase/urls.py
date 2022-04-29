@@ -32,6 +32,9 @@ urlpatterns = [
     path('leads/', include('leads.urls')),
     path('applications/', include('leads.urls_application')),
 
+    # Products
+    path('products/', include('leads.urls_product')),
+
     # New sign-up and register URLs
     path('signup/', relviews.signup, name='signup'),
     path('signin/', relviews.signin, name='signin'),

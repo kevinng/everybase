@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.response import TemplateResponse
 
 from everybase import settings
 from common import models as commods
@@ -774,6 +775,10 @@ def application_from_me_as_an_agent_list(request):
         params['page_obj'] = page_obj
 
     return render(request, 'leads/application_from_me_as_an_agent_list.html', params)
+
+def product_list(request):
+    template_name = 'leads/superio/product_list.html'
+    return TemplateResponse(request, template_name, {})
 
 # @login_required
 # @csrf_exempt
