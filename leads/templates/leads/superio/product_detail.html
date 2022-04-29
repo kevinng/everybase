@@ -1,0 +1,72 @@
+{% extends 'superio/extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}Product Detail{% endblock %}
+
+{% block contents %}
+
+<section class="blog-single">
+    <div class="auto-container">
+        <div class="upper-box">
+        <h3>{{ product.headline }}</h3>
+            <ul class="post-info">
+                <li>{{ product.author.first_name|title }} {{ product.author.last_name|title }}</li>
+                <li>{{ product.author.country.name }}</li>
+                <li>{{ product.age_desc }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="auto-container">
+        <h4>Seller Introduction</h4>
+        <p>{{ product.author.goods_string }}</p>
+
+        <h4>Product Details</h4>
+        <p>{{ product.details }}</p>
+
+        <h4>Profits, Commission or Renumeration for Helping to Sell</h4>
+        <p>{{ product.commission_type_other }}</p>
+
+        {% if not request.user.is_authenticated %}
+            <div class="comments-area">
+                <div class="comment-form default-form">
+                    <h4>Login to apply to be an agent</h4>
+                    <a href="{% url 'signin' %}" class="theme-btn btn-style-one call-modal" name="submit-form">Sign in</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="comments-area">
+                <div class="comment-form default-form">
+                    <h4>Apply to be an agent</h4>
+                    <form>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                <input id="has_experience" type="checkbox" name="has_experience">
+                                <label for="has_experience">I have experience with this product or industry</label>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                <input id="have_buyers" type="checkbox" name="have_buyers">
+                                <label for="have_buyers">I have potential buyers</label>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                <label>This is an optional question from the seller</label>
+                                <textarea name="message"></textarea>
+                            </div>
+
+                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                <label>Comments for the Seller</label>
+                                <textarea name="message"></textarea>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                <button class="theme-btn btn-style-one" type="submit" name="submit-form">Apply</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+</section>
+{% endblock %}

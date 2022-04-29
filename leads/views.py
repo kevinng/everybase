@@ -1,3 +1,4 @@
+from itertools import product
 from urllib.parse import urljoin
 import boto3, requests, json
 from PIL import Image, ImageOps
@@ -794,7 +795,14 @@ def product_list(request):
 
     return render(request, 'leads/superio/product_list.html', params)
 
+def product_detail(request, slug):
+    product = models.Lead.objects.get(slug_link=slug)
 
+    params = {
+        'product': product
+    }
+
+    return render(request, 'leads/superio/product_detail.html', params)
 
 # @login_required
 # @csrf_exempt

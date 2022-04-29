@@ -6,4 +6,5 @@ urlpatterns = [
     # Don't map slug URLs above generic links like lead_create. Otherwise,
     # 'products/create' will go to a lead detail page with slug 'create'.
     path('', views.product_list, name='product_list'),
+    path('<slug:slug>', views.product_detail, name='product_detail'),
 ]
