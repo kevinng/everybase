@@ -46,8 +46,8 @@
                     <div class="outer-box">
                         <nav class="nav main-menu">
                             <ul class="navigation" id="navbar">
-                                <li class="current">
-                                    <a href="#"><span>Products</span></a>
+                                <li {% if request.resolver_match.view_name == 'products:product_list' %}class="current"{% endif %}>
+                                    <a href="{% url 'products:product_list' %}"><span>Products</span></a>
                                 </li>
 
                                 <li>
