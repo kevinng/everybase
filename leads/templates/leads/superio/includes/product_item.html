@@ -1,0 +1,19 @@
+{% comment %} 
+Params:
+    product, product (a lead model) to display
+{% endcomment %}
+{% load static %}
+<div class="news-block col-lg-4 col-md-6 col-sm-12">
+    <div class="inner-box">
+        <div class="image-box">
+            <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
+        </div>
+        <div class="lower-content">
+            <ul class="post-meta">
+                <li>{{ product.author.first_name|title }} {{ product.author.last_name|title }}</li>
+                <li>{{ product.author.country.programmatic_name }}</li>
+            </ul>
+            <h3><a href="#">{{ product.headline }}</a></h3>
+        </div>
+    </div>
+</div>

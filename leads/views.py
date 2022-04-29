@@ -777,8 +777,24 @@ def application_from_me_as_an_agent_list(request):
     return render(request, 'leads/application_from_me_as_an_agent_list.html', params)
 
 def product_list(request):
-    template_name = 'leads/superio/product_list.html'
-    return TemplateResponse(request, template_name, {})
+    products = models.Lead.objects.all().order_by('-created')
+
+    # Paginate
+
+    products_per_page = 24
+    paginator = Paginator(products, products_per_page)
+
+    page_number = request.GET.get('page')
+
+    # Set context parameters
+    params = {}
+    
+    page_obj = paginator.get_page(page_number)
+    params['page_obj'] = page_obj
+
+    return render(request, 'leads/superio/product_list.html', params)
+
+
 
 # @login_required
 # @csrf_exempt
