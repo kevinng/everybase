@@ -67,6 +67,9 @@ def sm(request, file_to_render):
 def home(request):
     return TemplateResponse(request, 'home.html', {})
 
+def home_superio(request):
+    return TemplateResponse(request, 'superio/home.html', {})
+
 def pricing(request):
     return TemplateResponse(request, 'pricing.html', {})
 

@@ -15,6 +15,7 @@ from django.db.models import DateTimeField
 from django.db.models.functions import Trunc
 from django.contrib.postgres.search import (SearchVector, SearchQuery,
     SearchRank, SearchVectorField)
+from django.template.response import TemplateResponse
 
 from everybase import settings
 from common import models as commods
@@ -522,6 +523,22 @@ def is_logged_in(request, user_uuid):
     return JsonResponse({'l': False})
 
 def log_out(request):
+    logout(request)
+    next_url = request.GET.get('next')
+    if next_url is not None:
+        return HttpResponseRedirect(next_url)
+
+    return HttpResponseRedirect(reverse('home'))
+
+def signin(request):
+    template_name = 'relationships/superio/signin.html'
+    return TemplateResponse(request, template_name, {})
+
+def signup(request):
+    template_name = 'relationships/superio/signup.html'
+    return TemplateResponse(request, template_name, {})
+
+def signout(request):
     logout(request)
     next_url = request.GET.get('next')
     if next_url is not None:

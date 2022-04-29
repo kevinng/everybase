@@ -23,13 +23,19 @@ def trigger_handled_error(request):
 
 urlpatterns = [
     # Common
-    path('', comviews.home, name='home'),
+    # path('', comviews.home, name='home'),
+    path('', comviews.home_superio, name='home'),
     path('pricing', comviews.pricing, name='pricing'),
     path('ads.txt', comviews.ads_txt, name='ads_txt'), # For Adsense
 
     # Leads
     path('leads/', include('leads.urls')),
     path('applications/', include('leads.urls_application')),
+
+    # New sign-up and register URLs
+    path('signup/', relviews.signup, name='signup'),
+    path('signin/', relviews.signin, name='signin'),
+    path('signout/', relviews.signout, name='signout'),
 
     # Relationships
     path('register/', relviews.register, name='register'),

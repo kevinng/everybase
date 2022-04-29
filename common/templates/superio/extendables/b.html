@@ -73,8 +73,8 @@
 
                         {% comment %} Login/Register {% endcomment %}
                         <div class="btn-box">
-                            <a href="register-popup.html" class="theme-btn btn-style-three call-modal">Register</a>
-                            <a href="login-popup.html" class="theme-btn btn-style-one call-modal">Login</a>
+                            <a href="{% url 'signup' %}" class="theme-btn btn-style-three call-modal">Register</a>
+                            <a href="{% url 'signin' %}" class="theme-btn btn-style-one call-modal">Sign In</a>
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                     <div class="outer-box">
                         {% comment %} Login/Register {% endcomment %}
                         <div class="login-box">
-                            <a href="login-popup.html" class="call-modal"><span class="icon-user"></span></a>
+                            <a href="{% url 'signin' %}" class="call-modal"><span class="icon-user"></span></a>
                         </div>
                         <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span class="flaticon-menu-1"></span></a>
                     </div>
