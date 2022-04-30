@@ -211,3 +211,63 @@ class LoginForm(forms.Form):
             raise ValidationError(None)
 
         return self.cleaned_data
+
+class EmailLoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField()
+    next = forms.CharField(required=False)
+
+    def clean(self):
+        super(EmailLoginForm, self).clean()
+
+        email = self.cleaned_data.get('email')
+
+        if email is not None:
+            email = models.Email.objects.get(email=email)
+
+            u = models.User.objects.filter(
+                email=email.id, # User has email
+                registered__isnull=False, # User is registered
+                django_user__isnull=False # User has a Django user linked
+            ).first()
+
+            if u is None:
+                self.add_error('email', 'Account does not exist, please register.')
+                has_error = True
+        
+        if has_error:
+            raise ValidationError(None)
+
+class EmailRegisterForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField()
+    confirm_password = forms.CharField()
+
+    def clean(self):
+        super(EmailRegisterForm, self).clean()
+
+        email = self.cleaned_data.get('email')
+
+        if email is not None:
+            email = models.Email.objects.get(email=email)
+
+            u = models.User.objects.filter(
+                email=email.id, # User has email
+                registered__isnull=False, # User is registered
+                django_user__isnull=False # User has a Django user linked
+            ).first()
+
+            if u is not None:
+                self.add_error('email', 'Account exists.')
+                has_error = True
+
+        password = self.cleaned_data.get('password')
+        confirm_password = self.cleaned_data.get('confirm_password')
+
+        if password != confirm_password:
+            self.add_error('password', 'Does not match confirm password.')
+            self.add_error('confirm_password', 'Does not match password.')
+            has_error = True
+        
+        if has_error:
+            raise ValidationError(None)

@@ -531,10 +531,69 @@ def log_out(request):
     return HttpResponseRedirect(reverse('home'))
 
 def signin(request):
+    if request.method == 'POST':
+        form = forms.EmailLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            # Find Everybase user with this email
+            u = models.User.objects.filter(
+                email=email.id, # User has email
+                registered__isnull=False, # User is registered
+                django_user__isnull=False # User has a Django user linked
+            ).first()
+
+            # Authenticate with the Django user's username (which is the UUID key of the
+            # Everybase user) and the supplied password.
+            user = authenticate(request, username=u.django_user.username, password=password)
+
+            if user is not None:
+                # Success
+                next = form.changed_data.get('next')
+                if next is not None:
+                    return HttpResponseRedirect(next)
+                else:
+                    return HttpResponseRedirect(reverse('home'))
+            else:
+                form.add_error(None, 'Invalid credentials.')
+    else:
+        form = forms.EmailLoginForm()
+
     template_name = 'relationships/superio/signin.html'
-    return TemplateResponse(request, template_name, {})
+    return TemplateResponse(request, template_name, {'form': form})
 
 def signup(request):
+    if request.method == 'POST':
+        form = forms.EmailRegisterForm(request.POST)
+        if form.is_valid():
+            
+            # Get or create a new email for this user
+            email, _ = models.Email.objects.get_or_create(
+                email=form.cleaned_data.get('email')
+            )
+
+            # Create an Everybase user
+            user = models.User.objects.create(
+                email=email
+            )
+
+            # Create new Django user
+            django_user, _ = User.objects.get_or_create(
+                username=user.uuid
+            )
+
+            # Update user profile
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            user.registered = datetime.now(sgtz)
+            user.django_user = django_user
+            user.save()
+
+
+
+# TODO: continue from here, to direct to dashboard
+            return HttpResponseRedirect(reverse('home'))
+
     template_name = 'relationships/superio/signup.html'
     return TemplateResponse(request, template_name, {})
 

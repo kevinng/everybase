@@ -129,6 +129,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+
+    # Supports WhatsApp login
     'relationships.auth.backends.DirectBackend',
 ]
 
