@@ -950,18 +950,26 @@ def profile(request):
             user.company_name = form.cleaned_data.get('company_name')
             user.country = country
             user.save()
-
-            print(user.email)
-
     else:
         u = request.user.user
-        form = forms.ProfileForm(initial={
-            'first_name': u.first_name,
-            'last_name': u.last_name,
-            'phone_number': f'+{u.phone_number.country_code}{u.phone_number.national_number}',
-            'company_name': u.company_name,
-            'goods_string': u.goods_string
-        }, request=request)
+        initial = {}
+        
+        if u.first_name:
+            initial['first_name'] = u.first_name
+        
+        if u.last_name:
+            initial['last_name'] = u.last_name
+        
+        if u.phone_number:
+            initial['phone_number'] = f'+{u.phone_number.country_code}{u.phone_number.national_number}'
+        
+        if u.company_name:
+            initial['company_name'] = u.company_name
+
+        if u.goods_string:
+            initial['goods_string'] = u.goods_string
+        
+        form = forms.ProfileForm(initial=initial, request=request)
 
     return render(request, 'relationships/superio/profile.html', {'form': form})
 
