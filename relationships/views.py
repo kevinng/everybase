@@ -16,6 +16,7 @@ from django.db.models.functions import Trunc
 from django.contrib.postgres.search import (SearchVector, SearchQuery,
     SearchRank, SearchVectorField)
 from django.template.response import TemplateResponse
+from django.shortcuts import render
 
 from everybase import settings
 from common import models as commods
@@ -890,3 +891,6 @@ def user_list(request):
     params['page_obj'] = page_obj
 
     return render(request, 'relationships/user_list.html', params)
+
+def profile(request):
+    return render(request, 'relationships/superio/profile.html', {})

@@ -1,4 +1,3 @@
-from itertools import product
 from urllib.parse import urljoin
 import boto3, requests, json
 from PIL import Image, ImageOps
@@ -16,7 +15,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.template.response import TemplateResponse
 
 from everybase import settings
 from common import models as commods

@@ -22,7 +22,7 @@
     <!--[if lt IE 9]><script src="{% static 'common/superio/js/respond.js' %}"></script><![endif]-->
 </head>
 
-<body data-anm=".anm">
+<body{% block body_properties %} data-anm=".anm"{% endblock %}>
     {% comment %} Start: Page wrapper {% endcomment %}
     <div class="page-wrapper {% block page_wrapper_classes %}{% endblock %}">
 
@@ -73,8 +73,8 @@
 
                         {% comment %} Login/Register {% endcomment %}
                         <div class="btn-box">
-                            <a href="{% url 'signup' %}" class="theme-btn btn-style-three call-modal">Register</a>
-                            <a href="{% url 'signin' %}" class="theme-btn btn-style-one call-modal">Sign In</a>
+                            <a href="{% url 'signup' %}" class="theme-btn btn-style-three">Register</a>
+                            <a href="{% url 'signin' %}" class="theme-btn btn-style-one">Sign In</a>
                         </div>
                     </div>
                 </div>
@@ -82,13 +82,13 @@
 
             {% comment %} Mobile header {% endcomment %}
             <div class="mobile-header">
-                <div class="logo"><a href="/"><img src="{% static 'common/superio/images/logo.svg' %}" alt="Everybase - we help exporters find agents to sell their products overseas" title="Everybase - we help exporters find agents to sell their products overseas"></a></div>                
+                <div class="logo"><a href="/"><img src="{% static 'common/img/logo.png' %}" style="width: 152px; height: 21px;" alt="Everybase" title="Everybase"></a></div>
                 {% comment %} Nav box {% endcomment %}
                 <div class="nav-outer clearfix">
                     <div class="outer-box">
                         {% comment %} Login/Register {% endcomment %}
                         <div class="login-box">
-                            <a href="{% url 'signin' %}" class="call-modal"><span class="icon-user"></span></a>
+                            <a href="{% url 'signin' %}"><span class="icon-user"></span></a>
                         </div>
                         <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span class="flaticon-menu-1"></span></a>
                     </div>

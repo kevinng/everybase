@@ -240,8 +240,8 @@ class EmailLoginForm(forms.Form):
 
 class EmailRegisterForm(forms.Form):
     email = forms.EmailField()
-    password = forms.CharField()
-    confirm_password = forms.CharField()
+    password = forms.CharField(min_length=8)
+    confirm_password = forms.CharField(min_length=8)
 
     def clean(self):
         super(EmailRegisterForm, self).clean()

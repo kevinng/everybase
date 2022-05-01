@@ -53,6 +53,8 @@ urlpatterns = [
         name='is_logged_in'),
     path('logout/', relviews.log_out, name='logout'),
     path('persons/', include('relationships.urls')),
+    
+    path('users/', include('relationships.urls')), # Makes more sense for Everybase v5
 
     # Chat
     path('chat/', include('chat.urls')),
