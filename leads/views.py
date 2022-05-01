@@ -780,7 +780,7 @@ def product_list(request):
 
     # Paginate
 
-    products_per_page = 24
+    products_per_page = 36
     paginator = Paginator(products, products_per_page)
 
     page_number = request.GET.get('page')
