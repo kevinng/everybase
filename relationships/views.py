@@ -915,3 +915,6 @@ def user_list(request):
 
 def profile(request):
     return render(request, 'relationships/superio/profile.html', {})
+
+def messages(request):
+    return render(request, 'relationships/superio/messages.html', {})

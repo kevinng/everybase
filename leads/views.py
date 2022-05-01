@@ -802,6 +802,12 @@ def product_detail(request, slug):
 
     return render(request, 'leads/superio/product_detail.html', params)
 
+def product_create(request):
+    return render(request, 'leads/superio/product_create.html', {})
+
+def my_products(request):
+    return render(request, 'leads/superio/my_products.html', {})
+
 # @login_required
 # @csrf_exempt
 # def toggle_save_lead(request, slug):

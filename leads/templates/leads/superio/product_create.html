@@ -1,0 +1,76 @@
+{% extends 'superio/extendables/b.html' %}
+
+{% load static %}
+
+{% block page_wrapper_classes %} dashboard{% endblock %}
+
+{% block title %}New Product{% endblock %}
+
+{% block contents %}
+{% include 'superio/includes/dashboard_sidebar.html' %}
+
+{% comment %} Start: Dashboard {% endcomment %}
+<section class="user-dashboard">
+    <div class="dashboard-outer">
+        <div class="upper-title-box">
+            <h3>New Product</h3>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ls-widget">
+                    <div class="tabs-box">
+                        <div class="widget-title">
+                            {% comment %} <h4>My Profile</h4> {% endcomment %}
+                        </div>
+
+                        <div class="widget-content">
+                            <form class="default-form">
+                                <div class="row">
+                                    <div class="form-group col-12">
+                                        <label>Cover Photo</label>
+                                        <div class="uploading-outer">
+                                            <div class="uploadButton">
+                                                <input class="uploadButton-input" type="file" name="attachments[]" accept="image/*, application/pdf" id="upload" multiple />
+                                                <label class="uploadButton-button ripple-effect" for="upload">Browse Logo</label>
+                                                <span class="uploadButton-file-name"></span>
+                                            </div>
+                                            <div class="text">Max file size is 1MB, Minimum dimension: 330x300 And Suitable files are .jpg & .png</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-12">
+                                        <label>Product Name</label>
+                                        <input type="text" name="product_name">
+                                    </div>
+
+                                    <div class="form-group col-12">
+                                        <label>Product Details</label>
+                                        <textarea></textarea>
+                                    </div>
+
+                                    <div class="form-group col-12">
+                                        <label>Profits, Commission or Renumeration for Helping to Sell</label>
+                                        <textarea></textarea>
+                                    </div>
+            
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <button class="theme-btn btn-style-one">Post</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% comment %} End: Dashboard {% endcomment %}
+{% endblock %}
+
+{% block footer %}
+{% include 'superio/includes/dashboard_footer.html' %}
+{% endblock %}
