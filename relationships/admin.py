@@ -154,9 +154,9 @@ _user_fields = ['registered', 'django_user',
     'slug_link', 'slug_tokens',
 
     'impressions', 'clicks']
-_user_display_editable_fields = ['email', 'first_name', 'last_name', 'goods_string',
-    'languages_string', 'is_seller', 'is_sell_agent', 'internal_notes',
-    'is_buyer', 'is_buy_agent']
+_user_display_editable_fields = ['email', 'phone_number', 'first_name',
+    'last_name', 'goods_string', 'languages_string', 'is_seller', 'is_sell_agent',
+    'internal_notes', 'is_buyer', 'is_buy_agent']
 @admin.register(mod.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings

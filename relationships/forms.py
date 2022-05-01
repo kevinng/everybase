@@ -1,3 +1,4 @@
+from urllib import request
 from django import forms
 from django.core.exceptions import ValidationError
 from common.utilities.is_censored import is_censored
@@ -275,5 +276,48 @@ class EmailRegisterForm(forms.Form):
             self.add_error('confirm_password', 'Does not match password.')
             has_error = True
         
+        if has_error:
+            raise ValidationError(None)
+
+class ProfileForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    company_name = forms.CharField()
+    phone_number = forms.CharField()
+    goods_string = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request") # request passed in into object variable
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(ProfileForm, self).clean()
+
+        has_error = False
+        phone_number = self.cleaned_data.get('phone_number')
+        if phone_number is not None:
+            parsed_ph = phonenumbers.parse(str(phone_number), None)
+            ph_cc = parsed_ph.country_code
+            ph_nn = parsed_ph.national_number
+
+            try:
+                phone_number = models.PhoneNumber.objects.get(
+                    country_code=ph_cc,
+                    national_number=ph_nn
+                )
+
+                user_w_ph = models.User.objects.filter(
+                    phone_number=phone_number.id, # User has phone number
+                    registered__isnull=False, # User is registered
+                    django_user__isnull=False # User has a Django user linked
+                ).first()
+
+                if user_w_ph is not None and self.request.user.user.id != user_w_ph.id:
+                    self.add_error('phone_number', 'This phone number belongs to an existing user. Please ensure you\'ve entered your phone number correctly.')
+                    has_error = True
+            except models.PhoneNumber.DoesNotExist:
+                # Good - no user has this phone number
+                pass
+
         if has_error:
             raise ValidationError(None)

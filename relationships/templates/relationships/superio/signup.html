@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Superio | Just another HTML Template | Register</title>
+    <title>Everybase - sign in</title>
 
     {% comment %} Stylesheets {% endcomment %}
     <link href="{% static 'common/superio/css/bootstrap.css' %}" rel="stylesheet">
@@ -75,19 +75,19 @@
                             {% csrf_token %}
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" name="email" placeholder="Email" required>
+                                <input type="email" name="email" placeholder="Email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} required>
                                 {% if form.email.errors %}<div style="color:red">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">
                                 <label>Password</label>
-                                <input id="password-field" type="password" name="password" placeholder="Password" required>
+                                <input id="password-field" type="password" name="password" required>
                                 {% if form.password.errors %}<div style="color:red">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">
-                                <label>Confirm Password</label>
-                                <input id="password-field" type="password" name="confirm_password" placeholder="Retype password" required>
+                                <label>Re-enter Password</label>
+                                <input id="password-field" type="password" name="confirm_password" required>
                                 {% if form.password.errors %}<div style="color:red">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 

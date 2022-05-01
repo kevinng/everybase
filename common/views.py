@@ -2,7 +2,8 @@ from . import models
 from . import serializers
 # from django.http import JsonResponse
 from django.template.response import TemplateResponse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 # from rest_framework.parsers import JSONParser
 # from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, permissions
@@ -68,6 +69,10 @@ def home(request):
     return TemplateResponse(request, 'home.html', {})
 
 def home_superio(request):
+    # Redirect to dashboard if user is authenticated
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('users:profile'))
+
     return TemplateResponse(request, 'superio/home.html', {})
 
 def pricing(request):

@@ -250,7 +250,7 @@ if DEBUG == False:
     # Required for Heroku
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-LOGIN_URL = '/login'
+LOGIN_URL = '/signin'
 
 # List of persons to notify when someone signs up as a lead
 LEAD_SIGN_UP_NOTIFICATION_LIST = ['kevin@everybase.co']

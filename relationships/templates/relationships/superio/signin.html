@@ -72,7 +72,7 @@
                             {% csrf_token %}
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="text" name="email" placeholder="Email" {% if form.email.value %}value="{{ form.email.value }}"{% endif %} required>
+                                <input type="text" name="email" placeholder="Email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} required>
                                 {% if form.email.errors %}<div style="color:red">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 

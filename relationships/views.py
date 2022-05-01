@@ -1,3 +1,4 @@
+from mimetypes import init
 import pytz
 from datetime import datetime, timedelta
 
@@ -547,11 +548,11 @@ def signin(request):
                 django_user__isnull=False # User has a Django user linked
             ).first()
 
-            print(u)
-
             # Authenticate with the Django user's username (which is the UUID key of the
             # Everybase user) and the supplied password.
             user = authenticate(request, username=u.django_user.username, password=password)
+            if user is not None:
+                login(request, user)
 
             if user is not None:
                 # Success
@@ -591,11 +592,13 @@ def signup(request):
                 email=email
             )
 
+            password = form.cleaned_data.get('password')
+
             # Create new Django user
             django_user, _ = User.objects.get_or_create(
                 username=user.uuid
             )
-            django_user.set_password(form.cleaned_data.get('password'))
+            django_user.set_password(password)
             django_user.save()
 
             # Update user profile
@@ -603,6 +606,10 @@ def signup(request):
             user.registered = datetime.now(sgtz)
             user.django_user = django_user
             user.save()
+
+            user = authenticate(request, username=django_user.username, password=password)
+            if user is not None:
+                login(request, user)
 
             return HttpResponseRedirect(reverse('users:profile'))
     else:
@@ -913,8 +920,50 @@ def user_list(request):
 
     return render(request, 'relationships/user_list.html', params)
 
+@login_required
 def profile(request):
-    return render(request, 'relationships/superio/profile.html', {})
+    if request.method == 'POST':
+        form = forms.ProfileForm(request.POST, request=request)
+        if form.is_valid():
+            phone_number = form.cleaned_data.get('phone_number')
+
+            parsed_ph = phonenumbers.parse(str(phone_number), None)
+            ph_cc = parsed_ph.country_code
+            ph_nn = parsed_ph.national_number
+
+            ph, _ = models.PhoneNumber.objects.get_or_create(
+                country_code=ph_cc,
+                national_number=ph_nn
+            )
+
+            # Get country from user's phone number country code
+            try:
+                country = commods.Country.objects.get(country_code=ph_cc)
+            except commods.Country.DoesNotExist:
+                country = None
+
+            user = request.user.user
+            user.phone_number = ph
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.goods_string = form.cleaned_data.get('goods_string')
+            user.company_name = form.cleaned_data.get('company_name')
+            user.country = country
+            user.save()
+
+            print(user.email)
+
+    else:
+        u = request.user.user
+        form = forms.ProfileForm(initial={
+            'first_name': u.first_name,
+            'last_name': u.last_name,
+            'phone_number': f'+{u.phone_number.country_code}{u.phone_number.national_number}',
+            'company_name': u.company_name,
+            'goods_string': u.goods_string
+        }, request=request)
+
+    return render(request, 'relationships/superio/profile.html', {'form': form})
 
 def messages(request):
     return render(request, 'relationships/superio/messages.html', {})
