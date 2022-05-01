@@ -72,10 +72,22 @@
                         </nav>
 
                         {% comment %} Login/Register {% endcomment %}
-                        <div class="btn-box">
-                            <a href="{% url 'signup' %}" class="theme-btn btn-style-three">Register</a>
-                            <a href="{% url 'signin' %}" class="theme-btn btn-style-one">Sign In</a>
-                        </div>
+                        {% if not request.user.is_authenticated %}
+                            <div class="btn-box">
+                                <a href="{% url 'signup' %}" class="theme-btn btn-style-three">Register</a>
+                                <a href="{% url 'signin' %}" class="theme-btn btn-style-one">Sign In</a>
+                            </div>
+                        {% else %}
+                            <div class="dropdown dashboard-option">
+                                <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
+                                    <span class="name">{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li{% if request.resolver_match.view_name == 'users:profile' or request.resolver_match.view_name == 'products:product_create' or request.resolver_match.view_name == 'products:my_products' or request.resolver_match.view_name == 'relationships:messages' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"> <i class="la la-home"></i> Dashboard</a></li>
+                                    <li><a href="{% url 'signout' %}"><i class="la la-sign-out"></i>Sign Out</a></li>
+                                </ul>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
