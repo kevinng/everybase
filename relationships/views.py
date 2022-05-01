@@ -538,6 +538,8 @@ def signin(request):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
 
+            email = models.Email.objects.get(email=email)
+
             # Find Everybase user with this email
             u = models.User.objects.filter(
                 email=email.id, # User has email
@@ -545,14 +547,16 @@ def signin(request):
                 django_user__isnull=False # User has a Django user linked
             ).first()
 
+            print(u)
+
             # Authenticate with the Django user's username (which is the UUID key of the
             # Everybase user) and the supplied password.
             user = authenticate(request, username=u.django_user.username, password=password)
 
             if user is not None:
                 # Success
-                next = form.changed_data.get('next')
-                if next is not None:
+                next = form.cleaned_data.get('next')
+                if next is not None and next.strip() != '':
                     return HttpResponseRedirect(next)
                 else:
                     return HttpResponseRedirect(reverse('home'))
@@ -561,8 +565,16 @@ def signin(request):
     else:
         form = forms.EmailLoginForm()
 
+    params = {'form': form}
+
+    # Read 'next' URL from GET parameters to form input. We'll add it to the
+    # redirect URL when the user submits this form.
+    next = request.GET.get('next')
+    if next is not None:
+        params['next'] = next
+
     template_name = 'relationships/superio/signin.html'
-    return TemplateResponse(request, template_name, {'form': form})
+    return TemplateResponse(request, template_name, params)
 
 def signup(request):
     if request.method == 'POST':

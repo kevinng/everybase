@@ -222,6 +222,7 @@ class EmailLoginForm(forms.Form):
 
         email = self.cleaned_data.get('email')
 
+        has_error = False
         if email is not None:
             email = models.Email.objects.get(email=email)
 
