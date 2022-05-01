@@ -70,18 +70,25 @@
                 <div class="login-form default-form">
                     <div class="form-inner">
                         <h3>Register</h3>
-
                         <form action="{% url 'signup' %}" method="post">
+                            {% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}{% comment %} The next URL is rendered with the template if it is passed as a GET parameter to the URL. {% endcomment %}
+                            {% csrf_token %}
                             <div class="form-group">
                                 <label>Email</label>
                                 <input type="email" name="email" placeholder="Email" required>
-                                <div>Test error message</div>
+                                {% if form.email.errors %}<div style="color:red">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">
                                 <label>Password</label>
-                                <input id="password-field" type="password" name="password" value="" placeholder="Password">
-                                <div>Test error message</div>
+                                <input id="password-field" type="password" name="password" placeholder="Password" required>
+                                {% if form.password.errors %}<div style="color:red">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input id="password-field" type="password" name="confirm_password" placeholder="Retype password" required>
+                                {% if form.password.errors %}<div style="color:red">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">

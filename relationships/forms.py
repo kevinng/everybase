@@ -249,18 +249,23 @@ class EmailRegisterForm(forms.Form):
 
         email = self.cleaned_data.get('email')
 
+        has_error = False
         if email is not None:
-            email = models.Email.objects.get(email=email)
+            try:
+                email = models.Email.objects.get(email=email)
 
-            u = models.User.objects.filter(
-                email=email.id, # User has email
-                registered__isnull=False, # User is registered
-                django_user__isnull=False # User has a Django user linked
-            ).first()
+                u = models.User.objects.filter(
+                    email=email.id, # User has email
+                    registered__isnull=False, # User is registered
+                    django_user__isnull=False # User has a Django user linked
+                ).first()
 
-            if u is not None:
-                self.add_error('email', 'Account exists.')
-                has_error = True
+                if u is not None:
+                    self.add_error('email', 'Account exists.')
+                    has_error = True
+            except models.Email.DoesNotExist:
+                # Good - email is not in used
+                pass
 
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password')

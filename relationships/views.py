@@ -595,6 +595,8 @@ def signup(request):
             django_user, _ = User.objects.get_or_create(
                 username=user.uuid
             )
+            django_user.set_password(form.cleaned_data.get('password'))
+            django_user.save()
 
             # Update user profile
             sgtz = pytz.timezone(settings.TIME_ZONE)
@@ -602,13 +604,20 @@ def signup(request):
             user.django_user = django_user
             user.save()
 
+            return HttpResponseRedirect(reverse('users:profile'))
+    else:
+        form = forms.EmailRegisterForm()
 
+    params = {'form': form}
 
-# TODO: continue from here, to direct to dashboard
-            return HttpResponseRedirect(reverse('home'))
+    # Read 'next' URL from GET parameters to form input. We'll add it to the
+    # redirect URL when the user submits this form.
+    next = request.GET.get('next')
+    if next is not None:
+        params['next'] = next
 
     template_name = 'relationships/superio/signup.html'
-    return TemplateResponse(request, template_name, {})
+    return TemplateResponse(request, template_name, params)
 
 def signout(request):
     logout(request)
