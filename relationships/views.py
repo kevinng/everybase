@@ -974,4 +974,12 @@ def profile(request):
     return render(request, 'relationships/superio/profile.html', {'form': form})
 
 def messages(request):
+    u = request.user.user
+    if u.first_name == None or \
+        u.last_name == None or \
+        u.company_name == None or \
+        u.phone_number == None or \
+        u.goods_string == None:
+        return HttpResponseRedirect(reverse('users:profile'))
+
     return render(request, 'relationships/superio/messages.html', {})

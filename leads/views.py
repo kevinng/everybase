@@ -803,9 +803,25 @@ def product_detail(request, slug):
     return render(request, 'leads/superio/product_detail.html', params)
 
 def product_create(request):
+    u = request.user.user
+    if u.first_name == None or \
+        u.last_name == None or \
+        u.company_name == None or \
+        u.phone_number == None or \
+        u.goods_string == None:
+        return HttpResponseRedirect(reverse('users:profile'))
+
     return render(request, 'leads/superio/product_create.html', {})
 
 def my_products(request):
+    u = request.user.user
+    if u.first_name == None or \
+        u.last_name == None or \
+        u.company_name == None or \
+        u.phone_number == None or \
+        u.goods_string == None:
+        return HttpResponseRedirect(reverse('users:profile'))
+
     return render(request, 'leads/superio/my_products.html', {})
 
 # @login_required
