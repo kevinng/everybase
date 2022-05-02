@@ -25,14 +25,15 @@
                         </div>
 
                         <div class="widget-content">
-                            <form class="default-form">
+                            <form class="default-form" action="{% url 'products:product_create' %}" method="post">
+                                {% csrf_token %}
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label>Cover Photo</label>
                                         <div class="uploading-outer">
                                             <div class="uploadButton">
                                                 <input class="uploadButton-input" type="file" name="attachments[]" accept="image/*, application/pdf" id="upload" multiple />
-                                                <label class="uploadButton-button ripple-effect" for="upload">Browse Logo</label>
+                                                <label class="uploadButton-button ripple-effect" for="upload">Browse</label>
                                                 <span class="uploadButton-file-name"></span>
                                             </div>
                                             <div class="text">Max file size is 1MB, Minimum dimension: 330x300 And Suitable files are .jpg & .png</div>
@@ -43,21 +44,21 @@
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label>Product Name</label>
-                                        <input type="text" name="product_name">
+                                        <input type="text" name="headline">
                                     </div>
 
                                     <div class="form-group col-12">
                                         <label>Product Details</label>
-                                        <textarea></textarea>
+                                        <textarea name="details"></textarea>
                                     </div>
 
                                     <div class="form-group col-12">
-                                        <label>Profits, Commission or Renumeration for Helping to Sell</label>
-                                        <textarea></textarea>
+                                        <label>Commission for finding buyers</label>
+                                        <textarea name="commission_type_other"></textarea>
                                     </div>
             
                                     <div class="form-group col-lg-6 col-md-12">
-                                        <button class="theme-btn btn-style-one">Post</button>
+                                        <button type="submit" class="theme-btn btn-style-one">Post</button>
                                     </div>
                                 </div>
                             </form>

@@ -811,6 +811,8 @@ def product_create(request):
         u.goods_string == None:
         return HttpResponseRedirect(reverse('users:profile'))
 
+    
+
     return render(request, 'leads/superio/product_create.html', {})
 
 def my_products(request):
