@@ -973,6 +973,7 @@ def profile(request):
 
     return render(request, 'relationships/superio/profile.html', {'form': form})
 
+@login_required
 def messages(request):
     u = request.user.user
     if u.first_name == None or \
