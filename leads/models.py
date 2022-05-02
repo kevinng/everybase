@@ -81,7 +81,9 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         related_name='leads_currency',
         related_query_name='leads_currency',
-        db_index=True
+        db_index=True,
+        null=True,
+        blank=True
     )
     author_type = models.CharField(
         max_length=20,
@@ -90,6 +92,8 @@ class Lead(Standard):
             ('direct', 'Direct'),
             ('broker', 'Broker') # Middleman
         ],
+        null=True,
+        blank=True,
         db_index=True
     )
     buy_country = models.ForeignKey(
@@ -115,7 +119,10 @@ class Lead(Standard):
         db_index=True
     )
     details = models.TextField()
-    agent_job = models.TextField()
+    agent_job = models.TextField(
+        null=True,
+        blank=True
+    )
 
     commission_type = models.CharField(
         max_length=20,
