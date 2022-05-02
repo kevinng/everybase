@@ -802,6 +802,7 @@ def product_detail(request, slug):
 
     return render(request, 'leads/superio/product_detail.html', params)
 
+@login_required
 def product_create(request):
     u = request.user.user
     if u.first_name == None or \
@@ -815,6 +816,7 @@ def product_create(request):
 
     return render(request, 'leads/superio/product_create.html', {})
 
+@login_required
 def my_products(request):
     u = request.user.user
     if u.first_name == None or \
