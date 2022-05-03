@@ -6,12 +6,16 @@ Params:
 <div class="news-block col-lg-4 col-md-6 col-sm-12">
     <div class="inner-box">
         <div class="image-box">
-            <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
+            {% if product.cover_photo is not None %}
+                {% load thumbnail_url %}
+                {% thumbnail_url product.cover_photo as thumbnail_url %}
+                <figure class="image"><a href="{% url 'products:product_detail' product.slug_link %}"><img src="{{ thumbnail_url }}" alt="" /></a></figure>
+            {% endif %}
         </div>
         <div class="lower-content">
             <ul class="post-meta">
                 <li>{{ product.author.first_name|title }} {{ product.author.last_name|title }}</li>
-                <li>{{ product.author.country.programmatic_name }}</li>
+                <li>{{ product.author.country.name }}</li>
             </ul>
             <h3><a href="{% url 'products:product_detail' product.slug_link %}">{{ product.headline }}</a></h3>
         </div>

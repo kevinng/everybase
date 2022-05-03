@@ -18,6 +18,12 @@
         </div>
     </div>
 
+    {% if product.cover_photo is not None %}
+        {% load image_url %}
+        {% image_url product.cover_photo as image_url %}
+        <figure class="main-image"><img src="{{ image_url }}" alt=""></figure>
+    {% endif %}
+
     <div class="auto-container">
         <h4>Seller Introduction</h4>
         <p>{{ product.author.goods_string }}</p>
@@ -35,7 +41,7 @@
                     <a href="{% url 'signin' %}" class="theme-btn btn-style-one call-modal" name="submit-form">Sign in</a>
                 </div>
             </div>
-        {% else %}
+        {% elif product.author != request.user.user %}
             <div class="comments-area">
                 <div class="comment-form default-form">
                     <h4>Apply to be an agent</h4>
