@@ -1,5 +1,5 @@
 from urllib.parse import urljoin
-import boto3, requests, json
+import boto3, requests, json, pytz, datetime
 from PIL import Image, ImageOps
 from io import BytesIO
 
@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 from everybase import settings
 from common import models as commods
@@ -776,7 +777,9 @@ def application_from_me_as_an_agent_list(request):
     return render(request, 'leads/application_from_me_as_an_agent_list.html', params)
 
 def product_list(request):
-    products = models.Lead.objects.all().order_by('-created')
+    products = models.Lead.objects\
+        .filter(deleted__isnull=True)\
+        .order_by('-created')
 
     # Paginate
 
@@ -795,6 +798,10 @@ def product_list(request):
 
 def product_detail(request, slug):
     product = models.Lead.objects.get(slug_link=slug)
+    
+    # Don't allow access to deleted products
+    if product.deleted is not None:
+        return HttpResponseRedirect(reverse('products:product_list'))
 
     params = {
         'product': product
@@ -899,9 +906,44 @@ def my_products(request):
         u.goods_string == None:
         return HttpResponseRedirect(reverse('users:profile'))
 
-    
+    products = models.Lead.objects.all()\
+        .filter(
+            deleted__isnull=True,
+            author=request.user.user
+        )\
+        .order_by('-created')
 
-    return render(request, 'leads/superio/my_products.html', {})
+    # Paginate
+
+    # products_per_page = 36
+    # paginator = Paginator(products, products_per_page)
+
+    # page_number = request.GET.get('page')
+
+    # Set context parameters
+    params = {}
+    
+    # page_obj = paginator.get_page(page_number)
+    # params['page_obj'] = page_obj
+    params['page_obj'] = products
+
+    return render(request, 'leads/superio/my_products.html', params)
+
+@login_required
+def product_delete(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        product = models.Lead.objects.get(pk=product_id)
+        sgtz = pytz.timezone(settings.TIME_ZONE)
+        
+        # Set delete flag. Otherwise, we'll need to delete other models because associations
+        # are protected.
+        product.deleted = datetime.datetime.now(tz=sgtz)
+        product.save()
+
+        messages.add_message(request, messages.INFO, f'Product "{ product.headline }" deleted')
+
+        return HttpResponseRedirect(reverse('products:my_products'))
 
 # @login_required
 # @csrf_exempt
