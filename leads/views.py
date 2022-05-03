@@ -16,6 +16,7 @@ from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRan
 from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.template.loader import render_to_string
 
 from everybase import settings
 from common import models as commods
@@ -816,12 +817,33 @@ def product_detail(request, slug):
         return HttpResponseRedirect(reverse('users:profile'))
 
     product = models.Lead.objects.get(slug_link=slug)
-    
+
     # Don't allow access to deleted products
     if product.deleted is not None:
         return HttpResponseRedirect(reverse('products:product_list'))
+    
+    if request.method == 'POST':
+        form = forms.AgentApplicationForm(request.POST, product=product)
+        if form.is_valid():
+            has_experience = False if not form.cleaned_data.get('has_experience') else True
+            has_buyers = False if not form.cleaned_data.get('has_buyers') else True
+            answer_1 = form.cleaned_data.get('answer_1')
+            applicant_comments = form.cleaned_data.get('applicant_comments')
 
+            models.Application.objects.create(
+                lead=product,
+                applicant=request.user.user,
+                has_experience=has_experience,
+                has_buyers=has_buyers,
+                question_1=product.question_1,
+                answer_1=answer_1,
+                applicant_comments=applicant_comments
+            )
+    else:
+        form = forms.AgentApplicationForm(product=product)
+    
     params = {
+        'form': form,
         'product': product
     }
 

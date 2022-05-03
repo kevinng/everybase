@@ -279,3 +279,30 @@ class ProductCreateForm(forms.Form):
     details = forms.CharField()
     commission_type_other = forms.CharField()
     question_1 = forms.CharField(required=False)
+
+class AgentApplicationForm(forms.Form):
+    has_experience = forms.BooleanField(required=False)
+    has_buyers = forms.BooleanField(required=False)
+    answer_1 = forms.CharField(required=False)
+    applicant_comments = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        self.product = kwargs.pop("product") # product passed in into object variable
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(AgentApplicationForm, self).clean()
+
+        has_error = False
+
+        # Require answer 1 if the seller has specified question 1
+        if not self.product.question_1 and\
+            (not self.cleaned_data.get('answer_1') or
+            self.cleaned_data.get('answer_1').strip() == ''):
+            self.add_error('answer_1', _require_msg)
+            has_error = True
+
+        if has_error:
+            raise ValidationError(None)
+
+        return self.cleaned_data

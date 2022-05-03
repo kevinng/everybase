@@ -33,7 +33,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _application_fields})]
 
-_application_message_fields = ['application', 'author']
+_application_message_fields = ['application', 'author', 'body']
 @admin.register(models.ApplicationMessage)
 class ApplicationMessageAdmin(comadm.StandardAdmin):
     # List page settings

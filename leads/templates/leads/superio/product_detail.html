@@ -6,6 +6,15 @@
 
 {% block contents %}
 
+{% load product_conversation %}
+{% product_conversation product request.user.user as product_conversation %}
+{% if product_conversation != None %}
+<div class="message-box info">
+    <p>You've applied to be an agent for this product.</p>
+    <button class="close-btn"><span class="close_icon"></span></button>
+</div>
+{% endif %}
+
 <section class="blog-single">
     <div class="auto-container">
         <div class="upper-box">
@@ -25,10 +34,10 @@
     {% endif %}
 
     <div class="auto-container">
-        <h4>Seller Introduction</h4>
+        <h4>Exporter introduction</h4>
         <p>{{ product.author.goods_string }}</p>
 
-        <h4>Product Details</h4>
+        <h4>Product details</h4>
         <p>{{ product.details }}</p>
 
         <h4>Commission for finding buyers</h4>
@@ -38,33 +47,38 @@
             <div class="comments-area">
                 <div class="comment-form default-form">
                     <h4>Login to apply to be an agent</h4>
-                    <a href="{% url 'signin' %}" class="theme-btn btn-style-one call-modal" name="submit-form">Sign in</a>
+                    <a href="{% url 'signin' %}?next={% url 'products:product_detail' product.slug_link %}" class="theme-btn btn-style-one call-modal" name="submit-form">Sign in</a>
                 </div>
             </div>
-        {% elif product.author != request.user.user %}
+        {% elif product.author != request.user.user and product_conversation == None %}
             <div class="comments-area">
                 <div class="comment-form default-form">
-                    <h4>Apply to be an agent</h4>
-                    <form>
+                    <h4>I'm interested to be an agent for this product</h4>
+                    <form action="{% url 'products:product_detail' product.slug_link %}" method="post">
+                        {% csrf_token %}
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                <input id="has_experience" type="checkbox" name="has_experience">
+                                <input id="has_experience" name="has_experience" type="checkbox">
                                 <label for="has_experience">I have experience with this product or industry</label>
                             </div>
 
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                <input id="have_buyers" type="checkbox" name="have_buyers">
-                                <label for="have_buyers">I have potential buyers</label>
+                                <input id="has_buyers" name="has_buyers" type="checkbox">
+                                <label for="has_buyers">I have potential buyers</label>
                             </div>
+                            
+                            {% if product.question_1 is not None %}
+                                <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                    <label for="answer_1">{{ product.question_1 }}</label>
+                                    <textarea id="answer_1" name="answer_1"></textarea>
+                                    {% if form.answer_1.errors %}<div style="color:red">{% for error in form.answer_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                </div>
+                            {% endif %}
 
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                <label>This is an optional question from the seller</label>
-                                <textarea name="message"></textarea>
-                            </div>
-
-                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                <label>Comments for the Seller</label>
-                                <textarea name="message"></textarea>
+                                <label for="applicant_comments">Comments for exporter</label>
+                                <textarea id="applicant_comments" name="applicant_comments"></textarea>
+                                {% if form.applicant_comments.errors %}<div style="color:red">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                                 <button class="theme-btn btn-style-one" type="submit" name="submit-form">Apply</button>
