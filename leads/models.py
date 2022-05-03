@@ -338,6 +338,14 @@ class Lead(Standard):
             deleted__isnull=True
         ).count()
 
+    def num_applications(self):
+        """Number of applications on this lead"""
+        # We call applications 'conversations'
+        return Application.objects.filter(
+            lead=self,
+            deleted__isnull=True
+        ).count()
+
 class LeadDetailView(Standard):
     """Lead detail view.
 
