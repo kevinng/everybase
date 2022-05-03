@@ -12,6 +12,14 @@
 {% comment %} Start: Dashboard {% endcomment %}
 <section class="user-dashboard">
     <div class="dashboard-outer">
+
+        {% if request.user.user.first_name == None or request.user.user.last_name == None or request.user.user.company_name == None or request.user.user.phone_number.national_number == None or request.user.user.phone_number.country_code == None or request.user.user.goods_string == None %}
+            <div class="message-box warning">
+                <p>Please complete your profile before performing other actions.</p>
+                <button class="close-btn"><span class="close_icon"></span></button>
+            </div>
+        {% endif %}
+
         <div class="upper-title-box">
             <h3>Profile</h3>
         </div>
@@ -23,13 +31,6 @@
                         <div class="widget-title">
                             {% comment %} <h4>My Profile</h4> {% endcomment %}
                         </div>
-
-                        {% if request.user.user.first_name == None or request.user.user.last_name == None or request.user.user.company_name == None or request.user.user.phone_number.national_number == None or request.user.user.phone_number.country_code == None or request.user.user.goods_string == None %}
-                        <div class="message-box warning">
-                            <p>Please complete your profile.</p>
-                            {% comment %} <button class="close-btn"><span class="close_icon"></span></button> {% endcomment %}
-                        </div>
-                        {% endif %}
 
                         <div class="widget-content">
                             <form action="{% url 'users:profile' %}" method="post" class="default-form">
