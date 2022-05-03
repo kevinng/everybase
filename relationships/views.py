@@ -975,6 +975,7 @@ def profile(request):
 
 @login_required
 def messages(request):
+    # Prevent access if user has not completed profile
     u = request.user.user
     if u.first_name == None or \
         u.last_name == None or \

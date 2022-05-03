@@ -804,6 +804,7 @@ def product_detail(request, slug):
 
 @login_required
 def product_create(request):
+    # Prevent access if user has not completed profile
     u = request.user.user
     if u.first_name == None or \
         u.last_name == None or \
@@ -889,6 +890,7 @@ def product_create(request):
 
 @login_required
 def my_products(request):
+    # Prevent access if user has not completed profile
     u = request.user.user
     if u.first_name == None or \
         u.last_name == None or \
@@ -896,6 +898,8 @@ def my_products(request):
         u.phone_number == None or \
         u.goods_string == None:
         return HttpResponseRedirect(reverse('users:profile'))
+
+    
 
     return render(request, 'leads/superio/my_products.html', {})
 
