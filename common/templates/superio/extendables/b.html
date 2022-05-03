@@ -80,11 +80,11 @@
                         {% else %}
                             <div class="dropdown dashboard-option">
                                 <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
-                                    <span class="name">{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}</span>
+                                    <span class="name">{% if request.user.user.first_name == None or request.user.user.last_name == None %}{{ request.user.user.email.email }}{% else %}{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}{% endif %}</span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li{% if request.resolver_match.view_name == 'users:profile' or request.resolver_match.view_name == 'products:product_create' or request.resolver_match.view_name == 'products:my_products' or request.resolver_match.view_name == 'relationships:messages' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"> <i class="la la-home"></i> Dashboard</a></li>
-                                    <li><a href="{% url 'signout' %}"><i class="la la-sign-out"></i>Sign Out</a></li>
+                                    <li><a href="{% url 'signout' %}?next={{ request.path }}"><i class="la la-sign-out"></i>Sign Out</a></li>
                                 </ul>
                             </div>
                         {% endif %}
