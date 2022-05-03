@@ -777,6 +777,15 @@ def application_from_me_as_an_agent_list(request):
     return render(request, 'leads/application_from_me_as_an_agent_list.html', params)
 
 def product_list(request):
+    # Prevent access if user has not completed profile
+    u = request.user.user
+    if u.first_name == None or \
+        u.last_name == None or \
+        u.company_name == None or \
+        u.phone_number == None or \
+        u.goods_string == None:
+        return HttpResponseRedirect(reverse('users:profile'))
+
     products = models.Lead.objects\
         .filter(deleted__isnull=True)\
         .order_by('-created')
@@ -797,6 +806,15 @@ def product_list(request):
     return render(request, 'leads/superio/product_list.html', params)
 
 def product_detail(request, slug):
+    # Prevent access if user has not completed profile
+    u = request.user.user
+    if u.first_name == None or \
+        u.last_name == None or \
+        u.company_name == None or \
+        u.phone_number == None or \
+        u.goods_string == None:
+        return HttpResponseRedirect(reverse('users:profile'))
+
     product = models.Lead.objects.get(slug_link=slug)
     
     # Don't allow access to deleted products
