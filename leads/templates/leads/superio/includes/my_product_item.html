@@ -1,0 +1,27 @@
+{% comment %} 
+Params:
+    product, product (a lead model) to display
+{% endcomment %}
+{% load static %}
+<tr>
+    <td>
+        <h6><a href="{% url 'products:product_detail' product.slug_link %}">{{ product.headline }}</a></h6>
+    </td>
+    <td class="applied"><a href="{% url 'users:messages' %}">{{ product.num_applications }} Conversations</a></td>
+    <td>{{ product.age_desc }}</td>
+    <td>
+        <div class="option-box">
+            <ul class="option-list">
+                {% comment %} <li><button data-text="View Aplication"><span class="la la-eye"></span></button></li> {% endcomment %}
+                {% comment %} <li><button data-text="Reject Aplication"><span class="la la-pencil"></span></button></li> {% endcomment %}
+                <li>
+                    <form action="{% url 'products:product_delete' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <button type="submit" data-text="Delete"><span class="la la-trash"></span></button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>
