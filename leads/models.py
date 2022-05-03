@@ -451,7 +451,7 @@ class ApplicationQueryLog(Standard):
 class Application(Standard):
     """Agent application.
 
-    Last updated: 7 April 2022, 10:06 PM
+    Last updated: 3 May 2022, 4:07 PM
     """
     lead = models.ForeignKey(
         'Lead',
@@ -466,6 +466,15 @@ class Application(Standard):
         related_query_name='applications',
         on_delete=models.PROTECT,
         db_index=True
+    )
+
+    has_experience = models.BooleanField(
+        blank=True,
+        null=True
+    )
+    has_buyers = models.BooleanField(
+        blank=True,
+        null=True
     )
 
     question_1 = models.TextField(
