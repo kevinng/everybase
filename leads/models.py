@@ -325,6 +325,13 @@ class Lead(Standard):
             .filter(lead=self, deleted__isnull=True)\
             .order_by('-created')[:3]
     
+    def cover_photo(self):
+        """Returns cover photo"""
+        return fimods.File.objects\
+            .filter(lead=self, deleted__isnull=True)\
+            .order_by('-created')\
+            .first()
+    
     def num_images(self):
         """Returns the number of display images for this lead"""
         return fimods.File.objects\
