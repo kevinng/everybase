@@ -1,3 +1,4 @@
+from urllib import request
 from django import forms
 from django.core.exceptions import ValidationError
 from everybase import settings
@@ -271,3 +272,10 @@ class ApplicationDetailForm(forms.Form):
             raise ValidationError(None)
 
         return self.cleaned_data
+
+class ProductCreateForm(forms.Form):
+    cover_photo = forms.FileField()
+    headline = forms.CharField()
+    details = forms.CharField()
+    commission_type_other = forms.CharField()
+    question_1 = forms.CharField(required=False)

@@ -25,40 +25,52 @@
                         </div>
 
                         <div class="widget-content">
-                            <form class="default-form" action="{% url 'products:product_create' %}" method="post">
+                            <form class="default-form" action="{% url 'products:product_create' %}" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label>Cover Photo</label>
                                         <div class="uploading-outer">
                                             <div class="uploadButton">
-                                                <input class="uploadButton-input" type="file" name="attachments[]" accept="image/*, application/pdf" id="upload" multiple />
-                                                <label class="uploadButton-button ripple-effect" for="upload">Browse</label>
-                                                <span class="uploadButton-file-name"></span>
+                                                <input id="upload" class="uploadButton-input" type="file" name="cover_photo" accept="image/png, image/gif, image/jpeg" />
+                                                <label id="upload_label" class="uploadButton-button ripple-effect" for="upload">Browse</label>
+                                                <div id="upload_img_div" style="width: 300px"></div>
+                                                {% comment %} Not showing filename {% endcomment %}
+                                                {% comment %} <span id="upload_filename" class="uploadButton-file-name"></span> {% endcomment %}
                                             </div>
-                                            <div class="text">Max file size is 1MB, Minimum dimension: 330x300 And Suitable files are .jpg & .png</div>
+                                            <div id="upload_remove" style="margin-left:20px"><a href="#">Remove Image</a></div>
                                         </div>
+                                        {% if form.cover_photo.errors %}<div id="upload_error" style="color:red; margin-right: 5px" class="text">{% for error in form.cover_photo.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label>Product Name</label>
-                                        <input type="text" name="headline">
+                                        <input type="text" name="headline"{% if form.headline.value != None %} value="{{ form.headline.value }}"{% endif %}>
+                                        {% if form.headline.errors %}<div style="color:red">{% for error in form.headline.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     <div class="form-group col-12">
                                         <label>Product Details</label>
-                                        <textarea name="details"></textarea>
+                                        <textarea name="details">{% if form.details.value != None %}{{ form.details.value }}{% endif %}</textarea>
+                                        {% if form.details.errors %}<div style="color:red">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     <div class="form-group col-12">
                                         <label>Commission for finding buyers</label>
-                                        <textarea name="commission_type_other"></textarea>
+                                        <textarea name="commission_type_other">{% if form.commission_type_other.value != None %}{{ form.commission_type_other.value }}{% endif %}</textarea>
+                                        {% if form.commission_type_other.errors %}<div style="color:red">{% for error in form.commission_type_other.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
-            
+
+                                    <div class="form-group col-12">
+                                        <label>Interview questions (optional)</label>
+                                        <textarea name="question_1">{% if form.question_1.value != None %}{{ form.question_1.value }}{% endif %}</textarea>
+                                        {% if form.question_1.errors %}<div style="color:red">{% for error in form.question_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                    </div>
+
                                     <div class="form-group col-lg-6 col-md-12">
-                                        <button type="submit" class="theme-btn btn-style-one">Post</button>
+                                        <button id="submit" type="submit" class="theme-btn btn-style-one">Post</button>
                                     </div>
                                 </div>
                             </form>
@@ -74,4 +86,67 @@
 
 {% block footer %}
 {% include 'superio/includes/dashboard_footer.html' %}
+{% endblock %}
+
+{% comment %}
+$(document).ready(function() {
+    $upload = $('#upload')
+    $upload_label = $('#upload_label')
+    $upload_img_div = $('#upload_img_div')
+    $upload_remove = $('#upload_remove')
+    $submit = $('#submit')
+
+    function set_cover_photo() {
+        // Hide 'browse button' defined as label
+        $upload_label.hide()
+                    
+        // Form image tag with our only file
+        img = '<img src="' + URL.createObjectURL(files[0]) + '">'
+
+        // Append image tag to image div
+        $upload_img_div.append(img)
+        $upload_img_div.show()
+
+        // Show remove button
+        $upload_remove.show()
+    }
+
+    function clear_cover_photo() {
+        // Show 'browse button' defined as label
+        $upload_label.show()
+
+        // Remove image tag from image div
+        $upload_img_div.find(':first-child').remove()
+        $upload_img_div.hide()
+
+        // Hide remove button
+        $upload_remove.hide()
+
+        // Clear input so we may select the same file again
+        $upload.val('')
+    }
+
+    $upload.change(function() {
+        files = $upload.prop('files')
+        if (files.length > 0) {
+            set_cover_photo()
+        } else {
+            clear_cover_photo()
+        }
+    })
+
+    $upload_remove.click(function() {
+        clear_cover_photo()
+    })
+
+    clear_cover_photo()
+
+    $submit.click(function() {
+        $.LoadingOverlay("show")
+    })
+})
+{% endcomment %}
+{% block other_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+<script>$(document).ready((function(){function l(){$upload_label.show(),$upload_img_div.find(":first-child").remove(),$upload_img_div.hide(),$upload_remove.hide(),$upload.val("")}$upload=$("#upload"),$upload_label=$("#upload_label"),$upload_img_div=$("#upload_img_div"),$upload_remove=$("#upload_remove"),$submit=$("#submit"),$upload.change((function(){files=$upload.prop("files"),files.length>0?($upload_label.hide(),img='<img src="'+URL.createObjectURL(files[0])+'">',$upload_img_div.append(img),$upload_img_div.show(),$upload_remove.show()):l()})),$upload_remove.click((function(){l()})),l(),$submit.click((function(){$.LoadingOverlay("show")}))}));</script>
 {% endblock %}

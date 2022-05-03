@@ -201,6 +201,12 @@ AWS_S3_KEY_CACHE_IMAGE = 'cache/%s'
 # Lead image thumbnail size
 LEAD_IMAGE_THUMBNAIL_SIZE = 80, 80
 
+AWS_S3_KEY_PRODUCT_IMAGE = 'products/%s/%s'
+AWS_S3_KEY_PRODUCT_IMAGE_THUMBNAIL = 'products/%s/t/%s'
+
+# Product image thumbnail size
+PRODUCT_IMAGE_THUMBNAIL_SIZE = 455, 295
+
 # Override message tags
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',

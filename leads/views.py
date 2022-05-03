@@ -811,10 +811,81 @@ def product_create(request):
         u.phone_number == None or \
         u.goods_string == None:
         return HttpResponseRedirect(reverse('users:profile'))
-
     
+    if request.method == 'POST':
+        form = forms.ProductCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = models.Lead.objects.create(
+                author=request.user.user,
+                lead_type='selling', # We only support sellers for now
+                buy_country=request.user.user.country, # Default to user's country
+                headline=form.cleaned_data.get('headline'),
+                details=form.cleaned_data.get('details'),
+                question_1=form.cleaned_data.get('question_1')
+            )
 
-    return render(request, 'leads/superio/product_create.html', {})
+            cover_photo = request.FILES.get('cover_photo')
+            mime_type = get_mime_type(cover_photo)
+
+            # Create lead file
+            file = fimods.File.objects.create(
+                uploader=request.user.user,
+                mime_type=mime_type,
+                filename=cover_photo.name,
+                lead=product,
+                s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+                thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+            )
+
+            key = settings.AWS_S3_KEY_PRODUCT_IMAGE % (product.id, file.id)
+            thumb_key = settings.AWS_S3_KEY_PRODUCT_IMAGE_THUMBNAIL % (product.id, file.id)
+
+            s3 = boto3.session.Session(
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+            ).resource('s3')
+
+            # Upload lead image
+            lead_s3_obj = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+                Key=key,
+                Body=cover_photo,
+                ContentType=mime_type
+            )
+
+            # Update file with S3 results
+            file.s3_object_key = key
+            file.thumbnail_s3_object_key = thumb_key
+            file.s3_object_content_length = lead_s3_obj.content_length
+            file.e_tag = lead_s3_obj.e_tag
+            file.content_type = lead_s3_obj.content_type
+            file.last_modified = lead_s3_obj.last_modified
+            file.save()
+
+            # Resize, save thumbnail, record sizes
+            with Image.open(cover_photo) as im:
+                # Resize preserving aspect ratio cropping from the center
+                thumbnail = ImageOps.fit(im, settings.PRODUCT_IMAGE_THUMBNAIL_SIZE)
+                output = BytesIO()
+                thumbnail.save(output, format='PNG')
+                output.seek(0)
+
+                # Upload thumbnail
+                s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+                    Key=thumb_key,
+                    Body=output,
+                    ContentType=mime_type
+                )
+
+                # Update file and thumbnail sizes
+                file.width, file.height = im.size
+                file.thumbnail_width, file.thumbnail_height = thumbnail.size
+                file.save()
+            
+            return HttpResponseRedirect(reverse('products:my_products'))
+    else:
+        form = forms.ProductCreateForm()
+
+    return render(request, 'leads/superio/product_create.html', {'form': form})
 
 @login_required
 def my_products(request):
