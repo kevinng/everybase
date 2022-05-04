@@ -8,7 +8,7 @@
             <li{% if request.resolver_match.view_name == 'users:profile' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"><i class="la la-user-tie"></i>Profile</a></li>
             <li{% if request.resolver_match.view_name == 'products:product_create' %} class="active"{% endif %}><a href="{% url 'products:product_create' %}"><i class="las la-box"></i> New Product</a></li>
             <li{% if request.resolver_match.view_name == 'products:my_products' %} class="active"{% endif %}><a href="{% url 'products:my_products' %}"><i class="las la-boxes"></i>My Products</a></li>
-            <li{% if request.resolver_match.view_name == 'users:messages' %} class="active"{% endif %}><a href="{% url 'users:messages' %}"><i class="la la-comment-o"></i>Messages</a></li>
+            <li{% if request.resolver_match.view_name == 'messages:message_list' %} class="active"{% endif %}><a href="{% url 'messages:message_list' %}"><i class="la la-comment-o"></i>Messages</a></li>
         </ul>
     </div>
 </div>
