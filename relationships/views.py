@@ -982,19 +982,22 @@ def profile_required(request):
         user.company_name == None or \
         user.phone_number == None or \
         user.goods_string == None:
-        return HttpResponseRedirect(reverse('users:profile'))
+        return True
+    
+    return False
 
 @login_required
-def conversation_list(request):
-    profile_required(request)
+def application_list(request):
+    if profile_required(request):
+        return HttpResponseRedirect(reverse('users:profile'))
 
     # I just want this to direct to the top message
     return render(request, 'relationships/superio/messages.html', {})
 
-
 @login_required
 def application_detail(request, pk):
-    profile_required(request)
+    if profile_required(request):
+        return HttpResponseRedirect(reverse('users:profile'))
 
     # Get this conversation
     conversation = lemods.Application.objects.get(pk=pk)
