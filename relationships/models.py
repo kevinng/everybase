@@ -173,6 +173,15 @@ class User(Standard):
         db_index=True
     )
 
+    email = models.ForeignKey(
+        'Email',
+        related_name='user',
+        related_query_name='user',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     first_name = models.CharField(
         max_length=20,
         db_index=True,
@@ -185,25 +194,6 @@ class User(Standard):
         null=True,
         blank=True
     )
-    company_name = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    goods_string = models.TextField(
-        null=True,
-        blank=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        related_name='users_w_this_country',
-        related_query_name='users_w_this_country',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
     phone_number = models.ForeignKey(
         'PhoneNumber',
         related_name='user',
@@ -213,10 +203,10 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-    email = models.ForeignKey(
-        'Email',
-        related_name='user',
-        related_query_name='user',
+    country = models.ForeignKey(
+        'common.Country',
+        related_name='users_w_this_country',
+        related_query_name='users_w_this_country',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
@@ -238,7 +228,7 @@ class User(Standard):
         blank=True
     )
 
-    # NOTE: Not in Use
+    # Not in Use
 
     impressions = models.IntegerField(
         default=1, # Prevent division by 0
@@ -247,6 +237,34 @@ class User(Standard):
     clicks = models.IntegerField(
         default=0,
         db_index=True
+    )
+
+    has_company = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    company_name = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    goods_string = models.TextField(
+        null=True,
+        blank=True
+    )
+    buy_agent_details = models.TextField(
+        null=True,
+        blank=True
+    )
+    sell_agent_details = models.TextField(
+        null=True,
+        blank=True
+    )
+    logistics_agent_details = models.TextField(
+        null=True,
+        blank=True
     )
 
     is_buyer = models.BooleanField(
@@ -275,32 +293,6 @@ class User(Standard):
         db_index=True
     )
 
-    buy_agent_details = models.TextField(
-        null=True,
-        blank=True
-    )
-    sell_agent_details = models.TextField(
-        null=True,
-        blank=True
-    )
-    logistics_agent_details = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    languages = models.ManyToManyField(
-        'common.Language',
-        related_name='users_w_this_language',
-        related_query_name='users_w_this_language',
-        blank=True,
-        db_index=True
-    )
-    languages_string = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True
-    )
-    
     state = models.ForeignKey(
         'common.State',
         related_name='users_w_this_state',
@@ -316,11 +308,17 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-
-    has_company = models.BooleanField(
-        null=True,
+    languages = models.ManyToManyField(
+        'common.Language',
+        related_name='users_w_this_language',
+        related_query_name='users_w_this_language',
         blank=True,
         db_index=True
+    )
+    languages_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
     )
 
     def refresh_slug(self):
@@ -343,7 +341,7 @@ class User(Standard):
         self.slug_link = slugify(self.slug_tokens)
 
     def save(self, *args, **kwargs):
-        # Refresh slug when this user is saved.
+        # Refresh slug when this user is saved
         self.refresh_slug()
         return super().save(*args, **kwargs)
 
@@ -355,8 +353,8 @@ class User(Standard):
         except Country.DoesNotExist:
             return None
 
-    def conversations(self):
-        """Returns conversations associated with this user."""
+    def applications(self):
+        """Returns applications associated with this user."""
 
         # Conversations where this user is the applicant
         conversations = lemods.Application.objects\
@@ -375,7 +373,7 @@ class User(Standard):
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email}, {self.phone_number} [{self.id}])'
 
-    # NOTE: not in use
+    # Not in use
 
     # def root_comments(self):
     #     """Returns root comments only (i.e., comments that are not replies to
