@@ -1,4 +1,3 @@
-from pyexpat import model
 import random, uuid
 
 from django.db import models
@@ -9,7 +8,7 @@ from django.utils.text import slugify
 
 from common.models import (Standard, Choice, LowerCaseCharField,
     LowerCaseEmailField, Country)
-from leads.models import Lead
+import leads.models as lemods
 from payments import models as paymods
 
 class PhoneNumberType(Choice):
@@ -150,7 +149,7 @@ class InvalidEmail(Standard):
 class User(Standard):
     """User details.
 
-    Last updated: 11 April 2022, 10:58 PM
+    Last updated: 4 May 2022, 1:38 PM
     """
     registered = models.DateTimeField(
         null=True,
@@ -173,6 +172,7 @@ class User(Standard):
         editable=False,
         db_index=True
     )
+
     first_name = models.CharField(
         max_length=20,
         db_index=True,
@@ -185,25 +185,13 @@ class User(Standard):
         null=True,
         blank=True
     )
-
-    has_company = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
     company_name = models.CharField(
         max_length=50,
         null=True,
         blank=True,
         db_index=True
     )
-
     goods_string = models.TextField(
-        null=True,
-        blank=True
-    )
-    languages_string = models.CharField(
-        max_length=200,
         null=True,
         blank=True
     )
@@ -235,11 +223,6 @@ class User(Standard):
         db_index=True
     )
 
-    internal_notes = models.TextField(
-        null=True,
-        blank=True
-    )
-
     slug_link = models.CharField(
         max_length=200,
         unique=True,
@@ -249,6 +232,13 @@ class User(Standard):
         null=True,
         blank=True
     )
+
+    internal_notes = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    # NOTE: Not in Use
 
     impressions = models.IntegerField(
         default=1, # Prevent division by 0
@@ -279,21 +269,12 @@ class User(Standard):
         blank=True,
         db_index=True
     )
-
-    # Not in Use
-
     is_logistics_agent = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
     )
 
-    state_string = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
     buy_agent_details = models.TextField(
         null=True,
         blank=True
@@ -307,7 +288,6 @@ class User(Standard):
         blank=True
     )
 
-    # Save for future
     languages = models.ManyToManyField(
         'common.Language',
         related_name='users_w_this_language',
@@ -315,6 +295,12 @@ class User(Standard):
         blank=True,
         db_index=True
     )
+    languages_string = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
+    )
+    
     state = models.ForeignKey(
         'common.State',
         related_name='users_w_this_state',
@@ -324,27 +310,32 @@ class User(Standard):
         blank=True,
         db_index=True
     )
+    state_string = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
-    def root_comments(self):
-        """Returns root comments only (i.e., comments that are not replies to
-        a comment. We do not chain replies and all replies are to root comments.
-        """
-        return UserComment.objects.filter(
-            commentee=self,
-            reply_to__isnull=True
-        ).order_by('created')
+    has_company = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     def refresh_slug(self):
+        """Refresh the slug for this user."""
         first_user = User.objects.all().order_by('-id').first()
         if first_user is None:
             this_id = 0
         elif self.id is None:
-            # Compute ID because it's not been set. Race condition and collison
-            # possible but very unlikely.
+            # Compute ID because it's not been set.
+            # Collison due to race condition is possible but VERY unlikely.
             this_id = User.objects.all().order_by('-id').first().id + 1
         else:
             this_id = self.id
 
+        # Create slug out of user's first/last name and company name   
         self.slug_tokens = f'{self.first_name} {self.last_name}'
         if self.company_name is not None and len(self.company_name) > 0:
             self.slug_tokens = f'{self.slug_tokens} {self.company_name}'
@@ -352,30 +343,63 @@ class User(Standard):
         self.slug_link = slugify(self.slug_tokens)
 
     def save(self, *args, **kwargs):
+        # Refresh slug when this user is saved.
         self.refresh_slug()
         return super().save(*args, **kwargs)
 
     def country_from_phone_number(self):
+        """Returns country from user's phone number country code."""
         try:
             return Country.objects.get(
                 country_code=self.phone_number.country_code)
         except Country.DoesNotExist:
             return None
 
-    def num_comments_as_commentee(self):
-        return UserComment.objects.filter(commentee=self).count()
+    def conversations(self):
+        """Returns conversations associated with this user."""
 
-    def num_leads(self):
-        return Lead.objects.filter(author=self.id).count()
+        # Conversations where this user is the applicant
+        conversations = lemods.Application.objects\
+            .filter(applicant=self, deleted__isnull=True)
 
-    def num_credits_left(self):
-        sum = paymods.CreditsEvent.objects.filter(user=self)\
-            .aggregate(models.Sum('value'))
+        # Conversations where this user is the product owner
+        for product in lemods.Lead.objects.filter(author=self.id):
+            # Merge all conversations
+            conversations = conversations | product.conversations
 
-        if sum['value__sum'] is None:
-            return 0
+        # Sort by last messaged date/time
+        conversations.order_by('-last_messaged')
+        
+        return conversations
 
-        return sum['value__sum']
+    def __str__(self):
+        return f'({self.first_name}, {self.last_name}, {self.email}, {self.phone_number} [{self.id}])'
+
+    # NOTE: not in use
+
+    # def root_comments(self):
+    #     """Returns root comments only (i.e., comments that are not replies to
+    #     a comment. We do not chain replies and all replies are to root comments.
+    #     """
+    #     return UserComment.objects.filter(
+    #         commentee=self,
+    #         reply_to__isnull=True
+    #     ).order_by('created')
+
+    # def num_comments_as_commentee(self):
+    #     return UserComment.objects.filter(commentee=self).count()
+
+    # def num_leads(self):
+    #     return lemods.Lead.objects.filter(author=self.id).count()
+
+    # def num_credits_left(self):
+    #     sum = paymods.CreditsEvent.objects.filter(user=self)\
+    #         .aggregate(models.Sum('value'))
+
+    #     if sum['value__sum'] is None:
+    #         return 0
+
+    #     return sum['value__sum']
 
     # def seo_title(self):
     #     """Returns SEO-optimized title"""
@@ -401,10 +425,6 @@ class User(Standard):
     #             title += ' - ' + keywords
 
     #     return title
-
-    def __str__(self):
-        return f'({self.first_name}, {self.last_name}, {self.email},\
- {self.phone_number} [{self.id}])'
 
 class UserAgent(Standard):
     """User agent log.
