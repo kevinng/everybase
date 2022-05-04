@@ -8,7 +8,6 @@ urlpatterns = [
 
     # Superio routes
     path('profile', views.profile, name='profile'),
-    path('messages', views.messages, name='messages'),
 
     # Pre v5 routes
     # Map slug routes last
