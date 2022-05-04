@@ -48,6 +48,7 @@ class Lead(Standard):
 
     Last updated: 11 April 2022, 10:08 PM
     """
+
     uuid = models.UUIDField(
         unique=True,
         default=uuidlib.uuid4,
@@ -62,6 +63,9 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+
+
+    # Not in use
     is_promoted = models.BooleanField(
         blank=True,
         null=True,
@@ -273,8 +277,8 @@ class Lead(Standard):
         if first_lead is None:
             this_id = 0
         elif self.id is None:
-            # Compute ID because it's not been set. Race condition and collison
-            # possible but very unlikely.
+            # Compute ID because it's not been set.
+            # Race condition and collison possible but very unlikely.
             this_id = Lead.objects.all().order_by('-id').first().id + 1
         else:
             this_id = self.id
@@ -462,8 +466,8 @@ class Application(Standard):
     )
     applicant = models.ForeignKey(
         'relationships.User',
-        related_name='applications',
-        related_query_name='applications',
+        related_name='applications_as_applicant',
+        related_query_name='applications_as_applicant',
         on_delete=models.PROTECT,
         db_index=True
     )
