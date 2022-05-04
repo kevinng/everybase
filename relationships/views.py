@@ -973,15 +973,36 @@ def profile(request):
 
     return render(request, 'relationships/superio/profile.html', {'form': form})
 
-@login_required
-def messages(request):
+
+def profile_required(request):
     # Prevent access if user has not completed profile
-    u = request.user.user
-    if u.first_name == None or \
-        u.last_name == None or \
-        u.company_name == None or \
-        u.phone_number == None or \
-        u.goods_string == None:
+    user = request.user.user
+    if user.first_name == None or \
+        user.last_name == None or \
+        user.company_name == None or \
+        user.phone_number == None or \
+        user.goods_string == None:
         return HttpResponseRedirect(reverse('users:profile'))
 
+@login_required
+def conversation_list(request):
+    profile_required(request)
+
+    # I just want this to direct to the top message
     return render(request, 'relationships/superio/messages.html', {})
+
+
+@login_required
+def application_detail(request, pk):
+    profile_required(request)
+
+    # Get this conversation
+    conversation = lemods.Application.objects.get(pk=pk)
+
+    # Get user's conversations
+    conversations = request.user.user.applications()
+
+    params = {
+        'conversation': conversation
+    }
+    return render(request, 'relationships/superio/messages.html', params)

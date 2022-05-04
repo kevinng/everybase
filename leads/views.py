@@ -777,14 +777,20 @@ def application_from_me_as_an_agent_list(request):
 
     return render(request, 'leads/application_from_me_as_an_agent_list.html', params)
 
+def profile_required(request):
+    """Helper method that returns True if user has not completed profile."""
+    user = request.user.user
+    if user.first_name == None or \
+        user.last_name == None or \
+        user.company_name == None or \
+        user.phone_number == None or \
+        user.goods_string == None:
+        return True
+
+    return False
+
 def product_list(request):
-    # Prevent access if user has not completed profile
-    u = request.user.user
-    if u.first_name == None or \
-        u.last_name == None or \
-        u.company_name == None or \
-        u.phone_number == None or \
-        u.goods_string == None:
+    if profile_required(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     products = models.Lead.objects\
@@ -807,13 +813,7 @@ def product_list(request):
     return render(request, 'leads/superio/product_list.html', params)
 
 def product_detail(request, slug):
-    # Prevent access if user has not completed profile
-    u = request.user.user
-    if u.first_name == None or \
-        u.last_name == None or \
-        u.company_name == None or \
-        u.phone_number == None or \
-        u.goods_string == None:
+    if profile_required(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     product = models.Lead.objects.get(slug_link=slug)
@@ -851,13 +851,7 @@ def product_detail(request, slug):
 
 @login_required
 def product_create(request):
-    # Prevent access if user has not completed profile
-    u = request.user.user
-    if u.first_name == None or \
-        u.last_name == None or \
-        u.company_name == None or \
-        u.phone_number == None or \
-        u.goods_string == None:
+    if profile_required(request):
         return HttpResponseRedirect(reverse('users:profile'))
     
     if request.method == 'POST':
@@ -937,13 +931,7 @@ def product_create(request):
 
 @login_required
 def my_products(request):
-    # Prevent access if user has not completed profile
-    u = request.user.user
-    if u.first_name == None or \
-        u.last_name == None or \
-        u.company_name == None or \
-        u.phone_number == None or \
-        u.goods_string == None:
+    if profile_required(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     products = models.Lead.objects.all()\
@@ -971,6 +959,9 @@ def my_products(request):
 
 @login_required
 def product_delete(request):
+    if profile_required(request):
+        return HttpResponseRedirect(reverse('users:profile'))
+
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         product = models.Lead.objects.get(pk=product_id)
