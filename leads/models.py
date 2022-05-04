@@ -63,15 +63,6 @@ class Lead(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-
-
-    # Not in use
-    is_promoted = models.BooleanField(
-        blank=True,
-        null=True,
-        db_index=True
-    )
-
     lead_type = models.CharField(
         max_length=20,
         choices=[
@@ -80,6 +71,37 @@ class Lead(Standard):
         ],
         db_index=True
     )
+    headline = models.CharField(
+        max_length=80,
+        db_index=True
+    )
+    details = models.TextField()
+    comm_details = models.TextField(
+        null=True,
+        blank=True
+    )
+    questions = models.TextField(
+        null=True,
+        blank=True
+    )
+    
+    slug_link = models.CharField(
+        max_length=200,
+        unique=True,
+        db_index=True
+    )
+    slug_tokens = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    internal_notes = models.TextField(
+        null=True,
+        blank=True
+    )
+
+    # Not in use
+
     currency = models.ForeignKey(
         'payments.Currency',
         on_delete=models.PROTECT,
@@ -118,16 +140,16 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    headline = models.CharField(
-        max_length=80,
-        db_index=True
-    )
-    details = models.TextField()
     agent_job = models.TextField(
         null=True,
         blank=True
     )
-
+    is_promoted = models.BooleanField(
+        blank=True,
+        null=True,
+        db_index=True
+    )
+    
     commission_type = models.CharField(
         max_length=20,
         choices=[
@@ -218,31 +240,8 @@ class Lead(Standard):
         db_index=True
     )
 
-    internal_notes = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    slug_link = models.CharField(
-        max_length=200,
-        unique=True,
-        db_index=True
-    )
-    slug_tokens = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    # Not in use
-
     title = models.CharField(
         max_length=200,
-        null=True,
-        blank=True
-    )
-
-    need_agent = models.BooleanField(
-        db_index=True,
         null=True,
         blank=True
     )
@@ -261,7 +260,11 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-
+    need_agent = models.BooleanField(
+        db_index=True,
+        null=True,
+        blank=True
+    )
     need_logistics_agent = models.BooleanField(
         null=True,
         blank=True,
@@ -290,17 +293,51 @@ class Lead(Standard):
         self.refresh_slug()
         return super().save(*args, **kwargs)
 
-    def avg_deal_comm(self):
-        return self.commission / 100 * self.avg_deal_size
+    def cover_photo(self):
+        """Returns cover photo"""
+        return fimods.File.objects\
+            .filter(lead=self, deleted__isnull=True)\
+            .order_by('-created')\
+            .first()
 
-    def root_comments(self):
-        """Returns root comments only (i.e., comments that are not replies to
-        a comment. We do not chain replies and all replies are to root comments.
-        """
-        return LeadComment.objects.filter(
+    def num_applications(self):
+        """Number of applications on this lead"""
+        # We also call these applications 'conversations'
+        return Application.objects.filter(
             lead=self,
-            reply_to__isnull=True
-        ).order_by('created')
+            deleted__isnull=True
+        ).count()
+
+    # def display_images(self):
+    #     """Returns display images"""
+    #     return fimods.File.objects\
+    #         .filter(lead=self, deleted__isnull=True)\
+    #         .order_by('-created')[:3]
+
+    # def num_images(self):
+    #     """Returns the number of display images for this lead"""
+    #     return fimods.File.objects\
+    #         .filter(lead=self, deleted__isnull=True)\
+    #         .order_by('-created')[:3].count()
+
+    # def num_comments(self):
+    #     """Number of comments on this lead"""
+    #     return LeadComment.objects.filter(
+    #         lead=self,
+    #         deleted__isnull=True
+    #     ).count()
+
+    # def avg_deal_comm(self):
+    #     return self.commission / 100 * self.avg_deal_size
+
+    # def root_comments(self):
+    #     """Returns root comments only (i.e., comments that are not replies to
+    #     a comment. We do not chain replies and all replies are to root comments.
+    #     """
+    #     return LeadComment.objects.filter(
+    #         lead=self,
+    #         reply_to__isnull=True
+    #     ).order_by('created')
 
     # def seo_title(self):
     #     """Returns SEO-optimized title"""
@@ -323,39 +360,6 @@ class Lead(Standard):
 
     #     return title
 
-    def display_images(self):
-        """Returns display images"""
-        return fimods.File.objects\
-            .filter(lead=self, deleted__isnull=True)\
-            .order_by('-created')[:3]
-    
-    def cover_photo(self):
-        """Returns cover photo"""
-        return fimods.File.objects\
-            .filter(lead=self, deleted__isnull=True)\
-            .order_by('-created')\
-            .first()
-    
-    def num_images(self):
-        """Returns the number of display images for this lead"""
-        return fimods.File.objects\
-            .filter(lead=self, deleted__isnull=True)\
-            .order_by('-created')[:3].count()
-
-    def num_comments(self):
-        """Number of comments on this lead"""
-        return LeadComment.objects.filter(
-            lead=self,
-            deleted__isnull=True
-        ).count()
-
-    def num_applications(self):
-        """Number of applications on this lead"""
-        # We call applications 'conversations'
-        return Application.objects.filter(
-            lead=self,
-            deleted__isnull=True
-        ).count()
 
 class LeadDetailView(Standard):
     """Lead detail view.
