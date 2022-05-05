@@ -13,8 +13,13 @@ from leads import models, forms
 from files import models as fimods
 from files.utilities.get_mime_type import get_mime_type
 
+def _is_profile_complete(request):
+    """Returns True if user is authenticated and profile is complete."""
+    return request.user.is_authenticated and \
+        request.user.user.is_profile_complete()
+
 def lead_list(request):
-    if not request.user.user.is_profile_complete():
+    if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     leads = models.Lead.objects\
@@ -37,7 +42,7 @@ def lead_list(request):
     return render(request, 'leads/superio/lead_list.html', params)
 
 def lead_detail(request, slug):
-    if not request.user.user.is_profile_complete():
+    if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     lead = models.Lead.objects.get(slug_link=slug)
@@ -67,18 +72,18 @@ def lead_detail(request, slug):
                 applicant_comments=applicant_comments
             )
     else:
-        form = forms.AgentApplicationForm()
+        form = forms.ApplicationForm()
     
     params = {
         'form': form,
         'lead': lead
     }
 
-    return render(request, 'leads/superio/product_detail.html', params)
+    return render(request, 'leads/superio/lead_detail.html', params)
 
 @login_required
 def lead_create(request):
-    if not request.user.user.is_profile_complete():
+    if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
     
     if request.method == 'POST':
@@ -158,7 +163,7 @@ def lead_create(request):
 
 @login_required
 def my_leads(request):
-    if not request.user.user.is_profile_complete():
+    if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     leads = models.Lead.objects.all()\
@@ -186,7 +191,7 @@ def my_leads(request):
 
 @login_required
 def lead_edit(request, slug):
-    if not request.user.user.is_profile_complete():
+    if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     if request.method == 'POST':
@@ -270,7 +275,7 @@ def lead_edit(request, slug):
 
 @login_required
 def lead_delete(request):
-    if not request.user.user.is_profile_complete():
+    if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     if request.method == 'POST':
@@ -287,7 +292,7 @@ def lead_delete(request):
 
 @login_required
 def application_list(request):
-    if not request.user.user.is_profile_complete():
+    if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     # All applications associated with the user - to populate the list
@@ -303,7 +308,7 @@ def application_list(request):
 
 @login_required
 def application_detail(request, pk):
-    if not request.user.user.is_profile_complete():
+    if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     # Application of focus
@@ -321,7 +326,7 @@ def application_detail(request, pk):
 
 @login_required
 def application_delete(request, pk):
-    if not request.user.user.is_profile_complete():
+    if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
     
     if request.method == 'POST':
