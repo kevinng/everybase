@@ -269,11 +269,13 @@ class Lead(Standard):
             deleted__isnull=True
         ).count()
 
-    # def display_images(self):
-    #     """Returns display images"""
-    #     return fimods.File.objects\
-    #         .filter(lead=self, deleted__isnull=True)\
-    #         .order_by('-created')[:3]
+    def display_images(self):
+        """Returns display images."""
+        NUM_DISPLAY_IMAGES = 1
+
+        return fimods.File.objects\
+            .filter(lead=self, deleted__isnull=True)\
+            .order_by('-created')[:NUM_DISPLAY_IMAGES]
 
     # def num_images(self):
     #     """Returns the number of display images for this lead"""
