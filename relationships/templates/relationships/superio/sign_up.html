@@ -1,0 +1,127 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Everybase - sign in</title>
+
+    {% comment %} Stylesheets {% endcomment %}
+    <link href="{% static 'common/superio/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'common/superio/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'common/superio/css/responsive.css' %}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{% static 'common/superio/images/favicon.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'common/superio/images/favicon.png' %}" type="image/x-icon">
+
+    {% comment %} Responsive {% endcomment %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="{% static 'common/superio/js/respond.js' %}"></script><![endif]-->
+</head>
+
+<body>
+    {% comment %} start: Page wrapper {% endcomment %}
+    <div class="page-wrapper">
+
+        {% comment %} Preloader {% endcomment %}
+        <div class="preloader"></div>
+
+        {% comment %} start: Main header {% endcomment %}
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="main-box">
+                    <div class="nav-outer">
+                        <div class="logo-box">
+                            <div class="logo"><a href="/"><img src="{% static 'common/img/logo.png' %}" alt="Everybase" title="Everybase"></a></div>
+                        </div>
+                    </div>
+
+                    <div class="outer-box">
+                        <div class="btn-box">
+                            <a href="{% url 'signin' %}" class="theme-btn btn-style-three">Sign In</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mobile-header">
+                <div class="logo"><a href="/"><img src="{% static 'common/img/logo.png' %}" style="width: 152px; height: 21px;" alt="Everybase" title="Everybase"></a></div>
+                <div class="nav-outer clearfix">
+                    <div class="outer-box">
+                        <div class="login-box">
+                            <a href="login-popup.html" class="call-modal"><span class="icon-user"></span></a>
+                        </div>
+                        <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span class="flaticon-menu-1"></span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="nav-mobile"></div>
+        </header>
+        {% comment %} end: Main header {% endcomment %}
+
+        {% comment %} start: Info section {% endcomment %}
+        <div class="login-section">
+            <div class="image-layer" style="background-image: url({% static 'common/superio/images/background/12.jpg' %});"></div>
+            <div class="outer-box">
+                <div class="login-form default-form">
+                    <div class="form-inner">
+                        <h3>Register</h3>
+                        <form action="{% url 'signup' %}" method="post">
+                            {% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}{% comment %} The next URL is rendered with the template if it is passed as a GET parameter to the URL. {% endcomment %}
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" placeholder="Email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} required>
+                                {% if form.email.errors %}<div style="color:red">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input id="password-field" type="password" name="password" required>
+                                {% if form.password.errors %}<div style="color:red">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Re-enter Password</label>
+                                <input id="password-field" type="password" name="confirm_password" required>
+                                {% if form.password.errors %}<div style="color:red">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <button class="theme-btn btn-style-one" type="submit" name="Register">Register</button>
+                            </div>
+                        </form>
+
+                        <div class="bottom-box">
+                            <div class="text">Have an account? <a href="{% url 'signin' %}">Sign in</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% comment %} end: Info section {% endcomment %}
+    </div>
+    {% comment %} End: Page wrapper {% endcomment %}
+
+    <script src="{% static 'common/superio/js/jquery.js' %}"></script>
+    <script src="{% static 'common/superio/js/popper.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/chosen.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/jquery.fancybox.js' %}"></script>
+    <script src="{% static 'common/superio/js/jquery.modal.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/mmenu.polyfills.js' %}"></script>
+    <script src="{% static 'common/superio/js/mmenu.js' %}"></script>
+    <script src="{% static 'common/superio/js/appear.js' %}"></script>
+    <script src="{% static 'common/superio/js/ScrollMagic.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/rellax.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/owl.js' %}"></script>
+    <script src="{% static 'common/superio/js/wow.js' %}"></script>
+    <script src="{% static 'common/superio/js/script.js' %}"></script>
+</body>
+
+</html>
