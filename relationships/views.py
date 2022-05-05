@@ -50,14 +50,15 @@ def sign_in(request):
                 else:
                     return HttpResponseRedirect(reverse('home'))
             else:
-                form.add_error(None, 'Invalid credentials.')
+                form.add_error('password', 'Invalid credentials.')
+
     else:
         form = forms.EmailLoginForm()
 
     params = {'form': form}
 
-    # Read 'next' URL from GET parameters to form input. We'll add it to the
-    # redirect URL when the user submits this form.
+    # Read 'next' URL from GET parameters to form input.
+    # We'll add it to the redirect URL when the user submits this form.
     next = request.GET.get('next')
     if next is not None:
         params['next'] = next

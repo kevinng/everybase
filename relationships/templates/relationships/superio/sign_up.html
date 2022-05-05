@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Everybase - sign in</title>
+    <title>Register</title>
 
     {% comment %} Stylesheets {% endcomment %}
     <link href="{% static 'common/superio/css/bootstrap.css' %}" rel="stylesheet">
@@ -41,7 +41,7 @@
 
                     <div class="outer-box">
                         <div class="btn-box">
-                            <a href="{% url 'signin' %}" class="theme-btn btn-style-three">Sign In</a>
+                            <a href="{% url 'sign_in' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="theme-btn btn-style-three">Login</a>
                         </div>
                     </div>
                 </div>
@@ -70,8 +70,12 @@
                 <div class="login-form default-form">
                     <div class="form-inner">
                         <h3>Register</h3>
-                        <form action="{% url 'signup' %}" method="post">
-                            {% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}{% comment %} The next URL is rendered with the template if it is passed as a GET parameter to the URL. {% endcomment %}
+                        <form action="{% url 'sign_up' %}" method="post">
+                            {% if next != None %}
+                                <input type="hidden" name="next" value="{{ next }}">
+                            {% elif form.next.value != None %}
+                                <input type="hidden" name="next" value="{{ form.next.value }}">
+                            {% endif %}
                             {% csrf_token %}
                             <div class="form-group">
                                 <label>Email</label>
@@ -97,7 +101,7 @@
                         </form>
 
                         <div class="bottom-box">
-                            <div class="text">Have an account? <a href="{% url 'signin' %}">Sign in</a></div>
+                            <div class="text">Have an account? <a href="{% url 'sign_in' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}">Login</a></div>
                         </div>
                     </div>
                 </div>
