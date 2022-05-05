@@ -11,12 +11,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from decouple import config
+import sentry_sdk
 import django_heroku
 import dj_database_url
+
+from decouple import config
 from django.contrib.messages import constants as messages
 from django.conf.locale.en import formats as en_formats
-import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -199,13 +200,7 @@ AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL = 'leads/%s/t/%s'
 AWS_S3_KEY_CACHE_IMAGE = 'cache/%s'
 
 # Lead image thumbnail size
-LEAD_IMAGE_THUMBNAIL_SIZE = 80, 80
-
-AWS_S3_KEY_PRODUCT_IMAGE = 'products/%s/%s'
-AWS_S3_KEY_PRODUCT_IMAGE_THUMBNAIL = 'products/%s/t/%s'
-
-# Product image thumbnail size
-PRODUCT_IMAGE_THUMBNAIL_SIZE = 455, 295
+LEAD_IMAGE_THUMBNAIL_SIZE = 455, 295
 
 # Override message tags
 MESSAGE_TAGS = {
@@ -256,7 +251,7 @@ if DEBUG == False:
     # Required for Heroku
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-LOGIN_URL = '/signin'
+LOGIN_URL = '/sign-in'
 
 # List of persons to notify when someone signs up as a lead
 LEAD_SIGN_UP_NOTIFICATION_LIST = ['kevin@everybase.co']
