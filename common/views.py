@@ -1,57 +1,6 @@
-from . import models
-from . import serializers
-# from django.http import JsonResponse
 from django.template.response import TemplateResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-# from rest_framework.parsers import JSONParser
-# from django.views.decorators.csrf import csrf_exempt
-from rest_framework import generics, permissions
-
-class CountryAPI():
-    queryset = models.Country.objects.all()
-    serializer_class = serializers.CountrySerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class CountryList(
-    CountryAPI,
-    generics.ListCreateAPIView):
-    pass
-
-class CountryDetail(
-    CountryAPI,
-    generics.RetrieveUpdateDestroyAPIView):
-    pass
-
-class StateAPI():
-    queryset = models.State.objects.all()
-    serializer_class = serializers.StateSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class StateList(
-    StateAPI,
-    generics.ListCreateAPIView):
-    pass
-
-class StateDetail(
-    StateAPI,
-    generics.RetrieveUpdateDestroyAPIView):
-    pass
-
-class ImportJobAPI():
-    queryset = models.ImportJob.objects.all()
-    serializer_class = serializers.ImportJobSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class ImportJobList(
-    ImportJobAPI,
-    generics.ListCreateAPIView):
-    pass
-
-class ImportJobDetail(
-    ImportJobAPI,
-    generics.RetrieveUpdateDestroyAPIView):
-    pass
 
 def e(request, file_to_render):
     template_name = 'examples/%s' % file_to_render
@@ -66,17 +15,11 @@ def sm(request, file_to_render):
     return TemplateResponse(request, template_name, {})
 
 def home(request):
-    return TemplateResponse(request, 'home.html', {})
-
-def home_superio(request):
     # Redirect to dashboard if user is authenticated
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('users:profile'))
 
     return TemplateResponse(request, 'superio/home.html', {})
-
-def pricing(request):
-    return TemplateResponse(request, 'pricing.html', {})
 
 def ads_txt(request):
     filename = 'ads.txt'
@@ -84,3 +27,66 @@ def ads_txt(request):
     response = HttpResponse(content, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
     return response
+
+
+
+
+
+
+# from . import models
+# from . import serializers
+# from django.http import JsonResponse
+# from rest_framework.parsers import JSONParser
+# from django.views.decorators.csrf import csrf_exempt
+# from rest_framework import generics, permissions
+
+# class CountryAPI():
+#     queryset = models.Country.objects.all()
+#     serializer_class = serializers.CountrySerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+# class CountryList(
+#     CountryAPI,
+#     generics.ListCreateAPIView):
+#     pass
+
+# class CountryDetail(
+#     CountryAPI,
+#     generics.RetrieveUpdateDestroyAPIView):
+#     pass
+
+# class StateAPI():
+#     queryset = models.State.objects.all()
+#     serializer_class = serializers.StateSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+# class StateList(
+#     StateAPI,
+#     generics.ListCreateAPIView):
+#     pass
+
+# class StateDetail(
+#     StateAPI,
+#     generics.RetrieveUpdateDestroyAPIView):
+#     pass
+
+# class ImportJobAPI():
+#     queryset = models.ImportJob.objects.all()
+#     serializer_class = serializers.ImportJobSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+# class ImportJobList(
+#     ImportJobAPI,
+#     generics.ListCreateAPIView):
+#     pass
+
+# class ImportJobDetail(
+#     ImportJobAPI,
+#     generics.RetrieveUpdateDestroyAPIView):
+#     pass
+
+# def pricing(request):
+#     return TemplateResponse(request, 'pricing.html', {})
+
+# def home(request):
+#     return TemplateResponse(request, 'home.html', {})
