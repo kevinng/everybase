@@ -1,7 +1,7 @@
 {% load static %}
 <tr>
     <td>
-        <h6><a href="{% url 'leads:lead_detail' lead.slug_link %}">{{ lead.headline }}</a></h6>
+        <h6><a href="{% url 'leads:lead_detail' lead.slug_link %}" target="lead_detail">{{ lead.headline }}</a></h6>
     </td>
     <td class="applied"><a href="{% url 'applications:inbox' %}">{{ lead.num_applications }} Conversations</a></td>
     <td>{{ lead.age_desc }}</td>
