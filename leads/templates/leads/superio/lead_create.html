@@ -41,33 +41,44 @@
                                             </div>
                                             <div id="upload_remove" style="margin-left:20px"><a href="#">Remove Image</a></div>
                                         </div>
-                                        {% if form.cover_photo.errors %}<div id="upload_error" style="color:red; margin-right: 5px" class="text">{% for error in form.cover_photo.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        {% if form.cover_photo.errors %}<div id="upload_error" style="color:red" class="text">{% for error in form.cover_photo.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="form-group col-12">
-                                        <label>Product Name</label>
-                                        <input type="text" name="headline"{% if form.headline.value != None %} value="{{ form.headline.value }}"{% endif %}>
+                                        <label>Lead Title</label>
+                                        <input type="text" placeholder="Name your lead." name="headline"{% if form.headline.value != None %} value="{{ form.headline.value }}"{% endif %}>
                                         {% if form.headline.errors %}<div style="color:red">{% for error in form.headline.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     <div class="form-group col-12">
-                                        <label>Product Details</label>
-                                        <textarea name="details">{% if form.details.value != None %}{{ form.details.value }}{% endif %}</textarea>
+                                        <label>Export Country</label>
+                                        <select name="buy_country" class="chosen-select">
+                                            <option></option>
+                                            {% for country in countries %}
+                                                <option value="{{ country.programmatic_key }}"{% if form.buy_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        {% if form.buy_country.errors %}<div style="color:red">{% for error in form.buy_country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                    </div>
+
+                                    <div class="form-group col-12">
+                                        <label>Lead Details</label>
+                                        <textarea name="details" placeholder="Describe your products and other details the agent is interested in.">{% if form.details.value != None %}{{ form.details.value }}{% endif %}</textarea>
                                         {% if form.details.errors %}<div style="color:red">{% for error in form.details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     <div class="form-group col-12">
-                                        <label>Commission for finding buyers</label>
-                                        <textarea name="commission_type_other">{% if form.commission_type_other.value != None %}{{ form.commission_type_other.value }}{% endif %}</textarea>
-                                        {% if form.commission_type_other.errors %}<div style="color:red">{% for error in form.commission_type_other.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        <label>Commission Details</label>
+                                        <textarea name="comm_details" placeholder="Describe your commission offer.">{% if form.comm_details.value != None %}{{ form.comm_details.value }}{% endif %}</textarea>
+                                        {% if form.comm_details.errors %}<div style="color:red">{% for error in form.comm_details.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     <div class="form-group col-12">
-                                        <label>Interview questions (optional)</label>
-                                        <textarea name="question_1">{% if form.question_1.value != None %}{{ form.question_1.value }}{% endif %}</textarea>
-                                        {% if form.question_1.errors %}<div style="color:red">{% for error in form.question_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        <label>Questions for the Agent</label>
+                                        <textarea name="questions" placeholder="The agent is required to answer your questions when applying to your lead.">{% if form.questions.value != None %}{{ form.questions.value }}{% endif %}</textarea>
+                                        {% if form.questions.errors %}<div style="color:red">{% for error in form.questions.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     <div class="form-group col-lg-6 col-md-12">
