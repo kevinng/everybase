@@ -7,8 +7,10 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 
 from everybase import settings
+from common import models as commods
 from leads import models, forms
 from files import models as fimods
 from files.utilities.get_mime_type import get_mime_type
@@ -95,10 +97,13 @@ def lead_create(request):
     if request.method == 'POST':
         form = forms.LeadForm(request.POST, request.FILES)
         if form.is_valid():
+            buy_country_str = form.cleaned_data.get('buy_country')
+            buy_country = commods.Country.objects.get(programmatic_key=buy_country_str)
+
             lead = models.Lead.objects.create(
                 author=request.user.user,
                 lead_type='selling', # We only support sellers for now
-                buy_country=request.user.user.country, # Default to user's country
+                buy_country=buy_country,
                 headline=form.cleaned_data.get('headline'),
                 details=form.cleaned_data.get('details'),
                 questions=form.cleaned_data.get('questions')
@@ -165,7 +170,15 @@ def lead_create(request):
     else:
         form = forms.LeadForm()
 
-    return render(request, 'leads/superio/lead_create.html', {'form': form})
+    countries = commods.Country.objects.annotate(
+        num_leads=Count('leads_buy_country')).order_by('-num_leads')
+
+    params = {
+        'countries': countries,
+        'form': form
+    }
+
+    return render(request, 'leads/superio/lead_create.html', params)
 
 @login_required
 def my_leads(request):
@@ -280,13 +293,12 @@ def lead_edit(request, slug):
     # Return rendered
 
 @login_required
-def lead_delete(request):
+def lead_delete(request, slug):
     if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     if request.method == 'POST':
-        pk = request.POST.get('pk')
-        lead = models.Lead.objects.get(pk=pk)
+        lead = models.Lead.objects.get(slug_link=slug)
         
         # Set delete flag.
         # Model associations are protected, so deleting is a massive operation.
@@ -389,14 +401,12 @@ def application_delete(request, pk):
 # from django.template.loader import render_to_string
 # import requests, json
 # from urllib.parse import urljoin
-# from django.db.models import Count
 # from django.db.models import DateTimeField
 # from django.db.models.functions import Trunc
 # from django.db.models.expressions import RawSQL
 # from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
 # from django.views.generic.list import ListView
 # from django.contrib.auth.mixins import LoginRequiredMixin
-# from common import models as commods
 # from payments import models as paymods
 # from common.tasks.send_amplitude_event import send_amplitude_event
 # from files.utilities.delete_file import delete_file
