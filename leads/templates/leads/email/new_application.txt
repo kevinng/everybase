@@ -1,0 +1,6 @@
+{{ applicant_first_name|title }} {{ applicant_last_name|title }} is interested to be your agent for:
+
+{{ lead_headline }}
+
+Reply here:
+{{ application_detail_url }}

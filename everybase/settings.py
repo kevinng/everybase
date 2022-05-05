@@ -239,10 +239,6 @@ EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
 EMAIL_SYS_SENDER_EMAIL_ADDRESS = config('SYSTEM_EMAIL')
 # System email receivers
 EMAIL_SYS_RECEIVER_EMAIL_ADDRESSES = [config('SYSTEM_EMAIL')]
-# Support email sender
-EMAIL_SUP_SENDER_EMAIL_ADDRESS = config('SUPPORT_EMAIL')
-# Support email receivers
-EMAIL_SUP_RECEIVER_EMAIL_ADDRESSES = [config('SUPPORT_EMAIL')]
 
 if DEBUG == False:
     # Force HTTPS only

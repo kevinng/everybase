@@ -1,0 +1,8 @@
+You've created a lead on Everybase.
+
+{{ lead_headline }}
+{{ lead_detail_url }}
+
+Please add this email to your whitelist.
+
+We'll contact you at this address when someone contacts you on Everybase.

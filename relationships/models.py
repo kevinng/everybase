@@ -369,7 +369,7 @@ class User(commods.Standard):
         applications = applications.filter(deleted__isnull=True)
 
         # Sort by last messaged date/time
-        applications.order_by('-last_messaged')
+        applications = applications.order_by('-last_messaged')
 
         return applications
 

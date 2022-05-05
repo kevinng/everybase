@@ -11,9 +11,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.template.response import TemplateResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 
 from everybase import settings
 from common import models as commods
+from common.tasks.send_email import send_email
 from relationships import forms, models
 
 def sign_in(request):
@@ -95,6 +97,14 @@ def sign_up(request):
             user = authenticate(request, username=django_user.username, password=password)
             if user is not None:
                 login(request, user)
+
+            # Email lead author
+            send_email.delay(
+                render_to_string('leads/email/welcome_subject.txt', {}),
+                render_to_string('leads/email/welcome.txt', {}),
+                'friend@everybase.co',
+                [email.email]
+            )
 
             return HttpResponseRedirect(reverse('users:profile'))
     else:

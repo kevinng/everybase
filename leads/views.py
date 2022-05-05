@@ -1,3 +1,4 @@
+from urllib.parse import urljoin
 import boto3, pytz, datetime
 from PIL import Image, ImageOps
 from io import BytesIO
@@ -8,9 +9,11 @@ from django.http import HttpResponseRedirect, Http404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from django.template.loader import render_to_string
 
 from everybase import settings
 from common import models as commods
+from common.tasks.send_email import send_email
 from leads import models, forms
 from files import models as fimods
 from files.utilities.get_mime_type import get_mime_type
@@ -71,7 +74,7 @@ def lead_detail(request, slug):
             answers = form.cleaned_data.get('answers')
             applicant_comments = form.cleaned_data.get('applicant_comments')
 
-            models.Application.objects.create(
+            application = models.Application.objects.create(
                 lead=lead,
                 applicant=request.user.user,
                 has_experience=has_experience,
@@ -79,6 +82,24 @@ def lead_detail(request, slug):
                 applicant_comments=applicant_comments,
                 questions=lead.questions,
                 answers=answers
+            )
+
+            # Email lead author
+            send_email.delay(
+                render_to_string('leads/email/new_application_subject.txt', {
+                    'applicant_first_name': application.applicant.first_name,
+                    'applicant_last_name': application.applicant.last_name,
+                }),
+                render_to_string('leads/email/new_application.txt', {
+                    'applicant_first_name': application.applicant.first_name,
+                    'applicant_last_name': application.applicant.last_name,
+                    'lead_headline': application.lead.headline,
+                    'application_detail_url': \
+                        urljoin(settings.BASE_URL,
+                        reverse('applications:application_detail', args=(application.id,)))
+                }),
+                'friend@everybase.co',
+                [application.lead.author.email.email]
             )
     else:
         form = forms.ApplicationForm()
@@ -166,6 +187,19 @@ def lead_create(request):
                 file.width, file.height = im.size
                 file.thumbnail_width, file.thumbnail_height = thumbnail.size
                 file.save()
+
+            # Email lead author
+            send_email.delay(
+                render_to_string('leads/email/lead_created_subject.txt', {}),
+                render_to_string('leads/email/lead_created.txt', {
+                    'lead_headline': lead.headline,
+                    'lead_detail_url': \
+                        urljoin(settings.BASE_URL,
+                        reverse('leads:lead_detail', args=(lead.id,)))
+                }),
+                'friend@everybase.co',
+                [lead.author.email.email]
+            )
             
             return HttpResponseRedirect(reverse('leads:my_leads'))
     else:
@@ -208,90 +242,6 @@ def my_leads(request):
     params['page_obj'] = leads
 
     return render(request, 'leads/superio/my_leads.html', params)
-
-@login_required
-def lead_edit(request, slug):
-    if not _is_profile_complete(request):
-        return HttpResponseRedirect(reverse('users:profile'))
-
-    if request.method == 'POST':
-        form = forms.LeadForm(request.POST, request.FILES)
-        if form.is_valid():
-            lead = models.Lead.objects.get(slug_link=slug)
-            lead.headline = form.cleaned_data.get('headline')
-            lead.details = form.cleaned_data.get('details')
-            lead.questions = form.cleaned_data.get('questions')
-
-
-
-
-
-
-
-            # TODO CONTINUE FROM HERE
-
-            cover_photo = request.FILES.get('cover_photo')
-            mime_type = get_mime_type(cover_photo)
-
-            # Create lead file
-            file = fimods.File.objects.create(
-                uploader=request.user.user,
-                mime_type=mime_type,
-                filename=cover_photo.name,
-                lead=lead,
-                s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-                thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-            )
-
-            key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, file.id)
-            thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, file.id)
-
-            s3 = boto3.session.Session(
-                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-            ).resource('s3')
-
-            # Upload lead image
-            lead_s3_obj = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
-                Key=key,
-                Body=cover_photo,
-                ContentType=mime_type
-            )
-
-            # Update file with S3 results
-            file.s3_object_key = key
-            file.thumbnail_s3_object_key = thumb_key
-            file.s3_object_content_length = lead_s3_obj.content_length
-            file.e_tag = lead_s3_obj.e_tag
-            file.content_type = lead_s3_obj.content_type
-            file.last_modified = lead_s3_obj.last_modified
-            file.save()
-
-            # Resize, save thumbnail, record sizes
-            with Image.open(cover_photo) as im:
-                # Resize preserving aspect ratio cropping from the center
-                thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
-                output = BytesIO()
-                thumbnail.save(output, format='PNG')
-                output.seek(0)
-
-                # Upload thumbnail
-                s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
-                    Key=thumb_key,
-                    Body=output,
-                    ContentType=mime_type
-                )
-
-                # Update file and thumbnail sizes
-                file.width, file.height = im.size
-                file.thumbnail_width, file.thumbnail_height = thumbnail.size
-                file.save()
-            
-            return HttpResponseRedirect(reverse('leads:my_leads'))
-    elif request.method == 'GET':
-        pass
-
-    # Return rendered
 
 @login_required
 def lead_delete(request, slug):
@@ -339,16 +289,41 @@ def application_detail(request, pk):
         # User posted a message
         form = forms.ApplicationMessageForm(request.POST)
         if form.is_valid():
+            body = form.cleaned_data.get('body')
             models.ApplicationMessage.objects.create(
                 application=application,
                 author=request.user.user,
-                body=form.cleaned_data.get('body')
+                body=body
             )
             
             sgtz = pytz.timezone(settings.TIME_ZONE)
             now = datetime.datetime.now(tz=sgtz)
             application.last_messaged = now
             application.save()
+
+            if application.applicant.id == request.user.user.id:
+                counter_party = application.lead.author
+            else:
+                counter_party = application.applicant
+
+            # Email counter party
+            send_email.delay(
+                render_to_string('leads/email/new_message_subject.txt', {
+                    'first_name': request.user.user.first_name,
+                    'last_name': request.user.user.last_name
+                }),
+                render_to_string('leads/email/new_message.txt', {
+                    'first_name': request.user.user.first_name,
+                    'last_name': request.user.user.last_name,
+                    'body': body,
+                    'application_detail_url': \
+                        urljoin(settings.BASE_URL,
+                        reverse('applications:application_detail', args=(application.id,)))
+                }),
+                'friend@everybase.co',
+                [counter_party.email.email]
+            )
+
     elif request.method == 'GET':
         form = forms.ApplicationMessageForm()
 
@@ -417,7 +392,83 @@ def application_delete(request, pk):
 
 
 
+# @login_required
+# def lead_edit(request, slug):
+#     if not _is_profile_complete(request):
+#         return HttpResponseRedirect(reverse('users:profile'))
 
+#     if request.method == 'POST':
+#         form = forms.LeadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             lead = models.Lead.objects.get(slug_link=slug)
+#             lead.headline = form.cleaned_data.get('headline')
+#             lead.details = form.cleaned_data.get('details')
+#             lead.questions = form.cleaned_data.get('questions')
+
+#             # TODO CONTINUE FROM HERE
+
+#             cover_photo = request.FILES.get('cover_photo')
+#             mime_type = get_mime_type(cover_photo)
+
+#             # Create lead file
+#             file = fimods.File.objects.create(
+#                 uploader=request.user.user,
+#                 mime_type=mime_type,
+#                 filename=cover_photo.name,
+#                 lead=lead,
+#                 s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+#                 thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+#             )
+
+#             key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, file.id)
+#             thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, file.id)
+
+#             s3 = boto3.session.Session(
+#                 aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+#                 aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+#             ).resource('s3')
+
+#             # Upload lead image
+#             lead_s3_obj = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+#                 Key=key,
+#                 Body=cover_photo,
+#                 ContentType=mime_type
+#             )
+
+#             # Update file with S3 results
+#             file.s3_object_key = key
+#             file.thumbnail_s3_object_key = thumb_key
+#             file.s3_object_content_length = lead_s3_obj.content_length
+#             file.e_tag = lead_s3_obj.e_tag
+#             file.content_type = lead_s3_obj.content_type
+#             file.last_modified = lead_s3_obj.last_modified
+#             file.save()
+
+#             # Resize, save thumbnail, record sizes
+#             with Image.open(cover_photo) as im:
+#                 # Resize preserving aspect ratio cropping from the center
+#                 thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
+#                 output = BytesIO()
+#                 thumbnail.save(output, format='PNG')
+#                 output.seek(0)
+
+#                 # Upload thumbnail
+#                 s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
+#                     Key=thumb_key,
+#                     Body=output,
+#                     ContentType=mime_type
+#                 )
+
+#                 # Update file and thumbnail sizes
+#                 file.width, file.height = im.size
+#                 file.thumbnail_width, file.thumbnail_height = thumbnail.size
+#                 file.save()
+            
+#             return HttpResponseRedirect(reverse('leads:my_leads'))
+#     elif request.method == 'GET':
+#         pass
+
+#     # Return rendered
 
 # from django.template.loader import render_to_string
 # import requests, json
