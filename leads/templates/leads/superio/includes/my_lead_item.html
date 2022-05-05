@@ -9,7 +9,7 @@
         <div class="option-box">
             <ul class="option-list">
                 {% comment %} <li><button data-text="View Aplication"><span class="la la-eye"></span></button></li> {% endcomment %}
-                <li><a href="{% url 'leads:lead_edit' lead.slug_link %}" data-text="Edit"><span class="la la-pencil"></span></a></li>
+                {% comment %} <li><a href="{% url 'leads:lead_edit' lead.slug_link %}" data-text="Edit"><span class="la la-pencil"></span></a></li> {% endcomment %}
                 <li>
                     <form action="{% url 'leads:lead_delete' lead.slug_link %}" method="post">
                         {% csrf_token %}
