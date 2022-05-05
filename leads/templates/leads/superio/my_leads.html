@@ -57,7 +57,7 @@
 
                                     <tbody>
                                         {% if page_obj|length > 0 %}
-                                            {% for product in page_obj %}
+                                            {% for lead in page_obj %}
                                                 {% include 'leads/superio/includes/my_lead_item.html' with lead=lead %}
                                             {% endfor %}
                                         {% endif %}
