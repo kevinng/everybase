@@ -3,6 +3,7 @@ from django import forms
 class LeadForm(forms.Form):
     cover_photo = forms.FileField()
     headline = forms.CharField()
+    buy_country = forms.CharField()
     details = forms.CharField()
     comm_details = forms.CharField()
     questions = forms.CharField()
