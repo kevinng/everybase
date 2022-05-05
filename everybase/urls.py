@@ -1,5 +1,4 @@
 from relationships import views as relviews
-from leads import views as leviews
 from common import views as comviews
 
 from django.contrib import admin
@@ -23,40 +22,19 @@ def trigger_handled_error(request):
 
 urlpatterns = [
     # Common
-    # path('', comviews.home, name='home'),
-    path('', comviews.home_superio, name='home'),
-    # path('pricing', comviews.pricing, name='pricing'),
-    path('ads.txt', comviews.ads_txt, name='ads_txt'), # For Adsense
+    path('', comviews.home, name='home'),
+    # For Adsense and other ad networks
+    path('ads.txt', comviews.ads_txt, name='ads_txt'),
 
     # Leads
-    # path('leads/', include('leads.urls')),
-    # path('applications/', include('leads.urls_application')),
-
-    # Products
-    path('products/', include('leads.urls_product')),
-
-    # New sign-up and register URLs
-    path('signup/', relviews.signup, name='signup'),
-    path('signin/', relviews.signin, name='signin'),
-    path('signout/', relviews.signout, name='signout'),
-
-    # Pre V5 routings
-    # Relationships
-    # path('register/', relviews.register, name='register'),
-    # path('confirm_register/<str:user_uuid>', relviews.confirm_register,
-    #     name='confirm_register'),
-    # path('is_registered/<str:user_uuid>', relviews.is_registered,
-    #     name='is_registered'),
-    # path('login/', relviews.log_in, name='login'),
-    # path('confirm_login/<str:user_uuid>', relviews.confirm_login,
-    #     name='confirm_login'),
-    # path('is_logged_in/<str:user_uuid>', relviews.is_logged_in,
-    #     name='is_logged_in'),
-    # path('logout/', relviews.log_out, name='logout'),
-    # path('persons/', include('relationships.urls')),
+    path('leads/', include('leads.urls')),
+    path('applications/', include('leads.urls_application')),
     
+    # Relationships
     path('users/', include('relationships.urls')),
-    path('conversations/', include('relationships.urls_conversations')),
+    path('sign-up/', relviews.sign_up, name='sign_up'),
+    path('sign-in/', relviews.sign_in, name='sign_in'),
+    path('sign-out/', relviews.sign_out, name='sign_out'),
 
     # Chat
     path('chat/', include('chat.urls')),
@@ -77,6 +55,23 @@ urlpatterns = [
 
     # Common
     path('common/', include('common.urls')),
+
+    # Pre v5 routings
+    # path('', comviews.home, name='home'),
+    # path('pricing', comviews.pricing, name='pricing'),
+    #
+    # path('register/', relviews.register, name='register'),
+    # path('confirm_register/<str:user_uuid>', relviews.confirm_register,
+    #     name='confirm_register'),
+    # path('is_registered/<str:user_uuid>', relviews.is_registered,
+    #     name='is_registered'),
+    # path('login/', relviews.log_in, name='login'),
+    # path('confirm_login/<str:user_uuid>', relviews.confirm_login,
+    #     name='confirm_login'),
+    # path('is_logged_in/<str:user_uuid>', relviews.is_logged_in,
+    #     name='is_logged_in'),
+    # path('logout/', relviews.log_out, name='logout'),
+    # path('persons/', include('relationships.urls')),
 ]
 
 admin.site.site_header = "Everybase Admin"
