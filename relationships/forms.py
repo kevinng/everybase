@@ -18,15 +18,19 @@ class EmailLoginForm(forms.Form):
 
         has_error = False
         if email is not None:
-            email = models.Email.objects.get(email=email)
+            try:
+                email = models.Email.objects.get(email=email)
 
-            u = models.User.objects.filter(
-                email=email.id, # User has email
-                registered__isnull=False, # User is registered
-                django_user__isnull=False # User has a Django user linked
-            ).first()
+                u = models.User.objects.filter(
+                    email=email.id, # User has email
+                    registered__isnull=False, # User is registered
+                    django_user__isnull=False # User has a Django user linked
+                ).first()
 
-            if u is None:
+                if u is None:
+                    self.add_error('email', 'Account does not exist, please register.')
+                    has_error = True
+            except models.Email.DoesNotExist:
                 self.add_error('email', 'Account does not exist, please register.')
                 has_error = True
         
@@ -37,6 +41,7 @@ class EmailRegisterForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(min_length=8)
     confirm_password = forms.CharField(min_length=8)
+    next = forms.CharField(required=False)
 
     def clean(self):
         super(EmailRegisterForm, self).clean()
