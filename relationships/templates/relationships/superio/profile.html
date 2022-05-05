@@ -13,7 +13,7 @@
 <section class="user-dashboard">
     <div class="dashboard-outer">
 
-        {% if request.user.user.first_name == None or request.user.user.last_name == None or request.user.user.company_name == None or request.user.user.phone_number.national_number == None or request.user.user.phone_number.country_code == None or request.user.user.goods_string == None %}
+        {% if not request.user.user.is_profile_complete %}
             <div class="message-box warning">
                 <p>Please complete your profile before performing other actions.</p>
                 <button class="close-btn"><span class="close_icon"></span></button>
@@ -29,7 +29,7 @@
                 <div class="ls-widget">
                     <div class="tabs-box">
                         <div class="widget-title">
-                            {% comment %} <h4>My Profile</h4> {% endcomment %}
+                            {% comment %} <h4>Profile</h4> {% endcomment %}
                         </div>
 
                         <div class="widget-content">
@@ -61,7 +61,16 @@
                                         {% if form.phone_number.errors %}<div style="color:red">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
-                                    <div class="form-group col-lg-6 col-md-12"></div>
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Country</label>
+                                        <select name="country" class="chosen-select">
+                                            <option></option>
+                                            {% for country in countries %}
+                                                <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        {% if form.country.errors %}<div style="color:red">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                    </div>
 
                                     {% comment %} <div class="form-group col-lg-12 col-md-12">
                                         <label>Introduce Yourself</label>

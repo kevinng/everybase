@@ -81,6 +81,7 @@ class ProfileForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
     phone_number = PhoneNumberField()
+    country = forms.CharField()
 
     def __init__(self, *args, **kwargs):
         # Make request object passed in a class variable
