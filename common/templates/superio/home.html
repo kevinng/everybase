@@ -20,20 +20,19 @@
                         <div class="text">Access overseas market by recruiting agents to sell your products in their home country</div>
                     </div>
 
-                    {% comment %} Job search form {% endcomment %}
+                    {% comment %} Search {% endcomment %}
                     <div class="job-search-form-two wow fadeInUp" data-wow-delay="500ms">
-                        <form method="post" action="{% url 'products:product_list' %}" method="get">
+                        <form method="post" action="{% url 'leads:lead_list' %}" method="get">
                             {% csrf_token %}
                             <div class="row">
-                            <div class="form-group col-lg-9 col-md-12 col-sm-12">
-                                <label class="title">Find products to sell</label>
-                                <span class="icon flaticon-search-1"></span>
-                                <input type="text" name="products" placeholder="e.g., agriculture, textiles, commodities">
-                            </div>
-                            {% comment %} Form group {% endcomment %}
-                            <div class="form-group col-lg-3 col-md-12 col-sm-12 btn-box">
-                                <button type="submit" class="theme-btn btn-style-one"><span class="btn-title">Go</span></button>
-                            </div>
+                                <div class="form-group col-lg-9 col-md-12 col-sm-12">
+                                    <label class="title">Find products to sell</label>
+                                    <span class="icon flaticon-search-1"></span>
+                                    <input type="text" name="products" placeholder="e.g., agriculture, textiles, commodities">
+                                </div>
+                                <div class="form-group col-lg-3 col-md-12 col-sm-12 btn-box">
+                                    <button type="submit" class="theme-btn btn-style-one"><span class="btn-title">Go</span></button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -108,7 +107,7 @@
             </div>
 
             <div class="col-auto">
-                <a href="{% url 'products:product_list' %}">
+                <a href="{% url 'leads:lead_list' %}">
                     See More
                     <span class="fa fa-angle-right"></span>
                 </a>
@@ -221,7 +220,7 @@
                     <div class="content">
                         <h3>Agents</h3>
                         <p>Help exporters sell their products in your home country.</p>
-                        <a href="{% url 'signup' %}" class="theme-btn btn-style-five">Register Account</a>
+                        <a href="{% url 'sign_up' %}" class="theme-btn btn-style-five">Register Account</a>
                     </div>
                     <figure class="image"><img src="{% static 'common/superio/images/resource/employ.png' %}" alt=""></figure>
                 </div>
@@ -231,7 +230,7 @@
                     <div class="content">
                         <h3 class="color-dark-1">Exporter</h3>
                         <p class="color-dark-2">Find agents to help you sell your products overseas.</p>
-                        <a href="{% url 'signup' %}" class="theme-btn btn-style-five color-dark-1">Register Account</a>
+                        <a href="{% url 'sign_up' %}" class="theme-btn btn-style-five color-dark-1">Register Account</a>
                     </div>
                     <figure class="image"><img src="{% static 'common/superio/images/resource/candidate.png' %}" alt=""></figure>
                 </div>
