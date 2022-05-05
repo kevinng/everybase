@@ -3,6 +3,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
 urlpatterns = [
+    path('sm/<str:file_to_render>', views.sm), # Render Superio mockups
+
     # path('country/',
     #     views.CountryList.as_view()),
     # path('country/<int:pk>/',
@@ -18,8 +20,7 @@ urlpatterns = [
     # path('import_job/<int:pk>/',
     #     views.ImportJobDetail.as_view()),
 
-    path('e/<str:file_to_render>', views.e),
-    path('m/<str:file_to_render>', views.m),
-    path('sm/<str:file_to_render>', views.sm),
+    # path('e/<str:file_to_render>', views.e),
+    # path('m/<str:file_to_render>', views.m),
 ]
 urlpatterns = format_suffix_patterns(urlpatterns)
