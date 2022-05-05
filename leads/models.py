@@ -263,7 +263,6 @@ class Lead(Standard):
 
     def num_applications(self):
         """Number of applications on this lead"""
-        # We also call these applications 'conversations'
         return Application.objects.filter(
             lead=self,
             deleted__isnull=True
@@ -444,8 +443,8 @@ class ApplicationMessage(Standard):
     """
     application = models.ForeignKey(
         'Application',
-        related_name='application_messages',
-        related_query_name='application_messages',
+        related_name='messages',
+        related_query_name='messages',
         on_delete=models.PROTECT,
         db_index=True
     )
