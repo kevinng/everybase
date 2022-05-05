@@ -3,45 +3,6 @@ from django.db import models
 import files.models as fimods
 from common.models import Standard
 from django.utils.text import slugify
-
-class LeadComment(Standard):
-    """Comment on a lead
-
-    Last updated: 14 February 2022, 11:33 AM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='lead_comments',
-        related_query_name='lead_comments',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    commentor = models.ForeignKey(
-        'relationships.User',
-        related_name='lead_comments_as_commentor',
-        related_query_name='lead_comments_as_commentor',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
-    body = models.TextField()
-
-    reply_to = models.ForeignKey(
-        'LeadComment',
-        related_name='replies',
-        related_query_name='replies',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
-    def reply_comments(self):
-        """Returns replies to this lead"""
-        return LeadComment.objects.filter(
-            reply_to=self,
-            deleted__isnull=True
-        ).order_by('created')
     
 class Lead(Standard):
     """Lead.
@@ -360,7 +321,6 @@ class Lead(Standard):
 
     #     return title
 
-
 class LeadDetailView(Standard):
     """Lead detail view.
 
@@ -388,6 +348,186 @@ class LeadDetailView(Standard):
 
     class Meta:
         unique_together = ('viewer', 'lead')
+
+class Application(Standard):
+    """Agent application.
+
+    Last updated: 5 May 2022, 12:36 PM
+    """
+    last_messaged = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='applications',
+        related_query_name='applications',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    applicant = models.ForeignKey(
+        'relationships.User',
+        related_name='applications_as_applicant',
+        related_query_name='applications_as_applicant',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    has_experience = models.BooleanField(
+        blank=True,
+        null=True
+    )
+    has_buyers = models.BooleanField(
+        blank=True,
+        null=True
+    )
+
+    questions = models.TextField(
+        blank=True,
+        null=True
+    )
+    answers = models.TextField(
+        blank=True,
+        null=True
+    )
+    applicant_comments = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    # Not in use
+
+    question_1 = models.TextField(
+        blank=True,
+        null=True
+    )
+    answer_1 = models.TextField(
+        blank=True,
+        null=True
+    )
+    question_2 = models.TextField(
+        blank=True,
+        null=True
+    )
+    answer_2 = models.TextField(
+        blank=True,
+        null=True
+    )
+    question_3 = models.TextField(
+        blank=True,
+        null=True
+    )
+    answer_3 = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    response = models.CharField(
+        max_length=200,
+        choices=[
+            ('rejected', 'Rejected'),
+            ('started_work', 'Started Work'),
+            ('stopped_work', 'Stopped Work'),
+        ],
+        blank=True,
+        null=True
+    )
+
+class ApplicationMessage(Standard):
+    """Application message.
+
+    Last updated: 7 April 2022, 10:06 PM
+    """
+    application = models.ForeignKey(
+        'Application',
+        related_name='application_messages',
+        related_query_name='application_messages',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    author = models.ForeignKey(
+        'relationships.User',
+        related_name='application_messages',
+        related_query_name='application_messages',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    body = models.TextField(
+        blank=True,
+        null=True
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Not in use
+
+
+class LeadComment(Standard):
+    """Comment on a lead
+
+    Last updated: 14 February 2022, 11:33 AM
+    """
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='lead_comments',
+        related_query_name='lead_comments',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    commentor = models.ForeignKey(
+        'relationships.User',
+        related_name='lead_comments_as_commentor',
+        related_query_name='lead_comments_as_commentor',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    body = models.TextField()
+
+    reply_to = models.ForeignKey(
+        'LeadComment',
+        related_name='replies',
+        related_query_name='replies',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    def reply_comments(self):
+        """Returns replies to this lead"""
+        return LeadComment.objects.filter(
+            reply_to=self,
+            deleted__isnull=True
+        ).order_by('created')
 
 class LeadQueryLog(Standard):
     """Lead query log.
@@ -455,108 +595,6 @@ class ApplicationQueryLog(Standard):
         blank=True,
         db_index=True
     )
-
-class Application(Standard):
-    """Agent application.
-
-    Last updated: 4 May 2022, 1:15 PM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='applications',
-        related_query_name='applications',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    applicant = models.ForeignKey(
-        'relationships.User',
-        related_name='applications_as_applicant',
-        related_query_name='applications_as_applicant',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
-    has_experience = models.BooleanField(
-        blank=True,
-        null=True
-    )
-    has_buyers = models.BooleanField(
-        blank=True,
-        null=True
-    )
-
-    last_messaged = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
-    question_1 = models.TextField(
-        blank=True,
-        null=True
-    )
-    answer_1 = models.TextField(
-        blank=True,
-        null=True
-    )
-    question_2 = models.TextField(
-        blank=True,
-        null=True
-    )
-    answer_2 = models.TextField(
-        blank=True,
-        null=True
-    )
-    question_3 = models.TextField(
-        blank=True,
-        null=True
-    )
-    answer_3 = models.TextField(
-        blank=True,
-        null=True
-    )
-    applicant_comments = models.TextField(
-        blank=True,
-        null=True
-    )
-
-    response = models.CharField(
-        max_length=200,
-        choices=[
-            ('rejected', 'Rejected'),
-            ('started_work', 'Started Work'),
-            ('stopped_work', 'Stopped Work'),
-        ],
-        blank=True,
-        null=True
-    )
-
-class ApplicationMessage(Standard):
-    """Application message.
-
-    Last updated: 7 April 2022, 10:06 PM
-    """
-    application = models.ForeignKey(
-        'Application',
-        related_name='application_messages',
-        related_query_name='application_messages',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    author = models.ForeignKey(
-        'relationships.User',
-        related_name='application_messages',
-        related_query_name='application_messages',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-
-    body = models.TextField(
-        blank=True,
-        null=True
-    )
-
-# Not in use
 
 class WhatsAppClick(Standard):
     """User's click on to WhatsApp button
@@ -742,7 +780,6 @@ class LeadQuery(Standard):
         db_index=True
     )
 
-# Not in use, keep for data
 class FilterFormPost(Standard):
     """Filter form post by a user.
 
@@ -831,7 +868,6 @@ class FilterFormPost(Standard):
         blank=True
     )
 
-# Not in use, keep for data
 class WhatsAppLeadAuthorClick(Standard):
     """User's click on to WhatsApp lead author
     
