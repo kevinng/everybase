@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>{% block title %}Everybase - we help exporters find agents to sell their products overseas{% endblock %}</title>
+    <title>{% block title %}We help exporters find agents to sell their products overseas{% endblock %}</title>
 
     {% comment %} Stylesheets {% endcomment %}
     <link href="{% static 'common/superio/css/bootstrap.css' %}" rel="stylesheet">
@@ -46,8 +46,8 @@
                     <div class="outer-box">
                         <nav class="nav main-menu">
                             <ul class="navigation" id="navbar">
-                                <li {% if request.resolver_match.view_name == 'products:product_list' %}class="current"{% endif %}>
-                                    <a href="{% url 'products:product_list' %}"><span>Products</span></a>
+                                <li {% if request.resolver_match.view_name == 'leads:lead_list' %}class="current"{% endif %}>
+                                    <a href="{% url 'leads:lead_list' %}"><span>Leads</span></a>
                                 </li>
 
                                 <li>
@@ -74,8 +74,8 @@
                         {% comment %} Login/Register {% endcomment %}
                         {% if not request.user.is_authenticated %}
                             <div class="btn-box">
-                                <a href="{% url 'signup' %}" class="theme-btn btn-style-three">Register</a>
-                                <a href="{% url 'signin' %}" class="theme-btn btn-style-one">Sign In</a>
+                                <a href="{% url 'sign_up' %}" class="theme-btn btn-style-three">Register</a>
+                                <a href="{% url 'sign_in' %}" class="theme-btn btn-style-one">Sign In</a>
                             </div>
                         {% else %}
                             <div class="dropdown dashboard-option">
@@ -83,8 +83,8 @@
                                     <span class="name">{% if request.user.user.first_name == None or request.user.user.last_name == None %}{{ request.user.user.email.email }}{% else %}{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}{% endif %}</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li{% if request.resolver_match.view_name == 'users:profile' or request.resolver_match.view_name == 'products:product_create' or request.resolver_match.view_name == 'products:my_products' or request.resolver_match.view_name == 'relationships:messages' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"> <i class="la la-home"></i> Dashboard</a></li>
-                                    <li><a href="{% url 'signout' %}?next={{ request.path }}"><i class="la la-sign-out"></i>Sign Out</a></li>
+                                    <li{% if request.resolver_match.view_name == 'users:profile' or request.resolver_match.view_name == 'leads:lead_create' or request.resolver_match.view_name == 'leads:my_leads' or request.resolver_match.view_name == 'leads:inbox' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"> <i class="la la-home"></i> Dashboard</a></li>
+                                    <li><a href="{% url 'sign_out' %}?next={{ request.path }}"><i class="la la-sign-out"></i>Sign Out</a></li>
                                 </ul>
                             </div>
                         {% endif %}
@@ -100,7 +100,7 @@
                     <div class="outer-box">
                         {% comment %} Login/Register {% endcomment %}
                         <div class="login-box">
-                            <a href="{% url 'signin' %}"><span class="icon-user"></span></a>
+                            <a href="{% url 'sign_in' %}"><span class="icon-user"></span></a>
                         </div>
                         <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span class="flaticon-menu-1"></span></a>
                     </div>
