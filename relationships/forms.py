@@ -80,7 +80,6 @@ class EmailRegisterForm(forms.Form):
 class ProfileForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
-    company_name = forms.CharField()
     phone_number = PhoneNumberField()
 
     def __init__(self, *args, **kwargs):

@@ -981,32 +981,27 @@ def profile(request):
             user.first_name = form.cleaned_data.get('first_name')
             user.last_name = form.cleaned_data.get('last_name')
             user.goods_string = form.cleaned_data.get('goods_string')
-            user.company_name = form.cleaned_data.get('company_name')
             user.country = country
             user.save()
     else:
-        u = request.user.user
+        user = request.user.user
         initial = {}
         
-        if u.first_name:
-            initial['first_name'] = u.first_name
+        if user.first_name:
+            initial['first_name'] = user.first_name
         
-        if u.last_name:
-            initial['last_name'] = u.last_name
+        if user.last_name:
+            initial['last_name'] = user.last_name
         
-        if u.phone_number:
-            initial['phone_number'] = f'+{u.phone_number.country_code}{u.phone_number.national_number}'
-        
-        if u.company_name:
-            initial['company_name'] = u.company_name
+        if user.phone_number:
+            initial['phone_number'] = f'+{user.phone_number.country_code}{user.phone_number.national_number}'
 
-        if u.goods_string:
-            initial['goods_string'] = u.goods_string
+        if user.goods_string:
+            initial['goods_string'] = user.goods_string
         
         form = forms.ProfileForm(initial=initial, request=request)
 
     return render(request, 'relationships/superio/profile.html', {'form': form})
-
 
 def profile_required(request):
     # Prevent access if user has not completed profile
