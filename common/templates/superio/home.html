@@ -19,9 +19,13 @@
                         <h3>We Help Exporters Find Agents to Sell Their Products Overseas</h3>
                         <div class="text">Access overseas market by recruiting agents to sell your products in their home country</div>
                     </div>
+                    
+                    <div class="wow fadeInUp" data-wow-delay="500ms">
+                        <a href="{% url 'leads:lead_list' %}" class="theme-btn btn-style-one"><span class="btn-title">Explore Leads</span></a>
+                    </div>
 
                     {% comment %} Search {% endcomment %}
-                    <div class="job-search-form-two wow fadeInUp" data-wow-delay="500ms">
+                    {% comment %} <div class="job-search-form-two wow fadeInUp" data-wow-delay="500ms">
                         <form method="post" action="{% url 'leads:lead_list' %}" method="get">
                             {% csrf_token %}
                             <div class="row">
@@ -35,7 +39,7 @@
                                 </div>
                             </div>
                         </form>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
             </div>
         </div>
@@ -96,13 +100,13 @@
 </section>
 {% comment %} End: How Everybase works {% endcomment %}
 
-{% comment %} Start: Latest products {% endcomment %}
+{% comment %} Start: Latest leads {% endcomment %}
 <section class="layout-pt-120 layout-pb-120">
     <div class="auto-container">
         <div class="row justify-content-between align-items-end">
             <div class="col-lg-6">
                 <div class="">
-                <h2 class="fw-700">Latest Products</h2>
+                <h2 class="fw-700">Latest Leads</h2>
                 </div>
             </div>
 
@@ -115,97 +119,9 @@
         </div>
 
         <div class="row grid-base pt-50 wow fadeInUp">
-            <div class="news-block col-lg-4 col-md-6 col-sm-12">
-                <div class="inner-box">
-                  <div class="image-box">
-                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
-                  </div>
-                  <div class="lower-content">
-                    <ul class="post-meta">
-                      <li><a href="#">Li Wung Quan</a></li>
-                      <li><a href="#">China</a></li>
-                    </ul>
-                    <h3><a href="#">Wireless earbuds</a></h3>
-                  </div>
-                </div>
-            </div>
-
-            <div class="news-block col-lg-4 col-md-6 col-sm-12">
-                <div class="inner-box">
-                  <div class="image-box">
-                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
-                  </div>
-                  <div class="lower-content">
-                    <ul class="post-meta">
-                      <li><a href="#">Li Wung Quan</a></li>
-                      <li><a href="#">China</a></li>
-                    </ul>
-                    <h3><a href="#">Wireless earbuds</a></h3>
-                  </div>
-                </div>
-            </div>
-
-            <div class="news-block col-lg-4 col-md-6 col-sm-12">
-                <div class="inner-box">
-                  <div class="image-box">
-                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
-                  </div>
-                  <div class="lower-content">
-                    <ul class="post-meta">
-                      <li><a href="#">Li Wung Quan</a></li>
-                      <li><a href="#">China</a></li>
-                    </ul>
-                    <h3><a href="#">Wireless earbuds</a></h3>
-                  </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row grid-base pt-50 wow fadeInUp">
-            <div class="news-block col-lg-4 col-md-6 col-sm-12">
-                <div class="inner-box">
-                  <div class="image-box">
-                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
-                  </div>
-                  <div class="lower-content">
-                    <ul class="post-meta">
-                      <li><a href="#">Li Wung Quan</a></li>
-                      <li><a href="#">China</a></li>
-                    </ul>
-                    <h3><a href="#">Wireless earbuds</a></h3>
-                  </div>
-                </div>
-            </div>
-
-            <div class="news-block col-lg-4 col-md-6 col-sm-12">
-                <div class="inner-box">
-                  <div class="image-box">
-                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
-                  </div>
-                  <div class="lower-content">
-                    <ul class="post-meta">
-                      <li><a href="#">Li Wung Quan</a></li>
-                      <li><a href="#">China</a></li>
-                    </ul>
-                    <h3><a href="#">Wireless earbuds</a></h3>
-                  </div>
-                </div>
-            </div>
-
-            <div class="news-block col-lg-4 col-md-6 col-sm-12">
-                <div class="inner-box">
-                  <div class="image-box">
-                    <figure class="image"><img src="{% static 'common/superio/images/resource/news-1.jpg' %}" alt="" /></figure>
-                  </div>
-                  <div class="lower-content">
-                    <ul class="post-meta">
-                      <li><a href="#">Li Wung Quan</a></li>
-                      <li><a href="#">China</a></li>
-                    </ul>
-                    <h3><a href="#">Wireless earbuds</a></h3>
-                  </div>
-                </div>
-            </div>
+            {% for lead in leads %}
+                {% include 'leads/superio/includes/lead_item.html' with lead=lead %}
+            {% endfor %}
         </div>
     </div>
 </section>

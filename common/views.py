@@ -2,6 +2,8 @@ from django.template.response import TemplateResponse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
+from leads import models as lemods
+
 def e(request, file_to_render):
     template_name = 'examples/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
@@ -19,7 +21,11 @@ def home(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('users:profile'))
 
-    return TemplateResponse(request, 'superio/home.html', {})
+    leads = lemods.Lead.objects.filter(
+        deleted__isnull=True
+    ).order_by('-created')[0:6]
+
+    return TemplateResponse(request, 'superio/home.html', {'leads': leads})
 
 def ads_txt(request):
     filename = 'ads.txt'
