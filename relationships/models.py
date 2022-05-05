@@ -372,7 +372,6 @@ class User(commods.Standard):
         """Returns True if profile is complete."""
         return self.first_name != None and \
             self.last_name != None and \
-            self.company_name != None and \
             self.phone_number != None
 
     def __str__(self):
