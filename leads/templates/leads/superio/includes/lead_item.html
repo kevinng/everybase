@@ -1,0 +1,19 @@
+{% load static %}
+<div class="news-block col-lg-4 col-md-6 col-sm-12">
+    <div class="inner-box">
+        <div class="image-box">
+            {% if lead.cover_photo != None %}
+                {% load thumbnail_url %}
+                {% thumbnail_url lead.cover_photo as thumbnail_url %}
+                <figure class="image"><a href="{% url 'leads:lead_detail' lead.slug_link %}"><img src="{{ thumbnail_url }}" alt="" /></a></figure>
+            {% endif %}
+        </div>
+        <div class="lower-content">
+            <ul class="post-meta">
+                <li>{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</li>
+                <li>{{ lead.author.country.name }}</li>
+            </ul>
+            <h3><a href="{% url 'leads:lead_detail' lead.slug_link %}">{{ lead.headline }}</a></h3>
+        </div>
+    </div>
+</div>

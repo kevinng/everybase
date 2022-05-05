@@ -1,0 +1,23 @@
+{% load static %}
+<tr>
+    <td>
+        <h6><a href="{% url 'leads:lead_detail' lead.slug_link %}">{{ lead.headline }}</a></h6>
+    </td>
+    <td class="applied"><a href="{% url 'applications:application_list' %}">{{ lead.num_applications }} Conversations</a></td>
+    <td>{{ lead.age_desc }}</td>
+    <td>
+        <div class="option-box">
+            <ul class="option-list">
+                {% comment %} <li><button data-text="View Aplication"><span class="la la-eye"></span></button></li> {% endcomment %}
+                <li><a href="{% url 'leads:lead_update' %}"><span class="la la-pencil"></span></a></li>
+                <li>
+                    <form action="{% url 'leads:lead_delete' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="pk" value="{{ lead.id }}">
+                        <button type="submit" data-text="Delete"><span class="la la-trash"></span></button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>

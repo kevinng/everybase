@@ -6,12 +6,10 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User as django_user
 from django.utils.text import slugify
 
-from common.models import (Standard, Choice, LowerCaseCharField,
-    LowerCaseEmailField, Country)
+from common import models as commods
 import leads.models as lemods
-from payments import models as paymods
 
-class PhoneNumberType(Choice):
+class PhoneNumberType(commods.Choice):
     """Phone number type.
 
     Last updated: 21 April 2021, 11:23 PM
@@ -48,7 +46,7 @@ def validate_national_number(value):
             _('%(value)s must be numeric'), params={'value': value},
         )
 
-class PhoneNumber(Standard):
+class PhoneNumber(commods.Standard):
     """Phone numbers.
     
     Last updated: 2 November 2021, 12:53 PM
@@ -80,7 +78,7 @@ class PhoneNumber(Standard):
     class Meta:
         unique_together = ['country_code', 'national_number']
 
-class Email(Standard):
+class Email(commods.Standard):
     """Email.
 
     Last updated: 15 October 2021, 11:05 PM
@@ -91,7 +89,7 @@ class Email(Standard):
         blank=True,
         db_index=True
     )
-    email = LowerCaseEmailField(
+    email = commods.LowerCaseEmailField(
         unique=True,
         db_index=True
     )
@@ -122,13 +120,13 @@ class Email(Standard):
     def __str__(self):
         return f'({self.email} [{self.id}])'
 
-class InvalidEmail(Standard):
+class InvalidEmail(commods.Standard):
     """Invalid email.
 
     Last updated: 21 April 2021, 11:13 PM
     """
 
-    email = LowerCaseCharField(
+    email = commods.LowerCaseCharField(
         max_length=1000,
         unique=True,
         db_index=True
@@ -146,10 +144,10 @@ class InvalidEmail(Standard):
     def __str__(self):
         return f'({self.email} [{self.id}])'
 
-class User(Standard):
+class User(commods.Standard):
     """User details.
 
-    Last updated: 4 May 2022, 1:38 PM
+    Last updated: 5 May 2022, 1:13 PM
     """
     registered = models.DateTimeField(
         null=True,
@@ -348,27 +346,34 @@ class User(Standard):
     def country_from_phone_number(self):
         """Returns country from user's phone number country code."""
         try:
-            return Country.objects.get(
+            return commods.Country.objects.get(
                 country_code=self.phone_number.country_code)
-        except Country.DoesNotExist:
+        except commods.Country.DoesNotExist:
             return None
 
     def applications(self):
         """Returns applications associated with this user."""
 
-        # Conversations where this user is the applicant
-        conversations = lemods.Application.objects\
+        # Applications where this user is the applicant
+        applications = lemods.Application.objects\
             .filter(applicant=self, deleted__isnull=True)
 
-        # Conversations where this user is the product owner
-        for product in lemods.Lead.objects.filter(author=self.id):
-            # Merge all conversations
-            conversations = conversations | product.conversations
+        # Applications where this user is the product owner
+        for lead in lemods.Lead.objects.filter(author=self.id):
+            # Merge all applications
+            applications = applications | lead.applications
 
         # Sort by last messaged date/time
-        conversations.order_by('-last_messaged')
+        applications.order_by('-last_messaged')
         
-        return conversations
+        return applications
+
+    def is_profile_complete(self):
+        """Returns True if profile is complete."""
+        return self.first_name != None and \
+            self.last_name != None and \
+            self.company_name != None and \
+            self.phone_number != None
 
     def __str__(self):
         return f'({self.first_name}, {self.last_name}, {self.email}, {self.phone_number} [{self.id}])'
@@ -424,7 +429,47 @@ class User(Standard):
 
     #     return title
 
-class UserAgent(Standard):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Not in use
+
+class UserAgent(commods.Standard):
     """User agent log.
 
     Last updated: 30 January 2022, 11:14 PM
@@ -562,7 +607,7 @@ def get_token(length=_TOKEN_LENGTH):
         key += chars[p]
     return key
 
-class LoginToken(Standard):
+class LoginToken(commods.Standard):
     """Login token.
     
     Last updated: 15 February 2022, 3:46 PM
@@ -596,7 +641,7 @@ class LoginToken(Standard):
         default=get_token
     )
 
-class RegisterToken(Standard):
+class RegisterToken(commods.Standard):
     """Register token.
     
     Last updated: 15 February 2022, 3:46 PM
@@ -630,7 +675,7 @@ class RegisterToken(Standard):
         blank=True
     )
 
-class UserDetailView(Standard):
+class UserDetailView(commods.Standard):
     """User detail view
     
     Last updated: 28 February 2022, 12:17 AM
@@ -659,9 +704,7 @@ class UserDetailView(Standard):
         db_index=True    
     )
 
-# Not in Use
-
-class UserComment(Standard):
+class UserComment(commods.Standard):
     """Comment on a user
 
     Last updated: 14 February 2022, 11:33 AM
@@ -700,7 +743,7 @@ class UserComment(Standard):
             deleted__isnull=True
         ).order_by('created')
 
-class SavedUser(Standard):
+class SavedUser(commods.Standard):
     """Saved user.
 
     Last updated: 28 February 2022, 3:58 PM
@@ -727,7 +770,7 @@ class SavedUser(Standard):
     class Meta:
         unique_together = ('saver', 'savee')
 
-class UserQuery(Standard):
+class UserQuery(commods.Standard):
     """User query
 
     Last updated: 15 March 2022, 3:59 AM
