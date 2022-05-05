@@ -55,6 +55,9 @@ class Standard(models.Model):
     def age_desc(self):
         return diff_now_desc(self.created)
 
+    def age_desc_wo_ago(self):
+        return self.age_desc().split()[0]
+
     def age_days(self):
         return diff_now_in_days(self.created)
 
