@@ -354,18 +354,23 @@ class User(commods.Standard):
     def applications(self):
         """Returns applications associated with this user."""
 
-        # Applications where this user is the applicant
+        # Applications where this user is the applicant and lead author has replied
         applications = lemods.Application.objects\
-            .filter(applicant=self, deleted__isnull=True)
+            .filter(
+                applicant=self,
+                last_messaged__isnull=False # Lead author has replied
+            )
 
         # Applications where this user is the product owner
         for lead in lemods.Lead.objects.filter(author=self.id):
             # Merge all applications
-            applications = applications | lead.applications
+            applications = applications | lead.applications.all()
+
+        applications = applications.filter(deleted__isnull=True)
 
         # Sort by last messaged date/time
         applications.order_by('-last_messaged')
-        
+
         return applications
 
     def is_profile_complete(self):

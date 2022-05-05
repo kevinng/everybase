@@ -1,0 +1,8 @@
+<div style="margin-top: 20px" class="d-flex {% if message.author == request.user.user %}justify-content-end mb-2 reply{% else %}justify-content-start{% endif %}">
+    <div class="img_cont_msg">
+        <div class="name">{% if message.author == request.user.user %}You{% else %}{{ message.author.first_name|title }} {{ message.author.last_name|title }}{% endif %} <span class="msg_time">{{ message.age_desc_wo_ago }}</span></div>
+    </div>
+    <div class="msg_cotainer">
+        {{ message.body }}
+    </div>
+</div>

@@ -60,8 +60,9 @@ def lead_detail(request, slug):
         raise Http404('Lead not found')
     
     if request.method == 'POST':
+        # User applied to be an agent
         form = forms.ApplicationForm(request.POST)
-        if form.is_valid():
+        if request.user.user != lead.author and form.is_valid():
 
             # Default false if checkbox is not checked
             has_experience = False if not form.cleaned_data.get('has_experience') else True
@@ -75,9 +76,9 @@ def lead_detail(request, slug):
                 applicant=request.user.user,
                 has_experience=has_experience,
                 has_buyers=has_buyers,
+                applicant_comments=applicant_comments,
                 questions=lead.questions,
-                answers=answers,
-                applicant_comments=applicant_comments
+                answers=answers
             )
     else:
         form = forms.ApplicationForm()
@@ -313,16 +314,15 @@ def application_list(request):
     if not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
-    # All applications associated with the user - to populate the list
-    applications = request.user.user.applications()
+    # Get first of all applications associated with this user
+    first = request.user.user.applications().first()
+    if first:
+        return HttpResponseRedirect(
+            reverse('applications:application_detail', args=(first.id,)))
+    
+    form = forms.ApplicationMessageForm()
 
-    params = {
-        'application': applications.first(), # Focus on the top application
-        'applications': applications
-    }
-
-    # I just want this to direct to the top application
-    return render(request, 'leads/superio/inbox.html', params)
+    return render(request, 'leads/superio/inbox.html', {'form': form})
 
 @login_required
 def application_detail(request, pk):
@@ -332,10 +332,31 @@ def application_detail(request, pk):
     # Application of focus
     application = models.Application.objects.get(pk=pk)
 
+    if application.deleted is not None:
+        return HttpResponseRedirect(reverse('applications:inbox'))
+
+    if request.method == 'POST':
+        # User posted a message
+        form = forms.ApplicationMessageForm(request.POST)
+        if form.is_valid():
+            models.ApplicationMessage.objects.create(
+                application=application,
+                author=request.user.user,
+                body=form.cleaned_data.get('body')
+            )
+            
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            now = datetime.datetime.now(tz=sgtz)
+            application.last_messaged = now
+            application.save()
+    elif request.method == 'GET':
+        form = forms.ApplicationMessageForm()
+
     # All applications associated with the user - to populate the list
     applications = request.user.user.applications()
 
     params = {
+        'form': form,
         'application': application,
         'applications': applications
     }

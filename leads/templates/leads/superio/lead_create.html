@@ -161,4 +161,5 @@ $(document).ready(function() {
 {% block other_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 <script>$(document).ready((function(){function l(){$upload_label.show(),$upload_img_div.find(":first-child").remove(),$upload_img_div.hide(),$upload_remove.hide(),$upload.val("")}$upload=$("#upload"),$upload_label=$("#upload_label"),$upload_img_div=$("#upload_img_div"),$upload_remove=$("#upload_remove"),$submit=$("#submit"),$upload.change((function(){files=$upload.prop("files"),files.length>0?($upload_label.hide(),img='<img src="'+URL.createObjectURL(files[0])+'">',$upload_img_div.append(img),$upload_img_div.show(),$upload_remove.show()):l()})),$upload_remove.click((function(){l()})),l(),$submit.click((function(){$.LoadingOverlay("show")}))}));</script>
+<script src="{% static 'common/js/prevent_resubmit.js' %}"></script>
 {% endblock %}

@@ -11,10 +11,11 @@ class LeadForm(forms.Form):
 class ApplicationForm(forms.Form):
     has_experience = forms.BooleanField(required=False)
     has_buyers = forms.BooleanField(required=False)
-    answers = forms.CharField()
     applicant_comments = forms.CharField()
+    answers = forms.CharField()
 
-
+class ApplicationMessageForm(forms.Form):
+    body = forms.CharField()
 
 
 

@@ -77,3 +77,7 @@
 {% block footer %}
 {% include 'superio/includes/dashboard_footer.html' %}
 {% endblock %}
+
+{% block other_scripts %}
+<script src="{% static 'common/js/prevent_resubmit.js' %}"></script>
+{% endblock %}

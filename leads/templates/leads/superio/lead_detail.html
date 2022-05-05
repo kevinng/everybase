@@ -15,7 +15,7 @@
 {% lead_has_applications_with_applicant lead request.user.user as lead_has_applications_with_applicant %}
 {% if lead_has_applications_with_applicant != None %}
 <div class="message-box info">
-    <p>You've applied to be an agent for this product.</p>
+    <p>You've applied to be an agent for this lead.</p>
     <button class="close-btn"><span class="close_icon"></span></button>
 </div>
 {% endif %}
@@ -64,10 +64,10 @@
                     <a href="{% url 'sign_in' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-one" name="submit-form">Login</a>
                 </div>
             </div>
-        {% elif product.author != request.user.user and product_conversation == None %}
+        {% elif lead.author != request.user.user and not lead_has_applications_with_applicant %}
             <div class="comments-area">
                 <div class="comment-form default-form">
-                    <h4>I'm interested to be an agent for this product</h4>
+                    <h4>I'm interested to be an agent for this lead</h4>
                     <form action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
                         {% csrf_token %}
                         <div class="row clearfix">
@@ -80,6 +80,12 @@
                                 <input id="has_buyers" name="has_buyers" type="checkbox">
                                 <label for="has_buyers">I have potential buyers</label>
                             </div>
+
+                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                                <label for="applicant_comments">Comments</label>
+                                <textarea id="applicant_comments" name="applicant_comments"></textarea>
+                                {% if form.applicant_comments.errors %}<div style="color:red">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                            </div>
                             
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                                 <label for="answers">{{ lead.questions }}</label>
@@ -87,11 +93,6 @@
                                 {% if form.answers.errors %}<div style="color:red">{% for error in form.answers.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
-                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                <label for="applicant_comments">Comments for exporter</label>
-                                <textarea id="applicant_comments" name="applicant_comments"></textarea>
-                                {% if form.applicant_comments.errors %}<div style="color:red">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                            </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                                 <button class="theme-btn btn-style-one" type="submit" name="submit-form">Apply</button>
                             </div>
