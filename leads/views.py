@@ -19,7 +19,10 @@ def _is_profile_complete(request):
         request.user.user.is_profile_complete()
 
 def lead_list(request):
-    if not _is_profile_complete(request):
+    if not request.user.is_authenticated:
+        # Allow unauthenticated users to pass
+        pass
+    elif not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     leads = models.Lead.objects\
@@ -42,7 +45,10 @@ def lead_list(request):
     return render(request, 'leads/superio/lead_list.html', params)
 
 def lead_detail(request, slug):
-    if not _is_profile_complete(request):
+    if not request.user.is_authenticated:
+        # Allow unauthenticated users to pass
+        pass
+    elif not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
     lead = models.Lead.objects.get(slug_link=slug)
