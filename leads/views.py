@@ -59,7 +59,10 @@ def lead_detail(request, slug):
     elif not _is_profile_complete(request):
         return HttpResponseRedirect(reverse('users:profile'))
 
-    lead = models.Lead.objects.get(slug_link=slug)
+    try:
+        lead = models.Lead.objects.get(slug_link=slug)
+    except models.Lead.DoesNotExist:
+        raise Http404('Lead not found')
 
     # Disallow access to deleted lead
     if lead.deleted:
