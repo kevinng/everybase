@@ -64,7 +64,7 @@ class LeadCommentAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['lead', 'commentor']
 
 _lead_fields = [
-    'author', 'is_promoted',
+    'author', 'comm_details', 'questions', 'is_promoted',
 
     'lead_type', 'currency', 'author_type', 'buy_country', 'sell_country', 'headline',
     'details', 'agent_job',
