@@ -1,4 +1,4 @@
-import time, requests
+import requests
 from celery import shared_task
 from everybase import settings
 
@@ -138,8 +138,6 @@ def send_amplitude_event(
 
         if android_id is not None:
             e['android_id'] = android_id
-
-        print(e)
 
         return requests.post('https://api2.amplitude.com/2/httpapi', json={
             'api_key': settings.AMPLITUDE_API_KEY,

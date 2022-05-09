@@ -86,7 +86,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="card-body msg_card_body">
+                                    <div id="inbox_messages" class="card-body msg_card_body">
 
                                         {% comment %} First message is composed from application details {% endcomment %}
                                         <div class="d-flex {% if application.applicant == request.user.user %}justify-content-end mb-2 reply{% else %}justify-content-start{% endif %}">
@@ -112,7 +112,7 @@
                                         {% endfor %}
                                     </div>
 
-                                    <div class="card-footer">
+                                    <div class="card-footer" id="hello">
                                         <div class="form-group mb-0">
                                             <form action="{% url 'applications:application_detail' application.id %}" method="post">
                                                 {% csrf_token %}
@@ -138,6 +138,15 @@
 {% include 'superio/includes/dashboard_footer.html' %}
 {% endblock %}
 
+{% comment %}
+$(document).ready(function() {
+    // Focus on latest message
+    $inbox_item_last = $('.inbox_item:last')
+    $inbox_messages = $('#inbox_messages')
+    $inbox_messages.scrollTop($inbox_messages.scrollTop() + $inbox_item_last.position().top)
+})
+{% endcomment %}
 {% block other_scripts %}
+<script src="{% static 'leads/js/inbox.min.js' %}"></script>
 <script src="{% static 'common/js/prevent_resubmit.js' %}"></script>
 {% endblock %}

@@ -34,13 +34,13 @@
                     <nav class="ls-pagination">
                         <ul>
                             {% if page_obj.has_previous %}
-                                <li class="prev"><a href="?{% query_transform page=page_obj.previous_page_number %}"><i class="fa fa-arrow-left" style="margin-right: 10px"></i>Previous Page</a></li>
+                                <li class="prev"><a href="?{% query_transform page=page_obj.previous_page_number %}" class="prev_page"><i class="fa fa-arrow-left" style="margin-right: 10px"></i>Previous Page</a></li>
                             {% endif %}
                             {% comment %} <li><a href="#">1</a></li>
                             <li><a href="#" class="current-page">2</a></li>
                             <li><a href="#">3</a></li> {% endcomment %}
                             {% if page_obj.has_next %}
-                                <li class="next"><a href="?{% query_transform page=page_obj.next_page_number %}">Next Page<i class="fa fa-arrow-right" style="margin-left: 10px"></i></a></li>
+                                <li class="next"><a href="?{% query_transform page=page_obj.next_page_number %}" class="next_page">Next Page<i class="fa fa-arrow-right" style="margin-left: 10px"></i></a></li>
                             {% endif %}
                         </ul>
                     </nav>
@@ -49,4 +49,34 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% comment %}
+$(document).ready(function() {
+    $next_page = $('.next_page')
+    $prev_page = $('.prev_page')
+
+    // Amplitude call on next page
+    function next_page_clicked() {
+        var event = 'discovery - clicked lead list next page'
+        var props = {
+            'current_page': '{{ page_obj.number }}'
+        }
+        amplitude.getInstance().logEvent(event, props)
+    }
+    $next_page.click(function() { next_page_clicked() })
+
+    // Amplitude call on previous page
+    function previous_page_clicked() {
+        var event = 'discovery - clicked lead list previous page'
+        var props = {
+            'current_page': '{{ page_obj.number }}'
+        }
+        amplitude.getInstance().logEvent(event, props)
+    }
+    $prev_page.click(function() { previous_page_clicked() })
+})
+{% endcomment %}
+{% block other_scripts %}
+<script>$(document).ready((function(){$next_page=$(".next_page"),$prev_page=$(".prev_page"),$next_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list next page",{current_page:"{{ page_obj.number }}"})})),$prev_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list previous page",{current_page:"{{ page_obj.number }}"})}))}));</script>
 {% endblock %}

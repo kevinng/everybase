@@ -106,9 +106,28 @@
 {% include 'includes/photoswipe.html' %}
 {% endblock %}
 
+{% comment %}
+Amplitude instrumentation. Rendered inline because there are rendered values.
+
+$(document).ready(function() {
+    // Amplitude call on document ready
+    function lead_viewed() {
+        var event = 'discovery - viewed lead detail'
+        var props = {
+            'lead_id': '{{ lead.id }}',
+            'buy_sell': '{{ lead.lead_type }}',
+            'buy_country': '{{ lead.buy_country.programmatic_key }}'
+        }
+        amplitude.getInstance().logEvent(event, props)
+    }
+    lead_viewed()
+})
+{% endcomment %}
 {% block other_scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
 <script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
 <script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
+<script>$(document).ready((function(){amplitude.getInstance().logEvent("discovery - viewed lead detail",{lead_id:"{{ lead.id }}",buy_sell:"{{ lead.lead_type }}",buy_country:"{{ lead.buy_country.programmatic_key }}"})}));</script>
+<script src="{% static 'common/js/prevent_resubmit.js' %}"></script>
 {% endblock %}

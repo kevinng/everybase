@@ -17,6 +17,9 @@ from common.tasks.send_email import send_email
 from leads import models, forms
 from files import models as fimods
 from files.utilities.get_mime_type import get_mime_type
+from common.tasks.send_amplitude_event import send_amplitude_event
+from common.tasks.identify_amplitude_user import identify_amplitude_user
+from common.utilities.get_ip_address import get_ip_address
 
 def _is_profile_complete(request):
     """Returns True if user is authenticated and profile is complete."""
@@ -100,6 +103,16 @@ def lead_detail(request, slug):
                 }),
                 'friend@everybase.co',
                 [application.lead.author.email.email]
+            )
+
+            send_amplitude_event.delay(
+                'applied as an agent',
+                user_uuid=lead.author.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'application id': application.id,
+                    'buy country': application.lead.buy_country.programmatic_key
+                }
             )
     else:
         form = forms.ApplicationForm()
@@ -200,6 +213,17 @@ def lead_create(request):
                 'friend@everybase.co',
                 [lead.author.email.email]
             )
+
+            send_amplitude_event.delay(
+                'created lead',
+                user_uuid=lead.author.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'lead id': lead.id,
+                    'buy sell': lead.lead_type,
+                    'buy country': lead.buy_country.programmatic_key
+                }
+            )
             
             return HttpResponseRedirect(reverse('leads:my_leads'))
     else:
@@ -283,6 +307,15 @@ def application_detail(request, pk):
     application = models.Application.objects.get(pk=pk)
 
     if application.deleted is not None:
+        # Application is deleted, stop
+        return HttpResponseRedirect(reverse('applications:inbox'))
+    
+    author_replied = models.ApplicationMessage.objects.filter(
+        application=application,
+        author=application.lead.author
+    ).count() > 0
+    if application.applicant == request.user.user and not author_replied:
+        # Accessing user is an applicant and the author has not replied, stop
         return HttpResponseRedirect(reverse('applications:inbox'))
 
     if request.method == 'POST':
@@ -303,8 +336,10 @@ def application_detail(request, pk):
 
             if application.applicant.id == request.user.user.id:
                 counter_party = application.lead.author
+                counter_party_is_agent = False
             else:
                 counter_party = application.applicant
+                counter_party_is_agent = True
 
             # Email counter party
             send_email.delay(
@@ -322,6 +357,26 @@ def application_detail(request, pk):
                 }),
                 'friend@everybase.co',
                 [counter_party.email.email]
+            )
+
+            num_messages_sent = models.ApplicationMessage.objects.filter(
+                author=request.user.user
+            ).count()
+
+            identify_amplitude_user.delay(
+                user_id=request.user.user.uuid,
+                user_properties={
+                    'num messages sent': num_messages_sent
+                }
+            )
+            send_amplitude_event.delay(
+                'agent application - messaged counterparty',
+                user_uuid=request.user.user.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'application id': application.id,
+                    'counter party is agent': 'true' if counter_party_is_agent else 'false'
+                }
             )
 
     elif request.method == 'GET':
@@ -344,11 +399,26 @@ def application_delete(request, pk):
         return HttpResponseRedirect(reverse('users:profile'))
     
     if request.method == 'POST':
-        # Application to delete
         application = models.Application.objects.get(pk=pk)
+        if application.applicant == request.user.user:
+            deleted_by = 'agent'
+        else:
+            deleted_by = 'author'
+
         sgtz = pytz.timezone(settings.TIME_ZONE)
         application.deleted = datetime.datetime.now(tz=sgtz)
+        application.deleted_by = deleted_by
         application.save()
+
+        send_amplitude_event.delay(
+            'agent application - deleted conversation',
+            user_uuid=request.user.user.uuid,
+            ip=get_ip_address(request),
+            event_properties={
+                'application id': application.id,
+                'deleted by': deleted_by
+            }
+        )
 
     return HttpResponseRedirect(reverse('applications:inbox'))
 

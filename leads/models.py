@@ -360,6 +360,16 @@ class Application(Standard):
         blank=True,
         db_index=True
     )
+    deleted_by = models.CharField(
+        max_length=20,
+        choices=[
+            ('agent', 'Agent'),
+            ('author', 'Author')
+        ],
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     lead = models.ForeignKey(
         'Lead',

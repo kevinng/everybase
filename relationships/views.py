@@ -16,6 +16,9 @@ from django.template.loader import render_to_string
 from everybase import settings
 from common import models as commods
 from common.tasks.send_email import send_email
+from common.tasks.send_amplitude_event import send_amplitude_event
+from common.tasks.identify_amplitude_user import identify_amplitude_user
+from common.utilities.get_ip_address import get_ip_address
 from relationships import forms, models
 
 def sign_in(request):
@@ -42,6 +45,14 @@ def sign_in(request):
 
             if user is not None:
                 # Success
+
+                # Amplitude calls
+                send_amplitude_event.delay(
+                    'account - logged in',
+                    user_uuid=u.uuid,
+                    ip=get_ip_address(request)
+                )
+
                 next = form.cleaned_data.get('next')
                 if next is not None and next.strip() != '':
                     return HttpResponseRedirect(next)
@@ -94,9 +105,9 @@ def sign_up(request):
             user.django_user = django_user
             user.save()
 
-            user = authenticate(request, username=django_user.username, password=password)
-            if user is not None:
-                login(request, user)
+            django_user = authenticate(request, username=django_user.username, password=password)
+            if django_user is not None:
+                login(request, django_user)
 
             # Email lead author
             send_email.delay(
@@ -104,6 +115,13 @@ def sign_up(request):
                 render_to_string('leads/email/welcome.txt', {}),
                 'friend@everybase.co',
                 [email.email]
+            )
+
+            # Amplitude call
+            send_amplitude_event.delay(
+                'account - registered',
+                user_uuid=user.uuid,
+                ip=get_ip_address(request)
             )
 
             return HttpResponseRedirect(reverse('users:profile'))
@@ -154,6 +172,23 @@ def profile(request):
             user.phone_number = ph
             user.country = country
             user.save()
+
+            identify_amplitude_user.delay(
+                user_id=user.uuid,
+                user_properties={
+                    'country code': user.phone_number.country_code,
+                    'country': user.country.programmatic_key
+                }
+            )
+            send_amplitude_event.delay(
+                'account - updated profile',
+                user_uuid=user.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'country code': user.phone_number.country_code,
+                    'country': user.country.programmatic_key
+                }
+            )
     else:
         user = request.user.user
         initial = {}

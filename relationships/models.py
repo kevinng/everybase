@@ -355,11 +355,10 @@ class User(commods.Standard):
         """Returns applications associated with this user."""
 
         # Applications where this user is the applicant and lead author has replied
-        applications = lemods.Application.objects\
-            .filter(
-                applicant=self,
-                last_messaged__isnull=False # Lead author has replied
-            )
+        applications = lemods.Application.objects.filter(
+            applicant=self,
+            last_messaged__isnull=False
+        )
 
         # Applications where this user is the product owner
         for lead in lemods.Lead.objects.filter(author=self.id):
