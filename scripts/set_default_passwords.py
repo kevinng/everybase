@@ -3,7 +3,7 @@ from relationships import models
 # Give every user that does not have a usable password a default password
 def run():
     # Default password base will be combined with user ID to form the default password
-    pwd_base = '%5g8jh#@nl'
+    pwd_base = '%5g8jh'
 
     users = models.User.objects.all()
     for user in users:
