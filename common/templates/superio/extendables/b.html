@@ -143,13 +143,13 @@ return n._iq[e]};e.amplitude=n})(window,document);
                             </div>
                         {% else %}
                             <div class="dropdown dashboard-option">
-                                {% comment %} <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false"> {% endcomment %}
+                                <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
                                     <span class="name">{% if request.user.user.first_name == None or request.user.user.last_name == None %}{{ request.user.user.email.email }}{% else %}{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}{% endif %}</span>
-                                {% comment %} </a> {% endcomment %}
-                                {% comment %} <ul class="dropdown-menu"> {% endcomment %}
+                                </a>
+                                <ul class="dropdown-menu">
                                     {% comment %} <li{% if request.resolver_match.view_name == 'users:profile' or request.resolver_match.view_name == 'leads:lead_create' or request.resolver_match.view_name == 'leads:my_leads' or request.resolver_match.view_name == 'leads:inbox' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"> <i class="la la-home"></i> Dashboard</a></li> {% endcomment %}
-                                    {% comment %} <li><a href="{% url 'sign_out' %}?next={{ request.path }}"><i class="la la-sign-out"></i>Sign Out</a></li> {% endcomment %}
-                                {% comment %} </ul> {% endcomment %}
+                                    <li><a href="{% url 'sign_out' %}?next={{ request.path }}"><i class="la la-sign-out"></i>Sign Out</a></li>
+                                </ul>
                             </div>
                         {% endif %}
                     </div>
