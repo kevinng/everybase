@@ -9,6 +9,8 @@
             <li{% if request.resolver_match.view_name == 'leads:lead_create' %} class="active"{% endif %}><a href="{% url 'leads:lead_create' %}"><i class="las la-box"></i> New Lead</a></li>
             <li{% if request.resolver_match.view_name == 'leads:my_leads' %} class="active"{% endif %}><a href="{% url 'leads:my_leads' %}"><i class="las la-boxes"></i>My Leads</a></li>
             <li{% if request.resolver_match.view_name == 'applications:inbox' %} class="active"{% endif %}><a href="{% url 'applications:inbox' %}"><i class="la la-comment-o"></i>Inbox</a></li>
+            <li><br></li>
+            <li><a href="{% url 'sign_out' %}"><i class="las la-sign-out-alt"></i>Logout</a></li>
         </ul>
     </div>
 </div>
