@@ -26,9 +26,8 @@ class ApplicationAdmin(comadm.StandardAdmin):
     list_display = comadm.standard_list_display + _application_fields
     list_editable = comadm.standard_list_editable + _application_fields
     list_filter = comadm.standard_list_filter + ['response']
-    search_fields = comadm.standard_search_fields + ['lead', 'applicant',
-        'question_1', 'answer_1', 'question_2', 'answer_2', 'question_3',
-        'answer_3', 'applicant_comments']
+    search_fields = comadm.standard_search_fields + ['lead__headline', 'applicant__first_name',
+        'applicant__last_name', 'applicant__id', 'lead__id']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
