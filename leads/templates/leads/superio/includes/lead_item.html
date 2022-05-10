@@ -11,7 +11,7 @@
         <div class="lower-content">
             <ul class="post-meta">
                 <li>{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</li>
-                <li>{{ lead.author.country.name }}</li>
+                <li>{{ lead.buy_country.name }}</li>
             </ul>
             <h3><a href="{% url 'leads:lead_detail' lead.slug_link %}">{{ lead.headline }}</a></h3>
         </div>
