@@ -110,14 +110,6 @@ return n._iq[e]};e.amplitude=n})(window,document);
                                     <a href="https://everybase.freshdesk.com/support/home" target="everybase_support"><span>Support</span></a>
                                 </li>
 
-                                {% if request.user.is_authenticated %}
-
-                                <li>&nbsp</li>
-
-                                <li{% if request.resolver_match.view_name == 'users:profile' or request.resolver_match.view_name == 'leads:lead_create' or request.resolver_match.view_name == 'leads:my_leads' or request.resolver_match.view_name == 'leads:inbox' %} class="current"{% endif %}><a href="{% url 'users:profile' %}">Dashboard</a></li>
-
-                                {% endif %}
-
                                 {% comment %} Mobile view {% endcomment %}
                                 <li class="mm-add-listing">
                                     <span>
@@ -163,15 +155,11 @@ return n._iq[e]};e.amplitude=n})(window,document);
                 <div class="nav-outer clearfix">
                     <div class="outer-box">
                         {% comment %} Login/Register {% endcomment %}
-                        <div class="login-box">
                             {% if not request.user.is_authenticated %}
-                                <a href="{% url 'sign_in' %}"><span class="icon-user"></span></a>
+                                <a href="{% url 'sign_in' %}">Sign In</a>
                             {% else %}
-                                {% if request.resolver_match.view_name == 'users:profile' or request.resolver_match.view_name == 'leads:lead_create' or request.resolver_match.view_name == 'leads:my_leads' or request.resolver_match.view_name == 'leads:inbox' %}
-                                    <a id="toggle-user-sidebar"><span class="icon-user"></span></a>
-                                {% endif %}
-                            {% endif %}
-                        </div>
+                                <button class="theme-btn btn-style-three" id="toggle-user-sidebar">Dashboard</button>
+                            {% endif %} 
                         <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span class="flaticon-menu-1"></span></a>
                     </div>
                 </div>
