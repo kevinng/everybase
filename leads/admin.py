@@ -64,17 +64,10 @@ class LeadCommentAdmin(comadm.StandardAdmin):
 _lead_fields = [
     'author', 'comm_details', 'questions',
     
-    'min_commission_percentage', 'max_commission_percentage',
+    'commission_type', 'min_commission_percentage', 'max_commission_percentage',
 
     'lead_type', 'currency', 'author_type', 'buy_country', 'sell_country', 'headline',
-    'details', 'agent_job',
-
-     'is_promoted', 'commission_type', 'commission_earnings',
-    'commission_quantity_unit_string', 'commission_type_other', 'other_comm_details',
-
-    'is_comm_negotiable',
-
-    'question_1', 'question_2', 'question_3',
+    'details',
 
     'impressions', 'clicks',
 
@@ -84,11 +77,14 @@ _lead_fields = [
 
     'title',
 
-    'need_agent', 'country',
+    'need_agent', 'country', 'agent_job',
 
-    'avg_deal_size', 'commission_payable_by',
+    'avg_deal_size', 'commission_payable_by', 'commission_payable_after', 'commission_payable_after_other',
+    'commission_earnings', 'commission_quantity_unit_string', 'commission_type_other', 'other_comm_details',
+    
+    'is_comm_negotiable', 'is_promoted',
 
-    'commission_payable_after', 'commission_payable_after_other',
+    'question_1', 'question_2', 'question_3',
 
     'need_logistics_agent', 'other_logistics_agent_details'
 ]

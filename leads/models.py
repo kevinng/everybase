@@ -55,11 +55,20 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    country = models.ForeignKey(
+    buy_country = models.ForeignKey(
         'common.Country',
         on_delete=models.PROTECT,
-        related_name='leads_country',
-        related_query_name='leads_country',
+        related_name='leads_buy_country',
+        related_query_name='leads_buy_country',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sell_country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='leads_sell_country',
+        related_query_name='leads_sell_country',
         null=True,
         blank=True,
         db_index=True
@@ -107,20 +116,11 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    buy_country = models.ForeignKey(
+    country = models.ForeignKey(
         'common.Country',
         on_delete=models.PROTECT,
-        related_name='leads_buy_country',
-        related_query_name='leads_buy_country',
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sell_country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='leads_sell_country',
-        related_query_name='leads_sell_country',
+        related_name='leads_country',
+        related_query_name='leads_country',
         null=True,
         blank=True,
         db_index=True
@@ -242,7 +242,7 @@ class Lead(Standard):
     )
 
     def __str__(self):
-        return f'({self.headline}, {self.min_commission_percentage}, {self.max_commission_percentage}, {self.country} [{self.id}])'
+        return f'({self.headline}, {self.min_commission_percentage}, {self.max_commission_percentage}, {self.buy_country}, {self.sell_country} [{self.id}])'
     
     def refresh_slug(self):
         first_lead = Lead.objects.all().order_by('-id').first()
