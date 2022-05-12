@@ -18,8 +18,7 @@ class ApplicationQueryLogAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _application_query_log_fields})]
 
 _application_fields = ['lead', 'applicant', 'last_messaged', 'questions', 'answers',
-    'question_1', 'answer_1', 'question_2', 'answer_2', 'question_3', 'answer_3',
-    'applicant_comments', 'response']
+    'has_experience', 'has_buyers', 'applicant_comments', 'response']
 @admin.register(models.Application)
 class ApplicationAdmin(comadm.StandardAdmin):
     # List page settings
