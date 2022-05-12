@@ -6,7 +6,7 @@ def run():
             lead.buy_country = lead.country
             lead.save()
             print('Updated %s ' % lead)
-        elif lead.lead_type == 'sell' and lead.country is not None and lead.sell_country is None:
+        elif lead.lead_type == 'selling' and lead.country is not None and lead.sell_country is None:
             lead.sell_country = lead.country
             lead.save()
             print('Updated %s ' % lead)
