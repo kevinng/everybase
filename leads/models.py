@@ -240,6 +240,9 @@ class Lead(Standard):
         null=True,
         blank=True
     )
+
+    def __str__(self):
+        return f'({self.headline}, {self.min_commission_percentage}, {self.max_commission_percentage}, {self.country} [{self.id}])'
     
     def refresh_slug(self):
         first_lead = Lead.objects.all().order_by('-id').first()
