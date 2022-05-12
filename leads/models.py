@@ -7,7 +7,7 @@ from django.utils.text import slugify
 class Lead(Standard):
     """Lead.
 
-    Last updated: 11 April 2022, 10:08 PM
+    Last updated: 12 May 2022, 2:35 PM
     """
 
     uuid = models.UUIDField(
@@ -36,11 +36,35 @@ class Lead(Standard):
         max_length=80,
         db_index=True
     )
-    details = models.TextField()
-    comm_details = models.TextField(
-        null=True,
-        blank=True
+    commission_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('earning', 'Earning'),
+            ('percentage', 'Percentage'),
+            ('other', 'Other')
+        ],
+        db_index=True
     )
+    min_commission_percentage = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    max_commission_percentage = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='leads_country',
+        related_query_name='leads_country',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    details = models.TextField()
     questions = models.TextField(
         null=True,
         blank=True
@@ -111,20 +135,6 @@ class Lead(Standard):
         db_index=True
     )
     
-    commission_type = models.CharField(
-        max_length=20,
-        choices=[
-            ('earning', 'Earning'),
-            ('percentage', 'Percentage'),
-            ('other', 'Other')
-        ],
-        db_index=True
-    )
-    commission_percentage = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
     commission_earnings = models.FloatField(
         null=True,
         blank=True,
@@ -172,6 +182,10 @@ class Lead(Standard):
         null=True,
         blank=True
     )
+    comm_details = models.TextField(
+        null=True,
+        blank=True
+    )
 
     is_comm_negotiable = models.BooleanField(
         null=True,
@@ -205,15 +219,6 @@ class Lead(Standard):
         max_length=200,
         null=True,
         blank=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='leads_country',
-        related_query_name='leads_country',
-        null=True,
-        blank=True,
-        db_index=True
     )
 
     avg_deal_size = models.FloatField(
