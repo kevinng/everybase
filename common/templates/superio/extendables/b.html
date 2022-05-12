@@ -98,8 +98,7 @@ return n._iq[e]};e.amplitude=n})(window,document);
                         <div class="logo-box">
                             <div class="logo"><a href="/"><img src="{% static 'common/img/logo.png' %}" alt="Everybase" title="Everybase"></a></div>
                         </div>
-                    </div>
-                    <div class="outer-box">
+
                         <nav class="nav main-menu">
                             <ul class="navigation" id="navbar">
                                 <li {% if request.resolver_match.view_name == 'leads:lead_list' %}class="current"{% endif %}>
@@ -109,9 +108,22 @@ return n._iq[e]};e.amplitude=n})(window,document);
                                 <li>
                                     <a href="https://everybase.freshdesk.com/support/home" target="everybase_support"><span>Support</span></a>
                                 </li>
+                                
+                                {% if request.user.is_authenticated %}
+                                    <li class="dropdown">
+                                        <span>Account</span>
+                                        <ul>
+                                            <li{% if request.resolver_match.view_name == 'users:profile' %} class="current"{% endif %}><a href="{% url 'users:profile' %}">Profile</a></li>
+                                            <li{% if request.resolver_match.view_name == 'leads:lead_create' %} class="current"{% endif %}><a href="{% url 'leads:lead_create' %}">New Lead</a></li>
+                                            <li{% if request.resolver_match.view_name == 'leads:my_leads' %} class="current"{% endif %}><a href="{% url 'leads:my_leads' %}">My Leads</a></li>
+                                            <li{% if request.resolver_match.view_name == 'applications:inbox' or request.resolver_match.view_name == 'applications:application_detail' %} class="current"{% endif %}><a href="{% url 'applications:inbox' %}">Inbox</a></li>
+                                        </ul>
+                                    </li>
+                                {% endif %}
 
                                 {% comment %} Mobile view {% endcomment %}
                                 <li class="mm-add-listing">
+                                    <a href="{% url 'leads:lead_create' %}" class="theme-btn btn-style-one">New Lead</a>
                                     <span>
                                         <span class="contact-info">
                                             <span class="address">Singapore</span>
@@ -126,6 +138,17 @@ return n._iq[e]};e.amplitude=n})(window,document);
                                 </li>
                             </ul>
                         </nav>
+                    </div>
+
+                    <div class="outer-box">
+                        {% comment %} <button class="menu-btn">
+                            <span class="count">1</span>
+                            <span class="icon la la-heart-o"></span>
+                        </button> {% endcomment %}
+              
+                        {% comment %} <button class="menu-btn">
+                            <span class="icon la la-bell"></span>
+                        </button> {% endcomment %}
 
                         {% comment %} Login/Register {% endcomment %}
                         {% if not request.user.is_authenticated %}
@@ -139,7 +162,10 @@ return n._iq[e]};e.amplitude=n})(window,document);
                                     <span class="name">{% if request.user.user.first_name == None or request.user.user.last_name == None %}{{ request.user.user.email.email }}{% else %}{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}{% endif %}</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    {% comment %} <li{% if request.resolver_match.view_name == 'users:profile' or request.resolver_match.view_name == 'leads:lead_create' or request.resolver_match.view_name == 'leads:my_leads' or request.resolver_match.view_name == 'leads:inbox' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"> <i class="la la-home"></i> Dashboard</a></li> {% endcomment %}
+                                    {% comment %} <li{% if request.resolver_match.view_name == 'users:profile' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"><i class="la la-user-tie"></i>Profile</a></li>
+                                    <li{% if request.resolver_match.view_name == 'leads:lead_create' %} class="active"{% endif %}><a href="{% url 'leads:lead_create' %}"><i class="las la-box"></i> New Lead</a></li>
+                                    <li{% if request.resolver_match.view_name == 'leads:my_leads' %} class="active"{% endif %}><a href="{% url 'leads:my_leads' %}"><i class="las la-boxes"></i>My Leads</a></li>
+                                    <li{% if request.resolver_match.view_name == 'applications:inbox' or request.resolver_match.view_name == 'applications:application_detail' %} class="active"{% endif %}><a href="{% url 'applications:inbox' %}"><i class="la la-comment-o"></i>Inbox</a></li> {% endcomment %}
                                     <li><a href="{% url 'sign_out' %}?next={{ request.path }}"><i class="la la-sign-out"></i>Sign Out</a></li>
                                 </ul>
                             </div>
@@ -154,12 +180,13 @@ return n._iq[e]};e.amplitude=n})(window,document);
                 {% comment %} Nav box {% endcomment %}
                 <div class="nav-outer clearfix">
                     <div class="outer-box">
-                        {% comment %} Login/Register {% endcomment %}
-                            {% if not request.user.is_authenticated %}
-                                <a href="{% url 'sign_in' %}">Sign In</a>
-                            {% else %}
-                                <button class="theme-btn btn-style-three" id="toggle-user-sidebar">Dashboard</button>
-                            {% endif %} 
+                        {% if not request.user.is_authenticated %}
+                            <a style="margin-right: 15px" href="{% url 'sign_up' %}">Register</a>
+                            <a href="{% url 'sign_in' %}">Sign In</a>
+                        {% else %}
+                            {% block mobile_header_actions %}{% endblock %}
+                        {% endif %}
+                  
                         <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span class="flaticon-menu-1"></span></a>
                     </div>
                 </div>
