@@ -95,7 +95,7 @@ class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + ['uuid'] + _lead_fields
     list_editable = comadm.standard_list_editable + _lead_fields
-    list_filter = comadm.standard_list_filter + ['is_promoted', 'lead_type']
+    list_filter = comadm.standard_list_filter + ['author_type', 'lead_type']
     search_fields = comadm.standard_search_fields + ['details',
         'other_comm_details', 'other_logistics_agent_details', 'slug_link',
         'slug_tokens', 'internal_notes', 'author__first_name', 'author__last_name']
