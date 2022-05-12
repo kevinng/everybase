@@ -105,8 +105,8 @@ class LeadAdmin(comadm.StandardAdmin):
     readonly_fields = comadm.standard_readonly_fields + ['uuid']
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _lead_fields})]
-    autocomplete_fields = ['author', 'currency', 'buy_country', 'sell_country']
     inlines = [fiadm.FileInlineAdmin]
+    autocomplete_fields = ['author', 'currency', 'buy_country', 'sell_country', 'country']
 
 _saved_lead_fields = ['active', 'saver', 'lead']
 @admin.register(models.SavedLead)
