@@ -476,12 +476,14 @@ def application_detail(request, pk):
                     'counter party is agent': 'true' if counter_party_is_agent else 'false'
                 }
             )
-
     elif request.method == 'GET':
         form = forms.ApplicationMessageForm()
 
     # All applications associated with the user - to populate the list
     applications = request.user.user.applications()
+
+    print('applications')
+    print(applications)
 
     params = {
         'form': form,
