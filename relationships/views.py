@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -23,7 +24,7 @@ from relationships import forms, models
 
 def sign_in(request):
     if request.method == 'POST':
-        form = forms.EmailLoginForm(request.POST)
+        form = forms.LoginForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
@@ -62,7 +63,7 @@ def sign_in(request):
                 form.add_error('password', 'Invalid credentials.')
 
     else:
-        form = forms.EmailLoginForm()
+        form = forms.LoginForm()
 
     params = {'form': form}
 
@@ -77,7 +78,7 @@ def sign_in(request):
 
 def sign_up(request):
     if request.method == 'POST':
-        form = forms.EmailRegisterForm(request.POST)
+        form = forms.RegisterForm(request.POST)
         if form.is_valid():
             
             # Get or create a new email for this user
@@ -85,9 +86,29 @@ def sign_up(request):
                 email=form.cleaned_data.get('email')
             )
 
+            # Parse phone number
+            ph_str = form.cleaned_data.get('phone_number')
+            parsed_ph = phonenumbers.parse(str(ph_str), None)
+            ph_cc = parsed_ph.country_code
+            ph_nn = parsed_ph.national_number
+
+            # Get or create new phone number for this user
+            phone_number, _ = models.PhoneNumber.objects.get_or_create(
+                country_code=ph_cc,
+                national_number=ph_nn
+            )
+
+            # Get country
+            country_key = form.cleaned_data.get('country')
+            country = commods.Country.objects.get(programmatic_key=country_key)
+
             # Create an Everybase user
             user = models.User.objects.create(
-                email=email
+                email=email,
+                phone_number=phone_number,
+                country=country,
+                first_name=form.cleaned_data.get('first_name'),
+                last_name=form.cleaned_data.get('last_name')
             )
 
             password = form.cleaned_data.get('password')
@@ -124,11 +145,19 @@ def sign_up(request):
                 ip=get_ip_address(request)
             )
 
-            return HttpResponseRedirect(reverse('leads:lead_create'))
+            next = form.cleaned_data.get('next')
+            if next is not None and next.strip() != '':
+                return HttpResponseRedirect(next)
+            else:
+                return HttpResponseRedirect(reverse('leads:lead_create'))
     else:
-        form = forms.EmailRegisterForm()
+        form = forms.RegisterForm()
 
-    params = {'form': form}
+    params = {
+        'form': form,
+        'countries': commods.Country.objects.annotate(
+            num_leads=Count('leads_buy_country')).order_by('-num_leads')
+    }
 
     # Read 'next' URL from GET parameters to form input. We'll add it to the
     # redirect URL when the user submits this form.
@@ -189,6 +218,9 @@ def profile(request):
                     'country': user.country.programmatic_key
                 }
             )
+
+            messages.add_message(request, messages.INFO, 'Profile updated.')
+            return HttpResponseRedirect(reverse('users:profile'))
     else:
         user = request.user.user
         initial = {}
@@ -208,7 +240,7 @@ def profile(request):
         form = forms.ProfileForm(initial=initial, request=request)
 
     countries = commods.Country.objects.annotate(
-    num_leads=Count('leads_buy_country')).order_by('-num_leads')
+        num_leads=Count('leads_buy_country')).order_by('-num_leads')
 
     params = {
         'countries': countries,
@@ -217,7 +249,32 @@ def profile(request):
 
     return render(request, 'relationships/superio/profile.html', params)
 
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = forms.PasswordChangeForm(request.POST)
+        if form.is_valid():
+            u = request.user
 
+            password = form.cleaned_data.get('password')
+            u.set_password(password)
+            u.save()
+
+            # Reauthenticate with the Django user's username (which is the UUID key of the
+            # Everybase user) and the supplied password.
+            user = authenticate(request, username=u.username, password=password)
+            if user is not None:
+                login(request, user)
+
+            if user is not None:
+                # Success
+                messages.add_message(request, messages.INFO, 'Password updated.')
+                return HttpResponseRedirect(reverse('users:change_password'))
+    else:
+        form = forms.PasswordChangeForm()
+
+    params = {'form': form}
+    return render(request, 'relationships/superio/change_password.html', params)
 
 
 

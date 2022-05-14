@@ -6,13 +6,13 @@ from django.core.exceptions import ValidationError
 
 from relationships import models
 
-class EmailLoginForm(forms.Form):
+class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField()
     next = forms.CharField(required=False)
 
     def clean(self):
-        super(EmailLoginForm, self).clean()
+        super(LoginForm, self).clean()
 
         email = self.cleaned_data.get('email')
 
@@ -37,14 +37,25 @@ class EmailLoginForm(forms.Form):
         if has_error:
             raise ValidationError(None)
 
-class EmailRegisterForm(forms.Form):
+class RegisterForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(min_length=8)
-    confirm_password = forms.CharField(min_length=8)
+    phone_number = PhoneNumberField(required=False)
+    first_name = forms.CharField(
+        min_length=1,
+        max_length=20
+    )
+    last_name = forms.CharField(
+        min_length=1,
+        max_length=20
+    )
+    country = forms.CharField()
+
+    # Next destination after user has registered
     next = forms.CharField(required=False)
 
     def clean(self):
-        super(EmailRegisterForm, self).clean()
+        super(RegisterForm, self).clean()
 
         email = self.cleaned_data.get('email')
 
@@ -60,19 +71,37 @@ class EmailRegisterForm(forms.Form):
                 ).first()
 
                 if u is not None:
-                    self.add_error('email', 'Account exists.')
+                    self.add_error('email', 'This email belongs to an existing user. Please log in if you already have an account.')
                     has_error = True
             except models.Email.DoesNotExist:
                 # Good - email is not in used
                 pass
+        
+        phone_number = self.cleaned_data.get('phone_number')
+        if phone_number is not None:
+            parsed_ph = phonenumbers.parse(str(phone_number), None)
+            ph_cc = parsed_ph.country_code
+            ph_nn = parsed_ph.national_number
 
-        password = self.cleaned_data.get('password')
-        confirm_password = self.cleaned_data.get('confirm_password')
+            try:
+                phone_number = models.PhoneNumber.objects.get(
+                    country_code=ph_cc,
+                    national_number=ph_nn
+                )
 
-        if password != confirm_password:
-            self.add_error('password', 'Does not match confirm password.')
-            self.add_error('confirm_password', 'Does not match password.')
-            has_error = True
+                user_w_ph = models.User.objects.filter(
+                    phone_number=phone_number.id, # User has phone number
+                    registered__isnull=False, # User is registered
+                    django_user__isnull=False # User has a Django user linked
+                ).first()
+
+                if user_w_ph is not None:
+                    self.add_error('phone_number',
+                        'This phone number belongs to an existing user. Please ensure you\'ve entered your phone number correctly.')
+                    has_error = True
+            except models.PhoneNumber.DoesNotExist:
+                # Good - no user has this phone number
+                pass
         
         if has_error:
             raise ValidationError(None)
@@ -120,6 +149,24 @@ class ProfileForm(forms.Form):
         if has_error:
             raise ValidationError(None)
 
+class PasswordChangeForm(forms.Form):
+    password = forms.CharField(min_length=8)
+    confirm_password = forms.CharField(min_length=8)
+
+    def clean(self):
+        super(PasswordChangeForm, self).clean()
+
+        has_error = False
+
+        password = self.cleaned_data.get('password')
+        confirm = self.cleaned_data.get('confirm_password')
+        if password != confirm:
+            self.add_error('password', 'Password doesn\'t match confirm password.')
+            self.add_error('confirm_password', 'Password doesn\'t match confirm password.')
+            has_error = True
+        
+        if has_error:
+            raise ValidationError(None)
 
 
 

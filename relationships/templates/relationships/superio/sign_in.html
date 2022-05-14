@@ -77,13 +77,13 @@
                             <div class="form-group">
                                 <label>Email</label>
                                 <input type="text" name="email" placeholder="Email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} required>
-                                {% if form.email.errors %}<div style="color:red">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                {% if form.email.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">
                                 <label>Password</label>
                                 <input type="password" name="password" placeholder="Password" required>
-                                {% if form.password.errors %}<div style="color:red">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                {% if form.password.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">

@@ -4,6 +4,7 @@ from relationships import views
 app_name = 'users'
 urlpatterns = [
     path('profile', views.profile, name='profile'),
+    path('change_password', views.change_password, name='change_password'),
 
     # Pre v5 routes
     # path('', views.user_list, name='user_list'),

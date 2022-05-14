@@ -15,11 +15,13 @@
 <section class="user-dashboard">
     <div class="dashboard-outer">
 
-        {% if not request.user.user.is_profile_complete %}
-            <div class="message-box warning">
-                <p>Please complete your profile before performing other actions.</p>
-                <button class="close-btn"><span class="close_icon"></span></button>
-            </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message-box info">
+                    <p>{{ message }}</p>
+                    <button class="close-btn"><span class="close_icon"></span></button>
+                </div>
+            {% endfor %}
         {% endif %}
 
         <div class="upper-title-box">
@@ -41,26 +43,26 @@
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label>First Name</label>
                                         <input type="text" name="first_name"{% if form.first_name.value != None %} value="{{ form.first_name.value }}"{% endif %}>
-                                        {% if form.first_name.errors %}<div style="color:red">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        {% if form.first_name.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label>Last Name</label>
                                         <input type="text" name="last_name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %}>
-                                        {% if form.last_name.errors %}<div style="color:red">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        {% if form.last_name.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     {% comment %} <div class="form-group col-lg-6 col-md-12">
                                         <label>Company Name</label>
                                         <input type="text" name="company_name"{% if form.company_name.value != None %} value="{{ form.company_name.value }}"{% endif %}>
-                                        {% if form.company_name.errors %}<div style="color:red">{% for error in form.company_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        {% if form.company_name.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.company_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div> {% endcomment %}
 
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label>Phone</label>
                                         <input type="text" name="phone_number" placeholder="e.g., +14155552671"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %}>
-                                        <div class="text">Please include + symbol. E.g., +14155552671.</div>
-                                        {% if form.phone_number.errors %}<div style="color:red">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        <div class="text" style="margin-left:20px; margin-top:10px">Please include + symbol. E.g., +14155552671.</div>
+                                        {% if form.phone_number.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     <div class="form-group col-lg-6 col-md-12">
@@ -71,13 +73,13 @@
                                                 <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                                             {% endfor %}
                                         </select>
-                                        {% if form.country.errors %}<div style="color:red">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        {% if form.country.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     {% comment %} <div class="form-group col-lg-12 col-md-12">
                                         <label>Introduce Yourself</label>
                                         <textarea name="goods_string">{% if form.goods_string.value != None %}{{ form.goods_string.value }}{% endif %}</textarea>
-                                        {% if form.goods_string.errors %}<div style="color:red">{% for error in form.goods_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        {% if form.goods_string.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.goods_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div> {% endcomment %}
             
                                     <div class="form-group col-lg-6 col-md-12">
@@ -97,4 +99,8 @@
 
 {% block footer %}
 {% include 'superio/includes/dashboard_footer.html' %}
+{% endblock %}
+
+{% block other_scripts %}
+<script src="{% static 'common/js/prevent_resubmit.js' %}"></script>
 {% endblock %}

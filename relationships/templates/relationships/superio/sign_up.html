@@ -79,20 +79,44 @@
                             {% csrf_token %}
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" name="email" placeholder="Email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} required>
-                                {% if form.email.errors %}<div style="color:red">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                <input type="email" name="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} required>
+                                {% if form.email.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">
                                 <label>Password</label>
-                                <input id="password-field" type="password" name="password" required>
-                                {% if form.password.errors %}<div style="color:red">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                <input type="password" name="password" required>
+                                {% if form.password.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">
-                                <label>Re-enter Password</label>
-                                <input id="password-field" type="password" name="confirm_password" required>
-                                {% if form.password.errors %}<div style="color:red">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                <label>Phone Number</label>
+                                <input type="text" name="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} required>
+                                {% if form.phone_number.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                <div style="margin-left:20px; margin-top:10px">Please include + symbol. E.g., +14155552671.</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" name="first_name"{% if form.first_name.value != None %} value="{{ form.first_name.value }}"{% endif %} required>
+                                {% if form.first_name.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" name="last_name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %} required>
+                                {% if form.last_name.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label>Country</label>
+                                <select name="country" class="chosen-select">
+                                    <option>Select a Country</option>
+                                    {% for country in countries %}
+                                        <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% if form.country.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">

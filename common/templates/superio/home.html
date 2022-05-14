@@ -54,7 +54,7 @@
             <div class="col-lg-5">
                 <div class="sec-title text-center">
                     <h2>How Everybase Works</h2>
-                    <div class="text">Agents help exporters sell their products overseas for commissions.</div>
+                    <div class="text">Agents help exporters/importers sell their products or source goods for commissions.</div>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
                         <span class="icon icon-case"></span>
                     </div>
                     <h5>Find Agents or Products</h5>
-                    <p>Search and review agent or product details.</p>
+                    <p>Search and review lead details.</p>
                     </div>
                 </div>
             </div>
@@ -100,32 +100,25 @@
 </section>
 {% comment %} End: How Everybase works {% endcomment %}
 
-{% comment %} Start: Latest leads {% endcomment %}
-<section class="layout-pt-120 layout-pb-120">
+{% comment %} Start: Latest Leads {% endcomment %}
+<section class="job-section-two">
     <div class="auto-container">
-        <div class="row justify-content-between align-items-end">
-            <div class="col-lg-6">
-                <div class="">
-                <h2 class="fw-700">Latest Leads</h2>
-                </div>
-            </div>
-
-            <div class="col-auto">
-                <a href="{% url 'leads:lead_list' %}">
-                    See More
-                    <span class="fa fa-angle-right"></span>
-                </a>
-            </div>
-        </div>
-
-        <div class="row grid-base pt-50 wow fadeInUp">
-            {% for lead in leads %}
-                {% include 'leads/superio/includes/lead_item.html' with lead=lead %}
-            {% endfor %}
-        </div>
+        <div class="sec-title text-center">
+        <h2>Latest Leads</h2>
+        <div class="text">Sellers and buyers looking for agents to help sell or buy on commission.</div>
+    </div>
+  
+    <div class="row wow fadeInUp">
+        {% for lead in leads %}
+            {% include 'leads/superio/includes/lead_item.html' with lead=lead %}
+        {% endfor %}
+    </div>
+  
+    <div class="btn-box">
+        <a href="{% url 'leads:lead_list' %}" class="theme-btn btn-style-one bg-blue"><span class="btn-title">See More</span></a>
     </div>
 </section>
-{% comment %} End: Latest products {% endcomment %}
+{% comment %} End: Latest Leads {% endcomment %}
 
 {% comment %} Start: Register {% endcomment %}
 <section class="layout-pt-60 layout-pb-60">

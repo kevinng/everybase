@@ -1,4 +1,3 @@
-from operator import mod
 from urllib.parse import urljoin
 import boto3, pytz, datetime
 from PIL import Image, ImageOps

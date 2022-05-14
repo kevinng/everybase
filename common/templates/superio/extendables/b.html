@@ -117,6 +117,7 @@ return n._iq[e]};e.amplitude=n})(window,document);
                                             <li{% if request.resolver_match.view_name == 'users:profile' %} class="current"{% endif %}><a href="{% url 'users:profile' %}">Profile</a></li>
                                             <li{% if request.resolver_match.view_name == 'leads:my_leads' %} class="current"{% endif %}><a href="{% url 'leads:my_leads' %}">My Leads</a></li>
                                             <li{% if request.resolver_match.view_name == 'applications:inbox' or request.resolver_match.view_name == 'applications:application_detail' %} class="current"{% endif %}><a href="{% url 'applications:inbox' %}">Inbox</a></li>
+                                            <li{% if request.resolver_match.view_name == 'users:change_password' %} class="active"{% endif %}><a href="{% url 'users:change_password' %}"></i>Change Password</a></li>
                                             <li><a href="{% url 'sign_out' %}">Logout</a></li>
                                         </ul>
                                     </li>
@@ -160,14 +161,14 @@ return n._iq[e]};e.amplitude=n})(window,document);
                         {% else %}
                             <div class="dropdown dashboard-option">
                                 <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
-                                    <span class="name">{% if request.user.user.first_name == None or request.user.user.last_name == None %}{{ request.user.user.email.email }}{% else %}{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}{% endif %}</span>
+                                    <span class="name">{{ request.user.user.email.email }}</span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     {% comment %} <li{% if request.resolver_match.view_name == 'users:profile' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"><i class="la la-user-tie"></i>Profile</a></li>
                                     <li{% if request.resolver_match.view_name == 'leads:lead_create' %} class="active"{% endif %}><a href="{% url 'leads:lead_create' %}"><i class="las la-box"></i> New Lead</a></li>
                                     <li{% if request.resolver_match.view_name == 'leads:my_leads' %} class="active"{% endif %}><a href="{% url 'leads:my_leads' %}"><i class="las la-boxes"></i>My Leads</a></li>
                                     <li{% if request.resolver_match.view_name == 'applications:inbox' or request.resolver_match.view_name == 'applications:application_detail' %} class="active"{% endif %}><a href="{% url 'applications:inbox' %}"><i class="la la-comment-o"></i>Inbox</a></li> {% endcomment %}
-                                    <li><a href="{% url 'sign_out' %}?next={{ request.path }}"><i class="la la-sign-out"></i>Sign Out</a></li>
+                                    <li><a href="{% url 'sign_out' %}?next={{ request.path }}"><i class="la la-sign-out"></i>Logout</a></li>
                                 </ul>
                             </div>
                         {% endif %}

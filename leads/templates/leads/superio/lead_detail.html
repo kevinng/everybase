@@ -34,22 +34,23 @@
 
     <div class="auto-container">
         <h4>Buy/Sell</h4>
-        <p>{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}</p>
+        <p>{% if lead.lead_type == 'buying' %}Buy{% elif lead.lead_type == 'selling' %}Sell{% endif %}</p>
 
         <h4>Country</h4>
         <p>{% if lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% elif lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% endif %}</p>
 
+        <h4>Commission</h4>
+        <p>{{ lead.min_commission_percentage }}% to {{ lead.max_commission_percentage }}%</p>
+
         <h4>Lead Details</h4>
         <p>{{ lead.details }}</p>
-
-        <h4>Commission Details</h4>
-        <p>{{ lead.comm_details }}</p>
 
         {% if not request.user.is_authenticated %}
             <div class="comments-area">
                 <div class="comment-form default-form">
-                    <h4>Login to apply to be an agent</h4>
-                    <a href="{% url 'sign_in' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-one" name="submit-form">Login</a>
+                    <h4>I'm interested to be an agent</h4>
+                    <a href="{% url 'sign_up' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-one">Register</a>
+                    <a href="{% url 'sign_in' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-three">Login</a>
                 </div>
             </div>
         {% elif lead.author != request.user.user and not lead_has_applications_with_applicant %}
