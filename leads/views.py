@@ -24,18 +24,7 @@ from common.tasks.send_amplitude_event import send_amplitude_event
 from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
 
-def _is_profile_complete(request):
-    """Returns True if user is authenticated and profile is complete."""
-    return request.user.is_authenticated and \
-        request.user.user.is_profile_complete()
-
 def lead_list(request):
-    if not request.user.is_authenticated:
-        # Allow unauthenticated users to pass
-        pass
-    elif not _is_profile_complete(request):
-        return HttpResponseRedirect(reverse('users:profile'))
-
     leads = models.Lead.objects\
         .filter(deleted__isnull=True)\
         .order_by('-created')
@@ -143,12 +132,6 @@ def lead_list(request):
     return render(request, 'leads/superio/lead_list.html', params)
 
 def lead_detail(request, slug):
-    if not request.user.is_authenticated:
-        # Allow unauthenticated users to pass
-        pass
-    elif not _is_profile_complete(request):
-        return HttpResponseRedirect(reverse('users:profile'))
-
     try:
         lead = models.Lead.objects.get(slug_link=slug)
     except models.Lead.DoesNotExist:
@@ -368,9 +351,6 @@ def lead_edit(request, slug):
 
 @login_required
 def my_leads(request):
-    if not _is_profile_complete(request):
-        return HttpResponseRedirect(reverse('users:profile'))
-
     leads = models.Lead.objects.all()\
         .filter(
             deleted__isnull=True,
@@ -396,9 +376,6 @@ def my_leads(request):
 
 @login_required
 def lead_delete(request, slug):
-    if not _is_profile_complete(request):
-        return HttpResponseRedirect(reverse('users:profile'))
-
     if request.method == 'POST':
         lead = models.Lead.objects.get(slug_link=slug)
         
@@ -412,9 +389,6 @@ def lead_delete(request, slug):
 
 @login_required
 def application_list(request):
-    if not _is_profile_complete(request):
-        return HttpResponseRedirect(reverse('users:profile'))
-
     # Get first of all applications associated with this user
     first = request.user.user.applications().first()
     if first:
@@ -427,9 +401,6 @@ def application_list(request):
 
 @login_required
 def application_detail(request, pk):
-    if not _is_profile_complete(request):
-        return HttpResponseRedirect(reverse('users:profile'))
-
     # Application of focus
     application = models.Application.objects.get(pk=pk)
 
@@ -522,9 +493,6 @@ def application_detail(request, pk):
 
 @login_required
 def application_delete(request, pk):
-    if not _is_profile_complete(request):
-        return HttpResponseRedirect(reverse('users:profile'))
-    
     if request.method == 'POST':
         application = models.Application.objects.get(pk=pk)
         if application.applicant == request.user.user:

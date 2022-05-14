@@ -824,17 +824,17 @@
 		});
 	}
 
-	//Chat Contacts
-	// if($('.toggle-contact').length){
-	// 	$('.toggle-contact').on('click', function(e) {
-	// 		$('body').toggleClass('active-chat-contacts');
-	// 	});
-	// 	$('.contacts li').on('click', function(e) {
-	// 		$(this).addClass('active');
-	// 		$(this).siblings('li').removeClass('active');
-	// 		$('body').removeClass('active-chat-contacts');
-	// 	});
-	// }
+	// Chat Contacts
+	if($('.toggle-contact').length){
+		$('.toggle-contact').on('click', function(e) {
+			$('body').toggleClass('active-chat-contacts');
+		});
+		$('.contacts li').on('click', function(e) {
+			$(this).addClass('active');
+			$(this).siblings('li').removeClass('active');
+			$('body').removeClass('active-chat-contacts');
+		});
+	}
 
 	//Accordion Box
 	// if($('.accordion-box').length){
