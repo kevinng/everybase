@@ -31,6 +31,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
     # Details page settings
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _application_fields})]
+    autocomplete_fields = ['lead', 'applicant']
 
 _application_message_fields = ['application', 'author', 'body']
 @admin.register(models.ApplicationMessage)
