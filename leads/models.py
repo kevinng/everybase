@@ -454,6 +454,9 @@ class Application(Standard):
         null=True
     )
 
+    def __str__(self):
+        return f'({self.lead}, {self.applicant} [{self.id}])'
+
 class ApplicationMessage(Standard):
     """Application message.
 
