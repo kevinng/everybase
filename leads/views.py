@@ -482,9 +482,6 @@ def application_detail(request, pk):
     # All applications associated with the user - to populate the list
     applications = request.user.user.applications()
 
-    print('applications')
-    print(applications)
-
     params = {
         'form': form,
         'application': application,

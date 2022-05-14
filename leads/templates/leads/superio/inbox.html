@@ -79,10 +79,10 @@
                                             </div>
                                         </div>
 
-                                        <div class="btn-box">
+                                        <div>
                                             <form action="{% url 'applications:application_delete' application.id %}" method="post">
                                                 {% csrf_token %}
-                                                <button type="submit" class="dlt-chat">Delete Conversation</button>
+                                                <button type="submit" class="dlt-chat">Reject Application</button>
                                             </form>
                                             <button class="toggle-contact"><span class="fa fa-bars"></span></button>
                                         </div>
