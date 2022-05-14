@@ -5,8 +5,8 @@
 <div class="user-sidebar">
     <div class="sidebar-inner">
         <ul class="navigation">
-            <li{% if request.resolver_match.view_name == 'users:profile' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"><i class="la la-user-tie"></i>Profile</a></li>
             <li{% if request.resolver_match.view_name == 'leads:lead_create' %} class="active"{% endif %}><a href="{% url 'leads:lead_create' %}"><i class="las la-box"></i> New Lead</a></li>
+            <li{% if request.resolver_match.view_name == 'users:profile' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"><i class="la la-user-tie"></i>Profile</a></li>
             <li{% if request.resolver_match.view_name == 'leads:my_leads' %} class="active"{% endif %}><a href="{% url 'leads:my_leads' %}"><i class="las la-boxes"></i>My Leads</a></li>
             <li{% if request.resolver_match.view_name == 'applications:inbox' or request.resolver_match.view_name == 'applications:application_detail' %} class="active"{% endif %}><a href="{% url 'applications:inbox' %}"><i class="la la-comment-o"></i>Inbox</a></li>
         </ul>

@@ -4,7 +4,7 @@
 
 {% block page_wrapper_classes %} dashboard{% endblock %}
 
-{% block title %}New Lead{% endblock %}
+{% block title %}Edit Lead{% endblock %}
 
 {% block mobile_header_actions %}<a id="toggle-user-sidebar"><span class="mobile-nav-toggler las la-bars"></span></a>{% endblock %}
 
@@ -15,7 +15,7 @@
 <section class="user-dashboard">
     <div class="dashboard-outer">
         <div class="upper-title-box">
-            <h3>New Lead</h3>
+            <h3>Edit Lead</h3>
             <div class="text">Find agents to help you buy or sell on commissions</div>
         </div>
 
@@ -28,7 +28,7 @@
                         </div>
 
                         <div class="widget-content">
-                            <form class="default-form" action="{% url 'leads:lead_create' %}" method="post">
+                            <form class="default-form" action="{% url 'leads:lead_edit' slug_link %}" method="post">
                                 {% csrf_token %}
                                 
                                 <div class="row">
@@ -57,7 +57,7 @@
                                         <label>Country</label>
                                         {% comment %} Map country to either buy_country or sell_country on the backend depending on lead_type {% endcomment %}
                                         <select name="country" class="chosen-select">
-                                            <option>Select a Country</option>
+                                            <option></option>
                                             {% for country in countries %}
                                                 <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                                             {% endfor %}
@@ -106,7 +106,7 @@
 
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
-                                        <button id="submit" type="submit" class="theme-btn btn-style-one">Post</button>
+                                        <button id="submit" type="submit" class="theme-btn btn-style-one">Save</button>
                                     </div>
                                 </div>
                             </form>

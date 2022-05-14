@@ -19,7 +19,7 @@ def sm(request, file_to_render):
 def home(request):
     # Redirect to dashboard if user is authenticated
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('users:profile'))
+        return HttpResponseRedirect(reverse('leads:lead_create'))
 
     leads = lemods.Lead.objects.filter(
         deleted__isnull=True

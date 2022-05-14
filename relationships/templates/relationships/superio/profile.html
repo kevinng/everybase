@@ -66,7 +66,7 @@
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label>Country</label>
                                         <select name="country" class="chosen-select">
-                                            <option></option>
+                                            <option>Select a Country</option>
                                             {% for country in countries %}
                                                 <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                                             {% endfor %}

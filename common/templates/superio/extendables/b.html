@@ -82,8 +82,8 @@ return n._iq[e]};e.amplitude=n})(window,document);
     {% comment %} Start: Page wrapper {% endcomment %}
     <div class="page-wrapper {% block page_wrapper_classes %}{% endblock %}">
 
-        {% comment %} Preloader {% endcomment %}
-        <div class="preloader"></div>
+        {% comment %} Preloader, commented out to speed up loading {% endcomment %}
+        {% comment %} <div class="preloader"></div> {% endcomment %}
 
         {% comment %} Header span {% endcomment %}
         <span class="header-span"></span>
@@ -113,10 +113,11 @@ return n._iq[e]};e.amplitude=n})(window,document);
                                     <li class="dropdown">
                                         <span>Account</span>
                                         <ul>
-                                            <li{% if request.resolver_match.view_name == 'users:profile' %} class="current"{% endif %}><a href="{% url 'users:profile' %}">Profile</a></li>
                                             <li{% if request.resolver_match.view_name == 'leads:lead_create' %} class="current"{% endif %}><a href="{% url 'leads:lead_create' %}">New Lead</a></li>
+                                            <li{% if request.resolver_match.view_name == 'users:profile' %} class="current"{% endif %}><a href="{% url 'users:profile' %}">Profile</a></li>
                                             <li{% if request.resolver_match.view_name == 'leads:my_leads' %} class="current"{% endif %}><a href="{% url 'leads:my_leads' %}">My Leads</a></li>
                                             <li{% if request.resolver_match.view_name == 'applications:inbox' or request.resolver_match.view_name == 'applications:application_detail' %} class="current"{% endif %}><a href="{% url 'applications:inbox' %}">Inbox</a></li>
+                                            <li><a href="{% url 'sign_out' %}">Logout</a></li>
                                         </ul>
                                     </li>
                                 {% endif %}
@@ -238,7 +239,7 @@ return n._iq[e]};e.amplitude=n})(window,document);
     <script src="{% static 'common/superio/js/owl.js' %}"></script>
     <script src="{% static 'common/superio/js/wow.js' %}"></script>
     <script src="{% static 'common/superio/js/knob.js' %}"></script>
-    <script src="{% static 'common/superio/js/script.js' %}"></script>
+    <script src="{% static 'common/superio/js/script.min.js' %}"></script>
 {% block other_scripts %}{% endblock %}
 
 </body>

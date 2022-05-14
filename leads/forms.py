@@ -1,12 +1,42 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 class LeadForm(forms.Form):
-    cover_photo = forms.FileField()
+    lead_type = forms.CharField()
+    author_type = forms.CharField()
+    country = forms.CharField()
+    min_commission_percentage = forms.DecimalField()
+    max_commission_percentage = forms.DecimalField()
     headline = forms.CharField()
-    buy_country = forms.CharField()
     details = forms.CharField()
-    comm_details = forms.CharField()
     questions = forms.CharField()
+
+    def clean(self):
+        super(LeadForm, self).clean()
+
+        has_error = False
+        min_commission_percentage = self.cleaned_data.get('min_commission_percentage')
+        max_commission_percentage = self.cleaned_data.get('max_commission_percentage')
+
+        if min_commission_percentage is not None and max_commission_percentage is not None:
+            if min_commission_percentage < 0.01 or min_commission_percentage > 100:
+                self.add_error('min_commission_percentage', 'Agent commission must be between 0.01% and 100%')
+                has_error = True
+            
+            if max_commission_percentage < 0.01 or max_commission_percentage > 100:
+                self.add_error('max_commission_percentage', 'Agent commission must be between 0.01% and 100%')
+                has_error = True
+            
+            if min_commission_percentage >= max_commission_percentage:
+                self.add_error('min_commission_percentage', 'Minimum commission must be smaller than maximum commission')
+                has_error = True
+            
+            if max_commission_percentage <= min_commission_percentage:
+                self.add_error('max_commission_percentage', 'Maximum commission must be greater than minimum commission')
+                has_error = True
+            
+        if has_error:
+            raise ValidationError(None)
 
 class ApplicationForm(forms.Form):
     has_experience = forms.BooleanField(required=False)

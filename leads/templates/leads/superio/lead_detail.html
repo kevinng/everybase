@@ -26,30 +26,18 @@
         <h3>{{ lead.headline }}</h3>
             <ul class="post-info">
                 <li>{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</li>
-                <li>{{ lead.buy_country.name }}</li>
+                <li>{{ lead.author.country.name }}</li>
                 <li>{{ lead.age_desc }}</li>
             </ul>
         </div>
     </div>
 
     <div class="auto-container">
-        {% comment %} Start: Gallery {% endcomment %}
-        {% if lead.display_images.all|length > 0 %}
-        <div class="image-gallery" itemscope itemtype="http://schema.org/ImageGallery" style="margin-bottom: 60px">
-            {% load thumbnail_url %}
-            {% load image_url %}
-            {% for file in lead.display_images.all %}
-                {% thumbnail_url file as thumbnail_url %}
-                {% image_url file as image_url %}
-                <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                    <a href="{{ image_url }}" itemprop="contentUrl" data-size="{{ file.width }}x{{ file.height }}">
-                        <img src="{{ thumbnail_url }}" itemprop="thumbnail">
-                    </a>
-                </figure>
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% comment %} End: Gallery {% endcomment %}
+        <h4>Buy/Sell</h4>
+        <p>{% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %}</p>
+
+        <h4>Country</h4>
+        <p>{% if lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% elif lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% endif %}</p>
 
         <h4>Lead Details</h4>
         <p>{{ lead.details }}</p>
@@ -67,7 +55,7 @@
         {% elif lead.author != request.user.user and not lead_has_applications_with_applicant %}
             <div class="comments-area">
                 <div class="comment-form default-form">
-                    <h4>I'm interested to be an agent for this lead</h4>
+                    <h4>I'm interested to be an agent</h4>
                     <form action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
                         {% csrf_token %}
                         <div class="row clearfix">

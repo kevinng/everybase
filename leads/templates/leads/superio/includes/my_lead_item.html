@@ -3,13 +3,13 @@
     <td>
         <h6><a href="{% url 'leads:lead_detail' lead.slug_link %}" target="lead_detail">{{ lead.headline }}</a></h6>
     </td>
-    <td class="applied"><a href="{% url 'applications:inbox' %}">{{ lead.num_applications }} Conversations</a></td>
+    <td class="applied"><a href="{% url 'applications:inbox' %}">{{ lead.num_applications }}</a></td>
     <td>{{ lead.age_desc }}</td>
     <td>
         <div class="option-box">
             <ul class="option-list">
                 {% comment %} <li><button data-text="View Aplication"><span class="la la-eye"></span></button></li> {% endcomment %}
-                {% comment %} <li><a href="{% url 'leads:lead_edit' lead.slug_link %}" data-text="Edit"><span class="la la-pencil"></span></a></li> {% endcomment %}
+                <li><a href="{% url 'leads:lead_edit' lead.slug_link %}" data-text="Edit"><span class="la la-pencil"></span></a></li>
                 <li>
                     <form action="{% url 'leads:lead_delete' lead.slug_link %}" method="post">
                         {% csrf_token %}

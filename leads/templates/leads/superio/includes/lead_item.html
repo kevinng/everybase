@@ -1,19 +1,24 @@
 {% load static %}
-<div class="news-block col-lg-4 col-md-6 col-sm-12">
+<div class="job-block">
     <div class="inner-box">
-        <div class="image-box">
-            {% if lead.cover_photo != None %}
-                {% load thumbnail_url %}
-                {% thumbnail_url lead.cover_photo as thumbnail_url %}
-                <figure class="image"><a href="{% url 'leads:lead_detail' lead.slug_link %}"><img src="{{ thumbnail_url }}" alt="" /></a></figure>
-            {% endif %}
-        </div>
-        <div class="lower-content">
-            <ul class="post-meta">
-                <li>{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</li>
-                <li>{{ lead.buy_country.name }}</li>
+        <div class="content">
+            {% comment %} Note: CSS has been modified to move text into the position of the logo. {% endcomment %}
+            {% comment %} <span class="company-logo"><img src="{% static 'common/superio/images/resource/company-logo/1-1.png' %}" alt=""></span> {% endcomment %}
+            <h4><a href="{% url 'leads:lead_detail' lead.slug_link %}">{{ lead.headline }}</a></h4>
+            <ul class="job-info">
+                <li><span class="icon flaticon-user-1"></span>{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</li>
+                {% comment %} <li><span class="icon flaticon-briefcase"></span>Buying</li> {% endcomment %}
+                {% comment %} <li><span class="icon flaticon-map-locator"></span>Singapore</li> {% endcomment %}
+                {% if lead.min_commission_percentage != None and lead.max_commission_percentage != None %}
+                <li><span class="icon flaticon-money"></span>{% if lead.min_commission_percentage != None %}{{ lead.min_commission_percentage }}{% else %}0{% endif %}% to {% if lead.max_commission_percentage != None %}{{ lead.max_commission_percentage }}{% else %}0{% endif %}% Commission</li>
+                {% endif %}
+                <li><span class="icon flaticon-clock-3"></span>{{ lead.age_desc }}</li>
             </ul>
-            <h3><a href="{% url 'leads:lead_detail' lead.slug_link %}">{{ lead.headline }}</a></h3>
+            <ul class="job-other-info">
+                <li class="time">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %}</li>
+                <li class="privacy">{% if lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% elif lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% endif %}</li>
+                {% comment %} <li class="required">Urgent</li> {% endcomment %}
+            </ul>
         </div>
     </div>
 </div>

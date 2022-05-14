@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Leads - exporters looking for agents to sell their products overseas{% endblock %}
+{% block title %}Exporters looking for agents to sell their products overseas{% endblock %}
 
 {% block contents %}
 <section class="page-title">
@@ -16,20 +16,81 @@
     </div>
 </section>
 
-<div class="sidebar-page-container">
+<section class="ls-section">
     <div class="auto-container">
+        <div class="filters-backdrop"></div>
         <div class="row">
+            <div class="filters-column col-lg-4 col-md-12 col-sm-12">
+                <div class="inner-column">
+                    <div class="filters-outer">
+                        {% comment %} <button type="button" class="theme-btn close-filters">X</button> {% endcomment %}
 
-            <div class="content-side col-lg-12 col-md-12 col-sm-12">
-                <div class="blog-grid">
-                    <div class="row">
-                        {% if page_obj|length > 0 %}
+                        <form action="{% url 'leads:lead_list' %}" method="get">
+                            <div class="filter-block">
+                                <h4>Search</h4>
+                                <div class="form-group">
+                                    <input type="text" name="search_phrase"{% if search_phrase != None %} value="{{ search_phrase }}"{% endif %}>
+                                    <span class="icon flaticon-search-3"></span>
+                                </div>
+                            </div>
+
+                            <div class="filter-block">
+                                <h4>Buy/Sell</h4>
+                                <div class="form-group">
+                                    <select name="buy_sell" class="chosen-select">
+                                        <option value="buy_or_sell"{% if buy_sell == 'buy_or_sell' %} selected{% endif %}>Buy or Sell</option>
+                                        <option value="buy_only"{% if buy_sell == 'buy_only' %} selected{% endif %}>Buy only</option>
+                                        <option value="sell_only"{% if buy_sell == 'sell_only' %} selected{% endif %}>Sell only</option>
+                                    </select>
+                                    <span class="icon flaticon-briefcase"></span>
+                                </div>
+                            </div>
+
+                            <div class="filter-block">
+                                <h4>Country</h4>
+                                <div class="form-group">
+                                    <select name="country" class="chosen-select">
+                                        <option value="any_country">Any country</option>
+                                        {% for c in countries %}
+                                            <option value="{{ c.programmatic_key }}"{% if country == c.programmatic_key %} selected{% endif %}>{{ c.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <span class="icon flaticon-map-locator"></span>
+                                </div>
+                            </div>
+
+                            <div class="filter-block">
+                                <h4>Commissions</h4>
+                                <input type="hidden" id="min_commission_percentage_filter" name="min_commission_percentage_filter"{% if min_commission_percentage_filter != None %} value="{{ min_commission_percentage_filter }}"{% endif %}>
+                                <input type="hidden" id="max_commission_percentage_filter" name="max_commission_percentage_filter"{% if max_commission_percentage_filter != None %} value="{{ max_commission_percentage_filter }}"{% endif %}>
+                                <div class="range-slider-one commission-range">
+                                    <div class="commission-range-slider"></div>
+                                    <div class="input-outer">
+                                        <div class="amount-outer">
+                                            <span class="amount commission-amount">
+                                                <span class="min"></span>% to <span class="max"></span>%
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="filter-block">
+                                <button type="submit" class="theme-btn btn-style-one">Search</button>
+                                <a href="{% url 'leads:lead_list' %}" class="theme-btn btn-style-two">Reset</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="content-column col-lg-8 col-md-12 col-sm-12">
+                <div class="ls-outer">
+                    {% if page_obj|length > 0 %}
                             {% for lead in page_obj %}
                                 {% include 'leads/superio/includes/lead_item.html' with lead=lead %}
                             {% endfor %}
                         {% endif %}
-                    </div>
-   
+    
                     {% load query_transform %}
                     <nav class="ls-pagination">
                         <ul>
@@ -48,13 +109,19 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
 
 {% comment %}
 $(document).ready(function() {
     $next_page = $('.next_page')
     $prev_page = $('.prev_page')
+
+    $commission_range_slider = $('.commission-range-slider')
+    $commission_amount_min = $('.commission-amount .min')
+    $commission_amount_max = $('.commission-amount .max')
+    $min_commission_percentage_filter = $('#min_commission_percentage_filter')
+    $max_commission_percentage_filter = $('#max_commission_percentage_filter')
 
     // Amplitude call on next page
     function next_page_clicked() {
@@ -75,8 +142,83 @@ $(document).ready(function() {
         amplitude.getInstance().logEvent(event, props)
     }
     $prev_page.click(function() { previous_page_clicked() })
+
+    if ($commission_range_slider.length) {
+        min_commission_percentage_filter = parseFloat('{{ min_commission_percentage_filter|floatformat:0 }}')
+        max_commission_percentage_filter = parseFloat('{{ max_commission_percentage_filter|floatformat:0 }}')
+        max_commission_percentage = parseFloat('{{ max_commission_percentage|floatformat:0 }}')
+        $commission_range_slider.slider({
+            range: true,
+            min: 0,
+            max: max_commission_percentage,
+            values: [min_commission_percentage_filter, max_commission_percentage_filter],
+            slide: function(event, ui) {
+                $commission_amount_min.text(ui.values[0])
+                $min_commission_percentage_filter.val(ui.values[0])
+
+                $commission_amount_max.text(ui.values[1])
+                $max_commission_percentage_filter.val(ui.values[1])
+            }
+        })
+        
+        $commission_amount_min.text($commission_range_slider.slider('values', 0))
+        $commission_amount_max.text($commission_range_slider.slider('values', 1))
+    }
 })
 {% endcomment %}
 {% block other_scripts %}
-<script>$(document).ready((function(){$next_page=$(".next_page"),$prev_page=$(".prev_page"),$next_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list next page",{current_page:"{{ page_obj.number }}"})})),$prev_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list previous page",{current_page:"{{ page_obj.number }}"})}))}));</script>
+<script>
+    $(document).ready(function() {
+        $next_page = $('.next_page')
+        $prev_page = $('.prev_page')
+    
+        $commission_range_slider = $('.commission-range-slider')
+        $commission_amount_min = $('.commission-amount .min')
+        $commission_amount_max = $('.commission-amount .max')
+        $min_commission_percentage_filter = $('#min_commission_percentage_filter')
+        $max_commission_percentage_filter = $('#max_commission_percentage_filter')
+    
+        // Amplitude call on next page
+        function next_page_clicked() {
+            var event = 'discovery - clicked lead list next page'
+            var props = {
+                'current_page': '{{ page_obj.number }}'
+            }
+            amplitude.getInstance().logEvent(event, props)
+        }
+        $next_page.click(function() { next_page_clicked() })
+    
+        // Amplitude call on previous page
+        function previous_page_clicked() {
+            var event = 'discovery - clicked lead list previous page'
+            var props = {
+                'current_page': '{{ page_obj.number }}'
+            }
+            amplitude.getInstance().logEvent(event, props)
+        }
+        $prev_page.click(function() { previous_page_clicked() })
+    
+        if ($commission_range_slider.length) {
+            min_commission_percentage_filter = parseFloat('{{ min_commission_percentage_filter|floatformat:0 }}')
+            max_commission_percentage_filter = parseFloat('{{ max_commission_percentage_filter|floatformat:0 }}')
+            max_commission_percentage = parseFloat('{{ max_commission_percentage|floatformat:0 }}')
+            $commission_range_slider.slider({
+                range: true,
+                min: 0,
+                max: max_commission_percentage,
+                values: [min_commission_percentage_filter, max_commission_percentage_filter],
+                slide: function(event, ui) {
+                    $commission_amount_min.text(ui.values[0])
+                    $min_commission_percentage_filter.val(ui.values[0])
+    
+                    $commission_amount_max.text(ui.values[1])
+                    $max_commission_percentage_filter.val(ui.values[1])
+                }
+            })
+            
+            $commission_amount_min.text($commission_range_slider.slider('values', 0))
+            $commission_amount_max.text($commission_range_slider.slider('values', 1))
+        }
+    })
+</script>
 {% endblock %}

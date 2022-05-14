@@ -57,7 +57,7 @@ def sign_in(request):
                 if next is not None and next.strip() != '':
                     return HttpResponseRedirect(next)
                 else:
-                    return HttpResponseRedirect(reverse('home'))
+                    return HttpResponseRedirect(reverse('leads:lead_create'))
             else:
                 form.add_error('password', 'Invalid credentials.')
 
@@ -124,7 +124,7 @@ def sign_up(request):
                 ip=get_ip_address(request)
             )
 
-            return HttpResponseRedirect(reverse('users:profile'))
+            return HttpResponseRedirect(reverse('leads:lead_create'))
     else:
         form = forms.EmailRegisterForm()
 

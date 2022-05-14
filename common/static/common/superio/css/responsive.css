@@ -1760,7 +1760,8 @@
 
 	.job-block .content{
 		padding-top: 2px;
-		padding-left: 70px;
+		// padding-left: 70px; // Original
+        padding-left: 10px;
 	}
 
 	.job-block h4{
@@ -1781,7 +1782,7 @@
 
 	.job-block .job-other-info{
 		margin-top: 20px;
-		margin-left: -70px;
+		//margin-left: -70px; // Original
 	}
 
 	.job-block-two .bookmark-btn,

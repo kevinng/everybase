@@ -9,6 +9,7 @@ urlpatterns = [
 
     # NOTE: map other routes above slug routes
     path('<slug:slug>', views.lead_detail, name='lead_detail'),
+    path('<slug:slug>/edit', views.lead_edit, name='lead_edit'),
     path('<slug:slug>/delete', views.lead_delete, name='lead_delete'),
 
     # path('<slug:slug>/edit', views.lead_edit, name='lead_edit'),

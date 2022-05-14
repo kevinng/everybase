@@ -1,3 +1,4 @@
+from operator import mod
 from urllib.parse import urljoin
 import boto3, pytz, datetime
 from PIL import Image, ImageOps
@@ -8,8 +9,11 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, Q, DateTimeField
+from django.db.models.functions import Trunc
+from django.db.models.expressions import RawSQL
 from django.template.loader import render_to_string
+from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
 
 from everybase import settings
 from common import models as commods
@@ -37,16 +41,103 @@ def lead_list(request):
         .filter(deleted__isnull=True)\
         .order_by('-created')
 
+    params = {}
+
+    # Filter by buy/sell
+
+    buy_sell = request.GET.get('buy_sell')
+    if buy_sell is not None and buy_sell.strip() != '' and buy_sell != 'buy_or_sell':
+        if buy_sell == 'buy_only':
+            leads = leads.filter(lead_type='buying')
+        elif buy_sell == 'sell_only':
+            leads = leads.filter(lead_type='selling')
+        
+        # Pass value back to view
+        params['buy_sell'] = buy_sell
+
+    # Filter by country
+
+    country = request.GET.get('country')
+    if country is not None and country.strip() != '' and country != 'any_country':
+        c = commods.Country.objects.get(programmatic_key=country)
+        leads = leads.filter(Q(buy_country=c) | Q(sell_country=c))
+
+        # Pass value back to view
+        params['country'] = country
+
+    # Maximum commission percentage for view filter
+
+    max_comm_lead = models.Lead.objects.all()\
+        .filter(max_commission_percentage__isnull=False)\
+        .order_by('-max_commission_percentage')\
+        .first()
+        
+    params['max_commission_percentage'] = 0 if max_comm_lead is None else max_comm_lead.max_commission_percentage
+
+    # Filter by commissions
+    
+    min_commission_percentage_filter = request.GET.get('min_commission_percentage_filter')
+    if min_commission_percentage_filter is not None and min_commission_percentage_filter.strip() != '':
+        # Note: we're only filtering on maximum commission percentage with the slider's
+        # minimum and maximum values.
+        leads = leads.filter(max_commission_percentage__gte=min_commission_percentage_filter)\
+            .filter(max_commission_percentage__isnull=False)\
+            .filter(min_commission_percentage__isnull=False)
+
+        # Pass value back to view
+        params['min_commission_percentage_filter'] = min_commission_percentage_filter
+    else:
+        # Pass value back to view
+        params['min_commission_percentage_filter'] = 0
+    
+    max_commission_percentage_filter = request.GET.get('max_commission_percentage_filter')
+    if max_commission_percentage_filter is not None and max_commission_percentage_filter.strip() != '':
+        leads = leads.filter(max_commission_percentage__lte=max_commission_percentage_filter)\
+            .filter(max_commission_percentage__isnull=False)\
+            .filter(min_commission_percentage__isnull=False)
+
+        # Pass value back to view
+        params['max_commission_percentage_filter'] = max_commission_percentage_filter
+    else:
+        # Pass value back to view
+        params['max_commission_percentage_filter'] = params['max_commission_percentage']
+
+    # Baseline ordering
+
+    order_by = [Trunc('created', 'month', output_field=DateTimeField()).desc()]
+
+    # Search
+
+    search_phrase = request.GET.get('search_phrase')
+    if search_phrase is not None and search_phrase.strip() != '':
+        headline_details_vec = SearchVector('headline_details_vec')
+        search_query = SearchQuery(search_phrase)
+        leads = leads.annotate(
+            headline_details_vec=RawSQL('headline_details_vec', [],
+            output_field=SearchVectorField()))\
+            .annotate(search_rank=SearchRank(headline_details_vec, search_query))
+
+        order_by.append('-search_rank')
+
+        # Pass value back to view
+        params['search_phrase'] = search_phrase
+
+    # Order leads
+    
+    leads = leads.order_by(*order_by)
+
+    #  Set filter countries - only use countries used by leads
+
+    params['countries'] = commods.Country.objects.annotate(
+        num_leads=Count('leads_buy_country')).\
+            filter(num_leads__gt=0).\
+            order_by('-num_leads')
+
     # Paginate
 
-    leads_per_page = 12
+    leads_per_page = 20
     paginator = Paginator(leads, leads_per_page)
-
     page_number = request.GET.get('page')
-
-    # Set context parameters
-    params = {}
-    
     page_obj = paginator.get_page(page_number)
     params['page_obj'] = page_obj
 
@@ -119,6 +210,16 @@ def lead_detail(request, slug):
             )
     else:
         form = forms.ApplicationForm()
+
+    # Record user access if authenticated
+    if request.user.is_authenticated:
+        v, _ = models.LeadDetailView.objects.get_or_create(
+            lead=lead,
+            viewer=request.user.user
+        )
+
+        v.count += 1
+        v.save()
     
     params = {
         'form': form,
@@ -129,80 +230,39 @@ def lead_detail(request, slug):
 
 @login_required
 def lead_create(request):
-    if not _is_profile_complete(request):
-        return HttpResponseRedirect(reverse('users:profile'))
-    
     if request.method == 'POST':
-        form = forms.LeadForm(request.POST, request.FILES)
+        form = forms.LeadForm(request.POST)
         if form.is_valid():
-            buy_country_str = form.cleaned_data.get('buy_country')
-            buy_country = commods.Country.objects.get(programmatic_key=buy_country_str)
+            
+            g = lambda x: form.cleaned_data.get(x)
 
-            lead = models.Lead.objects.create(
+            lead_type = g('lead_type')
+            author_type = g('author_type')
+            country_key = g('country')
+            min_commission_percentage = g('min_commission_percentage')
+            max_commission_percentage = g('max_commission_percentage')
+            headline = g('headline')
+            details = g('details')
+            questions = g('questions')
+
+            lead = models.Lead(
                 author=request.user.user,
-                lead_type='selling', # We only support sellers for now
-                buy_country=buy_country,
-                headline=form.cleaned_data.get('headline'),
-                details=form.cleaned_data.get('details'),
-                questions=form.cleaned_data.get('questions')
+                lead_type=lead_type,
+                author_type=author_type,
+                min_commission_percentage=min_commission_percentage,
+                max_commission_percentage=max_commission_percentage,
+                headline=headline,
+                details=details,
+                questions=questions
             )
 
-            cover_photo = request.FILES.get('cover_photo')
-            mime_type = get_mime_type(cover_photo)
+            country = commods.Country.objects.get(programmatic_key=country_key)
+            if lead_type == 'selling':
+                lead.buy_country = country
+            elif lead_type == 'buying':
+                lead.sell_country = country
 
-            # Create lead file
-            file = fimods.File.objects.create(
-                uploader=request.user.user,
-                mime_type=mime_type,
-                filename=cover_photo.name,
-                lead=lead,
-                s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-                thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
-            )
-
-            key = settings.AWS_S3_KEY_LEAD_IMAGE % (lead.id, file.id)
-            thumb_key = settings.AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL % (lead.id, file.id)
-
-            s3 = boto3.session.Session(
-                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-            ).resource('s3')
-
-            # Upload lead image
-            lead_s3_obj = s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
-                Key=key,
-                Body=cover_photo,
-                ContentType=mime_type
-            )
-
-            # Update file with S3 results
-            file.s3_object_key = key
-            file.thumbnail_s3_object_key = thumb_key
-            file.s3_object_content_length = lead_s3_obj.content_length
-            file.e_tag = lead_s3_obj.e_tag
-            file.content_type = lead_s3_obj.content_type
-            file.last_modified = lead_s3_obj.last_modified
-            file.save()
-
-            # Resize, save thumbnail, record sizes
-            with Image.open(cover_photo) as im:
-                # Resize preserving aspect ratio cropping from the center
-                thumbnail = ImageOps.fit(im, settings.LEAD_IMAGE_THUMBNAIL_SIZE)
-                output = BytesIO()
-                thumbnail.save(output, format='PNG')
-                output.seek(0)
-
-                # Upload thumbnail
-                s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
-                    Key=thumb_key,
-                    Body=output,
-                    ContentType=mime_type
-                )
-
-                # Update file and thumbnail sizes
-                file.width, file.height = im.size
-                file.thumbnail_width, file.thumbnail_height = thumbnail.size
-                file.save()
+            lead.save()
 
             # Email lead author
             send_email.delay(
@@ -241,6 +301,71 @@ def lead_create(request):
     }
 
     return render(request, 'leads/superio/lead_create.html', params)
+
+@login_required
+def lead_edit(request, slug):
+    lead = models.Lead.objects.get(slug_link=slug)
+    if request.method == 'POST':
+        form = forms.LeadForm(request.POST)
+        if form.is_valid():
+            g = lambda x: form.cleaned_data.get(x)
+
+            lead_type = g('lead_type')
+            author_type = g('author_type')
+            country_key = g('country')
+            min_commission_percentage = g('min_commission_percentage')
+            max_commission_percentage = g('max_commission_percentage')
+            headline = g('headline')
+            details = g('details')
+            questions = g('questions')
+
+            lead.author = request.user.user
+            lead.lead_type = lead_type
+            lead.author_type = author_type
+            lead.min_commission_percentage = min_commission_percentage
+            lead.max_commission_percentage = max_commission_percentage
+            lead.headline = headline
+            lead.details = details
+            lead.questions = questions
+
+            country = commods.Country.objects.get(programmatic_key=country_key)
+            if lead_type == 'selling':
+                lead.buy_country = country
+            elif lead_type == 'buying':
+                lead.sell_country = country
+
+            lead.save()
+            
+            return HttpResponseRedirect(reverse('leads:my_leads'))
+    else:
+        initial = {
+            'author': lead.author,
+            'lead_type': lead.lead_type,
+            'author_type': lead.author_type,
+            'min_commission_percentage': lead.min_commission_percentage,
+            'max_commission_percentage': lead.max_commission_percentage,
+            'headline': lead.headline,
+            'details': lead.details,
+            'questions': lead.questions
+        }
+
+        if lead.lead_type == 'selling':
+            initial['country'] = lead.buy_country.programmatic_key
+        elif lead.lead_type == 'buying':
+            initial['country'] = lead.sell_country.programmatic_key
+
+        form = forms.LeadForm(initial=initial)
+
+    countries = commods.Country.objects.annotate(
+        num_leads=Count('leads_buy_country')).order_by('-num_leads')
+
+    params = {
+        'slug_link': lead.slug_link,
+        'countries': countries,
+        'form': form
+    }
+
+    return render(request, 'leads/superio/lead_edit.html', params)
 
 @login_required
 def my_leads(request):
