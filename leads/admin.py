@@ -8,6 +8,7 @@ _application_query_log_fields = ['user', 'status']
 @admin.register(models.ApplicationQueryLog)
 class ApplicationQueryLogAdmin(comadm.StandardAdmin):
     # List page settings
+    list_per_page = 100
     list_display = comadm.standard_list_display + _application_query_log_fields
     list_editable = comadm.standard_list_editable + _application_query_log_fields
     list_filter = comadm.standard_list_filter + ['status']
@@ -28,6 +29,7 @@ class ApplicationFollowUpInlineAdmin(admin.TabularInline):
 @admin.register(models.Application)
 class ApplicationAdmin(comadm.StandardAdmin):
     # List page settings
+    list_per_page = 100
     list_display = ['id', 'lead', 'applicant', 'last_messaged', 'last_followed_up', 'stopped_follow_up', 'created', 'has_experience', 'has_buyers']
     list_editable = [] # Override to speed up loading
     list_filter = ['last_messaged', 'lead__lead_type', 'created', 'stopped_follow_up', 'has_experience', 'has_buyers']
@@ -88,48 +90,26 @@ class LeadCommentAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['lead', 'commentor']
 
-_lead_fields = [
-    'author', 'comm_details', 'questions',
-    
-    'commission_type', 'min_commission_percentage', 'max_commission_percentage',
-
-    'lead_type', 'currency', 'author_type', 'buy_country', 'sell_country', 'headline',
-    'details',
-
-    'impressions', 'clicks',
-
-    'internal_notes', 'slug_link', 'slug_tokens',
-
-    # Not in use
-
-    'title',
-
-    'need_agent', 'country', 'agent_job',
-
-    'avg_deal_size', 'commission_payable_by', 'commission_payable_after', 'commission_payable_after_other',
-    'commission_earnings', 'commission_quantity_unit_string', 'commission_type_other', 'other_comm_details',
-    
-    'is_comm_negotiable', 'is_promoted',
-
-    'question_1', 'question_2', 'question_3',
-
-    'need_logistics_agent', 'other_logistics_agent_details'
-]
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + ['uuid'] + _lead_fields
-    list_editable = comadm.standard_list_editable + _lead_fields
-    list_filter = comadm.standard_list_filter + ['author_type', 'lead_type',
-        'commission_payable_by']
-    search_fields = comadm.standard_search_fields + ['details',
-        'other_comm_details', 'other_logistics_agent_details', 'slug_link',
-        'slug_tokens', 'internal_notes', 'author__first_name', 'author__last_name']
+    list_per_page = 100
+    list_display = ['id', 'created', 'author', 'lead_type', 'headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type']
+    list_editable = [] # Override to speed up loading
+    list_filter = ['created', 'lead_type', 'author_type']
+    search_fields = ['id', 'headline', 'details', 'author__first_name', 'author__last_name', 'internal_notes']
 
     # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['uuid']
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _lead_fields})]
+    readonly_fields = comadm.standard_readonly_fields + ['uuid', 'slug_link', 'slug_tokens']
+    fieldsets = [
+        (None, {'fields': ['id', 'uuid']}),
+        ('Details', {'fields': ['author', 'lead_type', 'headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type', 'questions']}),
+        ('Meta', {'fields': ['internal_notes', 'slug_link', 'slug_tokens', 'impressions', 'clicks']}),
+        ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
+        ('Not in use', {'fields': ['title', 'currency', 'comm_details', 'need_agent', 'country', 'agent_job', 'avg_deal_size', 'commission_payable_by', 'commission_payable_after',
+            'commission_payable_after_other', 'commission_earnings', 'commission_quantity_unit_string', 'commission_type_other', 'other_comm_details', 'is_comm_negotiable', 'is_promoted',
+            'question_1', 'question_2', 'question_3', 'need_logistics_agent', 'other_logistics_agent_details']})
+    ]
     inlines = [fiadm.FileInlineAdmin]
     autocomplete_fields = ['author', 'currency', 'buy_country', 'sell_country', 'country']
 
