@@ -80,10 +80,10 @@
                                         </div>
 
                                         <div>
-                                            <form action="{% url 'applications:application_delete' application.id %}" method="post">
+                                            {% comment %} <form action="{% url 'applications:application_delete' application.id %}" method="post">
                                                 {% csrf_token %}
                                                 <button type="submit" class="dlt-chat">Reject Application</button>
-                                            </form>
+                                            </form> {% endcomment %}
                                             <button class="toggle-contact"><span class="fa fa-bars"></span></button>
                                         </div>
                                     </div>
