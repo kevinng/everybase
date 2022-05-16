@@ -31,7 +31,7 @@ def lead_list(request):
 
     # Logging query
     query = models.LeadQuery(
-        user=request.user.user if request.user is not None else None
+        user=request.user.user if request.user.is_authenticated else None
     )
 
     params = {}
