@@ -1,3 +1,4 @@
+from email.mime import application
 import uuid as uuidlib
 from django.db import models
 import files.models as fimods
@@ -371,19 +372,14 @@ class LeadDetailView(Standard):
 class Application(Standard):
     """Agent application.
 
-    Last updated: 5 May 2022, 12:36 PM
+    Last updated: 16 May 2022, 5:20 PM
     """
     last_messaged = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
     )
-    deleted_by = models.CharField(
-        max_length=20,
-        choices=[
-            ('agent', 'Agent'),
-            ('author', 'Author')
-        ],
+    stopped_follow_up = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
@@ -421,12 +417,24 @@ class Application(Standard):
         blank=True,
         null=True
     )
+
     applicant_comments = models.TextField(
         blank=True,
         null=True
     )
 
     # Not in use
+
+    deleted_by = models.CharField(
+        max_length=20,
+        choices=[
+            ('agent', 'Agent'),
+            ('author', 'Author')
+        ],
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     question_1 = models.TextField(
         blank=True,
@@ -464,6 +472,17 @@ class Application(Standard):
         null=True
     )
 
+    def last_followed_up(self):
+        f = ApplicationFollowUp.objects\
+            .filter(application=self)\
+            .order_by('-created')\
+            .first()
+
+        if f is None:
+            return None
+        
+        return f.created
+
     def __str__(self):
         return f'({self.applicant}, {self.lead} [{self.id}])'
 
@@ -492,7 +511,22 @@ class ApplicationMessage(Standard):
         null=True
     )
 
+class ApplicationFollowUp(Standard):
+    """Application follow up.
 
+    Last updated: 16 May 2022, 5:34 PM
+    """
+    application = models.ForeignKey(
+        'Application',
+        related_name='follow_ups',
+        related_query_name='follow_ups',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    notes = models.TextField(
+        blank=True,
+        null=True
+    )
 
 
 
@@ -622,6 +656,9 @@ class LeadQuery(Standard):
         blank=True,
         db_index=True
     )
+
+    class Meta:
+        verbose_name_plural = 'Lead queries'
 
 class ApplicationQueryLog(Standard):
     """Application query log.

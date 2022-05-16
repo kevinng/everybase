@@ -1,3 +1,4 @@
+from lzma import MODE_FAST
 from django.contrib import admin
 from common import admin as comadm
 from files import admin as fiadm
@@ -17,29 +18,44 @@ class ApplicationQueryLogAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _application_query_log_fields})]
 
+class ApplicationFollowUpInlineAdmin(admin.TabularInline):
+    model = models.ApplicationFollowUp
+    extra = 1
+    fields = ['id', 'created', 'application', 'notes']
+    readonly_fields = ['id', 'created']
+    autocomplete_fields = ['application']
+
 @admin.register(models.Application)
 class ApplicationAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = ['id', 'lead', 'applicant', 'last_messaged', 'created', 'has_experience', 'has_buyers']
+    list_display = ['id', 'lead', 'applicant', 'last_messaged', 'last_followed_up', 'stopped_follow_up', 'created', 'has_experience', 'has_buyers']
     list_editable = [] # Override to speed up loading
-    list_filter = ['lead__lead_type', 'last_messaged', 'created', 'has_experience', 'has_buyers']
+    list_filter = ['last_messaged', 'lead__lead_type', 'created', 'stopped_follow_up', 'has_experience', 'has_buyers']
     search_fields = ['id', 'lead__headline', 'applicant__first_name', 'applicant__last_name']
 
     # Details page settings
     fieldsets = [
         (None, {'fields': ['id']}),
         ('Application details', {'fields': ['lead', 'applicant', 'has_experience', 'has_buyers', 'questions', 'answers', 'applicant_comments']}),
-        ('Timestamps', {'fields': ['last_messaged', 'created', 'updated' , 'deleted']})
+        ('Timestamps', {'fields': ['last_messaged', 'stopped_follow_up', 'created', 'updated' , 'deleted']})
     ]
-
-    # TODO: I need reverse fields on followed-up messages
-
-
-
-
-    # fieldsets = comadm.standard_fieldsets + \
-        # [('Details', {'fields': _application_fields})]
     autocomplete_fields = ['lead', 'applicant']
+    inlines = [ApplicationFollowUpInlineAdmin]
+
+@admin.register(models.ApplicationFollowUp)
+class ApplicationFollowUpAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = ['id', 'created', 'application', 'notes']
+    list_editable = [] # Override to speed up loading
+    search_fields = ['id', 'application__id', 'notes']
+
+    # Details page settings
+    fieldsets = [
+        (None, {'fields': ['id']}),
+        ('Details', {'fields': ['application', 'notes']}),
+        ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
+    ]
+    autocomplete_fields = ['application']
 
 _application_message_fields = ['application', 'author', 'body']
 @admin.register(models.ApplicationMessage)
@@ -217,8 +233,8 @@ class LeadQueryAdmin(comadm.StandardAdmin):
     # Details page settings
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Details', {'fields': ['created', 'user', 'search_phrase', 'country', 'min_commission_percentage', 'max_commission_percentage']}),
-        ('Not in use', {'fields': ['buy_country', 'sell_country', 'count']}),
-        ('Timestamps', {'fields': ['updated', 'deleted']})
+        ('Details', {'fields': ['user', 'search_phrase', 'country', 'min_commission_percentage', 'max_commission_percentage']}),
+        ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
+        ('Not in use', {'fields': ['buy_country', 'sell_country', 'count']})
     ]
     autocomplete_fields = ['user']
