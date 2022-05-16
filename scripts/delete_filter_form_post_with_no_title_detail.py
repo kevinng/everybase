@@ -1,9 +1,7 @@
 from leads import models
 
 def run():
-    ffps = models.FilterFormPost.objects.all()
-
-    for ffp in ffps:
-        if (ffps.title == '' or ffps.title is None) and (ffps.details == '' or ffps.details is None):
-            print('Delete ' + ffps)
-            ffp.delete()
+    for f in models.FilterFormPost.objects.all():
+        if (f.title is None or f.title == '') and (f.details is None or f.details == ''):
+            print('Deleted ' + f)
+            f.delete()
