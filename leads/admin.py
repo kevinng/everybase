@@ -207,17 +207,6 @@ class WhatsAppMessageBodyAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _whatsapp_message_body_fields})]
     autocomplete_fields = ['contactee', 'contactor']
 
-_lead_query_log_fields = [
-    'user',
-    'search_phrase',
-    'buy_sell',
-    'country'
-
-    # Old fields, continue to show them in details
-    'buy_country',
-    'sell_country',
-    'count'
-]
 @admin.register(models.LeadQuery)
 class LeadQueryAdmin(comadm.StandardAdmin):
     # List page settings
