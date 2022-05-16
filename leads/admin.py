@@ -57,18 +57,19 @@ class ApplicationFollowUpAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['application']
 
-_application_message_fields = ['application', 'author', 'body']
 @admin.register(models.ApplicationMessage)
 class ApplicationMessageAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _application_message_fields
-    list_editable = comadm.standard_list_editable + _application_message_fields
-    search_fields = comadm.standard_search_fields + ['application__id',
-        'author__first_name', 'author__last_name']
+    list_display = ['id', 'created', 'application', 'author', 'body']
+    list_editable = [] # Override to speed up loading
+    search_fields = ['id', 'application__id', 'author__first_name', 'author__last_name', 'body']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _application_message_fields})]
+    fieldsets = [
+        (None, {'fields': ['id']}),
+        ('Details', {'fields': ['application', 'author', 'body']}),
+        ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
+    ]
     autocomplete_fields = ['application', 'author']
 
 _lead_comment_fields = ['lead', 'commentor', 'body']
