@@ -251,7 +251,7 @@ class Lead(Standard):
         if self.lead_type == 'buying':
             s += f', {self.lead_type}, to {self.sell_country.name}'
 
-        s += f' [{self.id}]'
+        s += f', {self.author.first_name} {self.author.last_name}, [{self.id}]'
 
         return s
     
