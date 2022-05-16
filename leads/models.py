@@ -561,10 +561,10 @@ class LeadComment(Standard):
             deleted__isnull=True
         ).order_by('created')
 
-class LeadQueryLog(Standard):
-    """Lead query log.
+class LeadQuery(Standard):
+    """Lead query.
 
-    Last updated: 15 April 2022, 11:03 PM
+    Last updated: 16 May 2022, 4:21 PM
     """
     user = models.ForeignKey(
         'relationships.User',
@@ -669,148 +669,6 @@ class WhatsAppMessageBody(Standard):
         db_index=True
     )
     body = models.TextField()
-
-class LeadQuery(Standard):
-    """Lead query
-
-    Last updated: 12 March 2022, 8:32 PM
-    """
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='lead_query',
-        related_query_name='lead_query',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
-    commented_only = models.CharField(
-        max_length=20,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    saved_only = models.CharField(
-        max_length=20,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    buy_sell = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    direct_middleman = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    buy_country = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sell_country = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    goods_services = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    need_agent = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_type = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_type_other = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commented_only_other = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    min_commission = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    max_commission = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    min_avg_deal = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    max_avg_deal = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    comm_negotiable = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_payable_after = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_payable_after_other = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    other_agent_details = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    need_logistics_agent = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    logistics_agent_details = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
 
 class FilterFormPost(Standard):
     """Filter form post by a user.
