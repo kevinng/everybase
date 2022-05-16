@@ -575,7 +575,7 @@ class LeadQuery(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    search = models.CharField(
+    search_phrase = models.CharField(
         max_length=200,
         null=True,
         blank=True,
@@ -587,13 +587,7 @@ class LeadQuery(Standard):
         blank=True,
         db_index=True
     )
-    buy_country = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sell_country = models.CharField(
+    country = models.CharField(
         max_length=200,
         null=True,
         blank=True,
@@ -615,8 +609,19 @@ class LeadQuery(Standard):
         db_index=True
     )
 
-    class Meta:
-        unique_together = ('user', 'search', 'buy_sell', 'buy_country', 'sell_country')
+    # Not in use
+    buy_country = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sell_country = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
 class ApplicationQueryLog(Standard):
     """Application query log.

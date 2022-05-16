@@ -29,11 +29,17 @@ def lead_list(request):
         .filter(deleted__isnull=True)\
         .order_by('-created')
 
+    # Logging query
+    query = models.LeadQuery(
+        user=request.user.user if request.user is not None else None
+    )
+
     params = {}
 
     # Filter by buy/sell
 
     buy_sell = request.GET.get('buy_sell')
+    query.buy_sell = buy_sell # Log
     if buy_sell is not None and buy_sell.strip() != '' and buy_sell != 'buy_or_sell':
         if buy_sell == 'buy_only':
             leads = leads.filter(lead_type='buying')
@@ -46,6 +52,7 @@ def lead_list(request):
     # Filter by country
 
     country = request.GET.get('country')
+    query.country = country # Log
     if country is not None and country.strip() != '' and country != 'any_country':
         c = commods.Country.objects.get(programmatic_key=country)
         leads = leads.filter(Q(buy_country=c) | Q(sell_country=c))
@@ -65,6 +72,7 @@ def lead_list(request):
     # Filter by commissions
     
     min_commission_percentage_filter = request.GET.get('min_commission_percentage_filter')
+    query.min_commission_percentage = float(min_commission_percentage_filter) if min_commission_percentage_filter is not None else None # Log
     if min_commission_percentage_filter is not None and min_commission_percentage_filter.strip() != '':
         # Note: we're only filtering on maximum commission percentage with the slider's
         # minimum and maximum values.
@@ -79,6 +87,7 @@ def lead_list(request):
         params['min_commission_percentage_filter'] = 0
     
     max_commission_percentage_filter = request.GET.get('max_commission_percentage_filter')
+    query.max_commission_percentage = float(max_commission_percentage_filter) if max_commission_percentage_filter is not None else None # Log
     if max_commission_percentage_filter is not None and max_commission_percentage_filter.strip() != '':
         leads = leads.filter(max_commission_percentage__lte=max_commission_percentage_filter)\
             .filter(max_commission_percentage__isnull=False)\
@@ -97,6 +106,7 @@ def lead_list(request):
     # Search
 
     search_phrase = request.GET.get('search_phrase')
+    query.search_phrase = search_phrase # Log
     if search_phrase is not None and search_phrase.strip() != '':
         headline_details_vec = SearchVector('headline_details_vec')
         search_query = SearchQuery(search_phrase)
@@ -128,6 +138,9 @@ def lead_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     params['page_obj'] = page_obj
+
+    # Save log
+    query.save()
 
     return render(request, 'leads/superio/lead_list.html', params)
 

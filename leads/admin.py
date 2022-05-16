@@ -17,20 +17,28 @@ class ApplicationQueryLogAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _application_query_log_fields})]
 
-_application_fields = ['lead', 'applicant', 'last_messaged', 'questions', 'answers',
-    'has_experience', 'has_buyers', 'applicant_comments', 'response']
 @admin.register(models.Application)
 class ApplicationAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _application_fields
-    list_editable = comadm.standard_list_editable + _application_fields
-    list_filter = comadm.standard_list_filter + ['response']
-    search_fields = comadm.standard_search_fields + ['lead__headline', 'applicant__first_name',
-        'applicant__last_name', 'applicant__id', 'lead__id']
+    list_display = ['id', 'lead', 'applicant', 'last_messaged', 'created', 'has_experience', 'has_buyers']
+    list_editable = [] # Override to speed up loading
+    list_filter = ['lead__lead_type', 'last_messaged', 'created', 'has_experience', 'has_buyers']
+    search_fields = ['id', 'lead__headline', 'applicant__first_name', 'applicant__last_name']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _application_fields})]
+    fieldsets = [
+        (None, {'fields': ['id']}),
+        ('Application details', {'fields': ['lead', 'applicant', 'has_experience', 'has_buyers', 'questions', 'answers', 'applicant_comments']}),
+        ('Timestamps', {'fields': ['last_messaged', 'created', 'updated' , 'deleted']})
+    ]
+
+    # TODO: I need reverse fields on followed-up messages
+
+
+
+
+    # fieldsets = comadm.standard_fieldsets + \
+        # [('Details', {'fields': _application_fields})]
     autocomplete_fields = ['lead', 'applicant']
 
 _application_message_fields = ['application', 'author', 'body']
@@ -199,57 +207,29 @@ class WhatsAppMessageBodyAdmin(comadm.StandardAdmin):
         [('Details', {'fields': _whatsapp_message_body_fields})]
     autocomplete_fields = ['contactee', 'contactor']
 
-_lead_query_fields = [
-    'user',
-    'commented_only',
-    'saved_only',
-    'buy_sell',
-    'direct_middleman',
-    'buy_country',
-    'sell_country',
-    'goods_services',
-    'need_agent',
-    'commission_type',
-    'commission_type_other',
-    'min_commission',
-    'max_commission',
-    'min_avg_deal',
-    'max_avg_deal',
-    'comm_negotiable',
-    'commission_payable_after',
-    'commission_payable_after_other',
-    'other_agent_details',
-    'need_logistics_agent',
-    'logistics_agent_details'
-]
-@admin.register(models.LeadQuery)
-class LeadQueryAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _lead_query_fields
-    list_editable = comadm.standard_list_editable + _lead_query_fields
-    search_fields = comadm.standard_search_fields + _lead_query_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _lead_query_fields})]
-    autocomplete_fields = ['user']
-
 _lead_query_log_fields = [
     'user',
-    'search',
+    'search_phrase',
     'buy_sell',
+    'country'
+
+    # Old fields, continue to show them in details
     'buy_country',
     'sell_country',
     'count'
 ]
-@admin.register(models.LeadQueryLog)
-class LeadQueryLogAdmin(comadm.StandardAdmin):
+@admin.register(models.LeadQuery)
+class LeadQueryAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _lead_query_log_fields
-    list_editable = comadm.standard_list_editable + _lead_query_log_fields
-    search_fields = comadm.standard_search_fields + _lead_query_log_fields
+    list_display = ['id', 'created', 'user', 'search_phrase', 'country', 'min_commission_percentage', 'max_commission_percentage']
+    list_editable = [] # Override to speed up listing
+    search_fields = ['id', 'search_phrase', 'user__first_name', 'user__last_name']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _lead_query_log_fields})]
+    fieldsets = [
+        (None, {'fields': ['id']}),
+        ('Details', {'fields': ['created', 'user', 'search_phrase', 'country', 'min_commission_percentage', 'max_commission_percentage']}),
+        ('Not in use', {'fields': ['buy_country', 'sell_country', 'count']}),
+        ('Timestamps', {'fields': ['updated', 'deleted']})
+    ]
     autocomplete_fields = ['user']
