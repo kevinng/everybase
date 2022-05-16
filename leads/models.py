@@ -484,7 +484,7 @@ class Application(Standard):
         return f.created
 
     def __str__(self):
-        return f'({self.applicant}, {self.lead} [{self.id}])'
+        return f'{self.applicant.first_name} {self.applicant.last_name}, {self.lead.headline} [{self.id}]'
 
 class ApplicationMessage(Standard):
     """Application message.
