@@ -34,7 +34,10 @@
 
     <div class="auto-container">
         <h4>Buy/Sell</h4>
-        <p>{% if lead.lead_type == 'buying' %}Buy{% elif lead.lead_type == 'selling' %}Sell{% endif %}</p>
+        <p>{% if lead.lead_type == 'selling' %}Sell{% elif lead.lead_type == 'buying' %}Buy{% endif %}</p>
+
+        <h4>{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.lead_type == 'buying' %}Direct buyer{% endif %} or middleman?</h4>
+        <p>{% if lead.author_type == 'direct' %}{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.author_type == 'buying' %}Direct buyer{% endif %}{% elif lead.lead_type == 'broker' %}Middleman{% endif %}</p>
 
         <h4>Country</h4>
         <p>{% if lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% elif lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% endif %}</p>
