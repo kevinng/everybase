@@ -599,6 +599,16 @@ class LeadQuery(Standard):
         blank=True,
         db_index=True
     )
+    min_commission_percentage = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    max_commission_percentage = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     count = models.IntegerField(
         default=0,
