@@ -242,7 +242,17 @@ class Lead(Standard):
     )
 
     def __str__(self):
-        return f'({self.headline}, {self.min_commission_percentage}, {self.max_commission_percentage}, {self.buy_country}, {self.sell_country} [{self.id}])'
+        s = self.headline
+        if self.min_commission_percentage is not None and self.max_commission_percentage is not None:
+            s += f', {self.min_commission_percentage}% to {self.max_commission_percentage}'
+        if self.lead_type == 'selling':
+            s += f', {self.lead_type}, from {self.buy_country.name}'
+        if self.lead_type == 'buying':
+            s += f', {self.lead_type}, to {self.sell_country.name}'
+
+        s += f' [{self.id}]'
+
+        return s
     
     def refresh_slug(self):
         first_lead = Lead.objects.all().order_by('-id').first()

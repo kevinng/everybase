@@ -380,7 +380,7 @@ class User(commods.Standard):
             self.country != None
 
     def __str__(self):
-        return f'({self.first_name}, {self.last_name}, {self.email}, {self.phone_number} [{self.id}])'
+        return f'{self.first_name} {self.last_name} [{self.id}]'
 
     # Not in use
 
