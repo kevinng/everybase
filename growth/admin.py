@@ -328,14 +328,9 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
         [(None, {'fields': ['harvested', 'name', 'country', 'request',
             'email', 'domain']})]
 
-class EmailInlineAdmin(admin.TabularInline):
-    model = mod.EmailStatus.emails.through
-    extra = 1
-    autocomplete_fields = ['emailstatus']
-
 @admin.register(mod.EmailStatus)
 class EmailStatusAdmin(comadm.ChoiceAdmin):
-    inlines=[EmailInlineAdmin]
+    pass
 
 @admin.register(mod.GmassCampaignTag)
 class GmassCampaignTagAdmin(comadm.ChoiceAdmin):
