@@ -58,6 +58,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
         'num_messages',
         'applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link',
         'lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link',
+        'lead_headline', 'lead_details', 'lead_type', 'lead_country', 'lead_commission',
         'random_string_for_password'
     ]
     fieldsets = [
@@ -65,6 +66,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
         ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'internal_notes', 'random_string_for_password']}),
         ('Applicant', {'fields': ['applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link']}),
         ('Lead author', {'fields': ['lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link']}),
+        ('Lead', {'fields': ['lead_headline', 'lead_details', 'lead_type', 'lead_country', 'lead_commission']}),
         ('Application details', {'fields': ['lead', 'applicant', 'has_experience', 'has_buyers', 'questions', 'answers', 'applicant_comments']}),
         ('Timestamps', {'fields': ['updated' , 'deleted']})
     ]
@@ -145,6 +147,28 @@ class ApplicationAdmin(comadm.StandardAdmin):
         choices = string.ascii_lowercase + string.digits
         password_length = 8
         return ''.join(random.choice(choices) for i in range(password_length))
+
+    def lead_headline(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/leads/lead/{obj.lead.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.lead.headline}</a>')
+
+    def lead_type(self, obj):
+        return obj.lead.lead_type
+
+    def lead_country(self, obj):
+        if obj.lead.lead_type == 'selling':
+            return obj.lead.buy_country
+        elif obj.lead.lead_type == 'buying':
+            return obj.lead.sell_country
+
+        return None
+    
+    def lead_commission(self, obj):
+        return f'{obj.min_commission_percentage}% to {obj.max_commission_percentage}%'
+    
+    def lead_details(self, obj):
+        return obj.lead.details
 
 @admin.register(models.ApplicationMessage)
 class ApplicationMessageAdmin(comadm.StandardAdmin):
