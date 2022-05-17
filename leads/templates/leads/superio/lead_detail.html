@@ -46,7 +46,7 @@
         <p>{{ lead.min_commission_percentage }}% to {{ lead.max_commission_percentage }}%</p>
 
         <h4>Lead Details</h4>
-        <p>{{ lead.details }}</p>
+        <p>{{ lead.details|linebreaksbr }}</p>
 
         {% if not request.user.is_authenticated %}
             <div class="comments-area">
