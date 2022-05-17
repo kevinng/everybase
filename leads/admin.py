@@ -58,7 +58,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
         'num_messages',
         'applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link',
         'lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link',
-        'lead_headline', 'lead_details', 'lead_type', 'lead_country', 'lead_commission',
+        'lead_headline', 'lead_details', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission',
         'random_string_for_password'
     ]
     fieldsets = [
@@ -66,7 +66,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
         ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'internal_notes', 'random_string_for_password']}),
         ('Applicant', {'fields': ['applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link']}),
         ('Lead author', {'fields': ['lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link']}),
-        ('Lead', {'fields': ['lead_headline', 'lead_details', 'lead_type', 'lead_country', 'lead_commission']}),
+        ('Lead', {'fields': ['lead_headline', 'lead_details', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission']}),
         ('Application details', {'fields': ['lead', 'applicant', 'has_experience', 'has_buyers', 'questions', 'answers', 'applicant_comments']}),
         ('Timestamps', {'fields': ['updated' , 'deleted']})
     ]
@@ -156,13 +156,11 @@ class ApplicationAdmin(comadm.StandardAdmin):
     def lead_type(self, obj):
         return obj.lead.lead_type
 
-    def lead_country(self, obj):
-        if obj.lead.lead_type == 'selling':
-            return obj.lead.buy_country
-        elif obj.lead.lead_type == 'buying':
-            return obj.lead.sell_country
+    def lead_buy_country(self, obj):
+        return obj.lead.buy_country
 
-        return None
+    def lead_sell_country(self, obj):
+        return obj.lead.sell_country
     
     def lead_commission(self, obj):
         return f'{obj.min_commission_percentage}% to {obj.max_commission_percentage}%'
