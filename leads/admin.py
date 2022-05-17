@@ -64,12 +64,12 @@ class ApplicationAdmin(comadm.StandardAdmin):
     ]
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'internal_notes', 'random_string_for_password']}),
+        ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'updated', 'internal_notes', 'random_string_for_password']}),
         ('Applicant', {'fields': ['applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link']}),
         ('Lead author', {'fields': ['lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link']}),
         ('Lead', {'fields': ['lead_headline', 'lead_everybase_link', 'lead_details', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission']}),
         ('Application details', {'fields': ['lead', 'applicant', 'has_experience', 'has_buyers', 'questions', 'answers', 'applicant_comments']}),
-        ('Timestamps', {'fields': ['updated' , 'deleted']})
+        ('Timestamps', {'fields': ['deleted']})
     ]
     autocomplete_fields = ['lead', 'applicant']
     inlines = [ApplicationMessageInlineAdmin]
