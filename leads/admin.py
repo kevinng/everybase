@@ -6,6 +6,7 @@ from everybase import settings
 
 from django.utils.html import format_html
 from django.contrib import admin
+from django.urls import reverse
 
 from common import admin as comadm
 from files import admin as fiadm
@@ -58,7 +59,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
         'num_messages',
         'applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link',
         'lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link',
-        'lead_headline', 'lead_details', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission',
+        'lead_headline', 'lead_details', 'lead_everybase_link', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission',
         'random_string_for_password'
     ]
     fieldsets = [
@@ -66,7 +67,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
         ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'internal_notes', 'random_string_for_password']}),
         ('Applicant', {'fields': ['applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link']}),
         ('Lead author', {'fields': ['lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link']}),
-        ('Lead', {'fields': ['lead_headline', 'lead_details', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission']}),
+        ('Lead', {'fields': ['lead_headline', 'lead_everybase_link', 'lead_details', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission']}),
         ('Application details', {'fields': ['lead', 'applicant', 'has_experience', 'has_buyers', 'questions', 'answers', 'applicant_comments']}),
         ('Timestamps', {'fields': ['updated' , 'deleted']})
     ]
@@ -152,6 +153,10 @@ class ApplicationAdmin(comadm.StandardAdmin):
         link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
         link += f'/leads/lead/{obj.lead.id}/change'
         return format_html(f'<a href="{link}" target="{link}">{obj.lead.headline}</a>')
+
+    def lead_everybase_link(self, obj):
+        link = urljoin(settings.BASE_URL, reverse('leads:lead_detail', args=[obj.lead.slug_link]))
+        return format_html(f'<a href="{link}" target="{link}">{link}</a>')
 
     def lead_type(self, obj):
         return obj.lead.lead_type
