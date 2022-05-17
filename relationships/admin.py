@@ -92,22 +92,29 @@ class UserInlineAdmin(admin.TabularInline):
     # model = gromods.EmailStatus.emails.through
     model = models.User
     extra = 1
-    autocomplete_fields = ['django_user', 'languages',
-        'country', 'state', 'phone_number', 'email']
+    fields = ['user_link']
+    readonly_fields = ['user_link']
 
-_email_fields = ['verified', 'email', 'notes', 'invalid_email',
-    'import_job']
+    def user_link(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/relationships/user/{obj.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.first_name} {obj.last_name}</a>')
+
+_email_fields = ['verified', 'email', 'notes', 'invalid_email', 'import_job']
 @admin.register(models.Email)
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _email_fields
-    list_editable = comadm.standard_list_editable + ['email', 'notes']
-    list_filter = comadm.standard_list_filter + ['import_job']
-    search_fields = comadm.standard_search_fields + ['email']
+    list_display = ['id', 'created', 'email', 'do_not_email', 'import_job']
+    list_editable = ['do_not_email'] # Override to speed up loading
+    list_filter = ['do_not_email', 'import_job']
+    search_fields = ['id', 'email']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _email_fields})
+    fieldsets = [
+        (None, {'fields': ['id']}),
+        ('Details', {'fields': ['email', 'do_not_email', 'import_job', 'invalid_email']}),
+        ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
     ]
     autocomplete_fields = ['import_job', 'invalid_email']
     inlines = [

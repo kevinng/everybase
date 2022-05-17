@@ -81,10 +81,10 @@ class PhoneNumber(commods.Standard):
 class Email(commods.Standard):
     """Email.
 
-    Last updated: 15 October 2021, 11:05 PM
+    Last updated: 17 May 2022, 8:57 PM
     """
 
-    verified = models.DateTimeField(
+    do_not_email = models.DateField(
         null=True,
         blank=True,
         db_index=True
@@ -114,6 +114,13 @@ class Email(commods.Standard):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    # Not in use
+    verified = models.DateTimeField(
+        null=True,
+        blank=True,
         db_index=True
     )
 
