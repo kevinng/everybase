@@ -88,11 +88,6 @@ class WorldOfChemicalsSupplierInlineAdmin(admin.TabularInline):
         'alt_email_2', 'alt_email_3', 'invalid_email', 'invalid_owner_email',
         'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
 
-class EmailStatusInlineAdmin(admin.TabularInline):
-    model = gromods.EmailStatus.emails.through
-    extra = 1
-    autocomplete_fields = ['emailstatus']
-
 class UserInlineAdmin(admin.TabularInline):
     # model = gromods.EmailStatus.emails.through
     model = models.User
@@ -116,7 +111,6 @@ class EmailAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['import_job', 'invalid_email']
     inlines = [
-        EmailStatusInlineAdmin,
         UserInlineAdmin
         # GmassEmailStatusInlineAdmin,
         # GmassCampaignResultInlineAdmin,

@@ -328,10 +328,6 @@ class OKChemBuyingRequestAdmin(admin.ModelAdmin):
         [(None, {'fields': ['harvested', 'name', 'country', 'request',
             'email', 'domain']})]
 
-@admin.register(mod.EmailStatus)
-class EmailStatusAdmin(comadm.ChoiceAdmin):
-    pass
-
 @admin.register(mod.GmassCampaignTag)
 class GmassCampaignTagAdmin(comadm.ChoiceAdmin):
     pass

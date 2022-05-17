@@ -1235,19 +1235,7 @@ class OKChemBuyingRequest(Standard):
     
     def __str__(self):
         return f'({self.email} [{self.id}])'
-
-class EmailStatus(Choice):
-    """Email status.
-    
-    Last updated: 26 August 2021, 11:47 PM
-    """
-    emails = models.ManyToManyField(
-        'relationships.Email',
-        related_name='statuses',
-        related_query_name='statuses',
-        blank=True
-    )
-
+        
 class GmassCampaignTag(Choice):
     """Gmass campaign tag.
     
