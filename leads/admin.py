@@ -1,8 +1,17 @@
-from lzma import MODE_FAST
+import random, string
+
+from urllib.parse import urljoin
+
+from everybase import settings
+
+from django.utils.html import format_html
 from django.contrib import admin
+
 from common import admin as comadm
 from files import admin as fiadm
 from leads import models
+
+from relationships.utilities.get_non_tracking_whatsapp_link import get_non_tracking_whatsapp_link
 
 _application_query_log_fields = ['user', 'status']
 @admin.register(models.ApplicationQueryLog)
@@ -19,45 +28,123 @@ class ApplicationQueryLogAdmin(comadm.StandardAdmin):
     fieldsets = comadm.standard_fieldsets + \
         [('Details', {'fields': _application_query_log_fields})]
 
-class ApplicationFollowUpInlineAdmin(admin.TabularInline):
-    model = models.ApplicationFollowUp
-    extra = 1
-    fields = ['id', 'created', 'application', 'notes']
-    readonly_fields = ['id', 'created']
-    autocomplete_fields = ['application']
+class ApplicationMessageInlineAdmin(admin.TabularInline):
+    model = models.ApplicationMessage
+    extra = 0
+    fields = ['created', 'author_link', 'message_link']
+    readonly_fields = ['created', 'author_link', 'message_link']
+
+    def author_link(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/relationships/user/{obj.author.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.author.first_name} {obj.author.last_name}</a>')
+
+    def message_link(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/leads/applicationmessage/{obj.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.body}</a>')
 
 @admin.register(models.Application)
 class ApplicationAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'lead', 'applicant', 'last_messaged', 'last_followed_up', 'stopped_follow_up', 'created', 'has_experience', 'has_buyers']
+    list_display = ['id', 'lead', 'applicant', 'last_messaged', 'num_messages','stopped_follow_up', 'created', 'updated', 'has_experience', 'has_buyers']
     list_editable = [] # Override to speed up loading
     list_filter = ['last_messaged', 'lead__lead_type', 'created', 'stopped_follow_up', 'has_experience', 'has_buyers']
-    search_fields = ['id', 'lead__headline', 'applicant__first_name', 'applicant__last_name']
+    search_fields = ['id', 'lead__headline', 'applicant__first_name', 'applicant__last_name', 'internal_notes']
 
     # Details page settings
+    readonly_fields = comadm.standard_readonly_fields + [
+        'num_messages',
+        'applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link',
+        'lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link',
+        'random_string_for_password'
+    ]
     fieldsets = [
         (None, {'fields': ['id']}),
+        ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'internal_notes', 'random_string_for_password']}),
+        ('Applicant', {'fields': ['applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link']}),
+        ('Lead author', {'fields': ['lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link']}),
         ('Application details', {'fields': ['lead', 'applicant', 'has_experience', 'has_buyers', 'questions', 'answers', 'applicant_comments']}),
-        ('Timestamps', {'fields': ['last_messaged', 'stopped_follow_up', 'created', 'updated' , 'deleted']})
+        ('Timestamps', {'fields': ['updated' , 'deleted']})
     ]
     autocomplete_fields = ['lead', 'applicant']
-    inlines = [ApplicationFollowUpInlineAdmin]
+    inlines = [ApplicationMessageInlineAdmin]
 
-@admin.register(models.ApplicationFollowUp)
-class ApplicationFollowUpAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = ['id', 'created', 'application', 'notes']
-    list_editable = [] # Override to speed up loading
-    search_fields = ['id', 'application__id', 'notes']
+    def applicant_link(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/relationships/user/{obj.applicant.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.applicant.first_name} {obj.applicant.last_name}</a>')
 
-    # Details page settings
-    fieldsets = [
-        (None, {'fields': ['id']}),
-        ('Details', {'fields': ['application', 'notes']}),
-        ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
-    ]
-    autocomplete_fields = ['application']
+    def applicant_fb_profile(self, obj):
+        if obj.applicant.fb_profile is None:
+            return None
+
+        return format_html(f'<a href="{obj.applicant.fb_profile}" target="{obj.applicant.fb_profile}">{obj.applicant.fb_profile}</a>')
+
+    def applicant_email(self, obj):
+        if obj.applicant.email is None:
+            return None
+
+        return obj.applicant.email.email
+
+    def applicant_whatsapp(self, obj):
+        if obj.applicant.phone_number is None:
+            return None
+
+        link = get_non_tracking_whatsapp_link(
+            obj.applicant.phone_number.country_code,
+            obj.applicant.phone_number.national_number
+        )
+        return format_html(f'<a href="{link}" target="{link}">{obj.applicant.phone_number}</a>')
+
+    def applicant_password_change_link(self, obj):
+        if obj.applicant.django_user is None:
+            return None
+
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/auth/user/{obj.applicant.django_user.id}/password'
+        return format_html(f'<a href="{link}" target="{link}">{link}</a>')
+
+    def lead_author_link(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/relationships/user/{obj.lead.author.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.lead.author.first_name} {obj.lead.author.last_name}</a>')
+
+    def lead_author_fb_profile(self, obj):
+        if obj.lead.author.fb_profile is None:
+            return None
+
+        return format_html(f'<a href="{obj.lead.author.fb_profile}" target="{obj.lead.author.fb_profile}">{obj.lead.author.fb_profile}</a>')
+
+    def lead_author_email(self, obj):
+        if obj.lead.author.email is None:
+            return None
+
+        return obj.lead.author.email.email
+
+    def lead_author_whatsapp(self, obj):
+        if obj.lead.author.phone_number is None:
+            return None
+
+        link = get_non_tracking_whatsapp_link(
+            obj.lead.author.phone_number.country_code,
+            obj.lead.author.phone_number.national_number
+        )
+        return format_html(f'<a href="{link}" target="{link}">{obj.lead.author.phone_number}</a>')
+
+    def lead_author_password_change_link(self, obj):
+        if obj.lead.author.django_user is None:
+            return None
+
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/auth/user/{obj.lead.author.django_user.id}/password'
+        return format_html(f'<a href="{link}" target="{link}">{link}</a>')
+
+    def random_string_for_password(self, _):
+        choices = string.ascii_lowercase + string.digits
+        password_length = 8
+        return ''.join(random.choice(choices) for i in range(password_length))
 
 @admin.register(models.ApplicationMessage)
 class ApplicationMessageAdmin(comadm.StandardAdmin):

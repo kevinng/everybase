@@ -1,3 +1,5 @@
+from everybase import settings
+
 from relationships import views as relviews
 from common import views as comviews
 
@@ -43,8 +45,8 @@ urlpatterns = [
     path('files/', include('files.urls')),
 
     # Django admin obfuscated URL
-    path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', include('loginas.urls')),
-    path('3yJmUVGVJosFPDiZ6LyU4WARUiWXgMxCyfA6/', admin.site.urls),
+    path(settings.ADMIN_PATH + '/', include('loginas.urls')),
+    path(settings.ADMIN_PATH + '/', admin.site.urls),
 
     # Django Rest Framework login
     path('api-auth/', include('rest_framework.urls')),

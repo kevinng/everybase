@@ -372,7 +372,7 @@ class LeadDetailView(Standard):
 class Application(Standard):
     """Agent application.
 
-    Last updated: 16 May 2022, 5:20 PM
+    Last updated: 17 May 2022, 1:39 PM
     """
     last_messaged = models.DateTimeField(
         null=True,
@@ -419,6 +419,10 @@ class Application(Standard):
     )
 
     applicant_comments = models.TextField(
+        blank=True,
+        null=True
+    )
+    internal_notes = models.TextField(
         blank=True,
         null=True
     )
@@ -472,16 +476,10 @@ class Application(Standard):
         null=True
     )
 
-    def last_followed_up(self):
-        f = ApplicationFollowUp.objects\
-            .filter(application=self)\
-            .order_by('-created')\
-            .first()
-
-        if f is None:
-            return None
-        
-        return f.created
+    def num_messages(self):
+        return ApplicationMessage.objects.filter(
+            application=self
+        ).count()
 
     def __str__(self):
         return f'{self.applicant.first_name} {self.applicant.last_name}, {self.lead.headline} [{self.id}]'
@@ -511,26 +509,8 @@ class ApplicationMessage(Standard):
         null=True
     )
 
-class ApplicationFollowUp(Standard):
-    """Application follow up.
-
-    Last updated: 16 May 2022, 5:34 PM
-    """
-    application = models.ForeignKey(
-        'Application',
-        related_name='follow_ups',
-        related_query_name='follow_ups',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    notes = models.TextField(
-        blank=True,
-        null=True
-    )
-
-
-
-
+    def __str__(self):
+        return f'{self.author.first_name} {self.author.last_name}: {self.body} [{self.id}]'
 
 
 

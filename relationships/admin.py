@@ -1,15 +1,24 @@
+import random, string
+
+from urllib.parse import urljoin
+
+from everybase import settings
+
+from django.utils.html import format_html
 from django.contrib import admin
 
-from . import models as mod
-from common import admin as comadm, models
+from relationships import models
+from common import admin as comadm
 from growth import models as gromods
 
-@admin.register(mod.PhoneNumberType)
+from relationships.utilities.get_non_tracking_whatsapp_link import get_non_tracking_whatsapp_link
+
+@admin.register(models.PhoneNumberType)
 class PhoneNumberTypeAdmin(comadm.ChoiceAdmin):
     pass
 
 _phone_number_fields = ['country_code', 'national_number']
-@admin.register(mod.PhoneNumber)
+@admin.register(models.PhoneNumber)
 class PhoneNumberAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _phone_number_fields
@@ -86,14 +95,14 @@ class EmailStatusInlineAdmin(admin.TabularInline):
 
 class UserInlineAdmin(admin.TabularInline):
     # model = gromods.EmailStatus.emails.through
-    model = mod.User
+    model = models.User
     extra = 1
     autocomplete_fields = ['django_user', 'languages',
         'country', 'state', 'phone_number', 'email']
 
 _email_fields = ['verified', 'email', 'notes', 'invalid_email',
     'import_job']
-@admin.register(mod.Email)
+@admin.register(models.Email)
 class EmailAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _email_fields
@@ -122,12 +131,12 @@ class EmailAdmin(comadm.StandardAdmin):
     ]
 
 class EmailInlineAdmin(admin.TabularInline):
-    model = mod.Email
+    model = models.Email
     extra = 1
     autocomplete_fields = ['import_job']
 
 _invalid_email_fields = ['email', 'import_job']
-@admin.register(mod.InvalidEmail)
+@admin.register(models.InvalidEmail)
 class InvalidEmailAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _invalid_email_fields
@@ -142,42 +151,66 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['import_job']
     inlines = [EmailInlineAdmin]
 
-_user_fields = ['registered', 'django_user',
-
-    'first_name', 'last_name', 'has_company', 'company_name',
-
-    'goods_string', 'languages_string', 'country', 'phone_number',
-    'email', 'internal_notes',
-
-    'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent',
-
-    'slug_link', 'slug_tokens',
-
-    'impressions', 'clicks']
-_user_display_editable_fields = ['email', 'phone_number', 'first_name',
-    'last_name', 'goods_string', 'languages_string', 'is_seller', 'is_sell_agent',
-    'internal_notes', 'is_buyer', 'is_buy_agent']
-@admin.register(mod.User)
+@admin.register(models.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = ['id'] + _user_display_editable_fields
-    list_editable = _user_display_editable_fields
-    list_filter = comadm.standard_list_filter + ['registered', 'has_company',
-        'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent']
-    search_fields = comadm.standard_search_fields + [
-        'first_name', 'last_name', 'company_name', 'goods_string',
-        'languages_string', 'country__name', 'email__email',
-        'phone_number__country_code', 'phone_number__national_number',
-        'internal_notes', 'uuid']
+    list_per_page = 100
+    list_display = ['id', 'full_name', 'country', 'email', 'whatsapp_phone_number', 'created']
+    list_editable = [] # Override to speed up loading
+    list_filter = ['created']
+    search_fields = ['id', 'uuid', 'first_name', 'last_name', 'country__name', 'email__email', 'internal_notes']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        ('Details', {'fields': _user_fields})
+    readonly_fields = comadm.standard_readonly_fields + ['uuid', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password']
+    fieldsets = [
+        (None, {'fields': ['id', 'uuid']}),
+        ('Growth', {'fields': ['registered', 'django_user', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'fb_profile', 'internal_notes']}),
+        ('Details', {'fields': ['first_name', 'last_name', 'email', 'phone_number', 'country']}),
+        ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
+        ('Not in use', {'fields': [
+            'slug_link', 'slug_tokens',
+            'impressions', 'clicks',
+            'has_company', 'company_name', 'goods_string', 'buy_agent_details', 'sell_agent_details', 'logistics_agent_details',
+            'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent', 'is_logistics_agent',
+            'state', 'state_string', 'languages', 'languages_string'
+        ]})
     ]
     autocomplete_fields = ['django_user', 'country', 'phone_number', 'email']
 
+    def full_name(self, obj):
+        return f'{obj.first_name} {obj.last_name}'
+
+    def password_change_link(self, obj):
+        if obj.django_user is None:
+            return None
+
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/auth/user/{obj.django_user.id}/password'
+        return format_html(f'<a href="{link}" target="{link}">{link}</a>')
+
+    def random_string_for_password(self, obj):
+        choices = string.ascii_lowercase + string.digits
+        password_length = 8
+        return ''.join(random.choice(choices) for i in range(password_length))
+
+    def email_string(self, obj):
+        if obj.email is None:
+            return None
+
+        return obj.email.email
+
+    def whatsapp_phone_number(self, obj):
+        if obj.phone_number is None:
+            return None
+
+        link = get_non_tracking_whatsapp_link(
+            obj.phone_number.country_code,
+            obj.phone_number.national_number
+        )
+        return format_html(f'<a href="{link}" target="{link}">{obj.phone_number}</a>')
+
 _login_token_fields = ['user', 'activated', 'killed','token']
-@admin.register(mod.LoginToken)
+@admin.register(models.LoginToken)
 class LoginTokenAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _login_token_fields
@@ -193,7 +226,7 @@ class LoginTokenAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['user']
 
 _register_token_fields = ['user', 'activated', 'killed', 'token']
-@admin.register(mod.RegisterToken)
+@admin.register(models.RegisterToken)
 class RegisterTokenAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _register_token_fields
@@ -214,7 +247,7 @@ _user_agent_fields = ['user', 'ip_address', 'is_routable', 'is_mobile',
     'browser_family', 'browser_version', 'browser_version_string',
     'os', 'os_family', 'os_version', 'os_version_string', 'device',
     'device_family']
-@admin.register(mod.UserAgent)
+@admin.register(models.UserAgent)
 class UserAgentAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_agent_fields
@@ -236,7 +269,7 @@ class UserAgentAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['user']
 
 _user_comment_fields = ['commentee', 'commentor', 'body']
-@admin.register(mod.UserComment)
+@admin.register(models.UserComment)
 class UserCommentAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_comment_fields
@@ -253,7 +286,7 @@ class UserCommentAdmin(comadm.StandardAdmin):
 
 _user_detail_views_fields = ['viewee', 'viewer', 'comments_view_count',
     'leads_view_count']
-@admin.register(mod.UserDetailView)
+@admin.register(models.UserDetailView)
 class UserDetailViewAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_detail_views_fields
@@ -269,7 +302,7 @@ class UserDetailViewAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['viewee', 'viewer']
 
 _saved_user_fields = ['active', 'saver', 'savee']
-@admin.register(mod.SavedUser)
+@admin.register(models.SavedUser)
 class SavedUserAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _saved_user_fields
@@ -288,7 +321,7 @@ _user_query_fields = ['user', 'commented_only', 'saved_only', 'connected_only',
 'first_name', 'last_name', 'company_name', 'country', 'goods_string',
 'languages', 'is_buy_agent', 'buy_agent_details', 'is_sell_agent',
 'sell_agent_details', 'is_logistics_agent', 'logistics_agent_details']
-@admin.register(mod.UserQuery)
+@admin.register(models.UserQuery)
 class UserQueryAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_query_fields

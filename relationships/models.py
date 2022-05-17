@@ -73,7 +73,7 @@ class PhoneNumber(commods.Standard):
     )
 
     def __str__(self):
-        return f'(+{self.country_code} {self.national_number}, [{self.id}])'
+        return f'+{self.country_code} {self.national_number}'
 
     class Meta:
         unique_together = ['country_code', 'national_number']
@@ -118,7 +118,7 @@ class Email(commods.Standard):
     )
 
     def __str__(self):
-        return f'({self.email} [{self.id}])'
+        return f'{self.email}'
 
 class InvalidEmail(commods.Standard):
     """Invalid email.
@@ -142,12 +142,12 @@ class InvalidEmail(commods.Standard):
     )
 
     def __str__(self):
-        return f'({self.email} [{self.id}])'
+        return f'{self.email} [{self.id}]'
 
 class User(commods.Standard):
     """User details.
 
-    Last updated: 5 May 2022, 1:13 PM
+    Last updated: 17 May 2022, 11:11 AM
     """
     registered = models.DateTimeField(
         null=True,
@@ -206,6 +206,11 @@ class User(commods.Standard):
         related_name='users_w_this_country',
         related_query_name='users_w_this_country',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    fb_profile = models.URLField(
         null=True,
         blank=True,
         db_index=True

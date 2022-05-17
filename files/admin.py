@@ -1,5 +1,4 @@
-from everybase.settings import MEDIA_URL, AWS_S3_KEY_LEAD_IMAGE, \
-    AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL
+from everybase.settings import MEDIA_URL, AWS_S3_KEY_LEAD_IMAGE, AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL
 from urllib.parse import urljoin
 from django.utils.html import format_html
 from django.contrib import admin
