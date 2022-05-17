@@ -49,14 +49,14 @@ class ApplicationMessageInlineAdmin(admin.TabularInline):
 class ApplicationAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'last_messaged', 'num_messages', 'lead', 'applicant', 'stopped_follow_up', 'created', 'updated', 'has_experience', 'has_buyers']
+    list_display = ['id', 'last_messaged', 'num_messages', 'internal_notes_num_char', 'lead', 'applicant', 'stopped_follow_up', 'created', 'updated', 'has_experience', 'has_buyers']
     list_editable = [] # Override to speed up loading
     list_filter = ['last_messaged', 'lead__lead_type', 'created', 'stopped_follow_up', 'has_experience', 'has_buyers']
     search_fields = ['id', 'lead__headline', 'applicant__first_name', 'applicant__last_name', 'internal_notes']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + [
-        'num_messages',
+        'num_messages', 'internal_notes_num_char',
         'applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link',
         'lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link',
         'lead_headline', 'lead_details', 'lead_everybase_link', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission',
@@ -172,6 +172,12 @@ class ApplicationAdmin(comadm.StandardAdmin):
     
     def lead_details(self, obj):
         return obj.lead.details
+
+    def internal_notes_num_char(self, obj):
+        if obj.internal_notes is None:
+            return 0
+
+        return len(obj.internal_notes)
 
 @admin.register(models.ApplicationMessage)
 class ApplicationMessageAdmin(comadm.StandardAdmin):
