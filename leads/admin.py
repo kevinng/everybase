@@ -168,7 +168,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
         return obj.lead.sell_country
     
     def lead_commission(self, obj):
-        return f'{obj.min_commission_percentage}% to {obj.max_commission_percentage}%'
+        return f'{obj.lead.min_commission_percentage}% to {obj.lead.max_commission_percentage}%'
     
     def lead_details(self, obj):
         return obj.lead.details
