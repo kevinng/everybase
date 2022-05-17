@@ -29,7 +29,7 @@
                             <div class="filter-block">
                                 <h4>Search</h4>
                                 <div class="form-group">
-                                    <input type="text" name="search_phrase"{% if search_phrase != None %} value="{{ search_phrase }}"{% endif %}>
+                                    <input id="search_phrase" type="text" name="search_phrase"{% if search_phrase != None %} value="{{ search_phrase }}"{% endif %}>
                                     <span class="icon flaticon-search-3"></span>
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
                             <div class="filter-block">
                                 <h4>Buy/Sell</h4>
                                 <div class="form-group">
-                                    <select name="buy_sell" class="chosen-select">
+                                    <select id="buy_sell" name="buy_sell" class="chosen-select">
                                         <option value="buy_or_sell"{% if buy_sell == 'buy_or_sell' %} selected{% endif %}>Buy or Sell</option>
                                         <option value="buy_only"{% if buy_sell == 'buy_only' %} selected{% endif %}>Buy only</option>
                                         <option value="sell_only"{% if buy_sell == 'sell_only' %} selected{% endif %}>Sell only</option>
@@ -49,7 +49,7 @@
                             <div class="filter-block">
                                 <h4>Country</h4>
                                 <div class="form-group">
-                                    <select name="country" class="chosen-select">
+                                    <select id="country" name="country" class="chosen-select">
                                         <option value="any_country">Any country</option>
                                         {% for c in countries %}
                                             <option value="{{ c.programmatic_key }}"{% if country == c.programmatic_key %} selected{% endif %}>{{ c.name }}</option>
@@ -76,7 +76,7 @@
                             </div>
 
                             <div class="filter-block">
-                                <button type="submit" class="theme-btn btn-style-one">Search</button>
+                                <button id="submit" type="submit" class="theme-btn btn-style-one">Search</button>
                                 <a href="{% url 'leads:lead_list' %}" class="theme-btn btn-style-two">Reset</a>
                             </div>
                         </form>
@@ -114,14 +114,19 @@
 
 {% comment %}
 $(document).ready(function() {
+    $submit = $('#submit')
     $next_page = $('.next_page')
     $prev_page = $('.prev_page')
 
     $commission_range_slider = $('.commission-range-slider')
     $commission_amount_min = $('.commission-amount .min')
     $commission_amount_max = $('.commission-amount .max')
+
     $min_commission_percentage_filter = $('#min_commission_percentage_filter')
     $max_commission_percentage_filter = $('#max_commission_percentage_filter')
+    $search_phrase = $('#search_phrase')
+    $buy_sell = $('#buy_sell')
+    $country = $('#country')
 
     // Amplitude call on next page
     function next_page_clicked() {
@@ -164,8 +169,22 @@ $(document).ready(function() {
         $commission_amount_min.text($commission_range_slider.slider('values', 0))
         $commission_amount_max.text($commission_range_slider.slider('values', 1))
     }
+
+    // Amplitude call on form submit
+    function submit_clicked(menu_type) {
+        var event = 'discovery - searched leads'
+        var props = {
+            'search_phrase': $search_phrase.val(),
+            'buy_sell': $buy_sell.val(),
+            'country': $country.val(),
+            'min_commission_percentage': $min_commission_percentage_filter.val(),
+            'max_commission_percentage': $max_commission_percentage_filter.val(),
+        }
+        amplitude.getInstance().logEvent(event, props)
+    }
+    $submit.click(function() { submit_clicked() })
 })
 {% endcomment %}
 {% block other_scripts %}
-<script>$(document).ready((function(){$next_page=$(".next_page"),$prev_page=$(".prev_page"),$commission_range_slider=$(".commission-range-slider"),$commission_amount_min=$(".commission-amount .min"),$commission_amount_max=$(".commission-amount .max"),$min_commission_percentage_filter=$("#min_commission_percentage_filter"),$max_commission_percentage_filter=$("#max_commission_percentage_filter"),$next_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list next page",{current_page:"{{ page_obj.number }}"})})),$prev_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list previous page",{current_page:"{{ page_obj.number }}"})})),$commission_range_slider.length&&(min_commission_percentage_filter=parseFloat("{{ min_commission_percentage_filter|floatformat:0 }}"),max_commission_percentage_filter=parseFloat("{{ max_commission_percentage_filter|floatformat:0 }}"),max_commission_percentage=parseFloat("{{ max_commission_percentage|floatformat:0 }}"),$commission_range_slider.slider({range:!0,min:0,max:max_commission_percentage,values:[min_commission_percentage_filter,max_commission_percentage_filter],slide:function(e,i){$commission_amount_min.text(i.values[0]),$min_commission_percentage_filter.val(i.values[0]),$commission_amount_max.text(i.values[1]),$max_commission_percentage_filter.val(i.values[1])}}),$commission_amount_min.text($commission_range_slider.slider("values",0)),$commission_amount_max.text($commission_range_slider.slider("values",1)))}));</script>
+<script>$(document).ready((function(){$submit=$("#submit"),$next_page=$(".next_page"),$prev_page=$(".prev_page"),$commission_range_slider=$(".commission-range-slider"),$commission_amount_min=$(".commission-amount .min"),$commission_amount_max=$(".commission-amount .max"),$min_commission_percentage_filter=$("#min_commission_percentage_filter"),$max_commission_percentage_filter=$("#max_commission_percentage_filter"),$search_phrase=$("#search_phrase"),$buy_sell=$("#buy_sell"),$country=$("#country"),$next_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list next page",{current_page:"{{ page_obj.number }}"})})),$prev_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list previous page",{current_page:"{{ page_obj.number }}"})})),$commission_range_slider.length&&(min_commission_percentage_filter=parseFloat("{{ min_commission_percentage_filter|floatformat:0 }}"),max_commission_percentage_filter=parseFloat("{{ max_commission_percentage_filter|floatformat:0 }}"),max_commission_percentage=parseFloat("{{ max_commission_percentage|floatformat:0 }}"),$commission_range_slider.slider({range:!0,min:0,max:max_commission_percentage,values:[min_commission_percentage_filter,max_commission_percentage_filter],slide:function(e,i){$commission_amount_min.text(i.values[0]),$min_commission_percentage_filter.val(i.values[0]),$commission_amount_max.text(i.values[1]),$max_commission_percentage_filter.val(i.values[1])}}),$commission_amount_min.text($commission_range_slider.slider("values",0)),$commission_amount_max.text($commission_range_slider.slider("values",1))),$submit.click((function(){var e;e={search_phrase:$search_phrase.val(),buy_sell:$buy_sell.val(),country:$country.val(),min_commission_percentage:$min_commission_percentage_filter.val(),max_commission_percentage:$max_commission_percentage_filter.val()},amplitude.getInstance().logEvent("discovery - searched leads",e)}))}));</script>
 {% endblock %}
