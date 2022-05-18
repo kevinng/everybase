@@ -101,7 +101,7 @@ def lead_list(request):
 
     # Baseline ordering
 
-    order_by = [Trunc('created', 'month', output_field=DateTimeField()).desc()]
+    order_by = [Trunc('created', 'week', output_field=DateTimeField()).desc()]
 
     # Search
 
