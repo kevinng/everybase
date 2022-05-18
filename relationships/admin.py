@@ -174,6 +174,17 @@ class ApplicationMessageInlineAdmin(admin.TabularInline):
         link += f'/relationships/user/{obj.application.lead.author.id}/change'
         return format_html(f'<a href="{link}" target="{link}">{obj.application.lead.author.first_name} {obj.application.lead.author.last_name}</a>')
 
+class LeadInlineAdmin(admin.TabularInline):
+    model = lemods.Lead
+    extra = 0
+    fields = ['lead_link']
+    readonly_fields = ['lead_link']
+
+    def lead_link(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/leads/lead/{obj.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.headline}</a>')
+
 @admin.register(models.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
@@ -199,7 +210,7 @@ class UserAdmin(comadm.StandardAdmin):
         ]})
     ]
     autocomplete_fields = ['django_user', 'country', 'phone_number', 'email']
-    inlines = [ApplicationMessageInlineAdmin]
+    inlines = [ApplicationMessageInlineAdmin, LeadInlineAdmin]
 
     def full_name(self, obj):
         return f'{obj.first_name} {obj.last_name}'
