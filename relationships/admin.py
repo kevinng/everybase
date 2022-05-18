@@ -10,6 +10,7 @@ from django.contrib import admin
 from relationships import models
 from common import admin as comadm
 from growth import models as gromods
+from leads import models as lemods
 
 from relationships.utilities.get_non_tracking_whatsapp_link import get_non_tracking_whatsapp_link
 
@@ -152,6 +153,27 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['import_job']
     inlines = [EmailInlineAdmin]
 
+class ApplicationMessageInlineAdmin(admin.TabularInline):
+    model = lemods.ApplicationMessage
+    extra = 0
+    fields = ['application_link', 'body', 'applicant_link', 'lead_author_link']
+    readonly_fields = ['application_link', 'body', 'applicant_link', 'lead_author_link']
+
+    def application_link(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/leads/application/{obj.application.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.application}</a>')
+    
+    def applicant_link(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/relationships/user/{obj.application.applicant.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.application.applicant.first_name} {obj.application.applicant.last_name}</a>')
+
+    def lead_author_link(self, obj):
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/relationships/user/{obj.application.lead.author.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{obj.application.lead.author.first_name} {obj.application.lead.author.last_name}</a>')
+
 @admin.register(models.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
@@ -177,6 +199,7 @@ class UserAdmin(comadm.StandardAdmin):
         ]})
     ]
     autocomplete_fields = ['django_user', 'country', 'phone_number', 'email']
+    inlines = [ApplicationMessageInlineAdmin]
 
     def full_name(self, obj):
         return f'{obj.first_name} {obj.last_name}'
