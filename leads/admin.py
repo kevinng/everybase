@@ -56,7 +56,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + [
-        'num_messages', 'internal_notes_num_char',
+        'num_messages', 'internal_notes_num_char', 'application_public_link',
         'applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link', 'applicant_django_user_link',
         'lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link', 'lead_author_django_user_link',
         'lead_headline', 'lead_details', 'lead_everybase_link', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission',
@@ -64,7 +64,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
     ]
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'updated', 'internal_notes', 'random_string_for_password']}),
+        ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'updated', 'internal_notes', 'random_string_for_password', 'application_public_link']}),
         ('Applicant', {'fields': ['applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link', 'applicant_django_user_link']}),
         ('Lead author', {'fields': ['lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link', 'lead_author_django_user_link']}),
         ('Lead', {'fields': ['lead_headline', 'lead_everybase_link', 'lead_details', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission']}),
@@ -73,6 +73,10 @@ class ApplicationAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['lead', 'applicant']
     inlines = [ApplicationMessageInlineAdmin]
+
+    def application_public_link(self, obj):
+        link = urljoin(settings.BASE_URL, reverse('applications:application_detail', args=[obj.id,]))
+        return format_html(f'<a href="{link}" target="{link}">{link}</a>')
 
     def applicant_link(self, obj):
         link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
