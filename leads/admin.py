@@ -57,16 +57,16 @@ class ApplicationAdmin(comadm.StandardAdmin):
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + [
         'num_messages', 'internal_notes_num_char',
-        'applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link',
-        'lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link',
+        'applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link', 'applicant_django_user_link',
+        'lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link', 'lead_author_django_user_link',
         'lead_headline', 'lead_details', 'lead_everybase_link', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission',
         'random_string_for_password'
     ]
     fieldsets = [
         (None, {'fields': ['id']}),
         ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'updated', 'internal_notes', 'random_string_for_password']}),
-        ('Applicant', {'fields': ['applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link']}),
-        ('Lead author', {'fields': ['lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link']}),
+        ('Applicant', {'fields': ['applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link', 'applicant_django_user_link']}),
+        ('Lead author', {'fields': ['lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link', 'lead_author_django_user_link']}),
         ('Lead', {'fields': ['lead_headline', 'lead_everybase_link', 'lead_details', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission']}),
         ('Application details', {'fields': ['lead', 'applicant', 'has_experience', 'has_buyers', 'questions', 'answers', 'applicant_comments']}),
         ('Timestamps', {'fields': ['deleted']})
@@ -107,6 +107,14 @@ class ApplicationAdmin(comadm.StandardAdmin):
 
         link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
         link += f'/auth/user/{obj.applicant.django_user.id}/password'
+        return format_html(f'<a href="{link}" target="{link}">{link}</a>')
+
+    def applicant_django_user_link(self, obj):
+        if obj.applicant.django_user is None:
+            return None
+
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/auth/user/{obj.applicant.django_user.id}/change'
         return format_html(f'<a href="{link}" target="{link}">{link}</a>')
 
     def lead_author_link(self, obj):
@@ -178,6 +186,14 @@ class ApplicationAdmin(comadm.StandardAdmin):
             return 0
 
         return len(obj.internal_notes)
+
+    def lead_author_django_user_link(self, obj):
+        if obj.lead.author.django_user is None:
+            return None
+
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/auth/user/{obj.lead.author.django_user.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{link}</a>')
 
 @admin.register(models.ApplicationMessage)
 class ApplicationMessageAdmin(comadm.StandardAdmin):

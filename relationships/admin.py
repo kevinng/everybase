@@ -184,10 +184,10 @@ class UserAdmin(comadm.StandardAdmin):
     search_fields = ['id', 'uuid', 'first_name', 'last_name', 'country__name', 'email__email', 'internal_notes']
 
     # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['uuid', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password']
+    readonly_fields = comadm.standard_readonly_fields + ['uuid', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'django_user_link']
     fieldsets = [
         (None, {'fields': ['id', 'uuid']}),
-        ('Growth', {'fields': ['registered', 'django_user', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'fb_profile', 'internal_notes']}),
+        ('Growth', {'fields': ['registered', 'django_user', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'fb_profile', 'django_user_link', 'internal_notes']}),
         ('Details', {'fields': ['first_name', 'last_name', 'email', 'phone_number', 'country']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
         ('Not in use', {'fields': [
@@ -232,6 +232,14 @@ class UserAdmin(comadm.StandardAdmin):
             obj.phone_number.national_number
         )
         return format_html(f'<a href="{link}" target="{link}">{obj.phone_number}</a>')
+
+    def django_user_link(self, obj):
+        if obj.django_user is None:
+            return None
+
+        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+        link += f'/auth/user/{obj.django_user.id}/change'
+        return format_html(f'<a href="{link}" target="{link}">{link}</a>')
 
 _login_token_fields = ['user', 'activated', 'killed','token']
 @admin.register(models.LoginToken)
