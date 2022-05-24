@@ -165,8 +165,12 @@ def lead_list(request):
     page_obj = paginator.get_page(page_number)
     params['page_obj'] = page_obj
 
-    # Save log
-    query.save()
+    # Save log if it's not empty
+    if (query.search_phrase is not None and query.search_phrase.strip() != '') or\
+        (query.buy_sell is not None and query.buy_sell.strip() != 'buy_or_sell') or\
+        (query.country is not None and query.country.strip() != 'any_country') or\
+        (query.category is not None and query.category.strip() != 'any_category'):
+        query.save()
 
     return render(request, 'leads/superio/lead_list.html', params)
 

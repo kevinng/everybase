@@ -351,15 +351,15 @@ class WhatsAppMessageBodyAdmin(comadm.StandardAdmin):
 @admin.register(models.LeadQuery)
 class LeadQueryAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = ['id', 'created', 'user', 'search_phrase', 'country', 'min_commission_percentage', 'max_commission_percentage']
+    list_display = ['id', 'created', 'user', 'buy_sell', 'search_phrase', 'country', 'category']
     list_editable = [] # Override to speed up listing
     search_fields = ['id', 'search_phrase', 'user__first_name', 'user__last_name']
 
     # Details page settings
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Details', {'fields': ['user', 'search_phrase', 'country', 'min_commission_percentage', 'max_commission_percentage']}),
+        ('Details', {'fields': ['user', 'search_phrase', 'buy_sell', 'country', 'category']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
-        ('Not in use', {'fields': ['buy_country', 'sell_country', 'count']})
+        ('Not in use', {'fields': ['buy_country', 'sell_country', 'min_commission_percentage', 'max_commission_percentage', 'count']})
     ]
     autocomplete_fields = ['user']

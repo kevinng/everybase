@@ -622,6 +622,13 @@ class LeadQuery(Standard):
         blank=True,
         db_index=True
     )
+    category = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     min_commission_percentage = models.FloatField(
         null=True,
         blank=True,
