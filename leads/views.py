@@ -62,42 +62,42 @@ def lead_list(request):
 
     # Maximum commission percentage for view filter
 
-    max_comm_lead = models.Lead.objects.all()\
-        .filter(max_commission_percentage__isnull=False)\
-        .order_by('-max_commission_percentage')\
-        .first()
+    # max_comm_lead = models.Lead.objects.all()\
+    #     .filter(max_commission_percentage__isnull=False)\
+    #     .order_by('-max_commission_percentage')\
+    #     .first()
         
-    params['max_commission_percentage'] = 0 if max_comm_lead is None else max_comm_lead.max_commission_percentage
+    # params['max_commission_percentage'] = 0 if max_comm_lead is None else max_comm_lead.max_commission_percentage
 
     # Filter by commissions
     
-    min_commission_percentage_filter = request.GET.get('min_commission_percentage_filter')
-    query.min_commission_percentage = float(min_commission_percentage_filter) if min_commission_percentage_filter is not None else None # Log
-    if min_commission_percentage_filter is not None and min_commission_percentage_filter.strip() != '':
-        # Note: we're only filtering on maximum commission percentage with the slider's
-        # minimum and maximum values.
-        leads = leads.filter(max_commission_percentage__gte=min_commission_percentage_filter)\
-            .filter(max_commission_percentage__isnull=False)\
-            .filter(min_commission_percentage__isnull=False)
+    # min_commission_percentage_filter = request.GET.get('min_commission_percentage_filter')
+    # query.min_commission_percentage = float(min_commission_percentage_filter) if min_commission_percentage_filter is not None else None # Log
+    # if min_commission_percentage_filter is not None and min_commission_percentage_filter.strip() != '':
+    #     # Note: we're only filtering on maximum commission percentage with the slider's
+    #     # minimum and maximum values.
+    #     leads = leads.filter(max_commission_percentage__gte=min_commission_percentage_filter)\
+    #         .filter(max_commission_percentage__isnull=False)\
+    #         .filter(min_commission_percentage__isnull=False)
 
-        # Pass value back to view
-        params['min_commission_percentage_filter'] = min_commission_percentage_filter
-    else:
-        # Pass value back to view
-        params['min_commission_percentage_filter'] = 0
+    #     # Pass value back to view
+    #     params['min_commission_percentage_filter'] = min_commission_percentage_filter
+    # else:
+    #     # Pass value back to view
+    #     params['min_commission_percentage_filter'] = 0
     
-    max_commission_percentage_filter = request.GET.get('max_commission_percentage_filter')
-    query.max_commission_percentage = float(max_commission_percentage_filter) if max_commission_percentage_filter is not None else None # Log
-    if max_commission_percentage_filter is not None and max_commission_percentage_filter.strip() != '':
-        leads = leads.filter(max_commission_percentage__lte=max_commission_percentage_filter)\
-            .filter(max_commission_percentage__isnull=False)\
-            .filter(min_commission_percentage__isnull=False)
+    # max_commission_percentage_filter = request.GET.get('max_commission_percentage_filter')
+    # query.max_commission_percentage = float(max_commission_percentage_filter) if max_commission_percentage_filter is not None else None # Log
+    # if max_commission_percentage_filter is not None and max_commission_percentage_filter.strip() != '':
+    #     leads = leads.filter(max_commission_percentage__lte=max_commission_percentage_filter)\
+    #         .filter(max_commission_percentage__isnull=False)\
+    #         .filter(min_commission_percentage__isnull=False)
 
-        # Pass value back to view
-        params['max_commission_percentage_filter'] = max_commission_percentage_filter
-    else:
-        # Pass value back to view
-        params['max_commission_percentage_filter'] = params['max_commission_percentage']
+    #     # Pass value back to view
+    #     params['max_commission_percentage_filter'] = max_commission_percentage_filter
+    # else:
+    #     # Pass value back to view
+    #     params['max_commission_percentage_filter'] = params['max_commission_percentage']
 
     # Baseline ordering
 
