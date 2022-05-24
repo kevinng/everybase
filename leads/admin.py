@@ -49,10 +49,10 @@ class ApplicationMessageInlineAdmin(admin.TabularInline):
 class ApplicationAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'last_messaged', 'updated', 'stopped_follow_up', 'num_messages', 'internal_notes_num_char', 'lead', 'applicant', 'created', 'has_experience', 'has_buyers']
+    list_display = ['id', 'last_messaged', 'updated', 'stopped_follow_up', 'num_messages', 'internal_notes_num_char', 'lead', 'applicant', 'created', 'has_experience', 'has_buyers', 'applicant_email', 'lead_author_email']
     list_editable = [] # Override to speed up loading
     list_filter = ['last_messaged', 'lead__lead_type', 'created', 'stopped_follow_up', 'has_experience', 'has_buyers']
-    search_fields = ['id', 'lead__headline', 'applicant__first_name', 'applicant__last_name', 'lead__author__first_name', 'lead__author__last_name', 'internal_notes']
+    search_fields = ['id', 'lead__headline', 'applicant__first_name', 'applicant__last_name', 'lead__author__first_name', 'lead__author__last_name', 'lead__author__email__email', 'applicant__email__email', 'internal_notes']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + [

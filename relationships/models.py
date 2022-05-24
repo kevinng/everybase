@@ -84,7 +84,7 @@ class Email(commods.Standard):
     Last updated: 17 May 2022, 8:57 PM
     """
 
-    do_not_email = models.DateField(
+    do_not_email = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
