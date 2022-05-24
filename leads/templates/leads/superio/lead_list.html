@@ -42,6 +42,20 @@
                                         <option value="buy_only"{% if buy_sell == 'buy_only' %} selected{% endif %}>Buy only</option>
                                         <option value="sell_only"{% if buy_sell == 'sell_only' %} selected{% endif %}>Sell only</option>
                                     </select>
+                                    <span class="icon flaticon-money-bag"></span>
+                                </div>
+                            </div>
+
+                            <div class="filter-block">
+                                <h4>Category</h4>
+                                <div class="form-group">
+                                    <select id="category" name="category" class="chosen-select">
+                                        <option value="any_category">Any category</option>
+                                        {% for c in categories %}
+                                            <option value="{{ c.programmatic_key }}"{% if category == c.programmatic_key %} selected{% endif %}>{{ c.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    </select>
                                     <span class="icon flaticon-briefcase"></span>
                                 </div>
                             </div>
@@ -127,6 +141,7 @@ $(document).ready(function() {
     $search_phrase = $('#search_phrase')
     $buy_sell = $('#buy_sell')
     $country = $('#country')
+    $category = $('#category')
 
     // Amplitude call on next page
     function next_page_clicked() {
@@ -177,6 +192,7 @@ $(document).ready(function() {
             'search_phrase': $search_phrase.val(),
             'buy_sell': $buy_sell.val(),
             'country': $country.val(),
+            'category': $category.val(),
             //'min_commission_percentage': $min_commission_percentage_filter.val(),
             //'max_commission_percentage': $max_commission_percentage_filter.val(),
         }
@@ -186,5 +202,5 @@ $(document).ready(function() {
 })
 {% endcomment %}
 {% block other_scripts %}
-<script>$(document).ready((function(){$submit=$("#submit"),$next_page=$(".next_page"),$prev_page=$(".prev_page"),$search_phrase=$("#search_phrase"),$buy_sell=$("#buy_sell"),$country=$("#country"),$next_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list next page",{current_page:"{{ page_obj.number }}"})})),$prev_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list previous page",{current_page:"{{ page_obj.number }}"})})),$submit.click((function(){var e;e={search_phrase:$search_phrase.val(),buy_sell:$buy_sell.val(),country:$country.val()},amplitude.getInstance().logEvent("discovery - searched leads",e)}))}));</script>
+<script>$(document).ready((function(){$submit=$("#submit"),$next_page=$(".next_page"),$prev_page=$(".prev_page"),$search_phrase=$("#search_phrase"),$buy_sell=$("#buy_sell"),$country=$("#country"),$category=$("#category"),$next_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list next page",{current_page:"{{ page_obj.number }}"})})),$prev_page.click((function(){amplitude.getInstance().logEvent("discovery - clicked lead list previous page",{current_page:"{{ page_obj.number }}"})})),$submit.click((function(){var e;e={search_phrase:$search_phrase.val(),buy_sell:$buy_sell.val(),country:$country.val(),category:$category.val()},amplitude.getInstance().logEvent("discovery - searched leads",e)}))}));</script>
 {% endblock %}

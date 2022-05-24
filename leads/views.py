@@ -1,3 +1,4 @@
+from operator import mod
 from urllib.parse import urljoin
 import boto3, pytz, datetime
 from PIL import Image, ImageOps
@@ -49,13 +50,30 @@ def lead_list(request):
         # Pass value back to view
         params['buy_sell'] = buy_sell
 
+    # Filter by category
+
+    category = request.GET.get('category')
+    query.category = category # Log
+    if category is not None and category.strip() != '' and category != 'any_category':
+        c = models.LeadCategory.objects.get(programmatic_key=category)
+        leads = leads.filter(category=c)
+
+        # Pass value back to view
+        params['category'] = category
+
     # Filter by country
 
     country = request.GET.get('country')
     query.country = country # Log
     if country is not None and country.strip() != '' and country != 'any_country':
         c = commods.Country.objects.get(programmatic_key=country)
-        leads = leads.filter(Q(buy_country=c) | Q(sell_country=c))
+
+        if buy_sell == 'buy_or_sell':
+            leads = leads.filter(Q(buy_country=c) | Q(sell_country=c))
+        elif buy_sell == 'buy_only':
+            leads = leads.filter(Q(sell_country=c))
+        elif buy_sell == 'sell_only':
+            leads = leads.filter(Q(buy_country=c))
 
         # Pass value back to view
         params['country'] = country
@@ -126,10 +144,18 @@ def lead_list(request):
 
     #  Set filter countries - only use countries used by leads
 
-    params['countries'] = commods.Country.objects.annotate(
-        num_leads=Count('leads_buy_country')).\
-            filter(num_leads__gt=0).\
-            order_by('-num_leads')
+    params['countries'] = commods.Country.objects.\
+            annotate(num_buy_leads=Count('leads_buy_country')).\
+            annotate(num_sell_leads=Count('leads_sell_country')).\
+            filter(Q(num_buy_leads__gt=0) | Q(num_sell_leads__gt=0)).\
+            order_by('-num_buy_leads')
+
+    # Set filter categories - only use categories used by leads
+
+    params['categories'] = models.LeadCategory.objects\
+        .annotate(num_leads=Count('leads')).\
+        filter(num_leads__gt=0).\
+        order_by('-num_leads')
 
     # Paginate
 

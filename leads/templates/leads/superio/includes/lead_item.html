@@ -7,7 +7,9 @@
             <h4><a href="{% url 'leads:lead_detail' lead.slug_link %}">{{ lead.headline }}</a></h4>
             <ul class="job-info">
                 <li><span class="icon flaticon-user-1"></span>{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</li>
-                {% comment %} <li><span class="icon flaticon-briefcase"></span>Buying</li> {% endcomment %}
+                {% if lead.category != None %}
+                    <li><span class="icon flaticon-briefcase"></span>{{ lead.category.name }}</li>
+                {% endif %}
                 {% comment %} <li><span class="icon flaticon-map-locator"></span>Singapore</li> {% endcomment %}
                 {% if lead.min_commission_percentage != None and lead.max_commission_percentage != None %}
                 <li><span class="icon flaticon-money"></span>{% if lead.min_commission_percentage != None %}{{ lead.min_commission_percentage }}{% else %}0{% endif %}% to {% if lead.max_commission_percentage != None %}{{ lead.max_commission_percentage }}{% else %}0{% endif %}% Commission</li>
