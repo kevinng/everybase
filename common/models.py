@@ -97,7 +97,7 @@ class Choice(models.Model):
 
     def __str__(self):
         if self.id is not None:
-            return '(%s [%d])' % (self.name, self.id)
+            return '%s [%d]' % (self.name, self.id)
         
         return str(super(Choice, self))
 

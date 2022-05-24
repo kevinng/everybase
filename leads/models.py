@@ -1,20 +1,29 @@
-from email.mime import application
 import uuid as uuidlib
 from django.db import models
 import files.models as fimods
-from common.models import Standard
+from common.models import Standard, Choice
 from django.utils.text import slugify
     
 class Lead(Standard):
     """Lead.
 
-    Last updated: 12 May 2022, 2:35 PM
+    Last updated: 24 May 2022, 2:42 PM
     """
 
     uuid = models.UUIDField(
         unique=True,
         default=uuidlib.uuid4,
         editable=False,
+        db_index=True
+    )
+
+    category = models.ForeignKey(
+        'LeadCategory',
+        related_name='leads',
+        related_query_name='leads',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
         db_index=True
     )
 
@@ -512,7 +521,13 @@ class ApplicationMessage(Standard):
     def __str__(self):
         return f'{self.author.first_name} {self.author.last_name}: {self.body} [{self.id}]'
 
+class LeadCategory(Choice):
+    """Lead category.
 
+    Last updated: 24 May 2022, 2:45 PM
+    """
+    class Meta:
+        verbose_name_plural = 'Lead categories'
 
 
 

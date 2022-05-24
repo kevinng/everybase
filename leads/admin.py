@@ -234,16 +234,16 @@ class LeadCommentAdmin(comadm.StandardAdmin):
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'created', 'author', 'lead_type', 'headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type']
+    list_display = ['id', 'created', 'author', 'lead_type', 'category','headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type']
     list_editable = [] # Override to speed up loading
-    list_filter = ['created', 'lead_type', 'author_type']
+    list_filter = ['created', 'lead_type', 'author_type', 'category']
     search_fields = ['id', 'headline', 'details', 'author__first_name', 'author__last_name', 'internal_notes']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['uuid', 'slug_link', 'slug_tokens']
     fieldsets = [
         (None, {'fields': ['id', 'uuid']}),
-        ('Details', {'fields': ['author', 'lead_type', 'headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type', 'questions']}),
+        ('Details', {'fields': ['author', 'lead_type', 'category','headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type', 'questions']}),
         ('Meta', {'fields': ['internal_notes', 'slug_link', 'slug_tokens', 'impressions', 'clicks']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
         ('Not in use', {'fields': ['title', 'currency', 'comm_details', 'need_agent', 'country', 'agent_job', 'avg_deal_size', 'commission_payable_by', 'commission_payable_after',
@@ -251,7 +251,11 @@ class LeadAdmin(comadm.StandardAdmin):
             'question_1', 'question_2', 'question_3', 'need_logistics_agent', 'other_logistics_agent_details']})
     ]
     inlines = [fiadm.FileInlineAdmin]
-    autocomplete_fields = ['author', 'currency', 'buy_country', 'sell_country', 'country']
+    autocomplete_fields = ['author', 'category', 'currency', 'buy_country', 'sell_country', 'country']
+
+@admin.register(models.LeadCategory)
+class LeadCategoryAdmin(comadm.ChoiceAdmin):
+    pass
 
 _saved_lead_fields = ['active', 'saver', 'lead']
 @admin.register(models.SavedLead)
