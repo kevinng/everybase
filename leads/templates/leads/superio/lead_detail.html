@@ -36,8 +36,12 @@
         <h4>Buy/Sell</h4>
         <p>{% if lead.lead_type == 'selling' %}Sell{% elif lead.lead_type == 'buying' %}Buy{% endif %}</p>
 
+        {% if lead.author_type != None %}
+
         <h4>{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.lead_type == 'buying' %}Direct buyer{% endif %} or middleman?</h4>
         <p>{% if lead.author_type == 'direct' %}{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.author_type == 'buying' %}Direct buyer{% endif %}{% elif lead.lead_type == 'broker' %}Middleman{% endif %}</p>
+
+        {% endif %}
 
         <h4>Country</h4>
         <p>{% if lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% elif lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% endif %}</p>
@@ -53,8 +57,8 @@
             <div class="comments-area">
                 <div class="comment-form default-form">
                     <h4>I'm interested to be an agent</h4>
-                    <a href="{% url 'sign_up' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-one">Register</a>
-                    <a href="{% url 'sign_in' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-three">Login</a>
+                    <a href="{% url 'register' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-one">Register</a>
+                    <a href="{% url 'login' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-three">Login</a>
                 </div>
             </div>
         {% elif lead.author != request.user.user and not lead_has_applications_with_applicant %}
