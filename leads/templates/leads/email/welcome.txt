@@ -1,7 +1,5 @@
 Welcome to Everybase.
 
-We help exporters find agents to sell their products overseas.
+We help exporters find commission agents to sell their products.
 
-Please add this email to your whitelist.
-
-We'll contact you at this address when someone replies to you on Everybase.
+Please whitelist this email.
