@@ -34,9 +34,10 @@ urlpatterns = [
     
     # Relationships
     path('users/', include('relationships.urls')),
-    path('sign-up/', relviews.sign_up, name='sign_up'),
-    path('sign-in/', relviews.sign_in, name='sign_in'),
-    path('sign-out/', relviews.sign_out, name='sign_out'),
+    path('register/', relviews.register, name='register'),
+    path('login/', relviews.log_in, name='login'),
+    path('confirm-login/', relviews.confirm_login, name='confirm_login'),
+    path('logout/', relviews.log_out, name='logout'),
 
     # Chat
     path('chat/', include('chat.urls')),
