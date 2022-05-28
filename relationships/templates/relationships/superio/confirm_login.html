@@ -1,0 +1,134 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Confirm Login</title>
+
+    {% comment %} Stylesheets {% endcomment %}
+    <link href="{% static 'common/superio/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'common/superio/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'common/superio/css/responsive.css' %}" rel="stylesheet">
+
+    <link rel="shortcut icon" href="{% static 'common/superio/images/favicon.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'common/superio/images/favicon.png' %}" type="image/x-icon">
+
+    {% comment %} Responsive {% endcomment %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="{% static 'common/superio/js/respond.js' %}"></script><![endif]-->
+</head>
+
+<body>
+    {% comment %} start: Page wrapper {% endcomment %}
+    <div class="page-wrapper">
+
+        {% comment %} Preloader {% endcomment %}
+        {% comment %} <div class="preloader"></div> {% endcomment %}
+
+        {% comment %} start: Main header {% endcomment %}
+        <header class="main-header">
+            <div class="container-fluid">
+                <div class="main-box">
+                    <div class="nav-outer">
+                        <div class="logo-box">
+                            <div class="logo"><a href="/"><img src="{% static 'common/img/logo.png' %}" alt="Everybase" title="Everybase"></a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mobile-header">
+                <div class="logo"><a href="/"><img src="{% static 'common/img/logo.png' %}" style="width: 152px; height: 21px;" alt="Everybase" title="Everybase"></a></div>
+                <div class="nav-outer clearfix">
+                    <div class="outer-box">
+                        <div class="login-box">
+                            <a href="login-popup.html" class="call-modal"><span class="icon-user"></span></a>
+                        </div>
+                        <a href="#nav-mobile" class="mobile-nav-toggler navbar-trigger"><span class="flaticon-menu-1"></span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="nav-mobile"></div>
+        </header>
+        {% comment %} end: Main header {% endcomment %}
+
+        {% comment %} start: Info section {% endcomment %}
+        <div class="login-section">
+            <div class="image-layer" style="background-image: url({% static 'common/superio/images/background/12.jpg' %});"></div>
+            <div class="outer-box">
+                <div class="login-form default-form">
+                    <div class="form-inner">
+                        {% if form.method.value != None %}
+                            {% if form.method.value == 'email' %}
+                                <h3>We've sent a confirmation code to {{ form.email.value }}. Enter it here to login.</h3>
+                            {% elif form.method.value == 'whatsapp' %}
+                                <h3>We've sent a confirmation code to +{{ form.country_code.value }} {{ form.national_number.value }}. Enter it here to log in.</h3>
+                            {% endif %}
+                        {% endif %}
+                        <form action="{% url 'confirm_login' %}" method="post">
+                            {% if form.next.value != None %}
+                                <input type="hidden" name="next" value="{{ form.next.value }}">
+                            {% endif %}
+                            {% if form.method.value != None %}
+                                <input type="hidden" name="method" value="{{ form.method.value }}">
+                            {% endif %}
+                            {% if form.user_uuid.value != None %}
+                                <input type="hidden" name="user_uuid" value="{{ form.user_uuid.value }}">
+                            {% endif %}
+                            {% if form.email.value != None %}
+                                <input type="hidden" name="email" value="{{ form.email.value }}">
+                            {% endif %}
+                            {% if form.country_code.value != None %}
+                                <input type="hidden" name="country_code" value="{{ form.country_code.value }}">
+                            {% endif %}
+                            {% if form.national_number.value != None %}
+                                <input type="hidden" name="national_number" value="{{ form.national_number.value }}">
+                            {% endif %}
+
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                                <label>Confirmation Code</label>
+                                <input type="text" name="code"{% if form.code.value != None %} value="{{ form.code.value }}"{% endif %} placeholder="Confirmation Code" required>
+                                {% if form.code.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.code.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <button class="theme-btn btn-style-one" type="submit" name="Register">Login</button>
+                            </div>
+
+                            <div class="bottom-box">
+                                <div class="text">Confirmation code not working? <a href="{% url 'login' %}">Request for another code</a></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% comment %} end: Info section {% endcomment %}
+    </div>
+    {% comment %} End: Page wrapper {% endcomment %}
+
+    <script src="{% static 'common/superio/js/jquery.js' %}"></script>
+    <script src="{% static 'common/superio/js/popper.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/chosen.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/jquery.fancybox.js' %}"></script>
+    <script src="{% static 'common/superio/js/jquery.modal.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/mmenu.polyfills.js' %}"></script>
+    <script src="{% static 'common/superio/js/mmenu.js' %}"></script>
+    <script src="{% static 'common/superio/js/appear.js' %}"></script>
+    <script src="{% static 'common/superio/js/ScrollMagic.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/rellax.min.js' %}"></script>
+    <script src="{% static 'common/superio/js/owl.js' %}"></script>
+    <script src="{% static 'common/superio/js/wow.js' %}"></script>
+    <script src="{% static 'common/superio/js/script.js' %}"></script>
+</body>
+
+</html>
