@@ -1,0 +1,5 @@
+You've attempted to login to Everybase - https://everybase.co
+
+This is your confirmation code: {{ code }}
+
+Ignore this message if you didn't login to Everybase.
