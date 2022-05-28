@@ -41,7 +41,7 @@
 
                     <div class="outer-box">
                         <div class="btn-box">
-                            <a href="{% url 'sign_in' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="theme-btn btn-style-three">Login</a>
+                            <a href="{% url 'login' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="theme-btn btn-style-three">Login</a>
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                 <div class="login-form default-form">
                     <div class="form-inner">
                         <h3>Register</h3>
-                        <form action="{% url 'sign_up' %}" method="post">
+                        <form action="{% url 'register' %}" method="post">
                             {% if next != None %}
                                 <input type="hidden" name="next" value="{{ next }}">
                             {% elif form.next.value != None %}
@@ -79,19 +79,13 @@
                             {% csrf_token %}
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="email" name="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} required>
+                                <input type="email" name="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %}>
                                 {% if form.email.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
                             <div class="form-group">
-                                <label>Password</label>
-                                <input type="password" name="password" required>
-                                {% if form.password.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.password.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                            </div>
-
-                            <div class="form-group">
                                 <label>Phone Number</label>
-                                <input type="text" name="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} required>
+                                <input type="text" name="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %}>
                                 {% if form.phone_number.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                 <div style="margin-left:20px; margin-top:10px">Please include + symbol. E.g., +14155552671.</div>
                             </div>
@@ -125,7 +119,7 @@
                         </form>
 
                         <div class="bottom-box">
-                            <div class="text">Have an account? <a href="{% url 'sign_in' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}">Login</a></div>
+                            <div class="text">Have an account? <a href="{% url 'login' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}">Login</a></div>
                         </div>
                     </div>
                 </div>
