@@ -9,7 +9,7 @@
             <li{% if request.resolver_match.view_name == 'leads:my_leads' %} class="active"{% endif %}><a href="{% url 'leads:my_leads' %}"><i class="las la-boxes"></i>My Leads</a></li>
             <li{% if request.resolver_match.view_name == 'applications:inbox' or request.resolver_match.view_name == 'applications:application_detail' %} class="active"{% endif %}><a href="{% url 'applications:inbox' %}"><i class="la la-comment-o"></i>Inbox</a></li>
             <li{% if request.resolver_match.view_name == 'users:profile' %} class="active"{% endif %}><a href="{% url 'users:profile' %}"><i class="la la-user-tie"></i>Profile</a></li>
-            <li{% if request.resolver_match.view_name == 'users:change_password' %} class="active"{% endif %}><a href="{% url 'users:change_password' %}"><i class="las la-key"></i>Change Password</a></li>
+            {% comment %} <li{% if request.resolver_match.view_name == 'users:change_password' %} class="active"{% endif %}><a href="{% url 'users:change_password' %}"><i class="las la-key"></i>Change Password</a></li> {% endcomment %}
         </ul>
     </div>
 </div>
