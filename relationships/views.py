@@ -1,6 +1,8 @@
-import pytz
-import phonenumbers
+import pytz, phonenumbers, random
 from datetime import datetime
+
+from chat.tasks.send_welcome_message import send_welcome_message
+from chat.tasks.send_confirm_login import send_confirm_login
 
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -22,46 +24,67 @@ from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
 from relationships import forms, models
 
-def sign_in(request):
+# Named log_in and not login to prevent clash with Django login
+def log_in(request):
+    # Do not allow user to access this page if he is authenticated.
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('leads:lead_create'))
+
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
+            url = reverse('confirm_login')
 
-            email = models.Email.objects.get(email=email)
+            user = form.user
 
-            # Find Everybase user with this email
-            u = models.User.objects.filter(
-                email=email.id, # User has email
-                registered__isnull=False, # User is registered
-                django_user__isnull=False # User has a Django user linked
-            ).first()
+            # Include next as GET parameter in the URL
+            next = form.cleaned_data.get('next')
+            has_next = False
+            if next is not None and next.strip() != '':
+                url += f'?next={next}'
+                has_next = True
 
-            # Authenticate with the Django user's username (which is the UUID key of the
-            # Everybase user) and the supplied password.
-            user = authenticate(request, username=u.django_user.username, password=password)
-            if user is not None:
-                login(request, user)
+            if form.email is not None:
+                # Generate code
+                sgtz = pytz.timezone(settings.TIME_ZONE)
+                now = datetime.now(tz=sgtz)
+                
+                user.email_login_code = random.randint(100000, 999999)
+                user.email_login_code_generated = now
+                user.save()
 
-            if user is not None:
-                # Success
-
-                # Amplitude calls
-                send_amplitude_event.delay(
-                    'account - logged in',
-                    user_uuid=u.uuid,
-                    ip=get_ip_address(request)
+                # Send confirmation code by email
+                send_email.delay(
+                    render_to_string('relationships/email/confirm_login_subject.txt', {}),
+                    render_to_string('relationships/email/confirm_login.txt', {'code': user.email_login_code}),
+                    'friend@everybase.co',
+                    [form.email.email]
                 )
 
-                next = form.cleaned_data.get('next')
-                if next is not None and next.strip() != '':
-                    return HttpResponseRedirect(next)
+                if has_next and url.endswith(next):
+                    url += f'&method=email'
                 else:
-                    return HttpResponseRedirect(reverse('leads:lead_create'))
-            else:
-                form.add_error('password', 'Invalid credentials.')
+                    url += f'?method=email'
+            elif form.phone_number is not None:
+                # Generate code
+                sgtz = pytz.timezone(settings.TIME_ZONE)
+                now = datetime.now(tz=sgtz)
+                
+                user.whatsapp_login_code = random.randint(100000, 999999)
+                user.whatsapp_login_code_generated = now
+                user.save()
 
+                # Send confirmation code by WhatsApp
+                send_confirm_login.delay(form.user.id)
+
+                if has_next and url.endswith(next):
+                    url += f'&method=whatsapp'
+                else:
+                    url += f'?method=whatsapp'
+
+            url += f'&user={user.uuid}'
+
+            return HttpResponseRedirect(url)
     else:
         form = forms.LoginForm()
 
@@ -73,30 +96,104 @@ def sign_in(request):
     if next is not None:
         params['next'] = next
 
-    template_name = 'relationships/superio/sign_in.html'
+    template_name = 'relationships/superio/login.html'
     return TemplateResponse(request, template_name, params)
 
-def sign_up(request):
+def confirm_login(request):
+    # Do not allow user to access this page if he is authenticated.
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('leads:lead_create'))
+
+    params = {}
+
+    if request.method == 'POST':
+        form = forms.ConfirmLoginForm(request.POST)
+        if form.is_valid():
+            method = form.cleaned_data.get('method')
+
+            user_uuid = form.cleaned_data.get('user_uuid')
+            user = models.User.objects.get(uuid=user_uuid) # User should exist after form check
+
+            # Update login timestamp
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            now = datetime.now(sgtz)
+            if method == 'email':
+                user.last_email_login = now
+            elif method == 'whatsapp':
+                user.last_whatsapp_login = now
+            user.save()
+
+            # Authenticate with the Django user's username (which is the UUID key of the Everybase user) without password.
+            dj_user = authenticate(user.django_user.username)
+            if dj_user is not None:
+                # Successfully authenticated
+                login(request, dj_user)
+
+                # Amplitude calls
+                send_amplitude_event.delay(
+                    'account - logged in',
+                    user_uuid=user.uuid,
+                    ip=get_ip_address(request)
+                )
+
+                next = form.cleaned_data.get('next')
+                if next is not None and next.strip() != '':
+                    return HttpResponseRedirect(next)
+                else:
+                    return HttpResponseRedirect(reverse('leads:lead_create'))
+    elif request.method == 'GET':
+        user_uuid = request.GET.get('user')
+
+        try:
+            user = models.User.objects.get(uuid=user_uuid)
+        except models.User.DoesNotExist:
+            # Invalid user UUID, direct to login page
+            return HttpResponseRedirect(reverse('login'))
+
+        method = request.GET.get('method')
+
+        form = forms.ConfirmLoginForm(initial={
+            'user_uuid': user_uuid,
+            'method': method,
+            'next': request.GET.get('next'),
+            'email': user.email.email,
+            'country_code': user.phone_number.country_code,
+            'national_number': user.phone_number.national_number
+        })
+
+    # Pass GET parameters
+
+    params['form'] = form
+    template = 'relationships/superio/confirm_login.html'
+    return TemplateResponse(request, template, params)
+
+def register(request):
+    # Do not allow user to access this page if he is authenticated.
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('leads:lead_create'))
+
     if request.method == 'POST':
         form = forms.RegisterForm(request.POST)
         if form.is_valid():
             
             # Get or create a new email for this user
-            email, _ = models.Email.objects.get_or_create(
-                email=form.cleaned_data.get('email')
-            )
+            email_str = form.cleaned_data.get('email')
+            email = None
+            if email_str is not None:
+                email, _ = models.Email.objects.get_or_create(email=email_str)
 
             # Parse phone number
-            ph_str = form.cleaned_data.get('phone_number')
-            parsed_ph = phonenumbers.parse(str(ph_str), None)
-            ph_cc = parsed_ph.country_code
-            ph_nn = parsed_ph.national_number
-
-            # Get or create new phone number for this user
-            phone_number, _ = models.PhoneNumber.objects.get_or_create(
-                country_code=ph_cc,
-                national_number=ph_nn
-            )
+            ph_str = str(form.cleaned_data.get('phone_number'))
+            phone_number = None
+            if ph_str is not None and ph_str.strip() != '':
+                parsed_ph = phonenumbers.parse(ph_str, None)
+                ph_cc = parsed_ph.country_code
+                ph_nn = parsed_ph.national_number
+                # Get or create new phone number for this user
+                phone_number, _ = models.PhoneNumber.objects.get_or_create(
+                    country_code=ph_cc,
+                    national_number=ph_nn
+                )
 
             # Get country
             country_key = form.cleaned_data.get('country')
@@ -111,13 +208,9 @@ def sign_up(request):
                 last_name=form.cleaned_data.get('last_name')
             )
 
-            password = form.cleaned_data.get('password')
-
             # Create new Django user
-            django_user, _ = User.objects.get_or_create(
-                username=user.uuid
-            )
-            django_user.set_password(password)
+            django_user, _ = User.objects.get_or_create(username=user.uuid)
+            # django_user.set_password(password)
             django_user.save()
 
             # Update user profile
@@ -126,17 +219,22 @@ def sign_up(request):
             user.django_user = django_user
             user.save()
 
-            django_user = authenticate(request, username=django_user.username, password=password)
+            django_user = authenticate(request, username=django_user.username)
             if django_user is not None:
                 login(request, django_user)
 
-            # Email lead author
-            send_email.delay(
-                render_to_string('leads/email/welcome_subject.txt', {}),
-                render_to_string('leads/email/welcome.txt', {}),
-                'friend@everybase.co',
-                [email.email]
-            )
+            # Email user if email is specified
+            if email is not None:
+                send_email.delay(
+                    render_to_string('relationships/email/welcome_subject.txt', {}),
+                    render_to_string('relationships/email/welcome.txt', {}),
+                    'friend@everybase.co',
+                    [email.email]
+                )
+
+            # WhatsApp user if phone number is specified
+            if phone_number is not None:
+                send_welcome_message.delay(user.id)
 
             # Amplitude call
             send_amplitude_event.delay(
@@ -165,10 +263,10 @@ def sign_up(request):
     if next is not None:
         params['next'] = next
 
-    template_name = 'relationships/superio/sign_up.html'
+    template_name = 'relationships/superio/register.html'
     return TemplateResponse(request, template_name, params)
 
-def sign_out(request):
+def log_out(request):
     logout(request)
     next_url = request.GET.get('next')
     if next_url is not None:
@@ -249,35 +347,37 @@ def profile(request):
 
     return render(request, 'relationships/superio/profile.html', params)
 
-@login_required
-def change_password(request):
-    if request.method == 'POST':
-        form = forms.PasswordChangeForm(request.POST)
-        if form.is_valid():
-            u = request.user
+# @login_required
+# def change_password(request):
+#     if request.method == 'POST':
+#         form = forms.PasswordChangeForm(request.POST)
+#         if form.is_valid():
+#             u = request.user
 
-            password = form.cleaned_data.get('password')
-            u.set_password(password)
-            u.save()
+#             password = form.cleaned_data.get('password')
+#             u.set_password(password)
+#             u.save()
 
-            # Reauthenticate with the Django user's username (which is the UUID key of the
-            # Everybase user) and the supplied password.
-            user = authenticate(request, username=u.username, password=password)
-            if user is not None:
-                login(request, user)
+#             # Reauthenticate with the Django user's username (which is the UUID key of the
+#             # Everybase user) and the supplied password.
+#             user = authenticate(request, username=u.username, password=password)
+#             if user is not None:
+#                 login(request, user)
 
-            if user is not None:
-                # Success
-                messages.add_message(request, messages.INFO, 'Password updated.')
-                return HttpResponseRedirect(reverse('users:change_password'))
-    else:
-        form = forms.PasswordChangeForm()
+#             if user is not None:
+#                 # Success
+#                 messages.add_message(request, messages.INFO, 'Password updated.')
+#                 return HttpResponseRedirect(reverse('users:change_password'))
+#     else:
+#         form = forms.PasswordChangeForm()
 
-    params = {'form': form}
-    return render(request, 'relationships/superio/change_password.html', params)
+#     params = {'form': form}
+#     return render(request, 'relationships/superio/change_password.html', params)
 
 
-
+def m(request, file_to_render):
+    template_name = 'relationships/superio/%s' % file_to_render
+    return TemplateResponse(request, template_name, {})
 
 
 
