@@ -37,21 +37,32 @@
         <p>{% if lead.lead_type == 'selling' %}Sell{% elif lead.lead_type == 'buying' %}Buy{% endif %}</p>
 
         {% if lead.author_type != None %}
-
         <h4>{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.lead_type == 'buying' %}Direct buyer{% endif %} or middleman?</h4>
         <p>{% if lead.author_type == 'direct' %}{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.author_type == 'buying' %}Direct buyer{% endif %}{% elif lead.lead_type == 'broker' %}Middleman{% endif %}</p>
-
         {% endif %}
 
         <h4>Country</h4>
         <p>{% if lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% elif lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% endif %}</p>
 
         <h4>Commission</h4>
+
+        {% if lead.commission_type == 'percentage' %}
+
         <p>{{ lead.min_commission_percentage }}% to {{ lead.max_commission_percentage }}%</p>
+
+        {% elif lead.commission_type == 'usd_mt' %}
+
+        <p>USD {{ lead.commission_usd_mt|floatformat:2 }} per Metric Ton</p>
+
+        {% endif %}
+
+        {% if lead.details != None and lead.details.strip != '' %}
 
         <h4>Lead Details</h4>
         {% comment %} Render with <p> tags {% endcomment %}
         {{ lead.details|linebreaks }}
+
+        {% endif %}
 
         {% if not request.user.is_authenticated %}
             <div class="comments-area">
@@ -84,11 +95,15 @@
                                 {% if form.applicant_comments.errors %}<div style="color:red">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
                             
+                            {% if lead.questions != None %}
+
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                                 <label for="answers">{{ lead.questions }}</label>
                                 <textarea id="answers" name="answers"></textarea>
                                 {% if form.answers.errors %}<div style="color:red">{% for error in form.answers.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
+
+                            {% endif %}
 
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                                 <button class="theme-btn btn-style-one" type="submit" name="submit-form">Apply</button>

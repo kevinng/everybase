@@ -264,6 +264,8 @@ def lead_create(request):
             lead_type = g('lead_type')
             author_type = g('author_type')
             country_key = g('country')
+            commission_type = g('commission_type')
+            commission_usd_mt = g('commission_usd_mt')
             min_commission_percentage = g('min_commission_percentage')
             max_commission_percentage = g('max_commission_percentage')
             headline = g('headline')
@@ -274,6 +276,8 @@ def lead_create(request):
                 author=request.user.user,
                 lead_type=lead_type,
                 author_type=author_type,
+                commission_type=commission_type,
+                commission_usd_mt=commission_usd_mt,
                 min_commission_percentage=min_commission_percentage,
                 max_commission_percentage=max_commission_percentage,
                 headline=headline,
@@ -290,17 +294,18 @@ def lead_create(request):
             lead.save()
 
             # Email lead author
-            send_email.delay(
-                render_to_string('leads/email/lead_created_subject.txt', {}),
-                render_to_string('leads/email/lead_created.txt', {
-                    'lead_headline': lead.headline,
-                    'lead_detail_url': \
-                        urljoin(settings.BASE_URL,
-                        reverse('leads:lead_detail', args=(lead.id,)))
-                }),
-                'friend@everybase.co',
-                [lead.author.email.email]
-            )
+            if lead.author.email is not None:
+                send_email.delay(
+                    render_to_string('leads/email/lead_created_subject.txt', {}),
+                    render_to_string('leads/email/lead_created.txt', {
+                        'lead_headline': lead.headline,
+                        'lead_detail_url': \
+                            urljoin(settings.BASE_URL,
+                            reverse('leads:lead_detail', args=(lead.id,)))
+                    }),
+                    'friend@everybase.co',
+                    [lead.author.email.email]
+                )
 
             send_amplitude_event.delay(
                 'created lead',

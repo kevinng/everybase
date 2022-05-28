@@ -51,8 +51,14 @@ class Lead(Standard):
         choices=[
             ('earning', 'Earning'),
             ('percentage', 'Percentage'),
+            ('usd_mt', 'USD per MT'),
             ('other', 'Other')
         ],
+        db_index=True
+    )
+    commission_usd_mt = models.FloatField(
+        null=True,
+        blank=True,
         db_index=True
     )
     min_commission_percentage = models.FloatField(

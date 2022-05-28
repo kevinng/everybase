@@ -234,16 +234,16 @@ class LeadCommentAdmin(comadm.StandardAdmin):
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'created', 'author', 'lead_type', 'category','headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type', 'has_insights']
+    list_display = ['id', 'created', 'author', 'lead_type', 'category','headline', 'details', 'commission_usd_mt', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type', 'has_insights']
     list_editable = [] # Override to speed up loading
-    list_filter = ['created', 'lead_type', 'author_type', 'category', 'has_insights']
+    list_filter = ['created', 'lead_type', 'author_type', 'category', 'commission_type', 'has_insights']
     search_fields = ['id', 'headline', 'details', 'author__first_name', 'author__last_name', 'internal_notes']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['uuid', 'slug_link', 'slug_tokens']
     fieldsets = [
         (None, {'fields': ['id', 'uuid']}),
-        ('Details', {'fields': ['author', 'lead_type', 'category','headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type', 'questions']}),
+        ('Details', {'fields': ['author', 'lead_type', 'category','headline', 'details', 'commission_type', 'commission_usd_mt', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type', 'questions']}),
         ('Meta', {'fields': ['has_insights', 'internal_notes', 'slug_link', 'slug_tokens', 'impressions', 'clicks']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
         ('Not in use', {'fields': ['title', 'currency', 'comm_details', 'need_agent', 'country', 'agent_job', 'avg_deal_size', 'commission_payable_by', 'commission_payable_after',

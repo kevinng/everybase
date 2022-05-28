@@ -42,6 +42,18 @@
                                     </div>
 
                                     <div class="form-group col-lg-6 col-md-12">
+                                        <label>Country</label>
+                                        {% comment %} Map country to either buy_country or sell_country on the backend depending on lead_type {% endcomment %}
+                                        <select name="country" class="chosen-select">
+                                            <option value="any_country">Select a Country</option>
+                                            {% for country in countries %}
+                                                <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        {% if form.country.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                    </div>
+
+                                    {% comment %} <div class="form-group col-lg-6 col-md-12">
                                         <label id="author_type__label" for="author_type">Are you direct buyer/seller or middleman?</label>
                                         <select id="author_type" name="author_type" class="chosen-select">
                                             <option></option>
@@ -49,24 +61,28 @@
                                             <option value="broker"{% if form.author_type.value == 'broker' %} selected{% endif %}>Middleman</option>
                                         </select>
                                         {% if form.author_type.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.author_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                                    </div>
+                                    </div> {% endcomment %}
                                 </div>
 
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
-                                        <label>Country</label>
-                                        {% comment %} Map country to either buy_country or sell_country on the backend depending on lead_type {% endcomment %}
-                                        <select name="country" class="chosen-select">
-                                            <option>Select a Country</option>
-                                            {% for country in countries %}
-                                                <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                                            {% endfor %}
+                                        <label for="commission_type">How is agent commission calculated?</label>
+                                        <select id="commission_type" name="commission_type" class="chosen-select">
+                                            <option value="percentage"{% if form.commission_type.value == 'percentage' %} selected{% endif %}>Percentage</option>
+                                            <option value="usd_mt"{% if form.commission_type.value == 'usd_mt' %} selected{% endif %}>USD Per MT</option>
                                         </select>
-                                        {% if form.country.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        {% if form.commission_type.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.commission_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                    </div>
+
+                                    <div id="commission_usd_mt_fields" class="form-group col-lg-6 col-md-12">
+                                        <label>Commission, USD per Metric Ton</label>
+                                        <input type="number" step="0.1" id="commission_usd_mt" name="commission_usd_mt"{% if form.commission_usd_mt.value != None %} value="{{ form.commission_usd_mt.value }}"{% endif %}>
+                                        <div id="commission_usd_mt_error_js" style="color:red; margin-left:20px; margin-top:10px"></div>
+                                        {% if form.commission_usd_mt.errors %}<div id="commission_usd_mt_error" style="color:red; margin-left:20px; margin-top:10px">{% for error in form.commission_usd_mt.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div id="min_max_commission_fields" class="row">
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label>Minimum Commission %</label>
                                         <input type="number" step="0.1" id="min_commission_percentage" name="min_commission_percentage"{% if form.min_commission_percentage.value != None %} value="{{ form.min_commission_percentage.value }}"{% endif %}>
@@ -208,6 +224,110 @@ $(document).ready(function() {
 {% endcomment %}
 {% block other_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-<script src="{% static 'leads/js/lead_create_edit_superio.min.js' %}"></script>
+{% comment %} <script src="{% static 'leads/js/lead_create_edit_superio.min.js' %}"></script> {% endcomment %}
+<script>
+
+    $(document).ready(function() {
+        $lead_type = $('#lead_type')
+    
+        $author_type__label = $('#author_type__label')
+        $author_type = $('#author_type')
+        $author_type__option__direct = $('#author_type__option__direct')
+        
+        $commission_type = $('#commission_type')
+        $commission_usd_mt_fields = $('#commission_usd_mt_fields')
+        $min_max_commission_fields = $('#min_max_commission_fields')
+        $min_commission_percentage = $('#min_commission_percentage')
+        $min_commission_percentage_error_js = $('#min_commission_percentage_error_js')
+        $min_commission_percentage_error = $('#min_commission_percentage_error')
+        $max_commission_percentage = $('#max_commission_percentage')
+        $max_commission_percentage_error_js = $('#max_commission_percentage_error_js')
+        $max_commission_percentage_error = $('#max_commission_percentage_error')
+    
+        function update_author_type_ui__lead_type__buying() {
+            // Update 'author type' UI when 'lead type' has changed to 'buying'.
+            $author_type__label.text('Are you a direct buyer or a middleman?')
+            $author_type__option__direct.text('Direct Buyer')
+            $author_type.trigger("chosen:updated") // Refresh
+        }
+    
+        function update_author_type_ui__lead_type__selling() {
+            // Update 'author type' UI when 'lead type' has changed to 'selling'.
+            $author_type__label.text('Are you a direct seller or a middleman?')
+            $author_type__option__direct.text('Direct Seller')
+            $author_type.trigger("chosen:updated") // Refresh
+        }
+    
+        $lead_type.change(function() {
+            choice = $lead_type.val()
+            if (choice == 'buying') {
+                update_author_type_ui__lead_type__buying()
+            } else if (choice == 'selling') {
+                update_author_type_ui__lead_type__selling()
+            }
+        })
+    
+        $min_commission_percentage.on('input', function() {
+            min_value = $min_commission_percentage.val()
+            max_value = $max_commission_percentage.val()
+            if (min_value == '') {
+                // Don't check unless textfield is populated
+                $min_commission_percentage_error_js.hide()
+            } else if (min_value < 0.01 || min_value > 100) {
+                $min_commission_percentage_error_js.show()
+                $min_commission_percentage_error_js.text('Agent commission must be between 0.01% and 100%')
+                $min_commission_percentage_error.hide()
+            } else if (min_value >= max_value && max_value != '') {
+                $min_commission_percentage_error_js.show()
+                $min_commission_percentage_error_js.text('Minimum commission must be smaller than maximum commission')
+                $min_commission_percentage_error.hide()
+            } else {
+                $min_commission_percentage_error_js.hide()
+            }
+        })
+    
+        $max_commission_percentage.on('input', function() {
+            min_value = $min_commission_percentage.val()
+            max_value = $max_commission_percentage.val()
+            if (max_value == '') {
+                // Don't check unless textfield is populated
+                $max_commission_percentage_error_js.hide()
+            } else if (max_value < 0.01 || max_value > 100) {
+                $max_commission_percentage_error_js.show()
+                $max_commission_percentage_error_js.text('Agent commission must be between 0.01% and 100%')
+                $max_commission_percentage_error.hide()
+            } else if (max_value <= $min_commission_percentage.val() && min_value != '') {
+                $max_commission_percentage_error_js.show()
+                $max_commission_percentage_error_js.text('Maximum commission must be greater than minimum commission')
+                $max_commission_percentage_error.hide()
+            } else {
+                $max_commission_percentage_error_js.hide()
+            }
+        })
+
+        function update_commission_fields_ui(choice) {
+            if (choice == 'percentage') {
+                $min_max_commission_fields.show()
+                $commission_usd_mt_fields.hide()
+            } else if (choice == 'usd_mt') {
+                $min_max_commission_fields.hide()
+                $commission_usd_mt_fields.show()
+            }
+        }
+
+        $commission_type.change(function() {
+            choice = $commission_type.val()
+            update_commission_fields_ui(choice)
+        })
+        
+        update_commission_fields_ui($commission_type.val())
+        
+        // Show loading indicator on submission
+        // $('#submit').click(function() {
+        //     $.LoadingOverlay("show")
+        // })
+    })
+
+</script>
 <script src="{% static 'common/js/prevent_resubmit.js' %}"></script>
 {% endblock %}
