@@ -129,9 +129,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
+    # Required for admin backend to work
     'django.contrib.auth.backends.ModelBackend',
 
-    # Supports WhatsApp login
+    # Supports passwordless login to work
     'relationships.auth.backends.DirectBackend',
 ]
 
@@ -247,10 +248,7 @@ if DEBUG == False:
     # Required for Heroku
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-LOGIN_URL = '/sign-in'
-
-# List of persons to notify when someone signs up as a lead
-LEAD_SIGN_UP_NOTIFICATION_LIST = ['kevin@everybase.co']
+LOGIN_URL = '/login'
 
 # Django administration default datetime format
 en_formats.DATETIME_FORMAT = 'd M Y H:i:s'
@@ -313,8 +311,8 @@ GMASS_CAMPAIGN_UPDATE_TIMEFRAME_DAYS = config('GMASS_CAMPAIGN_UPDATE_TIMEFRAME_D
 ADMIN_PATH = str(config('ADMIN_PATH')).strip()
 
 # Login/register tokens expiry duration in seconds
-LOGIN_TOKEN_EXPIRY_SECS = 900 # 15 minutes
-REGISTER_TOKEN_EXPIRY_SECS = 900 # 15 minutes
+# LOGIN_TOKEN_EXPIRY_SECS = 900 # 15 minutes
+# REGISTER_TOKEN_EXPIRY_SECS = 900 # 15 minutes
 
 # S3 path for lead files
 LEADS_FILES_S3_PATH = 'leads'
@@ -335,3 +333,6 @@ SETTINGS_EXPORT = [
 
 # 5 MB 5242880
 MAX_UPLOAD_SIZE = 5242880
+
+# Login code expiry
+LOGIN_CODE_EXPIRY_SECONDS = config('LOGIN_CODE_EXPIRY_SECONDS')
