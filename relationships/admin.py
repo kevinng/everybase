@@ -189,16 +189,16 @@ class LeadInlineAdmin(admin.TabularInline):
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'full_name', 'country', 'email', 'whatsapp_phone_number', 'created']
+    list_display = ['id', 'full_name', 'country', 'email', 'whatsapp_phone_number', 'created', 'has_insights']
     list_editable = [] # Override to speed up loading
-    list_filter = ['created']
+    list_filter = ['created', 'has_insights']
     search_fields = ['id', 'uuid', 'first_name', 'last_name', 'country__name', 'email__email', 'internal_notes']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + ['uuid', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'django_user_link']
     fieldsets = [
         (None, {'fields': ['id', 'uuid']}),
-        ('Growth', {'fields': ['registered', 'django_user', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'fb_profile', 'django_user_link', 'internal_notes']}),
+        ('Growth', {'fields': ['registered', 'django_user', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'fb_profile', 'django_user_link', 'has_insights', 'internal_notes']}),
         ('Details', {'fields': ['first_name', 'last_name', 'email', 'phone_number', 'country']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
         ('Not in use', {'fields': [

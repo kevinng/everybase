@@ -154,7 +154,7 @@ class InvalidEmail(commods.Standard):
 class User(commods.Standard):
     """User details.
 
-    Last updated: 17 May 2022, 11:11 AM
+    Last updated: 27 May 2022, 9:09 PM
     """
     registered = models.DateTimeField(
         null=True,
@@ -175,6 +175,39 @@ class User(commods.Standard):
         unique=True,
         default=uuid.uuid4,
         editable=False,
+        db_index=True
+    )
+
+    last_email_login = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    email_login_code = models.CharField(
+        max_length=20,
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    email_login_code_generated = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    last_whatsapp_login = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    whatsapp_login_code = models.CharField(
+        max_length=20,
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    whatsapp_login_code_generated = models.DateTimeField(
+        null=True,
+        blank=True,
         db_index=True
     )
 
@@ -233,6 +266,10 @@ class User(commods.Standard):
         blank=True
     )
 
+    has_insights = models.BooleanField(
+        null=True,
+        blank=True
+    )
     internal_notes = models.TextField(
         null=True,
         blank=True

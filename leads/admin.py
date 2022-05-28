@@ -49,9 +49,9 @@ class ApplicationMessageInlineAdmin(admin.TabularInline):
 class ApplicationAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'last_messaged', 'updated', 'stopped_follow_up', 'num_messages', 'internal_notes_num_char', 'lead', 'applicant', 'created', 'has_experience', 'has_buyers', 'applicant_email', 'lead_author_email']
+    list_display = ['id', 'last_messaged', 'updated', 'stopped_follow_up', 'num_messages', 'internal_notes_num_char', 'lead', 'applicant', 'created', 'has_experience', 'has_buyers', 'applicant_email', 'lead_author_email', 'has_insights']
     list_editable = [] # Override to speed up loading
-    list_filter = ['last_messaged', 'lead__lead_type', 'created', 'stopped_follow_up', 'has_experience', 'has_buyers']
+    list_filter = ['last_messaged', 'lead__lead_type', 'created', 'stopped_follow_up', 'has_experience', 'has_buyers', 'has_insights']
     search_fields = ['id', 'lead__headline', 'applicant__first_name', 'applicant__last_name', 'lead__author__first_name', 'lead__author__last_name', 'lead__author__email__email', 'applicant__email__email', 'internal_notes']
 
     # Details page settings
@@ -64,7 +64,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
     ]
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'updated', 'internal_notes', 'random_string_for_password', 'application_public_link']}),
+        ('Growth', {'fields': ['last_messaged', 'num_messages', 'stopped_follow_up', 'created', 'updated', 'has_insights', 'internal_notes', 'random_string_for_password', 'application_public_link']}),
         ('Applicant', {'fields': ['applicant_link', 'applicant_fb_profile', 'applicant_email', 'applicant_whatsapp', 'applicant_password_change_link', 'applicant_django_user_link']}),
         ('Lead author', {'fields': ['lead_author_link', 'lead_author_fb_profile', 'lead_author_email', 'lead_author_whatsapp', 'lead_author_password_change_link', 'lead_author_django_user_link']}),
         ('Lead', {'fields': ['lead_headline', 'lead_everybase_link', 'lead_details', 'lead_type', 'lead_buy_country', 'lead_sell_country', 'lead_commission']}),
@@ -234,9 +234,9 @@ class LeadCommentAdmin(comadm.StandardAdmin):
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'created', 'author', 'lead_type', 'category','headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type']
+    list_display = ['id', 'created', 'author', 'lead_type', 'category','headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type', 'has_insights']
     list_editable = [] # Override to speed up loading
-    list_filter = ['created', 'lead_type', 'author_type', 'category']
+    list_filter = ['created', 'lead_type', 'author_type', 'category', 'has_insights']
     search_fields = ['id', 'headline', 'details', 'author__first_name', 'author__last_name', 'internal_notes']
 
     # Details page settings
@@ -244,7 +244,7 @@ class LeadAdmin(comadm.StandardAdmin):
     fieldsets = [
         (None, {'fields': ['id', 'uuid']}),
         ('Details', {'fields': ['author', 'lead_type', 'category','headline', 'details', 'min_commission_percentage', 'max_commission_percentage', 'buy_country', 'sell_country', 'author_type', 'questions']}),
-        ('Meta', {'fields': ['internal_notes', 'slug_link', 'slug_tokens', 'impressions', 'clicks']}),
+        ('Meta', {'fields': ['has_insights', 'internal_notes', 'slug_link', 'slug_tokens', 'impressions', 'clicks']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
         ('Not in use', {'fields': ['title', 'currency', 'comm_details', 'need_agent', 'country', 'agent_job', 'avg_deal_size', 'commission_payable_by', 'commission_payable_after',
             'commission_payable_after_other', 'commission_earnings', 'commission_quantity_unit_string', 'commission_type_other', 'other_comm_details', 'is_comm_negotiable', 'is_promoted',

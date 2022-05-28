@@ -7,7 +7,7 @@ from django.utils.text import slugify
 class Lead(Standard):
     """Lead.
 
-    Last updated: 24 May 2022, 2:42 PM
+    Last updated: 28 May 2022, 9:47 PM
     """
 
     uuid = models.UUIDField(
@@ -99,6 +99,10 @@ class Lead(Standard):
         blank=True
     )
 
+    has_insights = models.BooleanField(
+        null=True,
+        blank=True
+    )
     internal_notes = models.TextField(
         null=True,
         blank=True
@@ -381,7 +385,7 @@ class LeadDetailView(Standard):
 class Application(Standard):
     """Agent application.
 
-    Last updated: 17 May 2022, 1:39 PM
+    Last updated: 28 May 2022, 9:47 PM
     """
     last_messaged = models.DateTimeField(
         null=True,
@@ -428,6 +432,11 @@ class Application(Standard):
     )
 
     applicant_comments = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    has_insights = models.BooleanField(
         blank=True,
         null=True
     )
