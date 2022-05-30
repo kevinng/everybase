@@ -24,6 +24,23 @@ from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
 from relationships import forms, models
 
+def magic_login(request, uuid):
+    print(uuid)
+    print('magic')
+
+    # Logs in the user 'magically'
+    if uuid is not None:
+        dj_user = authenticate(uuid)
+        if dj_user is not None:
+            # Successfully authenticated
+            login(request, dj_user)
+
+    next = request.GET.get('next')
+    if next is not None and next.strip() != '':
+        return HttpResponseRedirect(next)
+    else:
+        return HttpResponseRedirect(reverse('leads:lead_create'))
+
 # Named log_in and not login to prevent clash with Django login
 def log_in(request):
     # Do not allow user to access this page if he is authenticated.

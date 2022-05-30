@@ -38,6 +38,7 @@ urlpatterns = [
     path('login/', relviews.log_in, name='login'),
     path('confirm-login/', relviews.confirm_login, name='confirm_login'),
     path('logout/', relviews.log_out, name='logout'),
+    path('ml/<uuid:uuid>/', relviews.magic_login, name='magic_login'),
 
     # Chat
     path('chat/', include('chat.urls')),
