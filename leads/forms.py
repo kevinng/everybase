@@ -1,4 +1,5 @@
 from django import forms
+from common.utilities.is_censored import is_censored
 from django.core.exceptions import ValidationError
 
 class LeadForm(forms.Form):
@@ -25,6 +26,10 @@ class LeadForm(forms.Form):
         commission_usd_mt = self.cleaned_data.get('commission_usd_mt')
         min_commission_percentage = self.cleaned_data.get('min_commission_percentage')
         max_commission_percentage = self.cleaned_data.get('max_commission_percentage')
+
+        headline = self.cleaned_data.get('headline')
+        details = self.cleaned_data.get('details')
+        questions = self.cleaned_data.get('questions')
         
         if country is not None and country == 'no_country':
             self.add_error('country', 'This field is required.')
@@ -52,6 +57,18 @@ class LeadForm(forms.Form):
             has_error = True
         elif commission_usd_mt is None and commission_type == 'usd_mt':
             self.add_error('commission_usd_mt', 'This field is required.')
+            has_error = True
+
+        if headline is not None and is_censored(headline):
+            self.add_error('headline', 'Please do not include contact details.')
+            has_error = True
+
+        if details is not None and is_censored(details):
+            self.add_error('details', 'Please do not include contact details.')
+            has_error = True
+
+        if questions is not None and is_censored(questions):
+            self.add_error('questions', 'Please do not include contact details.')
             has_error = True
         
         if has_error:
