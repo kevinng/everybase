@@ -41,6 +41,11 @@
             <p>{% if lead.author_type == 'direct' %}{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.author_type == 'buying' %}Direct buyer{% endif %}{% elif lead.lead_type == 'broker' %}Middleman{% endif %}</p>
         {% endif %}
 
+        {% if lead.category != None %}
+            <h4>Category</h4>
+            <p>{{ lead.category.name }}</p>
+        {% endif %}
+
         <h4>Country</h4>
         <p>{% if lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% elif lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% endif %}</p>
 

@@ -45,12 +45,23 @@
                                         <label>Country</label>
                                         {% comment %} Map country to either buy_country or sell_country on the backend depending on lead_type {% endcomment %}
                                         <select name="country" class="chosen-select">
-                                            <option value="any_country">Select a Country</option>
+                                            <option value="no_country">Select a Country</option>
                                             {% for country in countries %}
                                                 <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                                             {% endfor %}
                                         </select>
                                         {% if form.country.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-12">
+                                        <label>Category</label>
+                                        <select name="category" class="chosen-select">
+                                            <option value="other">Other</option>
+                                            {% for c in categories %}
+                                                <option value="{{ c.programmatic_key }}"{% if form.category.value == c.programmatic_key %} selected{% endif %}>{{ c.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        {% if form.category.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.category.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
                                     {% comment %} <div class="form-group col-lg-6 col-md-12">

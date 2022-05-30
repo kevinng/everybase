@@ -263,6 +263,7 @@ def lead_create(request):
             lead_type = g('lead_type')
             author_type = g('author_type')
             country_key = g('country')
+            category_key = g('category')
             commission_type = g('commission_type')
             commission_usd_mt = g('commission_usd_mt')
             min_commission_percentage = g('min_commission_percentage')
@@ -271,10 +272,18 @@ def lead_create(request):
             details = g('details')
             questions = g('questions')
 
+            category = None
+            if category_key != 'other':
+                try:
+                    category = models.LeadCategory.objects.get(programmatic_key=category_key)
+                except models.LeadCategory.DoesNotExist:
+                    pass
+
             lead = models.Lead(
                 author=request.user.user,
                 lead_type=lead_type,
                 author_type=author_type,
+                category=category,
                 commission_type=commission_type,
                 commission_usd_mt=commission_usd_mt,
                 min_commission_percentage=min_commission_percentage,
@@ -324,8 +333,14 @@ def lead_create(request):
     countries = commods.Country.objects.annotate(
         num_leads=Count('leads_buy_country')).order_by('-num_leads')
 
+    categories = models.LeadCategory.objects\
+        .annotate(num_leads=Count('leads')).\
+        filter(num_leads__gt=0).\
+        order_by('-num_leads')
+
     params = {
         'countries': countries,
+        'categories': categories,
         'form': form
     }
 
@@ -342,6 +357,7 @@ def lead_edit(request, slug):
             lead_type = g('lead_type')
             author_type = g('author_type')
             country_key = g('country')
+            category_key = g('category')
             commission_type = g('commission_type')
             commission_usd_mt = g('commission_usd_mt')
             min_commission_percentage = g('min_commission_percentage')
@@ -350,9 +366,17 @@ def lead_edit(request, slug):
             details = g('details')
             questions = g('questions')
 
+            category = None
+            if category_key != 'other':
+                try:
+                    category = models.LeadCategory.objects.get(programmatic_key=category_key)
+                except models.LeadCategory.DoesNotExist:
+                    pass
+
             lead.author = request.user.user
             lead.lead_type = lead_type
             lead.author_type = author_type
+            lead.category = category
             lead.commission_type = commission_type
             lead.commission_usd_mt = commission_usd_mt
             lead.min_commission_percentage = min_commission_percentage
@@ -384,6 +408,9 @@ def lead_edit(request, slug):
             'questions': lead.questions
         }
 
+        if lead.category is not None:
+            initial['category'] = lead.category.programmatic_key
+
         if lead.lead_type == 'selling':
             initial['country'] = lead.buy_country.programmatic_key
         elif lead.lead_type == 'buying':
@@ -394,8 +421,14 @@ def lead_edit(request, slug):
     countries = commods.Country.objects.annotate(
         num_leads=Count('leads_buy_country')).order_by('-num_leads')
 
+    categories = models.LeadCategory.objects\
+        .annotate(num_leads=Count('leads')).\
+        filter(num_leads__gt=0).\
+        order_by('-num_leads')
+
     params = {
         'slug_link': lead.slug_link,
+        'categories': categories,
         'countries': countries,
         'form': form
     }

@@ -9,6 +9,7 @@ class LeadForm(forms.Form):
     commission_type = forms.CharField()
 
     # Non-required fields
+    category = forms.CharField(required=False)
     commission_usd_mt = forms.DecimalField(required=False)
     min_commission_percentage = forms.DecimalField(required=False)
     max_commission_percentage = forms.DecimalField(required=False)
@@ -25,7 +26,7 @@ class LeadForm(forms.Form):
         min_commission_percentage = self.cleaned_data.get('min_commission_percentage')
         max_commission_percentage = self.cleaned_data.get('max_commission_percentage')
         
-        if country is not None and country == 'any_country':
+        if country is not None and country == 'no_country':
             self.add_error('country', 'This field is required.')
             has_error = True
 

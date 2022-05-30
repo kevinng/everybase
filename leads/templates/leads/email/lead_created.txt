@@ -5,4 +5,4 @@ You've created a lead on Everybase.
 
 Please add this email to your whitelist.
 
-We'll contact you at this address when someone contacts you on Everybase.
+We'll contact you at this email when someone contacts you on Everybase.

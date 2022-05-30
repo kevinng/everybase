@@ -89,7 +89,10 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    details = models.TextField()
+    details = models.TextField(
+        null=True,
+        blank=True
+    )
     questions = models.TextField(
         null=True,
         blank=True
