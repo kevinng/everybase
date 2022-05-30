@@ -52,6 +52,9 @@
                                         {% if form.last_name.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
 
+                                </div>
+
+                                <div class="row">
                                     {% comment %} <div class="form-group col-lg-6 col-md-12">
                                         <label>Company Name</label>
                                         <input type="text" name="company_name"{% if form.company_name.value != None %} value="{{ form.company_name.value }}"{% endif %}>
@@ -59,12 +62,20 @@
                                     </div> {% endcomment %}
 
                                     <div class="form-group col-lg-6 col-md-12">
+                                        <label>Email</label>
+                                        <input type="text" name="email" {% if form.email.value != None %} value="{{ form.email.value }}"{% endif %}>
+                                        {% if form.email.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-12">
                                         <label>Phone</label>
-                                        <input type="text" name="phone_number" placeholder="e.g., +14155552671"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %}>
+                                        <input type="text" name="phone_number" {% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %}>
                                         <div class="text" style="margin-left:20px; margin-top:10px">Please include + symbol. E.g., +14155552671.</div>
                                         {% if form.phone_number.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
+                                </div>
 
+                                <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label>Country</label>
                                         <select name="country" class="chosen-select">
@@ -81,9 +92,12 @@
                                         <textarea name="goods_string">{% if form.goods_string.value != None %}{{ form.goods_string.value }}{% endif %}</textarea>
                                         {% if form.goods_string.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.goods_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div> {% endcomment %}
-            
+                                </div>
+
+                                <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
                                         <button class="theme-btn btn-style-one" type="submit">Save</button>
+                                        <div class="text" style="margin-top:10px">You'll need to login again if you've changed your email or phone number.</div>
                                     </div>
                                 </div>
                             </form>

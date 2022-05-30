@@ -67,6 +67,16 @@
                 <div class="login-form default-form">
                     <div class="form-inner">
                         <h3>Login</h3>
+                        
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="message-box info">
+                                    <p>{{ message }}</p>
+                                    <button class="close-btn"><span class="close_icon"></span></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
                         <form action="{% url 'login' %}" method="post">
                             {% if next != None %}
                                 <input type="hidden" name="next" value="{{ next }}">

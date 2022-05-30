@@ -147,10 +147,8 @@ class LoginForm(forms.Form):
             raise ValidationError(None)
 
 class RegisterForm(forms.Form):
-    # Require user to provide email and/or phone number in clean()
     email = forms.EmailField(required=False)
     phone_number = PhoneNumberField(required=False)
-
     first_name = forms.CharField(
         min_length=1,
         max_length=20
@@ -181,7 +179,7 @@ class RegisterForm(forms.Form):
                 ).first()
 
                 if u is not None:
-                    self.add_error('email', 'This email belongs to an existing user. Please log in if you already have an account.')
+                    self.add_error('email', 'This email belongs to an existing user.')
                     has_error = True
             except models.Email.DoesNotExist:
                 # Good - email is not in used
@@ -207,8 +205,7 @@ class RegisterForm(forms.Form):
                 ).first()
                 
                 if user_w_ph is not None:
-                    self.add_error('phone_number',
-                        'This phone number belongs to an existing user. Please ensure you\'ve entered your phone number correctly.')
+                    self.add_error('phone_number', 'This phone number belongs to an existing user.')
                     has_error = True
             except models.PhoneNumber.DoesNotExist:
                 # Good - no user has this phone number
@@ -235,21 +232,54 @@ class RegisterForm(forms.Form):
 class ProfileForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
-    phone_number = PhoneNumberField()
+    email = forms.EmailField(required=False)
+    phone_number = PhoneNumberField(required=False)
+
     country = forms.CharField()
 
     def __init__(self, *args, **kwargs):
         # Make request object passed in a class variable
         self.request = kwargs.pop('request')
+        self.last_email = kwargs.pop('last_email')
+        self.last_phone_number = kwargs.pop('last_phone_number')
         super().__init__(*args, **kwargs)
 
     def clean(self):
         super(ProfileForm, self).clean()
 
         has_error = False
-        phone_number = self.cleaned_data.get('phone_number')
-        if phone_number is not None:
-            parsed_ph = phonenumbers.parse(str(phone_number), None)
+
+        email_str = self.cleaned_data.get('email')
+        ph_str = self.cleaned_data.get('phone_number')
+
+        if ph_str is not None:
+            ph_str = str(ph_str)
+
+        if (email_str is None or email_str.strip() == '') and\
+            (ph_str is None or ph_str.strip() == ''):
+            self.add_error('email', 'Specify phone number and/or email.')
+            self.add_error('phone_number', 'Specify phone number and/or email.')
+            has_error = True
+
+        if email_str is not None and email_str.strip() != '' and self.last_email != email_str:
+            try:
+                email = models.Email.objects.get(email=email_str)
+
+                u = models.User.objects.filter(
+                    email=email.id, # User has email
+                    registered__isnull=False, # User is registered
+                    django_user__isnull=False # User has a Django user linked
+                ).first()
+
+                if u is not None:
+                    self.add_error('email', 'This email belongs to an existing user.')
+                    has_error = True
+            except models.Email.DoesNotExist:
+                # Good - email is not in used
+                pass
+
+        if ph_str is not None and ph_str.strip() != '' and self.last_phone_number != ph_str:
+            parsed_ph = phonenumbers.parse(ph_str, None)
             ph_cc = parsed_ph.country_code
             ph_nn = parsed_ph.national_number
 
@@ -266,7 +296,7 @@ class ProfileForm(forms.Form):
                 ).first()
 
                 if user_w_ph is not None and self.request.user.user.id != user_w_ph.id:
-                    self.add_error('phone_number', 'This phone number belongs to an existing user. Please ensure you\'ve entered your phone number correctly.')
+                    self.add_error('phone_number', 'This phone number belongs to an existing user.')
                     has_error = True
             except models.PhoneNumber.DoesNotExist:
                 # Good - no user has this phone number

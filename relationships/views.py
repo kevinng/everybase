@@ -277,65 +277,101 @@ def log_out(request):
 @login_required
 def profile(request):
     if request.method == 'POST':
-        form = forms.ProfileForm(request.POST, request=request)
+        kwargs = {'request': request}
+        
+        user = request.user.user
+
+        kwargs['last_email'] = user.email.email if user.email else None
+        kwargs['last_phone_number'] = f'+{user.phone_number.country_code}{user.phone_number.national_number}' if user.phone_number else None
+
+        form = forms.ProfileForm(request.POST, **kwargs)
+
         if form.is_valid():
+            last_email = form.last_email
+            last_phone_number = form.last_phone_number
+            
+            email = form.cleaned_data.get('email')
             phone_number = form.cleaned_data.get('phone_number')
 
-            parsed_ph = phonenumbers.parse(str(phone_number), None)
-            ph_cc = parsed_ph.country_code
-            ph_nn = parsed_ph.national_number
+            need_logout = False
 
-            ph, _ = models.PhoneNumber.objects.get_or_create(
-                country_code=ph_cc,
-                national_number=ph_nn
-            )
+            if email is None or email.strip() == '':
+                user.email = None
+            elif last_email != email:
+                # User has updated his email
+                email, _ = models.Email.objects.get_or_create(email=email)
+                user.email = email
+                need_logout = True
+
+            if phone_number is None or str(phone_number).strip() == '':
+                user.phone_number = None
+            elif last_phone_number != phone_number :
+                # User has updated his phone number
+                parsed_ph = phonenumbers.parse(str(phone_number), None)
+                ph_cc = parsed_ph.country_code
+                ph_nn = parsed_ph.national_number
+
+                ph, _ = models.PhoneNumber.objects.get_or_create(
+                    country_code=ph_cc,
+                    national_number=ph_nn
+                )
+
+                user.phone_number = ph
+                need_logout = True
 
             country_str = form.cleaned_data.get('country')
             country = commods.Country.objects.get(programmatic_key=country_str)
 
-            user = request.user.user
             user.first_name = form.cleaned_data.get('first_name')
             user.last_name = form.cleaned_data.get('last_name')
-            user.phone_number = ph
             user.country = country
             user.save()
 
+            idampusr_props = {'country': user.country.programmatic_key}
+            idampusr_props['country code'] = user.phone_number.country_code if user.phone_number is not None else ''
+
+            ampevt_props = {'country': user.country.programmatic_key}
+            ampevt_props['country code'] = user.phone_number.country_code if user.phone_number is not None else ''
+
             identify_amplitude_user.delay(
                 user_id=user.uuid,
-                user_properties={
-                    'country code': user.phone_number.country_code,
-                    'country': user.country.programmatic_key
-                }
+                user_properties=idampusr_props
             )
             send_amplitude_event.delay(
                 'account - updated profile',
                 user_uuid=user.uuid,
                 ip=get_ip_address(request),
-                event_properties={
-                    'country code': user.phone_number.country_code,
-                    'country': user.country.programmatic_key
-                }
+                event_properties=ampevt_props
             )
+
+            if need_logout:
+                messages.add_message(request, messages.INFO, 'You have updated your email and/or phone number. Please log in again.')
+                logout(request)
+                return HttpResponseRedirect(reverse('login'))
 
             messages.add_message(request, messages.INFO, 'Profile updated.')
             return HttpResponseRedirect(reverse('users:profile'))
     else:
         user = request.user.user
         initial = {}
+        kwargs = {'request': request}
         
         if user.first_name:
             initial['first_name'] = user.first_name
         
         if user.last_name:
             initial['last_name'] = user.last_name
+
+        kwargs['last_email'] = user.email.email if user.email else None
+        initial['email'] = kwargs['last_email']
         
-        if user.phone_number:
-            initial['phone_number'] = f'+{user.phone_number.country_code}{user.phone_number.national_number}'
+        kwargs['last_phone_number'] = f'+{user.phone_number.country_code}{user.phone_number.national_number}' if user.phone_number else None
+        initial['phone_number'] = kwargs['last_phone_number']
 
         if user.country:
             initial['country'] = user.country.programmatic_key
         
-        form = forms.ProfileForm(initial=initial, request=request)
+        form = forms.ProfileForm(initial=initial, **kwargs)
 
     countries = commods.Country.objects.annotate(
         num_leads=Count('leads_buy_country')).order_by('-num_leads')
