@@ -37,31 +37,28 @@
         <p>{% if lead.lead_type == 'selling' %}Sell{% elif lead.lead_type == 'buying' %}Buy{% endif %}</p>
 
         {% if lead.author_type != None %}
-        <h4>{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.lead_type == 'buying' %}Direct buyer{% endif %} or middleman?</h4>
-        <p>{% if lead.author_type == 'direct' %}{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.author_type == 'buying' %}Direct buyer{% endif %}{% elif lead.lead_type == 'broker' %}Middleman{% endif %}</p>
+            <h4>{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.lead_type == 'buying' %}Direct buyer{% endif %} or middleman?</h4>
+            <p>{% if lead.author_type == 'direct' %}{% if lead.lead_type == 'selling' %}Direct seller{% elif lead.author_type == 'buying' %}Direct buyer{% endif %}{% elif lead.lead_type == 'broker' %}Middleman{% endif %}</p>
         {% endif %}
 
         <h4>Country</h4>
         <p>{% if lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% elif lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% endif %}</p>
 
-        <h4>Commission</h4>
-
-        {% if lead.commission_type == 'percentage' %}
-
-        <p>{{ lead.min_commission_percentage }}% to {{ lead.max_commission_percentage }}%</p>
-
-        {% elif lead.commission_type == 'usd_mt' %}
-
-        <p>USD {{ lead.commission_usd_mt|floatformat:2 }} per Metric Ton</p>
-
+        {% if lead.commission_type != None and lead.commission_type.strip != '' %}
+        {% if lead.commission_type == 'percentage' or lead.commission_type == 'usd_mt' %}
+            <h4>Commission</h4>
+            {% if lead.commission_type == 'percentage' %}
+                <p>{{ lead.min_commission_percentage }}% to {{ lead.max_commission_percentage }}%</p>
+            {% elif lead.commission_type == 'usd_mt' %}
+                <p>USD {{ lead.commission_usd_mt|floatformat:2 }} per Metric Ton</p>
+            {% endif %}
+        {% endif %}
         {% endif %}
 
         {% if lead.details != None and lead.details.strip != '' %}
-
-        <h4>Lead Details</h4>
-        {% comment %} Render with <p> tags {% endcomment %}
-        {{ lead.details|linebreaks }}
-
+            <h4>Lead Details</h4>
+            {% comment %} Render with <p> tags {% endcomment %}
+            {{ lead.details|linebreaks }}
         {% endif %}
 
         {% if not request.user.is_authenticated %}
@@ -137,9 +134,6 @@ $(document).ready(function() {
 {% endcomment %}
 {% block other_scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
-<script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
-<script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
 <script>$(document).ready((function(){amplitude.getInstance().logEvent("discovery - viewed lead detail",{lead_id:"{{ lead.id }}",buy_sell:"{{ lead.lead_type }}",buy_country:"{{ lead.buy_country.programmatic_key }}"})}));</script>
 <script src="{% static 'common/js/prevent_resubmit.js' %}"></script>
 {% endblock %}

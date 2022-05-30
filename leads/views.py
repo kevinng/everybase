@@ -19,7 +19,6 @@ from everybase import settings
 from common import models as commods
 from common.tasks.send_email import send_email
 from leads import models, forms
-from files import models as fimods
 from files.utilities.get_mime_type import get_mime_type
 from common.tasks.send_amplitude_event import send_amplitude_event
 from common.tasks.identify_amplitude_user import identify_amplitude_user
@@ -343,6 +342,8 @@ def lead_edit(request, slug):
             lead_type = g('lead_type')
             author_type = g('author_type')
             country_key = g('country')
+            commission_type = g('commission_type')
+            commission_usd_mt = g('commission_usd_mt')
             min_commission_percentage = g('min_commission_percentage')
             max_commission_percentage = g('max_commission_percentage')
             headline = g('headline')
@@ -352,6 +353,8 @@ def lead_edit(request, slug):
             lead.author = request.user.user
             lead.lead_type = lead_type
             lead.author_type = author_type
+            lead.commission_type = commission_type
+            lead.commission_usd_mt = commission_usd_mt
             lead.min_commission_percentage = min_commission_percentage
             lead.max_commission_percentage = max_commission_percentage
             lead.headline = headline
@@ -372,6 +375,8 @@ def lead_edit(request, slug):
             'author': lead.author,
             'lead_type': lead.lead_type,
             'author_type': lead.author_type,
+            'commission_type': lead.commission_type,
+            'commission_usd_mt': lead.commission_usd_mt,
             'min_commission_percentage': lead.min_commission_percentage,
             'max_commission_percentage': lead.max_commission_percentage,
             'headline': lead.headline,

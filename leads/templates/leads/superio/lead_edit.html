@@ -42,6 +42,17 @@
                                     </div>
 
                                     <div class="form-group col-lg-6 col-md-12">
+                                        <label>Country</label>
+                                        {% comment %} Map country to either buy_country or sell_country on the backend depending on lead_type {% endcomment %}
+                                        <select name="country" class="chosen-select">
+                                            {% for country in countries %}
+                                                <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        {% if form.country.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                    </div>
+
+                                    {% comment %} <div class="form-group col-lg-6 col-md-12">
                                         <label id="author_type__label" for="author_type">Are you direct buyer/seller or middleman?</label>
                                         <select id="author_type" name="author_type" class="chosen-select">
                                             <option></option>
@@ -49,24 +60,28 @@
                                             <option value="broker"{% if form.author_type.value == 'broker' %} selected{% endif %}>Middleman</option>
                                         </select>
                                         {% if form.author_type.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.author_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                                    </div>
+                                    </div> {% endcomment %}
                                 </div>
 
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
-                                        <label>Country</label>
-                                        {% comment %} Map country to either buy_country or sell_country on the backend depending on lead_type {% endcomment %}
-                                        <select name="country" class="chosen-select">
-                                            <option></option>
-                                            {% for country in countries %}
-                                                <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                                            {% endfor %}
+                                        <label for="commission_type">How is agent commission calculated?</label>
+                                        <select id="commission_type" name="commission_type" class="chosen-select">
+                                            <option value="percentage"{% if form.commission_type.value == 'percentage' %} selected{% endif %}>Percentage</option>
+                                            <option value="usd_mt"{% if form.commission_type.value == 'usd_mt' %} selected{% endif %}>USD Per MT</option>
                                         </select>
-                                        {% if form.country.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                        {% if form.commission_type.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.commission_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                    </div>
+
+                                    <div id="commission_usd_mt_fields" class="form-group col-lg-6 col-md-12">
+                                        <label>Commission, USD per Metric Ton</label>
+                                        <input type="number" step="0.1" id="commission_usd_mt" name="commission_usd_mt"{% if form.commission_usd_mt.value != None %} value="{{ form.commission_usd_mt.value }}"{% endif %}>
+                                        <div id="commission_usd_mt_error_js" style="color:red; margin-left:20px; margin-top:10px"></div>
+                                        {% if form.commission_usd_mt.errors %}<div id="commission_usd_mt_error" style="color:red; margin-left:20px; margin-top:10px">{% for error in form.commission_usd_mt.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div id="min_max_commission_fields" class="row">
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label>Minimum Commission %</label>
                                         <input type="number" step="0.1" id="min_commission_percentage" name="min_commission_percentage"{% if form.min_commission_percentage.value != None %} value="{{ form.min_commission_percentage.value }}"{% endif %}>

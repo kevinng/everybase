@@ -11,9 +11,14 @@
                     <li><span class="icon flaticon-briefcase"></span>{{ lead.category.name }}</li>
                 {% endif %}
                 {% comment %} <li><span class="icon flaticon-map-locator"></span>Singapore</li> {% endcomment %}
-                {% if lead.min_commission_percentage != None and lead.max_commission_percentage != None %}
-                <li><span class="icon flaticon-money"></span>{% if lead.min_commission_percentage != None %}{{ lead.min_commission_percentage }}{% else %}0{% endif %}% to {% if lead.max_commission_percentage != None %}{{ lead.max_commission_percentage }}{% else %}0{% endif %}% Commission</li>
+
+                {% if lead.commission_type == 'percentage' and lead.min_commission_percentage != None and lead.max_commission_percentage != None %}
+                    <li><span class="icon flaticon-money"></span>{% if lead.min_commission_percentage != None %}{{ lead.min_commission_percentage }}{% else %}0{% endif %}% to {% if lead.max_commission_percentage != None %}{{ lead.max_commission_percentage }}{% else %}0{% endif %}% Commission</li>
+                {% elif lead.commission_type == 'usd_mt' and lead.commission_usd_mt != None %}
+                    <li><span class="icon flaticon-money"></span>{{ lead.commission_usd_mt|floatformat:2 }} USD per Metric Ton</li>
                 {% endif %}
+
+
                 <li><span class="icon flaticon-clock-3"></span>{{ lead.age_desc }}</li>
             </ul>
             <ul class="job-other-info">
