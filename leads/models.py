@@ -49,6 +49,7 @@ class Lead(Standard):
     commission_type = models.CharField(
         max_length=20,
         choices=[
+            ('negotiable', 'Negotiable'),
             ('earning', 'Earning'),
             ('percentage', 'Percentage'),
             ('usd_mt', 'USD per MT'),

@@ -16,10 +16,14 @@ from django.template.loader import render_to_string
 from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
 
 from everybase import settings
+from leads import models, forms
+from chat.tasks.send_new_application import send_new_application
+from chat.tasks.send_new_message import send_new_message
+
+from files.utilities.get_mime_type import get_mime_type
+
 from common import models as commods
 from common.tasks.send_email import send_email
-from leads import models, forms
-from files.utilities.get_mime_type import get_mime_type
 from common.tasks.send_amplitude_event import send_amplitude_event
 from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
@@ -189,48 +193,69 @@ def lead_detail(request, slug):
         if request.user.user != lead.author and form.is_valid():
 
             # Default false if checkbox is not checked
-            has_experience = False if not form.cleaned_data.get('has_experience') else True
-            has_buyers = False if not form.cleaned_data.get('has_buyers') else True
+            # has_experience = False if not form.cleaned_data.get('has_experience') else True
+            # has_buyers = False if not form.cleaned_data.get('has_buyers') else True
 
-            answers = form.cleaned_data.get('answers')
+            # answers = form.cleaned_data.get('answers')
+
             applicant_comments = form.cleaned_data.get('applicant_comments')
 
             application = models.Application.objects.create(
                 lead=lead,
                 applicant=request.user.user,
-                has_experience=has_experience,
-                has_buyers=has_buyers,
+                # has_experience=has_experience,
+                # has_buyers=has_buyers,
                 applicant_comments=applicant_comments,
                 questions=lead.questions,
-                answers=answers
+                # answers=answers
             )
 
-            # Email lead author
-            send_email.delay(
-                render_to_string('leads/email/new_application_subject.txt', {
-                    'applicant_first_name': application.applicant.first_name,
-                    'applicant_last_name': application.applicant.last_name,
-                }),
-                render_to_string('leads/email/new_application.txt', {
-                    'applicant_first_name': application.applicant.first_name,
-                    'applicant_last_name': application.applicant.last_name,
-                    'lead_headline': application.lead.headline,
-                    'application_detail_url': \
-                        urljoin(settings.BASE_URL,
-                        reverse('applications:application_detail', args=(application.id,)))
-                }),
-                'friend@everybase.co',
-                [application.lead.author.email.email]
-            )
+            # Application detail link with 'magic login'
+            app_det_link = urljoin(settings.BASE_URL, reverse('magic_login', args=(application.lead.author.uuid,))) +\
+                '?next=' + reverse('applications:application_detail', args=(application.id,))
 
+            if application.lead.author.email is not None:
+                # Email lead author
+                send_email.delay(
+                    render_to_string('leads/email/new_application_subject.txt', {
+                        'lead_headline': application.lead.headline
+                    }),
+                    render_to_string('leads/email/new_application.txt', {
+                        'lead_author_first_name': application.lead.author.first_name,
+                        'lead_author_last_name': application.lead.author.last_name,
+                        'lead_headline': application.lead.headline,
+                        'application_detail_url': app_det_link
+                    }),
+                    'friend@everybase.co',
+                    [application.lead.author.email.email]
+                )
+
+            if application.lead.author.phone_number is not None:
+                # WhatsApp lead author
+                send_new_application.delay(
+                    application.lead.author.id,
+                    application.lead.author.first_name,
+                    application.lead.author.last_name,
+                    application.lead.headline,
+                    app_det_link
+                )
+
+            event_props = {
+                'application id': application.id,
+                'lead_type': application.lead.lead_type
+            }
+
+            if application.lead.buy_country is not None:
+                event_props['buy_country'] = application.lead.buy_country.programmatic_key
+
+            if application.lead.sell_country is not None:
+                event_props['sell_country'] = application.lead.sell_country.programmatic_key
+            
             send_amplitude_event.delay(
                 'applied as an agent',
                 user_uuid=lead.author.uuid,
                 ip=get_ip_address(request),
-                event_properties={
-                    'application id': application.id,
-                    'buy country': application.lead.buy_country.programmatic_key
-                }
+                event_properties=event_props
             )
     else:
         form = forms.ApplicationForm()
@@ -525,23 +550,35 @@ def application_detail(request, pk):
                 counter_party = application.applicant
                 counter_party_is_agent = True
 
+            # Application detail link with 'magic login'
+            app_det_link = urljoin(settings.BASE_URL, reverse('magic_login', args=(counter_party.uuid,))) +\
+                '?next=' + reverse('applications:application_detail', args=(application.id,))
+
             # Email counter party
-            send_email.delay(
-                render_to_string('leads/email/new_message_subject.txt', {
-                    'first_name': request.user.user.first_name,
-                    'last_name': request.user.user.last_name
-                }),
-                render_to_string('leads/email/new_message.txt', {
-                    'first_name': request.user.user.first_name,
-                    'last_name': request.user.user.last_name,
-                    'body': body,
-                    'application_detail_url': \
-                        urljoin(settings.BASE_URL,
-                        reverse('applications:application_detail', args=(application.id,)))
-                }),
-                'friend@everybase.co',
-                [counter_party.email.email]
-            )
+            if counter_party.email is not None:
+                send_email.delay(
+                    render_to_string('leads/email/new_message_subject.txt', {
+                        'lead_headline': application.lead.headline
+                    }),
+                    render_to_string('leads/email/new_message.txt', {
+                        'counter_party_first_name': counter_party.first_name,
+                        'counter_party_last_name': counter_party.last_name,
+                        'lead_headline': application.lead.headline,
+                        'application_detail_url': app_det_link
+                    }),
+                    'friend@everybase.co',
+                    [counter_party.email.email]
+                )
+
+            # WhatsApp counter party
+            if counter_party.phone_number is not None:
+                send_new_message.delay(
+                    counter_party.id,
+                    counter_party.first_name,
+                    counter_party.last_name,
+                    application.lead.headline,
+                    app_det_link
+                )
 
             num_messages_sent = models.ApplicationMessage.objects.filter(
                 author=request.user.user

@@ -79,6 +79,7 @@
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label for="commission_type">How is agent commission calculated?</label>
                                         <select id="commission_type" name="commission_type" class="chosen-select">
+                                            <option value="negotiable"{% if form.commission_type.value == 'negotiable' %} selected{% endif %}>Negotiable</option>
                                             <option value="percentage"{% if form.commission_type.value == 'percentage' %} selected{% endif %}>Percentage</option>
                                             <option value="usd_mt"{% if form.commission_type.value == 'usd_mt' %} selected{% endif %}>USD Per MT</option>
                                         </select>
@@ -125,11 +126,11 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-12">
+                                {% comment %} <div class="form-group col-12">
                                     <label>Questions for agents applying to your lead</label>
                                     <textarea name="questions">{% if form.questions.value != None %}{{ form.questions.value }}{% endif %}</textarea>
                                     {% if form.questions.errors %}<div style="color:red; margin-left:20px; margin-top:10px">{% for error in form.questions.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                                </div>
+                                </div> {% endcomment %}
 
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-md-12">
@@ -231,7 +232,10 @@ $(document).ready(function() {
     })
 
     function update_commission_fields_ui(choice) {
-        if (choice == 'percentage') {
+        if (choice == 'negotiable') {
+            $min_max_commission_fields.hide()
+            $commission_usd_mt_fields.hide()
+        } else if (choice == 'percentage') {
             $min_max_commission_fields.show()
             $commission_usd_mt_fields.hide()
         } else if (choice == 'usd_mt') {

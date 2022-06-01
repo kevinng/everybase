@@ -1,4 +1,4 @@
-You've created a lead on Everybase.
+You've created a lead on Everybase:
 
 {{ lead_headline }}
 {{ lead_detail_url }}

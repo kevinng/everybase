@@ -1,6 +1,7 @@
-You received a message on Everybase.
+Hi {{ counter_party_first_name }} {{ counter_party_last_name }},
 
-{{ first_name|title }} {{ last_name|title }}: {{ body }}
+A user sent you a message on Everybase on your lead: {{ lead_headline }}
 
-Reply here:
+Reply to the user here:
+
 {{ application_detail_url }}

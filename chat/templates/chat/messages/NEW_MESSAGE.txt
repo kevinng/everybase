@@ -1,4 +1,4 @@
-Hi {{ lead_author_first_name }} {{ lead_author_last_name }},
+Hi {{ counter_party_first_name }} {{ counter_party_last_name }},
 
 A user has messaged you on your lead:
 

@@ -1,1 +1,1 @@
-{{ applicant_first_name|title }} {{ applicant_last_name|title }} is interested to be your agent
+A user messaged you on your lead: {{ lead_headline }}

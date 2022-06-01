@@ -70,6 +70,17 @@
                                 <h3>We've sent a confirmation code to +{{ form.country_code.value }} {{ form.national_number.value }}. Enter it here to log in.</h3>
                             {% endif %}
                         {% endif %}
+
+
+                        {% comment %} {% if form.non_field_errors %}
+                            {% for e in form.non_field_errors %}
+                                <div class="message-box error">
+                                    <p>{{ e }}</p>
+                                    <button class="close-btn"><span class="close_icon"></span></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %} {% endcomment %}
+
                         <form action="{% url 'confirm_login' %}" method="post">
                             {% if form.next.value != None %}
                                 <input type="hidden" name="next" value="{{ form.next.value }}">

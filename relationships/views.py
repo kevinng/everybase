@@ -1,4 +1,5 @@
 import pytz, phonenumbers, random
+from urllib.parse import urljoin
 from datetime import datetime
 
 from chat.tasks.send_welcome_message import send_welcome_message
@@ -70,6 +71,13 @@ def log_in(request):
                 user.email_login_code_generated = now
                 user.save()
 
+                if has_next and url.endswith(next):
+                    url += f'&method=email'
+                else:
+                    url += f'?method=email'
+
+                url += f'&user={user.uuid}'
+
                 # Send confirmation code by email
                 send_email.delay(
                     render_to_string('relationships/email/confirm_login_subject.txt', {}),
@@ -77,11 +85,6 @@ def log_in(request):
                     'friend@everybase.co',
                     [form.email.email]
                 )
-
-                if has_next and url.endswith(next):
-                    url += f'&method=email'
-                else:
-                    url += f'?method=email'
             elif form.phone_number is not None:
                 # Generate code
                 sgtz = pytz.timezone(settings.TIME_ZONE)
@@ -91,15 +94,15 @@ def log_in(request):
                 user.whatsapp_login_code_generated = now
                 user.save()
 
-                # Send confirmation code by WhatsApp
-                send_confirm_login.delay(form.user.id)
-
                 if has_next and url.endswith(next):
                     url += f'&method=whatsapp'
                 else:
                     url += f'?method=whatsapp'
 
-            url += f'&user={user.uuid}'
+                url += f'&user={user.uuid}'
+
+                # Send confirmation code by WhatsApp
+                send_confirm_login.delay(form.user.id)
 
             return HttpResponseRedirect(url)
     else:
@@ -169,14 +172,20 @@ def confirm_login(request):
 
         method = request.GET.get('method')
 
-        form = forms.ConfirmLoginForm(initial={
+        initial = {
             'user_uuid': user_uuid,
             'method': method,
-            'next': request.GET.get('next'),
-            'email': user.email.email,
-            'country_code': user.phone_number.country_code,
-            'national_number': user.phone_number.national_number
-        })
+            'next': request.GET.get('next')
+        }
+        
+        if user.email is not None:
+            initial['email'] = user.email.email
+
+        if user.phone_number is not None:
+            initial['country_code'] = user.phone_number.country_code
+            initial['national_number'] = user.phone_number.national_number
+
+        form = forms.ConfirmLoginForm(initial=initial)
 
     # Pass GET parameters
 

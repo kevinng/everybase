@@ -1,4 +1,4 @@
-You've attempted to login to Everybase - https://everybase.co
+You've attempted to login to Everybase.
 
 This is your confirmation code: {{ code }}
 

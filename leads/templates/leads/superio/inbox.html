@@ -100,12 +100,18 @@
                                                 {% if application.has_buyers %}<p><b>I have buyers.</b><p>{% endif %}
                                                 {% if application.has_buyers or application.has_experience %}<br>{% endif %}
                                                 <p>{{ application.applicant_comments }}</p>
+                                                
+                                                {% if application.questions != None and application.questions.strip != '' %}
                                                 <br>
                                                 <p><b>Your question:</b></p>
                                                 <p>{{ application.questions }}</p>
+                                                {% endif %}
+                                                
+                                                {% if application.answers != None and application.answers.strip != '' %}
                                                 <br>
                                                 <p><b>My answers:</b></p>
                                                 <p>{{ application.answers }}</p>
+                                                {% endif %}
                                             </div>
                                         </div>
 

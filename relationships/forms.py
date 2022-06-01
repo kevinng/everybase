@@ -15,9 +15,9 @@ class ConfirmLoginForm(forms.Form):
     method = forms.CharField()
     user_uuid = forms.CharField()
     next = forms.CharField(required=False)
-    email = forms.CharField()
-    country_code = forms.CharField()
-    national_number = forms.CharField()
+    email = forms.CharField(required=False)
+    country_code = forms.CharField(required=False)
+    national_number = forms.CharField(required=False)
 
     def clean(self):
         super(ConfirmLoginForm, self).clean()

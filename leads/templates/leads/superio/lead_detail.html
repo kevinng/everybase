@@ -15,7 +15,7 @@
 {% lead_has_applications_with_applicant lead request.user.user as lead_has_applications_with_applicant %}
 {% if lead_has_applications_with_applicant != None %}
 <div class="message-box info">
-    <p>You've applied to be an agent for this lead.</p>
+    <p>You've contacted this user.</p>
     <button class="close-btn"><span class="close_icon"></span></button>
 </div>
 {% endif %}
@@ -48,11 +48,12 @@
 
         <h4>Country</h4>
         <p>{% if lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% elif lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% endif %}</p>
-
         {% if lead.commission_type != None and lead.commission_type.strip != '' %}
-        {% if lead.commission_type == 'percentage' or lead.commission_type == 'usd_mt' %}
+        {% if lead.commission_type == 'percentage' or lead.commission_type == 'usd_mt' or lead.commission_type == 'negotiable' %}
             <h4>Commission</h4>
-            {% if lead.commission_type == 'percentage' %}
+            {% if lead.commission_type == 'negotiable' %}
+                <p>Negotiable</p>
+            {% elif lead.commission_type == 'percentage' %}
                 <p>{{ lead.min_commission_percentage }}% to {{ lead.max_commission_percentage }}%</p>
             {% elif lead.commission_type == 'usd_mt' %}
                 <p>USD {{ lead.commission_usd_mt|floatformat:2 }} per Metric Ton</p>
@@ -69,7 +70,7 @@
         {% if not request.user.is_authenticated %}
             <div class="comments-area">
                 <div class="comment-form default-form">
-                    <h4>I'm interested to be an agent</h4>
+                    <h4>Contact User</h4>
                     <a href="{% url 'register' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-one">Register</a>
                     <a href="{% url 'login' %}?next={% url 'leads:lead_detail' lead.slug_link %}" class="theme-btn btn-style-three">Login</a>
                 </div>
@@ -77,11 +78,11 @@
         {% elif lead.author != request.user.user and not lead_has_applications_with_applicant %}
             <div class="comments-area">
                 <div class="comment-form default-form">
-                    <h4>I'm interested to be an agent</h4>
+                    <h4>Contact User</h4>
                     <form action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
                         {% csrf_token %}
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+                            {% comment %} <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                                 <input id="has_experience" name="has_experience" type="checkbox">
                                 <label for="has_experience">I have experience with this product or industry</label>
                             </div>
@@ -89,15 +90,15 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                                 <input id="has_buyers" name="has_buyers" type="checkbox">
                                 <label for="has_buyers">I have potential buyers</label>
-                            </div>
+                            </div> {% endcomment %}
 
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                <label for="applicant_comments">Comments</label>
+                                <label for="applicant_comments">Message</label>
                                 <textarea id="applicant_comments" name="applicant_comments"></textarea>
                                 {% if form.applicant_comments.errors %}<div style="color:red">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
                             
-                            {% if lead.questions != None %}
+                            {% comment %} {% if lead.questions != None and lead.questions.strip != '' %}
 
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
                                 <label for="answers">{{ lead.questions }}</label>
@@ -105,10 +106,10 @@
                                 {% if form.answers.errors %}<div style="color:red">{% for error in form.answers.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                             </div>
 
-                            {% endif %}
+                            {% endif %} {% endcomment %}
 
                             <div class="col-lg-12 col-md-12 col-sm-12 form-group">
-                                <button class="theme-btn btn-style-one" type="submit" name="submit-form">Apply</button>
+                                <button class="theme-btn btn-style-one" type="submit" name="submit-form">Contact</button>
                             </div>
                         </div>
                     </form>
