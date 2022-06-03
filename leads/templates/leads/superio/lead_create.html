@@ -46,6 +46,7 @@
                                         {% comment %} Map country to either buy_country or sell_country on the backend depending on lead_type {% endcomment %}
                                         <select name="country" class="chosen-select">
                                             <option value="no_country">Select a Country</option>
+                                            <option value="any_country">More Than 1 Country (See Details)</option>
                                             {% for country in countries %}
                                                 <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                                             {% endfor %}
@@ -79,7 +80,7 @@
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label for="commission_type">How is agent commission calculated?</label>
                                         <select id="commission_type" name="commission_type" class="chosen-select">
-                                            <option value="negotiable"{% if form.commission_type.value == 'negotiable' %} selected{% endif %}>Negotiable</option>
+                                            <option value="negotiable"{% if form.commission_type.value == 'negotiable' %} selected{% endif %}>Negotiable (See Details)</option>
                                             <option value="percentage"{% if form.commission_type.value == 'percentage' %} selected{% endif %}>Percentage</option>
                                             <option value="usd_mt"{% if form.commission_type.value == 'usd_mt' %} selected{% endif %}>USD Per MT</option>
                                         </select>

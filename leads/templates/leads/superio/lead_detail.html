@@ -47,12 +47,26 @@
         {% endif %}
 
         <h4>Country</h4>
-        <p>{% if lead.lead_type == 'buying' %}{{ lead.sell_country.name }}{% elif lead.lead_type == 'selling' %}{{ lead.buy_country.name }}{% endif %}</p>
+        <p>{% if lead.lead_type == 'buying' %}
+                {% if lead.sell_country != None %}
+                    {{ lead.sell_country.name }}
+                {% else %}
+                    More Than 1 Country (See Details)
+                {% endif %}
+            {% elif lead.lead_type == 'selling' %}
+                {% if lead.buy_country != None %}
+                    {{ lead.buy_country.name }}
+                {% else %}
+                    More Than 1 Country (See Details)
+                {% endif %}
+            {% endif %}
+        </p>
+
         {% if lead.commission_type != None and lead.commission_type.strip != '' %}
         {% if lead.commission_type == 'percentage' or lead.commission_type == 'usd_mt' or lead.commission_type == 'negotiable' %}
             <h4>Commission</h4>
             {% if lead.commission_type == 'negotiable' %}
-                <p>Negotiable</p>
+                <p>Negotiable (See Details)</p>
             {% elif lead.commission_type == 'percentage' %}
                 <p>{{ lead.min_commission_percentage }}% to {{ lead.max_commission_percentage }}%</p>
             {% elif lead.commission_type == 'usd_mt' %}
@@ -62,7 +76,7 @@
         {% endif %}
 
         {% if lead.details != None and lead.details.strip != '' %}
-            <h4>Lead Details</h4>
+            <h4>Details</h4>
             {% comment %} Render with <p> tags {% endcomment %}
             {{ lead.details|linebreaks }}
         {% endif %}

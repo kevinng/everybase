@@ -318,11 +318,12 @@ def lead_create(request):
                 questions=questions
             )
 
-            country = commods.Country.objects.get(programmatic_key=country_key)
-            if lead_type == 'selling':
-                lead.buy_country = country
-            elif lead_type == 'buying':
-                lead.sell_country = country
+            if country_key.strip() != 'any_country':
+                country = commods.Country.objects.get(programmatic_key=country_key)
+                if lead_type == 'selling':
+                    lead.buy_country = country
+                elif lead_type == 'buying':
+                    lead.sell_country = country
 
             lead.save()
 
@@ -347,7 +348,8 @@ def lead_create(request):
                 event_properties={
                     'lead id': lead.id,
                     'buy sell': lead.lead_type,
-                    'buy country': lead.buy_country.programmatic_key
+                    'buy country': lead.buy_country.programmatic_key if lead.buy_country is not None else 'any_country',
+                    'sell country': lead.sell_country.programmatic_key if lead.sell_country is not None else 'any_country'
                 }
             )
             
