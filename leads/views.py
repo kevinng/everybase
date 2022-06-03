@@ -362,7 +362,6 @@ def lead_create(request):
 
     categories = models.LeadCategory.objects\
         .annotate(num_leads=Count('leads')).\
-        filter(num_leads__gt=0).\
         order_by('-num_leads')
 
     params = {
