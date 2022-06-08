@@ -16,6 +16,17 @@ def sm(request, file_to_render):
     template_name = 'superio/mock_ups/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
 
+
+def ml(request, file_to_render):
+    template_name = 'metronic/layout_builder/%s' % file_to_render
+    return TemplateResponse(request, template_name, {})
+
+def mm(request, file_to_render):
+    template_name = 'metronic/mock_ups/%s' % file_to_render
+    return TemplateResponse(request, template_name, {})
+
+
+
 def home(request):
     # Redirect to dashboard if user is authenticated
     if request.user.is_authenticated:
