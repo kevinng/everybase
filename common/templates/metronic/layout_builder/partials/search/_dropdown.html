@@ -20,25 +20,20 @@
 												<!--begin::Wrapper-->
 												<div data-kt-search-element="wrapper">
 
-<!--layout-partial:partials/search/partials/_form-dropdown.html-->
+                                                    {% include 'metronic/layout_builder/partials/search/partials/_form-dropdown.html' %}
 
+                                                    {% include 'metronic/layout_builder/partials/search/partials/_results.html' %}
 
-<!--layout-partial:partials/search/partials/_results.html-->
+                                                    {% include 'metronic/layout_builder/partials/search/partials/_main.html' %}
 
-
-<!--layout-partial:partials/search/partials/_main.html-->
-
-
-<!--layout-partial:partials/search/partials/_empty.html-->
+                                                    {% include 'metronic/layout_builder/partials/search/partials/_empty.html' %}
 
 												</div>
 												<!--end::Wrapper-->
 
-<!--layout-partial:partials/search/partials/_advanced-options.html-->
+                                                    {% include 'metronic/layout_builder/partials/search/partials/_advanced-options.html' %}
 
-
-<!--layout-partial:partials/search/partials/_preferences.html-->
-
+                                                    {% include 'metronic/layout_builder/partials/search/partials/_preferences.html' %}
 											</div>
 											<!--end::Menu-->
 										</div>
