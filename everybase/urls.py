@@ -2,6 +2,7 @@ from everybase import settings
 
 from relationships import views as relviews
 from common import views as comviews
+from leads import views as leviews
 
 from django.contrib import admin
 from django.urls import include, path
@@ -24,7 +25,10 @@ def trigger_handled_error(request):
 
 urlpatterns = [
     # Common
-    path('', comviews.home, name='home'),
+    # path('', comviews.home, name='home'),
+
+    path('', leviews.lead_list, name='lead_list'),
+
     # For Adsense and other ad networks
     path('ads.txt', comviews.ads_txt, name='ads_txt'),
 

@@ -15,7 +15,7 @@ var KTUsersList = function () {
 
         tableRows.forEach(row => {
             const dateRow = row.querySelectorAll('td');
-            const lastLogin = dateRow[3].innerText.toLowerCase(); // Get last login time
+            const lastLogin = dateRow[3].innerText.toLowerCase(); // Get last login time   // RENAME TO 'contacted'
             let timeCount = 0;
             let timeFormat = 'minutes';
 
@@ -44,8 +44,8 @@ var KTUsersList = function () {
             dateRow[3].setAttribute('data-order', realDate);
 
             // Set real date for joined column
-            const joinedDate = moment(dateRow[5].innerHTML, "DD MMM YYYY, LT").format(); // select date from 5th column in table
-            dateRow[5].setAttribute('data-order', joinedDate);
+            // const joinedDate = moment(dateRow[5].innerHTML, "DD MMM YYYY, LT").format(); // select date from 5th column in table
+            // dateRow[5].setAttribute('data-order', joinedDate);
         });
 
         // Init datatable --- more info on datatables: https://datatables.net/manual/
@@ -56,7 +56,7 @@ var KTUsersList = function () {
             "lengthChange": false,
             'columnDefs': [
                 { orderable: false, targets: 0 }, // Disable ordering on column 0 (checkbox)
-                { orderable: false, targets: 6 }, // Disable ordering on column 6 (actions)                
+                // { orderable: false, targets: 6 }, // Disable ordering on column 6 (actions)                
             ]
         });
 

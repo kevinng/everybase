@@ -1,0 +1,74 @@
+{% load static %}
+
+
+{% comment %} TODO: if user is authenticated show menu, otherwise show login/register {% endcomment %}
+
+<div class="d-flex align-items-center">
+    <a href="#" class="btn btn-secondary me-2">Register</a>
+    <a href="#" class="btn btn-primary">Login</a>
+</div>
+
+
+
+{% comment %} Start: User menu {% endcomment %}
+<div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+
+    {% comment %} Start: Menu wrapper {% endcomment %}
+    <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+        <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-1.jpg' %}" alt="user" />
+    </div>
+
+    {% comment %} Start: User account menu {% endcomment %}
+    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px" data-kt-menu="true">
+
+        {% comment %} Start: Menu item {% endcomment %}
+        <div class="menu-item px-3">
+            <div class="menu-content d-flex align-items-center px-3">
+                {% comment %} Start: Avatar {% endcomment %}
+                <div class="symbol symbol-50px me-5">
+                    <img alt="Logo" src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-1.jpg' %}" />
+                </div>
+                {% comment %} End: Avatar {% endcomment %}
+
+                {% comment %} Start: Username {% endcomment %}
+                <div class="d-flex flex-column">
+                    <div class="fw-bolder d-flex align-items-center fs-5">Max Smith</div>
+                    <div class="fw-bold text-muted fs-7">United States of America, USA</div>
+                </div>
+                {% comment %} End: Username {% endcomment %}
+            </div>
+        </div>
+        {% comment %} End: Menu item {% endcomment %}
+
+        {% comment %} Start: Separator {% endcomment %}
+        <div class="separator my-2"></div>
+        {% comment %} End: Separator {% endcomment %}
+
+        {% comment %} Start: My leads menu item {% endcomment %}
+        <div class="menu-item px-5">
+            <a href="" class="menu-link px-5">
+                <span class="menu-text">My Leads</span>
+                <span class="menu-badge">
+                    <span class="badge badge-light-danger badge-circle fw-bolder fs-7">3</span>
+                </span>
+            </a>
+        </div>
+        {% comment %} End: My leads menu item {% endcomment %}
+
+        {% comment %} Start: Settings menu item {% endcomment %}
+        <div class="menu-item px-5">
+            <a href="" class="menu-link px-5">Settings</a>
+        </div>
+        {% comment %} End: Settings menu item {% endcomment %}
+
+        {% comment %} Start: Sign out menu item {% endcomment %}
+        <div class="menu-item px-5">
+            <a href="" class="menu-link px-5">Sign Out</a>
+        </div>
+        {% comment %} End: Sign out menu item {% endcomment %}
+    </div>
+    {% comment %} End: User account menu {% endcomment %}
+    
+    {% comment %} End: Menu wrapper {% endcomment %}
+</div>
+{% comment %} End: User menu {% endcomment %}

@@ -3,7 +3,9 @@ from relationships import views
 
 app_name = 'users'
 urlpatterns = [
-    path('profile', views.profile, name='profile'),
+
+    path('settings', views.profile_settings, name='profile_settings'),
+
     # path('change_password', views.change_password, name='change_password'),
 
     path('m/<str:file_to_render>', views.m),

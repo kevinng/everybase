@@ -1,0 +1,167 @@
+{% extends 'metronic/extendables/b.html' %}
+
+{% block page_title %}Leads{% endblock %}
+
+{% block page_subtitle %}Importers/exporters finding buyers, sellers and agents{% endblock %}
+
+{% block actionsx %}
+{% comment %} Start: Filter {% endcomment %}
+<div class="m-0">
+    {% comment %} Start: Menu toggle {% endcomment %}
+    <a href="#" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+        {% comment %} Start: SVG icon | path: icons/duotune/general/gen031.svg {% endcomment %}
+        <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" />
+            </svg>
+        </span>
+        Filter
+        {% comment %} End: SVG icon {% endcomment %}
+    </a>
+    {% comment %} End: Menu toggle {% endcomment %}
+    
+    {% comment %} Start: Menu {% endcomment %}
+    <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true">
+        {% comment %} Start: Header {% endcomment %}
+        <div class="px-7 py-5">
+            <div class="fs-5 text-dark fw-bolder">Filter Options</div>
+        </div>
+        {% comment %} End: Header {% endcomment %}
+
+        {% comment %} Start: Menu separator {% endcomment %}
+        <div class="separator border-gray-200"></div>
+        {% comment %} End: Menu separator {% endcomment %}
+
+        {% comment %} Start: Form {% endcomment %}
+        <div class="px-7 py-5">
+
+            {% comment %} Start: Search textfield {% endcomment %}
+            <div class="mb-6">
+                <label class="form-label fw-bold">Search</label>
+                <input type="text" class="form-control" placeholder="e.g., Wheat"/>
+            </div>
+            {% comment %} End: Search textfield {% endcomment %}
+
+            {% comment %} Start: Options first row {% endcomment %}
+            <div class="mb-4">
+                {% comment %} Start: Label {% endcomment %}
+                {% comment %} <label class="form-label fw-bold">Type:</label> {% endcomment %}
+                {% comment %} End: Label {% endcomment %}
+
+                <div class="d-flex">
+                    {% comment %} Start: Buying {% endcomment %}
+                    <label class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                        <input class="form-check-input" type="checkbox" value="buying" checked="checked"/>
+                        <span class="form-check-label">Buying</span>
+                    </label>
+                    {% comment %} End: Buying {% endcomment %}
+                    
+                    {% comment %} Start: Selling {% endcomment %}
+                    <label class="form-check form-check-sm form-check-custom form-check-solid">
+                        <input class="form-check-input" type="checkbox" value="selling" checked="checked"/>
+                        <span class="form-check-label">Selling</span>
+                    </label>
+                    {% comment %} End: Selling {% endcomment %}
+                </div>
+            </div>
+            {% comment %} End: Options first row {% endcomment %}
+
+            {% comment %} Start: Options second row {% endcomment %}
+            {% comment %} <div class="mb-10"> {% endcomment %}
+                {% comment %} Start: Label {% endcomment %}
+                {% comment %} <label class="form-label fw-bold">Need:</label> {% endcomment %}
+                {% comment %} End: Label {% endcomment %}
+
+                {% comment %} <div class="d-flex"> {% endcomment %}
+                    {% comment %} Start: Need logistics radio {% endcomment %}
+                    {% comment %} <label class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                        <input class="form-check-input" type="checkbox" value="buying" checked="checked" />
+                        <span class="form-check-label">Need Logistics</span>
+                    </label> {% endcomment %}
+                    {% comment %} End: Need logistics radio {% endcomment %}
+                    
+                    {% comment %} Start: Other radio {% endcomment %}
+                    {% comment %} <label class="form-check form-check-sm form-check-custom form-check-solid">
+                        <input class="form-check-input" type="checkbox" value="selling" checked="checked" />
+                        <span class="form-check-label">Other</span>
+                    </label> {% endcomment %}
+                    {% comment %} End: Other radio {% endcomment %}
+                {% comment %} </div> {% endcomment %}
+            {% comment %} </div> {% endcomment %}
+            {% comment %} End: Options second row {% endcomment %}
+
+            {% comment %} Start: Actions {% endcomment %}
+            <div class="d-flex justify-content-end">
+                <button type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Reset</button>
+                <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Apply</button>
+            </div>
+            {% comment %} End: Actions {% endcomment %}
+        </div>
+        {% comment %} End: Form {% endcomment %}
+    </div>
+    {% comment %} End: Menu {% endcomment %}
+</div>
+{% comment %} End: Filter menu {% endcomment %}
+
+{% comment %} Start: Secondary button {% endcomment %}
+{% comment %} End: Secondary button {% endcomment %}
+
+{% comment %} Start: Primary button {% endcomment %}
+<a href="{% url 'leads:lead_create' %}" class="btn btn-sm btn-primary">Post Lead</a>
+{% comment %} End: Primary button {% endcomment %}
+{% endblock %}
+
+{% block actions%}
+								<!--begin::Wrapper-->
+								<div class="d-flex align-items-center overflow-auto">
+									<!--begin::Search-->
+									<div class="position-relative my-1 me-2">
+										<!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+										<span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ps-10">
+											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+												<rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+												<path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
+											</svg>
+										</span>
+										<!--end::Svg Icon-->
+										<input type="text" class="form-control form-control-sm w-150px ps-10" name="Search" value="" placeholder="Search" />
+									</div>
+                                    <button type="submit" class="btn btn-sm btn-light-primary">Search</button>
+									<!--end::Search-->
+									<!--begin::Separartor-->
+									<div class="bullet bg-secondary h-35px w-1px mx-6"></div>
+									<!--end::Separartor-->
+									<button type="submit" class="btn btn-sm btn-primary">Post Lead</button>
+								</div>
+								<!--end::Wrapper-->
+{% endblock %}
+
+{% block content_body %}
+{% comment %} Start: Post {% endcomment %}
+<div class="post d-flex flex-column-fluid" id="kt_post">
+
+    {% comment %} Start: Container {% endcomment %}
+    <div id="kt_content_container" class="container-xxl">
+
+        {% include 'metronic/includes/lead_item.html' %}
+
+    </div>
+    {% comment %} End: Container {% endcomment %}
+</div>
+{% comment %} End: Post {% endcomment %}
+
+{% comment %} Start: Pagination {% endcomment %}
+<ul class="pagination">
+    <li class="page-item previous disabled"><span class="page-link">Previous</span></span></li>
+    {% comment %}
+    <li class="page-item "><a href="#" class="page-link">1</a></li>
+    <li class="page-item active"><a href="#" class="page-link">2</a></li>
+    <li class="page-item "><a href="#" class="page-link">3</a></li>
+    <li class="page-item "><a href="#" class="page-link">4</a></li>
+    <li class="page-item "><a href="#" class="page-link">5</a></li>
+    <li class="page-item "><a href="#" class="page-link">6</a></li>
+    {% endcomment %}
+    <li class="page-item next"><a class="page-link" href="#">Next</span></a></li>
+</ul>
+{% comment %} End: Pagination {% endcomment %}
+{% endblock %}

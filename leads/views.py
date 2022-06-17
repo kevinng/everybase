@@ -14,6 +14,7 @@ from django.db.models.functions import Trunc
 from django.db.models.expressions import RawSQL
 from django.template.loader import render_to_string
 from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
+from django.template.response import TemplateResponse
 
 from everybase import settings
 from leads import models, forms
@@ -28,7 +29,23 @@ from common.tasks.send_amplitude_event import send_amplitude_event
 from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
 
+def contact_lead(request, id):
+    template_name = 'leads/metronic/lead_capture.html'
+    return TemplateResponse(request, template_name, {})
+
+def lead_created_success(request, id):
+    template_name = 'leads/metronic/lead_create_success.html'
+    return TemplateResponse(request, template_name, {})
+
+def contact_detail(request, id):
+    template_name = 'leads/metronic/contact_detail.html'
+    return TemplateResponse(request, template_name, {})
+
 def lead_list(request):
+    template_name = 'leads/metronic/home.html'
+    return TemplateResponse(request, template_name, {})
+
+def _lead_list(request):
     leads = models.Lead.objects\
         .filter(deleted__isnull=True)\
         .order_by('-created')
@@ -177,7 +194,11 @@ def lead_list(request):
 
     return render(request, 'leads/superio/lead_list.html', params)
 
-def lead_detail(request, slug):
+def lead_detail_me(request, id):
+    template_name = 'leads/metronic/lead_detail.html'
+    return TemplateResponse(request, template_name, {})
+
+def _lead_detail(request, slug):
     try:
         lead = models.Lead.objects.get(slug_link=slug)
     except models.Lead.DoesNotExist:
@@ -277,8 +298,14 @@ def lead_detail(request, slug):
 
     return render(request, 'leads/superio/lead_detail.html', params)
 
-@login_required
+
+
 def lead_create(request):
+    template_name = 'leads/metronic/lead_create.html'
+    return TemplateResponse(request, template_name, {})
+
+@login_required
+def _lead_create(request):
     if request.method == 'POST':
         form = forms.LeadForm(request.POST)
         if form.is_valid():
@@ -461,8 +488,12 @@ def lead_edit(request, slug):
 
     return render(request, 'leads/superio/lead_edit.html', params)
 
-@login_required
 def my_leads(request):
+    template_name = 'leads/metronic/me.html'
+    return TemplateResponse(request, template_name, {})
+
+@login_required
+def _my_leads(request):
     leads = models.Lead.objects.all()\
         .filter(
             deleted__isnull=True,

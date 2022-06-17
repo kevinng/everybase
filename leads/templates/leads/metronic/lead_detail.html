@@ -1,0 +1,225 @@
+{% extends 'metronic/extendables/b.html' %}
+
+{% load static %}
+
+{% block page_title %}My Leads{% endblock %}
+
+{% block page_vendor_stylesheets %}
+{% comment %} <link href="{% static 'common/metronic/demo1/dist/assets/plugins/custom/datatables/datatables.bundle.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
+{% endblock %}
+
+{% block page_subtitle %}
+<ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+    <li class="breadcrumb-item"><a class="text-muted" href="#">My Leads</a></li>
+
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+
+    {% comment %} Start: Lead text summary as identifier {% endcomment %}
+    <li class="breadcrumb-item text-dark">I am looking for agen...</li>
+    {% comment %} End: Lead text summary as identifier {% endcomment %}
+</ul>
+{% endblock %}
+
+{% block content_body %}
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    {% comment %} Start: Container {% endcomment %}
+    <div id="kt_content_container" class="container-xxl">
+        {% comment %} Start: Navbar {% endcomment %}
+        <div class="card mb-5 mb-xl-10">
+            {% comment %} Start: Card header {% endcomment %}
+            <div class="card-header">
+                <div class="card-title align-items-start flex-column">
+                    {% comment %} Start: Avatar {% endcomment %}
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-45px me-5">
+                            <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
+                        </div>
+                        <div class="d-flex justify-content-start flex-column">
+                            <div class="text-dark fw-bolder fs-6">Ana Simmons</div>
+                            <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                                <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                {% comment %} End: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                            </span>
+                        </div>
+                    </div>
+                    {% comment %} End: Avatar {% endcomment %}
+                </div>
+                <div class="card-toolbar">
+                    {% comment %} <a href="?page=apps/calendar" class="btn btn-primary">Manage Calendar</a> {% endcomment %}
+                    <span class="text-muted">2w ago</span>
+                </div>
+            </div>
+            {% comment %} End: Card header {% endcomment %}
+
+            <div class="card-body pt-9 pb-0">
+                {% comment %} Start: Lead body {% endcomment %}
+                <div class="text-dark">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
+                <div class="mt-2">
+                    <div>
+                        {% comment %} <span class="badge badge-secondary">Buying</span> {% endcomment %}
+                        <span class="badge badge-light">Buying</span>
+                        {% comment %} <span class="badge badge-light">Help Me Source</span> {% endcomment %}
+                        {% comment %} <span class="badge badge-light">Need Logistics</span> {% endcomment %}
+                    </div>
+                </div>
+                {% comment %} End: Lead body {% endcomment %}
+
+                {% comment %} Start: Navs {% endcomment %}
+                <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
+                    {% comment %} Start: Nav item {% endcomment %}
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5 active" href="">Contacts (12)</a>
+                    </li>
+                    {% comment %} End: Nav item {% endcomment %}
+                </ul>
+                {% comment %} End: Navs {% endcomment %}
+            </div>
+        </div>
+        {% comment %} End: Navbar {% endcomment %}
+
+        <div class="card">
+            {% comment %} Start: Card header {% endcomment %}
+            {% comment %} <div class="card-header border-0 pt-6"> {% endcomment %}
+                {% comment %} Start: Card title {% endcomment %}
+                {% comment %} <div class="card-title">Contacts (12)</div> {% endcomment %}
+                {% comment %} End: Card title {% endcomment %}
+
+                {% comment %} Start: Card toolbar {% endcomment %}
+                {% comment %} <div class="card-toolbar"> {% endcomment %}
+                    {% comment %} Start: Filter {% endcomment %}
+                    {% comment %} <button type="button" class="btn btn-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"> {% endcomment %}
+                        {% comment %} Start: SCG icon | path: icons/duotune/general/gen031.svg {% endcomment %}
+                        {% comment %} <span class="svg-icon svg-icon-2"> {% endcomment %}
+                            {% comment %} <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"> {% endcomment %}
+                                {% comment %} <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="currentColor" /> {% endcomment %}
+                            {% comment %} </svg> {% endcomment %}
+                        {% comment %} </span> {% endcomment %}
+                        {% comment %} End: SVG icon {% endcomment %}
+                        {% comment %} Filter {% endcomment %}
+                    {% comment %} </button> {% endcomment %}
+
+                        {% comment %} Start: Filter menu {% endcomment %}
+                        {% comment %} <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true"> {% endcomment %}
+                            {% comment %} Start: Header {% endcomment %}
+                            {% comment %} <div class="px-7 py-5"> {% endcomment %}
+                                {% comment %} <div class="fs-5 text-dark fw-bolder">Filter</div> {% endcomment %}
+                            {% comment %} </div> {% endcomment %}
+                            {% comment %} End: Header {% endcomment %}
+
+                            {% comment %} Start: Separator {% endcomment %}
+                            {% comment %} <div class="separator border-gray-200"></div> {% endcomment %}
+                            {% comment %} End: Separator {% endcomment %}
+
+
+                            {% comment %} 
+                            
+                            We want to sort the entries
+                            FIrst, new (i.e. no rating)
+                            Then by ratings
+                            
+                            {% endcomment %}
+
+
+                            {% comment %} Start: Content {% endcomment %}
+                            {% comment %} <div class="px-7 py-5" data-kt-user-table-filter="form"> {% endcomment %}
+                                {% comment %} Start: Status {% endcomment %}
+                                {% comment %} <div class="mb-10">
+                                    <label class="form-label fs-6 fw-bold">Status</label>
+                                    <select class="form-select" data-kt-select2="true" data-placeholder="Select status" data-allow-clear="true">
+                                        <option></option>
+                                        <option value="Administrator">Administrator</option>
+                                        <option value="Analyst">Analyst</option>
+                                        <option value="Developer">Developer</option>
+                                        <option value="Support">Support</option>
+                                        <option value="Trial">Trial</option>
+                                    </select>
+                                </div> {% endcomment %}
+                                {% comment %} End: Status {% endcomment %}
+
+                                {% comment %} Start: Country {% endcomment %}
+                                {% comment %} <div class="mb-10">
+                                    <label class="form-label fs-6 fw-bold">Country</label>
+                                    <select class="form-select" data-kt-select2="true" data-placeholder="Select country" data-allow-clear="true" data-kt-user-table-filter="two-step" data-hide-search="true">
+                                        <option></option>
+                                        <option value="Enabled">United States of America, USA</option>
+                                        <option value="Enabled">Enabled</option>
+                                        <option value="Enabled">Enabled</option>
+                                    </select>
+                                </div> {% endcomment %}
+                                {% comment %} End: Country {% endcomment %}
+
+                                {% comment %} Start: Actions {% endcomment %}
+                                {% comment %} <div class="d-flex justify-content-end">
+                                    <button type="reset" class="btn btn-light btn-active-light-primary fw-bold me-2 px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="reset">Reset</button>
+                                    <button type="submit" class="btn btn-primary fw-bold px-6" data-kt-menu-dismiss="true" data-kt-user-table-filter="filter">Filter</button>
+                                </div> {% endcomment %}
+                                {% comment %} End: Actions {% endcomment %}
+                            {% comment %} </div> {% endcomment %}
+                            {% comment %} End: Content {% endcomment %}
+                        {% comment %} </div> {% endcomment %}
+                    {% comment %} </button> {% endcomment %}
+                    {% comment %} End: Filter {% endcomment %}
+                {% comment %} </div> {% endcomment %}
+                {% comment %} End: Card toolbar {% endcomment %}
+            {% comment %} </div> {% endcomment %}
+            {% comment %} End: Card header {% endcomment %}
+
+            {% comment %} Start: Card body {% endcomment %}
+            <div class="card-body py-4">
+                {% comment %} Start: Table {% endcomment %}
+                <div class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+
+                        {% comment %} Start: Table head {% endcomment %}
+                        <thead>
+                            {% comment %} Start: Table row {% endcomment %}
+                            <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                                <th class="min-w-200px">User</th>
+                                <th class="min-w-100px">Rating</th>
+                                <th>Contacted</th>
+                            </tr>
+                            {% comment %} End: Table row {% endcomment %}
+                        </thead>
+                        {% comment %} End: Table head {% endcomment %}
+
+                    {% comment %} Start: Table body {% endcomment %}
+                    <tbody class="text-gray-600 fw-bold">
+                        {% include 'leads/metronic/includes/contact_item.html' %}
+
+                        {% include 'leads/metronic/includes/contact_item.html' %}
+                    </tbody>
+                    {% comment %} End: Table body {% endcomment %}
+                </table></div><div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"><div class="dataTables_paginate paging_simple_numbers" id="kt_table_users_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="kt_table_users_previous"><a href="#" aria-controls="kt_table_users" data-dt-idx="0" tabindex="0" class="page-link"><i class="previous"></i></a></li><li class="paginate_button page-item active"><a href="#" aria-controls="kt_table_users" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="kt_table_users" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="kt_table_users" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item next" id="kt_table_users_next"><a href="#" aria-controls="kt_table_users" data-dt-idx="4" tabindex="0" class="page-link"><i class="next"></i></a></li></ul></div></div></div></div>
+                {% comment %} End: Table {% endcomment %}
+            </div>
+            {% comment %} End: Card body {% endcomment %}
+        </div>
+    </div>
+    {% comment %} End: Container {% endcomment %}    
+</div>
+{% comment %} End: Post {% endcomment %}
+{% endblock %}
+
+{% block page_vendor_javascript %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/plugins/custom/datatables/datatables.bundle.js' %}"></script> {% endcomment %}
+{% endblock %}
+
+{% block page_custom_javascript %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/js/custom/apps/user-management/users/list/table.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/js/custom/apps/user-management/users/list/export-users.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/js/custom/apps/user-management/users/list/add.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/js/widgets.bundle.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/js/custom/widgets.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/js/custom/apps/chat/chat.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/js/custom/utilities/modals/upgrade-plan.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/js/custom/utilities/modals/create-app.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'common/metronic/demo1/dist/assets/js/custom/utilities/modals/users-search.js' %}"></script> {% endcomment %}
+{% endblock %}

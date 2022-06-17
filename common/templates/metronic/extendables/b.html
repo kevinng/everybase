@@ -1,0 +1,204 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    {% comment %} Start: Head {% endcomment %}
+	<head>
+        <base href=""/>
+		<title>{% block title %}Everybase - find importers, exporters, buyers, sellers, agents, etc{% endblock %}</title>
+		<meta charset="utf-8" />
+		<meta name="description" content="{% block description %}Everybase - find importers, exporters, buyers, sellers, agents, etc{% endblock %}"/>
+		<meta name="keywords" content="{% block keywords %}importers, exporters, agents, brokers, buyers, sellers{% endblock %}"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<meta property="og:locale" content="en_US"/>
+		<meta property="og:type" content="website"/>
+		<meta property="og:title" content="{% block og_title %}Everybase - find importers, exporters, buyers, sellers, agents, etc{% endblock %}"/>
+		<meta property="og:url" content="https://everybase.co"/>
+		<meta property="og:site_name" content="Everybase"/>
+		<link rel="shortcut icon" href="{% static 'common/metronic/demo1/dist/assets/media/logos/favicon_everybase.ico' %}"/>
+		
+        {% comment %} Start: Fonts {% endcomment %}
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"/>
+        {% comment %} End: Fonts {% endcomment %}
+
+        {% comment %} Start: Page vendor stylesheets (used by this page) {% endcomment %}
+		{% block page_vendor_stylesheets %}{% endblock %}
+        {% comment %} End: Page vendor stylesheets {% endcomment %}
+
+        {% comment %} Start: Global stylesheets bundle (used by all pages) {% endcomment %}
+		<link href="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css"/>
+		<link href="{% static 'common/metronic/demo1/dist/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css"/>
+        {% comment %} End: Global stylesheets bundle {% endcomment %}
+	</head>
+    {% comment %} End: Head {% endcomment %}
+
+    {% comment %} Start: Body {% endcomment %}
+	<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed toolbar-tablet-and-mobile-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
+
+        {% comment %} Start: Main {% endcomment %}
+        {% comment %} Start: Root {% endcomment %}
+		<div class="d-flex flex-column flex-root">
+            {% comment %} Start: Page {% endcomment %}
+			<div class="page d-flex flex-row flex-column-fluid">
+                {% comment %} Start: Wrapper {% endcomment %}
+				<div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+                    {% comment %} Start: Header {% endcomment %}
+					<div id="kt_header" style="" class="header align-items-stretch">
+                        {% comment %} Start: Container {% endcomment %}
+						<div class="container-fluid d-flex align-items-stretch justify-content-between">
+                            {% comment %} Start: Logo {% endcomment %}
+							<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
+								<a href="?page=index">
+									<img alt="Logo" src="{% static 'common/metronic/demo1/dist/assets/media/logos/logo.png' %}" />
+								</a>
+							</div>
+                            {% comment %} End: Logo {% endcomment %}
+
+                            {% comment %} Start: Wrapper {% endcomment %}
+							<div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
+
+                                {% include 'metronic/includes/nav_bar.html' %}
+
+                                {% comment %} Start: Toolbar wrapper {% endcomment %}
+								<div class="d-flex align-items-stretch flex-shrink-0">
+
+                                    {% include 'metronic/includes/user_menu.html' %}
+
+                                    {% comment %} Start: Header menu toggle {% endcomment %}
+									<div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
+										<div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px" id="kt_header_menu_mobile_toggle">
+											{% comment %} SVG Icon | path: icons/duotune/text/txt001.svg {% endcomment %}
+											<span class="svg-icon svg-icon-1">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+													<path d="M13 11H3C2.4 11 2 10.6 2 10V9C2 8.4 2.4 8 3 8H13C13.6 8 14 8.4 14 9V10C14 10.6 13.6 11 13 11ZM22 5V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4V5C2 5.6 2.4 6 3 6H21C21.6 6 22 5.6 22 5Z" fill="currentColor" />
+													<path opacity="0.3" d="M21 16H3C2.4 16 2 15.6 2 15V14C2 13.4 2.4 13 3 13H21C21.6 13 22 13.4 22 14V15C22 15.6 21.6 16 21 16ZM14 20V19C14 18.4 13.6 18 13 18H3C2.4 18 2 18.4 2 19V20C2 20.6 2.4 21 3 21H13C13.6 21 14 20.6 14 20Z" fill="currentColor" />
+												</svg>
+											</span>
+											{% comment %} SVG Icon {% endcomment %}
+										</div>
+									</div>
+                                    {% comment %} End: Header menu toggle {% endcomment %}
+								</div>
+                                {% comment %} End: Toolbar wrapper {% endcomment %}
+							</div>
+                            {% comment %} End: Wrapper {% endcomment %}
+						</div>
+                        {% comment %} End: Container {% endcomment %}
+					</div>
+                    {% comment %} End: Header {% endcomment %}
+
+                    {% comment %} Start: Content {% endcomment %}
+					<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+
+                        {% comment %} Start: Toolbar {% endcomment %}
+						<div class="toolbar" id="kt_toolbar">
+
+                            {% comment %} Start: Container {% endcomment %}
+							<div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+			
+                                {% comment %} Start: Page title {% endcomment %}
+								<div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                                    {% comment %} Start: Title {% endcomment %}
+									<h1 class="d-flex text-dark fw-bolder fs-3 align-items-center my-1">{% block page_title %}{% endblock %}</h1>
+
+                                    {% comment %} Start: Separator {% endcomment %}
+									<span class="h-20px border-1 border-gray-200 border-start ms-3 mx-2 me-1"></span>
+                                    {% comment %} End: Separator {% endcomment %}
+
+                                    {% comment %} Start: Subtitle {% endcomment %}
+									<span class="text-muted fs-7 fw-bold ms-2">{% block page_subtitle %}{% endblock %}</span>
+                                    {% comment %} End: Description {% endcomment %}
+                                    {% comment %} End: Subtitle {% endcomment %}
+								</div>
+                                {% comment %} End: Page title {% endcomment %}
+								
+                                {% comment %} Start: Actions {% endcomment %}
+								<div class="d-flex align-items-center gap-2 gap-lg-3">
+                                    {% block actions %}{% endblock %}
+								</div>
+                                {% comment %} End: Actions {% endcomment %}
+							</div>
+                            {% comment %} End: Container {% endcomment %}
+						</div>
+                        {% comment %} End: Toolbar {% endcomment %}
+
+                        {% block content_body %}{% endblock %}
+					</div>
+                    {% comment %} End: Content {% endcomment %}
+
+                    {% comment %} Start: Footer {% endcomment %}
+					<div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
+
+                        {% comment %} Start: Container {% endcomment %}
+						<div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
+
+                            {% comment %} Start: Copyright {% endcomment %}
+							<div class="text-dark order-2 order-md-1">
+								<span class="text-muted fw-bold me-1">© 2022</span>
+								<a href="https://everybase.co" class="text-gray-800 text-hover-primary">Everybase</a>
+							</div>
+                            {% comment %} End: Copyright {% endcomment %}
+
+                            {% comment %} Start: Menu {% endcomment %}
+							{% comment %}
+                            <ul class="menu menu-gray-600 menu-hover-primary fw-bold order-1">
+								<li class="menu-item">
+									<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
+								</li>
+								<li class="menu-item">
+									<a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
+								</li>
+								<li class="menu-item">
+									<a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
+								</li>
+							</ul>
+                            {% endcomment %}
+                            {% comment %} End: Menu {% endcomment %}
+						</div>
+                        {% comment %} End: Container {% endcomment %}
+					</div>
+                    {% comment %} End: Footer {% endcomment %}
+				</div>
+                {% comment %} End: Wrapper {% endcomment %}
+			</div>
+            {% comment %} End: Page {% endcomment %}
+		</div>
+        {% comment %} End: Root {% endcomment %}
+        {% comment %} End: Main {% endcomment %}
+
+        {% comment %} Override this block to exclude it {% endcomment %}
+        {% block scrolltop %}
+        {% comment %} Start: Scrolltop {% endcomment %}
+		<div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
+            {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr066.svg {% endcomment %}
+			<span class="svg-icon">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+					<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
+					<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
+				</svg>
+			</span>
+            {% comment %} End: SVG icon {% endcomment %}
+		</div>
+        {% comment %} End: Scrolltop {% endcomment %}
+        {% endblock %}
+
+        {% comment %} Start: Javascript {% endcomment %}
+		<script>var hostUrl = "{% static 'common/metronic/demo1/dist/assets/' %}";</script>
+
+        {% comment %} Start: Global Javascript bundle (used by all pages) {% endcomment %}
+		<script src="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
+		<script src="{% static 'common/metronic/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
+        {% comment %} End: Global Javascript bundle {% endcomment %}
+
+        {% comment %} Start: Page vendors Javascript {% endcomment %}
+        {% block page_vendor_javascript %}{% endblock %}
+        {% comment %} End: Page vendors Javascript {% endcomment %}
+
+        {% comment %} Start: Page custom Javascript {% endcomment %}
+        {% block page_custom_javascript %}{% endblock %}
+        {% comment %} End: Page custom Javascript {% endcomment %}
+
+        {% comment %} End: Javascript {% endcomment %}
+	</body>
+    {% comment %} End: Body {% endcomment %}
+</html>

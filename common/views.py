@@ -27,16 +27,16 @@ def mm(request, file_to_render):
 
 
 
-def home(request):
-    # Redirect to dashboard if user is authenticated
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('leads:lead_create'))
+# def home(request):
+#     # Redirect to dashboard if user is authenticated
+#     if request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('leads:lead_create'))
 
-    leads = lemods.Lead.objects.filter(
-        deleted__isnull=True
-    ).order_by('-created')[0:6]
+#     leads = lemods.Lead.objects.filter(
+#         deleted__isnull=True
+#     ).order_by('-created')[0:6]
 
-    return TemplateResponse(request, 'superio/home.html', {'leads': leads})
+#     return TemplateResponse(request, 'superio/home.html', {'leads': leads})
 
 def ads_txt(request):
     filename = 'ads.txt'

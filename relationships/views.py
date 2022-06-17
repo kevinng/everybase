@@ -26,9 +26,6 @@ from common.utilities.get_ip_address import get_ip_address
 from relationships import forms, models
 
 def magic_login(request, uuid):
-    print(uuid)
-    print('magic')
-
     # Logs in the user 'magically'
     if uuid is not None:
         dj_user = authenticate(uuid)
@@ -299,6 +296,10 @@ def log_out(request):
         return HttpResponseRedirect(next_url)
 
     return HttpResponseRedirect(reverse('home'))
+
+def profile_settings(request):
+    template_name = 'relationships/metronic/profile_settings.html'
+    return TemplateResponse(request, template_name, {})
 
 @login_required
 def profile(request):
