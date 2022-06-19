@@ -8,6 +8,55 @@
 
 {% block og_title %}Emma Smith | I want to find agents... | My Leads{% endblock %}
 
+{% block page_title %}
+Emma Smith
+{% endblock %}
+
+{% block page_subtitle %}
+
+<ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+    {% comment %} <!--begin::Item-->
+    <li class="breadcrumb-item text-muted">
+        <a href="/metronic8/demo1/../demo1/index.html" class="text-muted text-hover-primary">Home</a>
+    </li>
+    <!--end::Item-->
+    <!--begin::Item-->
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+    <!--end::Item--> {% endcomment %}
+
+    <!--begin::Item-->
+    <li class="breadcrumb-item text-muted">Me</li>
+    <!--end::Item-->
+    <!--begin::Item-->
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+    <!--end::Item-->
+    <!--begin::Item-->
+    <li class="breadcrumb-item"><a class="text-muted" href="#">My Leads</a></li>
+    <!--end::Item-->
+    <!--begin::Item-->
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+    <!--end::Item-->
+    <!--begin::Item-->
+    <li class="breadcrumb-item"><a class="text-muted" href="#">I am looking for agen...</a></li>
+    <!--end::Item-->
+
+    <!--begin::Item-->
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+    <!--end::Item-->
+    <!--begin::Item-->
+    <li class="breadcrumb-item text-dark">Emma Smith</li>
+    <!--end::Item-->
+</ul>
+{% endblock %}
+
 {% block content_body %}
 {% comment %} Start: Post {% endcomment %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
@@ -300,7 +349,8 @@
                     <!--begin::Card header-->
                     <div class="card-header">
                         <div class="card-title">
-                            <h2>Take Notes <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen044.svg-->
+                            <h2>Private Notes
+                                <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen044.svg-->
                                 <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Other users do not see these notes.">
                                     <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen043.svg-->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -309,7 +359,8 @@
                                     <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
                                     </svg>
                                     <!--end::Svg Icon-->
-                                </span></h2>
+                                </span>
+                            </h2>
                         </div>
                         {% comment %} <div class="text-muted text-sm">Manage users you've spoken with</div> {% endcomment %}
                     </div>
@@ -410,8 +461,8 @@
                             <div class="fv-row">
                             <!--begin::basic autosize textarea-->
 
-                                <label for="" class="form-label">Notes</label>
-                                <textarea class="form-control" data-kt-autosize="true" placeholder="Notes on this user."></textarea>
+                                <label for="" class="form-label">Comments</label>
+                                <textarea class="form-control" data-kt-autosize="true"></textarea>
 
                             <!--end::basic autosize textarea-->
                             </div>
@@ -423,7 +474,7 @@
 
                 <!--begin::Card footer-->
                 <div class="card-footer d-flex justify-content-end py-6 px-9">
-                    {% comment %} <button class="btn btn-light btn-active-light-primary me-2">Discard</button> {% endcomment %}
+                    <button class="btn btn-light btn-active-light-primary me-2">Cancel</button>
                     <button class="btn btn-primary">Save</button>
                 </div>
                 <!--end::Card footer-->
@@ -431,6 +482,153 @@
 
                 </div>
                 <!--end::Order details-->
+
+
+
+
+                                                <!--begin::Order details-->
+                                                <div class="card card-flush py-4 mt-4">
+                                                    <!--begin::Card header-->
+                                                    <div class="card-header">
+                                                        <div class="card-title">
+                                                            <h2>Private Notes
+                                                                <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen044.svg-->
+                                                                <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Review this user after you">
+                                                                    <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen043.svg-->
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                                    <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"/>
+                                                                    <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                                                    </svg>
+                                                                    <!--end::Svg Icon-->
+                                                                </span>
+                                                            </h2>
+                                                        </div>
+                                                        <div class="card-toolbar">
+                                                            <span class="text-muted">Updated 2w ago</span>
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Card header-->
+                                                    <!--begin::Card body-->
+                                                    <div class="card-body pt-0">
+                                                        <!--begin::Billing address-->
+                                                        <div class="d-flex flex-column gap-5 gap-md-7">
+                                                            <!--begin::Title-->
+                                                            {% comment %} <div class="fs-3 fw-bolder mb-n2">Billing Address</div> {% endcomment %}
+                                                            <!--end::Title-->
+                                
+                                
+                                
+                                
+                                                            <div class="fv-row">
+                                                                <label class="form-label">Rating</label>
+                                                                {% comment %} <select class="form-select" data-control="select2" data-placeholder="Select an option">
+                                                                    <option></option>
+                                                                    <option value="1">Bad</option>
+                                                                    <option value="2">Not Now</option>
+                                                                    <option value="2">Good</option>
+                                                                </select> {% endcomment %}
+                                
+                                                                <div class="rating">
+                                                                    
+                                                                    <!--begin::Star 1-->
+                                                                    <label class="rating-label" for="kt_rating_input_1">
+                                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen029.svg-->
+                                                                        <span class="svg-icon svg-icon-1">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                <path d="M11.1359 4.48359C11.5216 3.82132 12.4784 3.82132 12.8641 4.48359L15.011 8.16962C15.1523 8.41222 15.3891 8.58425 15.6635 8.64367L19.8326 9.54646C20.5816 9.70867 20.8773 10.6186 20.3666 11.1901L17.5244 14.371C17.3374 14.5803 17.2469 14.8587 17.2752 15.138L17.7049 19.382C17.7821 20.1445 17.0081 20.7069 16.3067 20.3978L12.4032 18.6777C12.1463 18.5645 11.8537 18.5645 11.5968 18.6777L7.69326 20.3978C6.99192 20.7069 6.21789 20.1445 6.2951 19.382L6.7248 15.138C6.75308 14.8587 6.66264 14.5803 6.47558 14.371L3.63339 11.1901C3.12273 10.6186 3.41838 9.70867 4.16744 9.54646L8.3365 8.64367C8.61089 8.58425 8.84767 8.41222 8.98897 8.16962L11.1359 4.48359Z" fill="currentColor" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <!--end::Svg Icon-->
+                                                                    </label>
+                                                                    <input class="rating-input" name="rating" value="1" type="radio" id="kt_rating_input_1" />
+                                                                    <!--end::Star 1-->
+                                                                    <!--begin::Star 2-->
+                                                                    <label class="rating-label" for="kt_rating_input_2">
+                                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen029.svg-->
+                                                                        <span class="svg-icon svg-icon-1">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                <path d="M11.1359 4.48359C11.5216 3.82132 12.4784 3.82132 12.8641 4.48359L15.011 8.16962C15.1523 8.41222 15.3891 8.58425 15.6635 8.64367L19.8326 9.54646C20.5816 9.70867 20.8773 10.6186 20.3666 11.1901L17.5244 14.371C17.3374 14.5803 17.2469 14.8587 17.2752 15.138L17.7049 19.382C17.7821 20.1445 17.0081 20.7069 16.3067 20.3978L12.4032 18.6777C12.1463 18.5645 11.8537 18.5645 11.5968 18.6777L7.69326 20.3978C6.99192 20.7069 6.21789 20.1445 6.2951 19.382L6.7248 15.138C6.75308 14.8587 6.66264 14.5803 6.47558 14.371L3.63339 11.1901C3.12273 10.6186 3.41838 9.70867 4.16744 9.54646L8.3365 8.64367C8.61089 8.58425 8.84767 8.41222 8.98897 8.16962L11.1359 4.48359Z" fill="currentColor" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <!--end::Svg Icon-->
+                                                                    </label>
+                                                                    <input class="rating-input" name="rating" value="2" type="radio" id="kt_rating_input_2" />
+                                                                    <!--end::Star 2-->
+                                                                    <!--begin::Star 3-->
+                                                                    <label class="rating-label" for="kt_rating_input_3">
+                                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen029.svg-->
+                                                                        <span class="svg-icon svg-icon-1">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                <path d="M11.1359 4.48359C11.5216 3.82132 12.4784 3.82132 12.8641 4.48359L15.011 8.16962C15.1523 8.41222 15.3891 8.58425 15.6635 8.64367L19.8326 9.54646C20.5816 9.70867 20.8773 10.6186 20.3666 11.1901L17.5244 14.371C17.3374 14.5803 17.2469 14.8587 17.2752 15.138L17.7049 19.382C17.7821 20.1445 17.0081 20.7069 16.3067 20.3978L12.4032 18.6777C12.1463 18.5645 11.8537 18.5645 11.5968 18.6777L7.69326 20.3978C6.99192 20.7069 6.21789 20.1445 6.2951 19.382L6.7248 15.138C6.75308 14.8587 6.66264 14.5803 6.47558 14.371L3.63339 11.1901C3.12273 10.6186 3.41838 9.70867 4.16744 9.54646L8.3365 8.64367C8.61089 8.58425 8.84767 8.41222 8.98897 8.16962L11.1359 4.48359Z" fill="currentColor" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <!--end::Svg Icon-->
+                                                                    </label>
+                                                                    <input class="rating-input" name="rating" value="3" type="radio" id="kt_rating_input_3" />
+                                                                    <!--end::Star 3-->
+                                                                    <!--begin::Star 4-->
+                                                                    <label class="rating-label" for="kt_rating_input_4">
+                                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen029.svg-->
+                                                                        <span class="svg-icon svg-icon-1">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                <path d="M11.1359 4.48359C11.5216 3.82132 12.4784 3.82132 12.8641 4.48359L15.011 8.16962C15.1523 8.41222 15.3891 8.58425 15.6635 8.64367L19.8326 9.54646C20.5816 9.70867 20.8773 10.6186 20.3666 11.1901L17.5244 14.371C17.3374 14.5803 17.2469 14.8587 17.2752 15.138L17.7049 19.382C17.7821 20.1445 17.0081 20.7069 16.3067 20.3978L12.4032 18.6777C12.1463 18.5645 11.8537 18.5645 11.5968 18.6777L7.69326 20.3978C6.99192 20.7069 6.21789 20.1445 6.2951 19.382L6.7248 15.138C6.75308 14.8587 6.66264 14.5803 6.47558 14.371L3.63339 11.1901C3.12273 10.6186 3.41838 9.70867 4.16744 9.54646L8.3365 8.64367C8.61089 8.58425 8.84767 8.41222 8.98897 8.16962L11.1359 4.48359Z" fill="currentColor" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <!--end::Svg Icon-->
+                                                                    </label>
+                                                                    <input class="rating-input" name="rating" value="4" type="radio" id="kt_rating_input_4" />
+                                                                    <!--end::Star 4-->
+                                                                    <!--begin::Star 5-->
+                                                                    <label class="rating-label" for="kt_rating_input_5">
+                                                                        <!--begin::Svg Icon | path: icons/duotune/general/gen029.svg-->
+                                                                        <span class="svg-icon svg-icon-1">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                                <path d="M11.1359 4.48359C11.5216 3.82132 12.4784 3.82132 12.8641 4.48359L15.011 8.16962C15.1523 8.41222 15.3891 8.58425 15.6635 8.64367L19.8326 9.54646C20.5816 9.70867 20.8773 10.6186 20.3666 11.1901L17.5244 14.371C17.3374 14.5803 17.2469 14.8587 17.2752 15.138L17.7049 19.382C17.7821 20.1445 17.0081 20.7069 16.3067 20.3978L12.4032 18.6777C12.1463 18.5645 11.8537 18.5645 11.5968 18.6777L7.69326 20.3978C6.99192 20.7069 6.21789 20.1445 6.2951 19.382L6.7248 15.138C6.75308 14.8587 6.66264 14.5803 6.47558 14.371L3.63339 11.1901C3.12273 10.6186 3.41838 9.70867 4.16744 9.54646L8.3365 8.64367C8.61089 8.58425 8.84767 8.41222 8.98897 8.16962L11.1359 4.48359Z" fill="currentColor" />
+                                                                            </svg>
+                                                                        </span>
+                                                                        <!--end::Svg Icon-->
+                                                                    </label>
+                                                                    <input class="rating-input" name="rating" value="5" type="radio" id="kt_rating_input_5" />
+                                                                    <!--end::Star 5-->
+                                                                </div>
+                                                            
+                                                            </div>
+                                
+                                
+                                
+                                
+                                
+                                                            <div class="fv-row">
+                                                            <!--begin::basic autosize textarea-->
+                                
+                                                                <label for="" class="form-label">Comments</label>
+                                                                <div>hello world lalalalal</div>
+                                
+                                                            <!--end::basic autosize textarea-->
+                                                            </div>
+                                
+                                                        </div>
+                                                        <!--end::Billing address-->
+                                                    </div>
+                                                    <!--end::Card body-->
+                                
+                
+                                                <!--begin::Card footer-->
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    {% comment %} <button class="btn btn-light btn-active-light-primary me-2">Cancel</button> {% endcomment %}
+                    <button class="btn btn-primary">Edit</button>
+                </div>
+                <!--end::Card footer-->
+                                
+                                                </div>
+                                                <!--end::Order details-->
+
+
+
+
+
+
 
 
 
@@ -1248,7 +1446,7 @@ button.innerHTML = currentLabel;
 
 										<!--begin::Card footer-->
 										<div class="card-footer d-flex justify-content-end py-6 px-9">
-											{% comment %} <button class="btn btn-light btn-active-light-primary me-2">Discard</button> {% endcomment %}
+											<button class="btn btn-light btn-active-light-primary me-2">Cancel</button>
 											<button class="btn btn-primary">Save</button>
 										</div>
 										<!--end::Card footer-->
