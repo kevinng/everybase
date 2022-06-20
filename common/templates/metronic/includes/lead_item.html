@@ -46,14 +46,15 @@ Parameters:
         <div class="text-dark">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
         <div class="d-flex justify-content-between mt-2">
             <div>
-                <span class="badge badge-secondary">Buying</span>
-                <span class="badge badge-light">Help Me Source</span>
-                <span class="badge badge-light">Need Logistics</span>
+                <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to buy, or needs help to source this product.">Buying / Help Me Source</span>
+                <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell this product.">Selling / Help Me Sell</span>
+                {% comment %} <span class="badge badge-light">Help Me Source</span> {% endcomment %}
+                {% comment %} <span class="badge badge-light">Need Logistics</span> {% endcomment %}
             </div>
             {% comment %} Start: Badges {% endcomment %}
             <div>
                 {% comment %} <span class="badge badge-dark">Contacted</span> {% endcomment %}
-                <span class="badge badge-info">12 Contacts</span>
+                <span class="badge badge-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="12 users contacted you on this lead.">12 Contacts</span>
             </div>
             {% comment %} End: Badges {% endcomment %}
         </div>
@@ -125,9 +126,9 @@ Parameters:
                     <div class="mt-5">
                         <div class="text-dark">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
                         <div class="mt-2">
-                            <span class="badge badge-secondary">Buying</span>
-                            <span class="badge badge-light">Help Me Source</span>
-                            <span class="badge badge-light">Need Logistics</span>
+                            <span class="badge badge-secondary">Buying / Help Me Source</span>
+                            {% comment %} <span class="badge badge-light">Help Me Source</span> {% endcomment %}
+                            {% comment %} <span class="badge badge-light">Need Logistics</span> {% endcomment %}
                         </div>
                     </div>
                     {% comment %} End: Lead body {% endcomment %}

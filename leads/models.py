@@ -7,23 +7,12 @@ from django.utils.text import slugify
 class Lead(Standard):
     """Lead.
 
-    Last updated: 28 May 2022, 9:47 PM
+    Last updated: 17 June 2022, 6:05 PM
     """
-
     uuid = models.UUIDField(
         unique=True,
         default=uuidlib.uuid4,
         editable=False,
-        db_index=True
-    )
-
-    category = models.ForeignKey(
-        'LeadCategory',
-        related_name='leads',
-        related_query_name='leads',
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
         db_index=True
     )
 
@@ -38,75 +27,15 @@ class Lead(Standard):
         max_length=20,
         choices=[
             ('buying', 'Buying'),
-            ('selling', 'Selling')
-        ],
-        db_index=True
-    )
-    headline = models.CharField(
-        max_length=80,
-        db_index=True
-    )
-    commission_type = models.CharField(
-        max_length=20,
-        choices=[
-            ('negotiable', 'Negotiable'),
-            ('earning', 'Earning'),
-            ('percentage', 'Percentage'),
-            ('usd_mt', 'USD per MT'),
+            ('selling', 'Selling'),
             ('other', 'Other')
         ],
         db_index=True
     )
-    commission_usd_mt = models.FloatField(
-        null=True,
+
+    body = models.TextField(
         blank=True,
-        db_index=True
-    )
-    min_commission_percentage = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    max_commission_percentage = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    buy_country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='leads_buy_country',
-        related_query_name='leads_buy_country',
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sell_country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='leads_sell_country',
-        related_query_name='leads_sell_country',
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    details = models.TextField(
-        null=True,
-        blank=True
-    )
-    questions = models.TextField(
-        null=True,
-        blank=True
-    )
-    
-    slug_link = models.CharField(
-        max_length=200,
-        unique=True,
-        db_index=True
-    )
-    slug_tokens = models.TextField(
-        null=True,
-        blank=True
+        null=True
     )
 
     has_insights = models.BooleanField(
@@ -118,7 +47,36 @@ class Lead(Standard):
         blank=True
     )
 
+    slug_link = models.CharField(
+        max_length=200,
+        unique=True,
+        db_index=True
+    )
+    slug_tokens = models.TextField(
+        null=True,
+        blank=True
+    )
+
     # Not in use
+
+    category = models.ForeignKey(
+        'LeadCategory',
+        related_name='leads',
+        related_query_name='leads',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        db_index=True
+    )
+
+    headline = models.CharField(
+        max_length=80,
+        db_index=True
+    )
+    details = models.TextField(
+        null=True,
+        blank=True
+    )
 
     currency = models.ForeignKey(
         'payments.Currency',
@@ -140,15 +98,6 @@ class Lead(Standard):
         blank=True,
         db_index=True
     )
-    country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='leads_country',
-        related_query_name='leads_country',
-        null=True,
-        blank=True,
-        db_index=True
-    )
     agent_job = models.TextField(
         null=True,
         blank=True
@@ -159,6 +108,21 @@ class Lead(Standard):
         db_index=True
     )
     
+    commission_type = models.CharField(
+        max_length=20,
+        choices=[
+            ('negotiable', 'Negotiable'),
+            ('earning', 'Earning'),
+            ('percentage', 'Percentage'),
+            ('usd_mt', 'USD per MT'),
+            ('other', 'Other')
+        ],
+        db_index=True
+    )
+    comm_details = models.TextField(
+        null=True,
+        blank=True
+    )
     commission_earnings = models.FloatField(
         null=True,
         blank=True,
@@ -206,17 +170,58 @@ class Lead(Standard):
         null=True,
         blank=True
     )
-    comm_details = models.TextField(
-        null=True,
-        blank=True
-    )
-
     is_comm_negotiable = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
     )
-
+    commission_usd_mt = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    min_commission_percentage = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    max_commission_percentage = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='leads_country',
+        related_query_name='leads_country',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buy_country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='leads_buy_country',
+        related_query_name='leads_buy_country',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sell_country = models.ForeignKey(
+        'common.Country',
+        on_delete=models.PROTECT,
+        related_name='leads_sell_country',
+        related_query_name='leads_sell_country',
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    questions = models.TextField(
+        null=True,
+        blank=True
+    )
+    
     question_1 = models.TextField(
         blank=True,
         null=True
@@ -367,21 +372,21 @@ class Lead(Standard):
 class LeadDetailView(Standard):
     """Lead detail view.
 
-    Last updated: 11 February 2022, 10:11 PM
+    Last updated: 17 Jun 2022, 7:24 PM
     """
-    viewer = models.ForeignKey(
-        'relationships.User',
-        related_name='lead_detail_views',
-        related_query_name='lead_detail_views',
-        on_delete=models.PROTECT,
-        db_index=True  
-    )
     lead = models.ForeignKey(
         'Lead',
         related_name='lead_detail_views',
         related_query_name='lead_detail_views',
         on_delete=models.PROTECT,
         db_index=True        
+    )
+    viewer = models.ForeignKey(
+        'relationships.User',
+        related_name='lead_detail_views',
+        related_query_name='lead_detail_views',
+        on_delete=models.PROTECT,
+        db_index=True  
     )
 
     count = models.IntegerField(
@@ -391,6 +396,117 @@ class LeadDetailView(Standard):
 
     class Meta:
         unique_together = ('viewer', 'lead')
+
+class Contact(Standard):
+    """Contact.
+
+    Last updated: 17 June 2022, 7:30 PM
+    """
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='contacts',
+        related_query_name='contacts',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='contacts',
+        related_query_name='contacts',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='contacts',
+        related_query_name='contacts',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    is_whatsapp = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_wechat = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    wechat_id = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True
+    )
+    is_telegram = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    telegram_username = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True
+    )
+    is_line = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    line_id = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True
+    )
+    is_viber = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_other = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    comments = models.TextField(
+        null=True,
+        blank=True
+    )
+
+class ContactNote(Standard):
+    """Contact note.
+
+    Last updated: 17 Jun 2022, 7:24 PM
+    """
+    contact = models.ForeignKey(
+        'Contact',
+        related_name='notes',
+        related_query_name='notes',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    body = models.TextField()
+
+class ContactAction(Standard):
+    """Contact action.
+
+    Last updated: 17 Jun 2022, 7:24 PM
+    """
+    contact = models.ForeignKey(
+        'Contact',
+        related_name='actions',
+        related_query_name='actions',
+        on_delete=models.PROTECT,
+        db_index=True        
+    )
+    type = models.CharField(
+        max_length=20,
+        choices=[
+            ('whatsapp', 'WhatsApp'),
+            ('wechat', 'WeChat'),
+            ('telegram', 'Telegram'),
+            ('viber', 'Viber'),
+            ('line', 'LINE'),
+            ('copy_email', 'Copy Email'),
+            ('copy_phone', 'Copy Phone')
+        ],
+        db_index=True
+    )
 
 class Application(Standard):
     """Agent application.
