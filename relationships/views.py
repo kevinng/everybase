@@ -39,8 +39,17 @@ def magic_login(request, uuid):
     else:
         return HttpResponseRedirect(reverse('leads:lead_create'))
 
-# Named log_in and not login to prevent clash with Django login
+def confirm_email(request):
+    template_name = 'relationships/metronic/confirm_email.html'
+    return TemplateResponse(request, template_name, {})
+
+
 def log_in(request):
+    template_name = 'relationships/metronic/login.html'
+    return TemplateResponse(request, template_name, {})
+
+# Named log_in and not login to prevent clash with Django login
+def _log_in(request):
     # Do not allow user to access this page if he is authenticated.
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('leads:lead_create'))
@@ -190,7 +199,15 @@ def confirm_login(request):
     template = 'relationships/superio/confirm_login.html'
     return TemplateResponse(request, template, params)
 
+def confirm_phone(request):
+    template = 'relationships/metronic/confirm_phone.html'
+    return TemplateResponse(request, template, {})
+
 def register(request):
+    template = 'relationships/metronic/register.html'
+    return TemplateResponse(request, template, {})
+
+def _register(request):
     # Do not allow user to access this page if he is authenticated.
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('leads:lead_create'))

@@ -46,36 +46,115 @@
 							<!--begin::Heading-->
 							<div class="text-center mb-10">
 								<!--begin::Title-->
-								<h1 class="text-dark mb-3">Login to Everybase</h1>
+								<h1 class="text-dark mb-3">Register for Everybase</h1>
 								<!--end::Title-->
 								<!--begin::Link-->
-								<div class="text-gray-400 fw-bold fs-4">New Here?
-								<a href="../../demo1/dist/authentication/layouts/basic/sign-up.html" class="link-primary fw-bolder">Register</a></div>
+								<div class="text-gray-400 fw-bold fs-4">Have an account?
+								<a href="../../demo1/dist/authentication/layouts/basic/sign-up.html" class="link-primary fw-bolder">Login</a></div>
 								<!--end::Link-->
 							</div>
 							<!--begin::Heading-->
-
-
-
-
-
 							<!--begin::Input group-->
-							<div class="fv-row mb-10">
+							<div>
 								<!--begin::Label-->
-								<label class="form-label fs-6 fw-bolder text-dark">Email or WhatsApp Phone Number</label>
+								<label class="form-label fs-6 fw-bolder text-dark">Email Address</label>
 								<!--end::Label-->
 								<!--begin::Input-->
 								<input class="form-control form-control-lg" type="text" name="email" autocomplete="off" />
 								<!--end::Input-->
-                                <div class="form-text">For phone number - include + symbol. E.g., +14155552671.</div>
+                                {% comment %} <div class="form-text">For phone number - include + symbol. E.g., +14155552671.</div> {% endcomment %}
+							</div>
+							<!--end::Input group-->
+
+                            <!--begin::Input group-->
+							<div class="mt-6">
+								<!--begin::Label-->
+								<label class="form-label fs-6 fw-bolder text-dark">Phone Number</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								<input class="form-control form-control-lg" type="text" name="email" autocomplete="off" />
+								<!--end::Input-->
+                                <div class="form-text">Include + symbol. E.g., +14155552671.</div>
+							</div>
+							<!--end::Input group-->
+
+
+
+                            <div class="form-check form-check-custom mt-4">
+                                {% comment %} Start: WhatsApp radio {% endcomment %}
+                                <div class="me-3">
+                                    <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
+                                    <label>WhatsApp login & notification{% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                                        <span class="svg-icon svg-icon-warning svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Require verification">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                                <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                                </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}</label>
+                                </div>
+                                {% comment %} End: WhatsApp radio {% endcomment %}
+                            </div>
+                            {% comment %} <div class="form-text">Select at least 1 option.</div> {% endcomment %}
+
+
+
+                            <!--begin::Input group-->
+							<div class="mt-6">
+								<!--begin::Label-->
+								<label class="form-label fs-6 fw-bolder text-dark">First Name</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								<input class="form-control form-control-lg" type="text" name="email" autocomplete="off" />
+								<!--end::Input-->
+                                {% comment %} <div class="form-text">Include + symbol. E.g., +14155552671.</div> {% endcomment %}
+							</div>
+							<!--end::Input group-->
+
+
+                            <!--begin::Input group-->
+							<div class="mt-6">
+								<!--begin::Label-->
+								<label class="form-label fs-6 fw-bolder text-dark">Last Name</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								<input class="form-control form-control-lg" type="text" name="email" autocomplete="off" />
+								<!--end::Input-->
+                                {% comment %} <div class="form-text">Include + symbol. E.g., +14155552671.</div> {% endcomment %}
 							</div>
 							<!--end::Input group-->
 
 
 
 
+
+                            <!--begin::Input group-->
+							<div class="mt-6">
+								<!--begin::Label-->
+								<label class="form-label fs-6 fw-bolder text-dark">Country</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								{% comment %} <input class="form-control form-control-lg" type="text" name="email" autocomplete="off" /> {% endcomment %}
+
+								<!--end::Input-->
+                                {% comment %} <div class="form-text">Include + symbol. E.g., +14155552671.</div> {% endcomment %}
+
+                                <select class="form-select" data-control="select2" data-placeholder="Select an option">
+                                    <option></option>
+                                    <option value="1">Option 1</option>
+                                    <option value="2">Option 2</option>
+                                </select>
+							</div>
+							<!--end::Input group-->
+
+
+
+
+
+
 							<!--begin::Actions-->
-							<div class="text-center">
+							<div class="text-center mt-10">
 								<!--begin::Submit button-->
 								<button type="submit" id="kt_sign_in_submit" class="btn btn-lg btn-primary w-100 mb-5">
 									<span class="indicator-label">Next</span>
@@ -109,7 +188,7 @@
 		<!--begin::Javascript-->
 		<script>var hostUrl = "assets/";</script>
 		<!--begin::Global Javascript Bundle(used by all pages)-->
-		<script src="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
+        <script src="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
 		<script src="{% static 'common/metronic/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Page Custom Javascript(used by this page)-->
