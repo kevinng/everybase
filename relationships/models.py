@@ -397,46 +397,49 @@ class User(commods.Standard):
         self.refresh_slug()
         return super().save(*args, **kwargs)
 
-    def country_from_phone_number(self):
-        """Returns country from user's phone number country code."""
-        try:
-            return commods.Country.objects.get(
-                country_code=self.phone_number.country_code)
-        except commods.Country.DoesNotExist:
-            return None
-
-    def applications(self):
-        """Returns applications associated with this user."""
-
-        # Applications where this user is the applicant and lead author has replied
-        applications = lemods.Application.objects.filter(
-            applicant=self,
-            last_messaged__isnull=False
-        )
-
-        # Applications where this user is the product owner
-        for lead in lemods.Lead.objects.filter(author=self.id):
-            # Merge all applications
-            applications = applications | lead.applications.all()
-
-        applications = applications.filter(deleted__isnull=True)
-
-        # Sort by last messaged date/time
-        applications = applications.order_by('-last_messaged')
-
-        return applications
-
-    def is_profile_complete(self):
-        """Returns True if profile is complete."""
-        return self.first_name != None and \
-            self.last_name != None and \
-            self.phone_number != None and \
-            self.country != None
+    def num_leads(self):
+        return lemods.Lead.objects.filter(author=self.id).count()
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} [{self.id}]'
 
     # Not in use
+
+    # def country_from_phone_number(self):
+    #     """Returns country from user's phone number country code."""
+    #     try:
+    #         return commods.Country.objects.get(
+    #             country_code=self.phone_number.country_code)
+    #     except commods.Country.DoesNotExist:
+    #         return None
+
+    # def is_profile_complete(self):
+    #     """Returns True if profile is complete."""
+    #     return self.first_name != None and \
+    #         self.last_name != None and \
+    #         self.phone_number != None and \
+    #         self.country != None
+
+    # def applications(self):
+    #     """Returns applications associated with this user."""
+
+    #     # Applications where this user is the applicant and lead author has replied
+    #     applications = lemods.Application.objects.filter(
+    #         applicant=self,
+    #         last_messaged__isnull=False
+    #     )
+
+    #     # Applications where this user is the product owner
+    #     for lead in lemods.Lead.objects.filter(author=self.id):
+    #         # Merge all applications
+    #         applications = applications | lead.applications.all()
+
+    #     applications = applications.filter(deleted__isnull=True)
+
+    #     # Sort by last messaged date/time
+    #     applications = applications.order_by('-last_messaged')
+
+    #     return applications
 
     # def root_comments(self):
     #     """Returns root comments only (i.e., comments that are not replies to
@@ -449,9 +452,6 @@ class User(commods.Standard):
 
     # def num_comments_as_commentee(self):
     #     return UserComment.objects.filter(commentee=self).count()
-
-    # def num_leads(self):
-    #     return lemods.Lead.objects.filter(author=self.id).count()
 
     # def num_credits_left(self):
     #     sum = paymods.CreditsEvent.objects.filter(user=self)\
