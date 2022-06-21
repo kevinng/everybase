@@ -193,6 +193,10 @@ STATIC_URL = '/static/'
 STATICFILES_STORAGE = config('STATICFILES_STORAGE')
 DEFAULT_FILE_STORAGE = 'everybase.storage_backends.MediaStorage'
 
+# Object key format of user avatar in AWS S3
+AWS_S3_KEY_AVATAR_IMAGE = 'users/avatar/%s'
+AWS_S3_KEY_AVATAR_IMAGE_THUMBNAIL = 'users/avatar/t/%s'
+
 # Object key format of lead image objects in AWS S3. String positions, in order:
 #   lead ID
 #   file ID

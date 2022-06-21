@@ -1,10 +1,14 @@
 import random, uuid
 
+from urllib.parse import urljoin
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User as django_user
 from django.utils.text import slugify
+
+from everybase import settings
 
 from common import models as commods
 import leads.models as lemods
@@ -154,7 +158,7 @@ class InvalidEmail(commods.Standard):
 class User(commods.Standard):
     """User details.
 
-    Last updated: 20 Jun 2022, 3:26 PM
+    Last updated: 21 Jun 2022, 5:36 PM
     """
     registered = models.DateTimeField(
         null=True,
@@ -175,6 +179,16 @@ class User(commods.Standard):
         unique=True,
         default=uuid.uuid4,
         editable=False,
+        db_index=True
+    )
+
+    avatar = models.ForeignKey(
+        'files.File',
+        related_name='avatar_for_users',
+        related_query_name='avatar_for_users',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         db_index=True
     )
 
@@ -372,6 +386,14 @@ class User(commods.Standard):
         null=True,
         blank=True
     )
+
+    def avatar_url(self):
+        path = settings.AWS_S3_KEY_AVATAR_IMAGE % (self.id)
+        return urljoin(settings.MEDIA_URL, path)
+
+    def avatar_thumbnail_url(self):
+        path = settings.AWS_S3_KEY_AVATAR_IMAGE_THUMBNAIL % (self.id)
+        return urljoin(settings.MEDIA_URL, path)
 
     def refresh_slug(self):
         """Refresh the slug for this user."""
