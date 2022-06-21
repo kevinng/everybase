@@ -154,7 +154,7 @@ class InvalidEmail(commods.Standard):
 class User(commods.Standard):
     """User details.
 
-    Last updated: 27 May 2022, 9:09 PM
+    Last updated: 20 Jun 2022, 3:26 PM
     """
     registered = models.DateTimeField(
         null=True,
@@ -206,6 +206,11 @@ class User(commods.Standard):
         blank=True
     )
     whatsapp_login_code_generated = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    enable_whatsapp = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
