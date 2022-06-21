@@ -274,10 +274,13 @@ class Lead(Standard):
         s = self.headline
         if self.min_commission_percentage is not None and self.max_commission_percentage is not None:
             s += f', {self.min_commission_percentage}% to {self.max_commission_percentage}'
-        if self.lead_type == 'selling':
-            s += f', {self.lead_type}, from {self.buy_country.name}'
-        if self.lead_type == 'buying':
-            s += f', {self.lead_type}, to {self.sell_country.name}'
+
+        s += f', {self.lead_type}'
+
+        if self.lead_type == 'selling' and self.buy_country is not None:
+            s += f', {self.lead_type}'
+        if self.lead_type == 'buying' and self.sell_country is not None:
+            s += f', {self.lead_type}'
 
         s += f', {self.author.first_name} {self.author.last_name}, [{self.id}]'
 
