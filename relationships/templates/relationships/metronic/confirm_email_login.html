@@ -21,35 +21,44 @@
         {% comment %} End: Logo {% endcomment %}
 
         {% comment %} Start: Wrapper and form {% endcomment %}
-        <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
-            <form class="form w-100" action="{% url 'login' %}" method="post">
+        <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <form class="form w-100 mb-10" action="{% url 'confirm_email_login' %}" method="post">
                 {% if next != None %}
                     <input type="hidden" name="next" value="{{ next }}">
                 {% elif form.next.value != None %}
                     <input type="hidden" name="next" value="{{ form.next.value }}">
                 {% endif %}
 
+                {% if uuid != None %}
+                    <input type="hidden" name="uuid" value="{{ uuid }}">
+                {% elif form.uuid.value != None %}
+                    <input type="hidden" name="uuid" value="{{ form.uuid.value }}">
+                {% endif %}
+
                 {% csrf_token %}
 
-                <div class="text-center">
-                    <h1 class="text-dark">Login to Everybase</h1>
-                    <div class="text-gray-400 fw-bold fs-4 mt-3">New Here? <a href="{% url 'register' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="link-primary fw-bolder">Register</a></div>
+                <div class="text-center mb-10">
+                    <img alt="Logo" class="mh-125px" src="{% static 'common/metronic/demo1/dist/assets/media/svg/misc/smartphone.svg' %}" />
+                </div>
+
+                <div class="text-center mb-10">
+                    <h1 class="text-dark mb-3">Verify Your Email</h1>
+                    <div class="text-muted fw-bold fs-5 mb-5">Enter the verification code we've sent to</div>
+                    <div class="fw-bolder text-dark fs-3">{{ form.email.value }}</div>
+                    <input type="hidden" name="email" value="{{ form.email.value }}">
                 </div>
 
                 <div class="mt-10">
-                    <label class="form-label fs-6 fw-bolder text-dark">Email or WhatsApp Phone Number</label>
-                    <input class="form-control form-control-lg" type="text" name="email_or_phone_number"{% if form.email_or_phone_number.value != None %} value="{{ form.email_or_phone_number.value }}"{% endif %} required />
-                    <div class="form-text">For phone number - include + symbol. E.g., +14155552671.</div>
+                    <input type="text" class="form-control" name="code" placeholder="e.g., 123456" />
                 </div>
-                {% if form.email_or_phone_number.errors %}<div class="text-danger">{% for error in form.email_or_phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                {% if form.code.errors %}<div class="text-danger">{% for error in form.code.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <div class="text-center mt-10">
-                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Next</button>
+                <div class="d-flex flex-center mt-10">
+                    <button type="submit" class="btn btn-lg btn-primary fw-bolder">Login</button>
                 </div>
             </form>
         </div>
         {% comment %} End: Wrapper and form {% endcomment %}
     </div>
-    {% comment %} End: Content {% endcomment %}
 </div>
 {% endblock %}

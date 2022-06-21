@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    {% comment %} Start: Head {% endcomment %}
+	<head>
+        <base href="../../../">
+		<title>{% block title %}{% endblock %}</title>
+		<meta charset="utf-8" />
+		<meta name="description" content="{% block meta_description %}{% endblock %}" />
+		<meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:type" content="{% block meta_og_type %}website{% endblock %}" />
+		<meta property="og:title" content="{% block meta_og_title %}{% endblock %}" />
+		<meta property="og:url" content="{% block meta_og_url %}{% endblock %}" />
+		<meta property="og:site_name" content="{% block meta_og_site_name %}{% endblock %}" />
+		<link rel="canonical" href="https://everybase.co" />
+		<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+        {% comment %} Start: Fonts {% endcomment %}
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+        {% comment %} End: Fonts {% endcomment %}
+        {% comment %} Start: Global stylesheets bundle (used by all pages) {% endcomment %}
+		<link href="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'common/metronic/demo1/dist/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+        {% comment %} End: Global stylesheels bundle {% endcomment %}
+	</head>
+    {% comment %} End: Head {% endcomment %}
+    {% comment %} Start: Body {% endcomment %}
+	<body id="kt_body" class="bg-body">
+        {% comment %} Start: Main {% endcomment %}
+        {% comment %} Start: Root {% endcomment %}
+		<div class="d-flex flex-column flex-root">
+            {% block content %}{% endblock %}
+		</div>
+        {% comment %} End: Root {% endcomment %}
+        {% comment %} End: Main {% endcomment %}
+
+        {% comment %} Start: Javascript {% endcomment %}
+		<script>var hostUrl = "assets/";</script>
+        {% comment %} Start: Global Javascript bundle (used by all pages) {% endcomment %}
+		<script src="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
+		<script src="{% static 'common/metronic/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
+        {% comment %} End: Global Javascript bundle {% endcomment %}
+        {% comment %} Start: Page custom Javascript {% endcomment %}
+        {% block page_custom_javascript %}{% endblock %}
+        {% comment %} End: Page custom Javascript {% endcomment %}
+        {% comment %} End: Javascript {% endcomment %}
+	</body>
+    {% comment %} End: Body {% endcomment %}
+</html>

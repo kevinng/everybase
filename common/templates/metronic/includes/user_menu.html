@@ -4,8 +4,8 @@
 {% comment %} TODO: if user is authenticated show menu, otherwise show login/register {% endcomment %}
 
 <div class="d-flex align-items-center">
-    <a href="#" class="btn btn-secondary me-2">Register</a>
-    <a href="#" class="btn btn-primary">Login</a>
+    <a href="{% url 'register' %}" class="btn btn-secondary me-2">Register</a>
+    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
 </div>
 
 
@@ -63,7 +63,7 @@
 
         {% comment %} Start: Sign out menu item {% endcomment %}
         <div class="menu-item px-5">
-            <a href="" class="menu-link px-5">Sign Out</a>
+            <a href="{% url 'logout' %}" class="menu-link px-5">Logout</a>
         </div>
         {% comment %} End: Sign out menu item {% endcomment %}
     </div>
