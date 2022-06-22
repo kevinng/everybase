@@ -2,6 +2,8 @@
 
 Render lead item and accompanying modal contact if applicable.
 
+The clipboard Javascript have to be rendered separately after their dependencies include at the end of the page.
+
 Parameters:
     lead, lead item to be rendered
 {% endcomment %}
@@ -9,18 +11,33 @@ Parameters:
 {% load static %}
 
 {% comment %} Start: Lead item {% endcomment %}
-<a href="#" data-bs-toggle="modal" data-bs-target="#kt_modal_2" class="card shadow-sm">
-<div class="card shadow-sm">
+
+{% comment %}
+
+Allow user to contact author if he's not the author
+{% endcomment %}
+{% if lead.author.id != request.user.user.id %}
+<a href="#" data-bs-toggle="modal" data-bs-target="#lead_{{ lead.id }}_modal">
+{% else %}
+<a href="{% url 'leads:lead_detail_private' lead.id %}">
+{% endif %}
+
+<div class="card shadow-sm mt-4">
     {% comment %} Start: Card header {% endcomment %}
     <div class="card-header">
         <div class="card-title align-items-start flex-column">
             {% comment %} Start: Avatar {% endcomment %}
             <div class="d-flex align-items-center">
                 <div class="symbol symbol-45px me-5">
-                    <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
+                    {% if request.user.user.avatar == None %}
+                        <div class="symbol-label fs-3 bg-light-primary text-primary">{{ request.user.user.first_name.0|upper }}{{ request.user.user.last_name.0|upper }}</div>
+                    {% else %}
+                        <img src="{{ request.user.user.avatar_thumbnail_url }}" />
+                    {% endif %}
                 </div>
                 <div class="d-flex justify-content-start flex-column">
-                    <div class="text-dark fw-bolder fs-6">Ana Simmons
+                    <div class="text-dark fw-bolder fs-6">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}
+                    {% if lead.author.is_country_match_country_code %}
                         {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
                         <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -29,68 +46,56 @@ Parameters:
                             </svg>
                         </span>
                         {% comment %} End: SVG icon {% endcomment %}
+                    {% endif %}
                     </div>
-                    <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA</span>
+                    <span class="text-muted fw-bold text-muted d-block fs-7">{{ lead.author.country.name }}</span>
                 </div>
             </div>
             {% comment %} End: Avatar {% endcomment %}
         </div>
         <div class="card-toolbar">
-            <span class="text-muted">2w ago</span>
+            <span class="text-muted">{{ lead.age_desc }}</span>
         </div>
     </div>
     {% comment %} End: Card header {% endcomment %}
 
     {% comment %} Start: Card body {% endcomment %}
     <div class="card-body">
-        <div class="text-dark">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
+        <div class="text-dark">{% if lead.body != None %}{{ lead.body }}{% else %}{{ lead.headline }}{% endif %}</div>
         <div class="d-flex justify-content-between mt-2">
             <div>
-                <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to buy, or needs help to source this product.">Buying / Help Me Source</span>
-                <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell this product.">Selling / Help Me Sell</span>
+                {% if lead.lead_type == 'buying' %}
+                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to buy, or needs help to source.">Buying / Help Me Source</span>
+                {% elif lead.lead_type == 'selling' %}
+                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Selling / Help Me Sell</span>
+                {% elif lead.lead_type == 'other' %}
+                <span class="badge badge-secondary">Other</span>
+                {% endif %}
                 {% comment %} <span class="badge badge-light">Help Me Source</span> {% endcomment %}
                 {% comment %} <span class="badge badge-light">Need Logistics</span> {% endcomment %}
             </div>
             {% comment %} Start: Badges {% endcomment %}
             <div>
                 {% comment %} <span class="badge badge-dark">Contacted</span> {% endcomment %}
-                <span class="badge badge-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="12 users contacted you on this lead.">12 Contacts</span>
+                <span class="badge badge-info" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ lead.num_contacts }} users contacted you on this lead.">{{ lead.num_contacts }} Contacts</span>
             </div>
             {% comment %} End: Badges {% endcomment %}
         </div>
     </div>
     {% comment %} End: Card body {% endcomment %}
-
-    {% comment %} Start: Card footer {% endcomment %}
-    <div class="card-footer">
-        <div class="col-lg-4 col-md-6">
-            {% comment %} Start: Input group {% endcomment %}
-            <div class="input-group">
-                {% comment %} Start: Input {% endcomment %}
-                <input id="kt_clipboard_1" type="text" class="form-control col-lg-2" placeholder="name@example.com" value="name@example.com" readonly />
-                {% comment %} End: Input {% endcomment %}
-    
-                {% comment %} Start: Button {% endcomment %}
-                <button class="btn btn-light-primary" data-clipboard-target="#kt_clipboard_1">Copy Link</button>
-                {% comment %} End: Button {% endcomment %}
-            </div>
-            {% comment %} End: Input group {% endcomment %}
-        </div>
-    </div>
-    {% comment %} End: Card footer {% endcomment %}
 </div>
+
+{% comment %}
+We have only 1 </a> tag, but 2 <a> tags - which we'll choose to render depending on whether the this lead belongs to the user.
+{% endcomment %}
 </a>
+
 {% comment %} End: Lead item {% endcomment %}
 
-
-
-{% comment %} TODO: don't need to render the contact modal if  {% endcomment %}
-
-
-
-
+{% comment %} Render contact modal if user is not lead author {% endcomment %}
+{% if lead.author.id != request.user.user.id %}
 {% comment %} Start: Contact modal {% endcomment %}
-<div class="modal bg-white fade" tabindex="-1" id="kt_modal_2">
+<div class="modal bg-white fade" tabindex="-1" id="#lead_{{ lead.id }}_modal">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content shadow-none">
             <div class="modal-header">
@@ -150,8 +155,6 @@ Parameters:
                         <div class="form-text">Include + symbol. E.g., +14155552671.</div>
                         {% comment %} End: Phone textfield {% endcomment %}
 
-
-
                         <div class="form-check form-check-custom mt-4">
                             {% comment %} Start: WhatsApp radio {% endcomment %}
                             <div class="me-3">
@@ -161,8 +164,6 @@ Parameters:
                             {% comment %} End: WhatsApp radio {% endcomment %}
                         </div>
                         {% comment %} <div class="form-text">Select at least 1 option.</div> {% endcomment %}
-
-
 
                         <div class="form-check form-check-custom mt-2">
                             {% comment %} Start: WhatsApp radio {% endcomment %}
@@ -176,56 +177,6 @@ Parameters:
                             <input type="email" class="form-control" id="floatingInput1" placeholder="name@example.com" required />
                             <label for="floatingInput1">WeChat ID</label>
                         </div>
-
-                        {% comment %} <div class="form-check form-check-custom mt-2"> {% endcomment %}
-                            {% comment %} Start: WhatsApp radio {% endcomment %}
-                            {% comment %} <div class="me-3">
-                                <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                <label>Telegram</label>
-                            </div> {% endcomment %}
-                            {% comment %} End: WhatsApp radio {% endcomment %}
-                        {% comment %} </div>
-                        <div class="col-4 mt-2 mb-6">
-                            <label class="form-label">Telegram Username</label>
-                            <input class="form-control" type="text" />
-                        </div> {% endcomment %}
-                        {% comment %} <div class="form-check form-check-custom mt-2"> {% endcomment %}
-                            {% comment %} Start: WhatsApp radio {% endcomment %}
-                            {% comment %} <div class="me-3"> {% endcomment %}
-                                {% comment %} <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/> {% endcomment %}
-                                {% comment %} <label>LINE</label> {% endcomment %}
-                            {% comment %} </div> {% endcomment %}
-                            {% comment %} End: WhatsApp radio {% endcomment %}
-                        {% comment %} </div> {% endcomment %}
-                        {% comment %} <div class="col-4 mt-2 mb-6"> {% endcomment %}
-                            {% comment %} <label class="form-label">LINE ID</label> {% endcomment %}
-                            {% comment %} <input class="form-control" type="text" /> {% endcomment %}
-                        {% comment %} </div> {% endcomment %}
-
-
-
-
-                        {% comment %} <div class="form-check form-check-custom mt-2"> {% endcomment %}
-                            {% comment %} Start: WhatsApp radio {% endcomment %}
-                            {% comment %} <div class="me-3">
-                                <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                <label>Viber</label>
-                            </div> {% endcomment %}
-                            {% comment %} End: WhatsApp radio {% endcomment %}
-                        {% comment %} </div> {% endcomment %}
-
-
-                        {% comment %} <div class="form-check form-check-custom mt-2"> {% endcomment %}
-                            {% comment %} Start: Other radio {% endcomment %}
-                            {% comment %} <div class="me-3">
-                                <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                <label>Other (Specify in Comments)</label>
-                            </div> {% endcomment %}
-                            {% comment %} End: Other radio {% endcomment %}
-                        {% comment %} </div> {% endcomment %}
-
-
-
 
                         {% comment %} Start: Comments textfield {% endcomment %}
                         <div class="form-floating mt-8">
@@ -249,48 +200,6 @@ Parameters:
                             </div>
                             {% comment %} End: WhatsApp radio {% endcomment %}
                         </div>
-
-                        {% comment %} End: Comments textfield {% endcomment %}
-                        {% comment %} <div class="d-flex justify-content-end">
-                            <div id="comments_char_count" class="form-text">0/100</div>
-                        </div> {% endcomment %}
-
-                        {% comment %} Start: Purposes {% endcomment %}
-                        {% comment %} <div class="mt-4"> {% endcomment %}
-                            {% comment %} <label class="form-check form-check-custom">
-                                <input class="form-check-input" type="checkbox" value=""/>
-                                <span class="form-check-label">
-                                    Buyer
-                                </span>
-                            </label>
-                             {% endcomment %}
-                            {% comment %} Start: Can help to sell checkbox {% endcomment %}
-                            {% comment %} <label class="form-check form-check-custom mt-2">
-                                <input class="form-check-input" type="checkbox"/>
-                                <span class="form-check-label">Can Help to Sell {% endcomment %}
-                                    {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen044.svg {% endcomment %}
-                                    {% comment %} <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="No sending of goods before payment">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                            <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"/>
-                                            <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                        </svg>
-                                    </span> {% endcomment %}
-                                    {% comment %} End: SVG icon {% endcomment %}
-                                {% comment %} </span>
-                            </label> {% endcomment %}
-                            {% comment %} End: Can help to sell checkbox {% endcomment %}
-
-                            {% comment %} Start: Logistics checkbox {% endcomment %}
-                            {% comment %} <label class="form-check form-check-custom mt-2">
-                                <input class="form-check-input" type="checkbox" value=""/>
-                                <span class="form-check-label">
-                                    Logistics
-                                </span>
-                            </label> {% endcomment %}
-                            {% comment %} End: Logistics checkbox {% endcomment %}
-                        {% comment %} </div> {% endcomment %}
-                        {% comment %} End: Purposes {% endcomment %}
                     </div>
                     {% comment %} End: Contact form {% endcomment %}
                 </div>
@@ -304,3 +213,5 @@ Parameters:
     </div>
 </div>
 {% comment %} End: Modal contact form {% endcomment %}
+{% endif %}
+

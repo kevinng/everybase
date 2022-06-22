@@ -49,9 +49,9 @@
                 <span class="menu-text">My Leads</span>
 
                 {% if request.user.user.num_leads > 0 %}
-                <span class="menu-badge">
-                    <span class="badge badge-light-primary badge-circle fw-bolder fs-7">{{ request.user.user.num_leads }}</span>
-                </span>
+                    <span class="menu-badge">
+                        <span class="badge badge-light-primary badge-circle fw-bolder fs-7">{{ request.user.user.num_leads }}</span>
+                    </span>
                 {% endif %}
             </a>
         </div>

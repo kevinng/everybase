@@ -17,7 +17,9 @@ from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRan
 from django.template.response import TemplateResponse
 
 from everybase import settings
+
 from leads import models, forms
+
 from chat.tasks.send_new_application import send_new_application
 from chat.tasks.send_new_message import send_new_message
 
@@ -29,13 +31,178 @@ from common.tasks.send_amplitude_event import send_amplitude_event
 from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
 
+@login_required
+def lead_create(request):
+    if request.method == 'POST':
+        form = forms.LeadForm(request.POST)
+        if form.is_valid():
+            body = form.cleaned_data.get('body')
+            lead_type = form.cleaned_data.get('lead_type')
+
+            lead = models.Lead.objects.create(
+                author=request.user.user,
+                body=body,
+                lead_type=lead_type
+            )
+
+            send_amplitude_event.delay(
+                'created lead',
+                user_uuid=lead.author.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'lead id': lead.id,
+                    'lead type': lead.lead_type
+                }
+            )
+
+            return HttpResponseRedirect(reverse('leads:lead_created_success', args=(lead.id,)))
+    elif request.method == 'GET':
+        form = forms.LeadForm()
+
+    template_name = 'leads/metronic/lead_create.html'
+    return render(request, template_name, {'form': form})
+
+def lead_created_success(request, id):
+    lead = models.Lead.objects.get(pk=id)
+    template_name = 'leads/metronic/lead_create_success.html'
+    return TemplateResponse(request, template_name, {'lead_capture_url': lead.lead_capture_url})
+
+@login_required
+def lead_detail_private(request, id):
+    template_name = 'leads/metronic/lead_detail.html'
+    return TemplateResponse(request, template_name, {})
+
+@login_required
+def my_leads(request):
+    leads = request.user.user.leads_order_by_created_desc()
+
+    params = {}
+
+    # Paginate
+
+    leads_per_page = 20
+    paginator = Paginator(leads, leads_per_page)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    params['page_obj'] = page_obj
+
+    template_name = 'leads/metronic/my_leads.html'
+    return TemplateResponse(request, template_name, params)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@login_required
+def _lead_create(request):
+    if request.method == 'POST':
+        form = forms.LeadForm(request.POST)
+        if form.is_valid():
+            
+            g = lambda x: form.cleaned_data.get(x)
+
+            lead_type = g('lead_type')
+            author_type = g('author_type')
+            country_key = g('country')
+            category_key = g('category')
+            commission_type = g('commission_type')
+            commission_usd_mt = g('commission_usd_mt')
+            min_commission_percentage = g('min_commission_percentage')
+            max_commission_percentage = g('max_commission_percentage')
+            headline = g('headline')
+            details = g('details')
+            questions = g('questions')
+
+            category = None
+            if category_key != 'other':
+                try:
+                    category = models.LeadCategory.objects.get(programmatic_key=category_key)
+                except models.LeadCategory.DoesNotExist:
+                    pass
+
+            lead = models.Lead(
+                author=request.user.user,
+                lead_type=lead_type,
+                author_type=author_type,
+                category=category,
+                commission_type=commission_type,
+                commission_usd_mt=commission_usd_mt,
+                min_commission_percentage=min_commission_percentage,
+                max_commission_percentage=max_commission_percentage,
+                headline=headline,
+                details=details,
+                questions=questions
+            )
+
+            if country_key.strip() != 'any_country':
+                country = commods.Country.objects.get(programmatic_key=country_key)
+                if lead_type == 'selling':
+                    lead.buy_country = country
+                elif lead_type == 'buying':
+                    lead.sell_country = country
+
+            lead.save()
+
+            # Email lead author
+            if lead.author.email is not None:
+                send_email.delay(
+                    render_to_string('leads/email/lead_created_subject.txt', {}),
+                    render_to_string('leads/email/lead_created.txt', {
+                        'lead_headline': lead.headline,
+                        'lead_detail_url': \
+                            urljoin(settings.BASE_URL,
+                            reverse('leads:lead_detail', args=(lead.id,)))
+                    }),
+                    'friend@everybase.co',
+                    [lead.author.email.email]
+                )
+
+            send_amplitude_event.delay(
+                'created lead',
+                user_uuid=lead.author.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'lead id': lead.id,
+                    'buy sell': lead.lead_type,
+                    'buy country': lead.buy_country.programmatic_key if lead.buy_country is not None else 'any_country',
+                    'sell country': lead.sell_country.programmatic_key if lead.sell_country is not None else 'any_country'
+                }
+            )
+            
+            return HttpResponseRedirect(reverse('leads:my_leads'))
+    else:
+        form = forms.LeadForm()
+
+    countries = commods.Country.objects.annotate(
+        num_leads=Count('leads_buy_country')).order_by('-num_leads')
+
+    categories = models.LeadCategory.objects\
+        .annotate(num_leads=Count('leads')).\
+        order_by('-num_leads')
+
+    params = {
+        'countries': countries,
+        'categories': categories,
+        'form': form
+    }
+
+    return render(request, 'leads/superio/lead_create.html', params)
+
 def contact_lead(request, id):
     template_name = 'leads/metronic/lead_capture.html'
     return TemplateResponse(request, template_name, {})
 
-def lead_created_success(request, id):
-    template_name = 'leads/metronic/lead_create_success.html'
-    return TemplateResponse(request, template_name, {})
+
 
 def contact_detail(request, id):
     template_name = 'leads/metronic/contact_detail.html'
@@ -194,9 +361,7 @@ def _lead_list(request):
 
     return render(request, 'leads/superio/lead_list.html', params)
 
-def lead_detail_me(request, id):
-    template_name = 'leads/metronic/lead_detail.html'
-    return TemplateResponse(request, template_name, {})
+
 
 def _lead_detail(request, slug):
     try:
@@ -300,104 +465,9 @@ def _lead_detail(request, slug):
 
 
 
-def lead_create(request):
-    template_name = 'leads/metronic/lead_create.html'
-    return TemplateResponse(request, template_name, {})
 
-@login_required
-def _lead_create(request):
-    if request.method == 'POST':
-        form = forms.LeadForm(request.POST)
-        if form.is_valid():
-            
-            g = lambda x: form.cleaned_data.get(x)
 
-            lead_type = g('lead_type')
-            author_type = g('author_type')
-            country_key = g('country')
-            category_key = g('category')
-            commission_type = g('commission_type')
-            commission_usd_mt = g('commission_usd_mt')
-            min_commission_percentage = g('min_commission_percentage')
-            max_commission_percentage = g('max_commission_percentage')
-            headline = g('headline')
-            details = g('details')
-            questions = g('questions')
 
-            category = None
-            if category_key != 'other':
-                try:
-                    category = models.LeadCategory.objects.get(programmatic_key=category_key)
-                except models.LeadCategory.DoesNotExist:
-                    pass
-
-            lead = models.Lead(
-                author=request.user.user,
-                lead_type=lead_type,
-                author_type=author_type,
-                category=category,
-                commission_type=commission_type,
-                commission_usd_mt=commission_usd_mt,
-                min_commission_percentage=min_commission_percentage,
-                max_commission_percentage=max_commission_percentage,
-                headline=headline,
-                details=details,
-                questions=questions
-            )
-
-            if country_key.strip() != 'any_country':
-                country = commods.Country.objects.get(programmatic_key=country_key)
-                if lead_type == 'selling':
-                    lead.buy_country = country
-                elif lead_type == 'buying':
-                    lead.sell_country = country
-
-            lead.save()
-
-            # Email lead author
-            if lead.author.email is not None:
-                send_email.delay(
-                    render_to_string('leads/email/lead_created_subject.txt', {}),
-                    render_to_string('leads/email/lead_created.txt', {
-                        'lead_headline': lead.headline,
-                        'lead_detail_url': \
-                            urljoin(settings.BASE_URL,
-                            reverse('leads:lead_detail', args=(lead.id,)))
-                    }),
-                    'friend@everybase.co',
-                    [lead.author.email.email]
-                )
-
-            send_amplitude_event.delay(
-                'created lead',
-                user_uuid=lead.author.uuid,
-                ip=get_ip_address(request),
-                event_properties={
-                    'lead id': lead.id,
-                    'buy sell': lead.lead_type,
-                    'buy country': lead.buy_country.programmatic_key if lead.buy_country is not None else 'any_country',
-                    'sell country': lead.sell_country.programmatic_key if lead.sell_country is not None else 'any_country'
-                }
-            )
-            
-            return HttpResponseRedirect(reverse('leads:my_leads'))
-    else:
-        form = forms.LeadForm()
-
-    countries = commods.Country.objects.annotate(
-        num_leads=Count('leads_buy_country')).order_by('-num_leads')
-
-    categories = models.LeadCategory.objects\
-        .annotate(num_leads=Count('leads')).\
-        order_by('-num_leads')
-
-    params = {
-        'countries': countries,
-        'categories': categories,
-        'form': form
-    }
-
-    return render(request, 'leads/superio/lead_create.html', params)
 
 @login_required
 def lead_edit(request, slug):
@@ -488,9 +558,7 @@ def lead_edit(request, slug):
 
     return render(request, 'leads/superio/lead_edit.html', params)
 
-def my_leads(request):
-    template_name = 'leads/metronic/me.html'
-    return TemplateResponse(request, template_name, {})
+
 
 @login_required
 def _my_leads(request):

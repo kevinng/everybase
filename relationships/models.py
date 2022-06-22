@@ -421,6 +421,15 @@ class User(commods.Standard):
 
     def num_leads(self):
         return lemods.Lead.objects.filter(author=self.id).count()
+    
+    def leads_order_by_created_desc(self):
+        return lemods.Lead.objects.filter(author=self.id).order_by('-created')
+
+    def is_country_match_country_code(self):
+        if self.phone_number is not None and self.country is not None:
+            return self.country.country_code == self.phone_number.country_code
+
+        return False
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} [{self.id}]'

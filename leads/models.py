@@ -1,8 +1,13 @@
 import uuid as uuidlib
+from urllib.parse import urljoin
+
 from django.db import models
-import files.models as fimods
-from common.models import Standard, Choice
+from django.urls import reverse
 from django.utils.text import slugify
+
+from everybase import settings
+
+from common.models import Standard, Choice
     
 class Lead(Standard):
     """Lead.
@@ -18,8 +23,8 @@ class Lead(Standard):
 
     author = models.ForeignKey(
         'relationships.User',
-        related_name='leads_author',
-        related_query_name='leads_author',
+        related_name='leads_with_author',
+        related_query_name='leads_with_author',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -304,27 +309,36 @@ class Lead(Standard):
         self.refresh_slug()
         return super().save(*args, **kwargs)
 
-    def cover_photo(self):
-        """Returns cover photo"""
-        return fimods.File.objects\
-            .filter(lead=self, deleted__isnull=True)\
-            .order_by('-created')\
-            .first()
+    def lead_capture_url(self):
+        return urljoin(settings.BASE_URL, reverse('leads:contact_lead', args=[self.id]))
 
-    def num_applications(self):
-        """Number of applications on this lead"""
-        return Application.objects.filter(
+    def num_contacts(self):
+        return Contact.objects.filter(
             lead=self,
             deleted__isnull=True
         ).count()
 
-    def display_images(self):
-        """Returns display images."""
-        NUM_DISPLAY_IMAGES = 1
+    # def cover_photo(self):
+    #     """Returns cover photo"""
+    #     return fimods.File.objects\
+    #         .filter(lead=self, deleted__isnull=True)\
+    #         .order_by('-created')\
+    #         .first()
 
-        return fimods.File.objects\
-            .filter(lead=self, deleted__isnull=True)\
-            .order_by('-created')[:NUM_DISPLAY_IMAGES]
+    # def num_applications(self):
+    #     """Number of applications on this lead"""
+    #     return Application.objects.filter(
+    #         lead=self,
+    #         deleted__isnull=True
+    #     ).count()
+
+    # def display_images(self):
+    #     """Returns display images."""
+    #     NUM_DISPLAY_IMAGES = 1
+
+    #     return fimods.File.objects\
+    #         .filter(lead=self, deleted__isnull=True)\
+    #         .order_by('-created')[:NUM_DISPLAY_IMAGES]
 
     # def num_images(self):
     #     """Returns the number of display images for this lead"""

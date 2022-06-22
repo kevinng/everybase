@@ -1,0 +1,57 @@
+{% comment %} Start: Details {% endcomment %}
+<div class="d-flex flex-wrap flex-sm-nowrap mb-3">
+    {% comment %} Start: Pic {% endcomment %}
+    <div class="me-7 mb-4">
+        <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+            {% if request.user.user.avatar == None %}
+                <div class="symbol-label fs-1 bg-light-primary text-primary">{{ request.user.user.first_name.0|upper }}{{ request.user.user.last_name.0|upper }}</div>
+            {% else %}
+                <img src="{{ request.user.user.avatar_thumbnail_url }}" />
+            {% endif %}
+        </div>
+    </div>
+    {% comment %} End: Pic {% endcomment %}
+    {% comment %} Start: Info {% endcomment %}
+    <div class="flex-grow-1">
+        {% comment %} Start: Title {% endcomment %}
+        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+            {% comment %} Start: User {% endcomment %}
+            <div class="d-flex flex-column">
+                {% comment %} Start: Name {% endcomment %}
+                <div class="d-flex align-items-center mb-2">
+                    <span class="text-gray-900 fs-2 fw-bolder me-1">{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}</span>
+                </div>
+                {% comment %} End: Name {% endcomment %}
+                {% comment %} Start: Info {% endcomment %}
+                <div class="d-flex flex-wrap fw-bold fs-6 mb-4 pe-2">
+                    {% comment %} Start: SVG icon | path: icons/duotune/general/gen018.svg {% endcomment %}
+                    <span class="svg-icon svg-icon-4 me-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path opacity="0.3" d="M18.0624 15.3453L13.1624 20.7453C12.5624 21.4453 11.5624 21.4453 10.9624 20.7453L6.06242 15.3453C4.56242 13.6453 3.76242 11.4453 4.06242 8.94534C4.56242 5.34534 7.46242 2.44534 11.0624 2.04534C15.8624 1.54534 19.9624 5.24534 19.9624 9.94534C20.0624 12.0453 19.2624 13.9453 18.0624 15.3453Z" fill="currentColor" />
+                            <path d="M12.0624 13.0453C13.7193 13.0453 15.0624 11.7022 15.0624 10.0453C15.0624 8.38849 13.7193 7.04535 12.0624 7.04535C10.4056 7.04535 9.06241 8.38849 9.06241 10.0453C9.06241 11.7022 10.4056 13.0453 12.0624 13.0453Z" fill="currentColor" />
+                        </svg>
+                    </span>
+                    {% comment %} End: SVG icon {% endcomment %}
+                    <span class="text-muted me-2">{{ request.user.user.country.name }}</span>
+                    {% comment %} Start: country verification symbol {% endcomment %}
+                    {% if request.user.user.is_country_match_country_code %}
+                        {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                        <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code {{ request.user.user.phone_number.country_code }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                            <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        {% comment %} End: SVG icon {% endcomment %}
+                    {% endif %}
+                    {% comment %} End: country verificaiton symbol {% endcomment %}
+                </div>
+                {% comment %} End: Info {% endcomment %}
+            </div>
+            {% comment %} End: User {% endcomment %}
+        </div>
+        {% comment %} End: Title {% endcomment %}
+    </div>
+    {% comment %} End: Info {% endcomment %}
+</div>
+{% comment %} End: Details {% endcomment %}

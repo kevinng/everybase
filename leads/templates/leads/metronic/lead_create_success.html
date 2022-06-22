@@ -7,74 +7,94 @@
 {% block page_subtitle %}Importers/exporters finding buyers, sellers and agents{% endblock %}
 
 {% block actions%}
-								<!--begin::Wrapper-->
-								<div class="d-flex align-items-center overflow-auto">
-									<!--begin::Search-->
-									<div class="position-relative my-1 me-2">
-										<!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-										<span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ps-10">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-												<rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-												<path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-											</svg>
-										</span>
-										<!--end::Svg Icon-->
-										<input type="text" class="form-control form-control-sm w-150px ps-10" name="Search" value="" placeholder="Search" />
-									</div>
-                                    <button type="submit" class="btn btn-sm btn-light-primary">Search</button>
-									<!--end::Search-->
-									<!--begin::Separartor-->
-									<div class="bullet bg-secondary h-35px w-1px mx-6"></div>
-									<!--end::Separartor-->
-									<button type="submit" class="btn btn-sm btn-primary">Post Lead</button>
-								</div>
-								<!--end::Wrapper-->
+<!--begin::Wrapper-->
+<div class="d-flex align-items-center overflow-auto">
+    <!--begin::Search-->
+    <div class="position-relative my-1 me-2">
+        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+        <span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ps-10">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
+                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
+            </svg>
+        </span>
+        <!--end::Svg Icon-->
+        <input type="text" class="form-control form-control-sm w-150px ps-10" name="Search" value="" placeholder="Search" />
+    </div>
+    <button type="submit" class="btn btn-sm btn-light-primary">Search</button>
+    <!--end::Search-->
+    <!--begin::Separartor-->
+    <div class="bullet bg-secondary h-35px w-1px mx-6"></div>
+    <!--end::Separartor-->
+    <button type="submit" class="btn btn-sm btn-primary">Post Lead</button>
+</div>
+<!--end::Wrapper-->
 {% endblock %}
 
 {% block content_body %}
-{% comment %} Start: Post {% endcomment %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
-
-    {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
-
         <div class="card card-flush shadow-sm">
-            {% comment %} Start: Card header {% endcomment %}
             <div class="card-header">
                 <div class="card-title">
                     Lead Posted Successfully
                 </div>
             </div>
-            {% comment %} End: Card header {% endcomment %}
-        
-            {% comment %} Start: Card body {% endcomment %}
             <div class="card-body">
                 <div class="col-lg-4 col-md-6">
                     <label class="form-label">
-                        Share your lead
+                        Share this link
                     </label>
-
-                    {% comment %} Start: Input group {% endcomment %}
                     <div class="input-group">
-                        {% comment %} Start: Input {% endcomment %}
-                        <input id="kt_clipboard_1" type="text" class="form-control col-lg-2" placeholder="name@example.com" value="name@example.com" readonly />
-                        {% comment %} End: Input {% endcomment %}
-            
-                        {% comment %} Start: Button {% endcomment %}
-                        <button class="btn btn-light-primary" data-clipboard-target="#kt_clipboard_1">Copy Link</button>
-                        {% comment %} End: Button {% endcomment %}
+                        <input id="lead_clipboard" type="text" class="form-control col-lg-2" value="{{ lead_capture_url }}" readonly />
+                        <button class="btn btn-light-primary" data-clipboard-target="#lead_clipboard">Copy Link</button>
                     </div>
-                    {% comment %} End: Input group {% endcomment %}
                 </div>
 
                 <div class="d-flex mt-10">
-                    <a href="#" class="btn btn-primary">Next</a>
+                    <a href="{% url 'leads:my_leads' %}" class="btn btn-primary">Next</a>
                 </div>
             </div>
-            {% comment %} End: Card body {% endcomment %}
         </div>
     </div>
-    {% comment %} End: Container {% endcomment %}
 </div>
-{% comment %} End: Post {% endcomment %}
+{% endblock %}
+
+{% comment %} 
+$(document).ready(function() {
+    // Select elements
+    const lead_target = document.getElementById('lead_clipboard');
+    const lead_button = lead_target.nextElementSibling;
+
+    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+    var lead_clipboard = new ClipboardJS(lead_button, {
+        target: lead_target,
+        text: function() {
+            return lead_target.value;
+        }
+    });
+
+    // Success action handler
+    lead_clipboard.on('success', function(e) {
+        const currentLabel = lead_button.innerHTML;
+
+        // Exit label update when already in progress
+        if(lead_button.innerHTML === 'Copied!'){
+            return;
+        }
+
+        // Update button label
+        lead_button.innerHTML = 'Copied!';
+
+        // Revert button label after 3 seconds
+        setTimeout(function(){
+            lead_button.innerHTML = currentLabel;
+        }, 3000)
+    });
+})
+{% endcomment %}
+{% block page_custom_javascript %}
+<script>
+$(document).ready((function(){const n=document.getElementById("lead_clipboard"),e=n.nextElementSibling;new ClipboardJS(e,{target:n,text:function(){return n.value}}).on("success",(function(n){const t=e.innerHTML;"Copied!"!==e.innerHTML&&(e.innerHTML="Copied!",setTimeout((function(){e.innerHTML=t}),3e3))}))}));
+</script>
 {% endblock %}

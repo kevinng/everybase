@@ -2,7 +2,19 @@ from django import forms
 from common.utilities.is_censored import is_censored
 from django.core.exceptions import ValidationError
 
+from leads.models import Lead
+
 class LeadForm(forms.Form):
+    body = forms.CharField()
+    lead_type = forms.CharField()
+
+
+
+
+
+
+
+class _LeadForm(forms.Form):
     lead_type = forms.CharField()
     # author_type = forms.CharField()
     country = forms.CharField()
