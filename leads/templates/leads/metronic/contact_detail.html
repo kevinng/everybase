@@ -114,7 +114,7 @@ Emma Smith
                 <div class="separator my-10"></div>
 
 
-                <div class="ms-12">
+                <div class="ms-12 mb-6">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div class="symbol symbol-45px me-5">
@@ -177,8 +177,14 @@ Emma Smith
                         <!--begin::User Info-->
                         <div class="d-flex flex-center flex-column pt-5">
                             <!--begin::Avatar-->
-                            <div class="symbol symbol-100px symbol-circle mb-7">
+                            {% comment %} <div class="symbol symbol-100px symbol-circle mb-7">
                                 <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-6.jpg' %}" alt="image" />
+                            </div> {% endcomment %}
+
+                            <div class="symbol symbol-circle symbol-100px overflow-hidden mb-7">
+                                <a href="../../demo1/dist/apps/user-management/users/view.html">
+                                    <div class="symbol-label fs-1 bg-light-danger text-danger">ES</div>
+                                </a>
                             </div>
                             <!--end::Avatar-->
                             <!--begin::Name-->
@@ -360,6 +366,37 @@ Emma Smith
                                                                         <textarea class="form-control" data-kt-autosize="true" maxlength="500" placeholder="Comments" id="floatingTextarea2"></textarea>
                                                                         <label for="floatingTextarea2">Private Notes</label>
                                                                     </div>
+
+                                                                    <div class="form-check form-check-custom mt-4">
+                                                                        {% comment %} Start: Selling radio {% endcomment %}
+                                                                        <div class="me-3">
+                                                                            <input class="form-check-input me-2" type="radio" name="relevance" id="relevant" value="relevant" />
+                                                                            <label for="relevant"><span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as relevant.">Relevant</span></label>
+                                                                        </div>
+                                                                        {% comment %} End: Selling checkbox {% endcomment %}
+                                                                    </div>
+
+                                                                    <div class="form-check form-check-custom mt-2">
+                                                                        {% comment %} Start: Selling radio {% endcomment %}
+                                                                        <div class="me-3">
+                                                                            <input class="form-check-input me-2" type="radio" name="relevance" id="maybe_later" value="maybe_later" />
+                                                                            <label for="maybe_later"><span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as maybe relevant later.">Maybe Later</span></label>
+                                                                        </div>
+                                                                        {% comment %} End: Selling checkbox {% endcomment %}
+                                                                    </div>
+
+                                                                    
+                                                                    <div class="form-check form-check-custom mt-2">
+                                                                        {% comment %} Start: Selling radio {% endcomment %}
+                                                                        <div class="me-3">
+                                                                            <input class="form-check-input me-2" type="radio" name="relevance" id="not_relevant" value="not_relevant" />
+                                                                            <label for="not_relevant"><span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as not relevant.">Not Relevant</span></label>
+                                                                        </div>
+                                                                        {% comment %} End: Selling checkbox {% endcomment %}
+                                                                    </div>
+                                                
+                                                
+
                                                                     <div class="form-text">Only you can see your private notes.</div>
                                                                     {% comment %} End: Comments textfield {% endcomment %}
                                                                 <div class="d-flex justify-content-end mt-4">
@@ -407,12 +444,9 @@ Emma Smith
 
                                                                     <!--begin::Card body-->
                                                                     <div class="card-body">
-                                                                        Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world
-                                                                        <div class="d-flex justify-content-between mt-2">
-                                                                            <div></div>
-                                                                            <div>
-                                                                                {% comment %} <span class="badge badge-info">Private</span> {% endcomment %}
-                                                                            </div>
+                                                                        <div>Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world</div>
+                                                                        <div class="mt-2">
+                                                                            <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as not relevant.">Not Relevant</span>
                                                                         </div>
                                                                     </div>
                                                                     <!--end::Card body-->
@@ -443,7 +477,10 @@ Emma Smith
 
                                                                     <!--begin::Card body-->
                                                                     <div class="card-body">
-                                                                        Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world
+                                                                        <div>Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world</div>
+                                                                        <div class="mt-2">
+                                                                            <span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as maybe relevant later.">Maybe Later</span>
+                                                                        </div>
                                                                     </div>
                                                                     <!--end::Card body-->
                                                                 </div>
@@ -473,7 +510,10 @@ Emma Smith
                                                                 
                                                                                                                                     <!--begin::Card body-->
                                                                                                                                     <div class="card-body">
-                                                                                                                                        Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world
+                                                                                                                                        <div>Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world</div>
+                                                                                                                                        <div class="mt-2">
+                                                                                                                                            <span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as relevant to you.">Relevant</span>
+                                                                                                                                        </div>
                                                                                                                                     </div>
                                                                                                                                     <!--end::Card body-->
                                                                                                                                 </div>

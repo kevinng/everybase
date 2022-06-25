@@ -310,7 +310,7 @@ class Lead(Standard):
         return super().save(*args, **kwargs)
 
     def lead_capture_url(self):
-        return urljoin(settings.BASE_URL, reverse('leads:contact_lead', args=[self.id]))
+        return urljoin(settings.BASE_URL, reverse('leads:lead_capture', args=[self.id]))
 
     def num_contacts(self):
         return Contact.objects.filter(
@@ -417,7 +417,7 @@ class LeadDetailView(Standard):
 class Contact(Standard):
     """Contact.
 
-    Last updated: 17 June 2022, 7:30 PM
+    Last updated: 24 June 2022, 10:27 PM
     """
     lead = models.ForeignKey(
         'Lead',
@@ -427,11 +427,25 @@ class Contact(Standard):
         db_index=True
     )
 
-    email = models.ForeignKey(
-        'relationships.Email',
+    first_name = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    last_name = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country = models.ForeignKey(
+        'common.Country',
         related_name='contacts',
         related_query_name='contacts',
-        on_delete=models.PROTECT,
+        on_delete=models.PROTECT,        
+        null=True,
+        blank=True,
         db_index=True
     )
     email = models.ForeignKey(
@@ -439,7 +453,18 @@ class Contact(Standard):
         related_name='contacts',
         related_query_name='contacts',
         on_delete=models.PROTECT,
-        db_index=True
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    phone_number = models.ForeignKey(
+        'relationships.PhoneNumber',
+        related_name='contacts',
+        related_query_name='contacts',
+        on_delete=models.PROTECT,
+        db_index=True,
+        null=True,
+        blank=True
     )
     is_whatsapp = models.BooleanField(
         null=True,
@@ -484,12 +509,50 @@ class Contact(Standard):
         null=True,
         blank=True
     )
+    is_buyer = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_seller = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_sell_comm = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_buy_comm = models.BooleanField(
+        null=True,
+        blank=True
+    )
+
+    def is_country_match_country_code(self):
+        if self.country is None or self.phone_number is None:
+            return False
+
+        return self.country.country_code == self.phone_number.country_code
+
+    def last_note(self):
+        return ContactNote.objects.filter(
+            contact=self,
+            deleted__isnull=True
+        ).order_by('-created').first()
 
 class ContactNote(Standard):
     """Contact note.
 
     Last updated: 17 Jun 2022, 7:24 PM
     """
+    relevance = models.CharField(
+        max_length=20,
+        choices=[
+            ('relevant', 'Relevant'),
+            ('maybe_later', 'Maybe Later'),
+            ('not_relevant', 'Not Relevant')
+        ],
+        null=True,
+        blank=True
+    )
     contact = models.ForeignKey(
         'Contact',
         related_name='notes',
@@ -497,7 +560,10 @@ class ContactNote(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    body = models.TextField()
+    body = models.TextField(
+        null=True,
+        blank=True
+    )
 
 class ContactAction(Standard):
     """Contact action.

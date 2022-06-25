@@ -5,9 +5,9 @@ app_name = 'leads'
 urlpatterns = [
     path('my', views.my_leads, name='my_leads'),
     path('create', views.lead_create, name='lead_create'),
-    path('<int:id>', views.lead_detail_private, name='lead_detail_private'), # Lead detail as seen from owner's view
+    path('<int:id>', views.lead_detail, name='lead_detail'),
     path('contact/<int:id>', views.contact_detail, name='contact_detail'),
-    path('<int:id>/contact', views.contact_lead, name='contact_lead'),
+    path('<int:id>/contact', views.lead_capture, name='lead_capture'),
     path('<int:id>/success', views.lead_created_success, name='lead_created_success'),
 
 

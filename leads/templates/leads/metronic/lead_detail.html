@@ -4,20 +4,16 @@
 
 {% block page_title %}My Leads{% endblock %}
 
-{% block page_vendor_stylesheets %}
-{% comment %} <link href="{% static 'common/metronic/demo1/dist/assets/plugins/custom/datatables/datatables.bundle.css' %}" rel="stylesheet" type="text/css" /> {% endcomment %}
-{% endblock %}
-
 {% block page_subtitle %}
 <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
-    <li class="breadcrumb-item"><a class="text-muted" href="#">My Leads</a></li>
+    <li class="breadcrumb-item"><a class="text-muted" href="{% url 'leads:my_leads' %}">My Leads</a></li>
 
     <li class="breadcrumb-item">
         <span class="bullet bg-gray-300 w-5px h-2px"></span>
     </li>
 
     {% comment %} Start: Lead text summary as identifier {% endcomment %}
-    <li class="breadcrumb-item text-dark">I am looking for agen...</li>
+    <li class="breadcrumb-item text-dark">{{ lead.body|truncatechars:10 }}</li>
     {% comment %} End: Lead text summary as identifier {% endcomment %}
 </ul>
 {% endblock %}
@@ -27,47 +23,54 @@
     {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
         {% comment %} Start: Navbar {% endcomment %}
-        <div class="card mb-5 mb-xl-10">
+        <div class="card mb-5 mb-xl-10 shadow-sm">
             {% comment %} Start: Card header {% endcomment %}
             <div class="card-header">
                 <div class="card-title align-items-start flex-column">
                     {% comment %} Start: Avatar {% endcomment %}
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
-                            <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
+                            {% if request.user.user.avatar == None %}
+                                <div class="symbol-label fs-3 bg-light-primary text-primary">{{ request.user.user.first_name.0|upper }}{{ request.user.user.last_name.0|upper }}</div>
+                            {% else %}
+                                <img src="{{ request.user.user.avatar_thumbnail_url }}" />
+                            {% endif %}
                         </div>
                         <div class="d-flex justify-content-start flex-column">
-                            <div class="text-dark fw-bolder fs-6">Ana Simmons</div>
-                            <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                            <div class="text-dark fw-bolder fs-6">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}
+                            {% if lead.author.is_country_match_country_code %}
+                                {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
                                 <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                     <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
                                     <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
                                     </svg>
                                 </span>
-                                {% comment %} End: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            </span>
+                                {% comment %} End: SVG icon {% endcomment %}
+                            {% endif %}
+                            </div>
+                            <span class="text-muted fw-bold text-muted d-block fs-7">{{ lead.author.country.name }}</span>
                         </div>
                     </div>
                     {% comment %} End: Avatar {% endcomment %}
                 </div>
                 <div class="card-toolbar">
-                    {% comment %} <a href="?page=apps/calendar" class="btn btn-primary">Manage Calendar</a> {% endcomment %}
-                    <span class="text-muted">2w ago</span>
+                    <span class="text-muted">{{ lead.age_desc }}</span>
                 </div>
             </div>
             {% comment %} End: Card header {% endcomment %}
 
             <div class="card-body pt-9 pb-0">
                 {% comment %} Start: Lead body {% endcomment %}
-                <div class="text-dark">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
+                <div class="text-dark">{{lead.body }}</div>
                 <div class="mt-2">
-                    <div>
-                        {% comment %} <span class="badge badge-secondary">Buying</span> {% endcomment %}
-                        <span class="badge badge-light">Buying</span>
-                        {% comment %} <span class="badge badge-light">Help Me Source</span> {% endcomment %}
-                        {% comment %} <span class="badge badge-light">Need Logistics</span> {% endcomment %}
-                    </div>
+                    {% if lead.lead_type == 'buying' %}
+                        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to buy, or needs help to source.">Buying / Help Me Source</span>
+                    {% elif lead.lead_type == 'selling' %}
+                        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Selling / Help Me Sell</span>
+                    {% elif lead.lead_type == 'other' %}
+                        <span class="badge badge-secondary">Other</span>
+                    {% endif %}
                 </div>
                 {% comment %} End: Lead body {% endcomment %}
 
@@ -83,7 +86,7 @@
                 <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
                     {% comment %} Start: Nav item {% endcomment %}
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5 active" href="">Contacts (12)</a>
+                        <span class="nav-link text-active-primary ms-0 me-10 py-5 active">Contacts ({{ lead.num_contacts }})</span>
                     </li>
                     {% comment %} End: Nav item {% endcomment %}
                 </ul>
@@ -92,64 +95,71 @@
         </div>
         {% comment %} End: Navbar {% endcomment %}
 
-        <div class="card">
-            {% comment %} Start: Card body {% endcomment %}
-            <div class="card-body py-4">
-                {% comment %} Start: Table {% endcomment %}
-                <div class="dataTables_wrapper dt-bootstrap4 no-footer">
-                    <div class="table-responsive">
-                        <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
-                            <thead>
-                                <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
-                                    <th class="min-w-200px">User</th>
-                                    <th class="min-w-200px">Last Private Note</th>
-                                    <th class="text-end">Updated</th>
-                                </tr>
-                            </thead>
-
-                            <tbody class="text-gray-600 fw-bold">
-                                {% include 'leads/metronic/includes/contact_item.html' %}
-
-                                {% include 'leads/metronic/includes/contact_item.html' %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% comment %} Start: Pagination {% endcomment %}
-                    <div class="row">
-                        <div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start">
-                        </div>
-                        <div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end">
-                            <div class="dataTables_paginate paging_simple_numbers" id="kt_table_users_paginate">
-                                <ul class="pagination">
-                                    <li class="paginate_button page-item previous disabled" id="kt_table_users_previous">
-                                        <a href="#" aria-controls="kt_table_users" data-dt-idx="0" tabindex="0" class="page-link">
-                                            <i class="previous"></i>
-                                        </a>
-                                    </li>
-                                    <li class="paginate_button page-item active">
-                                        <a href="#" aria-controls="kt_table_users" data-dt-idx="1" tabindex="0" class="page-link">1</a>
-                                    </li>
-                                    <li class="paginate_button page-item ">
-                                        <a href="#" aria-controls="kt_table_users" data-dt-idx="2" tabindex="0" class="page-link">2</a>
-                                    </li>
-                                    <li class="paginate_button page-item ">
-                                        <a href="#" aria-controls="kt_table_users" data-dt-idx="3" tabindex="0" class="page-link">3</a>
-                                    </li>
-                                    <li class="paginate_button page-item next" id="kt_table_users_next">
-                                        <a href="#" aria-controls="kt_table_users" data-dt-idx="4" tabindex="0" class="page-link">
-                                            <i class="next"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    {% comment %} End: Pagination {% endcomment %}
+        {% if lead.num_contacts == 0 %}
+            {% comment %} Start: Message for 'no contacts' {% endcomment %}
+            <div class="fs-4 fw-bold card shadow-sm">
+                <div class="card-body text-center">
+                    No one has contacted you on this lead yet.
                 </div>
-                {% comment %} End: Table {% endcomment %}
             </div>
-            {% comment %} End: Card body {% endcomment %}
-        </div>
+            {% comment %} End: Message for 'no contacts' {% endcomment %}
+        {% else %}
+            {% comment %} Start: Contacts table {% endcomment %}
+            <div class="card shadow-sm">
+                {% comment %} Start: Card body {% endcomment %}
+                <div class="card-body py-4">
+                    {% comment %} Start: Table {% endcomment %}
+                    <div class="dataTables_wrapper dt-bootstrap4 no-footer">
+                        <div class="table-responsive">
+                            <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                <thead>
+                                    <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                                        <th class="min-w-200px">User</th>
+                                        {% comment %} <th>Updated</th> {% endcomment %}
+                                        <th class="min-w-250px">Details</th>
+                                        <th class="min-w-250px">Last Private Note
+                                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen045.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notes you added to shortlist contacts. Only you can see your private notes.">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="text-gray-600 fw-bold">
+                                    {% if page_obj|length > 0 %}
+                                        {% for contact in page_obj %}
+                                            {% include 'leads/metronic/includes/contact_item.html' with counter=forloop.counter contact=contact %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% comment %} End: Table {% endcomment %}
+                </div>
+                {% comment %} End: Card body {% endcomment %}
+            </div>
+            {% comment %} End: Contacts table {% endcomment %}
+        {% endif %}
+
+        {% comment %} Start: Pagination {% endcomment %}
+        {% load query_transform %}
+        <ul class="pagination mt-10">
+            {% if page_obj.has_previous %}
+                <li class="page-item previous"><a href="?{% query_transform page=page_obj.previous_page_number %}" class="page-link">Previous Page</a></li>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item next"><a href="?{% query_transform page=page_obj.next_page_number %}" class="page-link">Next Page</a></li>
+            {% endif %}
+        </ul>
+        {% comment %} End: Pagination {% endcomment %}
     </div>
     {% comment %} End: Container {% endcomment %}    
 </div>

@@ -19,7 +19,7 @@ Allow user to contact author if he's not the author
 {% if lead.author.id != request.user.user.id %}
 <a href="#" data-bs-toggle="modal" data-bs-target="#lead_{{ lead.id }}_modal">
 {% else %}
-<a href="{% url 'leads:lead_detail_private' lead.id %}">
+<a href="{% url 'leads:lead_detail' lead.id %}">
 {% endif %}
 
 <div class="card shadow-sm mt-4">
@@ -29,10 +29,10 @@ Allow user to contact author if he's not the author
             {% comment %} Start: Avatar {% endcomment %}
             <div class="d-flex align-items-center">
                 <div class="symbol symbol-45px me-5">
-                    {% if request.user.user.avatar == None %}
-                        <div class="symbol-label fs-3 bg-light-primary text-primary">{{ request.user.user.first_name.0|upper }}{{ request.user.user.last_name.0|upper }}</div>
+                    {% if lead.author.avatar == None %}
+                        <div class="symbol-label fs-3 bg-light-primary text-primary">{{ lead.author.first_name.0|upper }}{{ lead.author.last_name.0|upper }}</div>
                     {% else %}
-                        <img src="{{ request.user.user.avatar_thumbnail_url }}" />
+                        <img src="{{ lead.author.avatar_thumbnail_url }}" />
                     {% endif %}
                 </div>
                 <div class="d-flex justify-content-start flex-column">
@@ -69,10 +69,8 @@ Allow user to contact author if he's not the author
                 {% elif lead.lead_type == 'selling' %}
                     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Selling / Help Me Sell</span>
                 {% elif lead.lead_type == 'other' %}
-                <span class="badge badge-secondary">Other</span>
+                    <span class="badge badge-secondary">Other</span>
                 {% endif %}
-                {% comment %} <span class="badge badge-light">Help Me Source</span> {% endcomment %}
-                {% comment %} <span class="badge badge-light">Need Logistics</span> {% endcomment %}
             </div>
             {% comment %} Start: Badges {% endcomment %}
             <div>

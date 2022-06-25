@@ -1,11 +1,9 @@
-from operator import mod
+import phonenumbers, pytz, datetime
 from urllib.parse import urljoin
-import boto3, pytz, datetime
-from PIL import Image, ImageOps
-from io import BytesIO
 
 from django.urls import reverse
 from django.shortcuts import render
+from django.contrib import messages
 from django.http import HttpResponseRedirect, Http404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -18,18 +16,25 @@ from django.template.response import TemplateResponse
 
 from everybase import settings
 
-from leads import models, forms
-
 from chat.tasks.send_new_application import send_new_application
 from chat.tasks.send_new_message import send_new_message
-
-from files.utilities.get_mime_type import get_mime_type
 
 from common import models as commods
 from common.tasks.send_email import send_email
 from common.tasks.send_amplitude_event import send_amplitude_event
 from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
+
+from leads import models, forms
+
+from relationships import models as relmods
+
+# from files.utilities.get_mime_type import get_mime_type
+# from PIL import Image, ImageOps
+# from io import BytesIO
+# import boto3
+
+CONTACTED_SUCCESSFULLY_KEY = 'CONTACTED_SUCCESSFULLY_KEY'
 
 @login_required
 def lead_create(request):
@@ -68,9 +73,20 @@ def lead_created_success(request, id):
     return TemplateResponse(request, template_name, {'lead_capture_url': lead.lead_capture_url})
 
 @login_required
-def lead_detail_private(request, id):
+def lead_detail(request, id):
+    lead = models.Lead.objects.get(pk=id)
+    params = {'lead': lead}
+
+    # Paginate
+
+    contacts_per_page = 20
+    paginator = Paginator(lead.contacts.all().order_by('-created'), contacts_per_page)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    params['page_obj'] = page_obj
+
     template_name = 'leads/metronic/lead_detail.html'
-    return TemplateResponse(request, template_name, {})
+    return TemplateResponse(request, template_name, params)
 
 @login_required
 def my_leads(request):
@@ -88,6 +104,63 @@ def my_leads(request):
 
     template_name = 'leads/metronic/my_leads.html'
     return TemplateResponse(request, template_name, params)
+
+def lead_capture(request, id):
+    lead = models.Lead.objects.get(pk=id)
+
+    if request.method == 'POST':
+        form = forms.LeadCaptureForm(request.POST)
+        if form.is_valid():
+            # Email
+            email, _ = relmods.Email.objects.get_or_create(
+                email=form.cleaned_data.get('email'))
+
+            # Phone number
+            parsed_ph = phonenumbers.parse(
+                str(form.cleaned_data.get('phone_number')), None)
+            ph_cc = parsed_ph.country_code
+            ph_nn = parsed_ph.national_number
+            phone_number, _ = relmods.PhoneNumber.objects.get_or_create(
+                country_code=ph_cc,
+                national_number=ph_nn
+            )
+
+            # Country
+            country_key = form.cleaned_data.get('country')
+            country = commods.Country.objects.get(programmatic_key=country_key)
+
+            models.Contact.objects.create(
+                lead=lead,
+                first_name=form.cleaned_data.get('first_name'),
+                last_name=form.cleaned_data.get('last_name'),
+                email=email,
+                phone_number=phone_number,
+                is_whatsapp=form.cleaned_data.get('is_whatsapp'),
+                is_wechat=form.cleaned_data.get('is_wechat'),
+                wechat_id=form.cleaned_data.get('wechat_id'),
+                is_other=form.cleaned_data.get('is_other'),
+                country=country,
+                comments=form.cleaned_data.get('comments'),
+                is_buyer=form.cleaned_data.get('is_buyer'),
+                is_sell_comm=form.cleaned_data.get('is_sell_comm'),
+                is_seller=form.cleaned_data.get('is_seller'),
+                is_buy_comm=form.cleaned_data.get('is_buy_comm')
+            )
+
+            messages.info(request, CONTACTED_SUCCESSFULLY_KEY)
+            return HttpResponseRedirect(reverse('home'))
+    elif request.method == 'GET':
+        form = forms.LeadCaptureForm()
+
+    countries = commods.Country.objects.annotate(
+        num_leads=Count('users_w_this_country')).order_by('-num_leads')
+
+    template_name = 'leads/metronic/lead_capture.html'
+    return TemplateResponse(request, template_name, {
+        'countries': countries,
+        'lead': lead,
+        'form': form
+    })
 
 
 
@@ -198,9 +271,6 @@ def _lead_create(request):
 
     return render(request, 'leads/superio/lead_create.html', params)
 
-def contact_lead(request, id):
-    template_name = 'leads/metronic/lead_capture.html'
-    return TemplateResponse(request, template_name, {})
 
 
 

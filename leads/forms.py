@@ -8,6 +8,31 @@ class LeadForm(forms.Form):
     body = forms.CharField()
     lead_type = forms.CharField()
 
+class LeadCaptureForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    country = forms.CharField()
+    email = forms.CharField()
+    phone_number = forms.CharField()
+    is_whatsapp = forms.BooleanField(required=False)
+    is_wechat = forms.BooleanField(required=False)
+    wechat_id = forms.CharField(required=False)
+    is_other = forms.BooleanField(required=False)
+    comments = forms.CharField(max_length=100)
+    is_buyer = forms.BooleanField(required=False)
+    is_sell_comm = forms.BooleanField(required=False)
+    is_seller = forms.BooleanField(required=False)
+    is_buy_comm = forms.BooleanField(required=False)
+
+    def clean(self):
+        super(LeadCaptureForm, self).clean()
+
+        is_wechat = self.cleaned_data.get('is_wechat')
+        wechat_id = self.cleaned_data.get('wechat_id')
+
+        if is_wechat is not None and is_wechat == True and (wechat_id is None or wechat_id.strip() == ''):
+            self.add_error('wechat_id', 'This field is required.')
+        
 
 
 

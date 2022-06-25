@@ -7,6 +7,9 @@
 {% block page_subtitle %}Importers/exporters finding buyers, sellers and agents{% endblock %}
 
 {% block actions%}
+{% comment %} Put this in an include {% endcomment %}
+
+
 								<!--begin::Wrapper-->
 								<div class="d-flex align-items-center overflow-auto">
 									<!--begin::Search-->
@@ -32,12 +35,14 @@
 {% endblock %}
 
 {% block content_body %}
+<form action="{% url 'leads:lead_capture' lead.id %}" method="post">
+
+{% csrf_token %}
+
 {% comment %} Start: Post {% endcomment %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
-
     {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
-
         <div class="card shadow-sm">
             {% comment %} Start: Card header {% endcomment %}
             <div class="card-header">
@@ -45,10 +50,15 @@
                     {% comment %} Start: Avatar {% endcomment %}
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
-                            <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
+                            {% if lead.author.avatar == None %}
+                                <div class="symbol-label fs-3 bg-light-primary text-primary">{{ lead.author.first_name.0|upper }}{{ lead.author.last_name.0|upper }}</div>
+                            {% else %}
+                                <img src="{{ lead.author.avatar_thumbnail_url }}" />
+                            {% endif %}
                         </div>
                         <div class="d-flex justify-content-start flex-column">
-                            <div class="text-dark fw-bolder fs-6">Ana Simmons
+                            <div class="text-dark fw-bolder fs-6">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}
+                            {% if lead.author.is_country_match_country_code %}
                                 {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
                                 <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -57,189 +67,163 @@
                                     </svg>
                                 </span>
                                 {% comment %} End: SVG icon {% endcomment %}
+                            {% endif %}
                             </div>
-                            <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA</span>
+                            <span class="text-muted fw-bold text-muted d-block fs-7">{{ lead.author.country.name }}</span>
                         </div>
                     </div>
                     {% comment %} End: Avatar {% endcomment %}
                 </div>
                 <div class="card-toolbar">
-                    <span class="text-muted">2w ago</span>
+                    <span class="text-muted">{{ lead.age_desc }}</span>
                 </div>
             </div>
             {% comment %} End: Card header {% endcomment %}
         
             {% comment %} Start: Card body {% endcomment %}
             <div class="card-body">
-                <div class="text-dark">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
-                <div class="d-flex justify-content-between mt-2">
-                    <div>
-                        <span class="badge badge-secondary">Buying</span>
-                        <span class="badge badge-light">Help Me Source</span>
-                        <span class="badge badge-light">Need Logistics</span>
-                    </div>
-                    {% comment %} Start: Badges {% endcomment %}
-                    <div>
-                        {% comment %} <span class="badge badge-dark">Contacted</span> {% endcomment %}
-                        {% comment %} <span class="badge badge-info">12 Contacts</span> {% endcomment %}
-                    </div>
-                    {% comment %} End: Badges {% endcomment %}
+                <div class="text-dark">{{ lead.body }}</div>
+
+                <div class="mt-2">
+                    {% if lead.lead_type == 'buying' %}
+                        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to buy, or needs help to source.">Buying / Help Me Source</span>
+                    {% elif lead.lead_type == 'selling' %}
+                        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Selling / Help Me Sell</span>
+                    {% elif lead.lead_type == 'other' %}
+                        <span class="badge badge-secondary">Other</span>
+                    {% endif %}
                 </div>
+
+                <div class="separator my-4"></div>
+
+                <h5>Contact Lead Author</h5>
+
+                <div class="form-floating col-lg-4 mt-4">
+                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name"{% if form.first_name.value is not None and form.first_name.value|cut:' ' != '' %} value="{{ form.first_name.value }}"{% endif %} required />
+                    <label for="first_name">First Name</label>
+                </div>
+                {% if form.first_name.errors %}<div class="text-danger">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="form-floating col-lg-4 mt-2">
+                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name"{% if form.last_name.value is not None and form.last_name.value|cut:' ' != '' %} value="{{ form.last_name.value }}"{% endif %} required />
+                    <label for="last_name">Last Name</label>
+                </div>
+                {% if form.last_name.errors %}<div class="text-danger">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="form-floating col-lg-4 mt-2">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com"{% if form.email.value is not None and form.email.value|cut:' ' != '' %} value="{{ form.email.value }}"{% endif %} required />
+                    <label for="email">Email</label>
+                </div>
+                {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                
+                <div class="form-floating col-lg-4 mt-2">
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+1234567890"{% if form.phone_number.value is not None and form.phone_number.value|cut:' ' != '' %} value="{{ form.phone_number.value }}"{% endif %} required />
+                    <label for="phone_number">Phone</label>
+                </div>
+                <div class="form-text">Include + symbol. E.g., +14155552671.</div>
+                {% if form.phone_number.errors %}<div class="text-danger">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="form-check form-check-custom mt-4">
+                    <input class="form-check-input me-2" type="checkbox" name="is_whatsapp" id="is_whatsapp" {% if form.is_whatsapp.value == True %}checked {% endif %}/>
+                    <label for="is_whatsapp">WhatsApp</label>
+                </div>
+
+                <div class="form-check form-check-custom mt-2">
+                    <input class="form-check-input me-2" type="checkbox" name="is_wechat" id="is_wechat" {% if form.is_wechat.value == True %}checked {% endif %}/>
+                    <label for="is_wechat">WeChat</label>
+                </div>
+
+                <div id="wechat_id_div" class="form-floating col-lg-4 mt-2">
+                    <input type="text" class="form-control" name="wechat_id" id="wechat_id" placeholder="WeChat ID"{% if form.wechat_id.value is not None and form.wechat_id.value|cut:' ' != '' %} value="{{ form.wechat_id.value }}"{% endif %}/>
+                    <label for="wechat_id">WeChat ID</label>
+                </div>
+
+                {% if form.wechat_id.errors %}<div class="text-danger">{% for error in form.wechat_id.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="form-check form-check-custom mt-2">
+                    <input class="form-check-input me-2" type="checkbox" name="is_other" id="is_other" {% if form.is_other.value == True %}checked {% endif %}/>
+                    <label for="is_other">Other (Specify in Comments)</label>
+                </div>
+
+                <div class="col-lg-4 mt-6">
+                    <select name="country" class="form-select" data-control="select2" data-placeholder="Country">
+                        <option></option>
+                        {% for country in countries %}
+                            <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="form-floating mt-8">
+                    <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Comments" id="comments" name="comments">{% if form.comments.value is not None and form.comments.value|cut:' ' != '' %}{{ form.comments.value }}{% endif %}</textarea>
+                    <label for="comments">Comments</label>
+                </div>
+                {% if form.comments.errors %}<div class="text-danger">{% for error in form.comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                {% if lead.lead_type == 'selling' %}
+
+                    <div id="is_buyer" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_buyer" id="is_buyer_input" {% if form.is_buyer.value == True %}checked {% endif %}/>
+                        <label for="is_buyer_input">I'm a buyer</label>
+                    </div>
+
+                    <div id="is_sell_comm" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_sell_comm" id="is_sell_comm_input" {% if form.is_sell_comm.value == True %}checked {% endif %}/>
+                        <label for="is_sell_comm_input">I can help sell on a commission basis</label>
+                    </div>
+
+                {% elif lead.lead_type == 'buying' %}
+
+                    <div id="is_seller" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_seller" id="is_seller_input" {% if form.is_seller.value == True %}checked {% endif %}/>
+                        <label for="is_seller_input">I'm a seller</label>
+                    </div>
+
+                    <div id="is_buy_comm" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_buy_comm" id="is_buy_comm_input" {% if form.is_buy_comm.value == True %}checked {% endif %}/>
+                        <label for="is_buy_comm_input">I can help source on a commission basis</label>
+                    </div>
+
+                {% endif %}
             </div>
             {% comment %} End: Card body {% endcomment %}
-        
-            {% comment %} Start: Card footer {% endcomment %}
+
             <div class="card-footer">
-
-
-                    
-
-
-                                        {% comment %} Start: Contact form {% endcomment %}
-                                        <div class="mt-5">
-                                            {% comment %} Start: Email textfield {% endcomment %}
-                                            <div class="form-floating col-lg-4">
-                                                <input type="email" class="form-control" id="floatingInput1" placeholder="name@example.com" required />
-                                                <label for="floatingInput1">Email</label>
-                                            </div>
-                                            {% comment %} End: Email textfield {% endcomment %}
-                                            
-                                            {% comment %} Start: Phone textfield {% endcomment %}
-                                            <div class="form-floating col-lg-4 mt-2">
-                                                <input type="text" class="form-control" id="floatingInput2" placeholder="+1234567890" required />
-                                                <label for="floatingInput2">Phone</label>
-                                            </div>
-                                            <div class="form-text">Include + symbol. E.g., +14155552671.</div>
-                                            {% comment %} End: Phone textfield {% endcomment %}
-                    
-                    
-                    
-                                            <div class="form-check form-check-custom mt-4">
-                                                {% comment %} Start: WhatsApp radio {% endcomment %}
-                                                <div class="me-3">
-                                                    <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                                    <label>WhatsApp</label>
-                                                </div>
-                                                {% comment %} End: WhatsApp radio {% endcomment %}
-                                            </div>
-                                            {% comment %} <div class="form-text">Select at least 1 option.</div> {% endcomment %}
-                    
-                    
-                    
-                                            <div class="form-check form-check-custom mt-2">
-                                                {% comment %} Start: WhatsApp radio {% endcomment %}
-                                                <div class="me-3">
-                                                    <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                                    <label>WeChat</label>
-                                                </div>
-                                                {% comment %} End: WhatsApp radio {% endcomment %}
-                                            </div>
-                                            <div class="form-floating col-lg-4 mt-2 mb-6">
-                                                <input type="email" class="form-control" id="floatingInput1" placeholder="name@example.com" required />
-                                                <label for="floatingInput1">WeChat ID</label>
-                                            </div>
-                    
-                                            {% comment %} <div class="form-check form-check-custom mt-2"> {% endcomment %}
-                                                {% comment %} Start: WhatsApp radio {% endcomment %}
-                                                {% comment %} <div class="me-3">
-                                                    <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                                    <label>Telegram</label>
-                                                </div> {% endcomment %}
-                                                {% comment %} End: WhatsApp radio {% endcomment %}
-{% comment %}                     
-                                            </div>
-                                            <div class="form-floating col-lg-4 mt-2 mb-6">
-                                                <input type="email" class="form-control" id="floatingInput1" placeholder="name@example.com" required />
-                                                <label for="floatingInput1">Telegram Username</label>
-                                            </div> {% endcomment %}
-                    
-                                            {% comment %} <div class="form-check form-check-custom mt-2">                     {% endcomment %}
-                                                {% comment %} Start: WhatsApp radio {% endcomment %}
-                                                {% comment %} <div class="me-3">
-                                                    <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                                    <label>LINE</label>
-                                                </div> {% endcomment %}
-                                                {% comment %} End: WhatsApp radio {% endcomment %}
-                                            {% comment %} </div> {% endcomment %}
-
-                                            {% comment %} <div class="form-floating col-lg-4 mt-2 mb-6">
-                                                <input type="email" class="form-control" id="floatingInput1" placeholder="name@example.com" required />
-                                                <label for="floatingInput1">LINE ID</label>
-                                            </div> {% endcomment %}
-                    
-                    
-                    
-                    
-                                            {% comment %} <div class="form-check form-check-custom mt-2"> {% endcomment %}
-                                                {% comment %} Start: WhatsApp radio {% endcomment %}
-                                                {% comment %} <div class="me-3"> {% endcomment %}
-                                                    {% comment %} <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/> {% endcomment %}
-                                                    {% comment %} <label>Viber</label> {% endcomment %}
-                                                {% comment %} </div> {% endcomment %}
-                                                {% comment %} End: WhatsApp radio {% endcomment %}
-                                            {% comment %} </div> {% endcomment %}
-                    
-                    
-                                            <div class="form-check form-check-custom mt-2">
-                    
-                                                {% comment %} Start: Other radio {% endcomment %}
-                                                <div class="me-3">
-                                                    <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                                    <label>Other (Specify in Comments)</label>
-                                                </div>
-                                                {% comment %} End: Other radio {% endcomment %}
-                                            </div>
-                    
-                    
-                                            {% comment %} Start: Comments textfield {% endcomment %}
-                                            <div class="form-floating mt-8">
-                                                <textarea class="form-control" data-kt-autosize="true" maxlength="500" placeholder="Comments" id="floatingTextarea2"></textarea>
-                                                <label for="floatingTextarea2">Comments</label>
-                                            </div>
-                                            {% comment %} End: Comments textfield {% endcomment %}
-
-
-
-
-                                            <div class="form-check form-check-custom mt-2">
-                                                {% comment %} Start: WhatsApp radio {% endcomment %}
-                                                <div class="me-3">
-                                                    <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                                    <label>I'm a buyer</label>
-                                                </div>
-                                                {% comment %} End: WhatsApp radio {% endcomment %}
-                                            </div>
-                                            <div class="form-check form-check-custom mt-2">
-                                                {% comment %} Start: WhatsApp radio {% endcomment %}
-                                                <div class="me-3">
-                                                    <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                                    <label>I can help sell on a commission basis</label>
-                                                </div>
-                                                {% comment %} End: WhatsApp radio {% endcomment %}
-                                            </div>
-                    
-
-
-                    <div class="d-flex flex-row-reverse mt-4">
-                        <button type="submit" class="btn btn-primary">Contact</button>
-
-                    </div>
-
+                <div class="d-flex flex-row-reverse mt-4">
+                    <button type="submit" class="btn btn-primary">Contact</button>
                 </div>
-
-
-
-
-
-
-
-
             </div>
-            {% comment %} End: Card footer {% endcomment %}
         </div>
-
     </div>
     {% comment %} End: Container {% endcomment %}
 </div>
 {% comment %} End: Post {% endcomment %}
+</form>
+{% endblock %}
+
+{% comment %}
+$(document).ready(function() {
+    wechat_id_div = $('#wechat_id_div')
+    is_wechat = $('#is_wechat')
+
+    function toggle_wechat_id_div() {
+        if (is_wechat.is(':checked')) {
+            wechat_id_div.show()
+        } else {
+            wechat_id_div.hide()
+        }
+    }
+
+    toggle_wechat_id_div()
+
+    is_wechat.click(function() {
+        toggle_wechat_id_div()
+    })
+})
+{% endcomment %}
+{% block page_custom_javascript %}
+<script>
+$(document).ready((function(){function i(){is_wechat.is(":checked")?wechat_id_div.show():wechat_id_div.hide()}wechat_id_div=$("#wechat_id_div"),is_wechat=$("#is_wechat"),i(),is_wechat.click((function(){i()}))}));
+</script>
 {% endblock %}
