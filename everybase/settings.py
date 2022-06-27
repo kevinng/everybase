@@ -331,6 +331,7 @@ GA_WEB_STREAM_ID = config('GA_WEB_STREAM_ID')
 
 # Export parameters that can be used in templates
 SETTINGS_EXPORT = [
+    'BASE_URL',
     'GA_WEB_STREAM_ID',
     'RECAPTCHA_SITE_KEY'
 ]

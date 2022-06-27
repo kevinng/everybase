@@ -13,25 +13,14 @@ Parameters:
     <td class="d-flex align-items-center">
         <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
             <a href="{% url 'leads:contact_detail' contact.id %}">
-                <div class="symbol-label fs-3 bg-light-info text-info">{{ contact.first_name.0|upper }} {{ contact.last_name.0|upper }}</div>
+                {% include 'leads/metronic/includes/contact_avatar.html' with contact=contact %}
             </a>
         </div>
 
         {% comment %} Start: User details {% endcomment %}
         <div class="d-flex flex-column">
             <a href="{% url 'leads:contact_detail' contact.id %}" class="text-gray-800 text-hover-primary mb-1">{{ contact.first_name|title }} {{ contact.last_name|title }}</a>
-            <span>{{ contact.country.name }}
-                {% if contact.is_country_match_country_code %}
-                    {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                    <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                        <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
-                        </svg>
-                    </span>
-                    {% comment %} End: SVG icon {% endcomment %}
-                {% endif %}
-            </span>
+            <span>{% include 'leads/metronic/includes/contact_country.html' with contact=contact %}</span>
         </div>
         {% comment %} End: User details {% endcomment %}
     </td>
@@ -41,21 +30,7 @@ Parameters:
     <td>
         <div class="text-dark fw-normal fs-base">{{ contact.comments|truncatechars:100 }}</div>
         <div class="mt-2">
-            {% if contact.is_buyer == True %}
-                <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact is a buyer.">Buyer</span>
-            {% endif %}
-
-            {% if contact.is_sell_comm == True %}
-            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact can help you sell on a commission basis.">Can Help Sell</span>
-            {% endif %}
-
-            {% if contact.is_seller == True %}
-                <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact is a seller.">Seller</span>
-            {% endif %}
-
-            {% if contact.is_buy_comm == True %}
-                <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact can help you source on a commission basis.">Can Help Source</span>
-            {% endif %}
+            {% include 'leads/metronic/includes/contact_badges.html' with contact=contact %}
             <span class="text-muted fs-8">{{ contact.age_desc }}</span>
         </div>
     </td>
@@ -68,11 +43,11 @@ Parameters:
         {% else %}
             <div class="text-dark fw-normal fs-base">{{ contact.last_note.body|truncatechars:100 }}</div>
             <div class="mt-2">
-                {% if contact.relevance == 'relevant' %}
+                {% if contact.last_note.relevance == 'relevant' %}
                     <span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as relevant.">Relevant</span>
-                {% elif contact.relevance == 'maybe_later' %}
+                {% elif contact.last_note.relevance == 'maybe_later' %}
                     <span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as maybe relevant later.">Maybe Later</span>
-                {% elif contact.relevance == 'not_relevant' %}
+                {% elif contact.last_note.relevance == 'not_relevant' %}
                     <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as not relevant.">Not relevant</span>
                 {% endif %}
                 <span class="text-muted fs-8">{{ contact.age_desc }}</span>

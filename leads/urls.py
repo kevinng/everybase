@@ -9,7 +9,8 @@ urlpatterns = [
     path('contact/<int:id>', views.contact_detail, name='contact_detail'),
     path('<int:id>/contact', views.lead_capture, name='lead_capture'),
     path('<int:id>/success', views.lead_created_success, name='lead_created_success'),
-
+    path('<int:id>/wechat', views.redirect_contact_wechat, name='redirect_contact_wechat'),
+    path('<int:id>/whatsapp', views.redirect_contact_whatsapp, name='redirect_contact_whatsapp')
 
 
 # path('', views.lead_list, name='lead_list'),

@@ -1,0 +1,15 @@
+{% if lead.lead_type == 'buying' %}
+    {% if request.user.user.id == lead.author.id %}
+        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You want to buy, or needs help to source.">Buying / Help Me Source</span>
+    {% else %}
+        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to buy, or needs help to source.">Buying / Help Me Source</span>
+    {% endif %}
+{% elif lead.lead_type == 'selling' %}
+    {% if request.user.user.id == lead.author.id %}
+        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You want to sell, or needs help to sell.">Selling / Help Me Sell</span>
+    {% else %}
+        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Selling / Help Me Sell</span>
+    {% endif %}
+{% elif lead.lead_type == 'other' %}
+    <span class="badge badge-secondary">Other</span>
+{% endif %}

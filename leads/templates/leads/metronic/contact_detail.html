@@ -2,58 +2,32 @@
 
 {% load static %}
 
-{% block title %}Emma Smith | I want to find agents... | My Leads{% endblock %}
+{% block title %}{{ contact.first_name|title }} {{ contact.last_name|title }} | {{ contact.lead.body|truncatechars:10 }}{% endblock %}
 
-{% block description %}Emma Smith contacted you on your lead - I want to find agents...{% endblock %}
-
-{% block og_title %}Emma Smith | I want to find agents... | My Leads{% endblock %}
-
-{% block page_title %}
-Emma Smith
-{% endblock %}
+{% block page_title %}{{ contact.first_name|title }} {{ contact.last_name|title }}{% endblock %}
 
 {% block page_subtitle %}
 
 <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
-    {% comment %} <!--begin::Item-->
-    <li class="breadcrumb-item text-muted">
-        <a href="/metronic8/demo1/../demo1/index.html" class="text-muted text-hover-primary">Home</a>
-    </li>
-    <!--end::Item-->
-    <!--begin::Item-->
-    <li class="breadcrumb-item">
-        <span class="bullet bg-gray-300 w-5px h-2px"></span>
-    </li>
-    <!--end::Item--> {% endcomment %}
-
-    <!--begin::Item-->
     <li class="breadcrumb-item text-muted">Me</li>
-    <!--end::Item-->
-    <!--begin::Item-->
-    <li class="breadcrumb-item">
-        <span class="bullet bg-gray-300 w-5px h-2px"></span>
-    </li>
-    <!--end::Item-->
-    <!--begin::Item-->
-    <li class="breadcrumb-item"><a class="text-muted" href="#">My Leads</a></li>
-    <!--end::Item-->
-    <!--begin::Item-->
-    <li class="breadcrumb-item">
-        <span class="bullet bg-gray-300 w-5px h-2px"></span>
-    </li>
-    <!--end::Item-->
-    <!--begin::Item-->
-    <li class="breadcrumb-item"><a class="text-muted" href="#">I am looking for agen...</a></li>
-    <!--end::Item-->
 
-    <!--begin::Item-->
     <li class="breadcrumb-item">
         <span class="bullet bg-gray-300 w-5px h-2px"></span>
     </li>
-    <!--end::Item-->
-    <!--begin::Item-->
-    <li class="breadcrumb-item text-dark">Emma Smith</li>
-    <!--end::Item-->
+
+    <li class="breadcrumb-item"><a class="text-muted" href="{% url 'leads:my_leads' %}">My Leads</a></li>
+
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+
+    <li class="breadcrumb-item"><a class="text-muted" href="{% url 'leads:lead_detail' contact.lead.id %}">{{ contact.lead.body|truncatechars:10 }}</a></li>
+
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+
+    <li class="breadcrumb-item text-dark">{{ contact.first_name|title }} {{ contact.last_name|title }}</li>
 </ul>
 {% endblock %}
 
@@ -63,8 +37,6 @@ Emma Smith
     {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
         {% comment %} Start: Navbar {% endcomment %}
-
-
         <div class="card mb-5 mb-xl-10">
             {% comment %} Start: Card header {% endcomment %}
             <div class="card-header">
@@ -72,68 +44,52 @@ Emma Smith
                     {% comment %} Start: Avatar {% endcomment %}
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
-                            <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
+                            {% include 'leads/metronic/includes/user_avatar.html' with user=contact.lead.author %}
                         </div>
                         <div class="d-flex justify-content-start flex-column">
-                            <div class="text-dark fw-bolder fs-6">Ana Simmons {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                                <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                        <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
-                                    </svg>
-                                </span>
-                                {% comment %} End: SVG icon {% endcomment %}
-                            </div>
-                            <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA</span>
+                            {% include 'leads/metronic/includes/user_item_name_country.html' with user=contact.lead.author %}
                         </div>
                     </div>
                     {% comment %} End: Avatar {% endcomment %}
                 </div>
                 <div class="card-toolbar">
-                    <span class="text-muted">2w ago</span>
+                    <span class="text-muted">{{ contact.lead.age_desc }}</span>
                 </div>
             </div>
             {% comment %} End: Card header {% endcomment %}
             {% comment %} Start: Content body {% endcomment %}
             <div class="card-body pt-9 pb-0">
-                <div class="text-dark">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
+                <div class="text-dark">{{ contact.lead.body|linebreaks }}</div>
                 
                 <div class="d-flex justify-content-between mt-2">
                     <div>
-                        {% comment %} <span class="badge badge-secondary">Buying / Help Me Source</span> {% endcomment %}
-                        <span class="badge badge-light">Buying / Help Me Source</span>
-                        {% comment %} <span class="badge badge-light">Help Me Source</span> {% endcomment %}
-                        {% comment %} <span class="badge badge-light">Need Logistics</span> {% endcomment %}
+                        {% include 'leads/metronic/includes/lead_badges.html' with lead=contact.lead %}
                     </div>
                     <div>
                         {% comment %} <span class="badge badge-info">12 Contacts</span> {% endcomment %}
                     </div>
                 </div>
                 
-
                 <div class="separator my-10"></div>
-
 
                 <div class="ms-12 mb-6">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div class="symbol symbol-45px me-5">
-                                <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-6.jpg' %}" alt="" />
+                                {% include 'leads/metronic/includes/contact_avatar.html' with contact=contact %}
                             </div>
                             <div class="d-flex justify-content-start flex-column">
-                                <div class="text-dark fw-bolder fs-6">Emma Smith</div>
-                                <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA</span>
+                                <div class="text-dark fw-bolder fs-6">{{ contact.first_name|title }} {{ contact.last_name|title }}</div>
+                                <span class="text-muted fw-bold text-muted d-block fs-7">{% include 'leads/metronic/includes/contact_country.html' with contact=contact %}</span>
                             </div>
                         </div>
-                        <span class="text-muted">2w ago</span>
+                        <span class="text-muted">{{ contact.age_desc }}</span>
                     </div>
 
-                    <div class="text-dark mt-8">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
+                    <div class="text-dark mt-8">{{ contact.comments|linebreaks }}</div>
                     <div class="d-flex justify-content-between mt-2">
                         <div>
-                            <span class="badge badge-secondary">Buying</span>
-                            <span class="badge badge-light">Help Me Source</span>
-                            <span class="badge badge-light">Need Logistics</span>
+                            {% include 'leads/metronic/includes/contact_badges.html' with contact=contact %}
                         </div>
                         <div>
                             {% comment %} <span class="badge badge-dark">Contacted</span> {% endcomment %}
@@ -141,407 +97,184 @@ Emma Smith
                     </div>
                 </div>
 
-
-                <!--begin::Navs-->
+                {% comment %} Start: Navs {% endcomment %}
                 <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
-                    <!--begin::Nav item-->
                     <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5" href="">Contacts (12)</a>
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5" href="{% url 'leads:lead_detail' contact.lead.id %}">Contacts (12)</a>
                     </li>
-                    <!--end::Nav item-->
-                    <!--begin::Nav item-->
-                    {% comment %} <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5" href="">Settings</a>
-                    </li> {% endcomment %}
-                    <!--end::Nav item-->
                 </ul>
-                <!--begin::Navs-->
+                {% comment %} End: Navs {% endcomment %}
             </div>
         {% comment %} End: Navbar {% endcomment %}
         </div>
-    {% comment %} End: Container {% endcomment %}
+        {% comment %} End: Container {% endcomment %}
 
-
-
-
-
-        <!--begin::Layout-->
+        {% comment %} Start: Layout {% endcomment %}
         <div class="d-flex flex-column flex-lg-row">
-            <!--begin::Sidebar-->
+            {% comment %} Start: Sidebar {% endcomment %}
             <div class="flex-column flex-lg-row-auto w-lg-250px w-xl-350px mb-10">
-                <!--begin::Card-->
+                {% comment %} Start: Card {% endcomment %}
                 <div class="card mb-5 mb-xl-8">
-                    <!--begin::Card body-->
+                    {% comment %} Start: Card body {% endcomment %}
                     <div class="card-body">
-                        <!--begin::Summary-->
-                        <!--begin::User Info-->
+                        {% comment %} Start: User profile {% endcomment %}
                         <div class="d-flex flex-center flex-column pt-5">
-                            <!--begin::Avatar-->
-                            {% comment %} <div class="symbol symbol-100px symbol-circle mb-7">
-                                <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-6.jpg' %}" alt="image" />
-                            </div> {% endcomment %}
-
                             <div class="symbol symbol-circle symbol-100px overflow-hidden mb-7">
-                                <a href="../../demo1/dist/apps/user-management/users/view.html">
-                                    <div class="symbol-label fs-1 bg-light-danger text-danger">ES</div>
-                                </a>
+                                <div class="symbol-label fs-1 bg-light-info text-info">{{ contact.first_name.0|upper }}{{ contact.last_name.0|upper }}</div>
                             </div>
-                            <!--end::Avatar-->
-                            <!--begin::Name-->
-                            <span class="fs-3 text-gray-800 fw-bolder mb-3">Emma Smith</span>
-                            <!--end::Name-->
-                            <!--begin::Position-->
+
+                            <span class="fs-3 text-gray-800 fw-bolder mb-3">{{ contact.first_name|title }} {{ contact.last_name|title }}</span>
+
                             <div class="mb-9 text-muted fw-bold">
-                                <!--begin::Country-->
-                                United States of America, USA
-                                <!--begin::Country-->
+                                {% include 'leads/metronic/includes/contact_country.html' with contact=contact %}
                             </div>
-                            <!--end::Position-->
-
-                            {% comment %} <div class=> {% endcomment %}
                         </div>
-                        <!--end::User Info-->
-                        <!--end::Summary-->
+                        {% comment %} End: User profile {% endcomment %}
+
+                        {% if contact.is_whatsapp == True %}
+
+                        <div class="separator mb-4"></div>
+                        
+                        <div class="d-flex flex-column flex-center mb-4">
+                            <a href="{% url 'leads:redirect_contact_whatsapp' contact.id %}" class="btn btn-success">WhatsApp</a>
+                        </div>
+
+                        {% endif %}
+
+                        {% if contact.is_wechat == True %}
+
                         <div class="separator mb-4"></div>
 
                         <div class="d-flex flex-column flex-center mb-4">
-
-                            <a href="#" class="btn btn-success">WhatsApp</a>
-
+                            <a href="{% url 'leads:redirect_contact_wechat' contact.id %}" class="btn btn-success mb-2">WeChat</a>
+                            <div id="wechat_qrcode"></div>
                         </div>
+
+                        {% endif %}
+
+                        {% comment %}
+
+                        Other channels - yet to be implemented.
 
                         <div class="separator mb-4"></div>
 
                         <div class="d-flex flex-column flex-center mb-4">
-
-                            <a href="#" class="btn btn-success mb-2">WeChat</a>
-
-                            <div id="qrcode"></div>
-
-
-                        </div>
-
-
-                        {% comment %} <div class="separator mb-4"></div>
-
-                        <div class="d-flex flex-column flex-center mb-4">
-
                             <a href="#" class="btn btn-primary mb-2">Telegram</a>
-
                         </div>
 
                         <div class="separator mb-4"></div>
 
                         <div class="d-flex flex-column flex-center mb-4">
-
                             <a href="#" class="btn btn-success mb-2">LINE</a>
-
                         </div>
 
                         <div class="separator mb-4"></div>
 
                         <div class="d-flex flex-column flex-center mb-4">
-
                             <a href="#" class="btn btn-info mb-2">VIBER</a>
+                        </div>
+                        
+                        {% endcomment %}
 
-                        </div> {% endcomment %}
-
-
-                        <!--begin::Details toggle-->
-                        {% comment %} <div class="d-flex flex-stack fs-4 py-3">
-                            <div class="fw-bolder">Details</div>
-                        </div> {% endcomment %}
-                        <!--end::Details toggle-->
                         <div class="separator"></div>
-                        <!--begin::Details content-->
+
                         <div>
                             <div class="pb-5 fs-6">
-                                <!--begin::Details item-->
                                 <div class="fw-bolder mt-5">Email</div>
-                                {% comment %} <div class="text-gray-600">
-                                    <a href="#" class="text-gray-600 text-hover-primary">info@keenthemes.com</a>
-                                </div> {% endcomment %}
 
-                                <!--begin::Input group-->
                                 <div class="input-group mt-3">
-                                    <!--begin::Input-->
-                                    <input id="kt_clipboard_1" type="text" class="form-control" placeholder="name@example.com" value="name@example.com" />
-                                    <!--end::Input-->
-
-                                    <!--begin::Button-->
-                                    <button class="btn btn-light-primary" data-clipboard-target="#kt_clipboard_1">
-                                        Copy
-                                    </button>
-                                    <!--end::Button-->
+                                    <input id="email_clipboard" type="text" class="form-control" placeholder="{{ contact.email.email }}" value="{{ contact.email.email }}" />
+                                    <button class="btn btn-light-primary" data-clipboard-target="#email_clipboard">Copy</button>
                                 </div>
-                                <!--begin::Input group-->
-                                <!--end::Details item-->
 
+                                <div class="fw-bolder mt-5">Phone Number</div>
 
-                                                                                        <!--begin::Details item-->
-                                <div class="fw-bolder mt-5">Phone</div>
-                                {% comment %} <div class="text-gray-600">
-                                    <a href="#" class="text-gray-600 text-hover-primary">info@keenthemes.com</a>
-                                </div> {% endcomment %}
-
-                                <!--begin::Input group-->
                                 <div class="input-group mt-3">
-                                    <!--begin::Input-->
-                                    <input id="kt_clipboard_2" type="text" class="form-control" placeholder="+1234567890" value="+1234567890" />
-                                    <!--end::Input-->
-
-                                    <!--begin::Button-->
-                                    <button class="btn btn-light-primary" data-clipboard-target="#kt_clipboard_2">
-                                        Copy
-                                    </button>
-                                    <!--end::Button-->
+                                    <input id="phone_number_clipboard" type="text" class="form-control" placeholder="+{{ contact.phone_number.country_code }} {{ contact.phone_number.national_number }}" value="+{{ contact.phone_number.country_code }} {{ contact.phone_number.national_number }}" />
+                                    <button class="btn btn-light-primary" data-clipboard-target="#phone_number_clipboard">Copy</button>
                                 </div>
-                                <!--begin::Input group-->
-                                <!--end::Details item-->
-
-
-
                             </div>
                         </div>
-                        <!--end::Details content-->
                     </div>
-                    <!--end::Card body-->
+                    {% comment %} End: Card body {% endcomment %}
                 </div>
-                <!--end::Card-->
+                {% comment %} End: Card {% endcomment %}
             </div>
-            <!--end::Sidebar-->
+            {% comment %} End: Sidebar {% endcomment %}
 
-
-
-
-            
-            <!--begin::Content-->
+            {% comment %} Start: Content {% endcomment %}
             <div class="flex-lg-row-fluid ms-lg-15">
 
-
-
-
-
-
-
-
-
-
-
-
-                <!--begin:::Tabs-->
+                {% comment %} Start: Tabs {% endcomment %}
                 <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-bold mb-8">
-                    <!--begin:::Tab item-->
                     <li class="nav-item">
-                        <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#kt_user_view_overview_tab">Private Notes</a>
+                        <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#private_notes_tab">Private Notes</a>
                     </li>
-                    <!--end:::Tab item-->
-                    <!--begin:::Tab item-->
                     <li class="nav-item">
-                        <a class="nav-link text-active-primary pb-4" data-kt-countup-tabs="true" data-bs-toggle="tab" href="#kt_user_view_overview_tab2">Past Interactions</a>
+                        <a class="nav-link text-active-primary pb-4" data-kt-countup-tabs="true" data-bs-toggle="tab" href="#past_interactions_tab">Past Interactions</a>
                     </li>
-                    <!--end:::Tab item-->
                 </ul>
-                <!--end:::Tabs-->
-                <!--begin:::Tab content-->
-                <div class="tab-content" id="myTabContent">
-                    <!--begin:::Tab pane-->
-                    <div class="tab-pane fade show active" id="kt_user_view_overview_tab" role="tabpanel">
+                {% comment %} End: Tabs {% endcomment %}
+                
+                {% comment %} Start: Tab content {% endcomment %}
+                <div class="tab-content">
 
+                    {% comment %} Start: Tab pane {% endcomment %}
+                    <div class="tab-pane fade show active" id="private_notes_tab" role="tabpanel">
+                        <div class="card mt-4">
+                            <form action="{% url 'leads:contact_detail' contact.id %}" method="post">
+                                {% csrf_token %}
 
+                                <div class="card-body">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" data-kt-autosize="true" maxlength="500" placeholder="Comments" name="body" id="body">{% if form.body.value != None %}{{ form.body.value }}{% endif %}</textarea>
+                                        <label for="body">Private Notes</label>
+                                    </div>
+                                    {% if form.body.errors %}<div class="text-danger">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
+                                    <div class="form-check form-check-custom mt-4">
+                                        <div class="me-3">
+                                            <input class="form-check-input me-2" type="radio" name="relevance" id="relevant" value="relevant"{% if form.relevance.value == 'relevant' %} checked{% endif %}/>
+                                            <label for="relevant"><span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as relevant.">Relevant</span></label>
+                                        </div>
+                                    </div>
 
+                                    <div class="form-check form-check-custom mt-2">
+                                        <div class="me-3">
+                                            <input class="form-check-input me-2" type="radio" name="relevance" id="maybe_later" value="maybe_later"{% if form.relevance.value == 'maybe_later' %} checked{% endif %}/>
+                                            <label for="maybe_later"><span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as maybe relevant later.">Maybe Later</span></label>
+                                        </div>
+                                    </div>
+                        
+                                    <div class="form-check form-check-custom mt-2">
+                                        <div class="me-3">
+                                            <input class="form-check-input me-2" type="radio" name="relevance" id="not_relevant" value="not_relevant"{% if form.relevance.value == 'not_relevant' %} checked{% endif %}/>
+                                            <label for="not_relevant"><span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as not relevant.">Not Relevant</span></label>
+                                        </div>
+                                    </div>
 
+                                    {% if form.relevance.errors %}<div class="text-danger">{% for error in form.relevance.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                                        
+                                    <div class="form-text">Take notes to keep track of your contacts. ONLY YOU can see these private notes.</div>
 
+                                    <div class="d-flex justify-content-end mt-4">
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
 
-
-
-                                                <!--begin::Order details-->
-                <div class="card mt-4">
-
-                    <!--begin::Card body-->
-                    <div class="card-body">
-                                                                    {% comment %} Start: Comments textfield {% endcomment %}
-                                                                    <div class="form-floating">
-                                                                        <textarea class="form-control" data-kt-autosize="true" maxlength="500" placeholder="Comments" id="floatingTextarea2"></textarea>
-                                                                        <label for="floatingTextarea2">Private Notes</label>
-                                                                    </div>
-
-                                                                    <div class="form-check form-check-custom mt-4">
-                                                                        {% comment %} Start: Selling radio {% endcomment %}
-                                                                        <div class="me-3">
-                                                                            <input class="form-check-input me-2" type="radio" name="relevance" id="relevant" value="relevant" />
-                                                                            <label for="relevant"><span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as relevant.">Relevant</span></label>
-                                                                        </div>
-                                                                        {% comment %} End: Selling checkbox {% endcomment %}
-                                                                    </div>
-
-                                                                    <div class="form-check form-check-custom mt-2">
-                                                                        {% comment %} Start: Selling radio {% endcomment %}
-                                                                        <div class="me-3">
-                                                                            <input class="form-check-input me-2" type="radio" name="relevance" id="maybe_later" value="maybe_later" />
-                                                                            <label for="maybe_later"><span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as maybe relevant later.">Maybe Later</span></label>
-                                                                        </div>
-                                                                        {% comment %} End: Selling checkbox {% endcomment %}
-                                                                    </div>
-
-                                                                    
-                                                                    <div class="form-check form-check-custom mt-2">
-                                                                        {% comment %} Start: Selling radio {% endcomment %}
-                                                                        <div class="me-3">
-                                                                            <input class="form-check-input me-2" type="radio" name="relevance" id="not_relevant" value="not_relevant" />
-                                                                            <label for="not_relevant"><span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as not relevant.">Not Relevant</span></label>
-                                                                        </div>
-                                                                        {% comment %} End: Selling checkbox {% endcomment %}
-                                                                    </div>
-                                                
-                                                
-
-                                                                    <div class="form-text">Only you can see your private notes.</div>
-                                                                    {% comment %} End: Comments textfield {% endcomment %}
-                                                                <div class="d-flex justify-content-end mt-4">
-                                                                    <button class="btn btn-primary">Add</button>
-                                                                </div>
+                        {% for note in contact.active_notes %}
+                            {% include 'leads/metronic/includes/contact_note_item.html' with note=note %}
+                        {% endfor %}
+                        
                     </div>
-                    <!--end::Card body-->
+                    {% comment %} End: Tab pane {% endcomment %}
 
 
 
 
-                </div>
-                <!--end::Order details-->
-
-
-
-
-
-
-
-
-
-
-
-                                                                <!--begin::Order details-->
-                                                                <div class="card mt-4">
-                                                                    <div class="card-header">
-                                                                        <div class="card-title align-items-start flex-column">
-                                                                            <!--begin:Avatar-->
-                                                                            <div class="d-flex align-items-center">
-                                                                                <div class="symbol symbol-45px me-5">
-                                                                                    <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
-                                                                                </div>
-                                                                                <div class="d-flex justify-content-start flex-column">
-                                                                                    <div class="text-dark fw-bolder fs-6">Ana Simmons</div>
-                                                                                    <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <!--end:Avatar-->
-                                                                        </div>
-                                                                        <div class="card-toolbar">
-                                                                            <span class="badge badge-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only you can see your private notes">Private</span><span class="ms-4 text-muted">2w ago</span>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!--begin::Card body-->
-                                                                    <div class="card-body">
-                                                                        <div>Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world</div>
-                                                                        <div class="mt-2">
-                                                                            <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as not relevant.">Not Relevant</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <!--end::Card body-->
-                                                                </div>
-                                                                <!--end::Order details-->
-
-
-                                                                <!--begin::Order details-->
-                                                                <div class="card mt-4">
-                                                                    <div class="card-header">
-                                                                        <div class="card-title align-items-start flex-column">
-                                                                            <!--begin:Avatar-->
-                                                                            <div class="d-flex align-items-center">
-                                                                                <div class="symbol symbol-45px me-5">
-                                                                                    <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
-                                                                                </div>
-                                                                                <div class="d-flex justify-content-start flex-column">
-                                                                                    <div class="text-dark fw-bolder fs-6">Ana Simmons</div>
-                                                                                    <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <!--end:Avatar-->
-                                                                        </div>
-                                                                        <div class="card-toolbar">
-                                                                            <span class="badge badge-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only you can see your private notes">Private</span><span class="ms-4 text-muted">2w ago</span>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <!--begin::Card body-->
-                                                                    <div class="card-body">
-                                                                        <div>Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world</div>
-                                                                        <div class="mt-2">
-                                                                            <span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as maybe relevant later.">Maybe Later</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <!--end::Card body-->
-                                                                </div>
-                                                                <!--end::Order details-->
-
-
-                                                                                                                                <!--begin::Order details-->
-                                                                                                                                <div class="card mt-4">
-                                                                                                                                    <div class="card-header">
-                                                                                                                                        <div class="card-title align-items-start flex-column">
-                                                                                                                                            <!--begin:Avatar-->
-                                                                                                                                            <div class="d-flex align-items-center">
-                                                                                                                                                <div class="symbol symbol-45px me-5">
-                                                                                                                                                    <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
-                                                                                                                                                </div>
-                                                                                                                                                <div class="d-flex justify-content-start flex-column">
-                                                                                                                                                    <div class="text-dark fw-bolder fs-6">Ana Simmons</div>
-                                                                                                                                                    <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA</span>
-                                                                                                                                                </div>
-                                                                                                                                            </div>
-                                                                                                                                            <!--end:Avatar-->
-                                                                                                                                        </div>
-                                                                                                                                        <div class="card-toolbar">
-                                                                                                                                            <span class="badge badge-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only you can see your private notes">Private</span><span class="ms-4 text-muted">2w ago</span>
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                
-                                                                                                                                    <!--begin::Card body-->
-                                                                                                                                    <div class="card-body">
-                                                                                                                                        <div>Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world Hello world</div>
-                                                                                                                                        <div class="mt-2">
-                                                                                                                                            <span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as relevant to you.">Relevant</span>
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                    <!--end::Card body-->
-                                                                                                                                </div>
-                                                                                                                                <!--end::Order details-->
-
-
-
-
-                                                                
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-                    <!--end:::Tab pane-->
-
-
-
-
-                    <div class="tab-pane fade show" id="kt_user_view_overview_tab2" role="tabpanel">
+                    <div class="tab-pane fade show" id="past_interactions_tab" role="tabpanel">
 
 
 
@@ -642,7 +375,7 @@ Emma Smith
 <script>
     $(document).ready(function() {
     // Select elements
-const target = document.getElementById('kt_clipboard_1');
+const target = document.getElementById('email_clipboard');
 const button = target.nextElementSibling;
 
 // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
@@ -674,7 +407,7 @@ button.innerHTML = currentLabel;
 
 
     // Select elements
-    const target2 = document.getElementById('kt_clipboard_2');
+    const target2 = document.getElementById('phone_number_clipboard');
     const button2 = target2.nextElementSibling;
     
     // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
@@ -708,8 +441,8 @@ button.innerHTML = currentLabel;
 
 
 
-        var qrcode = new QRCode(document.getElementById("qrcode"), {
-            text: "http://jindo.dev.naver.com/collie",
+        var qrcode = new QRCode(document.getElementById("wechat_qrcode"), {
+            text: "{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",
             width: 128,
             height: 128,
             colorDark : "#000000",

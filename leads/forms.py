@@ -32,7 +32,11 @@ class LeadCaptureForm(forms.Form):
 
         if is_wechat is not None and is_wechat == True and (wechat_id is None or wechat_id.strip() == ''):
             self.add_error('wechat_id', 'This field is required.')
-        
+
+class ContactNoteForm(forms.Form):
+    body = forms.CharField()
+    relevance = forms.CharField()
+
 
 
 

@@ -1,0 +1,5 @@
+{% if user.avatar == None %}
+    <div class="symbol-label fs-3 bg-light-primary text-primary">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</div>
+{% else %}
+    <img src="{{ user.avatar_thumbnail_url }}" />
+{% endif %}

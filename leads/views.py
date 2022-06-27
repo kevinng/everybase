@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 from django.urls import reverse
 from django.shortcuts import render
 from django.contrib import messages
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponsePermanentRedirect
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q, DateTimeField
@@ -162,7 +162,55 @@ def lead_capture(request, id):
         'form': form
     })
 
+def contact_detail(request, id):
+    contact = models.Contact.objects.get(pk=id)
 
+    if request.method == 'POST':
+        form = forms.ContactNoteForm(request.POST)
+        if form.is_valid():
+            models.ContactNote.objects.create(
+                contact=contact,
+                body=form.cleaned_data.get('body'),
+                relevance=form.cleaned_data.get('relevance')
+            )
+
+            return HttpResponseRedirect(
+                reverse('leads:contact_detail', args=(contact.id,)))
+
+    elif request.method == 'GET':
+        form = forms.ContactNoteForm()
+
+    template_name = 'leads/metronic/contact_detail.html'
+    return TemplateResponse(request, template_name, {
+        'contact': contact,
+        'form': form
+    })
+
+def redirect_contact_wechat(_, id):
+    contact = models.Contact.objects.get(pk=id)
+
+    class WeixinSchemeRedirect(HttpResponsePermanentRedirect):
+        allowed_schemes = ['weixin']
+
+    if contact.is_wechat == True:
+        return WeixinSchemeRedirect(f'weixin://dl/chat?{contact.wechat_id}')
+    
+    return HttpResponseRedirect(reverse('home'))
+
+def redirect_contact_whatsapp(_, id):
+    contact = models.Contact.objects.get(pk=id)
+
+    if contact.is_whatsapp == True:
+        return HttpResponseRedirect(f'https://wa.me/{contact.phone_number.country_code}{contact.phone_number.national_number}')
+
+    return HttpResponseRedirect(reverse('home'))
+
+
+
+
+# CONTINUE FROM LAST INTERACTIONS
+# ALSO SETTINGS
+# LEADS
 
 
 
@@ -274,9 +322,7 @@ def _lead_create(request):
 
 
 
-def contact_detail(request, id):
-    template_name = 'leads/metronic/contact_detail.html'
-    return TemplateResponse(request, template_name, {})
+
 
 def lead_list(request):
     template_name = 'leads/metronic/home.html'

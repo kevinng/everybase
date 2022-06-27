@@ -538,6 +538,12 @@ class Contact(Standard):
             deleted__isnull=True
         ).order_by('-created').first()
 
+    def active_notes(self):
+        return ContactNote.objects.filter(
+            contact=self,
+            deleted__isnull=True
+        ).order_by('-created')
+
 class ContactNote(Standard):
     """Contact note.
 
