@@ -31,21 +31,21 @@ Parameters:
         <div class="text-dark">{% if lead.body != None %}{{ lead.body }}{% else %}{{ lead.headline }}{% endif %}</div>
         <div class="d-flex justify-content-between mt-2">
             <div>
-                {% if lead.lead_type == 'buying' %}
+                {% comment %} {% if lead.lead_type == 'buying' %} {% endcomment %}
                     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/buying_third_person.txt' %}">Buying</span>
-                {% elif lead.lead_type == 'selling' %}
+                {% comment %} {% elif lead.lead_type == 'selling' %} {% endcomment %}
                     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/selling_third_person.txt' %}">Selling</span>
-                {% elif lead.lead_type == 'need_logistics' %}
-                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Need Logistics</span>
-                {% elif lead.lead_type == 'sourcing_agent' %}
-                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Sourcing Agent</span>
-                {% elif lead.lead_type == 'selling_agent' %}
-                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Selling Agent</span>
-                {% elif lead.lead_type == 'logistics_agent' %}
-                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Logistics Agent</span>
-                {% elif lead.lead_type == 'other' %}
+                {% comment %} {% elif lead.lead_type == 'need_logistics' %} {% endcomment %}
+                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/need_logistics_third_person.txt' %}">Need Logistics</span>
+                {% comment %} {% elif lead.lead_type == 'sourcing_agent' %} {% endcomment %}
+                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sourcing_agent_third_person.txt' %}">Sourcing Agent</span>
+                {% comment %} {% elif lead.lead_type == 'selling_agent' %} {% endcomment %}
+                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/selling_agent_third_person.txt' %}">Selling Agent</span>
+                {% comment %} {% elif lead.lead_type == 'logistics_agent' %} {% endcomment %}
+                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/logistics_agent_third_person.txt' %}">Logistics Agent</span>
+                {% comment %} {% elif lead.lead_type == 'other' %} {% endcomment %}
                     <span class="badge badge-secondary">Other</span>
-                {% endif %}
+                {% comment %} {% endif %} {% endcomment %}
             </div>
             {% comment %} Start: Badges {% endcomment %}
             <div>
@@ -77,3 +77,144 @@ Parameters:
 </div>
 
 {% comment %} </a> {% endcomment %}
+
+
+
+
+
+
+
+
+
+
+
+
+        <!--start::Modals-->
+        {% comment %} <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_2">
+            Launch demo modal
+        </button> {% endcomment %}
+        
+        <div class="modal bg-white fade" tabindex="-1" id="kt_modal_2">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content shadow-none">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Contact</h5>
+        
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                            <span class="svg-icon svg-icon-2x"></span>
+                        </div>
+                        <!--end::Close-->
+                    </div>
+        
+                    <div class="modal-body">
+                        <div class="container-xxl col-lg-6">
+                            {% comment %} Start: avatar and timestamp {% endcomment %}
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-45px me-5">
+                                        <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
+                                    </div>
+                                    <div class="d-flex justify-content-start flex-column">
+                                        <div class="text-dark fw-bolder fs-6">Ana Simmons</div>
+                                        <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA</span>
+                                    </div>
+                                </div>
+                                <div class="text-muted">
+                                    2w ago
+                                </div>
+                            </div>
+                            {% comment %} End: avatar and timestamp {% endcomment %}
+
+                            <!--begin:Lead body-->
+                            <div class="mt-5">
+                                <div class="text-dark">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
+                                <div class="mt-2">
+                                    <span class="badge badge-secondary">Buying</span>
+                                    <span class="badge badge-light">Help Me Source</span>
+                                    <span class="badge badge-light">Need Logistics</span>
+                                </div>
+                            </div>
+                            <!--end:Lead body-->
+
+                            <!--begin:Contact form-->
+                            <div class="mt-5">
+
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="floatingInput1" placeholder="name@example.com"/>
+                                    <label for="floatingInput1">Email</label>
+                                </div>
+
+                                <div class="form-floating mt-2">
+                                    <input type="text" class="form-control" id="floatingInput2" placeholder="+1234567890"/>
+                                    <label for="floatingInput2">Phone</label>
+                                    <div class="form-text">Include + symbol. E.g., +14155552671.</div>
+                                </div>
+
+                                <div class="mt-2">
+                                    <label class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" value=""/>
+                                        <span class="form-check-label">
+                                            WhatsApp Me
+                                        </span>
+                                    </label>
+
+                                </div>
+
+
+
+
+                                <!--begin::Input group-->
+                                <div class="form-floating mt-8">
+                                    <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Comments" id="floatingTextarea2"></textarea>
+                                    <label for="floatingTextarea2">Comments</label>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <div class="form-text">0/140</div>
+                                </div>
+                                <!--end::Input group-->
+
+                                <div>
+                                    <label class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" value=""/>
+                                        <span class="form-check-label">
+                                            Buyer
+                                        </span>
+                                    </label>
+
+                                    <label class="form-check form-check-custom form-check-solid mt-2">
+                                        <input class="form-check-input" type="checkbox" value=""/>
+                                        <span class="form-check-label">
+                                            Can Help to Sell <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen044.svg-->
+                                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="No sending of goods before payment">
+                                                <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen043.svg-->
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"/>
+                                                <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                                </svg>
+                                                <!--end::Svg Icon-->
+                                            </span>
+                                    </label>
+
+                                    <label class="form-check form-check-custom form-check-solid mt-2">
+                                        <input class="form-check-input" type="checkbox" value=""/>
+                                        <span class="form-check-label">
+                                            Logistics
+                                        </span>
+                                    </label>
+                                </div>
+
+                            </div>
+                            <!--end:Contact form-->
+                        </div>
+                    </div>
+        
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!--end::Modals-->
