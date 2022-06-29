@@ -2,6 +2,7 @@ import uuid as uuidlib
 from urllib.parse import urljoin
 
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.text import slugify
 
@@ -543,6 +544,25 @@ class Contact(Standard):
             contact=self,
             deleted__isnull=True
         ).order_by('-created')
+
+    def other_interactions(self):
+        return Contact.objects\
+            .filter(lead__author=self.lead.author)\
+            .filter(
+                Q(email=self.email) |\
+                Q(phone_number=self.phone_number) |\
+                (Q(wechat_id__isnull=True) & Q(wechat_id=self.wechat_id)))\
+            .exclude(id=self.id)
+
+    def other_interactions_count(self):
+        return Contact.objects\
+            .filter(lead__author=self.lead.author)\
+            .filter(
+                Q(email=self.email) |\
+                Q(phone_number=self.phone_number) |\
+                (Q(wechat_id__isnull=True) & Q(wechat_id=self.wechat_id)))\
+            .exclude(id=self.id)\
+            .count()
 
 class ContactNote(Standard):
     """Contact note.

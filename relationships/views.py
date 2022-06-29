@@ -509,8 +509,8 @@ def log_out(request):
 
     return HttpResponseRedirect(reverse('home'))
 
-def profile_settings(request):
-    template_name = 'relationships/metronic/profile_settings.html'
+def settings(request):
+    template_name = 'relationships/metronic/settings.html'
     return TemplateResponse(request, template_name, {})
 
 @login_required

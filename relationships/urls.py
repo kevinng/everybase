@@ -4,7 +4,7 @@ from relationships import views
 app_name = 'users'
 urlpatterns = [
 
-    path('settings', views.profile_settings, name='profile_settings'),
+    path('settings', views.settings, name='settings'),
 
     # path('change_password', views.change_password, name='change_password'),
 

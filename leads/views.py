@@ -1,3 +1,4 @@
+from http.client import UNAUTHORIZED
 import phonenumbers, pytz, datetime
 from urllib.parse import urljoin
 
@@ -34,7 +35,8 @@ from relationships import models as relmods
 # from io import BytesIO
 # import boto3
 
-CONTACTED_SUCCESSFULLY_KEY = 'CONTACTED_SUCCESSFULLY_KEY'
+CONTACTED_SUCCESSFULLY_KEY = 'CONTACTED_SUCCESSFULLY_KEY' # Contactee sent contact
+UNAUTHORIZED_ACCESS = 'UNAUTHORIZED_ACCESS'
 
 @login_required
 def lead_create(request):
@@ -75,6 +77,12 @@ def lead_created_success(request, id):
 @login_required
 def lead_detail(request, id):
     lead = models.Lead.objects.get(pk=id)
+
+    # Disallow access if user doesn't own this lead
+    if request.user.user.id != lead.author.id:
+        messages.info(request, UNAUTHORIZED_ACCESS)
+        return HttpResponseRedirect(reverse('home'))
+
     params = {'lead': lead}
 
     # Paginate
@@ -205,6 +213,39 @@ def redirect_contact_whatsapp(_, id):
 
     return HttpResponseRedirect(reverse('home'))
 
+def lead_list(request):
+    
+    # Default search - by created
+
+    params = {}
+    
+    leads = models.Lead.objects\
+        .filter(deleted__isnull=True)\
+        .order_by('-created')
+
+    # Countries for select options
+    params['countries'] = commods.Country.objects.annotate(
+        num_leads=Count('users_w_this_country')).order_by('-num_leads')
+
+    # Paginate
+
+    leads_per_page = 50
+    paginator = Paginator(leads, leads_per_page)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    params['page_obj'] = page_obj
+
+
+    # params['countries'] = commods.Country.objects.\
+    #         annotate(num_buy_leads=Count('leads_buy_country')).\
+    #         annotate(num_sell_leads=Count('leads_sell_country')).\
+    #         filter(Q(num_buy_leads__gt=0) | Q(num_sell_leads__gt=0)).\
+    #         order_by('-num_buy_leads')
+
+    template_name = 'leads/metronic/home.html'
+    return TemplateResponse(request, template_name, params)
+
+
 
 
 
@@ -324,9 +365,6 @@ def _lead_create(request):
 
 
 
-def lead_list(request):
-    template_name = 'leads/metronic/home.html'
-    return TemplateResponse(request, template_name, {})
 
 def _lead_list(request):
     leads = models.Lead.objects\

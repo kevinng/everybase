@@ -1,5 +1,10 @@
 {% if user.avatar == None %}
-    <div class="symbol-label fs-3 bg-light-primary text-primary">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</div>
+    {% comment %} Use a different color for other users {% endcomment %}
+    {% if request.user.user.id == user.id %}
+        <div class="symbol-label fs-3 bg-light-primary text-primary">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</div>
+    {% else %}
+        <div class="symbol-label fs-3 bg-light-info text-info">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</div>
+    {% endif %}
 {% else %}
     <img src="{{ user.avatar_thumbnail_url }}" />
 {% endif %}

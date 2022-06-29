@@ -1,3 +1,5 @@
+from phonenumber_field.formfields import PhoneNumberField
+
 from django import forms
 from common.utilities.is_censored import is_censored
 from django.core.exceptions import ValidationError
@@ -12,8 +14,8 @@ class LeadCaptureForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
     country = forms.CharField()
-    email = forms.CharField()
-    phone_number = forms.CharField()
+    email = forms.EmailField()
+    phone_number = PhoneNumberField()
     is_whatsapp = forms.BooleanField(required=False)
     is_wechat = forms.BooleanField(required=False)
     wechat_id = forms.CharField(required=False)

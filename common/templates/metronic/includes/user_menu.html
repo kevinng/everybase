@@ -1,6 +1,6 @@
 {% load static %}
 
-{% if request.user.is_authenticated %}
+{% if user.is_authenticated %}
 {% comment %} Start: User menu {% endcomment %}
 <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
     {% comment %} Start: Menu wrapper {% endcomment %}
@@ -59,7 +59,7 @@
 
         {% comment %} Start: Settings menu item {% endcomment %}
         <div class="menu-item px-5">
-            <a href="{% url 'users:profile_settings' %}" class="menu-link px-5">Settings</a>
+            <a href="{% url 'users:settings' %}" class="menu-link px-5">Settings</a>
         </div>
         {% comment %} End: Settings menu item {% endcomment %}
 

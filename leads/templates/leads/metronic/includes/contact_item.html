@@ -39,7 +39,7 @@ Parameters:
     {% comment %} Start: Your last private note {% endcomment %}
     <td>
         {% if contact.last_note == None %}
-            <span class="badge badge-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've not added any private notes.">No Private Notes</span>
+            <span class="badge badge-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've not added any private notes.">No Private Notes</span>
         {% else %}
             <div class="text-dark fw-normal fs-base">{{ contact.last_note.body|truncatechars:100 }}</div>
             <div class="mt-2">
