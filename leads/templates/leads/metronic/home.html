@@ -391,7 +391,7 @@
             <div class="d-flex align-items-center">
                 <div class="col-lg-6 col-12">
                     <label for="origin_countries" class="form-label">Origin Countries</label>
-                    <select class="form-select" data-control="select2" data-placeholder="Filter Origin Countries" name='origin_countries' data-allow-clear="true" multiple="multiple">
+                    <select class="form-select" data-control="select2" data-placeholder="Filter Origin Countries" name="origin_countries" id="origin_countries" data-allow-clear="true" multiple="multiple">
                         <option></option>
                         {% for country in countries %}
                             <option value="{{ country.programmatic_key }}"{% if form.origin_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
@@ -405,7 +405,7 @@
             <div class="d-flex align-items-center">
                 <div class="col-lg-6 col-12">
                     <label for="destination_countries" class="form-label">Destination Countries</label>
-                    <select class="form-select" data-control="select2" data-placeholder="Filter Destination Countries" name='destination_countries' data-allow-clear="true" multiple="multiple">
+                    <select class="form-select" data-control="select2" data-placeholder="Filter Destination Countries" name="destination_countries" id="destination_countries" data-allow-clear="true" multiple="multiple">
                         <option></option>
                         {% for country in countries %}
                             <option value="{{ country.programmatic_key }}"{% if form.destination_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
