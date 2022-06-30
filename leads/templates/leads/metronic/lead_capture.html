@@ -7,36 +7,11 @@
 {% block page_subtitle %}{{ lead.body|truncatechars:100 }}{% endblock %}
 
 {% block actions%}
-{% comment %} Put this in an include {% endcomment %}
-
-
-								<!--begin::Wrapper-->
-								<div class="d-flex align-items-center overflow-auto">
-									<!--begin::Search-->
-									<div class="position-relative my-1 me-2">
-										<!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-										<span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ps-10">
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-												<rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-												<path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-											</svg>
-										</span>
-										<!--end::Svg Icon-->
-										<input type="text" class="form-control form-control-sm w-150px ps-10" name="Search" value="" placeholder="Search" />
-									</div>
-                                    <button type="submit" class="btn btn-sm btn-light-primary">Search</button>
-									<!--end::Search-->
-									<!--begin::Separartor-->
-									<div class="bullet bg-secondary h-35px w-1px mx-6"></div>
-									<!--end::Separartor-->
-									<button type="submit" class="btn btn-sm btn-primary">Post Lead</button>
-								</div>
-								<!--end::Wrapper-->
+{% include 'leads/metronic/includes/toolbar_actions.html' %}
 {% endblock %}
 
 {% block content_body %}
 <form action="{% url 'leads:lead_capture' lead.id %}" method="post">
-
 {% csrf_token %}
 
 {% comment %} Start: Post {% endcomment %}
@@ -85,38 +60,47 @@
                 <div class="text-dark">{{ lead.body|linebreaks }}</div>
 
                 <div class="mt-2">
-                    {% if lead.lead_type == 'buying' %}
-                        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to buy, or needs help to source.">Buying / Help Me Source</span>
-                    {% elif lead.lead_type == 'selling' %}
-                        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Selling / Help Me Sell</span>
-                    {% elif lead.lead_type == 'other' %}
-                        <span class="badge badge-secondary">Other</span>
-                    {% endif %}
+                    {% include 'leads/metronic/includes/lead_badges.html' with lead=lead %}
                 </div>
 
                 <div class="separator my-4"></div>
 
                 <h5>Contact Lead Author</h5>
 
-                <div class="form-floating col-lg-4 mt-4">
+                <div class="form-check form-check-custom mt-6">
+                    <input class="form-check-input me-2" type="checkbox" name="has_company" id="has_company" {% if form.has_company.value == True %}checked {% endif %}/>
+                    <label for="has_company">Has Company
+                        {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                        <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'relationships/metronic/tooltips/has_company_you.txt' %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        {% comment %} End: SVG icon {% endcomment %}
+                    </label>
+                </div>
+
+                <div class="form-floating col-lg-6 mt-4">
                     <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name"{% if form.first_name.value is not None and form.first_name.value|cut:' ' != '' %} value="{{ form.first_name.value }}"{% endif %} required />
                     <label for="first_name">First Name</label>
                 </div>
                 {% if form.first_name.errors %}<div class="text-danger">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <div class="form-floating col-lg-4 mt-2">
+                <div class="form-floating col-lg-6 mt-2">
                     <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name"{% if form.last_name.value is not None and form.last_name.value|cut:' ' != '' %} value="{{ form.last_name.value }}"{% endif %} required />
                     <label for="last_name">Last Name</label>
                 </div>
                 {% if form.last_name.errors %}<div class="text-danger">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <div class="form-floating col-lg-4 mt-2">
+                <div class="form-floating col-lg-6 mt-2">
                     <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com"{% if form.email.value is not None and form.email.value|cut:' ' != '' %} value="{{ form.email.value }}"{% endif %} required />
                     <label for="email">Email</label>
                 </div>
                 {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                
-                <div class="form-floating col-lg-4 mt-2">
+
+                <div class="form-floating col-lg-6 mt-2">
                     <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+1234567890"{% if form.phone_number.value is not None and form.phone_number.value|cut:' ' != '' %} value="{{ form.phone_number.value }}"{% endif %} required />
                     <label for="phone_number">Phone</label>
                 </div>
@@ -133,7 +117,7 @@
                     <label for="is_wechat">WeChat</label>
                 </div>
 
-                <div id="wechat_id_div" class="form-floating col-lg-4 mt-2">
+                <div id="wechat_id_div" class="form-floating col-lg-6 mt-2">
                     <input type="text" class="form-control" name="wechat_id" id="wechat_id" placeholder="WeChat ID"{% if form.wechat_id.value is not None and form.wechat_id.value|cut:' ' != '' %} value="{{ form.wechat_id.value }}"{% endif %}/>
                     <label for="wechat_id">WeChat ID</label>
                 </div>
@@ -145,7 +129,7 @@
                     <label for="is_other">Other (Specify in Comments)</label>
                 </div>
 
-                <div class="col-lg-4 mt-6">
+                <div class="col-lg-6 mt-6">
                     <select name="country" class="form-select" data-control="select2" data-placeholder="Country">
                         <option></option>
                         {% for country in countries %}
@@ -155,7 +139,7 @@
                 </div>
                 {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <div class="form-floating mt-8">
+                <div class="form-floating col-lg-6 mt-8">
                     <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Comments" id="comments" name="comments">{% if form.comments.value is not None and form.comments.value|cut:' ' != '' %}{{ form.comments.value }}{% endif %}</textarea>
                     <label for="comments">Comments</label>
                 </div>
@@ -224,6 +208,23 @@ $(document).ready(function() {
 {% endcomment %}
 {% block page_custom_javascript %}
 <script>
-$(document).ready((function(){function i(){is_wechat.is(":checked")?wechat_id_div.show():wechat_id_div.hide()}wechat_id_div=$("#wechat_id_div"),is_wechat=$("#is_wechat"),i(),is_wechat.click((function(){i()}))}));
+$(document).ready(function() {
+    wechat_id_div = $('#wechat_id_div')
+    is_wechat = $('#is_wechat')
+
+    function toggle_wechat_id_div() {
+        if (is_wechat.is(':checked')) {
+            wechat_id_div.show()
+        } else {
+            wechat_id_div.hide()
+        }
+    }
+
+    toggle_wechat_id_div()
+
+    is_wechat.click(function() {
+        toggle_wechat_id_div()
+    })
+})
 </script>
 {% endblock %}

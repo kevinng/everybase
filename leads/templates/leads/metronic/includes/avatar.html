@@ -1,6 +1,12 @@
+{% comment %} 
+
+Parameters:
+    user, user to render
+
+{% endcomment %}
 {% if user.avatar == None %}
     {% comment %} Use a different color for other users {% endcomment %}
-    {% if request.user.user.id == user.id %}
+    {% if request.user.is_authenticated and request.user.user.id == user.id %}
         <div class="symbol-label fs-3 bg-light-primary text-primary">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</div>
     {% else %}
         <div class="symbol-label fs-3 bg-light-info text-info">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</div>

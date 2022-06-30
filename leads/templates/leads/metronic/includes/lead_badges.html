@@ -1,15 +1,18 @@
+{% comment %} 
+    Only one of these badges apply, it describes the type of the lead.
+{% endcomment %}
 {% if lead.lead_type == 'buying' %}
-    {% if request.user.user.id == lead.author.id %}
-        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You want to buy, or needs help to source.">Buying / Help Me Source</span>
-    {% else %}
-        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to buy, or needs help to source.">Buying / Help Me Source</span>
-    {% endif %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sourcing.txt' %}">Sourcing</span>
 {% elif lead.lead_type == 'selling' %}
-    {% if request.user.user.id == lead.author.id %}
-        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You want to sell, or needs help to sell.">Selling / Help Me Sell</span>
-    {% else %}
-        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Selling / Help Me Sell</span>
-    {% endif %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/selling.txt' %}">Selling</span>
+{% elif lead.lead_type == 'need_logistics' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/need_logistics.txt' %}">Need Logistics</span>
+{% elif lead.lead_type == 'sourcing_agent' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sourcing_agent.txt' %}">Sourcing Agent</span>
+{% elif lead.lead_type == 'selling_agent' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/selling_agent.txt' %}">Selling Agent</span>
+{% elif lead.lead_type == 'logistics_agent' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/logistics_agent.txt' %}">Logistics Agent</span>
 {% elif lead.lead_type == 'other' %}
     <span class="badge badge-secondary">Other</span>
 {% endif %}

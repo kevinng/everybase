@@ -1,4 +1,11 @@
-<div class="text-dark fw-bolder fs-6">{{ user.first_name|title }} {{ user.last_name|title }}{% if user.id == request.user.user.id %} <span class="badge badge-light ms-1">You</span>{% endif %}</div>
+{% comment %}
+
+Parameters:
+    user, user to render.
+
+{% endcomment %}
+
+<div class="text-dark fw-bolder fs-6">{{ user.first_name|title }} {{ user.last_name|title }}{% if user.has_company == True %} <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="User has a company." class="badge badge-light ms-1">Company</span>{% endif %}</div>
 <span class="text-muted fw-bold text-muted d-block fs-7">{{ user.country.name }}
     {% if user.is_country_match_country_code %}
         {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
