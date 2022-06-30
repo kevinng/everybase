@@ -28,24 +28,24 @@ Parameters:
 
     {% comment %} Start: Card body {% endcomment %}
     <div class="card-body">
-        <div class="text-dark">{% if lead.body != None %}{{ lead.body }}{% else %}{{ lead.headline }}{% endif %}</div>
+        <div class="text-dark">{{ lead.body|linebreaks }}</div>
         <div class="d-flex justify-content-between mt-2">
             <div>
-                {% comment %} {% if lead.lead_type == 'buying' %} {% endcomment %}
+                {% if lead.lead_type == 'buying' %}
                     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/buying_third_person.txt' %}">Buying</span>
-                {% comment %} {% elif lead.lead_type == 'selling' %} {% endcomment %}
+                {% elif lead.lead_type == 'selling' %}
                     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/selling_third_person.txt' %}">Selling</span>
-                {% comment %} {% elif lead.lead_type == 'need_logistics' %} {% endcomment %}
+                {% elif lead.lead_type == 'need_logistics' %}
                     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/need_logistics_third_person.txt' %}">Need Logistics</span>
-                {% comment %} {% elif lead.lead_type == 'sourcing_agent' %} {% endcomment %}
+                {% elif lead.lead_type == 'sourcing_agent' %}
                     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sourcing_agent_third_person.txt' %}">Sourcing Agent</span>
-                {% comment %} {% elif lead.lead_type == 'selling_agent' %} {% endcomment %}
+                {% elif lead.lead_type == 'selling_agent' %}
                     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/selling_agent_third_person.txt' %}">Selling Agent</span>
-                {% comment %} {% elif lead.lead_type == 'logistics_agent' %} {% endcomment %}
+                {% elif lead.lead_type == 'logistics_agent' %}
                     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/logistics_agent_third_person.txt' %}">Logistics Agent</span>
-                {% comment %} {% elif lead.lead_type == 'other' %} {% endcomment %}
+                {% elif lead.lead_type == 'other' %}
                     <span class="badge badge-secondary">Other</span>
-                {% comment %} {% endif %} {% endcomment %}
+                {% endif %}
             </div>
             {% comment %} Start: Badges {% endcomment %}
             <div>
@@ -62,14 +62,31 @@ Parameters:
         <div class="d-flex justify-content-between">
             <div>
 {% comment %} Make this modal? {% endcomment %}
-                <a href="#" class="btn btn-light-warning btn-sm">Spam</a>
-                <a href="#" class="btn btn-light-danger btn-sm ms-1">Scam</a>
+{% comment %}
+But, you can click and 
+spam and scam should have no validations - otherwise, we'll not be able to do modals
+{% endcomment %}
+                {% comment %} <a href="#" class="btn btn-light-warning btn-sm" data-bs-toggle="modal" data-bs-target="#spam_modal_{{ lead.id }}">Spam</a>
+                <a href="#" class="btn btn-light-danger btn-sm ms-1">Scam</a> {% endcomment %}
+
+                <a href="#" class="btn btn-light-warning btn-sm">Spam <span class="badge badge-warning ms-1">5</span></a>
+                <a href="#" class="btn btn-light-danger btn-sm ms-1">Scam <span class="badge badge-danger ms-1">2</span></a>
+
+                <a href="#" class="btn btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning btn-sm">Spam <span class="badge badge-warning ms-1">5</span></a>
+                <a href="#" class="btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger btn-sm ms-1">Scam <span class="badge badge-danger ms-1">2</span></a>
             </div>
             {% if request.user.is_authenticated and request.user.user is not None and request.user.user.id == lead.author.id %}
                 <a href="{% url 'leads:lead_detail' lead.id %}" class="btn btn-light-info btn-sm">Details</a>
             {% else %}
-{% comment %} Make this modal? {% endcomment %}
+{% comment %} Make this modal? 
+
+return validation errors is difficult
+{% endcomment %}
                 <a href="{% url 'leads:lead_capture' lead.id %}" class="btn btn-light-primary btn-sm">Contact</a>
+                {% comment %} <a href="{% url 'leads:lead_capture' lead.id %}" class="btn btn-light btn-sm disabled">Contacted</a> {% endcomment %}
+                {% comment %} <a href="#" data-bs-toggle="modal" data-bs-target="#lead_contact_modal_{{lead.id}}" class="btn btn-light-primary btn-sm">Contact</a> {% endcomment %}
+
+                
             {% endif %}
         </div>
     </div>
@@ -82,6 +99,19 @@ Parameters:
 
 
 
+<div class="modal fade" tabindex="-1" id="spam_modal_{{ lead.id }}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Are you sure this is a spam?</h5>
+
+
+
+            {% comment %} Start: Card header {% endcomment %}
+            {% comment %} <div class="card-header"> {% endcomment %}
+
+            {% comment %} </div> {% endcomment %}
+            {% comment %} End: Card header {% endcomment %}
 
 
 
@@ -89,132 +119,80 @@ Parameters:
 
 
 
-        <!--start::Modals-->
-        {% comment %} <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_2">
-            Launch demo modal
-        </button> {% endcomment %}
-        
-        <div class="modal bg-white fade" tabindex="-1" id="kt_modal_2">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content shadow-none">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Contact</h5>
-        
-                        <!--begin::Close-->
-                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                            <span class="svg-icon svg-icon-2x"></span>
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="svg-icon svg-icon-2x">
+                        <!--begin::Svg Icon | path: assets/media/icons/duotune/arrows/arr088.svg-->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1" transform="rotate(-45 7.05025 15.5356)" fill="currentColor"/>
+                            <rect x="8.46447" y="7.05029" width="12" height="2" rx="1" transform="rotate(45 8.46447 7.05029)" fill="currentColor"/>
+                        </svg>
+                        <!--end::Svg Icon-->
+                    </span>
+                </div>
+                <!--end::Close-->
+            </div>
+
+            <div class="modal-body">
+
+                <div class="d-flex justify-content-between">
+                    <div class="align-items-start flex-column">
+                        {% comment %} Start: Avatar {% endcomment %}
+                        <div class="d-flex align-items-center">
+                            <div class="symbol symbol-45px me-5">
+                                {% if lead.author.avatar == None %}
+                                    <div class="symbol-label fs-3 bg-light-primary text-primary">{{ lead.author.first_name.0|upper }}{{ lead.author.last_name.0|upper }}</div>
+                                {% else %}
+                                    <img src="{{ lead.author.avatar_thumbnail_url }}" />
+                                {% endif %}
+                            </div>
+                            <div class="d-flex justify-content-start flex-column">
+                                <div class="text-dark fw-bolder fs-6">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}
+                                    {% if lead.author.is_country_match_country_code %}
+                                        {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                                        <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                            <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    {% endif %}
+                                </div>
+                                <span class="text-muted fw-bold text-muted d-block fs-7">{{ lead.author.country.name }}</span>
+                            </div>
                         </div>
-                        <!--end::Close-->
+                        {% comment %} End: Avatar {% endcomment %}
                     </div>
-        
-                    <div class="modal-body">
-                        <div class="container-xxl col-lg-6">
-                            {% comment %} Start: avatar and timestamp {% endcomment %}
-                            <div class="d-flex justify-content-between">
-                                <div class="d-flex align-items-center">
-                                    <div class="symbol symbol-45px me-5">
-                                        <img src="{% static 'common/metronic/demo1/dist/assets/media/avatars/300-14.jpg' %}" alt="" />
-                                    </div>
-                                    <div class="d-flex justify-content-start flex-column">
-                                        <div class="text-dark fw-bolder fs-6">Ana Simmons</div>
-                                        <span class="text-muted fw-bold text-muted d-block fs-7">United States of America, USA</span>
-                                    </div>
-                                </div>
-                                <div class="text-muted">
-                                    2w ago
-                                </div>
-                            </div>
-                            {% comment %} End: avatar and timestamp {% endcomment %}
-
-                            <!--begin:Lead body-->
-                            <div class="mt-5">
-                                <div class="text-dark">I am looking for agents to help me sell my products. I am looking for agents to help me sell my pro.</div>
-                                <div class="mt-2">
-                                    <span class="badge badge-secondary">Buying</span>
-                                    <span class="badge badge-light">Help Me Source</span>
-                                    <span class="badge badge-light">Need Logistics</span>
-                                </div>
-                            </div>
-                            <!--end:Lead body-->
-
-                            <!--begin:Contact form-->
-                            <div class="mt-5">
-
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="floatingInput1" placeholder="name@example.com"/>
-                                    <label for="floatingInput1">Email</label>
-                                </div>
-
-                                <div class="form-floating mt-2">
-                                    <input type="text" class="form-control" id="floatingInput2" placeholder="+1234567890"/>
-                                    <label for="floatingInput2">Phone</label>
-                                    <div class="form-text">Include + symbol. E.g., +14155552671.</div>
-                                </div>
-
-                                <div class="mt-2">
-                                    <label class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value=""/>
-                                        <span class="form-check-label">
-                                            WhatsApp Me
-                                        </span>
-                                    </label>
-
-                                </div>
-
-
-
-
-                                <!--begin::Input group-->
-                                <div class="form-floating mt-8">
-                                    <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Comments" id="floatingTextarea2"></textarea>
-                                    <label for="floatingTextarea2">Comments</label>
-                                </div>
-                                <div class="d-flex justify-content-end">
-                                    <div class="form-text">0/140</div>
-                                </div>
-                                <!--end::Input group-->
-
-                                <div>
-                                    <label class="form-check form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value=""/>
-                                        <span class="form-check-label">
-                                            Buyer
-                                        </span>
-                                    </label>
-
-                                    <label class="form-check form-check-custom form-check-solid mt-2">
-                                        <input class="form-check-input" type="checkbox" value=""/>
-                                        <span class="form-check-label">
-                                            Can Help to Sell <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen044.svg-->
-                                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="No sending of goods before payment">
-                                                <!--begin::Svg Icon | path: assets/media/icons/duotune/general/gen043.svg-->
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                                <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"/>
-                                                <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                                </svg>
-                                                <!--end::Svg Icon-->
-                                            </span>
-                                    </label>
-
-                                    <label class="form-check form-check-custom form-check-solid mt-2">
-                                        <input class="form-check-input" type="checkbox" value=""/>
-                                        <span class="form-check-label">
-                                            Logistics
-                                        </span>
-                                    </label>
-                                </div>
-
-                            </div>
-                            <!--end:Contact form-->
-                        </div>
-                    </div>
-        
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Send</button>
+                    {% comment %} <div class="card-toolbar"> {% endcomment %}
+                    <div>
+                        <span class="text-muted">{{ lead.age_desc }}</span>
                     </div>
                 </div>
+
+                <div class="text-dark mt-4">{{ lead.body|linebreaks }}</div>
+{% comment %}THIS PART NEEDS TO GO INTO INCLUDES  {% endcomment %}
+                <div class="mt-2">
+                    {% if lead.lead_type == 'buying' %}
+                        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to buy, or needs help to source.">Buying / Help Me Source</span>
+                    {% elif lead.lead_type == 'selling' %}
+                        <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User wants to sell, or needs help to sell.">Selling / Help Me Sell</span>
+                    {% elif lead.lead_type == 'other' %}
+                        <span class="badge badge-secondary">Other</span>
+                    {% endif %}
+                </div>
+
+                <div class="separator my-4"></div>
+
+
+
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning">Yes, Report Spam</button>
             </div>
         </div>
-		<!--end::Modals-->
+    </div>
+</div>

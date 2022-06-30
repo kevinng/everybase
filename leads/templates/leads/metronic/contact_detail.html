@@ -221,6 +221,8 @@
 
                     {% comment %} Start: Private notes tab pane {% endcomment %}
                     <div class="tab-pane fade show active" id="private_notes_tab" role="tabpanel">
+                        <h6>Add notes to track interactions with your contacts. ONLY YOU can see your private notes.</h4>
+
                         <div class="card mt-4 shadow-sm">
                             <form action="{% url 'leads:contact_detail' contact.id %}" method="post">
                                 {% csrf_token %}
@@ -255,7 +257,7 @@
 
                                     {% if form.relevance.errors %}<div class="text-danger">{% for error in form.relevance.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                                         
-                                    <div class="form-text">Take notes to keep track of your contacts. ONLY YOU can see your notes.</div>
+                                    {% comment %} <div class="form-text">Take notes to keep track of your contacts. ONLY YOU can see your notes.</div> {% endcomment %}
 
                                     <div class="d-flex justify-content-end mt-4">
                                         <button type="submit" class="btn btn-primary">Add</button>

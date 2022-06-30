@@ -2,9 +2,9 @@
 
 {% load static %}
 
-{% block page_title %}Leads{% endblock %}
+{% block page_title %}Contact Lead Author{% endblock %}
 
-{% block page_subtitle %}Importers/exporters finding buyers, sellers and agents{% endblock %}
+{% block page_subtitle %}{{ lead.body|truncatechars:100 }}{% endblock %}
 
 {% block actions%}
 {% comment %} Put this in an include {% endcomment %}
@@ -82,7 +82,7 @@
         
             {% comment %} Start: Card body {% endcomment %}
             <div class="card-body">
-                <div class="text-dark">{{ lead.body }}</div>
+                <div class="text-dark">{{ lead.body|linebreaks }}</div>
 
                 <div class="mt-2">
                     {% if lead.lead_type == 'buying' %}
