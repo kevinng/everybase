@@ -7,7 +7,6 @@
 {% block page_title %}{{ contact.first_name|title }} {{ contact.last_name|title }}{% endblock %}
 
 {% block page_subtitle %}
-
 <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
     <li class="breadcrumb-item text-muted">Me</li>
 
@@ -31,33 +30,31 @@
 </ul>
 {% endblock %}
 
+{% block actions%}
+{% include 'leads/metronic/includes/toolbar_actions.html' %}
+{% endblock %}
+
 {% block content_body %}
-{% comment %} Start: Post {% endcomment %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
     {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
-        {% comment %} Start: Navbar {% endcomment %}
         <div class="card mb-5 mb-xl-10 shadow-sm">
-            {% comment %} Start: Card header {% endcomment %}
             <div class="card-header">
                 <div class="card-title align-items-start flex-column">
-                    {% comment %} Start: Avatar {% endcomment %}
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
                             {% include 'leads/metronic/includes/avatar.html' with user=contact.lead.author %}
                         </div>
                         <div class="d-flex justify-content-start flex-column">
-                            {% include 'leads/metronic/includes/user_item_name_country.html' with user=contact.lead.author %}
+                            {% include 'leads/metronic/includes/avatar_details.html' with user=contact.lead.author %}
                         </div>
                     </div>
-                    {% comment %} End: Avatar {% endcomment %}
                 </div>
                 <div class="card-toolbar">
                     <span class="text-muted">{{ contact.lead.age_desc }}</span>
                 </div>
             </div>
-            {% comment %} End: Card header {% endcomment %}
-            {% comment %} Start: Content body {% endcomment %}
+
             <div class="card-body pt-9 pb-0">
                 <div class="text-dark">{{ contact.lead.body|linebreaks }}</div>
                 
@@ -79,8 +76,7 @@
                                 {% include 'leads/metronic/includes/contact_avatar.html' with contact=contact %}
                             </div>
                             <div class="d-flex justify-content-start flex-column">
-                                <div class="text-dark fw-bolder fs-6">{{ contact.first_name|title }} {{ contact.last_name|title }}</div>
-                                <span class="text-muted fw-bold text-muted d-block fs-7">{% include 'leads/metronic/includes/contact_country.html' with contact=contact %}</span>
+                                {% include 'leads/metronic/includes/contact_avatar_details.html' with contact=contact do_not_render_contact_url=True %}
                             </div>
                         </div>
                         <span class="text-muted">{{ contact.age_desc }}</span>
@@ -97,17 +93,13 @@
                     </div>
                 </div>
 
-                {% comment %} Start: Navs {% endcomment %}
                 <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
                     <li class="nav-item mt-2">
                         <a class="nav-link text-active-primary ms-0 me-10 py-5" href="{% url 'leads:lead_detail' contact.lead.id %}">Contacts (12)</a>
                     </li>
                 </ul>
-                {% comment %} End: Navs {% endcomment %}
             </div>
-        {% comment %} End: Navbar {% endcomment %}
         </div>
-        {% comment %} End: Container {% endcomment %}
 
         {% comment %} Start: Layout {% endcomment %}
         <div class="d-flex flex-column flex-lg-row">
@@ -117,39 +109,26 @@
                 <div class="card mb-5 mb-xl-8 shadow-sm">
                     {% comment %} Start: Card body {% endcomment %}
                     <div class="card-body">
-                        {% comment %} Start: User profile {% endcomment %}
                         <div class="d-flex flex-center flex-column pt-5">
                             <div class="symbol symbol-circle symbol-100px overflow-hidden mb-7">
-                                <div class="symbol-label fs-1 bg-light-info text-info">{{ contact.first_name.0|upper }}{{ contact.last_name.0|upper }}</div>
+                                {% include 'leads/metronic/includes/contact_avatar.html' with contact=contact %}
                             </div>
-
-                            <span class="fs-3 text-gray-800 fw-bolder mb-3">{{ contact.first_name|title }} {{ contact.last_name|title }}</span>
-
-                            <div class="mb-9 text-muted fw-bold">
-                                {% include 'leads/metronic/includes/contact_country.html' with contact=contact %}
-                            </div>
+                            {% include 'leads/metronic/includes/contact_avatar_details.html' with contact=contact %}
                         </div>
-                        {% comment %} End: User profile {% endcomment %}
 
                         {% if contact.is_whatsapp == True %}
-
-                        <div class="separator mb-4"></div>
-                        
-                        <div class="d-flex flex-column flex-center mb-4">
-                            <a href="{% url 'leads:redirect_contact_whatsapp' contact.id %}" class="btn btn-success">WhatsApp</a>
-                        </div>
-
+                            <div class="separator mt-4"></div>
+                            <div class="d-flex flex-column flex-center mt-4">
+                                <a href="{% url 'leads:redirect_contact_whatsapp' contact.id %}" class="btn btn-success">WhatsApp</a>
+                            </div>
                         {% endif %}
 
                         {% if contact.is_wechat == True %}
-
-                        <div class="separator mb-4"></div>
-
-                        <div class="d-flex flex-column flex-center mb-4">
-                            <a href="{% url 'leads:redirect_contact_wechat' contact.id %}" class="btn btn-success mb-2">WeChat</a>
-                            <div id="wechat_qrcode"></div>
-                        </div>
-
+                            <div class="separator mt-4"></div>
+                            <div class="d-flex flex-column flex-center mt-4">
+                                <a href="{% url 'leads:redirect_contact_wechat' contact.id %}" class="btn btn-success mb-2">WeChat</a>
+                                <div id="wechat_qrcode"></div>
+                            </div>
                         {% endif %}
 
                         {% comment %}
@@ -176,9 +155,9 @@
                         
                         {% endcomment %}
 
-                        <div class="separator"></div>
+                        <div class="separator mt-4"></div>
 
-                        <div>
+                        <div class="mt-4">
                             <div class="pb-5 fs-6">
                                 <div class="fw-bolder mt-5">Email</div>
 
@@ -211,7 +190,7 @@
                         <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#private_notes_tab">Private Notes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-active-primary pb-4" data-kt-countup-tabs="true" data-bs-toggle="tab" href="#other_interactions_tab">Other Interactions</a>
+                        <a class="nav-link text-active-primary pb-4" data-kt-countup-tabs="true" data-bs-toggle="tab" href="#other_interactions_tab">Other Leads</a>
                     </li>
                 </ul>
                 {% comment %} End: Tabs {% endcomment %}
@@ -221,7 +200,7 @@
 
                     {% comment %} Start: Private notes tab pane {% endcomment %}
                     <div class="tab-pane fade show active" id="private_notes_tab" role="tabpanel">
-                        <h6>Add notes to track interactions with your contacts. ONLY YOU can see your private notes.</h4>
+                        <h6>{% include 'leads/metronic/tooltips/private_notes.txt' %}</h4>
 
                         <div class="card mt-4 shadow-sm">
                             <form action="{% url 'leads:contact_detail' contact.id %}" method="post">
@@ -237,27 +216,25 @@
                                     <div class="form-check form-check-custom mt-4">
                                         <div class="me-3">
                                             <input class="form-check-input me-2" type="radio" name="relevance" id="relevant" value="relevant"{% if form.relevance.value == 'relevant' %} checked{% endif %}/>
-                                            <label for="relevant"><span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as relevant.">Relevant</span></label>
+                                            <label for="relevant"><span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/relevant.txt' %}">Relevant</span></label>
                                         </div>
                                     </div>
 
                                     <div class="form-check form-check-custom mt-2">
                                         <div class="me-3">
                                             <input class="form-check-input me-2" type="radio" name="relevance" id="maybe_later" value="maybe_later"{% if form.relevance.value == 'maybe_later' %} checked{% endif %}/>
-                                            <label for="maybe_later"><span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as maybe relevant later.">Maybe Later</span></label>
+                                            <label for="maybe_later"><span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/maybe_later.txt' %}">Maybe Later</span></label>
                                         </div>
                                     </div>
                         
                                     <div class="form-check form-check-custom mt-2">
                                         <div class="me-3">
                                             <input class="form-check-input me-2" type="radio" name="relevance" id="not_relevant" value="not_relevant"{% if form.relevance.value == 'not_relevant' %} checked{% endif %}/>
-                                            <label for="not_relevant"><span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark this contact as not relevant.">Not Relevant</span></label>
+                                            <label for="not_relevant"><span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/not_relevant.txt' %}">Not Relevant</span></label>
                                         </div>
                                     </div>
 
                                     {% if form.relevance.errors %}<div class="text-danger">{% for error in form.relevance.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                                                        
-                                    {% comment %} <div class="form-text">Take notes to keep track of your contacts. ONLY YOU can see your notes.</div> {% endcomment %}
 
                                     <div class="d-flex justify-content-end mt-4">
                                         <button type="submit" class="btn btn-primary">Add</button>
@@ -275,6 +252,8 @@
 
                     {% comment %} Start: Other interactions tab pane {% endcomment %}
                     <div class="tab-pane fade show" id="other_interactions_tab" role="tabpanel">
+                        <h6>Other leads with this contact.</h4>
+
                         {% if contact.other_interactions_count == 0 %}
                             {% comment %} Start: Message for 'no other interactions' {% endcomment %}
                             <div class="fs-4 fw-bold card shadow-sm">
@@ -298,98 +277,56 @@
     </div>
     {% comment %} End: Container {% endcomment %}
 </div>
-{% comment %} End: Post {% endcomment %}
 {% endblock %}
 
 {% block page_vendor_javascript %}
 <script src="{% static 'common/js/qrcode.min.js' %}"></script>
 {% endblock %}
 
-{% block page_custom_javascript %}
-<script>
-    $(document).ready(function() {
-    // Select elements
-const target = document.getElementById('email_clipboard');
-const button = target.nextElementSibling;
+{% comment %} 
+$(document).ready(function() {
 
-// Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
-var clipboard = new ClipboardJS(button, {
-target: target,
-text: function() {
-return target.value;
-}
-});
+    // Initialize clipboards
 
-// Success action handler
-clipboard.on('success', function(e) {
-const currentLabel = button.innerHTML;
+    function init_clipboard(target_id) {
+        const target = document.getElementById(target_id)
+        const button = target.nextElementSibling
+        var clipboard = new ClipboardJS(button, {
+            target: target,
+            text: function() {
+                return target.value
+            }
+        })
 
-// Exit label update when already in progress
-if(button.innerHTML === 'Copied!'){
-return;
-}
-
-// Update button label
-button.innerHTML = 'Copied!';
-
-// Revert button label after 3 seconds
-setTimeout(function(){
-button.innerHTML = currentLabel;
-}, 3000)
-});
-
-
-
-    // Select elements
-    const target2 = document.getElementById('phone_number_clipboard');
-    const button2 = target2.nextElementSibling;
+        clipboard.on('success', function(e) {
+            const currentLabel = button.innerHTML
+            if (button.innerHTML === 'Copied!'){ return }
+            button.innerHTML = 'Copied!'
     
-    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
-    var clipboard2 = new ClipboardJS(button2, {
-        target: target2,
-        text: function() {
-            return target2.value;
-        }
-    });
-    
-    // Success action handler
-    clipboard2.on('success', function(e) {
-        const currentLabel = button2.innerHTML;
-    
-        // Exit label update when already in progress
-        if(button2.innerHTML === 'Copied!'){
-            return;
-        }
-    
-        // Update button label
-        button2.innerHTML = 'Copied!';
-    
-        // Revert button label after 3 seconds
-        setTimeout(function(){
-            button2.innerHTML = currentLabel;
-        }, 3000)
-    });
+            // Revert button label after 3 seconds
+            setTimeout(function(){
+                button.innerHTML = currentLabel;
+            }, 3000)
+        })
+    }
 
+    init_clipboard('email_clipboard')
+    init_clipboard('phone_number_clipboard')
+})
 
-
-
-
-
-        var qrcode = new QRCode(document.getElementById("wechat_qrcode"), {
-            text: "{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",
-            width: 128,
-            height: 128,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-
-
-
-
-
-
+$(document).ready(function() {
+    // QR code. We cannot include this code because it requires server-side rendering.
+    var qrcode = new QRCode(document.getElementById("wechat_qrcode"), {
+        text: "{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
     })
-</script>
-
+})
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'leads/metronic/js/contact_details.js' %}"></script>
+<script>$(document).ready((function(){new QRCode(document.getElementById("wechat_qrcode"),{text:"{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",width:128,height:128,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H})}));</script>
 {% endblock %}

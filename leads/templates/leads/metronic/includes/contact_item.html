@@ -1,58 +1,39 @@
 {% comment %} 
-
 Parameters:
     contact, contact object to render
-    counter, position in the forloop (starting from 1, not 0)
-
 {% endcomment %}
-
-{% load static %}
-
-<tr class="{% if counter|divisibleby:2 %}even{% else %}odd{% endif %}">
-    {% comment %} Start: User {% endcomment %}
-    <td class="d-flex align-items-center">
-        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-            <a href="{% url 'leads:contact_detail' contact.id %}">
-                {% include 'leads/metronic/includes/contact_avatar.html' with contact=contact %}
-            </a>
-        </div>
-
-        {% comment %} Start: User details {% endcomment %}
-        <div class="d-flex flex-column">
-            <a href="{% url 'leads:contact_detail' contact.id %}" class="text-gray-800 text-hover-primary mb-1">{{ contact.first_name|title }} {{ contact.last_name|title }}</a>
-            <span>{% include 'leads/metronic/includes/contact_country.html' with contact=contact %}</span>
-        </div>
-        {% comment %} End: User details {% endcomment %}
-    </td>
-    {% comment %} End: User {% endcomment %}
-
-    {% comment %} Start:  {% endcomment %}
+<tr>
     <td>
+        <div class="d-flex align-items-center">
+            <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                <a href="{% url 'leads:contact_detail' contact.id %}">
+                    {% include 'leads/metronic/includes/contact_avatar.html' with contact=contact %}
+                </a>
+            </div>
+
+            <div class="d-flex flex-column">
+                {% include 'leads/metronic/includes/contact_avatar_details.html' with contact=contact %}
+            </div>
+        </div>
+    </td>
+
+    <td>
+        <div><span class="text-muted fs-8">{{ contact.age_desc }}</span></div>
         <div class="text-dark fw-normal fs-base">{{ contact.comments|truncatechars:100 }}</div>
         <div class="mt-2">
             {% include 'leads/metronic/includes/contact_badges.html' with contact=contact %}
-            <span class="text-muted fs-8">{{ contact.age_desc }}</span>
         </div>
     </td>
 
-
-    {% comment %} Start: Your last private note {% endcomment %}
     <td>
         {% if contact.last_note == None %}
             <span class="badge badge-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've not added any private notes.">No Private Notes</span>
         {% else %}
+            <div><span class="text-muted fs-8">{{ contact.age_desc }}</span></div>
             <div class="text-dark fw-normal fs-base">{{ contact.last_note.body|truncatechars:100 }}</div>
             <div class="mt-2">
-                {% if contact.last_note.relevance == 'relevant' %}
-                    <span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as relevant.">Relevant</span>
-                {% elif contact.last_note.relevance == 'maybe_later' %}
-                    <span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as maybe relevant later.">Maybe Later</span>
-                {% elif contact.last_note.relevance == 'not_relevant' %}
-                    <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as not relevant.">Not relevant</span>
-                {% endif %}
-                <span class="text-muted fs-8">{{ contact.age_desc }}</span>
+                {% include 'leads/metronic/includes/contact_note_badges.html' with note=contact.last_note %}
             </div>
         {% endif %}
     </td>
-    {% comment %} End: Your last private note {% endcomment %}
 </tr>

@@ -22,39 +22,38 @@
 </ul>
 {% endblock %}
 
+{% block actions%}
+{% include 'leads/metronic/includes/toolbar_actions.html' %}
+{% endblock %}
+
 {% block content_body %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
     {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
+
         {% comment %} Start: Navbar {% endcomment %}
         <div class="card mb-5 mb-xl-10 shadow-sm">
-            {% comment %} Start: Card header {% endcomment %}
             <div class="card-header">
                 <div class="card-title align-items-start flex-column">
-                    {% comment %} Start: Avatar {% endcomment %}
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
                             {% include 'leads/metronic/includes/avatar.html' with user=request.user.user %}
                         </div>
                         <div class="d-flex justify-content-start flex-column">
-                            {% include 'leads/metronic/includes/user_item_name_country.html' with user=request.user.user %}
+                            {% include 'leads/metronic/includes/avatar_details.html' with user=request.user.user %}
                         </div>
                     </div>
-                    {% comment %} End: Avatar {% endcomment %}
                 </div>
                 <div class="card-toolbar">
                     <span class="text-muted">{{ lead.age_desc }}</span>
                 </div>
             </div>
-            {% comment %} End: Card header {% endcomment %}
 
             <div class="card-body pt-9 pb-0">
-                {% comment %} Start: Lead body {% endcomment %}
                 <div class="text-dark">{{ lead.body|linebreaks }}</div>
                 <div class="mt-2">
                     {% include 'leads/metronic/includes/lead_badges.html' with lead=lead %}
                 </div>
-                {% comment %} End: Lead body {% endcomment %}
 
                 <div class="col-lg-4 col-md-6 mt-12">
                     <label class="form-label" for="lead_clipboard">Contact Form Link</label>
@@ -66,15 +65,11 @@
 
                 <div class="form-text">Share this link in WhatsApp chatgroup, Facebook groups, etc - so interested parties can contact you.</div>
 
-                {% comment %} Start: Navs {% endcomment %}
                 <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
-                    {% comment %} Start: Nav item {% endcomment %}
                     <li class="nav-item mt-2">
                         <span class="nav-link text-active-primary ms-0 me-10 py-5 active">Contacts ({{ lead.num_contacts }})</span>
                     </li>
-                    {% comment %} End: Nav item {% endcomment %}
                 </ul>
-                {% comment %} End: Navs {% endcomment %}
             </div>
         </div>
         {% comment %} End: Navbar {% endcomment %}
@@ -90,7 +85,6 @@
         {% else %}
             {% comment %} Start: Contacts table {% endcomment %}
             <div class="card shadow-sm">
-                {% comment %} Start: Card body {% endcomment %}
                 <div class="card-body py-4">
                     {% comment %} Start: Table {% endcomment %}
                     <div class="dataTables_wrapper dt-bootstrap4 no-footer">
@@ -99,11 +93,10 @@
                                 <thead>
                                     <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                                         <th class="min-w-200px">User</th>
-                                        {% comment %} <th>Updated</th> {% endcomment %}
                                         <th class="min-w-250px">Details</th>
                                         <th class="min-w-250px">Last Private Note
                                             {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen045.svg {% endcomment %}
-                                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Notes you added to shortlist contacts. Only you can see your private notes.">
+                                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/private_notes.txt' %}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                                     <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
                                                     <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
@@ -118,7 +111,7 @@
                                 <tbody class="text-gray-600 fw-bold">
                                     {% if page_obj|length > 0 %}
                                         {% for contact in page_obj %}
-                                            {% include 'leads/metronic/includes/contact_item.html' with counter=forloop.counter contact=contact %}
+                                            {% include 'leads/metronic/includes/contact_item.html' with contact=contact %}
                                         {% endfor %}
                                     {% endif %}
                                 </tbody>
@@ -127,12 +120,10 @@
                     </div>
                     {% comment %} End: Table {% endcomment %}
                 </div>
-                {% comment %} End: Card body {% endcomment %}
             </div>
             {% comment %} End: Contacts table {% endcomment %}
         {% endif %}
 
-        {% comment %} Start: Pagination {% endcomment %}
         {% load query_transform %}
         <ul class="pagination mt-10">
             {% if page_obj.has_previous %}
@@ -143,7 +134,6 @@
                 <li class="page-item next"><a href="?{% query_transform page=page_obj.next_page_number %}" class="page-link">Next Page</a></li>
             {% endif %}
         </ul>
-        {% comment %} End: Pagination {% endcomment %}
     </div>
     {% comment %} End: Container {% endcomment %}    
 </div>

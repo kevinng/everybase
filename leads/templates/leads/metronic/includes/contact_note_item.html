@@ -3,31 +3,26 @@
         <div class="card-title align-items-start flex-column">
             <div class="d-flex align-items-center">
                 <div class="symbol symbol-45px me-5">
-                    {% include 'leads/metronic/includes/contact_avatar.html' %}
+                    {% include 'leads/metronic/includes/avatar.html' with user=request.user.user%}
                 </div>
                 <div class="d-flex justify-content-start flex-column">
-                    <div class="text-dark fw-bolder fs-6">{{ note.contact.first_name|title }} {{ note.contact.last_name|title }}</div>
-                    <span class="text-muted fw-bold text-muted d-block fs-7">
-                        {% include 'leads/metronic/includes/contact_country.html' with contact=note.contact %}
-                    </span>
+                    {% include 'leads/metronic/includes/avatar_details.html' with user=request.user.user %}
                 </div>
             </div>
         </div>
         <div class="card-toolbar">
-            {% comment %} <span class="badge badge-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Only you can see your private notes">Private</span> {% endcomment %}
             <span class="ms-4 text-muted">{{ contact.age_desc }}</span>
         </div>
     </div>
-
     <div class="card-body">
         <div>{{ note.body|linebreaks }}</div>
         <div class="mt-2">
             {% if note.relevance == 'relevant' %}
-                <span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as maybe relevant later.">Relevant</span>
+                <span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/relevant.txt' %}">Relevant</span>
             {% elif note.relevance == 'maybe_later' %}
-                <span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as maybe relevant later.">Maybe Later</span>
+                <span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/maybe_later.txt' %}">Maybe Later</span>
             {% elif note.relevance == 'not_relevant' %}
-                <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've marked this contact as not relevant.">Not Relevant</span>
+                <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/not_relevant.txt' %}">Not Relevant</span>
             {% endif %}
         </div>
     </div>

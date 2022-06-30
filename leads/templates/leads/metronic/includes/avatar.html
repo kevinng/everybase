@@ -1,9 +1,8 @@
 {% comment %} 
-
 Parameters:
     user, user to render
-
 {% endcomment %}
+
 {% if user.avatar == None %}
     {% comment %} Use a different color for other users {% endcomment %}
     {% if request.user.is_authenticated and request.user.user.id == user.id %}
