@@ -1,9 +1,9 @@
 {% comment %}
 Parameters:
     contact, contact to render
-    do_not_render_contact_url, True if render a URL to contact details from user full name.
+    do_not_render_contact_url, True if render a URL to contact details from user full name
 {% endcomment %}
-{% if do_not_render_contact_url != True %}<a href="{% url 'leads:contact_detail' contact.id %}">{% endif %}
+{% if do_not_render_contact_url != True %}<a href="{% url 'leads:contact_detail_private_notes' contact.id %}">{% endif %}
     <div class="text-dark fw-bolder fs-6">{{ contact.first_name|title }} {{ contact.last_name|title }}</div>
 {% if do_not_render_contact_url != True %}</a>{% endif %}
 <span class="text-muted fw-bold text-muted d-block fs-7">{{ contact.country.name }}

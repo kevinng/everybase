@@ -1,0 +1,22 @@
+{% comment %}
+Parameters:
+    contact, contact to be rendered
+    private_notes, True if private notes tab is active
+    other_leads, True if other leads tab is active
+{% endcomment %}
+<ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-bold mb-8">
+    <li class="nav-item">
+        {% if private_notes == True %}
+            <span class="nav-link text-active-primary pb-4 active">Private Notes</span>
+        {% else %}
+            <a href="{% url 'leads:contact_detail_private_notes' contact.id %}" class="nav-link text-active-primary pb-4">Private Notes</a>
+        {% endif %}
+    </li>
+    <li class="nav-item">
+        {% if other_leads == True %}
+            <span class="nav-link text-active-primary pb-4 active">Other Contacts</span>
+        {% else %}
+            <a href="{% url 'leads:contact_detail_other_contacts' contact.id %}" class="nav-link text-active-primary pb-4">Other Contacts</a>
+        {% endif %}
+    </li>
+</ul>

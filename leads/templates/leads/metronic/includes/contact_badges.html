@@ -7,9 +7,13 @@
 {% endif %}
 
 {% if contact.is_seller == True %}
+promoting vs sourcing, not buying vs selling
     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact is a seller.">Seller</span>
 {% endif %}
 
 {% if contact.is_buy_comm == True %}
     <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact can help you source on a commission basis.">Source for Commission</span>
 {% endif %}
+
+
+{%CONTINUE%}

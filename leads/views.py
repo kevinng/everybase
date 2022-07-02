@@ -170,7 +170,7 @@ def lead_capture(request, id):
         'form': form
     })
 
-def contact_detail(request, id):
+def contact_detail_private_notes(request, id):
     contact = models.Contact.objects.get(pk=id)
 
     if request.method == 'POST':
@@ -183,16 +183,38 @@ def contact_detail(request, id):
             )
 
             return HttpResponseRedirect(
-                reverse('leads:contact_detail', args=(contact.id,)))
+                reverse('leads:contact_detail_private_notes', args=(contact.id,)))
 
     elif request.method == 'GET':
         form = forms.ContactNoteForm()
 
-    template_name = 'leads/metronic/contact_detail.html'
-    return TemplateResponse(request, template_name, {
+    params = {
         'contact': contact,
         'form': form
-    })
+    }
+
+    # Paginate
+
+    leads_per_page = 20
+    paginator = Paginator(contact.active_notes(), leads_per_page)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    params['page_obj'] = page_obj
+
+    template_name = 'leads/metronic/contact_detail_private_notes.html'
+    return TemplateResponse(request, template_name, params)
+
+def contact_detail_other_contacts(request, id):
+    contact = models.Contact.objects.get(pk=id)
+
+    params = {
+        'contact': contact,
+        'contacts': contact.other_contacts()
+        # 'form': form
+    }
+    
+    template_name = 'leads/metronic/contact_detail_other_contacts.html'
+    return TemplateResponse(request, template_name, params)
 
 def redirect_contact_wechat(_, id):
     contact = models.Contact.objects.get(pk=id)

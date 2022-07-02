@@ -13,7 +13,7 @@ from common.models import Standard, Choice
 class Lead(Standard):
     """Lead.
 
-    Last updated: 17 June 2022, 6:05 PM
+    Last updated: 2 July 2022, 12:24 PM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -34,6 +34,10 @@ class Lead(Standard):
         choices=[
             ('buying', 'Buying'),
             ('selling', 'Selling'),
+            ('need_logistics', 'Logistics'),
+            ('sourcing_agent', 'Sourcing Agent'),
+            ('sales_agent', 'Sales Agent'),
+            ('logistics_agent', 'Logistics Agent'),
             ('other', 'Other')
         ],
         db_index=True
@@ -545,7 +549,7 @@ class Contact(Standard):
             deleted__isnull=True
         ).order_by('-created')
 
-    def other_interactions(self):
+    def other_contacts(self):
         return Contact.objects\
             .filter(lead__author=self.lead.author)\
             .filter(
@@ -553,16 +557,6 @@ class Contact(Standard):
                 Q(phone_number=self.phone_number) |\
                 (Q(wechat_id__isnull=True) & Q(wechat_id=self.wechat_id)))\
             .exclude(id=self.id)
-
-    def other_interactions_count(self):
-        return Contact.objects\
-            .filter(lead__author=self.lead.author)\
-            .filter(
-                Q(email=self.email) |\
-                Q(phone_number=self.phone_number) |\
-                (Q(wechat_id__isnull=True) & Q(wechat_id=self.wechat_id)))\
-            .exclude(id=self.id)\
-            .count()
 
 class ContactNote(Standard):
     """Contact note.
