@@ -113,7 +113,7 @@
                 </div>
 
                 <div class="col-lg-6 mt-6">
-                    <select name="country" class="form-select" data-control="select2" data-placeholder="Country">
+                    <select name="country" class="form-select" data-control="select2" data-placeholder="Country" id="country">
                         <option></option>
                         {% for country in countries %}
                             <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
