@@ -1,5 +1,4 @@
 import pytz, phonenumbers, random
-from urllib.parse import urljoin
 from datetime import datetime
 
 from chat.tasks.send_welcome_message import send_welcome_message
@@ -509,7 +508,8 @@ def log_out(request):
 
     return HttpResponseRedirect(reverse('home'))
 
-def settings(request):
+# Don't name it 'settings', it conflicts with 
+def profile_settings(request):
     template_name = 'relationships/metronic/settings.html'
     return TemplateResponse(request, template_name, {})
 
