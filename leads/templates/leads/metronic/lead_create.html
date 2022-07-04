@@ -7,7 +7,7 @@
 {% block page_subtitle %}Find importers, exporters, buyers, sellers, agents and more.{% endblock %}
 
 {% block actions %}
-{% include 'leads/metronic/includes/toolbar_actions.html' %}
+{% include 'leads/metronic/includes/toolbar_actions.html' with hide_lead_create=True %}
 {% endblock %}
 
 {% block content_body %}
@@ -28,50 +28,62 @@
 
                         <div class="form-check form-check-custom mt-6">
                             <div class="me-3">
-                                <input class="form-check-input me-2" type="radio" name="lead_type" id="buying" value="buying" />
-                                <label for="buying">Buying</label>
+                                <input class="form-check-input me-1" type="radio" name="lead_type" id="buying" value="buying" />
+                                <label for="buying">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span>
+                                </label>
                             </div>
                         </div>
 
                         <div class="form-check form-check-custom mt-2">
                             <div class="me-3">
-                                <input class="form-check-input me-2" type="radio" name="lead_type" id="selling" value="selling" />
-                                <label for="selling">Promoting</label>
+                                <input class="form-check-input me-1" type="radio" name="lead_type" id="selling" value="selling" />
+                                <label for="selling">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span>
+                                </label>
                             </div>
                         </div>
 
                         <div class="form-check form-check-custom mt-2">
                             <div class="me-3">
-                                <input class="form-check-input me-2" type="radio" name="lead_type" id="need_logistics" value="need_logistics" />
-                                <label for="need_logistics">Need Logistics</label>
+                                <input class="form-check-input me-1" type="radio" name="lead_type" id="need_logistics" value="need_logistics" />
+                                <label for="need_logistics">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/need_logistics.txt' %}">Need Logistics</span>
+                                </label>
                             </div>
                         </div>
 
                         <div class="form-check form-check-custom mt-2">
                             <div class="me-3">
-                                <input class="form-check-input me-2" type="radio" name="lead_type" id="sourcing_agent" value="sourcing_agent" />
-                                <label for="sourcing_agent">Sourcing Agent</label>
+                                <input class="form-check-input me-1" type="radio" name="lead_type" id="sourcing_agent" value="sourcing_agent" />
+                                <label for="sourcing_agent">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span>
+                                </label>
                             </div>
                         </div>
 
                         <div class="form-check form-check-custom mt-2">
                             <div class="me-3">
-                                <input class="form-check-input me-2" type="radio" name="lead_type" id="sales_agent" value="sales_agent" />
-                                <label for="sales_agent">Sales Agent</label>
+                                <input class="form-check-input me-1" type="radio" name="lead_type" id="sales_agent" value="sales_agent" />
+                                <label for="sales_agent">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sales_agent.txt' %}">Sales Agent</span>
+                                </label>
                             </div>
                         </div>
 
                         <div class="form-check form-check-custom mt-2">
                             <div class="me-3">
-                                <input class="form-check-input me-2" type="radio" name="lead_type" id="logistics_agent" value="logistics_agent" />
-                                <label for="logistics_agent">Logistics Agent</label>
+                                <input class="form-check-input me-1" type="radio" name="lead_type" id="logistics_agent" value="logistics_agent" />
+                                <label for="logistics_agent">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span>
+                                </label>
                             </div>
                         </div>
 
                         <div class="form-check form-check-custom mt-2">
                             <div class="me-3">
-                                <input class="form-check-input me-2" type="radio" name="lead_type" id="other" value="other" />
-                                <label for="other">Other</label>
+                                <input class="form-check-input me-1" type="radio" name="lead_type" id="other" value="other" />
+                                <span class="badge badge-secondary">Other</span>
                             </div>
                         </div>
 

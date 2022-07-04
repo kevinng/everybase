@@ -18,11 +18,11 @@
         <div>{{ note.body|linebreaks }}</div>
         <div class="mt-2">
             {% if note.relevance == 'relevant' %}
-                <span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/relevant.txt' %}">Relevant</span>
+                <span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/private_notes/relevant.txt' %}">Relevant</span>
             {% elif note.relevance == 'maybe_later' %}
-                <span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/maybe_later.txt' %}">Maybe Later</span>
+                <span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/private_notes/maybe_later.txt' %}">Maybe Later</span>
             {% elif note.relevance == 'not_relevant' %}
-                <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/not_relevant.txt' %}">Not Relevant</span>
+                <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/private_notes/not_relevant.txt' %}">Not Relevant</span>
             {% endif %}
         </div>
     </div>

@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block tab_content %}
-<h6>{% include 'leads/metronic/tooltips/private_notes.txt' %}</h4>
+<h6>{% include 'leads/metronic/tooltips/private_notes/private_notes.txt' %}</h4>
 
 <div class="card mt-4 shadow-sm">
     <form action="{% url 'leads:contact_detail_private_notes' contact.id %}" method="post">
@@ -21,21 +21,21 @@
             <div class="form-check form-check-custom mt-4">
                 <div class="me-3">
                     <input class="form-check-input me-2" type="radio" name="relevance" id="relevant" value="relevant"{% if form.relevance.value == 'relevant' %} checked{% endif %}/>
-                    <label for="relevant"><span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/relevant.txt' %}">Relevant</span></label>
+                    <label for="relevant"><span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/private_notes/relevant.txt' %}">Relevant</span></label>
                 </div>
             </div>
 
             <div class="form-check form-check-custom mt-2">
                 <div class="me-3">
                     <input class="form-check-input me-2" type="radio" name="relevance" id="maybe_later" value="maybe_later"{% if form.relevance.value == 'maybe_later' %} checked{% endif %}/>
-                    <label for="maybe_later"><span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/maybe_later.txt' %}">Maybe Later</span></label>
+                    <label for="maybe_later"><span class="badge badge-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/private_notes/maybe_later.txt' %}">Maybe Later</span></label>
                 </div>
             </div>
 
             <div class="form-check form-check-custom mt-2">
                 <div class="me-3">
                     <input class="form-check-input me-2" type="radio" name="relevance" id="not_relevant" value="not_relevant"{% if form.relevance.value == 'not_relevant' %} checked{% endif %}/>
-                    <label for="not_relevant"><span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/not_relevant.txt' %}">Not Relevant</span></label>
+                    <label for="not_relevant"><span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/private_notes/not_relevant.txt' %}">Not Relevant</span></label>
                 </div>
             </div>
 

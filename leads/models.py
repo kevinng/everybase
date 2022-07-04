@@ -314,8 +314,8 @@ class Lead(Standard):
         self.refresh_slug()
         return super().save(*args, **kwargs)
 
-    def lead_capture_url(self):
-        return urljoin(settings.BASE_URL, reverse('leads:lead_capture', args=[self.id]))
+    def contact_lead_url(self):
+        return urljoin(settings.BASE_URL, reverse('leads:contact_lead', args=[self.id]))
 
     def num_contacts(self):
         return Contact.objects.filter(
@@ -422,7 +422,7 @@ class LeadDetailView(Standard):
 class Contact(Standard):
     """Contact.
 
-    Last updated: 24 June 2022, 10:27 PM
+    Last updated: 3 July 2022, 10:37 PM
     """
     lead = models.ForeignKey(
         'Lead',
@@ -471,6 +471,7 @@ class Contact(Standard):
         null=True,
         blank=True
     )
+
     is_whatsapp = models.BooleanField(
         null=True,
         blank=True
@@ -484,6 +485,45 @@ class Contact(Standard):
         null=True,
         blank=True
     )
+
+    is_buyer = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_seller = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_sales_agent = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_sourcing_agent = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_looking_for_sales_agent = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_looking_for_sourcing_agent = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    is_logistics_agent = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    need_logistics = models.BooleanField(
+        null=True,
+        blank=True
+    )
+
+    comments = models.TextField(
+        null=True,
+        blank=True
+    )
+
     is_telegram = models.BooleanField(
         null=True,
         blank=True
@@ -507,26 +547,6 @@ class Contact(Standard):
         blank=True
     )
     is_other = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    comments = models.TextField(
-        null=True,
-        blank=True
-    )
-    is_buyer = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    is_seller = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    is_sell_comm = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    is_buy_comm = models.BooleanField(
         null=True,
         blank=True
     )

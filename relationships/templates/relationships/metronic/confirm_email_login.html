@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="mt-10">
-                    <input type="text" class="form-control" name="code" placeholder="e.g., 123456" />
+                    <input type="text" class="form-control" name="code" placeholder="e.g. 123456" />
                 </div>
                 {% if form.code.errors %}<div class="text-danger">{% for error in form.code.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 

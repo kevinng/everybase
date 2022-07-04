@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content_body %}
-<form action="{% url 'leads:lead_capture' lead.id %}" method="post">
+<form action="{% url 'leads:contact_lead' lead.id %}" method="post">
 {% csrf_token %}
 
 {% comment %} Start: Post {% endcomment %}
@@ -22,7 +22,6 @@
             {% comment %} Start: Card header {% endcomment %}
             <div class="card-header">
                 <div class="card-title align-items-start flex-column">
-                    {% comment %} Start: Avatar {% endcomment %}
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
                             {% if lead.author.avatar == None %}
@@ -47,7 +46,6 @@
                             <span class="text-muted fw-bold text-muted d-block fs-7">{{ lead.author.country.name }}</span>
                         </div>
                     </div>
-                    {% comment %} End: Avatar {% endcomment %}
                 </div>
                 <div class="card-toolbar">
                     <span class="text-muted">{{ lead.age_desc }}</span>
@@ -66,21 +64,6 @@
                 <div class="separator my-4"></div>
 
                 <h5>Contact Lead Author</h5>
-
-                <div class="form-check form-check-custom mt-6">
-                    <input class="form-check-input me-2" type="checkbox" name="has_company" id="has_company" {% if form.has_company.value == True %}checked {% endif %}/>
-                    <label for="has_company">Has Company
-                        {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                        <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'relationships/metronic/tooltips/has_company_you.txt' %}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                            </svg>
-                        </span>
-                        {% comment %} End: SVG icon {% endcomment %}
-                    </label>
-                </div>
 
                 <div class="form-floating col-lg-6 mt-4">
                     <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name"{% if form.first_name.value is not None and form.first_name.value|cut:' ' != '' %} value="{{ form.first_name.value }}"{% endif %} required />
@@ -139,36 +122,62 @@
                 </div>
                 {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <div class="form-floating col-lg-6 mt-8">
+                <div class="form-floating col-lg-6 mt-2">
                     <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Comments" id="comments" name="comments">{% if form.comments.value is not None and form.comments.value|cut:' ' != '' %}{{ form.comments.value }}{% endif %}</textarea>
                     <label for="comments">Comments</label>
                 </div>
                 {% if form.comments.errors %}<div class="text-danger">{% for error in form.comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 {% if lead.lead_type == 'selling' %}
-
-                    <div id="is_buyer" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_buyer" id="is_buyer_input" {% if form.is_buyer.value == True %}checked {% endif %}/>
-                        <label for="is_buyer_input">I'm a buyer</label>
+                    <div id="is_sales_agent_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_sales_agent" id="is_sales_agent" {% if form.is_sales_agent.value == True %}checked {% endif %}/>
+                        <label for="is_sales_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Can promote goods on a commission basis.">Sales Agent</span></label>
                     </div>
 
-                    <div id="is_sell_comm" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_sell_comm" id="is_sell_comm_input" {% if form.is_sell_comm.value == True %}checked {% endif %}/>
-                        <label for="is_sell_comm_input">I can help sell on a commission basis</label>
+                    <div id="is_sourcing_goods_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_sourcing_goods" id="is_sourcing_goods" {% if form.is_sourcing_goods.value == True %}checked {% endif %}/>
+                        <label for="is_sourcing_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sourcing goods.">Sourcing Goods</span></label>
                     </div>
-
                 {% elif lead.lead_type == 'buying' %}
-
-                    <div id="is_seller" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_seller" id="is_seller_input" {% if form.is_seller.value == True %}checked {% endif %}/>
-                        <label for="is_seller_input">I'm a seller</label>
+                    <div id="is_sourcing_agent_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_sourcing_agent" id="is_sourcing_agent" {% if form.is_sourcing_agent.value == True %}checked {% endif %}/>
+                        <label for="is_sourcing_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Can source goods on a commission basis.">Sourcing Agent</span></label>
                     </div>
 
-                    <div id="is_buy_comm" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_buy_comm" id="is_buy_comm_input" {% if form.is_buy_comm.value == True %}checked {% endif %}/>
-                        <label for="is_buy_comm_input">I can help source on a commission basis</label>
+                    <div id="is_promoting_goods_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_promoting_goods" id="is_promoting_goods" {% if form.is_promoting_goods.value == True %}checked {% endif %}/>
+                        <label for="is_promoting_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Promoting goods.">Promoting Goods</span></label>
+                    </div>
+                {% elif lead.lead_type == 'sales_agent' %}
+                    <div id="is_looking_for_sales_agents_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_looking_for_sales_agents" id="is_looking_for_sales_agents" {% if form.is_looking_for_sales_agents.value == True %}checked {% endif %}/>
+                        <label for="is_looking_for_sales_agents"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Looking for sales agents to promote goods on a commission basis.">Looking for Sales Agents</span></label>
                     </div>
 
+                    <div id="is_sourcing_goods_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_sourcing_goods" id="is_sourcing_goods" {% if form.is_sourcing_goods.value == True %}checked {% endif %}/>
+                        <label for="is_sourcing_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sourcing goods.">Sourcing Goods</span></label>
+                    </div>
+                {% elif lead.lead_type == 'sourcing_agent' %}
+                    <div id="is_looking_for_sourcing_agents_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_looking_for_sourcing_agents" id="is_looking_for_sourcing_agents" {% if form.is_looking_for_sourcing_agents.value == True %}checked {% endif %}/>
+                        <label for="is_looking_for_sourcing_agents"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Looking for sourcing agents to source goods on a commission basis.">Looking for Sourcing Agents</span></label>
+                    </div>
+
+                    <div id="is_promoting_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_promoting" id="is_promoting" {% if form.is_promoting.value == True %}checked {% endif %}/>
+                        <label for="is_promoting"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Promoting goods.">Promoting Goods</span></label>
+                    </div>
+                {% elif lead.lead_type == 'need_logistics' %}
+                    <div id="is_logistics_agent_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_logistics_agent" id="is_logistics_agent" {% if form.is_logistics_agent.value == True %}checked {% endif %}/>
+                        <label for="is_logistics_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Can provide logistics services.">Logistics Agent</span></label>
+                    </div>
+                {% elif lead.lead_type == 'logistics_agent' %}
+                    <div id="is_need_logistics_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="is_need_logistics" id="is_need_logistics" {% if form.is_need_logistics.value == True %}checked {% endif %}/>
+                        <label for="is_need_logistics"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Looking for logistics services.">Need Logistics</span></label>
+                    </div>
                 {% endif %}
             </div>
             {% comment %} End: Card body {% endcomment %}

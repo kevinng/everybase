@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center overflow-auto">
-    {% if show_search != False %}
+    {% if hide_search != True %}
         <div class="position-relative my-1 me-2">
             {% comment %} Start: SVG Icon | path: icons/duotune/general/gen021.svg {% endcomment %}
             <span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ps-10">
@@ -13,9 +13,13 @@
         </div>
 
         <button type="submit" class="btn btn-sm btn-light-primary">Search</button>
-
-        <div class="bullet bg-secondary h-35px w-1px mx-6"></div>
     {% endif %}
 
-    <a href="{% url 'leads:lead_create' %}" class="btn btn-sm btn-primary">Post Lead</a>
+    {% if hide_search != True and hide_lead_create != True %}
+        <div class="bullet bg-secondary h-35px w-1px mx-6"></div>
+    {% endif %}
+    
+    {% if hide_lead_create != True %}
+        <a href="{% url 'leads:lead_create' %}" class="btn btn-sm btn-primary">Post Lead</a>
+    {% endif %}
 </div>

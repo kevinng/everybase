@@ -72,7 +72,7 @@ def lead_create(request):
 def lead_created_success(request, id):
     lead = models.Lead.objects.get(pk=id)
     template_name = 'leads/metronic/lead_create_success.html'
-    return TemplateResponse(request, template_name, {'lead_capture_url': lead.lead_capture_url})
+    return TemplateResponse(request, template_name, {'contact_lead_url': lead.contact_lead_url})
 
 @login_required
 def lead_detail(request, id):
@@ -113,7 +113,7 @@ def my_leads(request):
     template_name = 'leads/metronic/my_leads.html'
     return TemplateResponse(request, template_name, params)
 
-def lead_capture(request, id):
+def contact_lead(request, id):
     lead = models.Lead.objects.get(pk=id)
 
     if request.method == 'POST':
@@ -163,7 +163,7 @@ def lead_capture(request, id):
     countries = commods.Country.objects.annotate(
         num_leads=Count('users_w_this_country')).order_by('-num_leads')
 
-    template_name = 'leads/metronic/lead_capture.html'
+    template_name = 'leads/metronic/contact_lead.html'
     return TemplateResponse(request, template_name, {
         'countries': countries,
         'lead': lead,

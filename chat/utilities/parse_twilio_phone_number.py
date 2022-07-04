@@ -13,7 +13,7 @@ def parse_twilio_phone_number(
     -------
     (channel, phone_number)
         channel
-            Twilio channel - e.g., Whatsapp.
+            Twilio channel - e.g. Whatsapp.
         phone_number
             Phone number string.
     """

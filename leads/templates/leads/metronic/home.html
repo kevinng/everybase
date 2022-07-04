@@ -6,24 +6,7 @@
 
 {% block actions %}
 <div class="d-flex align-items-center overflow-auto">
-    {% comment %} Start: Search {% endcomment %}
-    {% comment %} <div class="position-relative my-1 me-2"> {% endcomment %}
-        {% comment %} SVG icon | path: icons/duotune/general/gen021.svg {% endcomment %}
-        {% comment %} <span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ps-10">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-            </svg>
-        </span> {% endcomment %}
-        {% comment %} SVG icon {% endcomment %}
-        {% comment %} <input type="text" class="form-control form-control-sm w-150px ps-10" name="Search" value="" placeholder="Search" /> {% endcomment %}
-    {% comment %} </div> {% endcomment %}
-    {% comment %} <button type="submit" class="btn btn-sm btn-light-primary">Search</button> {% endcomment %}
-    {% comment %} End: Search {% endcomment %}
-
-    {% comment %} <div class="bullet bg-secondary h-35px w-1px mx-6"></div> {% endcomment %}
-
-    <a href="{% url 'leads:lead_create' %}" class="btn btn-sm btn-primary">Post Lead</a>
+{% include 'leads/metronic/includes/toolbar_actions.html' with hide_search=True %}
 </div>
 {% endblock %}
 
@@ -106,12 +89,10 @@
             <div class="d-flex align-items-center">
                 <div class="col-lg-2 col-4 d-flex">
                     <select class="form-select" data-control="select2" data-hide-search="true" data-placeholder="Sort By">
-                        {% comment %} This option will be the recommendation feature {% endcomment %}
+                        {% comment %} Best match will be the recommendation feature {% endcomment %}
                         {% comment %} <option value="best_match">Best Match</option> {% endcomment %}
                         <option value="latest">Latest</option>
                         <option value="num_contacts">More Contacts</option>
-                        {% comment %} Make this into a large button {% endcomment %}
-                        {% comment %} <option value="num_spams_scams">Less Spams & Scams</option> {% endcomment %}
                     </select>
                 </div>
 
@@ -124,7 +105,7 @@
             <div class="d-flex justify-content-end mt-2">
                 <div class="form-check form-check-custom">
                     <input class="form-check-input me-2" type="checkbox" name="is_reduce_spams_scams" id="is_reduce_spams_scams" {% if form.is_buying.value == True %}checked {% endif %}/>
-                    <label for="is_reduce_spams_scams" class="fw-bold">Reduce Spams & Scams
+                    <label for="is_reduce_spams_scams">Reduce Spams & Scams
                         {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
                         <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hide leads with high spam and scam alerts.">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -145,97 +126,51 @@
                 <div class="d-flex align-items-center">
                     <div class="form-check form-check-custom">
                         <input class="form-check-input me-2" type="checkbox" name="is_buying" id="is_buying" {% if form.is_buying.value == True %}checked {% endif %}/>
-                        <label for="is_buying">Sourcing
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sourcing.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <label for="is_buying">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
-                        <input class="form-check-input me-2" type="checkbox" name="is_promoting" id="is_promoting" {% if form.is_promoting.value == True %}checked {% endif %}/>
-                        <label for="is_promoting">Promoting
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/promoting.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <input class="form-check-input me-2" type="checkbox" name="is_selling" id="is_selling" {% if form.is_selling.value == True %}checked {% endif %}/>
+                        <label for="is_selling">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
-                        <input class="form-check-input me-2" type="checkbox" name="is_need_logistics" id="is_need_logistics" {% if form.is_need_logistics.value == True %}checked {% endif %}/>
-                        <label for="is_need_logistics">Need Logistics
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/need_logistics.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <input class="form-check-input me-2" type="checkbox" name="need_logistics" id="need_logistics" {% if form.need_logistics.value == True %}checked {% endif %}/>
+                        <label for="need_logistics">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/need_logistics.txt' %}">Need Logistics</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="is_sourcing_agent" id="is_sourcing_agent" {% if form.is_sourcing_agent.value == True %}checked {% endif %}/>
-                        <label for="is_sourcing_agent">Sourcing Agent
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sourcing_agent.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <label for="is_sourcing_agent">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="is_sales_agent" id="is_sales_agent" {% if form.is_sales_agent.value == True %}checked {% endif %}/>
-                        <label for="is_sales_agent">Sales Agent
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sales_agent.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <label for="is_sales_agent">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sales_agent.txt' %}">Sales Agent</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="is_logistics_agent" id="is_logistics_agent" {% if form.is_logistics_agent.value == True %}checked {% endif %}/>
-                        <label for="is_logistics_agent">Logistics Agent
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/logistics_agent.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <label for="is_logistics_agent">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="is_other" id="is_other" {% if form.is_other.value == True %}checked {% endif %}/>
-                        <label for="is_other">Other</label>
+                        <label for="is_other">
+                            <span class="badge badge-secondary">Other</span>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -247,47 +182,23 @@
 
                 <div class="d-flex align-items-center">
                     <div class="form-check form-check-custom">
-                        <input class="form-check-input me-2" type="checkbox" name="is_buying" id="is_buying" {% if form.is_buying.value == True %}checked {% endif %}/>
-                        <label for="is_buying">Buying
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sourcing.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <input class="form-check-input me-2" type="checkbox" name="is_buying" id="is_buying_mob" {% if form.is_buying.value == True %}checked {% endif %}/>
+                        <label for="is_buying_mob">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
-                        <input class="form-check-input me-2" type="checkbox" name="is_promoting" id="is_promoting" {% if form.is_promoting.value == True %}checked {% endif %}/>
-                        <label for="is_promoting">Promoting
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/promoting.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <input class="form-check-input me-2" type="checkbox" name="is_promoting" id="is_promoting_mob" {% if form.is_promoting.value == True %}checked {% endif %}/>
+                        <label for="is_promoting_mob">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
-                        <input class="form-check-input me-2" type="checkbox" name="is_need_logistics" id="is_need_logistics" {% if form.is_need_logistics.value == True %}checked {% endif %}/>
-                        <label for="is_need_logistics">Need Logistics
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/need_logistics.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <input class="form-check-input me-2" type="checkbox" name="need_logistics" id="need_logistics_mob" {% if form.need_logistics.value == True %}checked {% endif %}/>
+                        <label for="need_logistics_mob">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/need_logistics.txt' %}">Need Logistics</span>
                         </label>
                     </div>
                 </div>
@@ -296,32 +207,14 @@
 
                 <div class="d-flex align-items-center">
                     <div class="form-check form-check-custom">
-                        <input class="form-check-input me-2" type="checkbox" name="is_sourcing_agent" id="is_sourcing_agent" {% if form.is_sourcing_agent.value == True %}checked {% endif %}/>
-                        <label for="is_sourcing_agent">Sourcing Agent
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sourcing_agent.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <input class="form-check-input me-2" type="checkbox" name="is_sourcing_agent" id="is_sourcing_agent_mob" {% if form.is_sourcing_agent.value == True %}checked {% endif %}/>
+                            <label for="is_sourcing_agent_mob"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
-                        <input class="form-check-input me-2" type="checkbox" name="is_sales_agent" id="is_sales_agent" {% if form.is_sales_agent.value == True %}checked {% endif %}/>
-                        <label for="is_sales_agent">Sales Agent
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/sales_agent.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <input class="form-check-input me-2" type="checkbox" name="is_sales_agent" id="is_sales_agent_mob" {% if form.is_sales_agent.value == True %}checked {% endif %}/>
+                            <label for="is_sales_agent_mob"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sales_agent.txt' %}">Sales Agent</span>
                         </label>
                     </div>
                 </div>
@@ -330,23 +223,15 @@
 
                 <div class="d-flex align-items-center">
                     <div class="form-check form-check-custom">
-                        <input class="form-check-input me-2" type="checkbox" name="is_logistics_agent" id="is_logistics_agent" {% if form.is_logistics_agent.value == True %}checked {% endif %}/>
-                        <label for="is_logistics_agent">Logistics Agent
-                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/logistics_agent.txt' %}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
+                        <input class="form-check-input me-2" type="checkbox" name="is_logistics_agent" id="is_logistics_agent_mob" {% if form.is_logistics_agent.value == True %}checked {% endif %}/>
+                        <label for="is_logistics_agent_mob">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span>
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
-                        <input class="form-check-input me-2" type="checkbox" name="is_other" id="is_other" {% if form.is_other.value == True %}checked {% endif %}/>
-                        <label for="is_other">Other</label>
+                        <input class="form-check-input me-2" type="checkbox" name="is_other" id="is_other_mob" {% if form.is_other.value == True %}checked {% endif %}/>
+                        <span class="badge badge-secondary">Other</span>
                     </div>
                 </div>
             </div>
@@ -366,13 +251,12 @@
 
                 <div class="form-check form-check-custom ms-2">
                     <input class="form-check-input me-2" type="checkbox" name="is_country_verified" id="is_country_verified" {% if form.is_country_verified.value == True %}checked {% endif %}/>
-                    <label for="is_country_verified">Verified Only
+                    <label for="is_country_verified">Verified
                         {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                        <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/verified_country.txt' %}">
+                        <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code.">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                            <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
                             </svg>
                         </span>
                         {% comment %} End: SVG icon {% endcomment %}
