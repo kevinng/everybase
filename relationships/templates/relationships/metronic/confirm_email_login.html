@@ -42,14 +42,14 @@
                 </div>
 
                 <div class="text-center mb-10">
-                    <h1 class="text-dark mb-3">Verify Your Email</h1>
-                    <div class="text-muted fw-bold fs-5 mb-5">Enter the verification code we've sent to</div>
+                    <h1 class="text-dark mb-3">Confirm Email Login</h1>
+                    <div class="text-muted fw-bold fs-5 mb-5">Enter the comfirmation code we've sent to</div>
                     <div class="fw-bolder text-dark fs-3">{{ form.email.value }}</div>
                     <input type="hidden" name="email" value="{{ form.email.value }}">
                 </div>
 
                 <div class="mt-10">
-                    <input type="text" class="form-control" name="code" placeholder="e.g. 123456" />
+                    <input type="text" class="form-control" name="code" placeholder="Enter confirmation code" />
                 </div>
                 {% if form.code.errors %}<div class="text-danger">{% for error in form.code.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
