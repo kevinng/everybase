@@ -70,7 +70,7 @@ class LoginForm(forms.Form):
                     has_error = True
 
             elif is_phone_number:
-                ph_err_msg = 'Account does not exist or WhatsApp login/notification is disabled. Login with your email if you already have an account.'
+                ph_err_msg = 'Account does not exist or WhatsApp login is disabled. Login with your email if you already have an account.'
 
                 try:
                     # Assign phone number model reference to form if it exists
@@ -128,7 +128,8 @@ class ConfirmEmailLoginForm(forms.Form):
                 self.add_error('code', err_msg)
                 raise ValidationError(None)
 
-            if self.user.last_email_login > self.user.email_login_code_generated:
+            if self.user.last_email_login is not None and\
+                self.user.last_email_login > self.user.email_login_code_generated:
                 # Code has been used
                 self.add_error('code', err_msg)
                 raise ValidationError(None)
