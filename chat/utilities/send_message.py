@@ -32,7 +32,7 @@ def send_message(
     media_url
         List of media URLs we're sending with this message
     no_external_calls
-        If True, will not make external API calls - e.g., send Twilio WhatsApp
+        If True, will not make external API calls - e.g. send Twilio WhatsApp
         messages. Useful for automated testing, to ascertain model updates are
         made correctly.
     """

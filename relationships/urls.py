@@ -3,8 +3,9 @@ from relationships import views
 
 app_name = 'users'
 urlpatterns = [
-
     path('settings', views.profile_settings, name='settings'),
+    path('verify_whatsapp', views.verify_whatsapp, name='verify_whatsapp'),
+    path('disable_whatsapp', views.disable_whatsapp, name='disable_whatsapp'),
 
     # path('change_password', views.change_password, name='change_password'),
 

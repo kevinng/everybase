@@ -24,7 +24,7 @@ def slugify(
 
     country, is_buy_agent, is_sell_agent, is_logistics_agent provides
     model-specific variation for User model. User model phrase should be a
-    concatenation of all details we want to use - e.g., goods/services, and
+    concatenation of all details we want to use - e.g. goods/services, and
     other agent related details.
     """
     # Tokenize

@@ -1,4 +1,3 @@
-from http.client import UNAUTHORIZED
 import phonenumbers, pytz, datetime
 from urllib.parse import urljoin
 
@@ -17,9 +16,6 @@ from django.template.response import TemplateResponse
 
 from everybase import settings
 
-from chat.tasks.send_new_application import send_new_application
-from chat.tasks.send_new_message import send_new_message
-
 from common import models as commods
 from common.tasks.send_email import send_email
 from common.tasks.send_amplitude_event import send_amplitude_event
@@ -29,11 +25,6 @@ from common.utilities.get_ip_address import get_ip_address
 from leads import models, forms
 
 from relationships import models as relmods
-
-# from files.utilities.get_mime_type import get_mime_type
-# from PIL import Image, ImageOps
-# from io import BytesIO
-# import boto3
 
 CONTACTED_SUCCESSFULLY_KEY = 'CONTACTED_SUCCESSFULLY_KEY' # Contactee sent contact
 UNAUTHORIZED_ACCESS = 'UNAUTHORIZED_ACCESS'
@@ -271,9 +262,6 @@ def lead_list(request):
 
 
 
-# CONTINUE FROM LAST INTERACTIONS
-# ALSO SETTINGS
-# LEADS
 
 
 
@@ -285,6 +273,21 @@ def lead_list(request):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+# from files.utilities.get_mime_type import get_mime_type
+# from PIL import Image, ImageOps
+# from io import BytesIO
+# import boto3
 
 
 @login_required

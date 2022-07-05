@@ -1,8 +1,6 @@
 import pytz, phonenumbers, random
 from datetime import datetime
-
-from chat.tasks.send_welcome_message import send_welcome_message
-from chat.tasks.send_confirm_login import send_confirm_login
+from ratelimit.decorators import ratelimit
 
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -11,18 +9,24 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as DjangoUser
 from django.template.response import TemplateResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 
 from everybase import settings
+
 from common import models as commods
 from common.tasks.send_email import send_email
 from common.tasks.send_amplitude_event import send_amplitude_event
 from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
+
+from chat.tasks._archive.send_welcome_message import send_welcome_message
+from chat.tasks.send_confirm_login import send_confirm_login
+
 from relationships import forms, models
+from relationships.tasks.send_whatsapp_verification_code import send_whatsapp_verification_code
 
 # Named 'log_in' and not 'login' to prevent clash with Django login
 def log_in(request):
@@ -190,6 +194,182 @@ def confirm_whatsapp_login(request):
     template = 'relationships/metronic/confirm_whatsapp_login.html'
     return TemplateResponse(request, template, {'form': form})
 
+def register(request):
+    # Direct user to home if he's already logged in
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('home'))
+
+    if request.method == 'POST':
+        form = forms.RegisterForm(request.POST)
+        if form.is_valid():
+            
+            # Get or create a new email for this user
+            email_str = form.cleaned_data.get('email')
+            email = None
+            if email_str is not None:
+                email, _ = models.Email.objects.get_or_create(email=email_str)
+
+            # Parse phone number
+            ph_str = form.cleaned_data.get('phone_number')
+            phone_number = None
+            if ph_str is not None:
+                ph_str = str(ph_str)
+                if ph_str.strip() != '':
+                    parsed_ph = phonenumbers.parse(ph_str, None)
+                    ph_cc = parsed_ph.country_code
+                    ph_nn = parsed_ph.national_number
+                    # Get or create new phone number for this user
+                    phone_number, _ = models.PhoneNumber.objects.get_or_create(
+                        country_code=ph_cc,
+                        national_number=ph_nn
+                    )
+
+            # Get country
+            country_key = form.cleaned_data.get('country')
+            country = commods.Country.objects.get(programmatic_key=country_key)
+
+            # Create an Everybase user
+            user = models.User.objects.create(
+                email=email,
+                phone_number=phone_number,
+                country=country,
+                first_name=form.cleaned_data.get('first_name'),
+                last_name=form.cleaned_data.get('last_name'),
+                enable_whatsapp=form.cleaned_data.get('enable_whatsapp')
+            )
+
+            # Create new Django user
+            django_user_created, _ = DjangoUser.objects.get_or_create(username=user.uuid)
+            # django_user.set_password(password)
+            # django_user.save()
+
+            # Update user profile
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            user.registered = datetime.now(sgtz)
+            user.django_user = django_user_created
+            user.save()
+
+            # Authenticate user
+            django_user_authenticated = authenticate(django_user_created.username)
+            if django_user_authenticated is not None:
+                login(request, django_user_authenticated)
+
+            # Email user - if it's specified
+            if user.email is not None:
+                send_email.delay(
+                    render_to_string('relationships/email/welcome_subject.txt', {}),
+                    render_to_string('relationships/email/welcome.txt', {}),
+                    'friend@everybase.co',
+                    [email.email]
+                )
+
+            if user.enable_whatsapp == True:
+                # Direct to WhatsApp confirmation page
+                return HttpResponseRedirect(reverse('users:verify_whatsapp'))
+
+            # Amplitude call
+            send_amplitude_event.delay(
+                'account - registered',
+                user_uuid=user.uuid,
+                ip=get_ip_address(request)
+            )
+
+            next = form.cleaned_data.get('next')
+            if next is not None and next.strip() != '':
+                return HttpResponseRedirect(next)
+            else:
+                return HttpResponseRedirect(reverse('home'))
+    else:
+        form = forms.RegisterForm()
+
+    params = {
+        'form': form,
+        'countries': commods.Country.objects.annotate(
+            num_users=Count('users_w_this_country')).order_by('-num_users')
+    }
+
+    # Read 'next' URL from GET parameters to form input. We'll add it to the
+    # redirect URL when the user submits this form.
+    next = request.GET.get('next')
+    if next is not None:
+        params['next'] = next
+
+    template = 'relationships/metronic/register.html'
+    return TemplateResponse(request, template, params)
+
+@login_required
+def verify_whatsapp(request):
+    user = models.User.objects.get(pk=request.user.user.id)
+    kwargs = {'user': user}
+
+    if request.method == 'POST':
+        form = forms.VerifyWhatsAppForm(request.POST, **kwargs)
+        if form.is_valid():
+            # Update last WhatsApp login timestamp. We use the WhatsApp login code/timestamp
+            # to verify WhatsApp number, so we have one less value to check.
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            now = datetime.now(tz=sgtz)
+            user.last_whatsapp_login = now
+            user.enable_whatsapp = True
+            user.save()
+
+            next = form.cleaned_data.get('next')
+            if next is not None and next.strip() != '':
+                return HttpResponseRedirect(next)
+            else:
+                return HttpResponseRedirect(reverse('home'))
+    else:
+        sgtz = pytz.timezone(settings.TIME_ZONE)
+        now = datetime.now(tz=sgtz)
+
+        if user.whatsapp_login_code_generated is None or\
+            user.enable_whatsapp == False or\
+            (now - user.whatsapp_login_code_generated).total_seconds() > (60*5):
+            # More than 5 minutes have elapsed since we last sent the code - resend.
+
+            # Generate code (note: we use WhatsApp login code, so there's only 1 date/timestamp we need
+            # to check if a user has verified his WhatsApp number.)
+            user.whatsapp_login_code = random.randint(100000, 999999)
+            user.whatsapp_login_code_generated = now
+            user.save()
+
+            send_whatsapp_verification_code.delay(user_id=user.id)
+
+        form = forms.VerifyWhatsAppForm(**kwargs)
+
+    params = {'form': form}
+
+    # Read 'next' URL from GET parameters to form input. We'll add it to the
+    # redirect URL when the user submits this form.
+    next = request.GET.get('next')
+    if next is not None:
+        params['next'] = next
+
+    template = 'relationships/metronic/verify_whatsapp.html'
+    return TemplateResponse(request, template, params)
+
+@login_required
+def disable_whatsapp(request):
+    user = models.User.objects.get(pk=request.user.user.id)
+    user.enable_whatsapp = False
+    user.save()
+
+    next = request.GET.get('next')
+    if next is not None and next.strip() != '':
+        return HttpResponseRedirect(next)
+
+    return HttpResponseRedirect(reverse('users:settings'))
+
+# Don't name it 'settings', it conflicts with everybase.settings.
+def profile_settings(request):
+    template_name = 'relationships/metronic/settings.html'
+    return TemplateResponse(request, template_name, {})
+
+
+
+
+
+
 
 
 
@@ -227,8 +407,6 @@ def magic_login(request, uuid):
 def confirm_email(request):
     template_name = 'relationships/metronic/confirm_email.html'
     return TemplateResponse(request, template_name, {})
-
-
 
 def _log_in(request):
     # Do not allow user to access this page if he is authenticated.
@@ -306,19 +484,6 @@ def _log_in(request):
     template_name = 'relationships/superio/login.html'
     return TemplateResponse(request, template_name, params)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def confirm_login(request):
     # Do not allow user to access this page if he is authenticated.
     if request.user.is_authenticated:
@@ -392,14 +557,6 @@ def confirm_login(request):
     params['form'] = form
     template = 'relationships/superio/confirm_login.html'
     return TemplateResponse(request, template, params)
-
-def confirm_phone(request):
-    template = 'relationships/metronic/confirm_phone.html'
-    return TemplateResponse(request, template, {})
-
-def register(request):
-    template = 'relationships/metronic/register.html'
-    return TemplateResponse(request, template, {})
 
 def _register(request):
     # Do not allow user to access this page if he is authenticated.
@@ -488,7 +645,7 @@ def _register(request):
     params = {
         'form': form,
         'countries': commods.Country.objects.annotate(
-            num_leads=Count('leads_buy_country')).order_by('-num_leads')
+            num_users=Count('users_w_this_country')).order_by('-num_users')
     }
 
     # Read 'next' URL from GET parameters to form input. We'll add it to the
@@ -507,11 +664,6 @@ def log_out(request):
         return HttpResponseRedirect(next_url)
 
     return HttpResponseRedirect(reverse('home'))
-
-# Don't name it 'settings', it conflicts with 
-def profile_settings(request):
-    template_name = 'relationships/metronic/settings.html'
-    return TemplateResponse(request, template_name, {})
 
 @login_required
 def profile(request):
@@ -613,7 +765,7 @@ def profile(request):
         form = forms.ProfileForm(initial=initial, **kwargs)
 
     countries = commods.Country.objects.annotate(
-        num_leads=Count('leads_buy_country')).order_by('-num_leads')
+        num_users=Count('users_w_this_country')).order_by('-num_users')
 
     params = {
         'countries': countries,
@@ -648,7 +800,6 @@ def profile(request):
 
 #     params = {'form': form}
 #     return render(request, 'relationships/superio/change_password.html', params)
-
 
 def m(request, file_to_render):
     template_name = 'relationships/superio/%s' % file_to_render

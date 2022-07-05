@@ -176,6 +176,111 @@ class ConfirmWhatsAppLoginForm(forms.Form):
                 self.add_error('code', err_msg)
                 raise ValidationError(None)
 
+class RegisterForm(forms.Form):
+    email = forms.EmailField()
+    phone_number = PhoneNumberField(required=True)
+    enable_whatsapp = forms.BooleanField(required=False)
+    first_name = forms.CharField(
+        min_length=1,
+        max_length=20
+    )
+    last_name = forms.CharField(
+        min_length=1,
+        max_length=20
+    )
+    country = forms.CharField()
+
+    # Next destination after user has registered
+    next = forms.CharField(required=False)
+
+    def clean(self):
+        super(RegisterForm, self).clean()
+
+        has_error = False
+
+        email_str = self.cleaned_data.get('email')
+        if email_str is not None and email_str.strip() != '':
+            try:
+                email = models.Email.objects.get(email=email_str)
+
+                u = models.User.objects.filter(
+                    email=email.id, # User has email
+                    registered__isnull=False, # User is registered
+                    django_user__isnull=False # User has a Django user linked
+                ).first()
+
+                if u is not None:
+                    self.add_error('email', 'This email belongs to an existing user.')
+                    has_error = True
+            except models.Email.DoesNotExist:
+                # Good - email is not in used
+                pass
+        
+        ph_str = self.cleaned_data.get('phone_number')
+        if ph_str is not None:
+            ph_str = str(ph_str)
+            if ph_str.strip() != '':
+                parsed_ph = phonenumbers.parse(ph_str, None)
+
+                ph_cc = parsed_ph.country_code
+                ph_nn = parsed_ph.national_number
+
+                try:
+                    phone_number = models.PhoneNumber.objects.get(
+                        country_code=ph_cc,
+                        national_number=ph_nn
+                    )
+
+                    user_w_ph = models.User.objects.filter(
+                        phone_number=phone_number.id, # User has phone number
+                        registered__isnull=False, # User is registered
+                        django_user__isnull=False # User has a Django user linked
+                    ).first()
+                    
+                    if user_w_ph is not None:
+                        self.add_error('phone_number', 'This phone number belongs to an existing user.')
+                        has_error = True
+                except models.PhoneNumber.DoesNotExist:
+                    # Good - no user has this phone number
+                    pass
+
+        if has_error:
+            raise ValidationError(None)
+
+class VerifyWhatsAppForm(forms.Form):
+    code = forms.CharField()
+    next = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(VerifyWhatsAppForm, self).clean()
+        if self.user.whatsapp_login_code != self.cleaned_data.get('code'):
+            self.add_error('code', 'Invalid code.')
+            raise ValidationError(None)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -254,7 +359,7 @@ class ConfirmLoginForm(forms.Form):
                 self.add_error('code', 'Please request for another code.')
                 raise ValidationError(None)
 
-class RegisterForm(forms.Form):
+class _RegisterForm(forms.Form):
     email = forms.EmailField(required=False)
     phone_number = PhoneNumberField(required=False)
     first_name = forms.CharField(

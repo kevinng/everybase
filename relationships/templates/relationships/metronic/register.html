@@ -1,200 +1,90 @@
+{% extends 'relationships/metronic/extendables/login_register.html' %}
+
+{% block title %}Register for Everybase{% endblock %}
+
+{% block meta_description %}Register for Everybase{% endblock %}
+
+{% block meta_og_title %}Register for Everybase{% endblock %}
+
+{% block meta_og_site_name %}Everybase{% endblock %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-	<!--begin::Head-->
-	<head><base href="../../../">
-		<title>Metronic - the world's #1 selling Bootstrap Admin Theme Ecosystem for HTML, Vue, React, Angular &amp; Laravel by Keenthemes</title>
-		<meta charset="utf-8" />
-		<meta name="description" content="The most advanced Bootstrap Admin Theme on Themeforest trusted by 94,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue &amp; Laravel versions. Grab your copy now and get life-time updates for free." />
-		<meta name="keywords" content="Metronic, bootstrap, bootstrap 5, Angular, VueJs, React, Laravel, admin themes, web design, figma, web development, free templates, free admin themes, bootstrap theme, bootstrap template, bootstrap dashboard, bootstrap dak mode, bootstrap button, bootstrap datepicker, bootstrap timepicker, fullcalendar, datatables, flaticon" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta property="og:locale" content="en_US" />
-		<meta property="og:type" content="article" />
-		<meta property="og:title" content="Metronic - Bootstrap 5 HTML, VueJS, React, Angular &amp; Laravel Admin Dashboard Theme" />
-		<meta property="og:url" content="https://keenthemes.com/metronic" />
-		<meta property="og:site_name" content="Keenthemes | Metronic" />
-		<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-		<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
-		<!--begin::Fonts-->
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-		<!--end::Fonts-->
-		<!--begin::Global Stylesheets Bundle(used by all pages)-->
-		<link href="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
-		<link href="{% static 'common/metronic/demo1/dist/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
-		<!--end::Global Stylesheets Bundle-->
-	</head>
-	<!--end::Head-->
-	<!--begin::Body-->
-	<body id="kt_body" class="bg-body">
-		<!--begin::Main-->
-		<!--begin::Root-->
-		<div class="d-flex flex-column flex-root">
-			<!--begin::Authentication - Sign-in -->
-			<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url(assets/media/illustrations/sketchy-1/14.png">
-				<!--begin::Content-->
-				<div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
-<!--begin::Logo-->
-<a href="../../demo1/dist/index.html" class="mb-12">
-    <img alt="Logo" src="{% static 'common/metronic/demo1/dist/assets/media/logos/logo.png' %}" />
-</a>
-<!--end::Logo-->
-					<!--begin::Wrapper-->
-					<div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
-						<!--begin::Form-->
-						<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="../../demo1/dist/index.html" action="#">
-							<!--begin::Heading-->
-							<div class="text-center mb-10">
-								<!--begin::Title-->
-								<h1 class="text-dark mb-3">Register for Everybase</h1>
-								<!--end::Title-->
-								<!--begin::Link-->
-								<div class="text-gray-400 fw-bold fs-4">Have an account?
-								<a href="../../demo1/dist/authentication/layouts/basic/sign-up.html" class="link-primary fw-bolder">Login</a></div>
-								<!--end::Link-->
-							</div>
-							<!--begin::Heading-->
-							<!--begin::Input group-->
-							<div>
-								<!--begin::Label-->
-								<label class="form-label fs-6 fw-bolder text-dark">Email Address</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<input class="form-control form-control-lg" type="text" name="email" autocomplete="off" />
-								<!--end::Input-->
-                                {% comment %} <div class="form-text">For phone number - include + symbol. E.g., +14155552671.</div> {% endcomment %}
-							</div>
-							<!--end::Input group-->
+{% block content %}
+<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url({% static 'common/metronic/demo1/dist/assets/media/illustrations/sketchy-1/14.png' %}">
+    <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+        <a href="{% url 'home' %}" class="mb-12">
+            <img alt="Logo" src="{% static 'common/metronic/demo1/dist/assets/media/logos/logo.png' %}" />
+        </a>
 
-                            <!--begin::Input group-->
-							<div class="mt-6">
-								<!--begin::Label-->
-								<label class="form-label fs-6 fw-bolder text-dark">Phone Number</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<input class="form-control form-control-lg" type="text" name="email" autocomplete="off" />
-								<!--end::Input-->
-                                <div class="form-text">Include + symbol. E.g., +14155552671.</div>
-							</div>
-							<!--end::Input group-->
+        <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <form class="form w-100" action="{% url 'register' %}" method="post">
+                {% csrf_token %}
 
+                <div class="text-center mb-10">
+                    <h1 class="text-dark mb-3">Register for Everybase</h1>
+                    <div class="text-gray-400 fw-bold fs-4">Have an account?
+                    <a href="{% url 'login' %}" class="link-primary fw-bolder">Login</a></div>
+                </div>
 
+                <div>
+                    <label class="form-label fs-6 fw-bolder text-dark" for="email">Email Address</label>
+                    <input class="form-control form-control-lg" type="text" name="email" id="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} />
+                </div>
+                {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                            <div class="form-check form-check-custom mt-4">
-                                {% comment %} Start: WhatsApp radio {% endcomment %}
-                                <div class="me-3">
-                                    <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                    <label>WhatsApp login & notification{% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                                        <span class="svg-icon svg-icon-warning svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Require verification">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                                <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                                                <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                                                </svg>
-                                        </span>
-                                        {% comment %} End: SVG icon {% endcomment %}</label>
-                                </div>
-                                {% comment %} End: WhatsApp radio {% endcomment %}
-                            </div>
-                            {% comment %} <div class="form-text">Select at least 1 option.</div> {% endcomment %}
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="phone_number">Phone Number</label>
+                    <input class="form-control form-control-lg" type="text" name="phone_number" id="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} />
+                    <div class="form-text">Include + symbol. E.g., +14155552671.</div>
+                </div>
+                {% if form.phone_number.errors %}<div class="text-danger">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
+                <div class="form-check form-check-custom mt-4">
+                    <div class="me-3">
+                        <input class="form-check-input me-2" type="checkbox" name="enable_whatsapp" id="enable_whatsapp" />
+                        <label for="enable_whatsapp">WhatsApp login
+                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Login with WhatsApp. Require verification of your phone number via WhatsApp.">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                    </svg>
+                            </span>
+                            {% comment %} End: SVG icon {% endcomment %}
+                        </label>
+                    </div>
+                </div>
 
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="first_name">First Name</label>
+                    <input class="form-control form-control-lg" type="text" name="first_name" id="first_name"{% if form.first_name.value != None %} value="{{ form.first_name.value }}"{% endif %} />
+                </div>
+                {% if form.first_name.errors %}<div class="text-danger">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                            <!--begin::Input group-->
-							<div class="mt-6">
-								<!--begin::Label-->
-								<label class="form-label fs-6 fw-bolder text-dark">First Name</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<input class="form-control form-control-lg" type="text" name="email" autocomplete="off" />
-								<!--end::Input-->
-                                {% comment %} <div class="form-text">Include + symbol. E.g., +14155552671.</div> {% endcomment %}
-							</div>
-							<!--end::Input group-->
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="last_name">Last Name</label>
+                    <input class="form-control form-control-lg" type="text" name="last_name" id="last_name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %} />
+                </div>
+                {% if form.last_name.errors %}<div class="text-danger">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="country">Country</label>
+                    <select name="country" class="form-select" data-control="select2" data-placeholder="Country" id="country">
+                        <option></option>
+                        {% for country in countries %}
+                            <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                            <!--begin::Input group-->
-							<div class="mt-6">
-								<!--begin::Label-->
-								<label class="form-label fs-6 fw-bolder text-dark">Last Name</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								<input class="form-control form-control-lg" type="text" name="email" autocomplete="off" />
-								<!--end::Input-->
-                                {% comment %} <div class="form-text">Include + symbol. E.g., +14155552671.</div> {% endcomment %}
-							</div>
-							<!--end::Input group-->
-
-
-
-
-
-                            <!--begin::Input group-->
-							<div class="mt-6">
-								<!--begin::Label-->
-								<label class="form-label fs-6 fw-bolder text-dark">Country</label>
-								<!--end::Label-->
-								<!--begin::Input-->
-								{% comment %} <input class="form-control form-control-lg" type="text" name="email" autocomplete="off" /> {% endcomment %}
-
-								<!--end::Input-->
-                                {% comment %} <div class="form-text">Include + symbol. E.g., +14155552671.</div> {% endcomment %}
-
-                                <select class="form-select" data-control="select2" data-placeholder="Select an option">
-                                    <option></option>
-                                    <option value="1">Option 1</option>
-                                    <option value="2">Option 2</option>
-                                </select>
-							</div>
-							<!--end::Input group-->
-
-
-
-
-
-
-							<!--begin::Actions-->
-							<div class="text-center mt-10">
-								<!--begin::Submit button-->
-								<button type="submit" id="kt_sign_in_submit" class="btn btn-lg btn-primary w-100 mb-5">
-									<span class="indicator-label">Next</span>
-									<span class="indicator-progress">Please wait...
-									<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-								</button>
-							</div>
-							<!--end::Actions-->
-						</form>
-						<!--end::Form-->
-					</div>
-					<!--end::Wrapper-->
-				</div>
-				<!--end::Content-->
-				<!--begin::Footer-->
-				<div class="d-flex flex-center flex-column-auto p-10">
-					<!--begin::Links-->
-					<div class="d-flex align-items-center fw-bold fs-6">
-						<a href="https://keenthemes.com" class="text-muted text-hover-primary px-2">About</a>
-						<a href="mailto:support@keenthemes.com" class="text-muted text-hover-primary px-2">Contact</a>
-						<a href="https://1.envato.market/EA4JP" class="text-muted text-hover-primary px-2">Contact Us</a>
-					</div>
-					<!--end::Links-->
-				</div>
-				<!--end::Footer-->
-			</div>
-			<!--end::Authentication - Sign-in-->
-		</div>
-		<!--end::Root-->
-		<!--end::Main-->
-		<!--begin::Javascript-->
-		<script>var hostUrl = "assets/";</script>
-		<!--begin::Global Javascript Bundle(used by all pages)-->
-        <script src="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
-		<script src="{% static 'common/metronic/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
-		<!--end::Global Javascript Bundle-->
-		<!--begin::Page Custom Javascript(used by this page)-->
-		<script src="assets/js/custom/authentication/sign-in/general.js"></script>
-		<!--end::Page Custom Javascript-->
-		<!--end::Javascript-->
-	</body>
-	<!--end::Body-->
-</html>
+                <div class="text-center mt-10">
+                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
