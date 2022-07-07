@@ -69,7 +69,7 @@
                 {% if form.last_name.errors %}<div class="text-danger">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="mt-6">
-                    <label class="form-label fs-6 fw-bolder text-dark" for="country">Country</label>
+                    <label id="country" for="country" class="form-label fs-6 fw-bolder text-dark">Country</label>
                     <select name="country" class="form-select" data-control="select2" data-placeholder="Country" id="country">
                         <option></option>
                         {% for country in countries %}

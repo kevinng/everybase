@@ -4,6 +4,9 @@ from everybase import settings
 from common.tasks.send_email import send_email
 from relationships.constants import email_purposes
 
+RATE_LIMITED = 'RATE_LIMITED'
+SUBJECT_AND_OR_BODY_NONE = 'SUBJECT_AND_OR_BODY_NONE'
+
 def send_email_code(
         user, # No type hint, because model reference creates circular import
         purpose: int,
@@ -22,6 +25,11 @@ def send_email_code(
     """
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(tz=sgtz)
+
+    difference = (now - user.email_code_generated).total_seconds()
+    if difference < settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
+        return RATE_LIMITED
+
     user.email_code = random.randint(100000, 999999)
     user.email_code_generated = now
     user.save()
@@ -41,4 +49,4 @@ def send_email_code(
         send_email.delay(subject, body, 'friend@everybase.co', [to])
         return True
     
-    return False
+    return SUBJECT_AND_OR_BODY_NONE

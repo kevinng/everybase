@@ -1,9 +1,9 @@
 from typing import Union
-import phonenumbers
+import phonenumbers, phonenumber_field
 from relationships import models
 
 def phone_number_exists(
-        phone_number: str,
+        phone_number: Union[phonenumbers.phonenumber.PhoneNumber, str],
         enable_whatsapp=True
     ) -> Union[bool, models.User]:
     """Returns PhoneNumber model reference if an existing user owns this phone number, False otherwise. Returns None if error.
@@ -15,18 +15,25 @@ def phone_number_exists(
     enable_whatsapp
         User.enable_whatsapp setting. Default True - i.e., only include users who have enabled WhatsApp.
     """
-    if phone_number is None or phone_number.strip() == '':
-        return None
+    if type(phone_number) == str:
+        if phone_number is None or phone_number.strip() == '':
+            return False
 
-    try:
-        parsed = phonenumbers.parse(phone_number, None)
-        country_code = parsed.country_code
-        national_number = parsed.national_number
-    except phonenumbers.phonenumberutil.NumberParseException:
-        return None
+        try:
+            parsed = phonenumbers.parse(phone_number, None)
+            country_code = parsed.country_code
+            national_number = parsed.national_number
+        except phonenumbers.phonenumberutil.NumberParseException:
+            return False
 
-    if not phonenumbers.is_valid_number(parsed):
-        return None
+        if not phonenumbers.is_valid_number(parsed):
+            return False
+    elif type(phone_number) == phonenumbers.phonenumber.PhoneNumber or \
+        type(phone_number) == phonenumber_field.phonenumber.PhoneNumber:
+        country_code = phone_number.country_code
+        national_number = phone_number.national_number
+    else:
+        return False
 
     try:
         p = models.PhoneNumber.objects.get(

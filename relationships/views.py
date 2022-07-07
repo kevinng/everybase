@@ -64,7 +64,7 @@ def _next_or_else_response(next, default):
         return HttpResponseRedirect(default)
 
 # Named 'log_in' and not 'login' to prevent clash with Django login
-@ratelimit(key='user_or_ip', rate='10/h', block=True, method=['POST'])
+@ratelimit(key='user_or_ip', rate='30/h', block=True, method=['POST'])
 def log_in(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('home')) # Go home if authenticated
@@ -159,17 +159,20 @@ def register(request):
             # Create Everybase user
             user = models.User.objects.create(
                 registered=datetime.now(pytz.timezone(settings.TIME_ZONE)),
-                django_user=DjangoUser.objects.get_or_create(username=user.uuid),
                 email=get_or_create_email(form.cleaned_data.get('email')),
                 phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
                 country=commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country')),
                 first_name=form.cleaned_data.get('first_name'),
                 last_name=form.cleaned_data.get('last_name'),
-                enable_whatsapp=form.cleaned_data.get('enable_whatsapp')
+                enable_whatsapp=False # Default, require verification to enable
             )
 
+            # Create Django user and associate it
+            user.django_user, _ = DjangoUser.objects.get_or_create(username=str(user.uuid))
+            user.save()
+
             # Authenticate passwordlessly
-            dju = authenticate(dju.username)
+            dju = authenticate(user.django_user.username)
             if dju is not None:
                 login(request, dju)
 
@@ -182,7 +185,7 @@ def register(request):
             )
 
             # Verify WhatsApp number if user enabled WhatsApp
-            if user.enable_whatsapp == True:
+            if form.cleaned_data.get('enable_whatsapp') == True:
                 return HttpResponseRedirect(reverse('users:verify_whatsapp'))
 
             send_amplitude_event.delay('account - registered', user_uuid=user.uuid, ip=get_ip_address(request))
@@ -197,23 +200,7 @@ def register(request):
     }, request.GET.get('next'))        
     return TemplateResponse(request, 'relationships/register.html', params)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# User will be authenticated coming from register view
 @login_required
 def verify_whatsapp(request):
     user = request.user.user
@@ -222,59 +209,42 @@ def verify_whatsapp(request):
     if request.method == 'POST':
         form = forms.VerifyWhatsAppForm(request.POST, **kwargs)
         if form.is_valid():
-            # Update last WhatsApp login timestamp. We use the WhatsApp login code/timestamp
-            # to verify WhatsApp number, so we have one less value to check.
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            now = datetime.now(tz=sgtz)
-            user.last_whatsapp_login = now
-            user.enable_whatsapp = True
+            use_whatsapp_code(user)
+            user.enable_whatsapp = True # Enable after verification, otherwise False.
             user.save()
-
-            next = form.cleaned_data.get('next')
-            if next is not None and next.strip() != '':
-                return HttpResponseRedirect(next)
-            else:
-                return HttpResponseRedirect(reverse('home'))
+            return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
     else:
-        sgtz = pytz.timezone(settings.TIME_ZONE)
-        now = datetime.now(tz=sgtz)
-
-        if user.whatsapp_login_code_generated is None or\
-            (now - user.whatsapp_login_code_generated).total_seconds() > settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
-            # More than 5 minutes have elapsed since we last sent the code - resend.
-
-            # Generate code (note: we use WhatsApp login code, so there's only 1 date/timestamp we need
-            # to check if a user has verified his WhatsApp number.)
-            user.whatsapp_login_code = random.randint(100000, 999999)
-            user.whatsapp_login_code_generated = now
-            user.save()
-
-            send_whatsapp_verification_code.delay(user_id=user.id)
-
+        send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.UPDATE_PHONE_NUMBER)
         form = forms.VerifyWhatsAppForm(**kwargs)
 
-    params = {'form': form}
+    params = _pass_next({'form': form}, request.GET.get('next'))
+    return TemplateResponse(request, 'relationships/verify_whatsapp.html', params)
 
-    # Read 'next' URL from GET parameters to form input. We'll add it to the
-    # redirect URL when the user submits this form.
-    next = request.GET.get('next')
-    if next is not None:
-        params['next'] = next
 
-    template = 'relationships/metronic/verify_whatsapp.html'
-    return TemplateResponse(request, template, params)
+
+
+
+
+
+
+
 
 @login_required
 def disable_whatsapp(request):
     user = request.user.user
     user.enable_whatsapp = False
     user.save()
+    return _next_or_else_response(request.GET.get('next'), reverse('users:settings'))
 
-    next = request.GET.get('next')
-    if next is not None and next.strip() != '':
-        return HttpResponseRedirect(next)
 
-    return HttpResponseRedirect(reverse('users:settings'))
+
+
+
+
+
+
+
+
 
 # Don't name profile settings function 'settings', it conflicts with everybase.settings.
 @login_required

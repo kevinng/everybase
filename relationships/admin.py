@@ -200,7 +200,7 @@ class UserAdmin(comadm.StandardAdmin):
         (None, {'fields': ['id', 'uuid']}),
         ('Growth', {'fields': ['registered', 'django_user', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'fb_profile', 'django_user_link', 'has_insights', 'internal_notes']}),
         ('Details', {'fields': ['first_name', 'last_name', 'email', 'phone_number', 'country']}),
-        ('Login', {'fields': ['last_email_login', 'email_login_code', 'email_login_code_generated', 'last_whatsapp_login', 'whatsapp_login_code', 'whatsapp_login_code_generated', 'enable_whatsapp']}),
+        ('Login', {'fields': ['email_code_used', 'email_code', 'email_code_generated', 'email_code_purpose','whatsapp_code_used', 'whatsapp_code', 'whatsapp_code_generated', 'whatsapp_code_purpose', 'enable_whatsapp']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
         ('Not in use', {'fields': [
             'slug_link', 'slug_tokens',

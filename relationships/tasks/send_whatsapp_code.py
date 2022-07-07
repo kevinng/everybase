@@ -5,12 +5,15 @@ from chat.constants import intents, messages
 from relationships import models
 from relationships.constants import whatsapp_purposes
 
+RATE_LIMITED = 'RATE_LIMITED'
+INTENT_AND_OR_MESSAGE_NONE = 'INTENT_AND_OR_MESSAGE_NONE'
+
 def send_whatsapp_code(
         user: models.User,
         purpose: str,
         phone_number: models.PhoneNumber=None
     ) -> bool:
-    """Send WhatsApp code to user. True if successful, False otherwise.
+    """Send WhatsApp code to user. True if successful, error flag otherwise.
     
     Parameters:
     -----------
@@ -23,6 +26,11 @@ def send_whatsapp_code(
     """
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(tz=sgtz)
+
+    difference = (now - user.whatsapp_code_generated).total_seconds()
+    if difference < settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
+        return RATE_LIMITED
+
     user.whatsapp_code = random.randint(100000, 999999)
     user.whatsapp_code_generated = now
     user.save()
@@ -37,8 +45,10 @@ def send_whatsapp_code(
         intent = intents.CONFIRM_PHONE_NUMBER_UPDATE
         message = intents.CONFIRM_PHONE_NUMBER_UPDATE
 
+    p = phone_number if phone_number is not None else user.phone_number
+
     if intent is not None and message is not None:
-        send_message.delay(user.id, intent, message, {'code': user.whatsapp_code}, phone_number=phone_number)
+        send_message.delay(user.id, intent, message, phone_number_id=p.id, message_params={'code': user.whatsapp_code})
         return True
 
-    return False
+    return INTENT_AND_OR_MESSAGE_NONE
