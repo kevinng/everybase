@@ -1,5 +1,4 @@
 import random, uuid
-
 from urllib.parse import urljoin
 
 from django.db import models
@@ -9,9 +8,11 @@ from django.contrib.auth.models import User as django_user
 from django.utils.text import slugify
 
 from everybase import settings
-
 from common import models as commods
 import leads.models as lemods
+
+from relationships.constants.email_purposes import EMAIL_PURPOSE_CHOICES
+from relationships.constants.whatsapp_purposes import WHATSAPP_PURPOSE_CHOICES
 
 class PhoneNumberType(commods.Choice):
     """Phone number type.
@@ -192,34 +193,48 @@ class User(commods.Standard):
         db_index=True
     )
 
-    last_email_login = models.DateTimeField(
+    email_code_used = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
     )
-    email_login_code = models.CharField(
+    email_code = models.CharField(
         max_length=20,
         db_index=True,
         null=True,
         blank=True
     )
-    email_login_code_generated = models.DateTimeField(
+    email_code_generated = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
     )
-    last_whatsapp_login = models.DateTimeField(
+    email_code_purpose = models.CharField(
+        max_length=20,
+        choices=EMAIL_PURPOSE_CHOICES,
         null=True,
         blank=True,
         db_index=True
     )
-    whatsapp_login_code = models.CharField(
+    whatsapp_code_used = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    whatsapp_code = models.CharField(
         max_length=20,
         db_index=True,
         null=True,
         blank=True
     )
-    whatsapp_login_code_generated = models.DateTimeField(
+    whatsapp_code_generated = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    whatsapp_code_purpose = models.CharField(
+        max_length=20,
+        choices=WHATSAPP_PURPOSE_CHOICES,
         null=True,
         blank=True,
         db_index=True

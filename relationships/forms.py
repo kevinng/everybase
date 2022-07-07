@@ -1,6 +1,7 @@
 from relationships.utilities.email_exists import email_exists
 from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.is_email_code_valid import is_email_code_valid
+from relationships.utilities.is_whatsapp_code_valid import is_whatsapp_code_valid
 from relationships.utilities.user_uuid_exists import user_uuid_exists
 
 import phonenumbers, pytz, datetime
@@ -63,13 +64,6 @@ class ConfirmEmailLoginForm(forms.Form):
         if is_email_code_valid(code, self.user) != True:
             raise ValidationError({'code': ['Invalid code.',]})
 
-
-
-
-
-
-
-
 class ConfirmWhatsAppLoginForm(forms.Form):
     code = forms.CharField()
 
@@ -81,43 +75,31 @@ class ConfirmWhatsAppLoginForm(forms.Form):
     def clean(self):
         super(ConfirmWhatsAppLoginForm, self).clean()
 
-        try:
-            # Assign user model reference if it exists
-            user_uuid = self.cleaned_data.get('uuid')
-            self.user = models.User.objects.get(uuid=user_uuid)
-        except models.User.DoesNotExist:
-            # Invalid user UUID, just tell the user code has expired.
-            raise ValidationError({'code': ['An error has occurred. Please request for another code.',]})
-
-
-
-
-
-
-
-
-
+        self.user = user_uuid_exists(self.cleaned_data.get('uuid'))
+        if self.user is None:
+            # Invalid user UUID, tell user to request for another.
+            raise ValidationError({'code': ['An error has occurred. Please cancel, and request for another code.',]})
 
         code = self.cleaned_data.get('code')
-        err_msg = 'Wrong or expired code.'
+        if is_whatsapp_code_valid(code, self.user) != True:
+            raise ValidationError({'code': ['Invalid code.',]})
 
-        if code is not None:
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            now = datetime.datetime.now(tz=sgtz)
-            difference = (now - self.user.whatsapp_login_code_generated).total_seconds()
-            if difference > int(settings.LOGIN_CODE_EXPIRY_SECONDS):
-                # Code has expired
-                self.add_error('code', err_msg)
-                raise ValidationError(None)
 
-            if self.user.last_whatsapp_login > self.user.whatsapp_login_code_generated:
-                # Code has been used
-                self.add_error('code', err_msg)
-                raise ValidationError(None)
 
-            if self.user.whatsapp_login_code != code:
-                self.add_error('code', err_msg)
-                raise ValidationError(None)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class RegisterForm(forms.Form):
     email = forms.EmailField()

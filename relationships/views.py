@@ -1,5 +1,6 @@
 import pytz, phonenumbers, random
 from datetime import datetime
+from ratelimit.decorators import ratelimit
 
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -27,65 +28,59 @@ from chat.tasks._archive.send_welcome_message import send_welcome_message
 from chat.tasks.send_confirm_login import send_confirm_login
 
 from relationships import forms, models
+from relationships.tasks import send_email_code
+from relationships.tasks import send_whatsapp_code
+from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
+from relationships.utilities.use_email_code import use_email_code
+from relationships.utilities.use_whatsapp_code import use_whatsapp_code
+from relationships.utilities.user_uuid_exists import user_uuid_exists
+from relationships.constants import email_purposes, whatsapp_purposes
+
+# To refactor
 from relationships.tasks.send_whatsapp_verification_code import send_whatsapp_verification_code
 
 MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN = 'MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN'
 
+# Helper functions
+
+def _append_next(url, next):
+    """Append next URL to input URL as a GET parameter."""
+    if next is not None and next.strip() != '':
+        url += f'&next={next}'
+    return url
+
+def _pass_next(params, next):
+    """Add next URL to params dictionary."""
+    if next is not None and next.strip() != '':
+        params['next'] = next
+    return params
+
+def _next_or_else_response(next, default):
+    """Return HTTPRedirectResponse to next if it's not none/empty, or default otherwise."""
+    if next is not None and next.strip() != '':
+        return HttpResponseRedirect(next)
+    else:
+        return HttpResponseRedirect(default)
+
 # Named 'log_in' and not 'login' to prevent clash with Django login
+@ratelimit(key='user_or_ip', rate='10/h', block=True, method=['POST'])
 def log_in(request):
-    # Direct user to home if he's already logged in
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('home')) # Go home if authenticated
     
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
         if form.is_valid():
             user = form.user
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            now = datetime.now(tz=sgtz)
-
             if form.email is not None:
-                if user.email_login_code_generated is None or\
-                    (now - user.email_login_code_generated).total_seconds() > settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
-                    # More than 5 minutes have elapsed since we last sent the code - resend.
-
-                    # Generate code
-                    user.email_login_code = random.randint(100000, 999999)
-                    user.email_login_code_generated = now
-                    user.save()
-
-                    # Send confirmation code by email
-                    send_email.delay(
-                        render_to_string('relationships/email/confirm_login_subject.txt', {}),
-                        render_to_string('relationships/email/confirm_login.txt', {'code': user.email_login_code}),
-                        'friend@everybase.co',
-                        [form.email.email]
-                    )
-
+                send_email_code.send_email_code(user, email_purposes.LOGIN)
                 url = reverse('confirm_email_login')
             elif form.phone_number is not None:
-                if user.whatsapp_login_code_generated is None or\
-                    (now - user.whatsapp_login_code_generated).total_seconds() > settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
-                    # More than 5 minutes have elapsed since we last sent the code - resend.
-
-                    # Generate code
-                    user.whatsapp_login_code = random.randint(100000, 999999)
-                    user.whatsapp_login_code_generated = now
-                    user.save()
-
-                    # Send confirmation code by WhatsApp
-                    send_confirm_login.delay(form.user.id)
-
+                send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.LOGIN)
                 url = reverse('confirm_whatsapp_login')
 
             url += f'?uuid={user.uuid}'
-
-            # Include next as GET parameter in the URL
-            next = form.cleaned_data.get('next')
-            if next is not None and next.strip() != '':
-                url += f'&next={next}'
-
-            return HttpResponseRedirect(url)
+            return HttpResponseRedirect(_append_next(url, form.cleaned_data.get('next')))
     else:
         initial = {}
         login_str = request.GET.get('login')
@@ -94,121 +89,87 @@ def log_in(request):
 
         form = forms.LoginForm(initial=initial)
 
-    params = {'form': form}
-
-    # Read 'next' URL from GET parameters to form input - we'll add it to the redirect URL when the user submits the form the next time.
-    next = request.GET.get('next')
-    if next is not None:
-        params['next'] = next
-
-    template_name = 'relationships/metronic/login.html'
-    return TemplateResponse(request, template_name, params)
+    params = _pass_next({'form': form}, request.GET.get('next'))
+    return TemplateResponse(request, 'relationships/metronic/login.html', params)
 
 def confirm_email_login(request):
-    # Direct user to home if he's already logged in
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('home')) # Go home if authenticated
 
     if request.method == 'POST':
         form = forms.ConfirmEmailLoginForm(request.POST)
-
         if form.is_valid():
-            # Update login timestamp
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            now = datetime.now(sgtz)
-            form.user.last_email_login = now
-
-            # Authenticate with the Django user's username (i.e., Everybase user UUID) without password
-            dj_user = authenticate(form.user.django_user.username)
-            if dj_user is not None:
-                # Successfully authenticated
-                login(request, dj_user)
-
-                # Amplitude calls
-                send_amplitude_event.delay(
-                    'account - logged in',
-                    user_uuid=form.user.uuid,
-                    ip=get_ip_address(request)
-                )
-
-                next = form.cleaned_data.get('next')
-                if next is not None and next.strip() != '':
-                    return HttpResponseRedirect(next)
-                else:
-                    return HttpResponseRedirect(reverse('home'))
+            use_email_code(form.user)
+            dju = authenticate(form.user.django_user.username) # Passwordless
+            if dju is not None:
+                login(request, dju)
+                send_amplitude_event.delay('account - logged in', user_uuid=form.user.uuid, ip=get_ip_address(request))
+                return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
 
     elif request.method == 'GET':
         uuid = request.GET.get('uuid')
+        user = user_uuid_exists(uuid)
+        if user is None:
+            return HttpResponseRedirect(reverse('login')) # Unlikely error (e.g., bug or user temperage). Direct to login. No need for message.
 
-        try:
-            user = models.User.objects.get(uuid=uuid)
-        except models.User.DoesNotExist:
-            # Invalid user UUID, direct to login page
-            return HttpResponseRedirect(reverse('login'))
-
-        initial = {
+        form = forms.ConfirmEmailLoginForm(initial={
             'uuid': uuid,
             'next': request.GET.get('next'),
             'email': user.email.email
-        }
+        })
 
-        form = forms.ConfirmEmailLoginForm(initial=initial)
-
-    template = 'relationships/metronic/confirm_email_login.html'
-    return TemplateResponse(request, template, {'form': form})
+    return TemplateResponse(request, 'relationships/metronic/confirm_email_login.html', {'form': form})
 
 def confirm_whatsapp_login(request):
-    # Direct user to home if he's already logged in
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('home')) # Go home if authenticated
     
     if request.method == 'POST':
         form = forms.ConfirmWhatsAppLoginForm(request.POST)
-
         if form.is_valid():
-            # Update login timestamp
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            now = datetime.now(sgtz)
-            form.user.last_email_login = now
-
-            # Authenticate with the Django user's username (i.e., Everybase user UUID) without password
-            dj_user = authenticate(form.user.django_user.username)
-            if dj_user is not None:
-                # Successfully authenticated
-                login(request, dj_user)
-
-                # Amplitude calls
-                send_amplitude_event.delay(
-                    'account - logged in',
-                    user_uuid=form.user.uuid,
-                    ip=get_ip_address(request)
-                )
-
-                next = form.cleaned_data.get('next')
-                if next is not None and next.strip() != '':
-                    return HttpResponseRedirect(next)
-                else:
-                    return HttpResponseRedirect(reverse('home'))
+            use_whatsapp_code(form.user)
+            dju = authenticate(form.user.django_user.username) # Passwordless
+            if dju is not None:
+                login(request, dju)
+                send_amplitude_event.delay('account - logged in', user_uuid=form.user.uuid, ip=get_ip_address(request))
+                return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
 
     elif request.method == 'GET':
         uuid = request.GET.get('uuid')
+        user = user_uuid_exists(uuid)
+        if user is None:
+            return HttpResponseRedirect(reverse('login')) # Unlikely error (e.g., bug or user temperage). Direct to login. No need for message.
 
-        try:
-            user = models.User.objects.get(uuid=uuid)
-        except models.User.DoesNotExist:
-            # Invalid user UUID, direct to login page
-            return HttpResponseRedirect(reverse('login'))
-
-        initial = {
+        form = forms.ConfirmWhatsAppLoginForm(initial={
             'uuid': uuid,
             'next': request.GET.get('next'),
             'phone_number': f'{user.phone_number.country_code} {user.phone_number.national_number}'
-        }
-
-        form = forms.ConfirmWhatsAppLoginForm(initial=initial)
+        })
     
     template = 'relationships/metronic/confirm_whatsapp_login.html'
     return TemplateResponse(request, template, {'form': form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def register(request):
     # Direct user to home if he's already logged in
@@ -231,14 +192,7 @@ def register(request):
             if ph_str is not None:
                 ph_str = str(ph_str)
                 if ph_str.strip() != '':
-                    parsed_ph = phonenumbers.parse(ph_str, None)
-                    ph_cc = parsed_ph.country_code
-                    ph_nn = parsed_ph.national_number
-                    # Get or create new phone number for this user
-                    phone_number, _ = models.PhoneNumber.objects.get_or_create(
-                        country_code=ph_cc,
-                        national_number=ph_nn
-                    )
+                    phone_number = get_or_create_phone_number(ph_str)
 
             # Get country
             country_key = form.cleaned_data.get('country')
@@ -879,14 +833,7 @@ def profile(request):
                 user.phone_number = None
             elif last_phone_number != phone_number :
                 # User has updated his phone number
-                parsed_ph = phonenumbers.parse(str(phone_number), None)
-                ph_cc = parsed_ph.country_code
-                ph_nn = parsed_ph.national_number
-
-                ph, _ = models.PhoneNumber.objects.get_or_create(
-                    country_code=ph_cc,
-                    national_number=ph_nn
-                )
+                ph = get_or_create_phone_number(str(phone_number))
 
                 user.phone_number = ph
                 need_logout = True
@@ -1060,7 +1007,7 @@ def m(request, file_to_render):
 #             )
             
 #             response = HttpResponse(status=302) # Temporary redirect
-#             response['Location'] = get_non_tracking_whatsapp_link(
+#             response['Location'] = get_whatsapp_url(
 #                 contactee.phone_number.country_code,
 #                 contactee.phone_number.national_number
 #             )

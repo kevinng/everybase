@@ -5,7 +5,7 @@ from chat.constants import intents, messages
 from chat.utilities.render_message import render_message
 from chat.handlers.library import MessageHandler
 from relationships import models
-from relationships.utilities.kill_login_tokens import kill_login_tokens
+from relationships.utilities._archive.kill_login_tokens import kill_login_tokens
 
 class Handler(MessageHandler):
     def run(self):

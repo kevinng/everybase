@@ -6,9 +6,9 @@ from chat import models
 from relationships import models as relmods
 
 def done_context(
-        user : relmods.User,
-        intent_key : str,
-        message_key : str
+        user: relmods.User,
+        intent_key: str,
+        message_key: str
     ):
     """Set user context's done timestamp to now.
 

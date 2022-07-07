@@ -6,7 +6,7 @@ from chat.utilities.render_message import render_message
 from chat.handlers.library import MessageHandler
 from django.contrib.auth.models import User
 from relationships import models
-from relationships.utilities.kill_register_tokens import kill_register_tokens
+from relationships.utilities._archive.kill_register_tokens import kill_register_tokens
 
 class Handler(MessageHandler):
     def run(self):

@@ -3,8 +3,8 @@ from chat.constants import intents, messages
 from relationships import models as relmods
 
 def get_context(
-        user : relmods.User
-    ):
+        user: relmods.User
+    ) -> tuple:
     """Get user context - i.e., intent and message key.
 
     Parameters

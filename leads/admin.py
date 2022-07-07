@@ -12,7 +12,7 @@ from common import admin as comadm
 from files import admin as fiadm
 from leads import models
 
-from relationships.utilities.get_non_tracking_whatsapp_link import get_non_tracking_whatsapp_link
+from relationships.utilities.get_whatsapp_url import get_whatsapp_url
 
 _application_query_log_fields = ['user', 'status']
 @admin.register(models.ApplicationQueryLog)
@@ -99,7 +99,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
         if obj.applicant.phone_number is None:
             return None
 
-        link = get_non_tracking_whatsapp_link(
+        link = get_whatsapp_url(
             obj.applicant.phone_number.country_code,
             obj.applicant.phone_number.national_number
         )
@@ -142,7 +142,7 @@ class ApplicationAdmin(comadm.StandardAdmin):
         if obj.lead.author.phone_number is None:
             return None
 
-        link = get_non_tracking_whatsapp_link(
+        link = get_whatsapp_url(
             obj.lead.author.phone_number.country_code,
             obj.lead.author.phone_number.national_number
         )

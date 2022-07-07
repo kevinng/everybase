@@ -1,9 +1,18 @@
+from typing import Union
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from relationships import models
 
-def email_exists(email: str) -> bool:
-    """Returns User model reference if an existing user owns this email, False otherwise. Returns None if error."""
+def email_exists(
+        email: str
+    ) -> Union[bool, models.User]:
+    """Returns User model reference if an existing user owns this email, False otherwise. Returns None if error.
+    
+    Parameters
+    ----------
+    email
+        Email to check.
+    """
     if email is None or email.strip() == '':
         return None
 

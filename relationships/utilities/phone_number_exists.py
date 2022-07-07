@@ -1,8 +1,20 @@
+from typing import Union
 import phonenumbers
 from relationships import models
 
-def phone_number_exists(phone_number: str, enable_whatsapp=True) -> bool:
-    """Returns PhoneNumber model reference if an existing user owns this phone number, False otherwise. Returns None if error."""
+def phone_number_exists(
+        phone_number: str,
+        enable_whatsapp=True
+    ) -> Union[bool, models.User]:
+    """Returns PhoneNumber model reference if an existing user owns this phone number, False otherwise. Returns None if error.
+    
+    Parameters:
+    -----------
+    phone_number
+        Phone number to check.
+    enable_whatsapp
+        User.enable_whatsapp setting. Default True - i.e., only include users who have enabled WhatsApp.
+    """
     if phone_number is None or phone_number.strip() == '':
         return None
 

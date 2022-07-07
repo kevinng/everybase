@@ -7,8 +7,8 @@ from chat.utilities.send_message import send_message
 from chat.utilities.render_message import render_message
 from chat.utilities.done_to_context import done_to_context
 from relationships import models as relmods
-from relationships.utilities.get_create_whatsapp_link import \
-    get_create_whatsapp_link
+from relationships.utilities.get_whatsapp_url import \
+    get_whatsapp_url
 from leads import models as lemods
 
 _CONTACT_REQUEST_DOES_NOT_EXIST = -1

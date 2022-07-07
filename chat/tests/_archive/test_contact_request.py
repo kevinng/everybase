@@ -9,7 +9,7 @@ from chat.tasks._archive.send_contact_request_exchanged_author import \
 from chat.tasks._archive.send_contact_request_exchanged_contactor import \
     send_contact_request_exchanged_contactor
 from relationships import models as relmods
-from relationships.utilities.get_create_whatsapp_link import \
+from relationships.utilities._archive.get_create_whatsapp_link import \
     get_create_whatsapp_link
 from leads import models as lemods
 

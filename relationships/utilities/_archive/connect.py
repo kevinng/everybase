@@ -1,5 +1,5 @@
 from relationships import models
-from relationships.utilities import sort_users
+from relationships.utilities._archive import sort_users
 
 def connect(
         user_x : models.User,

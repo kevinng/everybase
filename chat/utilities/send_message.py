@@ -10,34 +10,35 @@ def send_message(
         body: str,
         from_user: relmods.User,
         to_user: relmods.User,
-        intent_key: str = None,
-        message_key: str = None,
-        media_url: List[str] = None,
-        no_external_calls: bool = False
+        intent_key: str=None,
+        message_key: str=None,
+        media_url: List[str]=None,
+        to_phone_number: relmods.PhoneNumber=None,
+        no_external_calls: bool=False
     ) -> models.TwilioOutboundMessage:
     """Send Twilio WhatsApp message.
 
     Parameters
     ----------
     body
-        Message body
+        Message body.
     from_user
-        User we're sending this message from
+        User we're sending this message from.
     to_user
-        User we're sending this message to
+        User we're sending this message to.
     intent_key
-        Intent key of message's context
+        Intent key of message's context.
     message_key
-        Message key of message's context
+        Message key of message's context.
     media_url
-        List of media URLs we're sending with this message
+        List of media URLs we're sending with this message.
+    to_phone_number
+        If specified, we'll use this phone number in place of to_user.phone_number. Useful in cases such as when the user is updating his phone number.
     no_external_calls
-        If True, will not make external API calls - e.g. send Twilio WhatsApp
-        messages. Useful for automated testing, to ascertain model updates are
-        made correctly.
+        If True, will not make external API calls - e.g. send Twilio WhatsApp messages. Useful for automated testing, to ascertain model updates are made correctly.
     """
     from_ph = from_user.phone_number
-    to_ph = to_user.phone_number
+    to_ph = to_phone_number if to_phone_number is not None else to_user.phone_number
 
     # Send message
     message = None

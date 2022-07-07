@@ -12,7 +12,7 @@ from common import admin as comadm
 from growth import models as gromods
 from leads import models as lemods
 
-from relationships.utilities.get_non_tracking_whatsapp_link import get_non_tracking_whatsapp_link
+from relationships.utilities.get_whatsapp_url import get_whatsapp_url
 
 @admin.register(models.PhoneNumberType)
 class PhoneNumberTypeAdmin(comadm.ChoiceAdmin):
@@ -239,7 +239,7 @@ class UserAdmin(comadm.StandardAdmin):
         if obj.phone_number is None:
             return None
 
-        link = get_non_tracking_whatsapp_link(
+        link = get_whatsapp_url(
             obj.phone_number.country_code,
             obj.phone_number.national_number
         )

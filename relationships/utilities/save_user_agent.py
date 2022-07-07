@@ -1,10 +1,23 @@
-from relationships import models as relmods
-
-from django_user_agents.utils import get_user_agent
 from ipware import get_client_ip
 
-def save_user_agent(request, user):
-    # Record IP and user agent
+from django.http import HttpRequest
+from django_user_agents.utils import get_user_agent
+
+from relationships import models as relmods
+
+def save_user_agent(
+        request: HttpRequest,
+        user: relmods.User
+    ):
+    """Save user agent.
+
+    Parameters:
+    -----------
+    request
+        Request to save.
+    user
+        User to save agent for.
+    """
     r = get_user_agent(request)
     ip_address, is_routable = get_client_ip(request)
     try:

@@ -178,7 +178,7 @@ class TwilioIncomingStatusView(APIView):
 #         access.save()
 
 #         sph = get_support_phone_number()
-#         params = { 'whatsapp_url': get_non_tracking_whatsapp_link(
+#         params = { 'whatsapp_url': get_whatsapp_url(
 #             sph.country_code, sph.national_number) }
 
 #         # Make Amplitude call
@@ -210,7 +210,7 @@ class TwilioIncomingStatusView(APIView):
 #     # Chatbot phone number - for success/cancel URL
 #     chatbot_ph = relmods.PhoneNumber.objects.get(
 #         pk=settings.CHATBOT_PHONE_NUMBER_PK)
-#     end_url = get_non_tracking_whatsapp_link(
+#     end_url = get_whatsapp_url(
 #         chatbot_ph.country_code,
 #         chatbot_ph.national_number)
 

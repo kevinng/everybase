@@ -1,0 +1,9 @@
+# Purposes of sending emails
+
+LOGIN = 'LOGIN'
+UPDATE_EMAIL = 'UPDATE_EMAIL'
+
+EMAIL_PURPOSE_CHOICES = [
+    (LOGIN, LOGIN),
+    (UPDATE_EMAIL, UPDATE_EMAIL)
+]

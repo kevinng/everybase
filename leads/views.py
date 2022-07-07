@@ -25,6 +25,7 @@ from common.utilities.get_ip_address import get_ip_address
 from leads import models, forms
 
 from relationships import models as relmods
+from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
 
 MESSAGE_KEY__CONTACT_SENT = 'MESSAGE_KEY__CONTACT_SENT'
 MESSAGE_KEY__UNAUTHORIZED_ACCESS = 'MESSAGE_KEY__UNAUTHORIZED_ACCESS'
@@ -115,14 +116,7 @@ def contact_lead(request, id):
                 email=form.cleaned_data.get('email'))
 
             # Phone number
-            parsed_ph = phonenumbers.parse(
-                str(form.cleaned_data.get('phone_number')), None)
-            ph_cc = parsed_ph.country_code
-            ph_nn = parsed_ph.national_number
-            phone_number, _ = relmods.PhoneNumber.objects.get_or_create(
-                country_code=ph_cc,
-                national_number=ph_nn
-            )
+            phone_number = get_or_create_phone_number(str(form.cleaned_data.get('phone_number')))
 
             # Country
             country_key = form.cleaned_data.get('country')
