@@ -27,17 +27,20 @@ def send_whatsapp_code(
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(tz=sgtz)
 
-    difference = (now - user.whatsapp_code_generated).total_seconds()
-    if difference < settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
-        return RATE_LIMITED
+    # Rate limit
+    if user.whatsapp_code_generated is not None:
+        difference = (now - user.whatsapp_code_generated).total_seconds()
+        if difference < settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
+            return RATE_LIMITED
 
+    # Generate code
     user.whatsapp_code = random.randint(100000, 999999)
     user.whatsapp_code_generated = now
     user.save()
 
+    # Select message
     intent = None
     message = None
-
     if purpose == whatsapp_purposes.LOGIN:
         intent = intents.CONFIRM_LOGIN
         message = messages.CONFIRM_LOGIN

@@ -26,17 +26,20 @@ def send_email_code(
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(tz=sgtz)
 
-    difference = (now - user.email_code_generated).total_seconds()
-    if difference < settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
-        return RATE_LIMITED
+    # Rate limit
+    if user.email_code_generated is not None:
+        difference = (now - user.email_code_generated).total_seconds()
+        if difference < settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
+            return RATE_LIMITED
 
+    # Generate code
     user.email_code = random.randint(100000, 999999)
     user.email_code_generated = now
     user.save()
 
+    # Select subject and body
     subject = None
     body = None
-
     if purpose == email_purposes.LOGIN:
         subject = render_to_string('relationships/email/confirm_login_subject.txt', {})
         body = render_to_string('relationships/email/confirm_login.txt', {'code': user.email_code})
