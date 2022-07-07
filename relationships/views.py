@@ -1,6 +1,5 @@
 import pytz, phonenumbers, random
 from datetime import datetime
-from ratelimit.decorators import ratelimit
 
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -13,6 +12,8 @@ from django.contrib.auth.models import User as DjangoUser
 from django.template.response import TemplateResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 from everybase import settings
 
@@ -28,6 +29,8 @@ from chat.tasks.send_confirm_login import send_confirm_login
 from relationships import forms, models
 from relationships.tasks.send_whatsapp_verification_code import send_whatsapp_verification_code
 
+MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN = 'MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN'
+
 # Named 'log_in' and not 'login' to prevent clash with Django login
 def log_in(request):
     # Direct user to home if he's already logged in
@@ -42,30 +45,38 @@ def log_in(request):
             now = datetime.now(tz=sgtz)
 
             if form.email is not None:
-                # Generate code
-                user.email_login_code = random.randint(100000, 999999)
-                user.email_login_code_generated = now
-                user.save()
+                if user.email_login_code_generated is None or\
+                    (now - user.email_login_code_generated).total_seconds() > settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
+                    # More than 5 minutes have elapsed since we last sent the code - resend.
+
+                    # Generate code
+                    user.email_login_code = random.randint(100000, 999999)
+                    user.email_login_code_generated = now
+                    user.save()
+
+                    # Send confirmation code by email
+                    send_email.delay(
+                        render_to_string('relationships/email/confirm_login_subject.txt', {}),
+                        render_to_string('relationships/email/confirm_login.txt', {'code': user.email_login_code}),
+                        'friend@everybase.co',
+                        [form.email.email]
+                    )
 
                 url = reverse('confirm_email_login')
-
-                # Send confirmation code by email
-                send_email.delay(
-                    render_to_string('relationships/email/confirm_login_subject.txt', {}),
-                    render_to_string('relationships/email/confirm_login.txt', {'code': user.email_login_code}),
-                    'friend@everybase.co',
-                    [form.email.email]
-                )
             elif form.phone_number is not None:
-                # Generate code
-                user.whatsapp_login_code = random.randint(100000, 999999)
-                user.whatsapp_login_code_generated = now
-                user.save()
+                if user.whatsapp_login_code_generated is None or\
+                    (now - user.whatsapp_login_code_generated).total_seconds() > settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
+                    # More than 5 minutes have elapsed since we last sent the code - resend.
+
+                    # Generate code
+                    user.whatsapp_login_code = random.randint(100000, 999999)
+                    user.whatsapp_login_code_generated = now
+                    user.save()
+
+                    # Send confirmation code by WhatsApp
+                    send_confirm_login.delay(form.user.id)
 
                 url = reverse('confirm_whatsapp_login')
-
-                # Send confirmation code by WhatsApp
-                send_confirm_login.delay(form.user.id)
 
             url += f'?uuid={user.uuid}'
 
@@ -76,7 +87,12 @@ def log_in(request):
 
             return HttpResponseRedirect(url)
     else:
-        form = forms.LoginForm()
+        initial = {}
+        login_str = request.GET.get('login')
+        if login_str is not None:
+            initial['email_or_phone_number'] = login_str
+
+        form = forms.LoginForm(initial=initial)
 
     params = {'form': form}
 
@@ -240,8 +256,6 @@ def register(request):
 
             # Create new Django user
             django_user_created, _ = DjangoUser.objects.get_or_create(username=user.uuid)
-            # django_user.set_password(password)
-            # django_user.save()
 
             # Update user profile
             sgtz = pytz.timezone(settings.TIME_ZONE)
@@ -299,7 +313,7 @@ def register(request):
 
 @login_required
 def verify_whatsapp(request):
-    user = models.User.objects.get(pk=request.user.user.id)
+    user = request.user.user
     kwargs = {'user': user}
 
     if request.method == 'POST':
@@ -323,8 +337,7 @@ def verify_whatsapp(request):
         now = datetime.now(tz=sgtz)
 
         if user.whatsapp_login_code_generated is None or\
-            user.enable_whatsapp == False or\
-            (now - user.whatsapp_login_code_generated).total_seconds() > (60*5):
+            (now - user.whatsapp_login_code_generated).total_seconds() > settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
             # More than 5 minutes have elapsed since we last sent the code - resend.
 
             # Generate code (note: we use WhatsApp login code, so there's only 1 date/timestamp we need
@@ -350,7 +363,7 @@ def verify_whatsapp(request):
 
 @login_required
 def disable_whatsapp(request):
-    user = models.User.objects.get(pk=request.user.user.id)
+    user = request.user.user
     user.enable_whatsapp = False
     user.save()
 
@@ -360,10 +373,178 @@ def disable_whatsapp(request):
 
     return HttpResponseRedirect(reverse('users:settings'))
 
-# Don't name it 'settings', it conflicts with everybase.settings.
+# Don't name profile settings function 'settings', it conflicts with everybase.settings.
+@login_required
 def profile_settings(request):
+    user = request.user.user
+
+    if request.method == 'POST':
+        inputs = {}
+
+        if request.POST.get('save') == 'save':
+            # User clicked on the 'save' button.
+            # Initialize form with fields relevant to 'save', default the rest.
+            inputs = {
+                'first_name': request.POST.get('first_name'),
+                'last_name': request.POST.get('last_name'),
+                'country': request.POST.get('country'),
+                'email': user.email.email,
+                'enable_whatsapp': user.enable_whatsapp,
+                'save': 'save' # Identify button clicked
+            }
+        
+            if user.phone_number is not None:
+                inputs['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
+
+        elif request.POST.get('update_email') == 'update_email':
+            # User clicked on the 'update email' button.
+            # Initialize form with fields relevant to 'update_email', default the rest.
+            inputs = {
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'country': user.country,
+                'email': request.POST.get('email'),
+                'enable_whatsapp': user.enable_whatsapp,
+                'update_email': 'update_email' # Identify button clicked
+            }
+
+            if user.phone_number is not None:
+                inputs['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
+
+        elif request.POST.get('update_phone_number') == 'update_phone_number':
+            # User clicked on the 'update phone number' button.
+            # Initialize form with fields relevant to 'update_phone_number', default the rest.
+
+            inputs = {
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'country': user.country,
+                'enable_whatsapp': user.enable_whatsapp,
+                'phone_number': request.POST.get('phone_number'),
+                'update_phone_number': 'update_phone_number' # Identify button clicked
+            }
+
+            if user.email is not None:
+                inputs['email'] = user.email.email
+
+        form = forms.SettingsForm(inputs)
+
+        if form.is_valid():
+            if request.POST.get('save') == 'save':
+                country = commods.Country.objects.get(
+                    programmatic_key=form.cleaned_data.get('country'))
+                user = request.user.user
+                user.first_name = form.cleaned_data.get('first_name')
+                user.last_name = form.cleaned_data.get('last_name')
+                user.country = country
+                user.save()
+
+            elif request.POST.get('update_email') == 'update_email':
+                url = f"{reverse('users:update_email')}?email={form.cleaned_data.get('email')}"
+                return HttpResponseRedirect(url)
+
+            elif request.POST.get('update_phone_number') == 'update_phone_number':
+                url = f"{reverse('users:update_phone_number')}?phone_number={form.cleaned_data.get('phone_number')}"
+                return HttpResponseRedirect(url)
+    else:
+        initial = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'country': user.country.name
+        }
+
+        if user.email is not None:
+            initial['email'] = user.email.email
+        
+        if user.phone_number is not None:
+            initial['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
+
+        if user.enable_whatsapp is not None:
+            initial['enable_whatsapp'] = user.enable_whatsapp
+
+        form = forms.SettingsForm(initial=initial)
+
+    params = {
+        'form': form,
+        'countries': commods.Country.objects.annotate(
+            num_users=Count('users_w_this_country')).order_by('-num_users')
+    }
+
     template_name = 'relationships/metronic/settings.html'
-    return TemplateResponse(request, template_name, {})
+    return TemplateResponse(request, template_name, params)
+
+@login_required
+def update_email(request):
+    if request.method == 'POST':
+        user = request.user.user
+        kwargs = {'user': user}
+        form = forms.UpdateEmailForm(request.POST, **kwargs)
+# MAKE SURE NO ONE OWNS THE EMAIL
+        if form.is_valid():
+            email_str = form.cleaned_data.get('email')
+            user.email, _ = models.Email.objects.get_or_create(email=email_str)
+            user.save()
+
+            return HttpResponseRedirect(reverse('users:settings'))
+    else:
+        email = request.GET.get('email')
+        try:
+            validate_email(email)
+        except ValidationError as _:
+            messages.add_message(request, messages.ERROR, MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN)
+            return HttpResponseRedirect(reverse('users:settings'))
+        
+        user = request.user.user
+
+        sgtz = pytz.timezone(settings.TIME_ZONE)
+        now = datetime.now(tz=sgtz)
+
+        if user.email_login_code_generated is None or\
+            (now - user.email_login_code_generated).total_seconds() > settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
+            # More than 5 minutes have elapsed since we last sent the code - resend.
+
+            print('2')
+
+            # Send confirmation code by email.
+            # Note: we use the email login code for this purpose.
+            user.email_login_code = random.randint(100000, 999999)
+            user.email_login_code_generated = now
+            user.save()
+
+            send_email.delay(
+                render_to_string('relationships/email/confirm_email_update_subject.txt', {}),
+                render_to_string('relationships/email/confirm_email_update.txt', {'code': user.email_login_code}),
+                'friend@everybase.co',
+                [user.email.email]
+            )
+        
+        form = forms.UpdateEmailForm(initial={'email': email})
+        
+    template_name = 'relationships/metronic/confirm_email_change.html'
+    return TemplateResponse(request, template_name, {'form': form})
+
+def update_whatsapp_phone_number(request):
+    pass
+
+
+
+
+
+
+
+
+
+
+# def email_update(request):
+#     params = {
+#         # 'form': form,
+#         'countries': commods.Country.objects.annotate(
+#             num_users=Count('users_w_this_country')).order_by('-num_users')
+#     }
+
+#     template_name = 'relationships/metronic/settings.html'
+#     return TemplateResponse(request, template_name, params)
+
 
 
 

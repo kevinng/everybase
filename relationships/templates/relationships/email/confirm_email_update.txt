@@ -1,0 +1,5 @@
+You've requested to update your email on Everybase.
+
+This is your confirmation code: {{ code }}
+
+Ignore this message if you didn't update your email on Everybase.

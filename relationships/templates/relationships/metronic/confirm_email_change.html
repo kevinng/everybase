@@ -1,10 +1,11 @@
-{% extends 'relationships/metronic/extendables/simple.html' %}
+{% extends 'relationships/metronic/extendables/login_register.html' %}
 
-{% block title %}Confirm Email Login{% endblock %}
+{% block title %}Confirm Email Change{% endblock %}
 
-{% block meta_description %}Confirm email login to Everybase{% endblock %}
-{% block meta_og_title %}Confirm Email Login{% endblock %}
-{% block meta_og_url_path %}{% url 'login' %}{% endblock %}
+{% block meta_description %}Confirm Email Change{% endblock %}
+
+{% block meta_og_title %}Confirm Email Change{% endblock %}
+
 {% block meta_og_site_name %}Everybase{% endblock %}
 
 {% load static %}
@@ -17,19 +18,7 @@
         </a>
 
         <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
-            <form class="form w-100 mb-10" action="{% url 'confirm_email_login' %}" method="post">
-                {% if next != None %}
-                    <input type="hidden" name="next" value="{{ next }}">
-                {% elif form.next.value != None %}
-                    <input type="hidden" name="next" value="{{ form.next.value }}">
-                {% endif %}
-
-                {% if uuid != None %}
-                    <input type="hidden" name="uuid" value="{{ uuid }}">
-                {% elif form.uuid.value != None %}
-                    <input type="hidden" name="uuid" value="{{ form.uuid.value }}">
-                {% endif %}
-
+            <form class="form w-100 mb-10" action="{% url 'users:update_email' %}" method="post">
                 {% csrf_token %}
 
                 <div class="text-center mb-10">
@@ -37,8 +26,8 @@
                 </div>
 
                 <div class="text-center mb-10">
-                    <h1 class="text-dark mb-3">Confirm Email Login</h1>
-                    <div class="text-muted fw-bold fs-5 mb-5">Enter the confirmation code we've sent to</div>
+                    <h1 class="text-dark mb-3">Confirm Email Change</h1>
+                    <div class="text-muted fw-bold fs-5 mb-5">Enter the comfirmation code we've sent to</div>
                     <div class="fw-bolder text-dark fs-3">{{ form.email.value }}</div>
                     <input type="hidden" name="email" value="{{ form.email.value }}">
                 </div>
@@ -49,8 +38,7 @@
                 {% if form.code.errors %}<div class="text-danger">{% for error in form.code.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="d-flex flex-center mt-10">
-                    <a href="{% url 'login' %}?login={{ form.email.value }}" class="btn btn-lg btn-light fw-bolder">Cancel</a>
-                    <button type="submit" class="btn btn-lg btn-primary fw-bolder ms-2">Login</button>
+                    <button type="submit" class="btn btn-lg btn-primary fw-bolder">Change Email</button>
                 </div>
             </form>
         </div>

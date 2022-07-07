@@ -13,10 +13,10 @@
 		<meta property="og:locale" content="en_US" />
 		<meta property="og:type" content="{% block meta_og_type %}website{% endblock %}" />
 		<meta property="og:title" content="{% block meta_og_title %}{% endblock %}" />
-		<meta property="og:url" content="{% block meta_og_url %}{% endblock %}" />
+		<meta property="og:url" content="{{ settings.BASE_URL }}{% block meta_og_url_path %}{% endblock %}" />
 		<meta property="og:site_name" content="{% block meta_og_site_name %}{% endblock %}" />
 		<link rel="canonical" href="https://everybase.co" />
-		<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+        <link rel="shortcut icon" href="{% static 'common/metronic/demo1/dist/assets/media/logos/favicon_everybase.ico' %}"/>
         {% comment %} Start: Fonts {% endcomment %}
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
         {% comment %} End: Fonts {% endcomment %}

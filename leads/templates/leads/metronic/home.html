@@ -16,7 +16,7 @@
         {% if messages %}
             {% for message in messages %}
                 {% comment %} We need to string-strip message or the comparison will not work. {% endcomment %}
-                {% if message|cut:' ' == 'CONTACTED_SUCCESSFULLY_KEY' %}
+                {% if message|cut:' ' == 'MESSAGE_KEY__CONTACT_SENT' %}
                     <div class="alert alert-dismissible bg-info d-flex flex-column flex-sm-row w-100 p-5 mb-10">
                         {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
                         <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
@@ -47,7 +47,7 @@
                         </button>
                         {% comment %} End: Close {% endcomment %}
                     </div>
-                {% elif message|cut:' ' == 'UNAUTHORIZED_ACCESS' %}
+                {% elif message|cut:' ' == 'MESSAGE_KEY__UNAUTHORIZED_ACCESS' %}
                     <div class="alert alert-dismissible bg-info d-flex flex-column flex-sm-row w-100 p-5 mb-10">
                         {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
                         <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">

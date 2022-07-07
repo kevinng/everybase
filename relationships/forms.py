@@ -1,3 +1,8 @@
+from relationships.utilities.email_exists import email_exists
+from relationships.utilities.phone_number_exists import phone_number_exists
+from relationships.utilities.is_email_code_valid import is_email_code_valid
+from relationships.utilities.user_uuid_exists import user_uuid_exists
+
 import phonenumbers, pytz, datetime
 from phonenumber_field.formfields import PhoneNumberField
 
@@ -17,131 +22,63 @@ class LoginForm(forms.Form):
     def clean(self):
         super(LoginForm, self).clean()
 
-        # Email or phone model references to be assigned if they are successfully obtained
+        # Either field will be set, if email/phone-number of existing user is found
         self.email = None
         self.phone_number = None
 
-        eph_str = self.cleaned_data.get('email_or_phone_number')
-
-        # Check if string is an email address
-        is_email = False
-        try:
-            validate_email(eph_str)
-        except ValidationError as e:
-            pass
-        else:
-            is_email = True
-
-        has_error = False
-        if not is_email:
-            # String is not an email, check if string is a phone number
-            is_phone_number = False
-            try:
-                ph = phonenumbers.parse(eph_str)
-                is_phone_number = phonenumbers.is_valid_number(ph)
-            except phonenumbers.phonenumberutil.NumberParseException:
-                pass # is_phone_number is already False
-
-            if not is_email and not is_phone_number:
-                self.add_error('email_or_phone_number', 'Enter valid email or phone number.')
-                has_error = True
-        
-        if not has_error:
-            # No error so far - i.e., string is either an email or phone number - check if account exists.
-
-            if is_email:
-                try:
-                    # Assign email model reference to form if it exists
-                    self.email = models.Email.objects.get(email=eph_str)
-
-                    # Assign user model reference to form if it exists
-                    self.user = models.User.objects.filter(
-                        email=self.email.id, # User has email
-                        registered__isnull=False, # User is registered
-                        django_user__isnull=False # User has a Django user linked
-                    ).first()
-                        
-                    if self.user is None:
-                        self.add_error('email_or_phone_number', 'Account does not exist.')
-                        has_error = True
-
-                except models.Email.DoesNotExist:
-                    self.add_error('email_or_phone_number', 'Account does not exist.')
-                    has_error = True
-
-            elif is_phone_number:
-                ph_err_msg = 'Account does not exist or WhatsApp login is disabled. Login with your email if you already have an account.'
-
-                try:
-                    # Assign phone number model reference to form if it exists
-                    self.phone_number = models.PhoneNumber.objects.get(
-                        country_code=ph.country_code,
-                        national_number=ph.national_number
-                    )
-
-                    # Assign user model reference to form if it exists
-                    self.user = models.User.objects.filter(
-                        phone_number=self.phone_number.id, # User has phone number
-                        registered__isnull=False, # User is registered
-                        django_user__isnull=False, # User has a Django user linked
-                        enable_whatsapp=True # User enabled WhatsApp notification
-                    ).first()
-
-                    if self.user is None:
-                        self.add_error('email_or_phone_number', ph_err_msg)
-                        has_error = True
-                except models.PhoneNumber.DoesNotExist:
-                    self.add_error('email_or_phone_number', ph_err_msg)
-                    has_error = True
-
-        if has_error:
-            # User entered a valid email or phone number but no such account exists
-            raise ValidationError(None)
+        email_or_phone_number = self.cleaned_data.get('email_or_phone_number')
+        e = email_exists(email_or_phone_number)
+        p = phone_number_exists(email_or_phone_number)
+            
+        if e is None and p is None:
+            # Both functions returned error
+            raise ValidationError({'email_or_phone_number': ['Enter valid email or phone number.',]})
+        elif (e is False and p is None) or (e is None and p is False):
+            # Neither function returned an existing user
+            raise ValidationError({'email_or_phone_number': ['Account does not exist.',]})
+        elif isinstance(e, models.User):
+            self.user = e # Assign self.user to indicate user exists
+            self.email = e.email # Assign self.email to indicate valid email
+        elif isinstance(p, models.User):
+            self.user = p # Assign self.user to indicate user exists
+            self.phone_number = p.phone_number # Assign self.phone_number to indicate valid phone_number
 
 class ConfirmEmailLoginForm(forms.Form):
-    uuid = forms.CharField()
     code = forms.CharField()
-    email = forms.CharField() # For rendering only
+
+    # Rendered in hidden fields
     next = forms.CharField(required=False)
+    uuid = forms.CharField()
+    email = forms.CharField()
 
     def clean(self):
         super(ConfirmEmailLoginForm, self).clean()
 
-        try:
-            # Assign user model reference if it exists
-            user_uuid = self.cleaned_data.get('uuid')
-            self.user = models.User.objects.get(uuid=user_uuid)
-        except models.User.DoesNotExist:
-            # Invalid user UUID, just tell the user code has expired.
-            self.add_error('code', 'An error has occurred. Please request for another code.')
-            raise ValidationError(None)
-
+        self.user = user_uuid_exists(self.cleaned_data.get('uuid'))
+        if self.user is None:
+            # Invalid user UUID, tell user to request for another.
+            raise ValidationError({'code': ['An error has occurred. Please cancel, and request for another code.',]})
+        
         code = self.cleaned_data.get('code')
-        err_msg = 'Wrong or expired code.'
+        if is_email_code_valid(code, self.user) != True:
+            raise ValidationError({'code': ['Invalid code.',]})
 
-        if code is not None:
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            now = datetime.datetime.now(tz=sgtz)
-            difference = (now - self.user.email_login_code_generated).total_seconds()
-            if difference > int(settings.LOGIN_CODE_EXPIRY_SECONDS):
-                # Code has expired
-                self.add_error('code', err_msg)
-                raise ValidationError(None)
 
-            if self.user.last_email_login is not None and\
-                self.user.last_email_login > self.user.email_login_code_generated:
-                # Code has been used
-                self.add_error('code', err_msg)
-                raise ValidationError(None)
 
-            if self.user.email_login_code != code:
-                self.add_error('code', err_msg)
-                raise ValidationError(None)
+
+
+
+
+
+
+
 
 class ConfirmWhatsAppLoginForm(forms.Form):
-    uuid = forms.CharField()
     code = forms.CharField()
-    phone_number = forms.CharField() # For rendering only
+
+    # Rendered in hidden fields
+    phone_number = forms.CharField()
+    uuid = forms.CharField()
     next = forms.CharField(required=False)
 
     def clean(self):
@@ -153,8 +90,16 @@ class ConfirmWhatsAppLoginForm(forms.Form):
             self.user = models.User.objects.get(uuid=user_uuid)
         except models.User.DoesNotExist:
             # Invalid user UUID, just tell the user code has expired.
-            self.add_error('code', 'An error has occurred. Please request for another code.')
-            raise ValidationError(None)
+            raise ValidationError({'code': ['An error has occurred. Please request for another code.',]})
+
+
+
+
+
+
+
+
+
 
         code = self.cleaned_data.get('code')
         err_msg = 'Wrong or expired code.'
@@ -263,6 +208,97 @@ class VerifyWhatsAppForm(forms.Form):
             self.add_error('code', 'Invalid code.')
             raise ValidationError(None)
 
+class SettingsForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    country = forms.CharField()
+
+    # Required determined by which button the user clicked
+    email = forms.EmailField(required=False)
+    phone_number = PhoneNumberField(required=False)
+    enable_whatsapp = forms.BooleanField(required=False)
+
+    # To identify which button the user clicked
+    save = forms.CharField(required=False)
+    update_email = forms.CharField(required=False)
+    update_phone_number = forms.CharField(required=False)
+
+    def clean(self):
+        super(SettingsForm, self).clean()
+
+        has_error = False
+
+        if self.cleaned_data.get('update_email') == 'update_email':
+            # 'Update email button' clicked
+            email = self.cleaned_data.get('email')
+            if email is None or email.strip() == '':
+                self.add_error('email', 'This field is required.')
+                has_error = True
+            else:
+                try:
+                    email_obj = models.Email.objects.get(email=email)
+
+                    u = models.User.objects.filter(
+                        email=email_obj.id, # User has email
+                        registered__isnull=False, # User is registered
+                        django_user__isnull=False # User has a Django user linked
+                    ).first()
+
+                    if u is not None:
+                        self.add_error('email', 'This email belongs to an existing user.')
+                        has_error = True
+                except models.Email.DoesNotExist:
+                    # Good - email is not in used
+                    pass
+        elif self.cleaned_data.get('update_phone_number') == 'update_phone_number':
+            # 'Update phone number' button clicked
+            phone_number = self.cleaned_data.get('phone_number')
+            if phone_number is None or phone_number.strip() == '':
+                self.add_error('phone_number', 'This field is required.')
+                has_error = True
+            else:
+                ph_str = str(ph_str)
+                if ph_str.strip() != '':
+                    parsed_ph = phonenumbers.parse(ph_str, None)
+
+                    ph_cc = parsed_ph.country_code
+                    ph_nn = parsed_ph.national_number
+
+                    try:
+                        phone_number = models.PhoneNumber.objects.get(
+                            country_code=ph_cc,
+                            national_number=ph_nn
+                        )
+
+                        user_w_ph = models.User.objects.filter(
+                            phone_number=phone_number.id, # User has phone number
+                            registered__isnull=False, # User is registered
+                            django_user__isnull=False # User has a Django user linked
+                        ).first()
+                        
+                        if user_w_ph is not None:
+                            self.add_error('phone_number', 'This phone number belongs to an existing user.')
+                            has_error = True
+                    except models.PhoneNumber.DoesNotExist:
+                        # Good - no user has this phone number
+                        pass
+        if has_error:
+            raise ValidationError(None)
+
+class UpdateEmailForm(forms.Form):
+    email = forms.CharField()
+    code = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(UpdateEmailForm, self).clean()
+        if self.user.email_login_code != self.cleaned_data.get('code'):
+            self.add_error('code', 'Invalid code.')
+            raise ValidationError(None)
 
 
 
@@ -443,7 +479,7 @@ class _RegisterForm(forms.Form):
         if has_error:
             raise ValidationError(None)
 
-class ProfileForm(forms.Form):
+class _ProfileForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
     email = forms.EmailField(required=False)

@@ -1,26 +1,21 @@
-{% extends 'relationships/metronic/extendables/login_register.html' %}
+{% extends 'relationships/metronic/extendables/simple.html' %}
 
-{% block title %}Login to Everybase{% endblock %}
+{% block title %}Confirm WhatsApp Login{% endblock %}
 
-{% block meta_description %}Login to Everybase{% endblock %}
-
-{% block meta_og_title %}Login to Everybase{% endblock %}
-
+{% block meta_description %}Confirm WhatsApp login to Everybase{% endblock %}
+{% block meta_og_title %}Confirm WhatsApp Login{% endblock %}
+{% block meta_og_url_path %}{% url 'login' %}{% endblock %}
 {% block meta_og_site_name %}Everybase{% endblock %}
 
 {% load static %}
 
 {% block content %}
 <div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url({% static 'common/metronic/demo1/dist/assets/media/illustrations/sketchy-1/14.png' %}">
-    {% comment %} Start: Content {% endcomment %}
     <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
-        {% comment %} Start: Logo {% endcomment %}
         <a href="{% url 'home' %}" class="mb-12">
             <img alt="Logo" src="{% static 'common/metronic/demo1/dist/assets/media/logos/logo.png' %}" />
         </a>
-        {% comment %} End: Logo {% endcomment %}
 
-        {% comment %} Start: Wrapper and form {% endcomment %}
         <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
             <form class="form w-100 mb-10" action="{% url 'confirm_whatsapp_login' %}" method="post">
                 {% if next != None %}
@@ -54,11 +49,11 @@
                 {% if form.code.errors %}<div class="text-danger">{% for error in form.code.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="d-flex flex-center mt-10">
+                    <a href="{% url 'login' %}?login={{ form.email.value }}" class="btn btn-lg btn-light fw-bolder">Cancel</a>
                     <button type="submit" class="btn btn-lg btn-primary fw-bolder">Login</button>
                 </div>
             </form>
         </div>
-        {% comment %} End: Wrapper and form {% endcomment %}
     </div>
 </div>
 {% endblock %}

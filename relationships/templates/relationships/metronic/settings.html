@@ -19,256 +19,260 @@
 {% endblock %}
 
 {% block content_body %}
-{% comment %} Start: Post {% endcomment %}
-<div class="post d-flex flex-column-fluid" id="kt_post">
-    {% comment %} Start: Container {% endcomment %}
-    <div id="kt_content_container" class="container-xxl">
-        {% comment %} Start: Navbar {% endcomment %}
+<form class="form" action="{% url 'users:settings' %}" method="post">
+{% csrf_token %}
+
+<div class="post d-flex flex-column-fluid">
+    <div class="container-xxl">
         <div class="card mb-5 mb-xl-10 shadow-sm">
             <div class="card-body pt-9 pb-0">
-                {% include 'leads/metronic/includes/user_item.html' %}
-                
+                {% include 'leads/metronic/includes/user_item.html' %}  
                 {% include 'leads/metronic/includes/user_profile_nav.html' with tab='settings' %}
             </div>
         </div>
-        {% comment %} End: Navbar {% endcomment %}
 
-        {% comment %} Start: Basic info {% endcomment %}
+        {% comment %} Start: Profile {% endcomment %}
         <div class="card mb-5 mb-xl-10 shadow-sm">
-            {% comment %} Start: Card header {% endcomment %}
-            <div class="card-header border-0" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
-                {% comment %} Start: Card title {% endcomment %}
+            <div class="card-header border-0">
                 <div class="card-title m-0">
                     <h3 class="fw-bolder m-0">Profile</h3>
                 </div>
-                {% comment %} End: Card title {% endcomment %}
             </div>
-            {% comment %} End: Card header {% endcomment %}
 
-            {% comment %} Start: Content {% endcomment %}
-            <div id="kt_account_settings_profile_details">
-                {% comment %} Start: Form {% endcomment %}
-                <form id="kt_account_profile_details_form" class="form">
+            <div>
+                <div class="card-body border-top p-9">
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Avatar</label>
+                        <div class="col-lg-8">
+                            <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({% static 'common/metronic/demo1/dist/assets/media/svg/avatars/blank.svg' %})">
+                                <div class="image-input-wrapper w-125px h-125px" style="background-image: url({% static 'common/metronic/demo1/dist/assets/media/avatars/300-1.jpg' %})"></div>
 
-                    {% comment %} Start: Card body {% endcomment %}
-                    <div class="card-body border-top p-9">
+                                <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                    <input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
+                                    <input type="hidden" name="avatar_remove" />
+                                </label>
 
-                        {% comment %} Start: Avatar {% endcomment %}
-                        <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">Avatar</label>
-                            <div class="col-lg-8">
-                                {% comment %} Start: Image input {% endcomment %}
-                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('assets/media/svg/avatars/blank.svg')">
-                                    {% comment %} Start: Preview existing avatar {% endcomment %}
-                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url(assets/media/avatars/300-1.jpg)"></div>
-                                    {% comment %} End: Preview existing avatar {% endcomment %}
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+                                    <i class="bi bi-x fs-2"></i>
+                                </span>
 
-                                    {% comment %} Start: Label {% endcomment %}
-                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
-                                        <i class="bi bi-pencil-fill fs-7"></i>
-                                        {% comment %} Start: Inputs {% endcomment %}
-                                        <input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
-                                        <input type="hidden" name="avatar_remove" />
-                                        {% comment %} End: Inputs {% endcomment %}
-                                    </label>
-                                    {% comment %} End: Label {% endcomment %}
-
-                                    {% comment %} Start: Cancel {% endcomment %}
-                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
-                                        <i class="bi bi-x fs-2"></i>
-                                    </span>
-                                    {% comment %} End: Cancel {% endcomment %}
-
-                                    {% comment %} Start: Remove {% endcomment %}
-                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
-                                        <i class="bi bi-x fs-2"></i>
-                                    </span>
-                                    {% comment %} End: Remove {% endcomment %}
-                                </div>
-                                {% comment %} End: Image input {% endcomment %}
-
-                                {% comment %} Start: Hint {% endcomment %}
-                                <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
-                                {% comment %} End: Hint {% endcomment %}
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
+                                    <i class="bi bi-x fs-2"></i>
+                                </span>
                             </div>
+                            <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
                         </div>
-                        {% comment %} End: Avatar {% endcomment %}
+                    </div>
 
-                        {% comment %} Start: Name {% endcomment %}
-                        <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Name</label>
-                            <div class="col-lg-8">
-                                <div class="row">
-                                    {% comment %} Start: First name {% endcomment %}
-                                    <div class="col-lg-6 fv-row">
-                                        <input type="text" name="fname" class="form-control form-control-lg mb-3 mb-lg-0" placeholder="First name" />
-                                    </div>
-                                    {% comment %} End: First name {% endcomment %}
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Name</label>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-6 fv-row">
+                                    <input type="text" name="first_name" class="form-control form-control-lg mb-3 mb-lg-0" placeholder="First name"{% if form.first_name.value != None %} value="{{ form.first_name.value }}"{% endif %} />
+                                    {% if form.first_name.errors %}<div class="text-danger">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                </div>
 
-                                    {% comment %} Start: Last name {% endcomment %}
-                                    <div class="col-lg-6 fv-row">
-                                        <input type="text" name="lname" class="form-control form-control-lg" placeholder="Last name" />
-                                    </div>
-                                    {% comment %} End: Last name {% endcomment %}
+                                <div class="col-lg-6 fv-row">
+                                    <input type="text" name="last_name" class="form-control form-control-lg" placeholder="Last name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %} />
+                                    {% if form.last_name.errors %}<div class="text-danger">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                 </div>
                             </div>
                         </div>
-                        {% comment %} End: Name {% endcomment %}
+                    </div>
 
-                        {% comment %} Start: Country {% endcomment %}
-                        <div class="row mb-6">
-                            <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                <span class="required">Country</span>
-                            </label>
-                            <div class="col-lg-8 fv-row">
-                                <select name="country" aria-label="Select a Country" data-control="select2" data-placeholder="Choose country" class="form-select form-select-lg fw-bold">
-                                    <option></option>
-                                    <option value="AF">Afghanistan</option>
-                                    <option value="AX">Aland Islands</option>
-                                </select>
-                            </div>
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">
+                            <span class="required">Country</span>
+                        </label>
+                        <div class="col-lg-8 fv-row">
+                            <select name="country"data-control="select2" data-placeholder="Country" class="form-select form-select-lg fw-bold">
+                                {% for country in countries %}
+                                    <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                         </div>
-                        {% comment %} End: Country {% endcomment %}
                     </div>
-                    {% comment %} End: Card body {% endcomment %}
+                </div>
 
-                    {% comment %} Start: Actions {% endcomment %}
-                    <div class="card-footer d-flex justify-content-end py-6 px-9">
-                        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Save</button>
-                    </div>
-                    {% comment %} End: Actions {% endcomment %}
-                </form>
-                {% comment %} End: Form {% endcomment %}
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
+                    <button name="save" value="save" type="submit" class="btn btn-primary">Save</button>
+                </div>
             </div>
-            {% comment %} End: Content {% endcomment %}
         </div>
-        {% comment %} End: Basic info {% endcomment %}
+        {% comment %} End: Profile {% endcomment %}
 
-        {% comment %} Start: Sign-in method {% endcomment %}
+        {% comment %} Start: Contact methods {% endcomment %}
         <div class="card mb-5 mb-xl-10 shadow-sm">
-            {% comment %} Start: Card header {% endcomment %}
             <div class="card-header border-0"data-bs-target="#kt_account_signin_method">
                 <div class="card-title m-0">
-                    <h3 class="fw-bolder m-0">Sign-in Methods</h3>
+                    <h3 class="fw-bolder m-0">Contact Methods</h3>
                 </div>
             </div>
-            {% comment %} End: Card header {% endcomment %}
-            {% comment %} Start: Content {% endcomment %}
-            <div id="kt_account_settings_signin_method">
-                {% comment %} Start: Card body {% endcomment %}
+
+            <div>
                 <div class="card-body border-top p-9">
-                    {% comment %} Start: Email address {% endcomment %}
                     <div class="d-flex flex-wrap align-items-center">
-                        {% comment %} Start: Label {% endcomment %}
-                        <div id="kt_signin_email">
+                        <div id="change_email_preview_div">
                             <div class="fs-6 fw-bolder mb-1">Email</div>
-                            <div class="fw-bold text-gray-600">support@keenthemes.com</div>
+                            {% comment %} We set the user's current email here instead of the form email, so the current email shows if there're error in the form {% endcomment %}
+                            <div class="fw-bold text-gray-600">{% if request.user.user.email != None %}{{ request.user.user.email.email }}{% else %}No email set{% endif %}</div>
                         </div>
-                        {% comment %} End: Label {% endcomment %}
-                        {% comment %} Start: Edit {% endcomment %}
-                        <div id="kt_signin_email_edit" class="flex-row-fluid d-none">
-                            {% comment %} Start: Form {% endcomment %}
-                            <form id="kt_signin_change_email" class="form" novalidate="novalidate">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <label for="emailaddress" class="form-label fs-6 fw-bolder">Email Address</label>
-                                        <input type="email" class="form-control form-control-lg" id="emailaddress" placeholder="Email Address" name="emailaddress" value="support@keenthemes.com" />
-                                    </div>
-                                </div>
-                                <div class="d-flex mt-6">
-                                    <button id="kt_signin_submit" type="button" class="btn btn-primary me-2 px-6">Update Email</button>
-                                    <button id="kt_signin_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
-                                </div>
-                            </form>
-                            {% comment %} End: Form {% endcomment %}
-                        </div>
-                        {% comment %} End: Edit {% endcomment %}
 
-                        {% comment %} Start: Action {% endcomment %}
-                        <div id="kt_signin_email_button" class="ms-auto">
-                            <button class="btn btn-light btn-active-light-primary">Change Email</button>
+                        <div id="change_email_form_div" class="flex-row-fluid d-none">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label for="email" class="form-label fs-6 fw-bolder required">Email</label>
+                                    <input type="email" class="form-control form-control-lg" id="email" placeholder="Email" name="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} />
+                                    {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                </div>
+                            </div>
+                            <div class="d-flex mt-6">
+                                {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
+                                <button name="update_email" value="update_email" type="submit" class="btn btn-primary me-2 px-6">Update Email</button>
+                                <button id="change_email_button_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
+                            </div>
                         </div>
-                        {% comment %} End: Action {% endcomment %}
+
+                        <div id="change_email_button_div" class="ms-auto">
+                            <button type="button" class="btn btn-light btn-active-light-primary">Change Email</button>
+                        </div>
                     </div>
-                    {% comment %} End: Email address {% endcomment %}
 
-                    {% comment %} Start: Separator {% endcomment %}
                     <div class="separator separator-dashed my-6"></div>
-                    {% comment %} End: Separator {% endcomment %}
 
-                    {% comment %} Start: Password {% endcomment %}
                     <div class="d-flex flex-wrap align-items-center mb-10">
-                        {% comment %} Start: Label {% endcomment %}
-                        <div id="kt_signin_password">
-                            <div class="fs-6 fw-bolder mb-1">Phone</div>
-                            <div class="fw-bold text-gray-600">+1234567890</div>
+                        <div id="change_phone_number_preview_div">
+                            <div class="fs-6 fw-bolder mb-1">Phone Number</div>
+                            {% comment %} We set the user's current phone number here instead of the form phone number, so the current phone number shows if there're error in the form {% endcomment %}
+                            <div class="fw-bold text-gray-600">{% if request.user.user.phone_number != None %}+{{ request.user.user.phone_number.country_code }} {{ request.user.user.phone_number.national_number }}{% else %}No phone number set{% endif %}</div>
                         </div>
-                        {% comment %} End: Label {% endcomment %}
                         
-                        {% comment %} Start: Edit {% endcomment %}
-                        <div id="kt_signin_password_edit" class="flex-row-fluid d-none">
-                            {% comment %} Start: Form {% endcomment %}
-                            <form id="kt_signin_change_password" class="form" novalidate="novalidate">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="fv-row mb-0">
-                                            <label for="currentpassword" class="form-label fs-6 fw-bolder">Phone Number</label>
-                                            <input type="text" class="form-control form-control-lg" name="currentpassword" id="currentpassword" />
-                                        </div>
-                                        <div class="form-text mt-2">Include + symbol. E.g., +14155552671.</div>
+                        <div id="change_phone_number_form_div" class="flex-row-fluid d-none">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="fv-row mb-0">
+                                        <label for="phone_number" class="form-label fs-6 fw-bolder required">Phone Number</label>
+                                        <input type="text" class="form-control form-control-lg" name="phone_number" id="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} />
                                     </div>
+                                    <div class="form-text mt-2">Include + symbol. E.g., +14155552671.</div>
+                                    {% if form.phone_number.errors %}<div class="text-danger">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                                 </div>
+                            </div>
 
-                                <div class="form-check form-check-custom mt-4">
-                                    {% comment %} Start: WhatsApp radio {% endcomment %}
-                                    <div class="me-3">
-                                        <input class="form-check-input me-2" type="checkbox" name="chatapp" value=""/>
-                                        <label>Enable WhatsApp notification{% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Receive notifications or login via our chatbot. Require verification.">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                                    <path d="M11.276 13.654C11.276 13.2713 11.3367 12.9447 11.458 12.674C11.5887 12.394 11.738 12.1653 11.906 11.988C12.0833 11.8107 12.3167 11.61 12.606 11.386C12.942 11.1247 13.1893 10.896 13.348 10.7C13.5067 10.4947 13.586 10.2427 13.586 9.944C13.586 9.636 13.4833 9.356 13.278 9.104C13.082 8.84267 12.69 8.712 12.102 8.712C11.486 8.712 11.066 8.866 10.842 9.174C10.6273 9.482 10.52 9.82267 10.52 10.196L10.534 10.574H8.826C8.78867 10.3967 8.77 10.2333 8.77 10.084C8.77 9.552 8.90067 9.07133 9.162 8.642C9.42333 8.20333 9.81067 7.858 10.324 7.606C10.8467 7.354 11.4813 7.228 12.228 7.228C13.1987 7.228 13.9687 7.44733 14.538 7.886C15.1073 8.31533 15.392 8.92667 15.392 9.72C15.392 10.168 15.322 10.5507 15.182 10.868C15.042 11.1853 14.874 11.442 14.678 11.638C14.482 11.834 14.2253 12.0533 13.908 12.296C13.544 12.576 13.2733 12.8233 13.096 13.038C12.928 13.2527 12.844 13.528 12.844 13.864V14.326H11.276V13.654ZM11.192 15.222H12.928V17H11.192V15.222Z" fill="currentColor"/>
-                                                    </svg>
-                                            </span>
-                                            {% comment %} End: SVG icon {% endcomment %}</label>
-                                    </div>
-                                    {% comment %} End: WhatsApp radio {% endcomment %}
+                            <div class="form-check form-check-custom mt-4">
+                                <div class="me-3">
+                                    <input class="form-check-input me-2" type="checkbox" id="enable_whatsapp" name="enable_whatsapp"{% if form.enable_whatsapp.value != None %} checked{% endif %} />
+                                    <label for="enable_whatsapp">Enable WhatsApp login
+                                        {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                                        <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'relationships/metronic/tooltips/enable_whatsapp.txt' %}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                <path d="M11.276 13.654C11.276 13.2713 11.3367 12.9447 11.458 12.674C11.5887 12.394 11.738 12.1653 11.906 11.988C12.0833 11.8107 12.3167 11.61 12.606 11.386C12.942 11.1247 13.1893 10.896 13.348 10.7C13.5067 10.4947 13.586 10.2427 13.586 9.944C13.586 9.636 13.4833 9.356 13.278 9.104C13.082 8.84267 12.69 8.712 12.102 8.712C11.486 8.712 11.066 8.866 10.842 9.174C10.6273 9.482 10.52 9.82267 10.52 10.196L10.534 10.574H8.826C8.78867 10.3967 8.77 10.2333 8.77 10.084C8.77 9.552 8.90067 9.07133 9.162 8.642C9.42333 8.20333 9.81067 7.858 10.324 7.606C10.8467 7.354 11.4813 7.228 12.228 7.228C13.1987 7.228 13.9687 7.44733 14.538 7.886C15.1073 8.31533 15.392 8.92667 15.392 9.72C15.392 10.168 15.322 10.5507 15.182 10.868C15.042 11.1853 14.874 11.442 14.678 11.638C14.482 11.834 14.2253 12.0533 13.908 12.296C13.544 12.576 13.2733 12.8233 13.096 13.038C12.928 13.2527 12.844 13.528 12.844 13.864V14.326H11.276V13.654ZM11.192 15.222H12.928V17H11.192V15.222Z" fill="currentColor"/>
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </label>
                                 </div>
-                                {% comment %} <div class="form-text">Select at least 1 option.</div> {% endcomment %}
+                            </div>
 
-                                
-                                <div class="d-flex mt-6">
-                                    <button id="kt_password_submit" type="button" class="btn btn-primary me-2 px-6">Update Phone</button>
-                                    <button id="kt_password_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
-                                </div>
-                            </form>
-                            {% comment %} End: Form {% endcomment %}
+                            <div class="d-flex mt-6">
+                                {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
+                                <button name="update_phone_number" value="update_phone_number" type="submit" class="btn btn-primary me-2 px-6">Update Phone Number</button>
+                                <button id="change_phone_number_button_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
+                            </div>
                         </div>
-                        {% comment %} End: Edit {% endcomment %}
 
-                        {% comment %} Start: Action {% endcomment %}
-                        <div id="kt_signin_password_button" class="ms-auto">
-                            <button class="btn btn-light btn-active-light-primary">Change Phone</button>
+                        <div id="change_phone_number_button_div" class="ms-auto">
+                            <button type="button" class="btn btn-light btn-active-light-primary">Change Phone Number</button>
                         </div>
-                        {% comment %} End: Action {% endcomment %}
                     </div>
-                    {% comment %} End: Password {% endcomment %}
-
                 </div>
-                {% comment %} End: Card body {% endcomment %}
             </div>
-            {% comment %} End: Content {% endcomment %}
         </div>
-        {% comment %} End: Sign-in method {% endcomment %}
+        {% comment %} End: Contact methods {% endcomment %}
     </div>
-    {% comment %} End: Container {% endcomment %}
 </div>
-{% comment %} End: Post {% endcomment %}
 
+</form>
 {% endblock %}
 
+{% comment %}
+We render the Javascript inline because we may toggle email/phone-number div in the event of an error.
+
+"use strict";
+
+// Class definition
+var settings_functions = function () {
+    // Private functions
+    var init_toggles = function () {
+
+        var change_email_preview_div = document.getElementById('change_email_preview_div');
+        var change_email_form_div = document.getElementById('change_email_form_div');
+        var change_email_button_div = document.getElementById('change_email_button_div');
+        var change_email_button_cancel = document.getElementById('change_email_button_cancel');
+
+        var change_phone_number_preview_div = document.getElementById('change_phone_number_preview_div');
+        var change_phone_number_form_div = document.getElementById('change_phone_number_form_div');
+        var change_phone_number_button_div = document.getElementById('change_phone_number_button_div');
+        var change_phone_number_button_cancel = document.getElementById('change_phone_number_button_cancel');
+
+        change_email_button_div.querySelector('button').addEventListener('click', function () {
+            toggle_change_email();
+        });
+
+        change_email_button_cancel.addEventListener('click', function () {
+            toggle_change_email();
+        });
+
+        change_phone_number_button_div.querySelector('button').addEventListener('click', function () {
+            toggle_change_phone_number();
+        });
+
+        change_phone_number_button_cancel.addEventListener('click', function () {
+            toggle_change_phone_number();
+        });
+
+        var toggle_change_email = function () {
+            change_email_preview_div.classList.toggle('d-none');
+            change_email_button_div.classList.toggle('d-none');
+            change_email_form_div.classList.toggle('d-none');
+        }
+
+        var toggle_change_phone_number = function () {
+            change_phone_number_preview_div.classList.toggle('d-none');
+            change_phone_number_button_div.classList.toggle('d-none');
+            change_phone_number_form_div.classList.toggle('d-none');
+        }
+
+        /* @preserve
+        Manually remove comment enclosure after minification
+        {% if form.email.errors %}toggle_change_email();{% endif %}
+        {% if form.phone_number.errors %}toggle_change_phone_number();{% endif %}
+        */
+    }
+
+    // Public methods
+    return {
+        init: function () {
+            init_toggles();
+        }
+    }
+}();
+
+// On document ready
+KTUtil.onDOMContentLoaded(function() {
+    settings_functions.init();
+});
+{% endcomment %}
 {% block page_custom_javascript %}
-<script src="{% static 'common/metronic/demo1/dist/assets/js/custom/account/settings/signin-methods.js' %}"></script>
-<script src="{% static 'common/metronic/demo1/dist/assets/js/custom/account/settings/profile-details.js' %}"></script>
-<script src="{% static 'common/metronic/demo1/dist/assets/js/custom/account/settings/deactivate-account.js' %}"></script>
+<script>
+"use strict";var settings_functions={init:function(){!function(){var e=document.getElementById("change_email_preview_div"),n=document.getElementById("change_email_form_div"),t=document.getElementById("change_email_button_div"),c=document.getElementById("change_email_button_cancel"),o=document.getElementById("change_phone_number_preview_div"),i=document.getElementById("change_phone_number_form_div"),d=document.getElementById("change_phone_number_button_div"),l=document.getElementById("change_phone_number_button_cancel");t.querySelector("button").addEventListener("click",(function(){u()})),c.addEventListener("click",(function(){u()})),d.querySelector("button").addEventListener("click",(function(){g()})),l.addEventListener("click",(function(){g()}));var u=function(){e.classList.toggle("d-none"),t.classList.toggle("d-none"),n.classList.toggle("d-none")},g=function(){o.classList.toggle("d-none"),d.classList.toggle("d-none"),i.classList.toggle("d-none")}
+{% if form.email.errors %}u();{% endif %}
+{% if form.phone_number.errors %}g();{% endif %}
+}()}};KTUtil.onDOMContentLoaded((function(){settings_functions.init()}));
+</script>
 {% endblock %}

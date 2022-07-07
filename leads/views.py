@@ -26,8 +26,8 @@ from leads import models, forms
 
 from relationships import models as relmods
 
-CONTACTED_SUCCESSFULLY_KEY = 'CONTACTED_SUCCESSFULLY_KEY' # Contactee sent contact
-UNAUTHORIZED_ACCESS = 'UNAUTHORIZED_ACCESS'
+MESSAGE_KEY__CONTACT_SENT = 'MESSAGE_KEY__CONTACT_SENT'
+MESSAGE_KEY__UNAUTHORIZED_ACCESS = 'MESSAGE_KEY__UNAUTHORIZED_ACCESS'
 
 @login_required
 def lead_create(request):
@@ -71,7 +71,7 @@ def lead_detail(request, id):
 
     # Disallow access if user doesn't own this lead
     if request.user.user.id != lead.author.id:
-        messages.info(request, UNAUTHORIZED_ACCESS)
+        messages.info(request, MESSAGE_KEY__UNAUTHORIZED_ACCESS)
         return HttpResponseRedirect(reverse('home'))
 
     params = {'lead': lead}
@@ -146,7 +146,7 @@ def contact_lead(request, id):
                 is_buy_comm=form.cleaned_data.get('is_buy_comm')
             )
 
-            messages.info(request, CONTACTED_SUCCESSFULLY_KEY)
+            messages.info(request, MESSAGE_KEY__CONTACT_SENT)
             return HttpResponseRedirect(reverse('home'))
     elif request.method == 'GET':
         form = forms.LeadCaptureForm()
