@@ -30,6 +30,7 @@ from chat.tasks.send_confirm_login import send_confirm_login
 from relationships import forms, models
 from relationships.tasks import send_email_code
 from relationships.tasks import send_whatsapp_code
+from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
 from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
 from relationships.utilities.get_or_create_email import get_or_create_email
 from relationships.utilities.use_email_code import use_email_code
@@ -220,15 +221,6 @@ def verify_whatsapp(request):
     params = _pass_next({'form': form}, request.GET.get('next'))
     return TemplateResponse(request, 'relationships/verify_whatsapp.html', params)
 
-
-
-
-
-
-
-
-
-
 @login_required
 def disable_whatsapp(request):
     user = request.user.user
@@ -236,115 +228,99 @@ def disable_whatsapp(request):
     user.save()
     return _next_or_else_response(request.GET.get('next'), reverse('users:settings'))
 
-
-
-
-
-
-
-
-
-
-
 # Don't name profile settings function 'settings', it conflicts with everybase.settings.
 @login_required
 def profile_settings(request):
     user = request.user.user
+    kwargs = {'user': user}
+
+    # Default SettingsForm values to user's existing values
+    inputs = {
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'country': user.country.programmatic_key,
+        'enable_whatsapp': user.enable_whatsapp
+    }
+
+    if user.email is not None:
+        inputs['email'] = user.email.email
+
+    if user.phone_number is not None:
+        inputs['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
 
     if request.method == 'POST':
-        inputs = {}
-
+        # Override with relevant values depending on the button clicked
         if request.POST.get('save') == 'save':
-            # User clicked on the 'save' button.
-            # Initialize form with fields relevant to 'save', default the rest.
-            inputs = {
-                'first_name': request.POST.get('first_name'),
-                'last_name': request.POST.get('last_name'),
-                'country': request.POST.get('country'),
-                'email': user.email.email,
-                'enable_whatsapp': user.enable_whatsapp,
-                'save': 'save' # Identify button clicked
-            }
-        
-            if user.phone_number is not None:
-                inputs['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
+            inputs['first_name'] = request.POST.get('first_name')
+            inputs['last_name'] = request.POST.get('last_name')
+            inputs['country'] = request.POST.get('country')
+            inputs['save'] = 'save'
 
         elif request.POST.get('update_email') == 'update_email':
-            # User clicked on the 'update email' button.
-            # Initialize form with fields relevant to 'update_email', default the rest.
-            inputs = {
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'country': user.country,
-                'email': request.POST.get('email'),
-                'enable_whatsapp': user.enable_whatsapp,
-                'update_email': 'update_email' # Identify button clicked
-            }
-
-            if user.phone_number is not None:
-                inputs['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
+            inputs['email'] = request.POST.get('email')
+            inputs['update_email'] = 'update_email'
 
         elif request.POST.get('update_phone_number') == 'update_phone_number':
-            # User clicked on the 'update phone number' button.
-            # Initialize form with fields relevant to 'update_phone_number', default the rest.
+            inputs['phone_number'] = request.POST.get('phone_number')
+            inputs['enable_whatsapp'] = request.POST.get('enable_whatsapp')
+            inputs['update_phone_number'] = 'update_phone_number'
 
-            inputs = {
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'country': user.country,
-                'enable_whatsapp': user.enable_whatsapp,
-                'phone_number': request.POST.get('phone_number'),
-                'update_phone_number': 'update_phone_number' # Identify button clicked
-            }
+        form = forms.SettingsForm(inputs, **kwargs)
 
-            if user.email is not None:
-                inputs['email'] = user.email.email
-
-        form = forms.SettingsForm(inputs)
+        nose = lambda x : x is None or x is False
+        different = lambda x, y: not (nose(x) == nose(y) or x == y)
 
         if form.is_valid():
             if request.POST.get('save') == 'save':
-                country = commods.Country.objects.get(
-                    programmatic_key=form.cleaned_data.get('country'))
                 user = request.user.user
                 user.first_name = form.cleaned_data.get('first_name')
                 user.last_name = form.cleaned_data.get('last_name')
-                user.country = country
+                user.country = commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country'))
                 user.save()
 
             elif request.POST.get('update_email') == 'update_email':
-                url = f"{reverse('users:update_email')}?email={form.cleaned_data.get('email')}"
-                return HttpResponseRedirect(url)
+                if user.email.email != form.cleaned_data.get('email').strip():
+                    return HttpResponseRedirect(f"{reverse('users:update_email')}?email={form.cleaned_data.get('email')}")
 
             elif request.POST.get('update_phone_number') == 'update_phone_number':
-                url = f"{reverse('users:update_phone_number')}?phone_number={form.cleaned_data.get('phone_number')}"
-                return HttpResponseRedirect(url)
+                phone_number = form.cleaned_data.get('phone_number')
+                enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
+                if not are_phone_numbers_same(user.phone_number, phone_number):
+                    # Require verification even if the user wants to disable WhatsApp
+                    return HttpResponseRedirect(f"{reverse('users:update_phone_number')}?phone_number={phone_number}&enable_whatsapp={enable_whatsapp}")
+                elif different(user.enable_whatsapp, enable_whatsapp):
+                    if nose(enable_whatsapp):
+                        # Do not require verification to disable WhatsApp if phone number is the same
+                        user.enable_whatsapp = False
+                        user.save()
+                    else:
+                        # Require verification to enable WhatsApp even if phone number is the same
+                        return HttpResponseRedirect(f"{reverse('users:update_phone_number')}?phone_number={phone_number}&enable_whatsapp={enable_whatsapp}")
+
     else:
-        initial = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'country': user.country.name
-        }
+        form = forms.SettingsForm(initial=inputs, **kwargs)
 
-        if user.email is not None:
-            initial['email'] = user.email.email
-        
-        if user.phone_number is not None:
-            initial['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
-
-        if user.enable_whatsapp is not None:
-            initial['enable_whatsapp'] = user.enable_whatsapp
-
-        form = forms.SettingsForm(initial=initial)
-
-    params = {
+    return TemplateResponse(request, 'relationships/settings.html', {
         'form': form,
         'countries': commods.Country.objects.annotate(
             num_users=Count('users_w_this_country')).order_by('-num_users')
-    }
+    })
 
-    template_name = 'relationships/metronic/settings.html'
-    return TemplateResponse(request, template_name, params)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @login_required
 def update_email(request):

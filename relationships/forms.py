@@ -1,3 +1,4 @@
+from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
 from relationships.utilities.email_exists import email_exists
 from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.is_email_code_valid import is_email_code_valid
@@ -130,95 +131,65 @@ class VerifyWhatsAppForm(forms.Form):
         if self.user.whatsapp_code != self.cleaned_data.get('code'):
             raise ValidationError({'code': ['Invalid code.',]})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 class SettingsForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
     country = forms.CharField()
 
-    # Required determined by which button the user clicked
+    # Required determined by button clicked
     email = forms.EmailField(required=False)
     phone_number = PhoneNumberField(required=False)
     enable_whatsapp = forms.BooleanField(required=False)
 
-    # To identify which button the user clicked
+    # Identifies button clicked
     save = forms.CharField(required=False)
     update_email = forms.CharField(required=False)
     update_phone_number = forms.CharField(required=False)
 
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
     def clean(self):
         super(SettingsForm, self).clean()
 
-        has_error = False
-
         if self.cleaned_data.get('update_email') == 'update_email':
             # 'Update email button' clicked
-            email = self.cleaned_data.get('email')
-            if email is None or email.strip() == '':
-                self.add_error('email', 'This field is required.')
-                has_error = True
-            else:
-                try:
-                    email_obj = models.Email.objects.get(email=email)
-
-                    u = models.User.objects.filter(
-                        email=email_obj.id, # User has email
-                        registered__isnull=False, # User is registered
-                        django_user__isnull=False # User has a Django user linked
-                    ).first()
-
-                    if u is not None:
-                        self.add_error('email', 'This email belongs to an existing user.')
-                        has_error = True
-                except models.Email.DoesNotExist:
-                    # Good - email is not in used
-                    pass
+            email = self.cleaned_data.get('email').strip()
+            if email != self.user.email.email and email_exists(email):
+                raise ValidationError({'email': ['This email belongs to an existing user',]})
+            
         elif self.cleaned_data.get('update_phone_number') == 'update_phone_number':
             # 'Update phone number' button clicked
             phone_number = self.cleaned_data.get('phone_number')
-            if phone_number is None or phone_number.strip() == '':
-                self.add_error('phone_number', 'This field is required.')
-                has_error = True
-            else:
-                ph_str = str(ph_str)
-                if ph_str.strip() != '':
-                    parsed_ph = phonenumbers.parse(ph_str, None)
+            
+            if not are_phone_numbers_same(phone_number, self.user.phone_number) and phone_number_exists(phone_number):
+                raise ValidationError({'phone_number': ['This phone number belongs to an existing user',]})
+        
 
-                    ph_cc = parsed_ph.country_code
-                    ph_nn = parsed_ph.national_number
 
-                    try:
-                        phone_number = models.PhoneNumber.objects.get(
-                            country_code=ph_cc,
-                            national_number=ph_nn
-                        )
 
-                        user_w_ph = models.User.objects.filter(
-                            phone_number=phone_number.id, # User has phone number
-                            registered__isnull=False, # User is registered
-                            django_user__isnull=False # User has a Django user linked
-                        ).first()
-                        
-                        if user_w_ph is not None:
-                            self.add_error('phone_number', 'This phone number belongs to an existing user.')
-                            has_error = True
-                    except models.PhoneNumber.DoesNotExist:
-                        # Good - no user has this phone number
-                        pass
-        if has_error:
-            raise ValidationError(None)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class UpdateEmailForm(forms.Form):
     email = forms.CharField()

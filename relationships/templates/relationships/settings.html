@@ -165,7 +165,7 @@
 
                             <div class="form-check form-check-custom mt-4">
                                 <div class="me-3">
-                                    <input class="form-check-input me-2" type="checkbox" id="enable_whatsapp" name="enable_whatsapp"{% if form.enable_whatsapp.value != None %} checked{% endif %} />
+                                    <input class="form-check-input me-2" type="checkbox" id="enable_whatsapp" name="enable_whatsapp"{% if form.enable_whatsapp.value == True %} checked{% endif %} />
                                     <label for="enable_whatsapp">Enable WhatsApp login
                                         {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
                                         <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'relationships/tooltips/enable_whatsapp.txt' %}">
