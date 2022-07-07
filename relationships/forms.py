@@ -70,9 +70,6 @@ class ConfirmEmailLoginForm(forms.Form):
 
 
 
-
-
-
 class ConfirmWhatsAppLoginForm(forms.Form):
     code = forms.CharField()
 

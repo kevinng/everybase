@@ -1,18 +1,16 @@
-{% extends 'relationships/metronic/extendables/login_register.html' %}
+{% extends 'relationships/metronic/extendables/simple.html' %}
 
 {% block title %}Login to Everybase{% endblock %}
 
 {% block meta_description %}Login to Everybase{% endblock %}
-
 {% block meta_og_title %}Login to Everybase{% endblock %}
-
+{% block meta_og_url_path %}{% url 'login' %}{% endblock %}
 {% block meta_og_site_name %}Everybase{% endblock %}
 
 {% load static %}
 
 {% block content %}
 <div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url({% static 'common/metronic/demo1/dist/assets/media/illustrations/sketchy-1/14.png' %}">
-    {% comment %} Start: Content {% endcomment %}
     <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
         <a href="{% url 'home' %}" class="mb-12">
             <img alt="Logo" src="{% static 'common/metronic/demo1/dist/assets/media/logos/logo.png' %}" />
@@ -45,6 +43,5 @@
             </form>
         </div>
     </div>
-    {% comment %} End: Content {% endcomment %}
 </div>
 {% endblock %}
