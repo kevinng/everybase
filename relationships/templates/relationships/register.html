@@ -1,113 +1,89 @@
-{% extends 'extendables/b.html' %}
+{% extends 'relationships/extendables/simple.html' %}
+
+{% block title %}Register for Everybase{% endblock %}
+
+{% block meta_description %}Register for Everybase{% endblock %}
+{% block meta_og_title %}Register for Everybase{% endblock %}
+{% block meta_og_url_path %}{% url 'register' %}{% endblock %}
+{% block meta_og_site_name %}Everybase{% endblock %}
 
 {% load static %}
 
-{% block title %}Register{% endblock %}
-
 {% block content %}
-<div class="flex justify-center">
-    <div class="bg-white md:w-2/3 lg:w-1/2 xl:w-1/3 mt-10 mb-10 w-full p-10 shadow-md">
-        <img class="mx-auto mt-5" src="{% static 'common/img/logo.png' %}">
-        <h1 class="text-3xl font-bold text-center mt-5">Register</h1>
+<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url({% static 'common/metronic/demo1/dist/assets/media/illustrations/sketchy-1/14.png' %}">
+    <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+        <a href="{% url 'home' %}" class="mb-12">
+            <img alt="Logo" src="{% static 'common/metronic/demo1/dist/assets/media/logos/logo.png' %}" />
+        </a>
 
-        <div class="mt-7 flex flex-col justify-center">
-            <form action="{% url 'register' %}" method="post">
+        <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <form class="form w-100" action="{% url 'register' %}" method="post">
                 {% csrf_token %}
-                {% if next is not None %}<input type="hidden" name="next" value="{{ next }}">{% endif %}{% comment %} The next URL is rendered with the template if it is passed as a GET parameter to the URL. {% endcomment %}
-                <label for="whatsapp_phone_number" class="font-bold text-slate-400">WhatsApp Phone Number</label>
-                <input name="whatsapp_phone_number" value="{% if form.whatsapp_phone_number.value %}{{ form.whatsapp_phone_number.value }}{% endif %}" placeholder="E.g., +14155552671" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
-                <div class="mt-2">Please include + symbol. E.g., +14155552671.</div>
-                {% if form.whatsapp_phone_number.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.whatsapp_phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <label for="first_name" class="font-bold text-slate-400 mt-7 block">First Name</label>
-                <input name="first_name" value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
-                {% if form.first_name.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
-                <label for="last_name" class="font-bold text-slate-400 mt-7 block">Last Name</label>
-                <input name="last_name" value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
-                {% if form.last_name.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
-                <div class="mt-7 flex justify-start">
-                    <input id="has_company" name="has_company" type="checkbox" class="h-6 w-6" {% if form.has_company.value == True %} checked{% endif %}>
-                    <label for="has_company" class="ml-3">I have a company</label>
+                <div class="text-center mb-10">
+                    <h1 class="text-dark mb-3">Register for Everybase</h1>
+                    <div class="text-gray-400 fw-bold fs-4">Have an account?
+                    <a href="{% url 'login' %}" class="link-primary fw-bolder">Login</a></div>
                 </div>
 
-                <label id="company_name__label" for="company_name" class="font-bold text-slate-400 mt-7 block">Company Name</label>
-                <input id="company_name" name="company_name" value="{% if form.company_name.value %}{{ form.company_name.value }}{% endif %}" type="text" class="w-full border rounded-md py-3 px-5 mt-2">
-                {% if form.company_name.errors %}<div id="company_name__error" class="w-full px-1 mt-2 text-red-500">{% for error in form.company_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
-                <label for="email" class="font-bold text-slate-400 mt-7 block">Email</label>
-                <input name="email" value="{% if form.email.value %}{{ form.email.value }}{% endif %}" type="email" class="w-full border rounded-md py-3 px-5 mt-2">
-                {% if form.email.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
-                <label for="email" class="font-bold text-slate-400 mt-7 block">Goods & Services I Deal With</label>
-                <textarea rows="4" name="goods_string" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.goods_string.value %}{{ form.goods_string.value }}{% endif %}</textarea>
-                {% if form.goods_string.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.goods_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                <div class="mt-2">E.g., textiles, commodities.</div>
-
-                <label class="font-bold text-slate-400 mt-7 block">I am a</label>
-                <div class="mt-2 flex justify-start">
-                    <input id="is_buyer" name="is_buyer" type="checkbox" class="h-6 w-6" {% if form.is_buyer.value == True %} checked{% endif %}>
-                    <label for="is_buyer" class="ml-3">Buyer</label>
+                <div>
+                    <label class="form-label fs-6 fw-bolder text-dark" for="email">Email Address</label>
+                    <input class="form-control form-control-lg" type="text" name="email" id="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} />
                 </div>
-                <div class="mt-2 flex justify-start">
-                    <input id="is_seller" name="is_seller" type="checkbox" class="h-6 w-6" {% if form.is_seller.value == True %} checked{% endif %}>
-                    <label for="is_seller" class="ml-3">Seller</label>
+                {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="phone_number">Phone Number</label>
+                    <input class="form-control form-control-lg" type="text" name="phone_number" id="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} />
+                    <div class="form-text">Include + symbol. E.g., +14155552671.</div>
                 </div>
-                <div class="mt-2 flex justify-start">
-                    <input id="is_buy_agent" name="is_buy_agent" type="checkbox" class="h-6 w-6" {% if form.is_buy_agent.value == True %} checked{% endif %}>
-                    <label for="is_buy_agent" class="ml-3">Buying Agent</label>
-                </div>
-                <div class="mt-2 flex justify-start">
-                    <input id="is_sell_agent" name="is_sell_agent" type="checkbox" class="h-6 w-6" {% if form.is_sell_agent.value == True %} checked{% endif %}>
-                    <label for="is_sell_agent" class="ml-3">Selling Agent</label>
+                {% if form.phone_number.errors %}<div class="text-danger">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="form-check form-check-custom mt-4">
+                    <div class="me-3">
+                        <input class="form-check-input me-2" type="checkbox" name="enable_whatsapp" id="enable_whatsapp" />
+                        <label for="enable_whatsapp">WhatsApp login
+                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'relationships/tooltips/enable_whatsapp.txt' %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                    </svg>
+                            </span>
+                            {% comment %} End: SVG icon {% endcomment %}
+                        </label>
+                    </div>
                 </div>
 
-                <label for="email" class="font-bold text-slate-400 mt-7 block">Languages I Speak</label>
-                <textarea rows="4" name="languages_string" class="w-full border rounded-md py-3 px-5 mt-2">{% if form.languages_string.value %}{{ form.languages_string.value }}{% endif %}</textarea>
-                {% if form.languages_string.errors %}<div class="w-full px-1 mt-2 text-red-500">{% for error in form.languages_string.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                <div class="mt-2">E.g., English, Bahasa.</div>
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="first_name">First Name</label>
+                    <input class="form-control form-control-lg" type="text" name="first_name" id="first_name"{% if form.first_name.value != None %} value="{{ form.first_name.value }}"{% endif %} />
+                </div>
+                {% if form.first_name.errors %}<div class="text-danger">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <button type="submit" class="w-full py-4 px-7 font-bold text-white rounded-md bg-green-500 hover:bg-green-600 mt-10 shadow-md">WhatsApp Me</button>
-                <div class="text-center mt-2 px-1">A confirmation message will be sent to your phone number via WhatsApp. Reply 'yes' to register and sign-in.</div>
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="last_name">Last Name</label>
+                    <input class="form-control form-control-lg" type="text" name="last_name" id="last_name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %} />
+                </div>
+                {% if form.last_name.errors %}<div class="text-danger">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="country">Country</label>
+                    <select name="country" class="form-select" data-control="select2" data-placeholder="Country" id="country">
+                        <option></option>
+                        {% for country in countries %}
+                            <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="text-center mt-10">
+                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Next</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% comment %} 
-Dependencies:
-    JQuery
-
-$(document).ready(function() {
-    $has_company = $('#has_company')
-    $company_name__label = $('#company_name__label')
-    $company_name = $('#company_name')
-    $company_name__error = $('#company_name__error')
-
-    function set_has_company() {
-        if ($has_company.is(':checked')) {
-            $company_name__label.show()
-            $company_name.show()
-            $company_name__error.show()
-        } else {
-            $company_name__label.hide()
-            $company_name.hide()
-            $company_name__error.hide()
-        }
-    }
-
-    // Run on load
-    set_has_company()
-
-    // Run on change
-    $has_company.change(function () {
-        set_has_company()
-    })
-})
-{% endcomment %}
-{% block other_script %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'relationships/js/user_create_edit.min.js' %}"></script>
 {% endblock %}

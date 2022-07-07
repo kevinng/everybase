@@ -8,12 +8,13 @@ def send_email(
     from_email,
     recipient_list,
     html_message=None):
-    """Send specified email. Designed to be self-contained without dependencies
-    to other sub-systems (e.g. PostgreSQL, template renderer)
+    """Send email. Returns True if successful. Designed to be self-contained without dependencies to other sub-systems (e.g. PostgreSQL, template renderer)."""
+    if from_email is None or from_email.strip() == '':
+        return False
 
-    Returns:
-    Boolean: True if successful
-    """
+    for email in recipient_list:
+        if email is None or email.strip() == '':
+            return False
     
     return send_mail(
         subject,
