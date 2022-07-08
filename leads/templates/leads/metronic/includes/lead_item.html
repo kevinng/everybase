@@ -38,9 +38,14 @@ Parameters:
         <div class="d-flex justify-content-between">
             <div>
                 {% if not request.user.is_authenticated or request.user.user.id != lead.author.id %}
-                    <a href="#" class="btn btn-light-danger btn-sm ms-1">Scam <span class="badge badge-danger ms-1">2</span></a>
-                    <a href="#" class="btn btn-light-warning btn-sm">Spam <span class="badge badge-warning ms-1">5</span></a>
+                    <a href="#" class="btn btn-light-danger btn-sm"><i class="bi bi-hand-thumbs-down"></i> Bad <span class="badge badge-danger ms-1">2</span></a>
+                    {% comment %} Remove ms-2 {% endcomment %}
+                    <a href="#" class="btn btn-active-light-danger btn-sm text-danger ms-2"><i class="bi text-danger bi-hand-thumbs-down"></i> Bad <span class="badge badge-danger ms-1">2</span></a>
 
+                    {% comment %} <a href="#" class="btn btn-light-danger btn-sm ms-1"><i class="bi bi-hand-thumbs-down"></i> Scam <span class="badge badge-danger ms-1">2</span></a> {% endcomment %}
+                    {% comment %} <a href="#" class="btn btn-light-warning btn-sm">Spam <span class="badge badge-warning ms-1">5</span></a> {% endcomment %}
+
+                    
                     {% comment %} <a href="#" class="btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger btn-sm ms-1">Scam <span class="badge badge-danger ms-1">2</span></a> {% endcomment %}
                     {% comment %} <a href="#" class="btn btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning btn-sm">Spam <span class="badge badge-warning ms-1">5</span></a> {% endcomment %}
                 {% endif %}

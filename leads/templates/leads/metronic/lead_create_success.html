@@ -3,32 +3,10 @@
 {% load static %}
 
 {% block page_title %}Leads{% endblock %}
-
 {% block page_subtitle %}Importers/exporters finding buyers, sellers and agents{% endblock %}
 
 {% block actions%}
-<!--begin::Wrapper-->
-<div class="d-flex align-items-center overflow-auto">
-    <!--begin::Search-->
-    <div class="position-relative my-1 me-2">
-        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-        <span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ps-10">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor" />
-                <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor" />
-            </svg>
-        </span>
-        <!--end::Svg Icon-->
-        <input type="text" class="form-control form-control-sm w-150px ps-10" name="Search" value="" placeholder="Search" />
-    </div>
-    <button type="submit" class="btn btn-sm btn-light-primary">Search</button>
-    <!--end::Search-->
-    <!--begin::Separartor-->
-    <div class="bullet bg-secondary h-35px w-1px mx-6"></div>
-    <!--end::Separartor-->
-    <button type="submit" class="btn btn-sm btn-primary">Post Lead</button>
-</div>
-<!--end::Wrapper-->
+{% include 'leads/metronic/includes/toolbar_actions.html' %}
 {% endblock %}
 
 {% block content_body %}
@@ -42,17 +20,17 @@
             </div>
             <div class="card-body">
                 <div class="col-lg-4 col-md-6">
-                    <label class="form-label">
-                        Share your lead with this link
-                    </label>
+                    <label class="form-label">Share this Link</label>
                     <div class="input-group">
                         <input id="lead_clipboard" type="text" class="form-control col-lg-2" value="{{ contact_lead_url }}" readonly />
                         <button class="btn btn-light-primary" data-clipboard-target="#lead_clipboard">Copy Link</button>
                     </div>
+                    <div class="form-text">User may contact you via the form at this link. <a href="{{ contact_lead_url }}" target="_blank">See how it looks like.</a></div>
                 </div>
 
                 <div class="d-flex mt-10">
-                    <a href="{% url 'leads:my_leads' %}" class="btn btn-primary">Next</a>
+                    <a href="{% url 'leads:lead_create' %}" class="btn btn-light-primary">Post Another Lead</a>
+                    <a href="{% url 'leads:my_leads' %}" class="btn btn-primary ms-2">See Your Leads</a>
                 </div>
             </div>
         </div>

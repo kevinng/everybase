@@ -56,14 +56,14 @@
                 </div>
 
                 <div class="col-lg-4 col-md-6 mt-12">
-                    <label class="form-label" for="lead_clipboard">Contact URL</label>
+                    <label class="form-label" for="lead_clipboard">Share this Link</label>
                     <div class="input-group">
                         <input id="lead_clipboard" type="text" class="form-control col-lg-2" value="{{ lead.contact_lead_url }}" readonly />
                         <button class="btn btn-light-primary" data-clipboard-target="#lead_clipboard">Copy</button>
                     </div>
                 </div>
 
-                <div class="form-text">Share this link in WhatsApp chatgroup, Facebook groups, etc - so interested parties can contact you.</div>
+                <div class="form-text">User may contact you via the form at this link. <a href="{{ lead.contact_lead_url }}" target="_blank">See how it looks like.</a></div>
 
                 <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
                     <li class="nav-item mt-2">
