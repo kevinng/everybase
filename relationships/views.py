@@ -1,4 +1,4 @@
-import pytz, phonenumbers, random
+import pytz, phonenumbers, random, urllib
 from datetime import datetime
 from ratelimit.decorators import ratelimit
 
@@ -286,10 +286,13 @@ def profile_settings(request):
             elif request.POST.get('update_phone_number') == 'update_phone_number':
                 phone_number = form.cleaned_data.get('phone_number')
                 enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
+
+                encph = urllib.parse.quote(str(phone_number)) # Encode phone number so the + symbol is passed safely
+                verification_url = f"{reverse('users:update_phone_number')}?phone_number={encph}&enable_whatsapp={enable_whatsapp}"
+
                 if not are_phone_numbers_same(user.phone_number, phone_number):
                     # Require verification even if the user wants to disable WhatsApp
-                    phone_number = str(phone_number).replace('+', '') # Remove + symbol
-                    return HttpResponseRedirect(f"{reverse('users:update_phone_number')}?phone_number={phone_number}&enable_whatsapp={enable_whatsapp}")
+                    return HttpResponseRedirect(verification_url)
                 elif user.enable_whatsapp != enable_whatsapp:
                     if not enable_whatsapp:
                         # Do not require verification to disable WhatsApp if phone number is unchanged
@@ -298,8 +301,7 @@ def profile_settings(request):
                         messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS)
                     else:
                         # Require verification to enable WhatsApp even if phone number is the same
-                        phone_number = str(phone_number).replace('+', '') # Remove + symbol
-                        return HttpResponseRedirect(f"{reverse('users:update_phone_number')}?phone_number={phone_number}&enable_whatsapp={enable_whatsapp}")
+                        return HttpResponseRedirect(verification_url)
 
     else:
         form = forms.SettingsForm(initial=inputs, **kwargs)
@@ -330,11 +332,6 @@ def update_email(request):
             return HttpResponseRedirect(reverse('users:settings'))
     else:
         email = request.GET.get('email')
-        
-        # Validate email, in case it has been tempered
-        if email_exists(email):
-            messages.add_message(request, messages.ERROR, MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN)
-            return HttpResponseRedirect(reverse('users:settings'))
 
         send_email_code.send_email_code(user, email_purposes.UPDATE_EMAIL, email)
         form = forms.UpdateEmailForm(initial={'email': email}, **kwargs)
@@ -350,7 +347,7 @@ def update_phone_number(request):
         if form.is_valid():
             # Validate phone number, in case it has been tempered
             phone_number = form.cleaned_data.get('phone_number')
-            enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
+            enable_whatsapp = form.cleaned_data.get('enable_whatsapp') == 'True'
             if phone_number_exists(phone_number) is not None:
                 # User is changing phone_number and/or enable_whatsapp
                 user.enable_whatsapp = enable_whatsapp
@@ -362,18 +359,13 @@ def update_phone_number(request):
 
             return HttpResponseRedirect(reverse('users:settings'))
     else:
-        phone_number = request.GET.get('phone_number').strip()
+        phone_number = request.GET.get('phone_number')
 
-        # Validate phone number, in case it has been tempered
-        if phone_number_exists(phone_number):
-            messages.add_message(request, messages.ERROR, MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN)
-            return HttpResponseRedirect(reverse('users:settings'))
-
-        p = get_or_create_phone_number(f'+{phone_number}') # + was removed
+        p = get_or_create_phone_number(phone_number)
         send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.UPDATE_PHONE_NUMBER, phone_number=p)
         form = forms.UpdatePhoneNumberForm(initial={
             'phone_number': phone_number,
-            'enable_whatsapp': request.GET.get('enable_whatsapp')
+            'enable_whatsapp': request.GET.get('enable_whatsapp') == 'True'
         }, **kwargs)
 
     return TemplateResponse(request, 'relationships/confirm_phone_number_change.html', {'form': form})

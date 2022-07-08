@@ -16,6 +16,8 @@
             <img alt="Logo" src="{% static 'common/metronic/demo1/dist/assets/media/logos/logo.png' %}" />
         </a>
 
+        {{form.errors}}
+
         <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
             <form class="form w-100 mb-10" action="{% url 'users:update_phone_number' %}" method="post">
                 {% csrf_token %}
@@ -27,8 +29,8 @@
                 <div class="text-center mb-10">
                     <h1 class="text-dark mb-3">Verify Your WhatsApp Phone Number</h1>
                     <div class="text-muted fw-bold fs-5 mb-5">Enter the confirmation code we've sent via WhatsApp to</div>
-                    <div class="fw-bolder text-dark fs-3">+{{ form.phone_number.value }}</div>
-                    <input type="hidden" name="phone_number" value="+{{ form.phone_number.value }}" />
+                    <div class="fw-bolder text-dark fs-3">{{ form.phone_number.value }}</div>
+                    <input type="hidden" name="phone_number" value="{{ form.phone_number.value }}" />
                     <input type="hidden" name="enable_whatsapp" value="{{ form.enable_whatsapp.value }}" />
                 </div>
 

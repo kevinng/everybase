@@ -1,5 +1,7 @@
 from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
 from relationships.utilities.email_exists import email_exists
+from relationships.utilities.is_email_code_rate_limited import is_email_code_rate_limited
+from relationships.utilities.is_whatsapp_code_rate_limited import is_whatsapp_code_rate_limited
 from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.is_email_code_valid import is_email_code_valid
 from relationships.utilities.is_whatsapp_code_valid import is_whatsapp_code_valid
@@ -159,6 +161,8 @@ class SettingsForm(forms.Form):
             email = self.cleaned_data.get('email').strip()
             if email != self.user.email.email and email_exists(email):
                 raise ValidationError({'email': ['This email belongs to an existing user',]})
+            elif is_email_code_rate_limited(self.user):
+                raise ValidationError({'email': ["You're sending requests too quickly. Please try again later.",]})
             
         elif self.cleaned_data.get('update_phone_number') == 'update_phone_number':
             # 'Update phone number' button clicked
@@ -166,6 +170,8 @@ class SettingsForm(forms.Form):
             
             if not are_phone_numbers_same(phone_number, self.user.phone_number) and phone_number_exists(phone_number):
                 raise ValidationError({'phone_number': ['This phone number belongs to an existing user',]})
+            elif is_whatsapp_code_rate_limited(self.user):
+                raise ValidationError({'phone_number': ["You're sending requests too quickly. Please try again later.",]})
 
 class UpdateEmailForm(forms.Form):
     email = forms.CharField()
@@ -186,7 +192,7 @@ class UpdatePhoneNumberForm(forms.Form):
 
     # Render in hidden fields
     phone_number = PhoneNumberField()
-    enable_whatsapp = forms.BooleanField()
+    enable_whatsapp = forms.CharField()
 
     def __init__(self, *args, **kwargs):
         # Make request object passed in a class variable
