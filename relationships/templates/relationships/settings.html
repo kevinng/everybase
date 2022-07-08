@@ -206,7 +206,7 @@
         </div>
 
         {% comment %} Start: Avatar {% endcomment %}
-        <div class="card mb-5 mb-xl-10 shadow-sm">
+        {% comment %} <div class="card mb-5 mb-xl-10 shadow-sm">
             <div class="card-header border-0">
                 <div class="card-title m-0">
                     <h3 class="fw-bolder m-0">Avatar</h3>
@@ -235,12 +235,12 @@
                     <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
                 </div>
 
-                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                <div class="card-footer d-flex justify-content-end py-6 px-9"> {% endcomment %}
                     {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
-                    <button name="update_avatar" value="update_avatar" type="submit" class="btn btn-primary">Update Avatar</button>
+                    {% comment %} <button name="update_avatar" value="update_avatar" type="submit" class="btn btn-primary">Update Avatar</button>
                 </div>
             </div>
-        </div>
+        </div> {% endcomment %}
         {% comment %} End: Avatar {% endcomment %}
 
         {% comment %} Start: Profile {% endcomment %}
