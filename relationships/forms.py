@@ -30,14 +30,14 @@ class LoginForm(forms.Form):
 
         email_or_phone_number = self.cleaned_data.get('email_or_phone_number')
         e = email_exists(email_or_phone_number)
-        p = phone_number_exists(email_or_phone_number)
+        p = phone_number_exists(email_or_phone_number, enable_whatsapp=True)
             
         if e is None and p is None:
             # Both functions returned error
             raise ValidationError({'email_or_phone_number': ['Enter valid email or phone number.',]})
         elif (e is False and p is None) or (e is None and p is False):
             # Neither function returned an existing user
-            raise ValidationError({'email_or_phone_number': ['Account does not exist.',]})
+            raise ValidationError({'email_or_phone_number': ['Account does not exist. If you have provided a phone number, WhatsApp login may have been disabled.',]})
         elif isinstance(e, models.User):
             self.user = e # Assign self.user to indicate user exists
             self.email = e.email # Assign self.email to indicate valid email
@@ -128,7 +128,7 @@ class VerifyWhatsAppForm(forms.Form):
 
     def clean(self):
         super(VerifyWhatsAppForm, self).clean()
-        if self.user.whatsapp_code != self.cleaned_data.get('code'):
+        if is_whatsapp_code_valid(self.cleaned_data.get('code'), self.user) is not True:
             raise ValidationError({'code': ['Invalid code.',]})
 
 class SettingsForm(forms.Form):
@@ -142,7 +142,7 @@ class SettingsForm(forms.Form):
     enable_whatsapp = forms.BooleanField(required=False)
 
     # Identifies button clicked
-    save = forms.CharField(required=False)
+    update_profile = forms.CharField(required=False)
     update_email = forms.CharField(required=False)
     update_phone_number = forms.CharField(required=False)
 
@@ -166,30 +166,6 @@ class SettingsForm(forms.Form):
             
             if not are_phone_numbers_same(phone_number, self.user.phone_number) and phone_number_exists(phone_number):
                 raise ValidationError({'phone_number': ['This phone number belongs to an existing user',]})
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class UpdateEmailForm(forms.Form):
     email = forms.CharField()
@@ -202,9 +178,25 @@ class UpdateEmailForm(forms.Form):
 
     def clean(self):
         super(UpdateEmailForm, self).clean()
-        if self.user.email_login_code != self.cleaned_data.get('code'):
-            self.add_error('code', 'Invalid code.')
-            raise ValidationError(None)
+        if is_email_code_valid(self.cleaned_data.get('code'), self.user) is not True:
+            raise ValidationError({'code': ['Invalid code.',]})
+
+class UpdatePhoneNumberForm(forms.Form):
+    code = forms.CharField()
+
+    # Render in hidden fields
+    phone_number = PhoneNumberField()
+    enable_whatsapp = forms.BooleanField()
+
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(UpdatePhoneNumberForm, self).clean()
+        if is_whatsapp_code_valid(self.cleaned_data.get('code'), self.user) is not True:
+            raise ValidationError({'code': ['Invalid code.',]})
 
 
 

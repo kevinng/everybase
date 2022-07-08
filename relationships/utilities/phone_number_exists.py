@@ -4,7 +4,7 @@ from relationships import models
 
 def phone_number_exists(
         phone_number: Union[phonenumbers.phonenumber.PhoneNumber, str],
-        enable_whatsapp=True
+        enable_whatsapp=None
     ) -> Union[bool, models.User]:
     """Returns PhoneNumber model reference if an existing user owns this phone number, False otherwise. Returns None if error.
     
@@ -13,7 +13,7 @@ def phone_number_exists(
     phone_number
         Phone number to check.
     enable_whatsapp
-        User.enable_whatsapp setting. Default True - i.e., only include users who have enabled WhatsApp.
+        User.enable_whatsapp setting. Default None - i.e., only everyone. E.g., if True, only includes user with enable_whatsapp equals to True.
     """
     if type(phone_number) == str:
         if phone_number is None or phone_number.strip() == '':
@@ -41,17 +41,21 @@ def phone_number_exists(
             national_number=national_number
         )
 
-        u = models.User.objects.filter(
+        users = models.User.objects.filter(
             phone_number=p.id, # User has phone number
             registered__isnull=False, # User is registered
             django_user__isnull=False, # User has a Django user linked
             deleted__isnull=True, # User is not deleted
-            enable_whatsapp=enable_whatsapp # User has enabled WhatsApp
-        ).first()
+        )
+
+        if enable_whatsapp is not None:
+            users = users.filter(enable_whatsapp=enable_whatsapp)
+
+        user = users.first()
         
-        if u is not None:
+        if user is not None:
             # Phone number belongs to an existing user
-            return u
+            return user
     except models.PhoneNumber.DoesNotExist:
         return False
     

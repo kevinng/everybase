@@ -1,9 +1,9 @@
 {% extends 'relationships/extendables/simple.html' %}
 
-{% block title %}Confirm Email Change{% endblock %}
+{% block title %}Verify WhatsApp Phone Number{% endblock %}
 
-{% block meta_description %}Confirm email change{% endblock %}
-{% block meta_og_title %}Confirm Email Change{% endblock %}
+{% block meta_description %}Verify WhatsApp phone number{% endblock %}
+{% block meta_og_title %}Verify WhatsApp Phone Number{% endblock %}
 {% block meta_og_url_path %}{% url 'users:settings' %}{% endblock %}
 {% block meta_og_site_name %}Everybase{% endblock %}
 
@@ -17,7 +17,7 @@
         </a>
 
         <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
-            <form class="form w-100 mb-10" action="{% url 'users:update_email' %}" method="post">
+            <form class="form w-100 mb-10" action="{% url 'users:update_phone_number' %}" method="post">
                 {% csrf_token %}
 
                 <div class="text-center mb-10">
@@ -25,20 +25,21 @@
                 </div>
 
                 <div class="text-center mb-10">
-                    <h1 class="text-dark mb-3">Confirm Email Change</h1>
-                    <div class="text-muted fw-bold fs-5 mb-5">Enter the comfirmation code we've sent to</div>
-                    <div class="fw-bolder text-dark fs-3">{{ form.email.value }}</div>
-                    <input type="hidden" name="email" value="{{ form.email.value }}">
+                    <h1 class="text-dark mb-3">Verify Your WhatsApp Phone Number</h1>
+                    <div class="text-muted fw-bold fs-5 mb-5">Enter the confirmation code we've sent via WhatsApp to</div>
+                    <div class="fw-bolder text-dark fs-3">+{{ form.phone_number.value }}</div>
+                    <input type="hidden" name="phone_number" value="+{{ form.phone_number.value }}" />
+                    <input type="hidden" name="enable_whatsapp" value="{{ form.enable_whatsapp.value }}" />
                 </div>
 
                 <div class="mt-10">
                     <input type="text" class="form-control" name="code" placeholder="Enter confirmation code" />
+                    {% if form.code.errors %}<div class="text-danger">{% for error in form.code.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                 </div>
-                {% if form.code.errors %}<div class="text-danger">{% for error in form.code.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="d-flex flex-center mt-10">
                     <a href="{% url 'users:settings' %}" class="btn btn-lg btn-light fw-bolder">Cancel</a>
-                    <button type="submit" class="btn btn-lg btn-primary fw-bolder ms-2">Change Email</button>
+                    <button type="submit" class="btn btn-lg btn-primary fw-bolder ms-2">Update Phone Number</button>
                 </div>
             </form>
         </div>

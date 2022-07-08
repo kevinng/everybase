@@ -189,7 +189,7 @@ class LeadInlineAdmin(admin.TabularInline):
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'full_name', 'country', 'email', 'whatsapp_phone_number', 'created', 'has_insights']
+    list_display = ['id', 'updated', 'full_name', 'country', 'email', 'whatsapp_phone_number', 'created', 'has_insights']
     list_editable = [] # Override to speed up loading
     list_filter = ['created', 'has_insights']
     search_fields = ['id', 'uuid', 'first_name', 'last_name', 'country__name', 'email__email', 'internal_notes']

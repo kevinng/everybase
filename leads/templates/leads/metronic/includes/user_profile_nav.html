@@ -7,9 +7,9 @@ Parameters
 <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
     <li class="nav-item mt-2">
         {% if tab == 'my_leads' %}
-            <span class="nav-link text-active-primary ms-0 me-10 py-5 active">My Leads</span>
+            <span class="nav-link text-active-primary ms-0 me-10 py-5 active">My Leads ({{ request.user.user.num_leads }})</span>
         {% else %}
-            <a class="nav-link text-active-primary ms-0 me-10 py-5" href="{% url 'leads:my_leads' %}">My Leads</a>
+            <a class="nav-link text-active-primary ms-0 me-10 py-5" href="{% url 'leads:my_leads' %}">My Leads ({{ request.user.user.num_leads }})</a>
         {% endif %}
     </li>
 

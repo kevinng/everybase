@@ -31,17 +31,20 @@ from relationships import forms, models
 from relationships.tasks import send_email_code
 from relationships.tasks import send_whatsapp_code
 from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
+from relationships.utilities.email_exists import email_exists
 from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
 from relationships.utilities.get_or_create_email import get_or_create_email
+from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.use_email_code import use_email_code
 from relationships.utilities.use_whatsapp_code import use_whatsapp_code
 from relationships.utilities.user_uuid_exists import user_uuid_exists
 from relationships.constants import email_purposes, whatsapp_purposes
 
-# To refactor
-from relationships.tasks.send_whatsapp_verification_code import send_whatsapp_verification_code
-
+MESSAGE_KEY__PROFILE_UPDATE_SUCCESS = 'MESSAGE_KEY__PROFILE_UPDATE_SUCCESS'
 MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN = 'MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN'
+MESSAGE_KEY__EMAIL_UPDATE_SUCCESS = 'MESSAGE_KEY__EMAIL_UPDATE_SUCCESS'
+MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN = 'MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN'
+MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS = 'MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS'
 
 # Helper functions
 
@@ -250,11 +253,11 @@ def profile_settings(request):
 
     if request.method == 'POST':
         # Override with relevant values depending on the button clicked
-        if request.POST.get('save') == 'save':
+        if request.POST.get('update_profile') == 'update_profile':
             inputs['first_name'] = request.POST.get('first_name')
             inputs['last_name'] = request.POST.get('last_name')
             inputs['country'] = request.POST.get('country')
-            inputs['save'] = 'save'
+            inputs['update_profile'] = 'update_profile'
 
         elif request.POST.get('update_email') == 'update_email':
             inputs['email'] = request.POST.get('email')
@@ -267,16 +270,14 @@ def profile_settings(request):
 
         form = forms.SettingsForm(inputs, **kwargs)
 
-        nose = lambda x : x is None or x is False
-        different = lambda x, y: not (nose(x) == nose(y) or x == y)
-
         if form.is_valid():
-            if request.POST.get('save') == 'save':
+            if request.POST.get('update_profile') == 'update_profile':
                 user = request.user.user
                 user.first_name = form.cleaned_data.get('first_name')
                 user.last_name = form.cleaned_data.get('last_name')
                 user.country = commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country'))
                 user.save()
+                messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PROFILE_UPDATE_SUCCESS)
 
             elif request.POST.get('update_email') == 'update_email':
                 if user.email.email != form.cleaned_data.get('email').strip():
@@ -287,14 +288,17 @@ def profile_settings(request):
                 enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
                 if not are_phone_numbers_same(user.phone_number, phone_number):
                     # Require verification even if the user wants to disable WhatsApp
+                    phone_number = str(phone_number).replace('+', '') # Remove + symbol
                     return HttpResponseRedirect(f"{reverse('users:update_phone_number')}?phone_number={phone_number}&enable_whatsapp={enable_whatsapp}")
-                elif different(user.enable_whatsapp, enable_whatsapp):
-                    if nose(enable_whatsapp):
-                        # Do not require verification to disable WhatsApp if phone number is the same
+                elif user.enable_whatsapp != enable_whatsapp:
+                    if not enable_whatsapp:
+                        # Do not require verification to disable WhatsApp if phone number is unchanged
                         user.enable_whatsapp = False
                         user.save()
+                        messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS)
                     else:
                         # Require verification to enable WhatsApp even if phone number is the same
+                        phone_number = str(phone_number).replace('+', '') # Remove + symbol
                         return HttpResponseRedirect(f"{reverse('users:update_phone_number')}?phone_number={phone_number}&enable_whatsapp={enable_whatsapp}")
 
     else:
@@ -306,73 +310,73 @@ def profile_settings(request):
             num_users=Count('users_w_this_country')).order_by('-num_users')
     })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @login_required
 def update_email(request):
-    if request.method == 'POST':
-        user = request.user.user
-        kwargs = {'user': user}
-        form = forms.UpdateEmailForm(request.POST, **kwargs)
-# MAKE SURE NO ONE OWNS THE EMAIL
-        if form.is_valid():
-            email_str = form.cleaned_data.get('email')
-            user.email, _ = models.Email.objects.get_or_create(email=email_str)
-            user.save()
+    user = request.user.user
+    kwargs = {'user': user}
 
+    if request.method == 'POST':
+        form = forms.UpdateEmailForm(request.POST, **kwargs)
+        if form.is_valid():
+            # Validate email, in case it has been tempered
+            email = form.cleaned_data.get('email')
+            if not email_exists(email):
+                user.email, _ = models.Email.objects.get_or_create(email=email)
+                user.save()
+                messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__EMAIL_UPDATE_SUCCESS)
+            else:
+                messages.add_message(request, messages.ERROR, MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN)
+            
             return HttpResponseRedirect(reverse('users:settings'))
     else:
         email = request.GET.get('email')
-        try:
-            validate_email(email)
-        except ValidationError as _:
+        
+        # Validate email, in case it has been tempered
+        if email_exists(email):
             messages.add_message(request, messages.ERROR, MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN)
             return HttpResponseRedirect(reverse('users:settings'))
+
+        send_email_code.send_email_code(user, email_purposes.UPDATE_EMAIL, email)
+        form = forms.UpdateEmailForm(initial={'email': email}, **kwargs)
         
-        user = request.user.user
+    return TemplateResponse(request, 'relationships/confirm_email_change.html', {'form': form})
 
-        sgtz = pytz.timezone(settings.TIME_ZONE)
-        now = datetime.now(tz=sgtz)
+def update_phone_number(request):
+    user = request.user.user
+    kwargs = {'user': user}
 
-        if user.email_login_code_generated is None or\
-            (now - user.email_login_code_generated).total_seconds() > settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
-            # More than 5 minutes have elapsed since we last sent the code - resend.
+    if request.method == 'POST':
+        form = forms.UpdatePhoneNumberForm(request.POST, **kwargs)
+        if form.is_valid():
+            # Validate phone number, in case it has been tempered
+            phone_number = form.cleaned_data.get('phone_number')
+            enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
+            if phone_number_exists(phone_number) is not None:
+                # User is changing phone_number and/or enable_whatsapp
+                user.enable_whatsapp = enable_whatsapp
+                user.phone_number = get_or_create_phone_number(phone_number)
+                user.save()
+                messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS)
+            else:
+                messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN)
 
+            return HttpResponseRedirect(reverse('users:settings'))
+    else:
+        phone_number = request.GET.get('phone_number').strip()
 
-            # Send confirmation code by email.
-            # Note: we use the email login code for this purpose.
-            user.email_login_code = random.randint(100000, 999999)
-            user.email_login_code_generated = now
-            user.save()
+        # Validate phone number, in case it has been tempered
+        if phone_number_exists(phone_number):
+            messages.add_message(request, messages.ERROR, MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN)
+            return HttpResponseRedirect(reverse('users:settings'))
 
-            send_email.delay(
-                render_to_string('relationships/email/confirm_email_update_subject.txt', {}),
-                render_to_string('relationships/email/confirm_email_update.txt', {'code': user.email_login_code}),
-                'friend@everybase.co',
-                [user.email.email]
-            )
-        
-        form = forms.UpdateEmailForm(initial={'email': email})
-        
-    template_name = 'relationships/metronic/confirm_email_change.html'
-    return TemplateResponse(request, template_name, {'form': form})
+        p = get_or_create_phone_number(f'+{phone_number}') # + was removed
+        send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.UPDATE_PHONE_NUMBER, phone_number=p)
+        form = forms.UpdatePhoneNumberForm(initial={
+            'phone_number': phone_number,
+            'enable_whatsapp': request.GET.get('enable_whatsapp')
+        }, **kwargs)
 
-def update_whatsapp_phone_number(request):
-    pass
+    return TemplateResponse(request, 'relationships/confirm_phone_number_change.html', {'form': form})
 
 
 
@@ -1403,7 +1407,7 @@ def m(request, file_to_render):
 #         return JsonResponse(toggle())
 
 #     # Unauthenticated call. User will be given the URL to click only if the
-#     # user is authenticated. Otherwise, a click on the 'save' button will
+#     # user is authenticated. Otherwise, a click on the 'update_profile' button will
 #     # result in an AJAX post to this URL.
 #     #
 #     # Toggle save-unsave, redirect user to next URL.

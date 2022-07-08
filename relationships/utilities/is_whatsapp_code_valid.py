@@ -6,7 +6,6 @@ from relationships import models
 INVALID = 'INVALID'
 NO_CODE_GENERATED = 'NO_CODE_GENERATED'
 USED = 'USED'
-RATE_LIMITED = 'RATE_LIMITED'
 EXPIRED = 'EXPIRED'
 def is_whatsapp_code_valid(
         code: str,
@@ -26,9 +25,6 @@ def is_whatsapp_code_valid(
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(tz=sgtz)
     difference = (now - user.whatsapp_code_generated).total_seconds()
-    
-    if difference > int(settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS):
-        return RATE_LIMITED
     
     if difference > int(settings.CONFIRMATION_CODE_EXPIRY_SECONDS):
         return EXPIRED
