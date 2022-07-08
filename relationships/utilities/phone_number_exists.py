@@ -17,23 +17,23 @@ def phone_number_exists(
     """
     if type(phone_number) == str:
         if phone_number is None or phone_number.strip() == '':
-            return False
+            return None
 
         try:
             parsed = phonenumbers.parse(phone_number, None)
             country_code = parsed.country_code
             national_number = parsed.national_number
         except phonenumbers.phonenumberutil.NumberParseException:
-            return False
+            return None
 
         if not phonenumbers.is_valid_number(parsed):
-            return False
+            return None
     elif type(phone_number) == phonenumbers.phonenumber.PhoneNumber or \
         type(phone_number) == phonenumber_field.phonenumber.PhoneNumber:
         country_code = phone_number.country_code
         national_number = phone_number.national_number
     else:
-        return False
+        return None
 
     try:
         p = models.PhoneNumber.objects.get(
@@ -56,7 +56,9 @@ def phone_number_exists(
         if user is not None:
             # Phone number belongs to an existing user
             return user
+        
+        return False
     except models.PhoneNumber.DoesNotExist:
         return False
     
-    return False
+    return None

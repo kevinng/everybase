@@ -31,7 +31,7 @@ class LoginForm(forms.Form):
         email_or_phone_number = self.cleaned_data.get('email_or_phone_number')
         e = email_exists(email_or_phone_number)
         p = phone_number_exists(email_or_phone_number, enable_whatsapp=True)
-            
+
         if e is None and p is None:
             # Both functions returned error
             raise ValidationError({'email_or_phone_number': ['Enter valid email or phone number.',]})

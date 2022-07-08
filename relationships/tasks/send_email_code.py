@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from everybase import settings
 from common.tasks.send_email import send_email
 from relationships.constants import email_purposes
+from relationships.utilities.is_email_code_rate_limited import is_email_code_rate_limited
 
 RATE_LIMITED = 'RATE_LIMITED'
 SUBJECT_AND_OR_BODY_NONE = 'SUBJECT_AND_OR_BODY_NONE'
@@ -26,11 +27,8 @@ def send_email_code(
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(tz=sgtz)
 
-    # Rate limit
-    if user.email_code_generated is not None:
-        difference = (now - user.email_code_generated).total_seconds()
-        if difference < settings.CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS:
-            return RATE_LIMITED
+    if is_email_code_rate_limited(user):
+        return RATE_LIMITED
 
     # Generate code
     user.email_code = random.randint(100000, 999999)
