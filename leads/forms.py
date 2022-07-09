@@ -10,6 +10,14 @@ class LeadForm(forms.Form):
     body = forms.CharField()
     lead_type = forms.CharField()
 
+    def clean(self):
+        super(LeadForm, self).clean()
+        if is_censored(self.cleaned_data.get('body')):
+            raise ValidationError({'body': ["Don't include contact details. Don't worry, you'll receive email and/or phone number when someone contacts you.",]})
+
+
+
+
 class LeadCaptureForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()

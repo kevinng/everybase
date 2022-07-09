@@ -26,14 +26,14 @@ def trigger_handled_error(request):
 urlpatterns = [
     path('ads.txt', comviews.ads_txt, name='ads_txt'), # For Adsense and other ad networks
 
-    path('', leviews.lead_list, name='home'),
     path('login/', relviews.log_in, name='login'),
     path('logout/', relviews.log_out, name='logout'),
     path('register/', relviews.register, name='register'),
     path('confirm-whatsapp-login/', relviews.confirm_whatsapp_login, name='confirm_whatsapp_login'),
     path('confirm-email-login/', relviews.confirm_email_login, name='confirm_email_login'),
 
-
+    # NEED TO CHANGE THIS TO LANDING PAGE
+    path('', leviews.lead_list, name='home'),
 
 
 
@@ -41,7 +41,7 @@ urlpatterns = [
 
 
     # OLD LINKS
-
+    
 
 
     # Common
