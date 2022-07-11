@@ -34,7 +34,7 @@ class Lead(Standard):
         choices=[
             ('buying', 'Buying'),
             ('selling', 'Selling'),
-            ('need_logistics', 'Logistics'),
+            ('need_logistics', 'Need Logistics'),
             ('sourcing_agent', 'Sourcing Agent'),
             ('sales_agent', 'Sales Agent'),
             ('logistics_agent', 'Logistics Agent'),
@@ -281,20 +281,7 @@ class Lead(Standard):
     )
 
     def __str__(self):
-        s = self.headline
-        if self.min_commission_percentage is not None and self.max_commission_percentage is not None:
-            s += f', {self.min_commission_percentage}% to {self.max_commission_percentage}'
-
-        s += f', {self.lead_type}'
-
-        if self.lead_type == 'selling' and self.buy_country is not None:
-            s += f', {self.lead_type}'
-        if self.lead_type == 'buying' and self.sell_country is not None:
-            s += f', {self.lead_type}'
-
-        s += f', {self.author.first_name} {self.author.last_name}, [{self.id}]'
-
-        return s
+        return f'{self.lead_type}, {self.body[:20]}, [{self.id}]'
     
     def refresh_slug(self):
         first_lead = Lead.objects.all().order_by('-id').first()
@@ -472,51 +459,99 @@ class Contact(Standard):
         blank=True
     )
 
-    is_whatsapp = models.BooleanField(
+    via_whatsapp = models.BooleanField(
         null=True,
         blank=True
     )
-    is_wechat = models.BooleanField(
+    via_wechat = models.BooleanField(
         null=True,
         blank=True
     )
-    wechat_id = models.CharField(
+    via_wechat_id = models.CharField(
         max_length=50,
         null=True,
         blank=True
     )
 
-    is_buyer = models.BooleanField(
+    to_selling_as_sales_agent = models.BooleanField(
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
-    is_seller = models.BooleanField(
+    to_selling_as_sourcing_goods = models.BooleanField(
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
-    is_sales_agent = models.BooleanField(
+    to_selling_as_other = models.BooleanField(
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
-    is_sourcing_agent = models.BooleanField(
+    to_buying_as_sourcing_agent = models.BooleanField(
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
-    is_looking_for_sales_agent = models.BooleanField(
+    to_buying_as_promoting_goods = models.BooleanField(
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
-    is_looking_for_sourcing_agent = models.BooleanField(
+    to_buying_as_other = models.BooleanField(
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
-    is_logistics_agent = models.BooleanField(
+    to_sales_agent_as_seeking_cooperation = models.BooleanField(
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
     )
-    need_logistics = models.BooleanField(
+    to_sales_agent_as_sourcing_goods = models.BooleanField(
         null=True,
-        blank=True
+        blank=True,
+        db_index=True
+    )
+    to_sales_agent_as_other = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    to_sourcing_agent_as_seeking_cooperation = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    to_sourcing_agent_as_promoting_goods = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    to_sourcing_agent_as_other = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    to_logistics_agent_as_need_logistics = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    to_logistics_agent_as_other = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    to_need_logistics_as_logistics_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    to_need_logistics_as_other = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
     )
 
     comments = models.TextField(
@@ -524,29 +559,27 @@ class Contact(Standard):
         blank=True
     )
 
-    is_telegram = models.BooleanField(
+    # Not in use
+
+    via_telegram = models.BooleanField(
         null=True,
         blank=True
     )
-    telegram_username = models.CharField(
+    via_telegram_username = models.CharField(
         max_length=50,
         null=True,
         blank=True
     )
-    is_line = models.BooleanField(
+    via_line = models.BooleanField(
         null=True,
         blank=True
     )
-    line_id = models.CharField(
+    via_line_id = models.CharField(
         max_length=50,
         null=True,
         blank=True
     )
-    is_viber = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    is_other = models.BooleanField(
+    via_viber = models.BooleanField(
         null=True,
         blank=True
     )
@@ -630,6 +663,8 @@ class ContactAction(Standard):
         ],
         db_index=True
     )
+
+# Not in use
 
 class Application(Standard):
     """Agent application.

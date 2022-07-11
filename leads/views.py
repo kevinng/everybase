@@ -1,4 +1,4 @@
-import phonenumbers, pytz, datetime
+import pytz, datetime
 from urllib.parse import urljoin
 
 from django.urls import reverse
@@ -24,11 +24,117 @@ from common.utilities.get_ip_address import get_ip_address
 
 from leads import models, forms
 
-from relationships import models as relmods
+from relationships.utilities.get_or_create_email import get_or_create_email
 from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
 
 MESSAGE_KEY__CONTACT_SENT = 'MESSAGE_KEY__CONTACT_SENT'
 MESSAGE_KEY__UNAUTHORIZED_ACCESS = 'MESSAGE_KEY__UNAUTHORIZED_ACCESS'
+
+def contact_lead(request, id):
+    lead = models.Lead.objects.get(pk=id)
+    kwargs = {'lead': lead}
+
+    if request.method == 'POST':
+        form = forms.ContactLeadForm(request.POST, **kwargs)
+        if form.is_valid():
+            email = get_or_create_email(form.cleaned_data.get('email'))
+            phone_number = get_or_create_phone_number(form.cleaned_data.get('phone_number'))
+
+            country_key = form.cleaned_data.get('country')
+            country = commods.Country.objects.get(programmatic_key=country_key)
+
+            models.Contact.objects.create(
+                lead=lead,
+                first_name=form.cleaned_data.get('first_name'),
+                last_name=form.cleaned_data.get('last_name'),
+                email=email,
+                phone_number=phone_number,
+
+                via_whatsapp=form.cleaned_data.get('via_whatsapp'),
+                via_wechat=form.cleaned_data.get('via_wechat'),
+                via_wechat_id=form.cleaned_data.get('via_wechat_id'),
+
+                country=country,
+
+                comments=form.cleaned_data.get('comments'),
+
+                to_selling_as_sales_agent=form.cleaned_data.get('to_selling_as_sales_agent'),
+                to_selling_as_sourcing_goods=form.cleaned_data.get('to_selling_as_sourcing_goods'),
+                to_selling_as_other=form.cleaned_data.get('to_selling_as_other'),
+
+                to_buying_as_sourcing_agent=form.cleaned_data.get('to_buying_as_sourcing_agent'),
+                to_buying_as_promoting_goods=form.cleaned_data.get('to_buying_as_promoting_goods'),
+                to_buying_as_other=form.cleaned_data.get('to_buying_as_other'),
+
+                to_sales_agent_as_seeking_cooperation=form.cleaned_data.get('to_sales_agent_as_seeking_cooperation'),
+                to_sales_agent_as_sourcing_goods=form.cleaned_data.get('to_sales_agent_as_sourcing_goods'),
+                to_sales_agent_as_other=form.cleaned_data.get('to_sales_agent_as_other'),
+
+                to_sourcing_agent_as_seeking_cooperation=form.cleaned_data.get('to_sourcing_agent_as_seeking_cooperation'),
+                to_sourcing_agent_as_promoting_goods=form.cleaned_data.get('to_sourcing_agent_as_promoting_goods'),
+                to_sourcing_agent_as_other=form.cleaned_data.get('to_sourcing_agent_as_other'),
+
+                to_logistics_agent_as_need_logistics=form.cleaned_data.get('to_logistics_agent_as_need_logistics'),
+                to_logistics_agent_as_other=form.cleaned_data.get('to_logistics_agent_as_other'),
+
+                to_need_logistics_as_logistics_agent=form.cleaned_data.get('to_need_logistics_as_logistics_agent'),
+                to_need_logistics_as_other=form.cleaned_data.get('to_need_logistics_as_other'),
+            )
+
+            # Save contact details to session so user won't have to reenter them
+            request.session['last_contact__first_name'] = form.cleaned_data.get('first_name')
+            request.session['last_contact__last_name'] = form.cleaned_data.get('last_name')
+            request.session['last_contact__email'] = form.cleaned_data.get('email')
+            request.session['last_contact__phone_number'] = str(form.cleaned_data.get('phone_number'))
+            request.session['last_contact__via_whatsapp'] = form.cleaned_data.get('via_whatsapp')
+            request.session['last_contact__via_wechat'] = form.cleaned_data.get('via_wechat')
+            request.session['last_contact__via_wechat_id'] = form.cleaned_data.get('via_wechat_id')
+            request.session['last_contact__country'] = form.cleaned_data.get('country')
+
+            messages.info(request, MESSAGE_KEY__CONTACT_SENT)
+            return HttpResponseRedirect(reverse('home'))
+
+    elif request.method == 'GET':
+        initial = {}
+
+        # Read from session the fields and initialize contact lead form
+        initial['first_name'] = request.session.get('last_contact__first_name')
+        initial['last_name'] = request.session.get('last_contact__last_name')
+        initial['email'] = request.session.get('last_contact__email')
+        initial['phone_number'] = request.session.get('last_contact__phone_number')
+        initial['via_whatsapp'] = request.session.get('last_contact__via_whatsapp')
+        initial['via_wechat'] = request.session.get('last_contact__via_wechat')
+        initial['via_wechat_id'] = request.session.get('last_contact__via_wechat_id')
+        initial['country'] = request.session.get('last_contact__country')
+
+        form = forms.ContactLeadForm(initial=initial, **kwargs)
+
+    countries = commods.Country.objects\
+        .annotate(num_leads=Count('users_w_this_country'))\
+        .order_by('-num_leads')
+
+    template_name = 'leads/metronic/contact_lead.html'
+    return TemplateResponse(request, template_name, {
+        'countries': countries,
+        'lead': lead,
+        'form': form
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @login_required
 def lead_create(request):
@@ -104,56 +210,6 @@ def my_leads(request):
 
     template_name = 'leads/metronic/my_leads.html'
     return TemplateResponse(request, template_name, params)
-
-def contact_lead(request, id):
-    lead = models.Lead.objects.get(pk=id)
-
-    if request.method == 'POST':
-        form = forms.LeadCaptureForm(request.POST)
-        if form.is_valid():
-            # Email
-            email, _ = relmods.Email.objects.get_or_create(
-                email=form.cleaned_data.get('email'))
-
-            # Phone number
-            phone_number = get_or_create_phone_number(str(form.cleaned_data.get('phone_number')))
-
-            # Country
-            country_key = form.cleaned_data.get('country')
-            country = commods.Country.objects.get(programmatic_key=country_key)
-
-            models.Contact.objects.create(
-                lead=lead,
-                first_name=form.cleaned_data.get('first_name'),
-                last_name=form.cleaned_data.get('last_name'),
-                email=email,
-                phone_number=phone_number,
-                is_whatsapp=form.cleaned_data.get('is_whatsapp'),
-                is_wechat=form.cleaned_data.get('is_wechat'),
-                wechat_id=form.cleaned_data.get('wechat_id'),
-                is_other=form.cleaned_data.get('is_other'),
-                country=country,
-                comments=form.cleaned_data.get('comments'),
-                is_buyer=form.cleaned_data.get('is_buyer'),
-                is_sell_comm=form.cleaned_data.get('is_sell_comm'),
-                is_seller=form.cleaned_data.get('is_seller'),
-                is_buy_comm=form.cleaned_data.get('is_buy_comm')
-            )
-
-            messages.info(request, MESSAGE_KEY__CONTACT_SENT)
-            return HttpResponseRedirect(reverse('home'))
-    elif request.method == 'GET':
-        form = forms.LeadCaptureForm()
-
-    countries = commods.Country.objects.annotate(
-        num_leads=Count('users_w_this_country')).order_by('-num_leads')
-
-    template_name = 'leads/metronic/contact_lead.html'
-    return TemplateResponse(request, template_name, {
-        'countries': countries,
-        'lead': lead,
-        'form': form
-    })
 
 def contact_detail_private_notes(request, id):
     contact = models.Contact.objects.get(pk=id)

@@ -13,41 +13,117 @@ class LeadForm(forms.Form):
     def clean(self):
         super(LeadForm, self).clean()
         if is_censored(self.cleaned_data.get('body')):
-            raise ValidationError({'body': ["Don't include contact details. Don't worry, you'll receive email and/or phone number when someone contacts you.",]})
+            raise ValidationError({'body': ["Don't include contact details. You'll receive email and phone number - when someone contacts you.",]})
 
-
-
-
-class LeadCaptureForm(forms.Form):
+class ContactLeadForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
     country = forms.CharField()
     email = forms.EmailField()
     phone_number = PhoneNumberField()
-    is_whatsapp = forms.BooleanField(required=False)
-    is_wechat = forms.BooleanField(required=False)
-    wechat_id = forms.CharField(required=False)
-    is_other = forms.BooleanField(required=False)
+
+    via_whatsapp = forms.BooleanField(required=False)
+    via_wechat = forms.BooleanField(required=False)
+    via_wechat_id = forms.CharField(required=False)
+
     comments = forms.CharField(max_length=100)
-    is_buyer = forms.BooleanField(required=False)
-    is_sell_comm = forms.BooleanField(required=False)
-    is_seller = forms.BooleanField(required=False)
-    is_buy_comm = forms.BooleanField(required=False)
+
+    # Required depends on lead type
+    
+    to_selling_as_sales_agent = forms.BooleanField(required=False)
+    to_selling_as_sourcing_goods = forms.BooleanField(required=False)
+    to_selling_as_other = forms.BooleanField(required=False)
+    
+    to_buying_as_sourcing_agent = forms.BooleanField(required=False)
+    to_buying_as_promoting_goods = forms.BooleanField(required=False)
+    to_buying_as_other = forms.BooleanField(required=False)
+    
+    to_sales_agent_as_seeking_cooperation = forms.BooleanField(required=False)
+    to_sales_agent_as_sourcing_goods = forms.BooleanField(required=False)
+    to_sales_agent_as_other = forms.BooleanField(required=False)
+    
+    to_sourcing_agent_as_seeking_cooperation = forms.BooleanField(required=False)
+    to_sourcing_agent_as_promoting_goods = forms.BooleanField(required=False)
+    to_sourcing_agent_as_other = forms.BooleanField(required=False)
+    
+    to_logistics_agent_as_need_logistics = forms.BooleanField(required=False)
+    to_logistics_agent_as_other = forms.BooleanField(required=False)
+    
+    to_need_logistics_as_logistics_agent = forms.BooleanField(required=False)
+    to_need_logistics_as_other = forms.BooleanField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.lead = kwargs.pop('lead')
+        super().__init__(*args, **kwargs)
 
     def clean(self):
-        super(LeadCaptureForm, self).clean()
+        super(ContactLeadForm, self).clean()
 
-        is_wechat = self.cleaned_data.get('is_wechat')
-        wechat_id = self.cleaned_data.get('wechat_id')
+        via_wechat = self.cleaned_data.get('via_wechat')
+        via_wechat_id = self.cleaned_data.get('via_wechat_id')
 
-        if is_wechat is not None and is_wechat == True and (wechat_id is None or wechat_id.strip() == ''):
-            self.add_error('wechat_id', 'This field is required.')
+        err_msg = 'This field is required.'
+
+        if via_wechat is not None and via_wechat == True and (via_wechat_id is None or via_wechat_id.strip() == ''):
+            self.add_error('via_wechat_id', err_msg)
+
+        is_empty = lambda x : self.cleaned_data.get(x) is None or self.cleaned_data.get(x).strip() == ''
+        def flag_is_empty(key):
+            if is_empty(key):
+                self.add_error(key, err_msg)
+
+        if self.lead.lead_type == 'selling':
+            flag_is_empty('to_selling_as_sales_agent')
+            flag_is_empty('to_selling_as_sourcing_goods')
+            flag_is_empty('to_selling_as_other')
+        elif self.lead.lead_type == 'buying':
+            flag_is_empty('to_buying_as_sourcing_agent')
+            flag_is_empty('to_buying_as_promoting_goods')
+            flag_is_empty('to_buying_as_other')
+        elif self.lead.lead_type == 'sales_agent':
+            flag_is_empty('to_sales_agent_as_seeking_cooperation')
+            flag_is_empty('to_sales_agent_as_sourcing_goods')
+            flag_is_empty('to_sales_agent_as_other')
+        elif self.lead.lead_type == 'sourcing_agent':
+            flag_is_empty('to_sourcing_agent_as_seeking_cooperation')
+            flag_is_empty('to_sourcing_agent_as_promoting_goods')
+            flag_is_empty('to_sourcing_agent_as_other')
+        elif self.lead.lead_type == 'logistics_agent':
+            flag_is_empty('to_logistics_agent_as_need_logistics')
+            flag_is_empty('to_logistics_agent_as_other')
+        elif self.lead.lead_type == 'need_logistics':
+            flag_is_empty('to_need_logistics_as_logistics_agent')
+            flag_is_empty('to_need_logistics_as_other')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class ContactNoteForm(forms.Form):
     body = forms.CharField()
     relevance = forms.CharField()
-
-
 
 
 

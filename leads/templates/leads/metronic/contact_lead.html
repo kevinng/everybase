@@ -13,13 +13,9 @@
 {% block content_body %}
 <form action="{% url 'leads:contact_lead' lead.id %}" method="post">
 {% csrf_token %}
-
-{% comment %} Start: Post {% endcomment %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
-    {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
         <div class="card shadow-sm">
-            {% comment %} Start: Card header {% endcomment %}
             <div class="card-header">
                 <div class="card-title align-items-start flex-column">
                     <div class="d-flex align-items-center">
@@ -51,9 +47,7 @@
                     <span class="text-muted">{{ lead.age_desc }}</span>
                 </div>
             </div>
-            {% comment %} End: Card header {% endcomment %}
         
-            {% comment %} Start: Card body {% endcomment %}
             <div class="card-body">
                 <div class="text-dark">{{ lead.body|linebreaks }}</div>
 
@@ -91,26 +85,21 @@
                 {% if form.phone_number.errors %}<div class="text-danger">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="form-check form-check-custom mt-4">
-                    <input class="form-check-input me-2" type="checkbox" name="is_whatsapp" id="is_whatsapp" {% if form.is_whatsapp.value == True %}checked {% endif %}/>
-                    <label for="is_whatsapp">WhatsApp</label>
+                    <input class="form-check-input me-2" type="checkbox" name="via_whatsapp" id="via_whatsapp" {% if form.via_whatsapp.value == True %}checked {% endif %}/>
+                    <label for="via_whatsapp">WhatsApp</label>
                 </div>
 
                 <div class="form-check form-check-custom mt-2">
-                    <input class="form-check-input me-2" type="checkbox" name="is_wechat" id="is_wechat" {% if form.is_wechat.value == True %}checked {% endif %}/>
-                    <label for="is_wechat">WeChat</label>
+                    <input class="form-check-input me-2" type="checkbox" name="via_wechat" id="via_wechat" {% if form.via_wechat.value == True %}checked {% endif %}/>
+                    <label for="via_wechat">WeChat</label>
                 </div>
 
-                <div id="wechat_id_div" class="form-floating col-lg-6 mt-2">
-                    <input type="text" class="form-control" name="wechat_id" id="wechat_id" placeholder="WeChat ID"{% if form.wechat_id.value is not None and form.wechat_id.value|cut:' ' != '' %} value="{{ form.wechat_id.value }}"{% endif %}/>
-                    <label for="wechat_id">WeChat ID</label>
+                <div id="via_wechat_id_div" class="form-floating col-lg-6 mt-2">
+                    <input type="text" class="form-control" name="via_wechat_id" id="via_wechat_id" placeholder="WeChat ID"{% if form.via_wechat_id.value is not None and form.via_wechat_id.value|cut:' ' != '' %} value="{{ form.via_wechat_id.value }}"{% endif %}/>
+                    <label for="via_wechat_id">WeChat ID</label>
                 </div>
 
-                {% if form.wechat_id.errors %}<div class="text-danger">{% for error in form.wechat_id.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
-                <div class="form-check form-check-custom mt-2">
-                    <input class="form-check-input me-2" type="checkbox" name="is_other" id="is_other" {% if form.is_other.value == True %}checked {% endif %}/>
-                    <label for="is_other">Other (Specify in Comments)</label>
-                </div>
+                {% if form.via_wechat_id.errors %}<div class="text-danger">{% for error in form.via_wechat_id.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="col-lg-6 mt-6">
                     <select name="country" class="form-select" data-control="select2" data-placeholder="Country" id="country">
@@ -127,60 +116,101 @@
                     <label for="comments">Comments</label>
                 </div>
                 {% if form.comments.errors %}<div class="text-danger">{% for error in form.comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
+                
                 {% if lead.lead_type == 'selling' %}
-                    <div id="is_sales_agent_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_sales_agent" id="is_sales_agent" {% if form.is_sales_agent.value == True %}checked {% endif %}/>
-                        <label for="is_sales_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Can promote goods on a commission basis.">Sales Agent</span></label>
+                
+                    <div id="to_selling_as_sales_agent_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_selling_as_sales_agent" id="to_selling_as_sales_agent" {% if form.to_selling_as_sales_agent.value == True %}checked {% endif %}/>
+                        <label for="to_selling_as_sales_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sales_agent.txt' %}">Sales Agent</span></label>
                     </div>
 
-                    <div id="is_sourcing_goods_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_sourcing_goods" id="is_sourcing_goods" {% if form.is_sourcing_goods.value == True %}checked {% endif %}/>
-                        <label for="is_sourcing_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sourcing goods.">Sourcing Goods</span></label>
+                    <div id="to_selling_as_sourcing_goods_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_selling_as_sourcing_goods" id="to_selling_as_sourcing_goods" {% if form.to_selling_as_sourcing_goods.value == True %}checked {% endif %}/>
+                        <label for="to_selling_as_sourcing_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span></label>
                     </div>
+
+                    <div id="to_selling_as_other_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_selling_as_other" id="to_selling_as_other" {% if form.to_selling_as_other.value == True %}checked {% endif %}/>
+                        <label for="to_selling_as_other"><span class="badge badge-secondary">Other</span></label>
+                    </div>
+                
                 {% elif lead.lead_type == 'buying' %}
-                    <div id="is_sourcing_agent_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_sourcing_agent" id="is_sourcing_agent" {% if form.is_sourcing_agent.value == True %}checked {% endif %}/>
-                        <label for="is_sourcing_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Can source goods on a commission basis.">Sourcing Agent</span></label>
+
+                    <div id="to_buying_as_sourcing_agent_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_buying_as_sourcing_agent" id="to_buying_as_sourcing_agent" {% if form.to_buying_as_sourcing_agent.value == True %}checked {% endif %}/>
+                        <label for="to_buying_as_sourcing_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span></label>
                     </div>
 
-                    <div id="is_promoting_goods_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_promoting_goods" id="is_promoting_goods" {% if form.is_promoting_goods.value == True %}checked {% endif %}/>
-                        <label for="is_promoting_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Promoting goods.">Promoting Goods</span></label>
+                    <div id="to_buying_as_promoting_goods_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_buying_as_promoting_goods" id="to_buying_as_promoting_goods" {% if form.to_buying_as_promoting_goods.value == True %}checked {% endif %}/>
+                        <label for="to_buying_as_promoting_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span></label>
                     </div>
+
+                    <div id="to_buying_as_other_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_buying_as_other" id="to_buying_as_other" {% if form.to_buying_as_other.value == True %}checked {% endif %}/>
+                        <label for="to_buying_as_other"><span class="badge badge-secondary">Other</span></label>
+                    </div>
+
                 {% elif lead.lead_type == 'sales_agent' %}
-                    <div id="is_looking_for_sales_agents_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_looking_for_sales_agents" id="is_looking_for_sales_agents" {% if form.is_looking_for_sales_agents.value == True %}checked {% endif %}/>
-                        <label for="is_looking_for_sales_agents"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Looking for sales agents to promote goods on a commission basis.">Looking for Sales Agents</span></label>
+
+                    <div id="to_sales_agent_as_seeking_cooperation_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_sales_agent_as_seeking_cooperation" id="to_sales_agent_as_seeking_cooperation" {% if form.to_sales_agent_as_seeking_cooperation.value == True %}checked {% endif %}/>
+                        <label for="to_sales_agent_as_seeking_cooperation"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/contacts/seeking_cooperation_from_sales_agent.txt' %}">Seeking Cooperation</span></label>
                     </div>
 
-                    <div id="is_sourcing_goods_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_sourcing_goods" id="is_sourcing_goods" {% if form.is_sourcing_goods.value == True %}checked {% endif %}/>
-                        <label for="is_sourcing_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sourcing goods.">Sourcing Goods</span></label>
+                    <div id="to_sales_agent_as_sourcing_goods_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_sales_agent_as_sourcing_goods" id="to_sales_agent_as_sourcing_goods" {% if form.to_sales_agent_as_sourcing_goods.value == True %}checked {% endif %}/>
+                        <label for="to_sales_agent_as_sourcing_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span></label>
                     </div>
+
+                    <div id="to_sales_agent_as_other_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_sales_agent_as_other" id="to_sales_agent_as_other" {% if form.to_sales_agent_as_other.value == True %}checked {% endif %}/>
+                        <label for="to_sales_agent_as_other"><span class="badge badge-secondary">Other</span></label>
+                    </div>
+
                 {% elif lead.lead_type == 'sourcing_agent' %}
-                    <div id="is_looking_for_sourcing_agents_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_looking_for_sourcing_agents" id="is_looking_for_sourcing_agents" {% if form.is_looking_for_sourcing_agents.value == True %}checked {% endif %}/>
-                        <label for="is_looking_for_sourcing_agents"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Looking for sourcing agents to source goods on a commission basis.">Looking for Sourcing Agents</span></label>
+
+                    <div id="to_sourcing_agent_as_seeking_cooperation_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_sourcing_agent_as_seeking_cooperation" id="to_sourcing_agent_as_seeking_cooperation" {% if form.to_sourcing_agent_as_seeking_cooperation.value == True %}checked {% endif %}/>
+                        <label for="to_sourcing_agent_as_seeking_cooperation"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/contacts/seeking_cooperation_from_sourcing_agent.txt' %}">Seeking Cooperation</span></label>
                     </div>
 
-                    <div id="is_promoting_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_promoting" id="is_promoting" {% if form.is_promoting.value == True %}checked {% endif %}/>
-                        <label for="is_promoting"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Promoting goods.">Promoting Goods</span></label>
+                    <div id="to_sourcing_agent_as_promoting_goods_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_sourcing_agent_as_promoting_goods" id="to_sourcing_agent_as_promoting_goods" {% if form.to_sourcing_agent_as_promoting_goods.value == True %}checked {% endif %}/>
+                        <label for="to_sourcing_agent_as_promoting_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span></label>
                     </div>
-                {% elif lead.lead_type == 'need_logistics' %}
-                    <div id="is_logistics_agent_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_logistics_agent" id="is_logistics_agent" {% if form.is_logistics_agent.value == True %}checked {% endif %}/>
-                        <label for="is_logistics_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Can provide logistics services.">Logistics Agent</span></label>
+
+                    <div id="to_sourcing_agent_as_other_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_sourcing_agent_as_other" id="to_sourcing_agent_as_other" {% if form.to_sourcing_agent_as_other.value == True %}checked {% endif %}/>
+                        <label for="to_sourcing_agent_as_other"><span class="badge badge-secondary">Other</span></label>
                     </div>
+
                 {% elif lead.lead_type == 'logistics_agent' %}
-                    <div id="is_need_logistics_div" class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="checkbox" name="is_need_logistics" id="is_need_logistics" {% if form.is_need_logistics.value == True %}checked {% endif %}/>
-                        <label for="is_need_logistics"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Looking for logistics services.">Need Logistics</span></label>
+
+                    <div id="to_logistics_agent_as_need_logistics_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_logistics_agent_as_need_logistics" id="to_logistics_agent_as_need_logistics" {% if form.to_logistics_agent_as_need_logistics.value == True %}checked {% endif %}/>
+                        <label for="to_logistics_agent_as_need_logistics"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/need_logistics.txt' %}">Need Logistics</span></label>
                     </div>
+
+                    <div id="to_logistics_agent_as_other_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_logistics_agent_as_other" id="to_logistics_agent_as_other" {% if form.to_logistics_agent_as_other.value == True %}checked {% endif %}/>
+                        <label for="to_logistics_agent_as_other"><span class="badge badge-secondary">Other</span></label>
+                    </div>
+
+                {% elif lead.lead_type == 'need_logistics' %}
+
+                    <div id="to_need_logistics_as_logistics_agent_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_need_logistics_as_logistics_agent" id="to_need_logistics_as_logistics_agent" {% if form.to_need_logistics_as_logistics_agent.value == True %}checked {% endif %}/>
+                        <label for="to_need_logistics_as_logistics_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/metronic/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span></label>
+                    </div>
+
+                    <div id="to_need_logistics_as_other_div" class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="to_need_logistics_as_other" id="to_need_logistics_as_other" {% if form.to_need_logistics_as_other.value == True %}checked {% endif %}/>
+                        <label for="to_need_logistics_as_other"><span class="badge badge-secondary">Other</span></label>
+                    </div>
+
                 {% endif %}
             </div>
-            {% comment %} End: Card body {% endcomment %}
 
             <div class="card-footer">
                 <div class="d-flex flex-row-reverse mt-4">
@@ -189,51 +219,30 @@
             </div>
         </div>
     </div>
-    {% comment %} End: Container {% endcomment %}
 </div>
-{% comment %} End: Post {% endcomment %}
 </form>
 {% endblock %}
 
 {% comment %}
 $(document).ready(function() {
-    wechat_id_div = $('#wechat_id_div')
-    is_wechat = $('#is_wechat')
+    via_wechat_id_div = $('#via_wechat_id_div')
+    via_wechat = $('#via_wechat')
 
-    function toggle_wechat_id_div() {
-        if (is_wechat.is(':checked')) {
-            wechat_id_div.show()
+    function toggle_via_wechat_id_div() {
+        if (via_wechat.is(':checked')) {
+            via_wechat_id_div.show()
         } else {
-            wechat_id_div.hide()
+            via_wechat_id_div.hide()
         }
     }
 
-    toggle_wechat_id_div()
+    toggle_via_wechat_id_div()
 
-    is_wechat.click(function() {
-        toggle_wechat_id_div()
+    via_wechat.click(function() {
+        toggle_via_wechat_id_div()
     })
 })
 {% endcomment %}
 {% block page_custom_javascript %}
-<script>
-$(document).ready(function() {
-    wechat_id_div = $('#wechat_id_div')
-    is_wechat = $('#is_wechat')
-
-    function toggle_wechat_id_div() {
-        if (is_wechat.is(':checked')) {
-            wechat_id_div.show()
-        } else {
-            wechat_id_div.hide()
-        }
-    }
-
-    toggle_wechat_id_div()
-
-    is_wechat.click(function() {
-        toggle_wechat_id_div()
-    })
-})
-</script>
+<script src="{% static 'leads/js/contact_lead.js' %}"></script>
 {% endblock %}
