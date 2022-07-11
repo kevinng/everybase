@@ -608,7 +608,7 @@ class Contact(Standard):
             .filter(
                 Q(email=self.email) |\
                 Q(phone_number=self.phone_number) |\
-                (Q(wechat_id__isnull=True) & Q(wechat_id=self.wechat_id)))\
+                (Q(via_wechat_id__isnull=True) & Q(via_wechat_id=self.via_wechat_id)))\
             .exclude(id=self.id)
 
 class ContactNote(Standard):

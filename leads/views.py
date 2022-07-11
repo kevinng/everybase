@@ -4,15 +4,15 @@ from urllib.parse import urljoin
 from django.urls import reverse
 from django.shortcuts import render
 from django.contrib import messages
-from django.http import HttpResponseRedirect, Http404, HttpResponsePermanentRedirect
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q, DateTimeField
 from django.db.models.functions import Trunc
 from django.db.models.expressions import RawSQL
 from django.template.loader import render_to_string
-from django.contrib.postgres.search import (SearchVector, SearchQuery, SearchRank, SearchVectorField)
 from django.template.response import TemplateResponse
+from django.http import HttpResponseRedirect, Http404, HttpResponsePermanentRedirect
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
 
 from everybase import settings
 
@@ -29,6 +29,10 @@ from relationships.utilities.get_or_create_phone_number import get_or_create_pho
 
 MESSAGE_KEY__CONTACT_SENT = 'MESSAGE_KEY__CONTACT_SENT'
 MESSAGE_KEY__UNAUTHORIZED_ACCESS = 'MESSAGE_KEY__UNAUTHORIZED_ACCESS'
+
+def _page_obj(objects, page: int, items_per_page=20):
+    paginator = Paginator(objects, items_per_page)
+    return paginator.get_page(page)
 
 def contact_lead(request, id):
     lead = models.Lead.objects.get(pk=id)
@@ -120,34 +124,15 @@ def contact_lead(request, id):
         'form': form
     })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @login_required
 def lead_create(request):
     if request.method == 'POST':
         form = forms.LeadForm(request.POST)
         if form.is_valid():
-            body = form.cleaned_data.get('body')
-            lead_type = form.cleaned_data.get('lead_type')
-
             lead = models.Lead.objects.create(
                 author=request.user.user,
-                body=body,
-                lead_type=lead_type
+                body=form.cleaned_data.get('body'),
+                lead_type=form.cleaned_data.get('lead_type')
             )
 
             send_amplitude_event.delay(
@@ -164,13 +149,12 @@ def lead_create(request):
     elif request.method == 'GET':
         form = forms.LeadForm()
 
-    template_name = 'leads/metronic/lead_create.html'
-    return render(request, template_name, {'form': form})
+    return render(request, 'leads/metronic/lead_create.html', {'form': form})
 
+@login_required
 def lead_created_success(request, id):
     lead = models.Lead.objects.get(pk=id)
-    template_name = 'leads/metronic/lead_create_success.html'
-    return TemplateResponse(request, template_name, {'contact_lead_url': lead.contact_lead_url})
+    return TemplateResponse(request, 'leads/metronic/lead_create_success.html', {'contact_lead_url': lead.contact_lead_url})
 
 @login_required
 def lead_detail(request, id):
@@ -185,32 +169,16 @@ def lead_detail(request, id):
 
     # Paginate
 
-    contacts_per_page = 20
-    paginator = Paginator(lead.contacts.all().order_by('-created'), contacts_per_page)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    params['page_obj'] = page_obj
-
-    template_name = 'leads/metronic/lead_detail.html'
-    return TemplateResponse(request, template_name, params)
+    params['page_obj'] = _page_obj(lead.contacts.all().order_by('-created'), request.GET.get('page'))
+    return TemplateResponse(request, 'leads/metronic/lead_detail.html', params)
 
 @login_required
 def my_leads(request):
     leads = request.user.user.leads_order_by_created_desc()
+    params = {'page_obj': _page_obj(leads, request.GET.get('page'))}
+    return TemplateResponse(request, 'leads/metronic/my_leads.html', params)
 
-    params = {}
-
-    # Paginate
-
-    leads_per_page = 20
-    paginator = Paginator(leads, leads_per_page)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    params['page_obj'] = page_obj
-
-    template_name = 'leads/metronic/my_leads.html'
-    return TemplateResponse(request, template_name, params)
-
+@login_required
 def contact_detail_private_notes(request, id):
     contact = models.Contact.objects.get(pk=id)
 
@@ -233,29 +201,24 @@ def contact_detail_private_notes(request, id):
         'contact': contact,
         'form': form
     }
+    params['page_obj'] = _page_obj(contact.active_notes(), request.GET.get('page'))
 
-    # Paginate
+    # WhatsApp message bodies
 
-    leads_per_page = 20
-    paginator = Paginator(contact.active_notes(), leads_per_page)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    params['page_obj'] = page_obj
-
-    template_name = 'leads/metronic/contact_detail_private_notes.html'
-    return TemplateResponse(request, template_name, params)
+    return TemplateResponse(request, 'leads/metronic/contact_detail_private_notes.html', params)
 
 def contact_detail_other_contacts(request, id):
     contact = models.Contact.objects.get(pk=id)
-
     params = {
         'contact': contact,
-        'contacts': contact.other_contacts()
-        # 'form': form
+        'page_obj': _page_obj(contact.other_contacts(), request.GET.get('page'))
     }
-    
-    template_name = 'leads/metronic/contact_detail_other_contacts.html'
-    return TemplateResponse(request, template_name, params)
+    return TemplateResponse(request, 'leads/metronic/contact_detail_other_contacts.html', params)
+
+
+
+
+
 
 def redirect_contact_wechat(_, id):
     contact = models.Contact.objects.get(pk=id)
@@ -264,17 +227,26 @@ def redirect_contact_wechat(_, id):
         allowed_schemes = ['weixin']
 
     if contact.is_wechat == True:
-        return WeixinSchemeRedirect(f'weixin://dl/chat?{contact.wechat_id}')
+        return WeixinSchemeRedirect(f'weixin://dl/chat?{contact.via_wechat_id}')
     
     return HttpResponseRedirect(reverse('home'))
 
 def redirect_contact_whatsapp(_, id):
     contact = models.Contact.objects.get(pk=id)
 
-    if contact.is_whatsapp == True:
+    if contact.via_whatsapp == True:
         return HttpResponseRedirect(f'https://wa.me/{contact.phone_number.country_code}{contact.phone_number.national_number}')
 
     return HttpResponseRedirect(reverse('home'))
+
+
+
+
+
+
+
+
+
 
 def lead_list(request):
     
@@ -334,646 +306,623 @@ def lead_list(request):
 
 
 
-# from files.utilities.get_mime_type import get_mime_type
-# from PIL import Image, ImageOps
-# from io import BytesIO
-# import boto3
+# # from files.utilities.get_mime_type import get_mime_type
+# # from PIL import Image, ImageOps
+# # from io import BytesIO
+# # import boto3
 
 
-@login_required
-def _lead_create(request):
-    if request.method == 'POST':
-        form = forms.LeadForm(request.POST)
-        if form.is_valid():
+# @login_required
+# def _lead_create(request):
+#     if request.method == 'POST':
+#         form = forms.LeadForm(request.POST)
+#         if form.is_valid():
             
-            g = lambda x: form.cleaned_data.get(x)
+#             g = lambda x: form.cleaned_data.get(x)
 
-            lead_type = g('lead_type')
-            author_type = g('author_type')
-            country_key = g('country')
-            category_key = g('category')
-            commission_type = g('commission_type')
-            commission_usd_mt = g('commission_usd_mt')
-            min_commission_percentage = g('min_commission_percentage')
-            max_commission_percentage = g('max_commission_percentage')
-            headline = g('headline')
-            details = g('details')
-            questions = g('questions')
+#             lead_type = g('lead_type')
+#             author_type = g('author_type')
+#             country_key = g('country')
+#             category_key = g('category')
+#             commission_type = g('commission_type')
+#             commission_usd_mt = g('commission_usd_mt')
+#             min_commission_percentage = g('min_commission_percentage')
+#             max_commission_percentage = g('max_commission_percentage')
+#             headline = g('headline')
+#             details = g('details')
+#             questions = g('questions')
 
-            category = None
-            if category_key != 'other':
-                try:
-                    category = models.LeadCategory.objects.get(programmatic_key=category_key)
-                except models.LeadCategory.DoesNotExist:
-                    pass
+#             category = None
+#             if category_key != 'other':
+#                 try:
+#                     category = models.LeadCategory.objects.get(programmatic_key=category_key)
+#                 except models.LeadCategory.DoesNotExist:
+#                     pass
 
-            lead = models.Lead(
-                author=request.user.user,
-                lead_type=lead_type,
-                author_type=author_type,
-                category=category,
-                commission_type=commission_type,
-                commission_usd_mt=commission_usd_mt,
-                min_commission_percentage=min_commission_percentage,
-                max_commission_percentage=max_commission_percentage,
-                headline=headline,
-                details=details,
-                questions=questions
-            )
+#             lead = models.Lead(
+#                 author=request.user.user,
+#                 lead_type=lead_type,
+#                 author_type=author_type,
+#                 category=category,
+#                 commission_type=commission_type,
+#                 commission_usd_mt=commission_usd_mt,
+#                 min_commission_percentage=min_commission_percentage,
+#                 max_commission_percentage=max_commission_percentage,
+#                 headline=headline,
+#                 details=details,
+#                 questions=questions
+#             )
 
-            if country_key.strip() != 'any_country':
-                country = commods.Country.objects.get(programmatic_key=country_key)
-                if lead_type == 'selling':
-                    lead.buy_country = country
-                elif lead_type == 'buying':
-                    lead.sell_country = country
+#             if country_key.strip() != 'any_country':
+#                 country = commods.Country.objects.get(programmatic_key=country_key)
+#                 if lead_type == 'selling':
+#                     lead.buy_country = country
+#                 elif lead_type == 'buying':
+#                     lead.sell_country = country
 
-            lead.save()
+#             lead.save()
 
-            # Email lead author
-            if lead.author.email is not None:
-                send_email.delay(
-                    render_to_string('leads/email/lead_created_subject.txt', {}),
-                    render_to_string('leads/email/lead_created.txt', {
-                        'lead_headline': lead.headline,
-                        'lead_detail_url': \
-                            urljoin(settings.BASE_URL,
-                            reverse('leads:lead_detail', args=(lead.id,)))
-                    }),
-                    'friend@everybase.co',
-                    [lead.author.email.email]
-                )
+#             # Email lead author
+#             if lead.author.email is not None:
+#                 send_email.delay(
+#                     render_to_string('leads/email/lead_created_subject.txt', {}),
+#                     render_to_string('leads/email/lead_created.txt', {
+#                         'lead_headline': lead.headline,
+#                         'lead_detail_url': \
+#                             urljoin(settings.BASE_URL,
+#                             reverse('leads:lead_detail', args=(lead.id,)))
+#                     }),
+#                     'friend@everybase.co',
+#                     [lead.author.email.email]
+#                 )
 
-            send_amplitude_event.delay(
-                'created lead',
-                user_uuid=lead.author.uuid,
-                ip=get_ip_address(request),
-                event_properties={
-                    'lead id': lead.id,
-                    'buy sell': lead.lead_type,
-                    'buy country': lead.buy_country.programmatic_key if lead.buy_country is not None else 'any_country',
-                    'sell country': lead.sell_country.programmatic_key if lead.sell_country is not None else 'any_country'
-                }
-            )
+#             send_amplitude_event.delay(
+#                 'created lead',
+#                 user_uuid=lead.author.uuid,
+#                 ip=get_ip_address(request),
+#                 event_properties={
+#                     'lead id': lead.id,
+#                     'buy sell': lead.lead_type,
+#                     'buy country': lead.buy_country.programmatic_key if lead.buy_country is not None else 'any_country',
+#                     'sell country': lead.sell_country.programmatic_key if lead.sell_country is not None else 'any_country'
+#                 }
+#             )
             
-            return HttpResponseRedirect(reverse('leads:my_leads'))
-    else:
-        form = forms.LeadForm()
+#             return HttpResponseRedirect(reverse('leads:my_leads'))
+#     else:
+#         form = forms.LeadForm()
 
-    countries = commods.Country.objects.annotate(
-        num_leads=Count('leads_buy_country')).order_by('-num_leads')
+#     countries = commods.Country.objects.annotate(
+#         num_leads=Count('leads_buy_country')).order_by('-num_leads')
 
-    categories = models.LeadCategory.objects\
-        .annotate(num_leads=Count('leads')).\
-        order_by('-num_leads')
+#     categories = models.LeadCategory.objects\
+#         .annotate(num_leads=Count('leads')).\
+#         order_by('-num_leads')
 
-    params = {
-        'countries': countries,
-        'categories': categories,
-        'form': form
-    }
+#     params = {
+#         'countries': countries,
+#         'categories': categories,
+#         'form': form
+#     }
 
-    return render(request, 'leads/superio/lead_create.html', params)
+#     return render(request, 'leads/superio/lead_create.html', params)
 
+# def _lead_list(request):
+#     leads = models.Lead.objects\
+#         .filter(deleted__isnull=True)\
+#         .order_by('-created')
 
+#     # Logging query
+#     query = models.LeadQuery(
+#         user=request.user.user if request.user.is_authenticated else None
+#     )
 
+#     params = {}
 
+#     # Filter by buy/sell
 
-
-
-def _lead_list(request):
-    leads = models.Lead.objects\
-        .filter(deleted__isnull=True)\
-        .order_by('-created')
-
-    # Logging query
-    query = models.LeadQuery(
-        user=request.user.user if request.user.is_authenticated else None
-    )
-
-    params = {}
-
-    # Filter by buy/sell
-
-    buy_sell = request.GET.get('buy_sell')
-    query.buy_sell = buy_sell # Log
-    if buy_sell is not None and buy_sell.strip() != '' and buy_sell != 'buy_or_sell':
-        if buy_sell == 'buy_only':
-            leads = leads.filter(lead_type='buying')
-        elif buy_sell == 'sell_only':
-            leads = leads.filter(lead_type='selling')
+#     buy_sell = request.GET.get('buy_sell')
+#     query.buy_sell = buy_sell # Log
+#     if buy_sell is not None and buy_sell.strip() != '' and buy_sell != 'buy_or_sell':
+#         if buy_sell == 'buy_only':
+#             leads = leads.filter(lead_type='buying')
+#         elif buy_sell == 'sell_only':
+#             leads = leads.filter(lead_type='selling')
         
-        # Pass value back to view
-        params['buy_sell'] = buy_sell
+#         # Pass value back to view
+#         params['buy_sell'] = buy_sell
 
-    # Filter by category
+#     # Filter by category
 
-    category = request.GET.get('category')
-    query.category = category # Log
-    if category is not None and category.strip() != '' and category != 'any_category':
-        c = models.LeadCategory.objects.get(programmatic_key=category)
-        leads = leads.filter(category=c)
+#     category = request.GET.get('category')
+#     query.category = category # Log
+#     if category is not None and category.strip() != '' and category != 'any_category':
+#         c = models.LeadCategory.objects.get(programmatic_key=category)
+#         leads = leads.filter(category=c)
 
-        # Pass value back to view
-        params['category'] = category
+#         # Pass value back to view
+#         params['category'] = category
 
-    # Filter by country
+#     # Filter by country
 
-    country = request.GET.get('country')
-    query.country = country # Log
-    if country is not None and country.strip() != '' and country != 'any_country':
-        c = commods.Country.objects.get(programmatic_key=country)
+#     country = request.GET.get('country')
+#     query.country = country # Log
+#     if country is not None and country.strip() != '' and country != 'any_country':
+#         c = commods.Country.objects.get(programmatic_key=country)
 
-        if buy_sell == 'buy_or_sell':
-            leads = leads.filter(Q(buy_country=c) | Q(sell_country=c))
-        elif buy_sell == 'buy_only':
-            leads = leads.filter(Q(sell_country=c))
-        elif buy_sell == 'sell_only':
-            leads = leads.filter(Q(buy_country=c))
+#         if buy_sell == 'buy_or_sell':
+#             leads = leads.filter(Q(buy_country=c) | Q(sell_country=c))
+#         elif buy_sell == 'buy_only':
+#             leads = leads.filter(Q(sell_country=c))
+#         elif buy_sell == 'sell_only':
+#             leads = leads.filter(Q(buy_country=c))
 
-        # Pass value back to view
-        params['country'] = country
+#         # Pass value back to view
+#         params['country'] = country
 
-    # Maximum commission percentage for view filter
+#     # Maximum commission percentage for view filter
 
-    # max_comm_lead = models.Lead.objects.all()\
-    #     .filter(max_commission_percentage__isnull=False)\
-    #     .order_by('-max_commission_percentage')\
-    #     .first()
+#     # max_comm_lead = models.Lead.objects.all()\
+#     #     .filter(max_commission_percentage__isnull=False)\
+#     #     .order_by('-max_commission_percentage')\
+#     #     .first()
         
-    # params['max_commission_percentage'] = 0 if max_comm_lead is None else max_comm_lead.max_commission_percentage
+#     # params['max_commission_percentage'] = 0 if max_comm_lead is None else max_comm_lead.max_commission_percentage
 
-    # Filter by commissions
+#     # Filter by commissions
     
-    # min_commission_percentage_filter = request.GET.get('min_commission_percentage_filter')
-    # query.min_commission_percentage = float(min_commission_percentage_filter) if min_commission_percentage_filter is not None else None # Log
-    # if min_commission_percentage_filter is not None and min_commission_percentage_filter.strip() != '':
-    #     # Note: we're only filtering on maximum commission percentage with the slider's
-    #     # minimum and maximum values.
-    #     leads = leads.filter(max_commission_percentage__gte=min_commission_percentage_filter)\
-    #         .filter(max_commission_percentage__isnull=False)\
-    #         .filter(min_commission_percentage__isnull=False)
+#     # min_commission_percentage_filter = request.GET.get('min_commission_percentage_filter')
+#     # query.min_commission_percentage = float(min_commission_percentage_filter) if min_commission_percentage_filter is not None else None # Log
+#     # if min_commission_percentage_filter is not None and min_commission_percentage_filter.strip() != '':
+#     #     # Note: we're only filtering on maximum commission percentage with the slider's
+#     #     # minimum and maximum values.
+#     #     leads = leads.filter(max_commission_percentage__gte=min_commission_percentage_filter)\
+#     #         .filter(max_commission_percentage__isnull=False)\
+#     #         .filter(min_commission_percentage__isnull=False)
 
-    #     # Pass value back to view
-    #     params['min_commission_percentage_filter'] = min_commission_percentage_filter
-    # else:
-    #     # Pass value back to view
-    #     params['min_commission_percentage_filter'] = 0
+#     #     # Pass value back to view
+#     #     params['min_commission_percentage_filter'] = min_commission_percentage_filter
+#     # else:
+#     #     # Pass value back to view
+#     #     params['min_commission_percentage_filter'] = 0
     
-    # max_commission_percentage_filter = request.GET.get('max_commission_percentage_filter')
-    # query.max_commission_percentage = float(max_commission_percentage_filter) if max_commission_percentage_filter is not None else None # Log
-    # if max_commission_percentage_filter is not None and max_commission_percentage_filter.strip() != '':
-    #     leads = leads.filter(max_commission_percentage__lte=max_commission_percentage_filter)\
-    #         .filter(max_commission_percentage__isnull=False)\
-    #         .filter(min_commission_percentage__isnull=False)
+#     # max_commission_percentage_filter = request.GET.get('max_commission_percentage_filter')
+#     # query.max_commission_percentage = float(max_commission_percentage_filter) if max_commission_percentage_filter is not None else None # Log
+#     # if max_commission_percentage_filter is not None and max_commission_percentage_filter.strip() != '':
+#     #     leads = leads.filter(max_commission_percentage__lte=max_commission_percentage_filter)\
+#     #         .filter(max_commission_percentage__isnull=False)\
+#     #         .filter(min_commission_percentage__isnull=False)
 
-    #     # Pass value back to view
-    #     params['max_commission_percentage_filter'] = max_commission_percentage_filter
-    # else:
-    #     # Pass value back to view
-    #     params['max_commission_percentage_filter'] = params['max_commission_percentage']
+#     #     # Pass value back to view
+#     #     params['max_commission_percentage_filter'] = max_commission_percentage_filter
+#     # else:
+#     #     # Pass value back to view
+#     #     params['max_commission_percentage_filter'] = params['max_commission_percentage']
 
-    # Baseline ordering
+#     # Baseline ordering
 
-    order_by = [Trunc('created', 'week', output_field=DateTimeField()).desc()]
+#     order_by = [Trunc('created', 'week', output_field=DateTimeField()).desc()]
 
-    # Search
+#     # Search
 
-    search_phrase = request.GET.get('search_phrase')
-    query.search_phrase = search_phrase # Log
-    if search_phrase is not None and search_phrase.strip() != '':
-        headline_details_vec = SearchVector('headline_details_vec')
-        search_query = SearchQuery(search_phrase)
-        leads = leads.annotate(
-            headline_details_vec=RawSQL('headline_details_vec', [],
-            output_field=SearchVectorField()))\
-            .annotate(search_rank=SearchRank(headline_details_vec, search_query))
+#     search_phrase = request.GET.get('search_phrase')
+#     query.search_phrase = search_phrase # Log
+#     if search_phrase is not None and search_phrase.strip() != '':
+#         headline_details_vec = SearchVector('headline_details_vec')
+#         search_query = SearchQuery(search_phrase)
+#         leads = leads.annotate(
+#             headline_details_vec=RawSQL('headline_details_vec', [],
+#             output_field=SearchVectorField()))\
+#             .annotate(search_rank=SearchRank(headline_details_vec, search_query))
 
-        order_by.append('-search_rank')
+#         order_by.append('-search_rank')
 
-        # Pass value back to view
-        params['search_phrase'] = search_phrase
+#         # Pass value back to view
+#         params['search_phrase'] = search_phrase
 
-    # Order leads
+#     # Order leads
     
-    leads = leads.order_by(*order_by)
+#     leads = leads.order_by(*order_by)
 
-    #  Set filter countries - only use countries used by leads
+#     #  Set filter countries - only use countries used by leads
 
-    params['countries'] = commods.Country.objects.\
-            annotate(num_buy_leads=Count('leads_buy_country')).\
-            annotate(num_sell_leads=Count('leads_sell_country')).\
-            filter(Q(num_buy_leads__gt=0) | Q(num_sell_leads__gt=0)).\
-            order_by('-num_buy_leads')
+#     params['countries'] = commods.Country.objects.\
+#             annotate(num_buy_leads=Count('leads_buy_country')).\
+#             annotate(num_sell_leads=Count('leads_sell_country')).\
+#             filter(Q(num_buy_leads__gt=0) | Q(num_sell_leads__gt=0)).\
+#             order_by('-num_buy_leads')
 
-    # Set filter categories - only use categories used by leads
+#     # Set filter categories - only use categories used by leads
 
-    params['categories'] = models.LeadCategory.objects\
-        .annotate(num_leads=Count('leads')).\
-        filter(num_leads__gt=0).\
-        order_by('-num_leads')
+#     params['categories'] = models.LeadCategory.objects\
+#         .annotate(num_leads=Count('leads')).\
+#         filter(num_leads__gt=0).\
+#         order_by('-num_leads')
 
-    # Paginate
+#     # Paginate
 
-    leads_per_page = 20
-    paginator = Paginator(leads, leads_per_page)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    params['page_obj'] = page_obj
+#     leads_per_page = 20
+#     paginator = Paginator(leads, leads_per_page)
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+#     params['page_obj'] = page_obj
 
-    # Save log if it's not empty
-    if (query.search_phrase is not None and query.search_phrase.strip() != '') or\
-        (query.buy_sell is not None and query.buy_sell.strip() != 'buy_or_sell') or\
-        (query.country is not None and query.country.strip() != 'any_country') or\
-        (query.category is not None and query.category.strip() != 'any_category'):
-        query.save()
+#     # Save log if it's not empty
+#     if (query.search_phrase is not None and query.search_phrase.strip() != '') or\
+#         (query.buy_sell is not None and query.buy_sell.strip() != 'buy_or_sell') or\
+#         (query.country is not None and query.country.strip() != 'any_country') or\
+#         (query.category is not None and query.category.strip() != 'any_category'):
+#         query.save()
 
-    return render(request, 'leads/superio/lead_list.html', params)
+#     return render(request, 'leads/superio/lead_list.html', params)
 
+# def _lead_detail(request, slug):
+#     try:
+#         lead = models.Lead.objects.get(slug_link=slug)
+#     except models.Lead.DoesNotExist:
+#         raise Http404('Lead not found')
 
-
-def _lead_detail(request, slug):
-    try:
-        lead = models.Lead.objects.get(slug_link=slug)
-    except models.Lead.DoesNotExist:
-        raise Http404('Lead not found')
-
-    # Disallow access to deleted lead
-    if lead.deleted:
-        raise Http404('Lead not found')
+#     # Disallow access to deleted lead
+#     if lead.deleted:
+#         raise Http404('Lead not found')
     
-    if request.method == 'POST':
-        # User applied to be an agent
-        form = forms.ApplicationForm(request.POST)
-        if request.user.user != lead.author and form.is_valid():
+#     if request.method == 'POST':
+#         # User applied to be an agent
+#         form = forms.ApplicationForm(request.POST)
+#         if request.user.user != lead.author and form.is_valid():
 
-            # Default false if checkbox is not checked
-            # has_experience = False if not form.cleaned_data.get('has_experience') else True
-            # has_buyers = False if not form.cleaned_data.get('has_buyers') else True
+#             # Default false if checkbox is not checked
+#             # has_experience = False if not form.cleaned_data.get('has_experience') else True
+#             # has_buyers = False if not form.cleaned_data.get('has_buyers') else True
 
-            # answers = form.cleaned_data.get('answers')
+#             # answers = form.cleaned_data.get('answers')
 
-            applicant_comments = form.cleaned_data.get('applicant_comments')
+#             applicant_comments = form.cleaned_data.get('applicant_comments')
 
-            application = models.Application.objects.create(
-                lead=lead,
-                applicant=request.user.user,
-                # has_experience=has_experience,
-                # has_buyers=has_buyers,
-                applicant_comments=applicant_comments,
-                questions=lead.questions,
-                # answers=answers
-            )
+#             application = models.Application.objects.create(
+#                 lead=lead,
+#                 applicant=request.user.user,
+#                 # has_experience=has_experience,
+#                 # has_buyers=has_buyers,
+#                 applicant_comments=applicant_comments,
+#                 questions=lead.questions,
+#                 # answers=answers
+#             )
 
-            # Application detail link with 'magic login'
-            app_det_link = urljoin(settings.BASE_URL, reverse('magic_login', args=(application.lead.author.uuid,))) +\
-                '?next=' + reverse('applications:application_detail', args=(application.id,))
+#             # Application detail link with 'magic login'
+#             app_det_link = urljoin(settings.BASE_URL, reverse('magic_login', args=(application.lead.author.uuid,))) +\
+#                 '?next=' + reverse('applications:application_detail', args=(application.id,))
 
-            if application.lead.author.email is not None:
-                # Email lead author
-                send_email.delay(
-                    render_to_string('leads/email/new_application_subject.txt', {
-                        'lead_headline': application.lead.headline
-                    }),
-                    render_to_string('leads/email/new_application.txt', {
-                        'lead_author_first_name': application.lead.author.first_name,
-                        'lead_author_last_name': application.lead.author.last_name,
-                        'lead_headline': application.lead.headline,
-                        'application_detail_url': app_det_link
-                    }),
-                    'friend@everybase.co',
-                    [application.lead.author.email.email]
-                )
+#             if application.lead.author.email is not None:
+#                 # Email lead author
+#                 send_email.delay(
+#                     render_to_string('leads/email/new_application_subject.txt', {
+#                         'lead_headline': application.lead.headline
+#                     }),
+#                     render_to_string('leads/email/new_application.txt', {
+#                         'lead_author_first_name': application.lead.author.first_name,
+#                         'lead_author_last_name': application.lead.author.last_name,
+#                         'lead_headline': application.lead.headline,
+#                         'application_detail_url': app_det_link
+#                     }),
+#                     'friend@everybase.co',
+#                     [application.lead.author.email.email]
+#                 )
 
-            if application.lead.author.phone_number is not None:
-                # WhatsApp lead author
-                send_new_application.delay(
-                    application.lead.author.id,
-                    application.lead.author.first_name,
-                    application.lead.author.last_name,
-                    application.lead.headline,
-                    app_det_link
-                )
+#             if application.lead.author.phone_number is not None:
+#                 # WhatsApp lead author
+#                 send_new_application.delay(
+#                     application.lead.author.id,
+#                     application.lead.author.first_name,
+#                     application.lead.author.last_name,
+#                     application.lead.headline,
+#                     app_det_link
+#                 )
 
-            event_props = {
-                'application id': application.id,
-                'lead_type': application.lead.lead_type
-            }
+#             event_props = {
+#                 'application id': application.id,
+#                 'lead_type': application.lead.lead_type
+#             }
 
-            if application.lead.buy_country is not None:
-                event_props['buy_country'] = application.lead.buy_country.programmatic_key
+#             if application.lead.buy_country is not None:
+#                 event_props['buy_country'] = application.lead.buy_country.programmatic_key
 
-            if application.lead.sell_country is not None:
-                event_props['sell_country'] = application.lead.sell_country.programmatic_key
+#             if application.lead.sell_country is not None:
+#                 event_props['sell_country'] = application.lead.sell_country.programmatic_key
             
-            send_amplitude_event.delay(
-                'applied as an agent',
-                user_uuid=lead.author.uuid,
-                ip=get_ip_address(request),
-                event_properties=event_props
-            )
-    else:
-        form = forms.ApplicationForm()
+#             send_amplitude_event.delay(
+#                 'applied as an agent',
+#                 user_uuid=lead.author.uuid,
+#                 ip=get_ip_address(request),
+#                 event_properties=event_props
+#             )
+#     else:
+#         form = forms.ApplicationForm()
 
-    # Record user access if authenticated
-    if request.user.is_authenticated:
-        v, _ = models.LeadDetailView.objects.get_or_create(
-            lead=lead,
-            viewer=request.user.user
-        )
+#     # Record user access if authenticated
+#     if request.user.is_authenticated:
+#         v, _ = models.LeadDetailView.objects.get_or_create(
+#             lead=lead,
+#             viewer=request.user.user
+#         )
 
-        v.count += 1
-        v.save()
+#         v.count += 1
+#         v.save()
     
-    params = {
-        'form': form,
-        'lead': lead
-    }
+#     params = {
+#         'form': form,
+#         'lead': lead
+#     }
 
-    return render(request, 'leads/superio/lead_detail.html', params)
+#     return render(request, 'leads/superio/lead_detail.html', params)
 
+# @login_required
+# def lead_edit(request, slug):
+#     lead = models.Lead.objects.get(slug_link=slug)
+#     if request.method == 'POST':
+#         form = forms.LeadForm(request.POST)
+#         if form.is_valid():
+#             g = lambda x: form.cleaned_data.get(x)
 
+#             lead_type = g('lead_type')
+#             author_type = g('author_type')
+#             country_key = g('country')
+#             category_key = g('category')
+#             commission_type = g('commission_type')
+#             commission_usd_mt = g('commission_usd_mt')
+#             min_commission_percentage = g('min_commission_percentage')
+#             max_commission_percentage = g('max_commission_percentage')
+#             headline = g('headline')
+#             details = g('details')
+#             questions = g('questions')
 
+#             category = None
+#             if category_key != 'other':
+#                 try:
+#                     category = models.LeadCategory.objects.get(programmatic_key=category_key)
+#                 except models.LeadCategory.DoesNotExist:
+#                     pass
 
+#             lead.author = request.user.user
+#             lead.lead_type = lead_type
+#             lead.author_type = author_type
+#             lead.category = category
+#             lead.commission_type = commission_type
+#             lead.commission_usd_mt = commission_usd_mt
+#             lead.min_commission_percentage = min_commission_percentage
+#             lead.max_commission_percentage = max_commission_percentage
+#             lead.headline = headline
+#             lead.details = details
+#             lead.questions = questions
 
+#             country = commods.Country.objects.get(programmatic_key=country_key)
+#             if lead_type == 'selling':
+#                 lead.buy_country = country
+#             elif lead_type == 'buying':
+#                 lead.sell_country = country
 
-
-@login_required
-def lead_edit(request, slug):
-    lead = models.Lead.objects.get(slug_link=slug)
-    if request.method == 'POST':
-        form = forms.LeadForm(request.POST)
-        if form.is_valid():
-            g = lambda x: form.cleaned_data.get(x)
-
-            lead_type = g('lead_type')
-            author_type = g('author_type')
-            country_key = g('country')
-            category_key = g('category')
-            commission_type = g('commission_type')
-            commission_usd_mt = g('commission_usd_mt')
-            min_commission_percentage = g('min_commission_percentage')
-            max_commission_percentage = g('max_commission_percentage')
-            headline = g('headline')
-            details = g('details')
-            questions = g('questions')
-
-            category = None
-            if category_key != 'other':
-                try:
-                    category = models.LeadCategory.objects.get(programmatic_key=category_key)
-                except models.LeadCategory.DoesNotExist:
-                    pass
-
-            lead.author = request.user.user
-            lead.lead_type = lead_type
-            lead.author_type = author_type
-            lead.category = category
-            lead.commission_type = commission_type
-            lead.commission_usd_mt = commission_usd_mt
-            lead.min_commission_percentage = min_commission_percentage
-            lead.max_commission_percentage = max_commission_percentage
-            lead.headline = headline
-            lead.details = details
-            lead.questions = questions
-
-            country = commods.Country.objects.get(programmatic_key=country_key)
-            if lead_type == 'selling':
-                lead.buy_country = country
-            elif lead_type == 'buying':
-                lead.sell_country = country
-
-            lead.save()
+#             lead.save()
             
-            return HttpResponseRedirect(reverse('leads:my_leads'))
-    else:
-        initial = {
-            'author': lead.author,
-            'lead_type': lead.lead_type,
-            'author_type': lead.author_type,
-            'commission_type': lead.commission_type,
-            'commission_usd_mt': lead.commission_usd_mt,
-            'min_commission_percentage': lead.min_commission_percentage,
-            'max_commission_percentage': lead.max_commission_percentage,
-            'headline': lead.headline,
-            'details': lead.details,
-            'questions': lead.questions
-        }
+#             return HttpResponseRedirect(reverse('leads:my_leads'))
+#     else:
+#         initial = {
+#             'author': lead.author,
+#             'lead_type': lead.lead_type,
+#             'author_type': lead.author_type,
+#             'commission_type': lead.commission_type,
+#             'commission_usd_mt': lead.commission_usd_mt,
+#             'min_commission_percentage': lead.min_commission_percentage,
+#             'max_commission_percentage': lead.max_commission_percentage,
+#             'headline': lead.headline,
+#             'details': lead.details,
+#             'questions': lead.questions
+#         }
 
-        if lead.category is not None:
-            initial['category'] = lead.category.programmatic_key
+#         if lead.category is not None:
+#             initial['category'] = lead.category.programmatic_key
 
-        if lead.lead_type == 'selling':
-            initial['country'] = lead.buy_country.programmatic_key
-        elif lead.lead_type == 'buying':
-            initial['country'] = lead.sell_country.programmatic_key
+#         if lead.lead_type == 'selling':
+#             initial['country'] = lead.buy_country.programmatic_key
+#         elif lead.lead_type == 'buying':
+#             initial['country'] = lead.sell_country.programmatic_key
 
-        form = forms.LeadForm(initial=initial)
+#         form = forms.LeadForm(initial=initial)
 
-    countries = commods.Country.objects.annotate(
-        num_leads=Count('leads_buy_country')).order_by('-num_leads')
+#     countries = commods.Country.objects.annotate(
+#         num_leads=Count('leads_buy_country')).order_by('-num_leads')
 
-    categories = models.LeadCategory.objects\
-        .annotate(num_leads=Count('leads')).\
-        filter(num_leads__gt=0).\
-        order_by('-num_leads')
+#     categories = models.LeadCategory.objects\
+#         .annotate(num_leads=Count('leads')).\
+#         filter(num_leads__gt=0).\
+#         order_by('-num_leads')
 
-    params = {
-        'slug_link': lead.slug_link,
-        'categories': categories,
-        'countries': countries,
-        'form': form
-    }
+#     params = {
+#         'slug_link': lead.slug_link,
+#         'categories': categories,
+#         'countries': countries,
+#         'form': form
+#     }
 
-    return render(request, 'leads/superio/lead_edit.html', params)
+#     return render(request, 'leads/superio/lead_edit.html', params)
 
+# @login_required
+# def _my_leads(request):
+#     leads = models.Lead.objects.all()\
+#         .filter(
+#             deleted__isnull=True,
+#             author=request.user.user
+#         )\
+#         .order_by('-created')
 
+#     # Paginate
 
-@login_required
-def _my_leads(request):
-    leads = models.Lead.objects.all()\
-        .filter(
-            deleted__isnull=True,
-            author=request.user.user
-        )\
-        .order_by('-created')
+#     # products_per_page = 36
+#     # paginator = Paginator(products, products_per_page)
 
-    # Paginate
+#     # page_number = request.GET.get('page')
 
-    # products_per_page = 36
-    # paginator = Paginator(products, products_per_page)
-
-    # page_number = request.GET.get('page')
-
-    # Set context parameters
-    params = {}
+#     # Set context parameters
+#     params = {}
     
-    # page_obj = paginator.get_page(page_number)
-    # params['page_obj'] = page_obj
-    params['page_obj'] = leads
+#     # page_obj = paginator.get_page(page_number)
+#     # params['page_obj'] = page_obj
+#     params['page_obj'] = leads
 
-    return render(request, 'leads/superio/my_leads.html', params)
+#     return render(request, 'leads/superio/my_leads.html', params)
 
-@login_required
-def lead_delete(request, slug):
-    if request.method == 'POST':
-        lead = models.Lead.objects.get(slug_link=slug)
+# @login_required
+# def lead_delete(request, slug):
+#     if request.method == 'POST':
+#         lead = models.Lead.objects.get(slug_link=slug)
         
-        # Set delete flag.
-        # Model associations are protected, so deleting is a massive operation.
-        sgtz = pytz.timezone(settings.TIME_ZONE)
-        lead.deleted = datetime.datetime.now(tz=sgtz)
-        lead.save()
+#         # Set delete flag.
+#         # Model associations are protected, so deleting is a massive operation.
+#         sgtz = pytz.timezone(settings.TIME_ZONE)
+#         lead.deleted = datetime.datetime.now(tz=sgtz)
+#         lead.save()
 
-        return HttpResponseRedirect(reverse('leads:my_leads'))
+#         return HttpResponseRedirect(reverse('leads:my_leads'))
 
-@login_required
-def application_list(request):
-    # Get first of all applications associated with this user
-    first = request.user.user.applications().first()
-    if first:
-        return HttpResponseRedirect(
-            reverse('applications:application_detail', args=(first.id,)))
+# @login_required
+# def application_list(request):
+#     # Get first of all applications associated with this user
+#     first = request.user.user.applications().first()
+#     if first:
+#         return HttpResponseRedirect(
+#             reverse('applications:application_detail', args=(first.id,)))
     
-    form = forms.ApplicationMessageForm()
+#     form = forms.ApplicationMessageForm()
 
-    return render(request, 'leads/superio/inbox.html', {'form': form})
+#     return render(request, 'leads/superio/inbox.html', {'form': form})
 
-@login_required
-def application_detail(request, pk):
-    # Application of focus
-    application = models.Application.objects.get(pk=pk)
+# @login_required
+# def application_detail(request, pk):
+#     # Application of focus
+#     application = models.Application.objects.get(pk=pk)
 
-    if application.deleted is not None:
-        # Application is deleted, stop
-        return HttpResponseRedirect(reverse('applications:inbox'))
+#     if application.deleted is not None:
+#         # Application is deleted, stop
+#         return HttpResponseRedirect(reverse('applications:inbox'))
     
-    author_replied = models.ApplicationMessage.objects.filter(
-        application=application,
-        author=application.lead.author
-    ).count() > 0
-    if application.applicant == request.user.user and not author_replied:
-        # Accessing user is an applicant and the author has not replied, stop
-        return HttpResponseRedirect(reverse('applications:inbox'))
+#     author_replied = models.ApplicationMessage.objects.filter(
+#         application=application,
+#         author=application.lead.author
+#     ).count() > 0
+#     if application.applicant == request.user.user and not author_replied:
+#         # Accessing user is an applicant and the author has not replied, stop
+#         return HttpResponseRedirect(reverse('applications:inbox'))
 
-    if request.method == 'POST':
-        # User posted a message
-        form = forms.ApplicationMessageForm(request.POST)
-        if form.is_valid():
-            body = form.cleaned_data.get('body')
-            models.ApplicationMessage.objects.create(
-                application=application,
-                author=request.user.user,
-                body=body
-            )
+#     if request.method == 'POST':
+#         # User posted a message
+#         form = forms.ApplicationMessageForm(request.POST)
+#         if form.is_valid():
+#             body = form.cleaned_data.get('body')
+#             models.ApplicationMessage.objects.create(
+#                 application=application,
+#                 author=request.user.user,
+#                 body=body
+#             )
             
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            now = datetime.datetime.now(tz=sgtz)
-            application.last_messaged = now
-            application.save()
+#             sgtz = pytz.timezone(settings.TIME_ZONE)
+#             now = datetime.datetime.now(tz=sgtz)
+#             application.last_messaged = now
+#             application.save()
 
-            if application.applicant.id == request.user.user.id:
-                counter_party = application.lead.author
-                counter_party_is_agent = False
-            else:
-                counter_party = application.applicant
-                counter_party_is_agent = True
+#             if application.applicant.id == request.user.user.id:
+#                 counter_party = application.lead.author
+#                 counter_party_is_agent = False
+#             else:
+#                 counter_party = application.applicant
+#                 counter_party_is_agent = True
 
-            # Application detail link with 'magic login'
-            app_det_link = urljoin(settings.BASE_URL, reverse('magic_login', args=(counter_party.uuid,))) +\
-                '?next=' + reverse('applications:application_detail', args=(application.id,))
+#             # Application detail link with 'magic login'
+#             app_det_link = urljoin(settings.BASE_URL, reverse('magic_login', args=(counter_party.uuid,))) +\
+#                 '?next=' + reverse('applications:application_detail', args=(application.id,))
 
-            # Email counter party
-            if counter_party.email is not None:
-                send_email.delay(
-                    render_to_string('leads/email/new_message_subject.txt', {
-                        'lead_headline': application.lead.headline
-                    }),
-                    render_to_string('leads/email/new_message.txt', {
-                        'counter_party_first_name': counter_party.first_name,
-                        'counter_party_last_name': counter_party.last_name,
-                        'lead_headline': application.lead.headline,
-                        'application_detail_url': app_det_link
-                    }),
-                    'friend@everybase.co',
-                    [counter_party.email.email]
-                )
+#             # Email counter party
+#             if counter_party.email is not None:
+#                 send_email.delay(
+#                     render_to_string('leads/email/new_message_subject.txt', {
+#                         'lead_headline': application.lead.headline
+#                     }),
+#                     render_to_string('leads/email/new_message.txt', {
+#                         'counter_party_first_name': counter_party.first_name,
+#                         'counter_party_last_name': counter_party.last_name,
+#                         'lead_headline': application.lead.headline,
+#                         'application_detail_url': app_det_link
+#                     }),
+#                     'friend@everybase.co',
+#                     [counter_party.email.email]
+#                 )
 
-            # WhatsApp counter party
-            if counter_party.phone_number is not None:
-                send_new_message.delay(
-                    counter_party.id,
-                    counter_party.first_name,
-                    counter_party.last_name,
-                    application.lead.headline,
-                    app_det_link
-                )
+#             # WhatsApp counter party
+#             if counter_party.phone_number is not None:
+#                 send_new_message.delay(
+#                     counter_party.id,
+#                     counter_party.first_name,
+#                     counter_party.last_name,
+#                     application.lead.headline,
+#                     app_det_link
+#                 )
 
-            num_messages_sent = models.ApplicationMessage.objects.filter(
-                author=request.user.user
-            ).count()
+#             num_messages_sent = models.ApplicationMessage.objects.filter(
+#                 author=request.user.user
+#             ).count()
 
-            identify_amplitude_user.delay(
-                user_id=request.user.user.uuid,
-                user_properties={
-                    'num messages sent': num_messages_sent
-                }
-            )
-            send_amplitude_event.delay(
-                'agent application - messaged counterparty',
-                user_uuid=request.user.user.uuid,
-                ip=get_ip_address(request),
-                event_properties={
-                    'application id': application.id,
-                    'counter party is agent': 'true' if counter_party_is_agent else 'false'
-                }
-            )
-    elif request.method == 'GET':
-        form = forms.ApplicationMessageForm()
+#             identify_amplitude_user.delay(
+#                 user_id=request.user.user.uuid,
+#                 user_properties={
+#                     'num messages sent': num_messages_sent
+#                 }
+#             )
+#             send_amplitude_event.delay(
+#                 'agent application - messaged counterparty',
+#                 user_uuid=request.user.user.uuid,
+#                 ip=get_ip_address(request),
+#                 event_properties={
+#                     'application id': application.id,
+#                     'counter party is agent': 'true' if counter_party_is_agent else 'false'
+#                 }
+#             )
+#     elif request.method == 'GET':
+#         form = forms.ApplicationMessageForm()
 
-    # All applications associated with the user - to populate the list
-    applications = request.user.user.applications()
+#     # All applications associated with the user - to populate the list
+#     applications = request.user.user.applications()
 
-    params = {
-        'form': form,
-        'application': application,
-        'applications': applications
-    }
+#     params = {
+#         'form': form,
+#         'application': application,
+#         'applications': applications
+#     }
 
-    return render(request, 'leads/superio/inbox.html', params)
+#     return render(request, 'leads/superio/inbox.html', params)
 
-@login_required
-def application_delete(request, pk):
-    if request.method == 'POST':
-        application = models.Application.objects.get(pk=pk)
-        if application.applicant == request.user.user:
-            deleted_by = 'agent'
-        else:
-            deleted_by = 'author'
+# @login_required
+# def application_delete(request, pk):
+#     if request.method == 'POST':
+#         application = models.Application.objects.get(pk=pk)
+#         if application.applicant == request.user.user:
+#             deleted_by = 'agent'
+#         else:
+#             deleted_by = 'author'
 
-        sgtz = pytz.timezone(settings.TIME_ZONE)
-        application.deleted = datetime.datetime.now(tz=sgtz)
-        application.deleted_by = deleted_by
-        application.save()
+#         sgtz = pytz.timezone(settings.TIME_ZONE)
+#         application.deleted = datetime.datetime.now(tz=sgtz)
+#         application.deleted_by = deleted_by
+#         application.save()
 
-        send_amplitude_event.delay(
-            'agent application - deleted conversation',
-            user_uuid=request.user.user.uuid,
-            ip=get_ip_address(request),
-            event_properties={
-                'application id': application.id,
-                'deleted by': deleted_by
-            }
-        )
+#         send_amplitude_event.delay(
+#             'agent application - deleted conversation',
+#             user_uuid=request.user.user.uuid,
+#             ip=get_ip_address(request),
+#             event_properties={
+#                 'application id': application.id,
+#                 'deleted by': deleted_by
+#             }
+#         )
 
-    return HttpResponseRedirect(reverse('applications:inbox'))
-
-
-
-
-
-
-
+#     return HttpResponseRedirect(reverse('applications:inbox'))
 
 
 

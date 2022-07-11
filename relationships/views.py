@@ -370,6 +370,17 @@ def update_phone_number(request):
 
     return TemplateResponse(request, 'relationships/confirm_phone_number_change.html', {'form': form})
 
+def magic_login(request, uuid):
+    if uuid is not None:
+        dju = authenticate(uuid)
+        if dju is not None:
+            login(request, dju)
+    
+    return _next_or_else_response(request.GET.get('next'), reverse('home'))
+
+def log_out(request):
+    logout(request)
+    return _next_or_else_response(request.GET.get('next'), reverse('home'))
 
 
 
@@ -378,6 +389,26 @@ def update_phone_number(request):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# def m(request, file_to_render):
+#     template_name = 'relationships/superio/%s' % file_to_render
+#     return TemplateResponse(request, template_name, {})
 
 # def email_update(request):
 #     params = {
@@ -390,407 +421,362 @@ def update_phone_number(request):
 #     return TemplateResponse(request, template_name, params)
 
 
+# def confirm_email(request):
+#     template_name = 'relationships/metronic/confirm_email.html'
+#     return TemplateResponse(request, template_name, {})
 
+# def _log_in(request):
+#     # Do not allow user to access this page if he is authenticated.
+#     if request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('leads:lead_create'))
 
+#     if request.method == 'POST':
+#         form = forms.LoginForm(request.POST)
+#         if form.is_valid():
+#             url = reverse('confirm_login')
 
+#             user = form.user
 
+#             # Include next as GET parameter in the URL
+#             next = form.cleaned_data.get('next')
+#             has_next = False
+#             if next is not None and next.strip() != '':
+#                 url += f'?next={next}'
+#                 has_next = True
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def magic_login(request, uuid):
-    # Logs in the user 'magically'
-    if uuid is not None:
-        dj_user = authenticate(uuid)
-        if dj_user is not None:
-            # Successfully authenticated
-            login(request, dj_user)
-
-    next = request.GET.get('next')
-    if next is not None and next.strip() != '':
-        return HttpResponseRedirect(next)
-    else:
-        return HttpResponseRedirect(reverse('leads:lead_create'))
-
-def confirm_email(request):
-    template_name = 'relationships/metronic/confirm_email.html'
-    return TemplateResponse(request, template_name, {})
-
-def _log_in(request):
-    # Do not allow user to access this page if he is authenticated.
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('leads:lead_create'))
-
-    if request.method == 'POST':
-        form = forms.LoginForm(request.POST)
-        if form.is_valid():
-            url = reverse('confirm_login')
-
-            user = form.user
-
-            # Include next as GET parameter in the URL
-            next = form.cleaned_data.get('next')
-            has_next = False
-            if next is not None and next.strip() != '':
-                url += f'?next={next}'
-                has_next = True
-
-            if form.email is not None:
-                # Generate code
-                sgtz = pytz.timezone(settings.TIME_ZONE)
-                now = datetime.now(tz=sgtz)
+#             if form.email is not None:
+#                 # Generate code
+#                 sgtz = pytz.timezone(settings.TIME_ZONE)
+#                 now = datetime.now(tz=sgtz)
                 
-                user.email_login_code = random.randint(100000, 999999)
-                user.email_login_code_generated = now
-                user.save()
+#                 user.email_login_code = random.randint(100000, 999999)
+#                 user.email_login_code_generated = now
+#                 user.save()
 
-                if has_next and url.endswith(next):
-                    url += f'&method=email'
-                else:
-                    url += f'?method=email'
+#                 if has_next and url.endswith(next):
+#                     url += f'&method=email'
+#                 else:
+#                     url += f'?method=email'
 
-                url += f'&user={user.uuid}'
+#                 url += f'&user={user.uuid}'
 
-                # Send confirmation code by email
-                send_email.delay(
-                    render_to_string('relationships/email/confirm_login_subject.txt', {}),
-                    render_to_string('relationships/email/confirm_login.txt', {'code': user.email_login_code}),
-                    'friend@everybase.co',
-                    [form.email.email]
-                )
-            elif form.phone_number is not None:
-                # Generate code
-                sgtz = pytz.timezone(settings.TIME_ZONE)
-                now = datetime.now(tz=sgtz)
+#                 # Send confirmation code by email
+#                 send_email.delay(
+#                     render_to_string('relationships/email/confirm_login_subject.txt', {}),
+#                     render_to_string('relationships/email/confirm_login.txt', {'code': user.email_login_code}),
+#                     'friend@everybase.co',
+#                     [form.email.email]
+#                 )
+#             elif form.phone_number is not None:
+#                 # Generate code
+#                 sgtz = pytz.timezone(settings.TIME_ZONE)
+#                 now = datetime.now(tz=sgtz)
                 
-                user.whatsapp_login_code = random.randint(100000, 999999)
-                user.whatsapp_login_code_generated = now
-                user.save()
+#                 user.whatsapp_login_code = random.randint(100000, 999999)
+#                 user.whatsapp_login_code_generated = now
+#                 user.save()
 
-                if has_next and url.endswith(next):
-                    url += f'&method=whatsapp'
-                else:
-                    url += f'?method=whatsapp'
+#                 if has_next and url.endswith(next):
+#                     url += f'&method=whatsapp'
+#                 else:
+#                     url += f'?method=whatsapp'
 
-                url += f'&user={user.uuid}'
+#                 url += f'&user={user.uuid}'
 
-                # Send confirmation code by WhatsApp
-                send_confirm_login.delay(form.user.id)
+#                 # Send confirmation code by WhatsApp
+#                 send_confirm_login.delay(form.user.id)
 
-            return HttpResponseRedirect(url)
-    else:
-        form = forms.LoginForm()
+#             return HttpResponseRedirect(url)
+#     else:
+#         form = forms.LoginForm()
 
-    params = {'form': form}
+#     params = {'form': form}
 
-    # Read 'next' URL from GET parameters to form input.
-    # We'll add it to the redirect URL when the user submits this form.
-    next = request.GET.get('next')
-    if next is not None:
-        params['next'] = next
+#     # Read 'next' URL from GET parameters to form input.
+#     # We'll add it to the redirect URL when the user submits this form.
+#     next = request.GET.get('next')
+#     if next is not None:
+#         params['next'] = next
 
-    template_name = 'relationships/superio/login.html'
-    return TemplateResponse(request, template_name, params)
+#     template_name = 'relationships/superio/login.html'
+#     return TemplateResponse(request, template_name, params)
 
-def confirm_login(request):
-    # Do not allow user to access this page if he is authenticated.
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('leads:lead_create'))
+# def confirm_login(request):
+#     # Do not allow user to access this page if he is authenticated.
+#     if request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('leads:lead_create'))
 
-    params = {}
+#     params = {}
 
-    if request.method == 'POST':
-        form = forms.ConfirmLoginForm(request.POST)
-        if form.is_valid():
-            method = form.cleaned_data.get('method')
+#     if request.method == 'POST':
+#         form = forms.ConfirmLoginForm(request.POST)
+#         if form.is_valid():
+#             method = form.cleaned_data.get('method')
 
-            user_uuid = form.cleaned_data.get('user_uuid')
-            user = models.User.objects.get(uuid=user_uuid) # User should exist after form check
+#             user_uuid = form.cleaned_data.get('user_uuid')
+#             user = models.User.objects.get(uuid=user_uuid) # User should exist after form check
 
-            # Update login timestamp
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            now = datetime.now(sgtz)
-            if method == 'email':
-                user.last_email_login = now
-            elif method == 'whatsapp':
-                user.last_whatsapp_login = now
-            user.save()
+#             # Update login timestamp
+#             sgtz = pytz.timezone(settings.TIME_ZONE)
+#             now = datetime.now(sgtz)
+#             if method == 'email':
+#                 user.last_email_login = now
+#             elif method == 'whatsapp':
+#                 user.last_whatsapp_login = now
+#             user.save()
 
-            # Authenticate with the Django user's username (which is the UUID key of the Everybase user) without password.
-            dj_user = authenticate(user.django_user.username)
-            if dj_user is not None:
-                # Successfully authenticated
-                login(request, dj_user)
+#             # Authenticate with the Django user's username (which is the UUID key of the Everybase user) without password.
+#             dj_user = authenticate(user.django_user.username)
+#             if dj_user is not None:
+#                 # Successfully authenticated
+#                 login(request, dj_user)
 
-                # Amplitude calls
-                send_amplitude_event.delay(
-                    'account - logged in',
-                    user_uuid=user.uuid,
-                    ip=get_ip_address(request)
-                )
+#                 # Amplitude calls
+#                 send_amplitude_event.delay(
+#                     'account - logged in',
+#                     user_uuid=user.uuid,
+#                     ip=get_ip_address(request)
+#                 )
 
-                next = form.cleaned_data.get('next')
-                if next is not None and next.strip() != '':
-                    return HttpResponseRedirect(next)
-                else:
-                    return HttpResponseRedirect(reverse('leads:lead_create'))
-    elif request.method == 'GET':
-        user_uuid = request.GET.get('user')
+#                 next = form.cleaned_data.get('next')
+#                 if next is not None and next.strip() != '':
+#                     return HttpResponseRedirect(next)
+#                 else:
+#                     return HttpResponseRedirect(reverse('leads:lead_create'))
+#     elif request.method == 'GET':
+#         user_uuid = request.GET.get('user')
 
-        try:
-            user = models.User.objects.get(uuid=user_uuid)
-        except models.User.DoesNotExist:
-            # Invalid user UUID, direct to login page
-            return HttpResponseRedirect(reverse('login'))
+#         try:
+#             user = models.User.objects.get(uuid=user_uuid)
+#         except models.User.DoesNotExist:
+#             # Invalid user UUID, direct to login page
+#             return HttpResponseRedirect(reverse('login'))
 
-        method = request.GET.get('method')
+#         method = request.GET.get('method')
 
-        initial = {
-            'user_uuid': user_uuid,
-            'method': method,
-            'next': request.GET.get('next')
-        }
+#         initial = {
+#             'user_uuid': user_uuid,
+#             'method': method,
+#             'next': request.GET.get('next')
+#         }
         
-        if user.email is not None:
-            initial['email'] = user.email.email
+#         if user.email is not None:
+#             initial['email'] = user.email.email
 
-        if user.phone_number is not None:
-            initial['country_code'] = user.phone_number.country_code
-            initial['national_number'] = user.phone_number.national_number
+#         if user.phone_number is not None:
+#             initial['country_code'] = user.phone_number.country_code
+#             initial['national_number'] = user.phone_number.national_number
 
-        form = forms.ConfirmLoginForm(initial=initial)
+#         form = forms.ConfirmLoginForm(initial=initial)
 
-    # Pass GET parameters
+#     # Pass GET parameters
 
-    params['form'] = form
-    template = 'relationships/superio/confirm_login.html'
-    return TemplateResponse(request, template, params)
+#     params['form'] = form
+#     template = 'relationships/superio/confirm_login.html'
+#     return TemplateResponse(request, template, params)
 
-def _register(request):
-    # Do not allow user to access this page if he is authenticated.
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('leads:lead_create'))
+# def _register(request):
+#     # Do not allow user to access this page if he is authenticated.
+#     if request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('leads:lead_create'))
 
-    if request.method == 'POST':
-        form = forms.RegisterForm(request.POST)
-        if form.is_valid():
+#     if request.method == 'POST':
+#         form = forms.RegisterForm(request.POST)
+#         if form.is_valid():
             
-            # Get or create a new email for this user
-            email_str = form.cleaned_data.get('email')
-            email = None
-            if email_str is not None:
-                email, _ = models.Email.objects.get_or_create(email=email_str)
+#             # Get or create a new email for this user
+#             email_str = form.cleaned_data.get('email')
+#             email = None
+#             if email_str is not None:
+#                 email, _ = models.Email.objects.get_or_create(email=email_str)
 
-            # Parse phone number
-            ph_str = str(form.cleaned_data.get('phone_number'))
-            phone_number = None
-            if ph_str is not None and ph_str.strip() != '':
-                parsed_ph = phonenumbers.parse(ph_str, None)
-                ph_cc = parsed_ph.country_code
-                ph_nn = parsed_ph.national_number
-                # Get or create new phone number for this user
-                phone_number, _ = models.PhoneNumber.objects.get_or_create(
-                    country_code=ph_cc,
-                    national_number=ph_nn
-                )
+#             # Parse phone number
+#             ph_str = str(form.cleaned_data.get('phone_number'))
+#             phone_number = None
+#             if ph_str is not None and ph_str.strip() != '':
+#                 parsed_ph = phonenumbers.parse(ph_str, None)
+#                 ph_cc = parsed_ph.country_code
+#                 ph_nn = parsed_ph.national_number
+#                 # Get or create new phone number for this user
+#                 phone_number, _ = models.PhoneNumber.objects.get_or_create(
+#                     country_code=ph_cc,
+#                     national_number=ph_nn
+#                 )
 
-            # Get country
-            country_key = form.cleaned_data.get('country')
-            country = commods.Country.objects.get(programmatic_key=country_key)
+#             # Get country
+#             country_key = form.cleaned_data.get('country')
+#             country = commods.Country.objects.get(programmatic_key=country_key)
 
-            # Create an Everybase user
-            user = models.User.objects.create(
-                email=email,
-                phone_number=phone_number,
-                country=country,
-                first_name=form.cleaned_data.get('first_name'),
-                last_name=form.cleaned_data.get('last_name')
-            )
+#             # Create an Everybase user
+#             user = models.User.objects.create(
+#                 email=email,
+#                 phone_number=phone_number,
+#                 country=country,
+#                 first_name=form.cleaned_data.get('first_name'),
+#                 last_name=form.cleaned_data.get('last_name')
+#             )
 
-            # Create new Django user
-            django_user, _ = User.objects.get_or_create(username=user.uuid)
-            # django_user.set_password(password)
-            django_user.save()
+#             # Create new Django user
+#             django_user, _ = User.objects.get_or_create(username=user.uuid)
+#             # django_user.set_password(password)
+#             django_user.save()
 
-            # Update user profile
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            user.registered = datetime.now(sgtz)
-            user.django_user = django_user
-            user.save()
+#             # Update user profile
+#             sgtz = pytz.timezone(settings.TIME_ZONE)
+#             user.registered = datetime.now(sgtz)
+#             user.django_user = django_user
+#             user.save()
 
-            django_user = authenticate(request, username=django_user.username)
-            if django_user is not None:
-                login(request, django_user)
+#             django_user = authenticate(request, username=django_user.username)
+#             if django_user is not None:
+#                 login(request, django_user)
 
-            # Email user if email is specified
-            if email is not None:
-                send_email.delay(
-                    render_to_string('relationships/email/welcome_subject.txt', {}),
-                    render_to_string('relationships/email/welcome.txt', {}),
-                    'friend@everybase.co',
-                    [email.email]
-                )
+#             # Email user if email is specified
+#             if email is not None:
+#                 send_email.delay(
+#                     render_to_string('relationships/email/welcome_subject.txt', {}),
+#                     render_to_string('relationships/email/welcome.txt', {}),
+#                     'friend@everybase.co',
+#                     [email.email]
+#                 )
 
-            # WhatsApp user if phone number is specified
-            if phone_number is not None:
-                send_welcome_message.delay(user.id)
+#             # WhatsApp user if phone number is specified
+#             if phone_number is not None:
+#                 send_welcome_message.delay(user.id)
 
-            # Amplitude call
-            send_amplitude_event.delay(
-                'account - registered',
-                user_uuid=user.uuid,
-                ip=get_ip_address(request)
-            )
+#             # Amplitude call
+#             send_amplitude_event.delay(
+#                 'account - registered',
+#                 user_uuid=user.uuid,
+#                 ip=get_ip_address(request)
+#             )
 
-            next = form.cleaned_data.get('next')
-            if next is not None and next.strip() != '':
-                return HttpResponseRedirect(next)
-            else:
-                return HttpResponseRedirect(reverse('leads:lead_create'))
-    else:
-        form = forms.RegisterForm()
+#             next = form.cleaned_data.get('next')
+#             if next is not None and next.strip() != '':
+#                 return HttpResponseRedirect(next)
+#             else:
+#                 return HttpResponseRedirect(reverse('leads:lead_create'))
+#     else:
+#         form = forms.RegisterForm()
 
-    params = {
-        'form': form,
-        'countries': commods.Country.objects.annotate(
-            num_users=Count('users_w_this_country')).order_by('-num_users')
-    }
+#     params = {
+#         'form': form,
+#         'countries': commods.Country.objects.annotate(
+#             num_users=Count('users_w_this_country')).order_by('-num_users')
+#     }
 
-    # Read 'next' URL from GET parameters to form input. We'll add it to the
-    # redirect URL when the user submits this form.
-    next = request.GET.get('next')
-    if next is not None:
-        params['next'] = next
+#     # Read 'next' URL from GET parameters to form input. We'll add it to the
+#     # redirect URL when the user submits this form.
+#     next = request.GET.get('next')
+#     if next is not None:
+#         params['next'] = next
 
-    template_name = 'relationships/superio/register.html'
-    return TemplateResponse(request, template_name, params)
+#     template_name = 'relationships/superio/register.html'
+#     return TemplateResponse(request, template_name, params)
 
-def log_out(request):
-    logout(request)
-    next_url = request.GET.get('next')
-    if next_url is not None:
-        return HttpResponseRedirect(next_url)
 
-    return HttpResponseRedirect(reverse('home'))
 
-@login_required
-def profile(request):
-    if request.method == 'POST':
-        kwargs = {'request': request}
+# @login_required
+# def profile(request):
+#     if request.method == 'POST':
+#         kwargs = {'request': request}
         
-        user = request.user.user
+#         user = request.user.user
 
-        kwargs['last_email'] = user.email.email if user.email else None
-        kwargs['last_phone_number'] = f'+{user.phone_number.country_code}{user.phone_number.national_number}' if user.phone_number else None
+#         kwargs['last_email'] = user.email.email if user.email else None
+#         kwargs['last_phone_number'] = f'+{user.phone_number.country_code}{user.phone_number.national_number}' if user.phone_number else None
 
-        form = forms.ProfileForm(request.POST, **kwargs)
+#         form = forms.ProfileForm(request.POST, **kwargs)
 
-        if form.is_valid():
-            last_email = form.last_email
-            last_phone_number = form.last_phone_number
+#         if form.is_valid():
+#             last_email = form.last_email
+#             last_phone_number = form.last_phone_number
             
-            email = form.cleaned_data.get('email')
-            phone_number = form.cleaned_data.get('phone_number')
+#             email = form.cleaned_data.get('email')
+#             phone_number = form.cleaned_data.get('phone_number')
 
-            need_logout = False
+#             need_logout = False
 
-            if email is None or email.strip() == '':
-                user.email = None
-            elif last_email != email:
-                # User has updated his email
-                email, _ = models.Email.objects.get_or_create(email=email)
-                user.email = email
-                need_logout = True
+#             if email is None or email.strip() == '':
+#                 user.email = None
+#             elif last_email != email:
+#                 # User has updated his email
+#                 email, _ = models.Email.objects.get_or_create(email=email)
+#                 user.email = email
+#                 need_logout = True
 
-            if phone_number is None or str(phone_number).strip() == '':
-                user.phone_number = None
-            elif last_phone_number != phone_number :
-                # User has updated his phone number
-                ph = get_or_create_phone_number(str(phone_number))
+#             if phone_number is None or str(phone_number).strip() == '':
+#                 user.phone_number = None
+#             elif last_phone_number != phone_number :
+#                 # User has updated his phone number
+#                 ph = get_or_create_phone_number(str(phone_number))
 
-                user.phone_number = ph
-                need_logout = True
+#                 user.phone_number = ph
+#                 need_logout = True
 
-            country_str = form.cleaned_data.get('country')
-            country = commods.Country.objects.get(programmatic_key=country_str)
+#             country_str = form.cleaned_data.get('country')
+#             country = commods.Country.objects.get(programmatic_key=country_str)
 
-            user.first_name = form.cleaned_data.get('first_name')
-            user.last_name = form.cleaned_data.get('last_name')
-            user.country = country
-            user.save()
+#             user.first_name = form.cleaned_data.get('first_name')
+#             user.last_name = form.cleaned_data.get('last_name')
+#             user.country = country
+#             user.save()
 
-            idampusr_props = {'country': user.country.programmatic_key}
-            idampusr_props['country code'] = user.phone_number.country_code if user.phone_number is not None else ''
+#             idampusr_props = {'country': user.country.programmatic_key}
+#             idampusr_props['country code'] = user.phone_number.country_code if user.phone_number is not None else ''
 
-            ampevt_props = {'country': user.country.programmatic_key}
-            ampevt_props['country code'] = user.phone_number.country_code if user.phone_number is not None else ''
+#             ampevt_props = {'country': user.country.programmatic_key}
+#             ampevt_props['country code'] = user.phone_number.country_code if user.phone_number is not None else ''
 
-            identify_amplitude_user.delay(
-                user_id=user.uuid,
-                user_properties=idampusr_props
-            )
-            send_amplitude_event.delay(
-                'account - updated profile',
-                user_uuid=user.uuid,
-                ip=get_ip_address(request),
-                event_properties=ampevt_props
-            )
+#             identify_amplitude_user.delay(
+#                 user_id=user.uuid,
+#                 user_properties=idampusr_props
+#             )
+#             send_amplitude_event.delay(
+#                 'account - updated profile',
+#                 user_uuid=user.uuid,
+#                 ip=get_ip_address(request),
+#                 event_properties=ampevt_props
+#             )
 
-            if need_logout:
-                messages.add_message(request, messages.INFO, 'You have updated your email and/or phone number. Please log in again.')
-                logout(request)
-                return HttpResponseRedirect(reverse('login'))
+#             if need_logout:
+#                 messages.add_message(request, messages.INFO, 'You have updated your email and/or phone number. Please log in again.')
+#                 logout(request)
+#                 return HttpResponseRedirect(reverse('login'))
 
-            messages.add_message(request, messages.INFO, 'Profile updated.')
-            return HttpResponseRedirect(reverse('users:profile'))
-    else:
-        user = request.user.user
-        initial = {}
-        kwargs = {'request': request}
+#             messages.add_message(request, messages.INFO, 'Profile updated.')
+#             return HttpResponseRedirect(reverse('users:profile'))
+#     else:
+#         user = request.user.user
+#         initial = {}
+#         kwargs = {'request': request}
         
-        if user.first_name:
-            initial['first_name'] = user.first_name
+#         if user.first_name:
+#             initial['first_name'] = user.first_name
         
-        if user.last_name:
-            initial['last_name'] = user.last_name
+#         if user.last_name:
+#             initial['last_name'] = user.last_name
 
-        kwargs['last_email'] = user.email.email if user.email else None
-        initial['email'] = kwargs['last_email']
+#         kwargs['last_email'] = user.email.email if user.email else None
+#         initial['email'] = kwargs['last_email']
         
-        kwargs['last_phone_number'] = f'+{user.phone_number.country_code}{user.phone_number.national_number}' if user.phone_number else None
-        initial['phone_number'] = kwargs['last_phone_number']
+#         kwargs['last_phone_number'] = f'+{user.phone_number.country_code}{user.phone_number.national_number}' if user.phone_number else None
+#         initial['phone_number'] = kwargs['last_phone_number']
 
-        if user.country:
-            initial['country'] = user.country.programmatic_key
+#         if user.country:
+#             initial['country'] = user.country.programmatic_key
         
-        form = forms.ProfileForm(initial=initial, **kwargs)
+#         form = forms.ProfileForm(initial=initial, **kwargs)
 
-    countries = commods.Country.objects.annotate(
-        num_users=Count('users_w_this_country')).order_by('-num_users')
+#     countries = commods.Country.objects.annotate(
+#         num_users=Count('users_w_this_country')).order_by('-num_users')
 
-    params = {
-        'countries': countries,
-        'form': form
-    }
+#     params = {
+#         'countries': countries,
+#         'form': form
+#     }
 
-    return render(request, 'relationships/superio/profile.html', params)
+#     return render(request, 'relationships/superio/profile.html', params)
 
 # @login_required
 # def change_password(request):
@@ -819,9 +805,6 @@ def profile(request):
 #     params = {'form': form}
 #     return render(request, 'relationships/superio/change_password.html', params)
 
-def m(request, file_to_render):
-    template_name = 'relationships/superio/%s' % file_to_render
-    return TemplateResponse(request, template_name, {})
 
 
 

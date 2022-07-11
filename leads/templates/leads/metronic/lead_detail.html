@@ -28,7 +28,6 @@
 
 {% block content_body %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
-    {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
 
         {% comment %} Start: Navbar {% endcomment %}
@@ -75,13 +74,11 @@
         {% comment %} End: Navbar {% endcomment %}
 
         {% if lead.num_contacts == 0 %}
-            {% comment %} Start: Message for 'no contacts' {% endcomment %}
             <div class="fs-4 fw-bold card shadow-sm">
                 <div class="card-body text-center">
                     No one has contacted you on this lead yet.
                 </div>
             </div>
-            {% comment %} End: Message for 'no contacts' {% endcomment %}
         {% else %}
             {% comment %} Start: Contacts table {% endcomment %}
             <div class="card shadow-sm">
@@ -126,9 +123,7 @@
 
         {% include 'metronic/includes/paginator_with_pages.html' %}
     </div>
-    {% comment %} End: Container {% endcomment %}    
 </div>
-{% comment %} End: Post {% endcomment %}
 {% endblock %}
 
 {% comment %}

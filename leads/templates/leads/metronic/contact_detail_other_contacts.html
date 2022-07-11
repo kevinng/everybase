@@ -14,9 +14,11 @@
         </div>
     </div>
 {% else %}
-    {% for other_contact in contacts %}
-        {% include 'leads/metronic/includes/other_contact_item.html' with contact=other_contact this_contact=contact %}
-    {% endfor %}
+    {% if page_obj|length > 0 %}
+        {% for other_contact in page_obj %}
+            {% include 'leads/metronic/includes/other_contact_item.html' with contact=other_contact this_contact=contact %}
+        {% endfor %}
+    {% endif %}
 {% endif %}
 
 {% include 'metronic/includes/paginator_with_pages.html' %}
