@@ -4,7 +4,9 @@ from django import forms
 from common.utilities.is_censored import is_censored
 from django.core.exceptions import ValidationError
 
-from leads.models import Lead
+from leads import models
+from relationships.utilities.get_or_create_email import get_or_create_email
+from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
 
 class LeadForm(forms.Form):
     body = forms.CharField()
@@ -29,7 +31,7 @@ class ContactLeadForm(forms.Form):
     comments = forms.CharField(max_length=100)
 
     # Required depends on lead type
-    
+
     to_selling_as_sales_agent = forms.BooleanField(required=False)
     to_selling_as_sourcing_goods = forms.BooleanField(required=False)
     to_selling_as_other = forms.BooleanField(required=False)
@@ -68,33 +70,16 @@ class ContactLeadForm(forms.Form):
         if via_wechat is not None and via_wechat == True and (via_wechat_id is None or via_wechat_id.strip() == ''):
             self.add_error('via_wechat_id', err_msg)
 
-        is_empty = lambda x : self.cleaned_data.get(x) is None or self.cleaned_data.get(x).strip() == ''
-        def flag_is_empty(key):
-            if is_empty(key):
-                self.add_error(key, err_msg)
+        previous_contact = models.Contact.objects.filter(
+            lead=self.lead,
+            email=get_or_create_email(self.cleaned_data.get('email')),
+            phone_number=get_or_create_phone_number(self.cleaned_data.get('phone_number'))
+        ).first()
 
-        if self.lead.lead_type == 'selling':
-            flag_is_empty('to_selling_as_sales_agent')
-            flag_is_empty('to_selling_as_sourcing_goods')
-            flag_is_empty('to_selling_as_other')
-        elif self.lead.lead_type == 'buying':
-            flag_is_empty('to_buying_as_sourcing_agent')
-            flag_is_empty('to_buying_as_promoting_goods')
-            flag_is_empty('to_buying_as_other')
-        elif self.lead.lead_type == 'sales_agent':
-            flag_is_empty('to_sales_agent_as_seeking_cooperation')
-            flag_is_empty('to_sales_agent_as_sourcing_goods')
-            flag_is_empty('to_sales_agent_as_other')
-        elif self.lead.lead_type == 'sourcing_agent':
-            flag_is_empty('to_sourcing_agent_as_seeking_cooperation')
-            flag_is_empty('to_sourcing_agent_as_promoting_goods')
-            flag_is_empty('to_sourcing_agent_as_other')
-        elif self.lead.lead_type == 'logistics_agent':
-            flag_is_empty('to_logistics_agent_as_need_logistics')
-            flag_is_empty('to_logistics_agent_as_other')
-        elif self.lead.lead_type == 'need_logistics':
-            flag_is_empty('to_need_logistics_as_logistics_agent')
-            flag_is_empty('to_need_logistics_as_other')
+        if previous_contact is not None:
+            self.add_error('email', "You've contacted the author of this lead before.")
+            self.add_error('phone_number', "You've contacted the author of this lead before.")
+
 
 
 
