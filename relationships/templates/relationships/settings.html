@@ -1,4 +1,4 @@
-{% extends 'metronic/extendables/b.html' %}
+{% extends 'extendables/b.html' %}
 
 {% load static %}
 
@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block actions %}
-{% include 'leads/metronic/includes/toolbar_actions.html' %}
+{% include 'leads/includes/toolbar_actions.html' %}
 {% endblock %}
 
 {% block content_body %}
@@ -200,8 +200,8 @@
 
         <div class="card mb-5 mb-xl-10 shadow-sm">
             <div class="card-body pt-9 pb-0">
-                {% include 'leads/metronic/includes/user_item.html' %}  
-                {% include 'leads/metronic/includes/user_profile_nav.html' with tab='settings' %}
+                {% include 'leads/includes/user_item.html' %}  
+                {% include 'leads/includes/user_profile_nav.html' with tab='settings' %}
             </div>
         </div>
 
@@ -215,8 +215,8 @@
 
             <div>
                 <div class="card-body border-top p-9">
-                    <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({% static 'common/metronic/demo1/dist/assets/media/svg/avatars/blank.svg' %})">
-                        <div class="image-input-wrapper w-125px h-125px" style="background-image: url({% static 'common/metronic/demo1/dist/assets/media/avatars/300-1.jpg' %})"></div>
+                    <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url({% static 'common/demo1/dist/assets/media/svg/avatars/blank.svg' %})">
+                        <div class="image-input-wrapper w-125px h-125px" style="background-image: url({% static 'common/demo1/dist/assets/media/avatars/300-1.jpg' %})"></div>
 
                         <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
                             <i class="bi bi-pencil-fill fs-7"></i>

@@ -1,100 +1,65 @@
-{% comment %} 
-Params:
-    lead, lead to display
-    more_css_classes, additional div CSS classes
-
-Note: thumbnails are not clickable.
+{% comment %}
+Parameters:
+    lead, lead item to be rendered
 {% endcomment %}
-<a href="{% url 'leads:lead_detail' lead.slug_link %}" class="lead_item" data-lead-id="{{ lead.id }}" data-position="{{ position }}" data-num-images="{{ lead.num_images }}" data-age-days="{{ lead.age_days }}" data-buy-sell="{{ lead.lead_type }}" data-buy-country="{{ lead.buy_country.programmatic_key }}" data-sell-country="{{ lead.sell_country.programmatic_key }}" data-commission-type="{{ lead.commission_type }}" data-commission-percentage="{% if lead.commission_percentage is None %}{% else %}{{ lead.commission_percentage }}{% endif %}" data-commission-earnings="{% if lead.commission_earnings is None %}{% else %}{{ lead.commission_earnings }}{% endif %}" data-commission-quantity-unit-string="{{ lead.commission_quantity_unit_string }}" data-is-comm-negotiable="{% if lead.is_comm_negotiable is None or lead.is_comm_negotiable == '' %}False{% else %}{{ lead.is_comm_negotiable }}{% endif %}">
-    <div class="bg-white hover:outline hover:outline-1 hover:outline-blue-500 shadow-md rounded{% if more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
 
-        {% comment %} <div class="flex justify-between bg-blue-50 w-full px-8 py-4">
-            <div class="flex flex-col justify-start items-start">
-                <div class="text-sm font-semibold">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</div>
-                {% if lead.author.country and lead.author.country.name|cut:' ' != '' %}
-                    <div class="text-sm">{{ lead.author.country.name }}</div>
-                {% endif %}
-                {% if lead.author.company_name and lead.author.company_name|cut:' ' != '' %}
-                    <div class="text-sm">{{ lead.author.company_name }}</div>
-                {% endif %}
+{% load static %}
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header">
+        <div class="card-title align-items-start flex-column">
+            <div class="d-flex align-items-center">
+                <div class="symbol symbol-45px me-5">
+                    {% include 'leads/includes/avatar.html' with user=lead.author %}
+                </div>
+                <div class="d-flex justify-content-start flex-column">
+                    {% include 'leads/includes/avatar_details.html' with user=lead.author %}
+                </div>
             </div>
-        </div> {% endcomment %}
-
-        <div class="px-8 pb-8 flex justify-between items-start">
-            <div>
-                {% comment %} start: author {% endcomment %}
-                <div class="text-sm font-bold mt-4">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</div>
-                {% comment %} end: author {% endcomment %}
-
-                {% comment %} start: country {% endcomment %}
-                <div class="text-sm">{{ lead.author.country.name }}</div>
-                {% comment %} end: country {% endcomment %}
-                
-                {% comment %} start: headline {% endcomment %}
-                <div class="mt-6 font-bold text-lg">{{ lead.headline }}</div>
-                {% comment %} end: headline {% endcomment %}
-
-                {% comment %} start: thumbnails {% endcomment %}
-                {% if lead.display_images.all|length > 0 %}
-                    <div class="flex items-start justify-start mt-2 gap-2">
-                        {% load thumbnail_url %}
-                        {% for file in lead.display_images.all %}
-                            {% thumbnail_url file as thumbnail_url %}
-                            <img src="{{ thumbnail_url }}" class="shadow-md">
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                {% comment %} end: thumbnails {% endcomment %}
-
-                {% comment %} start: description {% endcomment %}
-                <div class="break-words mt-2">{% if lead.details|length > 140 %}{{ lead.details|linebreaksbr|truncatechars:140 }}...{% else %}{{ lead.details }}{% endif %}</div>
-                {% comment %} end: description {% endcomment %}
-
-                {% comment %} start: lead_type {% endcomment %}
-                <div class="font-bold text-slate-400 mt-6">Selling or Buying?</div>
-                <div class="mt-1">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %}</div>
-                {% comment %} end: lead_type {% endcomment %}
-                
-                {% comment %} start: buy_country {% endcomment %}
-                <div class="font-bold text-slate-400 mt-6">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
-                <div class="mt-1">{% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}Any Country{% endif %}</div>
-                <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country the goods/services are exported from or based in.{% elif lead.lead_type == 'buying' %}Country buyer would like to buy or source from.{% endif %}</div>
-                {% comment %} end: buy_country {% endcomment %}
-
-                {% comment %} start: sell_country {% endcomment %}
-                <div class="font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Sell In This Country{% elif lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
-                <div class="mt-1">{% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}Any Country{% endif %}</div>
-                <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country seller would like to sell the goods/services in.{% elif lead.lead_type == 'buying' %}Country the goods/services are imported into or needed.{% endif %}</div>
-                {% comment %} end: sell_country {% endcomment %}
-
-                {% comment %} start: commission {% endcomment %}
-                {% if lead.commission_type == 'percentage' %}
-
-                    <div class="font-bold text-slate-400 mt-4">Commission</div>
-                    <div class="mt-1">{{ lead.commission_percentage|floatformat:0 }}% of Sales</div>
-
-                {% elif lead.commission_type == 'earning' %}
-
-                    <div class="font-bold text-slate-400 mt-4">Commission</div>
-                    <div class="mt-1">{{ lead.currency.name }} {{ lead.commission_earnings|floatformat:2 }} per {{ lead.commission_quantity_unit_string }}</div>
-
-                {% elif lead.commission_type == 'other' %}
-
-                    <div class="font-bold text-slate-400 mt-4">Commission</div>
-                    <div class="mt-1 break-words">{{ lead.commission_type_other|linebreaksbr }}</div>
-
-                {% endif %}
-                {% comment %} end: commission {% endcomment %}
-
-                {% comment %} start: is_comm_negotiable {% endcomment %}
-                {% if lead.is_comm_negotiable == True %}
-                    <div class="italic">Commission may differ and is negotiable for each deal.</div>
-                {% endif %}
-                {% comment %} end: is_comm_negotiable {% endcomment %}
-
-            </div>
-
-            <div class="text-sm mt-4 whitespace-nowrap">{{ lead.age_desc }}</div>
+        </div>
+        <div class="card-toolbar">
+            <span class="text-muted">{{ lead.age_desc }}</span>
         </div>
     </div>
-</a>
+
+    <div class="card-body">
+        <div class="text-dark">{{ lead.body|linebreaks }}</div>
+        <div class="d-flex justify-content-between mt-2">
+            <div>
+                {% include 'leads/includes/lead_badges.html' with lead=lead %}
+            </div>
+            <div>
+                <span class="badge badge-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ lead.num_contacts }} users have contacted the author.">{{ lead.num_contacts }} Contacts</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <div class="d-flex justify-content-between">
+            <div>
+                {% if not request.user.is_authenticated or request.user.user.id != lead.author.id %}
+                    <a href="#" class="btn btn-light-danger btn-sm"><i class="bi bi-hand-thumbs-down"></i> Bad <span class="badge badge-danger ms-1">2</span></a>
+                    {% comment %} Remove ms-2 {% endcomment %}
+                    <a href="#" class="btn btn-active-light-danger btn-sm text-danger ms-2"><i class="bi text-danger bi-hand-thumbs-down"></i> Bad <span class="badge badge-danger ms-1">2</span></a>
+
+                    {% comment %} <a href="#" class="btn btn-light-danger btn-sm ms-1"><i class="bi bi-hand-thumbs-down"></i> Scam <span class="badge badge-danger ms-1">2</span></a> {% endcomment %}
+                    {% comment %} <a href="#" class="btn btn-light-warning btn-sm">Spam <span class="badge badge-warning ms-1">5</span></a> {% endcomment %}
+
+                    
+                    {% comment %} <a href="#" class="btn btn-outline btn-outline-dashed btn-outline-danger btn-active-light-danger btn-sm ms-1">Scam <span class="badge badge-danger ms-1">2</span></a> {% endcomment %}
+                    {% comment %} <a href="#" class="btn btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning btn-sm">Spam <span class="badge badge-warning ms-1">5</span></a> {% endcomment %}
+                {% endif %}
+            </div>
+            {% if request.user.is_authenticated and request.user.user is not None and request.user.user.id == lead.author.id %}
+                <a href="{% url 'leads:lead_detail' lead.id %}" class="btn btn-light-info btn-sm">Details</a>
+            {% else %}
+
+            <div>
+                <a href="{% url 'leads:contact_lead' lead.id %}" class="btn btn-primary btn-sm">Contact</a>
+                {% comment %} <span class="bg-light text-muted btn-sm fw-bold" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've contacted this user.">Contacted</span> {% endcomment %}
+            </div>
+                
+            {% endif %}
+        </div>
+    </div>
+</div>

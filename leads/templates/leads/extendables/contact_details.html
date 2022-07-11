@@ -1,0 +1,318 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}{{ contact.first_name|title }} {{ contact.last_name|title }} | {{ contact.lead.body|truncatechars:10 }}{% endblock %}
+
+{% block page_title %}{{ contact.first_name|title }} {{ contact.last_name|title }}{% endblock %}
+
+{% block page_subtitle %}
+<ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+    <li class="breadcrumb-item text-muted">Me</li>
+
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+
+    <li class="breadcrumb-item"><a class="text-muted" href="{% url 'leads:my_leads' %}">My Leads</a></li>
+
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+
+    <li class="breadcrumb-item"><a class="text-muted" href="{% url 'leads:lead_detail' contact.lead.id %}">{{ contact.lead.body|truncatechars:10 }}</a></li>
+
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+
+    <li class="breadcrumb-item text-dark">{{ contact.first_name|title }} {{ contact.last_name|title }}</li>
+</ul>
+{% endblock %}
+
+{% block actions%}
+{% include 'leads/includes/toolbar_actions.html' %}
+{% endblock %}
+
+{% block content_body %}
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-xxl">
+        <div class="card mb-5 mb-xl-10 shadow-sm">
+            <div class="card-header">
+                <div class="card-title align-items-start flex-column">
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-45px me-5">
+                            {% include 'leads/includes/avatar.html' with user=contact.lead.author %}
+                        </div>
+                        <div class="d-flex justify-content-start flex-column">
+                            {% include 'leads/includes/avatar_details.html' with user=contact.lead.author %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <span class="text-muted">{{ contact.lead.age_desc }}</span>
+                </div>
+            </div>
+
+            <div class="card-body pt-9 pb-0">
+                <div class="text-dark">{{ contact.lead.body|linebreaks }}</div>
+                
+                <div class="d-flex justify-content-between mt-2">
+                    <div>
+                        {% include 'leads/includes/lead_badges.html' with lead=contact.lead %}
+                    </div>
+                    <div>
+                        {% comment %} <span class="badge badge-info">12 Contacts</span> {% endcomment %}
+                    </div>
+                </div>
+                
+                <div class="separator my-10"></div>
+
+                <div class="ms-12 mb-6">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="symbol symbol-45px me-5">
+                                {% include 'leads/includes/contact_avatar.html' with contact=contact %}
+                            </div>
+                            <div class="d-flex justify-content-start flex-column">
+                                {% include 'leads/includes/contact_avatar_details.html' with contact=contact do_not_render_contact_url=True %}
+                            </div>
+                        </div>
+                        <span class="text-muted">{{ contact.age_desc }}</span>
+                    </div>
+
+                    <div class="text-dark mt-8">{{ contact.comments|linebreaks }}</div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <div>
+                            {% include 'leads/includes/contact_badges.html' with contact=contact %}
+                        </div>
+                        <div>
+                            {% comment %} <span class="badge badge-dark">Contacted</span> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
+                    <li class="nav-item mt-2">
+                        <a class="nav-link text-active-primary ms-0 me-10 py-5" href="{% url 'leads:lead_detail' contact.lead.id %}">Contacts ({{ contact.lead.num_contacts }})</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-lg-row">
+            {% comment %} Start: Sidebar {% endcomment %}
+            <div class="flex-column flex-lg-row-auto w-lg-250px w-xl-350px mb-10">
+                <div class="card mb-5 mb-xl-8 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex flex-center flex-column pt-5">
+                            <div class="symbol symbol-circle symbol-100px overflow-hidden mb-7">
+                                {% include 'leads/includes/contact_avatar.html' with contact=contact %}
+                            </div>
+                            {% include 'leads/includes/contact_avatar_details.html' with contact=contact %}
+                        </div>
+
+                        {% if contact.via_whatsapp == True %}
+                            <div class="separator mt-4"></div>
+                            <div class="d-flex flex-column flex-center mt-4">
+                                {% comment %} <a href="{% url 'leads:redirect_contact_whatsapp' contact.id %}" class="btn btn-success">WhatsApp</a> {% endcomment %}
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#whatsapp_modal">WhatsApp</button>
+                                <div class="modal bg-white fade" tabindex="-1" id="whatsapp_modal">
+                                    <div class="modal-dialog modal-fullscreen">
+                                        <div class="modal-content shadow-none">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">WhatsApp Lead Author</h5>
+                                                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span class="svg-icon svg-icon-2x"></span>
+                                                </div>
+                                            </div>
+                                
+                                            <div class="modal-body">
+                                                
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="symbol symbol-45px me-5">
+                                                            {% include 'leads/includes/contact_avatar.html' with contact=contact %}
+                                                        </div>
+                                                        <div class="d-flex justify-content-start flex-column">
+                                                            {% include 'leads/includes/contact_avatar_details.html' with contact=contact do_not_render_contact_url=True %}
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-muted">{{ contact.age_desc }}</span>
+                                                </div>
+
+                                                <div class="separator my-4"></div>
+
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-floating mt-2">
+                                                            <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Message Message Body" id="whatsapp_body" name="whatsapp_body">{% if form.whatsapp_body.value is not None and form.whatsapp_body.value|cut:' ' != '' %}{{ form.whatsapp_body.value }}{% endif %}</textarea>
+                                                            <label for="whatsapp_body">WhatsApp Message Body</label>
+                                                        </div>
+                                                    
+                                                        <div class="mt-2">
+                                                            <button id="clear_whatsapp_body" class="btn btn-sm btn-light">Clear</button>
+                                                            <button id="last_whatsapp_body" class="btn btn-sm btn-light ms-1">Last Message</button>
+                                                            <button id="default_whatsapp_body" class="btn btn-sm btn-light ms-1">Default Message</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-success">WhatsApp Lead Author</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if contact.via_wechat == True %}
+                            <div class="separator mt-4"></div>
+                            <div class="d-flex flex-column flex-center mt-4">
+                                <a href="{% url 'leads:redirect_contact_wechat' contact.id %}" class="btn btn-success mb-2">WeChat</a>
+                                <div id="wechat_qrcode"></div>
+                            </div>
+                        {% endif %}
+
+                        {% comment %}
+
+                        Other channels - yet to be implemented.
+
+                        <div class="separator mb-4"></div>
+
+                        <div class="d-flex flex-column flex-center mb-4">
+                            <a href="#" class="btn btn-primary mb-2">Telegram</a>
+                        </div>
+
+                        <div class="separator mb-4"></div>
+
+                        <div class="d-flex flex-column flex-center mb-4">
+                            <a href="#" class="btn btn-success mb-2">LINE</a>
+                        </div>
+
+                        <div class="separator mb-4"></div>
+
+                        <div class="d-flex flex-column flex-center mb-4">
+                            <a href="#" class="btn btn-info mb-2">VIBER</a>
+                        </div>
+                        
+                        {% endcomment %}
+
+                        <div class="separator mt-4"></div>
+
+                        <div class="mt-4">
+                            <div class="pb-5 fs-6">
+                                <div class="fw-bolder mt-5">Email</div>
+
+                                <div class="input-group mt-3">
+                                    <input id="email_clipboard" type="text" class="form-control" placeholder="{{ contact.email.email }}" value="{{ contact.email.email }}" />
+                                    <button class="btn btn-light-primary" data-clipboard-target="#email_clipboard">Copy</button>
+                                </div>
+
+                                <div class="fw-bolder mt-5">Phone Number</div>
+
+                                <div class="input-group mt-3">
+                                    <input id="phone_number_clipboard" type="text" class="form-control" placeholder="+{{ contact.phone_number.country_code }} {{ contact.phone_number.national_number }}" value="+{{ contact.phone_number.country_code }} {{ contact.phone_number.national_number }}" />
+                                    <button class="btn btn-light-primary" data-clipboard-target="#phone_number_clipboard">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% comment %} End: Sidebar {% endcomment %}
+
+            {% comment %} Start: Content {% endcomment %}
+            <div class="flex-lg-row-fluid ms-lg-15">
+                {% block tabs %}{% endblock %}
+
+                <div class="tab-content">
+                    {% block tab_content %}{% endblock %}
+                </div>
+            </div>
+            {% comment %} End: Content {% endcomment %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_vendor_javascript %}
+<script src="{% static 'common/js/qrcode.min.js' %}"></script>
+{% endblock %}
+
+{% comment %} 
+$(document).ready(function() {
+
+    // Initialize clipboards
+
+    function init_clipboard(target_id) {
+        const target = document.getElementById(target_id)
+        const button = target.nextElementSibling
+        var clipboard = new ClipboardJS(button, {
+            target: target,
+            text: function() {
+                return target.value
+            }
+        })
+
+        clipboard.on('success', function(e) {
+            const currentLabel = button.innerHTML
+            if (button.innerHTML === 'Copied!'){ return }
+            button.innerHTML = 'Copied!'
+    
+            // Revert button label after 3 seconds
+            setTimeout(function(){
+                button.innerHTML = currentLabel;
+            }, 3000)
+        })
+    }
+
+    init_clipboard('email_clipboard')
+    init_clipboard('phone_number_clipboard')
+})
+
+$(document).ready(function() {
+    // QR code. We cannot include this code because it requires server-side rendering.
+    var qrcode = new QRCode(document.getElementById("wechat_qrcode"), {
+        text: "{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    })
+})
+
+$(document).ready(function() {
+    // WhatsApp message body. We cannot include this code because it requires server-side rendering.
+    function init_whatsapp_message_body_buttons() {
+        clear_whatsapp_body = $('#clear_whatsapp_body')
+        last_whatsapp_body = $('#last_whatsapp_body')
+        default_whatsapp_body = $('#default_whatsapp_body')
+        whatsapp_body = $('#whatsapp_body')
+
+        clear_whatsapp_body.click(function() {
+            whatsapp_body.val('')
+        })
+
+        last_whatsapp_body.click(function() {
+            console.log("{{ last_whatsapp_body }}")
+        })
+
+        default_whatsapp_body.click(function() {
+            console.log("{{ default_whatsapp_body }}")
+        })
+    }
+
+    init_whatsapp_message_body_buttons()
+})
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'leads/js/contact_details.js' %}"></script>
+<script>$(document).ready((function(){new QRCode(document.getElementById("wechat_qrcode"),{text:"{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",width:128,height:128,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H})}));</script>
+<script>$(document).ready((function(){clear_whatsapp_body=$("#clear_whatsapp_body"),last_whatsapp_body=$("#last_whatsapp_body"),default_whatsapp_body=$("#default_whatsapp_body"),whatsapp_body=$("#whatsapp_body"),clear_whatsapp_body.click((function(){whatsapp_body.val("")})),last_whatsapp_body.click((function(){console.log("{{ last_whatsapp_body }}")})),default_whatsapp_body.click((function(){console.log("{{ default_whatsapp_body }}")}))}));</script>
+{% endblock %}

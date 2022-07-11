@@ -1,0 +1,34 @@
+{% load static %}
+
+					<!--begin::Header-->
+					<div id="kt_header" style="" class="header align-items-stretch">
+						<!--begin::Container-->
+						<div class="container-fluid d-flex align-items-stretch justify-content-between">
+							<!--begin::Aside mobile toggle-->
+							<!--end::Aside mobile toggle-->
+							<!--begin::Logo-->
+							<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
+								<a href="?page=index">
+									<img alt="Logo" src="{% static 'common/demo1/dist/assets/media/logos/logo-1.svg' %}" class="h-20px h-lg-30px" />
+								</a>
+							</div>
+							<!--end::Logo-->
+							<!--begin::Wrapper-->
+							<div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
+								<!--begin::Navbar-->
+								<div class="d-flex align-items-stretch" id="kt_header_nav">
+
+                                    {% include 'layout_builder/layout/header/__menu.html' %}
+
+								</div>
+								<!--end::Navbar-->
+
+                                {% include 'layout_builder/layout/header/__topbar.html' %}
+
+							</div>
+							<!--end::Wrapper-->
+						</div>
+						<!--end::Container-->
+					</div>
+					<!--end::Header-->
+					

@@ -1,0 +1,78 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block page_title %}Leads{% endblock %}
+{% block page_subtitle %}Importers/exporters finding buyers, sellers and agents{% endblock %}
+
+{% block actions%}
+{% include 'leads/includes/toolbar_actions.html' %}
+{% endblock %}
+
+{% block content_body %}
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-xxl">
+        <div class="card card-flush shadow-sm">
+            <div class="card-header">
+                <div class="card-title">
+                    Lead Posted Successfully
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label">Share this Link</label>
+                    <div class="input-group">
+                        <input id="lead_clipboard" type="text" class="form-control col-lg-2" value="{{ contact_lead_url }}" readonly />
+                        <button class="btn btn-light-primary" data-clipboard-target="#lead_clipboard">Copy Link</button>
+                    </div>
+                    <div class="form-text">User may contact you via the form at this link. <a href="{{ contact_lead_url }}" target="_blank">See how it looks like.</a></div>
+                </div>
+
+                <div class="d-flex mt-10">
+                    <a href="{% url 'leads:lead_create' %}" class="btn btn-light-primary">Post Another Lead</a>
+                    <a href="{% url 'leads:my_leads' %}" class="btn btn-primary ms-2">See Your Leads</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% comment %} 
+$(document).ready(function() {
+    // Select elements
+    const lead_target = document.getElementById('lead_clipboard');
+    const lead_button = lead_target.nextElementSibling;
+
+    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+    var lead_clipboard = new ClipboardJS(lead_button, {
+        target: lead_target,
+        text: function() {
+            return lead_target.value;
+        }
+    });
+
+    // Success action handler
+    lead_clipboard.on('success', function(e) {
+        const currentLabel = lead_button.innerHTML;
+
+        // Exit label update when already in progress
+        if(lead_button.innerHTML === 'Copied!'){
+            return;
+        }
+
+        // Update button label
+        lead_button.innerHTML = 'Copied!';
+
+        // Revert button label after 3 seconds
+        setTimeout(function(){
+            lead_button.innerHTML = currentLabel;
+        }, 3000)
+    });
+})
+{% endcomment %}
+{% block page_custom_javascript %}
+<script>
+$(document).ready((function(){const n=document.getElementById("lead_clipboard"),e=n.nextElementSibling;new ClipboardJS(e,{target:n,text:function(){return n.value}}).on("success",(function(n){const t=e.innerHTML;"Copied!"!==e.innerHTML&&(e.innerHTML="Copied!",setTimeout((function(){e.innerHTML=t}),3e3))}))}));
+</script>
+{% endblock %}

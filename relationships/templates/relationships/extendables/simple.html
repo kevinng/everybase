@@ -16,13 +16,13 @@
 		<meta property="og:url" content="{{ settings.BASE_URL }}{% block meta_og_url_path %}{% endblock %}" />
 		<meta property="og:site_name" content="{% block meta_og_site_name %}{% endblock %}" />
 		<link rel="canonical" href="https://everybase.co" />
-        <link rel="shortcut icon" href="{% static 'common/metronic/demo1/dist/assets/media/logos/favicon_everybase.ico' %}"/>
+        <link rel="shortcut icon" href="{% static 'common/demo1/dist/assets/media/logos/favicon_everybase.ico' %}"/>
         {% comment %} Start: Fonts {% endcomment %}
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
         {% comment %} End: Fonts {% endcomment %}
         {% comment %} Start: Global stylesheets bundle (used by all pages) {% endcomment %}
-		<link href="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
-		<link href="{% static 'common/metronic/demo1/dist/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'common/demo1/dist/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'common/demo1/dist/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
         {% comment %} End: Global stylesheets bundle (used by all pages) {% endcomment %}
 	</head>
     {% comment %} End: Head {% endcomment %}
@@ -39,8 +39,8 @@
         {% comment %} Start: Javascript {% endcomment %}
 		<script>var hostUrl = "assets/";</script>
         {% comment %} Start: Global Javascript bundle (used by all pages) {% endcomment %}
-		<script src="{% static 'common/metronic/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
-		<script src="{% static 'common/metronic/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
+		<script src="{% static 'common/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
+		<script src="{% static 'common/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
         {% comment %} End: Global Javascript bundle {% endcomment %}
         {% comment %} Start: Page custom Javascript {% endcomment %}
         {% block page_custom_javascript %}{% endblock %}

@@ -117,7 +117,7 @@ def contact_lead(request, id):
         .annotate(num_leads=Count('users_w_this_country'))\
         .order_by('-num_leads')
 
-    template_name = 'leads/metronic/contact_lead.html'
+    template_name = 'leads/contact_lead.html'
     return TemplateResponse(request, template_name, {
         'countries': countries,
         'lead': lead,
@@ -149,12 +149,12 @@ def lead_create(request):
     elif request.method == 'GET':
         form = forms.LeadForm()
 
-    return render(request, 'leads/metronic/lead_create.html', {'form': form})
+    return render(request, 'leads/lead_create.html', {'form': form})
 
 @login_required
 def lead_created_success(request, id):
     lead = models.Lead.objects.get(pk=id)
-    return TemplateResponse(request, 'leads/metronic/lead_create_success.html', {'contact_lead_url': lead.contact_lead_url})
+    return TemplateResponse(request, 'leads/lead_create_success.html', {'contact_lead_url': lead.contact_lead_url})
 
 @login_required
 def lead_detail(request, id):
@@ -170,13 +170,13 @@ def lead_detail(request, id):
     # Paginate
 
     params['page_obj'] = _page_obj(lead.contacts.all().order_by('-created'), request.GET.get('page'))
-    return TemplateResponse(request, 'leads/metronic/lead_detail.html', params)
+    return TemplateResponse(request, 'leads/lead_detail.html', params)
 
 @login_required
 def my_leads(request):
     leads = request.user.user.leads_order_by_created_desc()
     params = {'page_obj': _page_obj(leads, request.GET.get('page'))}
-    return TemplateResponse(request, 'leads/metronic/my_leads.html', params)
+    return TemplateResponse(request, 'leads/my_leads.html', params)
 
 @login_required
 def contact_detail_private_notes(request, id):
@@ -204,8 +204,9 @@ def contact_detail_private_notes(request, id):
     params['page_obj'] = _page_obj(contact.active_notes(), request.GET.get('page'))
 
     # WhatsApp message bodies
+    
 
-    return TemplateResponse(request, 'leads/metronic/contact_detail_private_notes.html', params)
+    return TemplateResponse(request, 'leads/contact_detail_private_notes.html', params)
 
 def contact_detail_other_contacts(request, id):
     contact = models.Contact.objects.get(pk=id)
@@ -213,7 +214,7 @@ def contact_detail_other_contacts(request, id):
         'contact': contact,
         'page_obj': _page_obj(contact.other_contacts(), request.GET.get('page'))
     }
-    return TemplateResponse(request, 'leads/metronic/contact_detail_other_contacts.html', params)
+    return TemplateResponse(request, 'leads/contact_detail_other_contacts.html', params)
 
 
 
@@ -277,7 +278,7 @@ def lead_list(request):
     #         filter(Q(num_buy_leads__gt=0) | Q(num_sell_leads__gt=0)).\
     #         order_by('-num_buy_leads')
 
-    template_name = 'leads/metronic/home.html'
+    template_name = 'leads/home.html'
     return TemplateResponse(request, template_name, params)
 
 

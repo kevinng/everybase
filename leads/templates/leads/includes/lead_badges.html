@@ -1,0 +1,18 @@
+{% comment %} 
+    Only one of these badges apply, it describes the type of the lead.
+{% endcomment %}
+{% if lead.lead_type == 'buying' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span>
+{% elif lead.lead_type == 'selling' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span>
+{% elif lead.lead_type == 'need_logistics' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/need_logistics.txt' %}">Need Logistics</span>
+{% elif lead.lead_type == 'sourcing_agent' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span>
+{% elif lead.lead_type == 'sales_agent' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sales_agent.txt' %}">Sales Agent</span>
+{% elif lead.lead_type == 'logistics_agent' %}
+    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span>
+{% elif lead.lead_type == 'other' %}
+    <span class="badge badge-secondary">Other</span>
+{% endif %}

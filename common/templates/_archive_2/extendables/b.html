@@ -1,0 +1,184 @@
+{% load static %}
+
+<!doctype html>
+<html>
+{% autoescape on %}
+<head>
+{% comment %} start: Adsense {% endcomment %}
+{% comment %}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4994829786974999" crossorigin="anonymous"></script>
+{% endcomment %}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4994829786974999" crossorigin="anonymous"></script>
+{% comment %} end: Adsense {% endcomment %}
+
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'common/favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'common/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'common/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'common/favicon/site.webmanifest' %}">
+    {% block other_head_tags %}{% endblock %}
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.1/dist/flowbite.min.css" />
+    <link href="{% static 'common/css/output.min.css' %}" rel="stylesheet" />
+    {% block other_css %}{% endblock %}
+    {% comment %} start: Amplitude initialization {% endcomment %}
+    {% comment %}
+We render the initialization code here because we need to ensure order-of-execution and render the user ID if user is authenticated.
+
+(function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
+;r.type="text/javascript"
+;r.integrity="sha384-VuGgAcmMrGHihvjXxxBVMIqoDFXc8/PO9q/08kCgq4Wn1iPnSmUbI3xhXaFozVFv"
+;r.crossOrigin="anonymous";r.async=true
+;r.src="https://cdn.amplitude.com/libs/amplitude-8.18.1-min.gz.js"
+;r.onload=function(){if(!e.amplitude.runQueuedFunctions){console.log(
+"[Amplitude] Error: could not load SDK")}};var s=t.getElementsByTagName("script"
+)[0];s.parentNode.insertBefore(r,s);function i(e,t){e.prototype[t]=function(){
+this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
+var o=function(){this._q=[];return this};var a=["add","append","clearAll",
+"prepend","set","setOnce","unset","preInsert","postInsert","remove"];for(
+var c=0;c<a.length;c++){i(o,a[c])}n.Identify=o;var l=function(){this._q=[]
+;return this};var u=["setProductId","setQuantity","setPrice","setRevenueType",
+"setEventProperties"];for(var p=0;p<u.length;p++){i(l,u[p])}n.Revenue=l;var d=[
+"init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut",
+"setVersionName","setDomain","setDeviceId","enableTracking",
+"setGlobalUserProperties","identify","clearUserProperties","setGroup",
+"logRevenueV2","regenerateDeviceId","groupIdentify","onInit","onNewSessionStart"
+,"logEventWithTimestamp","logEventWithGroups","setSessionId","resetSessionId",
+"getDeviceId","getUserId","setMinTimeBetweenSessionsMillis",
+"setEventUploadThreshold","setUseDynamicConfig","setServerZone","setServerUrl",
+"sendEvents","setLibrary","setTransport"];function v(t){function e(e){
+t[e]=function(){t._q.push([e].concat(Array.prototype.slice.call(arguments,0)))}}
+for(var n=0;n<d.length;n++){e(d[n])}}v(n);n.getInstance=function(e){e=(
+!e||e.length===0?"$default_instance":e).toLowerCase();if(
+!Object.prototype.hasOwnProperty.call(n._iq,e)){n._iq[e]={_q:[]};v(n._iq[e])}
+return n._iq[e]};e.amplitude=n})(window,document);
+    {% endcomment %}
+    <script>
+        !function(e,t){var n=e.amplitude||{_q:[],_iq:{}},r=t.createElement("script");r.type="text/javascript",r.integrity="sha384-VuGgAcmMrGHihvjXxxBVMIqoDFXc8/PO9q/08kCgq4Wn1iPnSmUbI3xhXaFozVFv",r.crossOrigin="anonymous",r.async=!0,r.src="https://cdn.amplitude.com/libs/amplitude-8.18.1-min.gz.js",r.onload=function(){e.amplitude.runQueuedFunctions||console.log("[Amplitude] Error: could not load SDK")};var s=t.getElementsByTagName("script")[0];function i(e,t){e.prototype[t]=function(){return this._q.push([t].concat(Array.prototype.slice.call(arguments,0))),this}}s.parentNode.insertBefore(r,s);for(var o=function(){return this._q=[],this},a=["add","append","clearAll","prepend","set","setOnce","unset","preInsert","postInsert","remove"],c=0;c<a.length;c++)i(o,a[c]);n.Identify=o;for(var l=function(){return this._q=[],this},u=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"],p=0;p<u.length;p++)i(l,u[p]);n.Revenue=l;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","enableTracking","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","groupIdentify","onInit","onNewSessionStart","logEventWithTimestamp","logEventWithGroups","setSessionId","resetSessionId","getDeviceId","getUserId","setMinTimeBetweenSessionsMillis","setEventUploadThreshold","setUseDynamicConfig","setServerZone","setServerUrl","sendEvents","setLibrary","setTransport"];function v(e){function t(t){e[t]=function(){e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}for(var n=0;n<d.length;n++)t(d[n])}v(n),n.getInstance=function(e){return e=(e&&0!==e.length?e:"$default_instance").toLowerCase(),Object.prototype.hasOwnProperty.call(n._iq,e)||(n._iq[e]={_q:[]},v(n._iq[e])),n._iq[e]},e.amplitude=n}(window,document);
+        {% if request.user.is_authenticated %}
+            amplitude.getInstance().init("54bdfa6b310004cd889cd35e8c57115e", "{{ request.user.user.uuid }}")
+        {% else %}
+            amplitude.getInstance().init("54bdfa6b310004cd889cd35e8c57115e")
+        {% endif %}
+    </script>
+{% comment %} start: Google Analytics {% endcomment %}
+{% comment %}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.GA_WEB_STREAM_ID }}"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '{{ settings.GA_WEB_STREAM_ID }}');
+</script>
+{% endcomment %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.GA_WEB_STREAM_ID }}"></script>
+    <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","{{ settings.GA_WEB_STREAM_ID }}");</script>
+{% comment %} end: Google Analytics {% endcomment %}
+</head>
+<body class="bg-slate-100 flex flex-col">
+    {% comment %} start: header {% endcomment %}
+    <div class="flex items-center justify-between bg-white py-3 pl-5 pr-5 shadow-md z-[100] sticky top-0">
+        {% comment %} start: hamburger and logo {% endcomment %}
+        <div>
+            <button class="hamburger lg:hidden">
+                <div class="bar"></div>
+            </button>
+            <a href="{% url 'home' %}" class="hidden lg:block"><img src="{% static 'common/img/logo.png' %}"></a>
+        </div>
+        {% comment %} end: hamburger and logo {% endcomment %}
+
+        {% comment %} start: desktop menu {% endcomment %}
+        <div class="justify-between hidden lg:block text-sm">
+            <a {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-600{% else %}hover:text-blue-600{% endif %} text-base ml-7">Leads</a>
+            <a href="https://everybase.freshdesk.com/support/home" class="hover:text-blue-600 text-base ml-7">Support</a>
+        </div>
+        {% comment %} end: desktop menu {% endcomment %}
+
+        {% comment %} start: actions {% endcomment %}
+        <div class="hidden lg:block">
+            <div class="flex items-center">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'leads:lead_create' %}" class="py-2 px-4 mr-4 rounded-md text-white bg-blue-500 hover:bg-blue-600">Post a Lead</a>
+                    <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar" class="flex justify-between items-center">Hi,&nbsp&nbsp<span class="font-bold">{{ request.user.user.first_name|title }}</span> <svg class="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button>
+                    <div id="dropdownNavbar" class="hidden z-10 bg-white rounded divide-y divide-gray-100 shadow" data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate(981px, 2079px);">
+                        <ul class="py-1" aria-labelledby="dropdownLargeButton">
+                            <li>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_detail' user.user.slug_link %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block py-2 px-6 text-base hover:text-blue-600">My Profile & Leads</a>
+                            </li>
+                            <li> 
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'applications:application_from_me_as_an_agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'applications:application_from_me_as_an_agent_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block py-2 px-6 text-base hover:text-blue-600">Applications from me as an Agent</a>
+                            </li>
+                            <li>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'applications:application_for_my_leads_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'applications:application_for_my_leads_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block py-2 px-6 text-base hover:text-blue-600">Agent Applications for my Leads</a>
+                            </li>
+                            <li>
+                                <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_edit' user.user.slug_link %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_edit' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block py-2 px-6 text-base hover:text-blue-600">Edit Profile</a>
+                            </li>
+                        </ul>
+                        <div class="py-1">
+                            <a href="{% url 'logout' %}" class="block py-2 px-6 text-base hover:text-blue-600">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'register' %}" class="text-slate-600 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md px-4 py-2">Register</a>
+                    <a href="{% url 'login' %}" class="text-slate-600 shadow-md bg-slate-300 hover:bg-slate-400 rounded-md px-4 py-2 ml-2">Login</a>
+                {% endif %}
+            </div>
+        </div>
+        {% comment %} end: actions {% endcomment %}
+
+        {% block page_actions %}{% endblock %}
+    </div>
+    {% comment %} start: mobile menu {% endcomment %}
+    <nav class="mobile-nav text-base">
+        <a {% if request.resolver_match.view_name != 'leads:lead_list' %}href="{% url 'leads:lead_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'leads:lead_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Leads</a>
+        <a href="https://everybase.freshdesk.com/support/home" class="hover:text-blue-700 block px-4 py-4">Support</a>
+        <div class="h-10"></div>
+        {% if request.user.is_authenticated %}
+            <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_detail' user.user.slug_link %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_detail' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">My Profile & Leads</a>
+            <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'applications:application_from_me_as_an_agent_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'applications:application_from_me_as_an_agent_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Applications from me as an Agent</a>
+            <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'applications:application_for_my_leads_list' %}" {% endif %}class="{% if request.resolver_match.view_name == 'applications:application_for_my_leads_list' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Agent Applications for my Leads</a>
+            <a {% if request.resolver_match.view_name != 'user.user.slug_link' %}href="{% url 'users:user_edit' user.user.slug_link %}" {% endif %}class="{% if request.resolver_match.view_name == 'users:user_edit' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Edit Profile</a>
+            <a href="{% url 'logout' %}" class="hover:text-blue-700 block px-4 py-4">Logout</a>
+        {% else %}
+            <a href="{% url 'register' %}" class="{% if request.resolver_match.view_name == 'register' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Register</a>
+            <a href="{% url 'login' %}" class="{% if request.resolver_match.view_name == 'login' %}font-bold text-blue-700{% else %}hover:text-blue-700{% endif %} block px-4 py-4">Login</a>
+        {% endif %}
+    </nav>
+    {% comment %} end: mobile menu {% endcomment %}
+    {% comment %} end: header {% endcomment %}
+
+    {% block content %}{% endblock %}
+
+    {% block footer %}
+    <div class="flex justify-center bg-gradient-to-t from-zinc-700 to-zinc-900 py-5 pt-10 pb-10">
+        <div class="text-sm text-center">
+            <p class="font-semibold text-white">Everybase Pte Ltd, &copy 2022, Singapore</p>
+            <p><a class="text-blue-400 hover:text-blue-500" href="mailto:friend@everybase.co">friend@everybase.co</a></p>
+        </div>
+    </div>
+    {% endblock %}
+
+{% comment %}
+Javascript
+https://codebeautify.org/minify-js
+
+<script>
+    const menu_btn = document.querySelector('.hamburger');
+    const mobile_menu = document.querySelector('.mobile-nav');
+    menu_btn.addEventListener('click', function () {
+        menu_btn.classList.toggle('is-active');
+        mobile_menu.classList.toggle('is-active');
+    })
+</script>
+{% endcomment %}
+    <script defer src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
+    <script defer src="{% static 'common/js/hamburger.min.js' %}"></script>
+    <script async src="https://www.google.com/recaptcha/api.js"></script>
+    {% block other_script %}{% endblock %}
+</body>
+{% endautoescape %}
+</html>

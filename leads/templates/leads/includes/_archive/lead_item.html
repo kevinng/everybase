@@ -1,0 +1,100 @@
+{% comment %} 
+Params:
+    lead, lead to display
+    more_css_classes, additional div CSS classes
+
+Note: thumbnails are not clickable.
+{% endcomment %}
+<a href="{% url 'leads:lead_detail' lead.slug_link %}" class="lead_item" data-lead-id="{{ lead.id }}" data-position="{{ position }}" data-num-images="{{ lead.num_images }}" data-age-days="{{ lead.age_days }}" data-buy-sell="{{ lead.lead_type }}" data-buy-country="{{ lead.buy_country.programmatic_key }}" data-sell-country="{{ lead.sell_country.programmatic_key }}" data-commission-type="{{ lead.commission_type }}" data-commission-percentage="{% if lead.commission_percentage is None %}{% else %}{{ lead.commission_percentage }}{% endif %}" data-commission-earnings="{% if lead.commission_earnings is None %}{% else %}{{ lead.commission_earnings }}{% endif %}" data-commission-quantity-unit-string="{{ lead.commission_quantity_unit_string }}" data-is-comm-negotiable="{% if lead.is_comm_negotiable is None or lead.is_comm_negotiable == '' %}False{% else %}{{ lead.is_comm_negotiable }}{% endif %}">
+    <div class="bg-white hover:outline hover:outline-1 hover:outline-blue-500 shadow-md rounded{% if more_css_classes|cut:' ' != '' %} {{ more_css_classes }}{% endif %}">
+
+        {% comment %} <div class="flex justify-between bg-blue-50 w-full px-8 py-4">
+            <div class="flex flex-col justify-start items-start">
+                <div class="text-sm font-semibold">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</div>
+                {% if lead.author.country and lead.author.country.name|cut:' ' != '' %}
+                    <div class="text-sm">{{ lead.author.country.name }}</div>
+                {% endif %}
+                {% if lead.author.company_name and lead.author.company_name|cut:' ' != '' %}
+                    <div class="text-sm">{{ lead.author.company_name }}</div>
+                {% endif %}
+            </div>
+        </div> {% endcomment %}
+
+        <div class="px-8 pb-8 flex justify-between items-start">
+            <div>
+                {% comment %} start: author {% endcomment %}
+                <div class="text-sm font-bold mt-4">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}</div>
+                {% comment %} end: author {% endcomment %}
+
+                {% comment %} start: country {% endcomment %}
+                <div class="text-sm">{{ lead.author.country.name }}</div>
+                {% comment %} end: country {% endcomment %}
+                
+                {% comment %} start: headline {% endcomment %}
+                <div class="mt-6 font-bold text-lg">{{ lead.headline }}</div>
+                {% comment %} end: headline {% endcomment %}
+
+                {% comment %} start: thumbnails {% endcomment %}
+                {% if lead.display_images.all|length > 0 %}
+                    <div class="flex items-start justify-start mt-2 gap-2">
+                        {% load thumbnail_url %}
+                        {% for file in lead.display_images.all %}
+                            {% thumbnail_url file as thumbnail_url %}
+                            <img src="{{ thumbnail_url }}" class="shadow-md">
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% comment %} end: thumbnails {% endcomment %}
+
+                {% comment %} start: description {% endcomment %}
+                <div class="break-words mt-2">{% if lead.details|length > 140 %}{{ lead.details|linebreaksbr|truncatechars:140 }}...{% else %}{{ lead.details }}{% endif %}</div>
+                {% comment %} end: description {% endcomment %}
+
+                {% comment %} start: lead_type {% endcomment %}
+                <div class="font-bold text-slate-400 mt-6">Selling or Buying?</div>
+                <div class="mt-1">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %}</div>
+                {% comment %} end: lead_type {% endcomment %}
+                
+                {% comment %} start: buy_country {% endcomment %}
+                <div class="font-bold text-slate-400 mt-6">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
+                <div class="mt-1">{% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}Any Country{% endif %}</div>
+                <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country the goods/services are exported from or based in.{% elif lead.lead_type == 'buying' %}Country buyer would like to buy or source from.{% endif %}</div>
+                {% comment %} end: buy_country {% endcomment %}
+
+                {% comment %} start: sell_country {% endcomment %}
+                <div class="font-bold text-slate-400 mt-4">{% if lead.lead_type == 'selling' %}Sell In This Country{% elif lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
+                <div class="mt-1">{% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}Any Country{% endif %}</div>
+                <div class="mt-1 italic">{% if lead.lead_type == 'selling' %}Country seller would like to sell the goods/services in.{% elif lead.lead_type == 'buying' %}Country the goods/services are imported into or needed.{% endif %}</div>
+                {% comment %} end: sell_country {% endcomment %}
+
+                {% comment %} start: commission {% endcomment %}
+                {% if lead.commission_type == 'percentage' %}
+
+                    <div class="font-bold text-slate-400 mt-4">Commission</div>
+                    <div class="mt-1">{{ lead.commission_percentage|floatformat:0 }}% of Sales</div>
+
+                {% elif lead.commission_type == 'earning' %}
+
+                    <div class="font-bold text-slate-400 mt-4">Commission</div>
+                    <div class="mt-1">{{ lead.currency.name }} {{ lead.commission_earnings|floatformat:2 }} per {{ lead.commission_quantity_unit_string }}</div>
+
+                {% elif lead.commission_type == 'other' %}
+
+                    <div class="font-bold text-slate-400 mt-4">Commission</div>
+                    <div class="mt-1 break-words">{{ lead.commission_type_other|linebreaksbr }}</div>
+
+                {% endif %}
+                {% comment %} end: commission {% endcomment %}
+
+                {% comment %} start: is_comm_negotiable {% endcomment %}
+                {% if lead.is_comm_negotiable == True %}
+                    <div class="italic">Commission may differ and is negotiable for each deal.</div>
+                {% endif %}
+                {% comment %} end: is_comm_negotiable {% endcomment %}
+
+            </div>
+
+            <div class="text-sm mt-4 whitespace-nowrap">{{ lead.age_desc }}</div>
+        </div>
+    </div>
+</a>
