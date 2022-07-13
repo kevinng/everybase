@@ -1,5 +1,7 @@
 {% extends 'extendables/b.html' %}
 
+{% load static %}
+
 {% block page_title %}Leads{% endblock %}
 
 {% block page_subtitle %}Importers, exporters, buyers, sellers, agents and more.{% endblock %}
@@ -276,11 +278,6 @@
 {% endblock %}
 
 {% comment %}
-
-
-{% endcomment %}
-{% block page_custom_javascript %}
-<script>
 $(document).ready(function() {
     // We have two sets of checkboxes to cater for different screensizes, and we want to link them up.
 
@@ -347,6 +344,7 @@ $(document).ready(function() {
 })
 
 // These functions are triggered by onclick, and have to be outside document.ready to work.
+// This code have to be rendered inline because it has server-side rendered links.
 
 function flag_lead(lead_id, type, button_id, badge_id) {
     url = ''
@@ -377,5 +375,8 @@ function flag_lead(lead_id, type, button_id, badge_id) {
         }
     )
 }
-</script>
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'leads/js/home.js' %}"></script>
+<script>function flag_lead(l,a,g,s){url="","spam"==a?url="{% url 'leads:flag_spam' %}":"scam"==a&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:l},(function(l,t){btn=$("#"+g),bdg=$("#"+s),"spam"==a?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(l.num_spam_flags)):(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(l.num_scam_flags))}))}</script>
 {% endblock %}

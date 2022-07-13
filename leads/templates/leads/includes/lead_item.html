@@ -57,7 +57,7 @@ Parameters:
             {% else %}
 
             <div>
-                <a href="{% url 'leads:contact_lead' lead.id %}" class="btn btn-primary btn-sm">Contact</a>
+                <a target="_blank" href="{% url 'leads:contact_lead' lead.id %}" class="btn btn-primary btn-sm">Contact</a>
                 {% comment %} <span class="bg-light text-muted btn-sm fw-bold" data-bs-toggle="tooltip" data-bs-placement="bottom" title="You've contacted this user.">Contacted</span> {% endcomment %}
             </div>
                 
