@@ -342,3 +342,5 @@ MAX_UPLOAD_SIZE = 5242880
 # Confirmation codes - e.g., login email/WhatsApp code - resend interval in seconds
 CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS = int(config('CONFIRMATION_CODE_RESEND_INTERVAL_SECONDS'))
 CONFIRMATION_CODE_EXPIRY_SECONDS = int(config('CONFIRMATION_CODE_EXPIRY_SECONDS'))
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 

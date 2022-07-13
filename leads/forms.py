@@ -80,32 +80,6 @@ class ContactLeadForm(forms.Form):
             self.add_error('email', "You've contacted the author of this lead before.")
             self.add_error('phone_number', "You've contacted the author of this lead before.")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ContactNoteForm(forms.Form):
     body = forms.CharField()
     relevance = forms.CharField()
@@ -114,86 +88,99 @@ class ContactNoteForm(forms.Form):
 
 
 
-class _LeadForm(forms.Form):
-    lead_type = forms.CharField()
-    # author_type = forms.CharField()
-    country = forms.CharField()
-    headline = forms.CharField()
-    commission_type = forms.CharField()
 
-    # Non-required fields
-    category = forms.CharField(required=False)
-    commission_usd_mt = forms.DecimalField(required=False)
-    min_commission_percentage = forms.DecimalField(required=False)
-    max_commission_percentage = forms.DecimalField(required=False)
-    details = forms.CharField(required=False)
-    questions = forms.CharField(required=False)
 
-    def clean(self):
-        super(LeadForm, self).clean()
 
-        has_error = False
-        country = self.cleaned_data.get('country')
-        commission_type = self.cleaned_data.get('commission_type')
-        commission_usd_mt = self.cleaned_data.get('commission_usd_mt')
-        min_commission_percentage = self.cleaned_data.get('min_commission_percentage')
-        max_commission_percentage = self.cleaned_data.get('max_commission_percentage')
 
-        headline = self.cleaned_data.get('headline')
-        details = self.cleaned_data.get('details')
-        questions = self.cleaned_data.get('questions')
+
+
+
+
+
+
+
+
+
+# class _LeadForm(forms.Form):
+#     lead_type = forms.CharField()
+#     # author_type = forms.CharField()
+#     country = forms.CharField()
+#     headline = forms.CharField()
+#     commission_type = forms.CharField()
+
+#     # Non-required fields
+#     category = forms.CharField(required=False)
+#     commission_usd_mt = forms.DecimalField(required=False)
+#     min_commission_percentage = forms.DecimalField(required=False)
+#     max_commission_percentage = forms.DecimalField(required=False)
+#     details = forms.CharField(required=False)
+#     questions = forms.CharField(required=False)
+
+#     def clean(self):
+#         super(LeadForm, self).clean()
+
+#         has_error = False
+#         country = self.cleaned_data.get('country')
+#         commission_type = self.cleaned_data.get('commission_type')
+#         commission_usd_mt = self.cleaned_data.get('commission_usd_mt')
+#         min_commission_percentage = self.cleaned_data.get('min_commission_percentage')
+#         max_commission_percentage = self.cleaned_data.get('max_commission_percentage')
+
+#         headline = self.cleaned_data.get('headline')
+#         details = self.cleaned_data.get('details')
+#         questions = self.cleaned_data.get('questions')
         
-        if country is not None and country == 'no_country':
-            self.add_error('country', 'This field is required.')
-            has_error = True
+#         if country is not None and country == 'no_country':
+#             self.add_error('country', 'This field is required.')
+#             has_error = True
 
-        if min_commission_percentage is not None and max_commission_percentage is not None and commission_type is not None and commission_type == 'percentage':
-            if min_commission_percentage < 0.01 or min_commission_percentage > 100:
-                self.add_error('min_commission_percentage', 'Agent commission must be between 0.01% and 100%')
-                has_error = True
+#         if min_commission_percentage is not None and max_commission_percentage is not None and commission_type is not None and commission_type == 'percentage':
+#             if min_commission_percentage < 0.01 or min_commission_percentage > 100:
+#                 self.add_error('min_commission_percentage', 'Agent commission must be between 0.01% and 100%')
+#                 has_error = True
             
-            if max_commission_percentage < 0.01 or max_commission_percentage > 100:
-                self.add_error('max_commission_percentage', 'Agent commission must be between 0.01% and 100%')
-                has_error = True
+#             if max_commission_percentage < 0.01 or max_commission_percentage > 100:
+#                 self.add_error('max_commission_percentage', 'Agent commission must be between 0.01% and 100%')
+#                 has_error = True
             
-            if min_commission_percentage >= max_commission_percentage:
-                self.add_error('min_commission_percentage', 'Minimum commission must be smaller than maximum commission')
-                has_error = True
+#             if min_commission_percentage >= max_commission_percentage:
+#                 self.add_error('min_commission_percentage', 'Minimum commission must be smaller than maximum commission')
+#                 has_error = True
             
-            if max_commission_percentage <= min_commission_percentage:
-                self.add_error('max_commission_percentage', 'Maximum commission must be greater than minimum commission')
-                has_error = True
-        elif min_commission_percentage is None and max_commission_percentage is None and commission_type == 'percentage':
-            self.add_error('min_commission_percentage', 'This field is required.')
-            self.add_error('max_commission_percentage', 'This field is required.')
-            has_error = True
-        elif commission_usd_mt is None and commission_type == 'usd_mt':
-            self.add_error('commission_usd_mt', 'This field is required.')
-            has_error = True
+#             if max_commission_percentage <= min_commission_percentage:
+#                 self.add_error('max_commission_percentage', 'Maximum commission must be greater than minimum commission')
+#                 has_error = True
+#         elif min_commission_percentage is None and max_commission_percentage is None and commission_type == 'percentage':
+#             self.add_error('min_commission_percentage', 'This field is required.')
+#             self.add_error('max_commission_percentage', 'This field is required.')
+#             has_error = True
+#         elif commission_usd_mt is None and commission_type == 'usd_mt':
+#             self.add_error('commission_usd_mt', 'This field is required.')
+#             has_error = True
 
-        if headline is not None and is_censored(headline):
-            self.add_error('headline', 'Please do not include contact details.')
-            has_error = True
+#         if headline is not None and is_censored(headline):
+#             self.add_error('headline', 'Please do not include contact details.')
+#             has_error = True
 
-        if details is not None and is_censored(details):
-            self.add_error('details', 'Please do not include contact details.')
-            has_error = True
+#         if details is not None and is_censored(details):
+#             self.add_error('details', 'Please do not include contact details.')
+#             has_error = True
 
-        if questions is not None and is_censored(questions):
-            self.add_error('questions', 'Please do not include contact details.')
-            has_error = True
+#         if questions is not None and is_censored(questions):
+#             self.add_error('questions', 'Please do not include contact details.')
+#             has_error = True
         
-        if has_error:
-            raise ValidationError(None)
+#         if has_error:
+#             raise ValidationError(None)
 
-class ApplicationForm(forms.Form):
-    has_experience = forms.BooleanField(required=False)
-    has_buyers = forms.BooleanField(required=False)
-    applicant_comments = forms.CharField()
-    answers = forms.CharField(required=False)
+# class ApplicationForm(forms.Form):
+#     has_experience = forms.BooleanField(required=False)
+#     has_buyers = forms.BooleanField(required=False)
+#     applicant_comments = forms.CharField()
+#     answers = forms.CharField(required=False)
 
-class ApplicationMessageForm(forms.Form):
-    body = forms.CharField()
+# class ApplicationMessageForm(forms.Form):
+#     body = forms.CharField()
 
 
 

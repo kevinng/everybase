@@ -430,7 +430,6 @@ class User(commods.Standard):
         self.slug_link = slugify(self.slug_tokens)
 
     def save(self, *args, **kwargs):
-        # Refresh slug when this user is saved
         self.refresh_slug()
         return super().save(*args, **kwargs)
 
@@ -439,7 +438,7 @@ class User(commods.Standard):
     
     def leads_order_by_created_desc(self):
         return lemods.Lead.objects.filter(author=self.id).order_by('-created')
-
+    
     def is_country_match_country_code(self):
         if self.phone_number is not None and self.country is not None:
             return self.country.country_code == self.phone_number.country_code

@@ -13,7 +13,7 @@ from common.models import Standard, Choice
 class Lead(Standard):
     """Lead.
 
-    Last updated: 2 July 2022, 12:24 PM
+    Last updated: 13 July 2022, 4:05 AM
     """
     uuid = models.UUIDField(
         unique=True,
@@ -67,6 +67,11 @@ class Lead(Standard):
         blank=True
     )
 
+    impressions = models.IntegerField(
+        default=1, # Prevent division by 0
+        db_index=True
+    )
+
     # Not in use
 
     category = models.ForeignKey(
@@ -81,6 +86,8 @@ class Lead(Standard):
 
     headline = models.CharField(
         max_length=80,
+        null=True,
+        blank=True,
         db_index=True
     )
     details = models.TextField(
@@ -127,6 +134,8 @@ class Lead(Standard):
             ('usd_mt', 'USD per MT'),
             ('other', 'Other')
         ],
+        null=True,
+        blank=True,
         db_index=True
     )
     comm_details = models.TextField(
@@ -245,10 +254,6 @@ class Lead(Standard):
         null=True
     )
 
-    impressions = models.IntegerField(
-        default=1, # Prevent division by 0
-        db_index=True
-    )
     clicks = models.IntegerField(
         default=0,
         db_index=True
@@ -281,7 +286,8 @@ class Lead(Standard):
     )
 
     def __str__(self):
-        return f'{self.lead_type}, {self.body[:20]}, [{self.id}]'
+        body = self.body[:20] if self.body is not None else ''
+        return f'{self.lead_type}, {body}, [{self.id}]'
     
     def refresh_slug(self):
         first_lead = Lead.objects.all().order_by('-id').first()
@@ -409,7 +415,7 @@ class LeadDetailView(Standard):
 class Contact(Standard):
     """Contact.
 
-    Last updated: 3 July 2022, 10:37 PM
+    Last updated: 13 July 2022, 3:15 AM
     """
     lead = models.ForeignKey(
         'Lead',
@@ -559,6 +565,13 @@ class Contact(Standard):
         blank=True
     )
 
+    session_key = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     # Not in use
 
     via_telegram = models.BooleanField(
@@ -641,7 +654,7 @@ class ContactNote(Standard):
 class ContactAction(Standard):
     """Contact action.
 
-    Last updated: 17 Jun 2022, 7:24 PM
+    Last updated: 11 July 2022, 9:02 PM
     """
     contact = models.ForeignKey(
         'Contact',
@@ -663,6 +676,52 @@ class ContactAction(Standard):
         ],
         db_index=True
     )
+    body = models.TextField(
+        blank=True,
+        null=True
+    )
+
+class LeadFlag(Standard):
+    """Lead flag - e.g., spam, scam.
+
+    Last updated: 13 July 2022, 2:45 PM
+    """
+    lead = models.ForeignKey(
+        'Lead',
+        related_name='flags',
+        related_query_name='flags',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    session_key = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='flags',
+        related_query_name='flags',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        db_index=True
+    )
+    type = models.CharField(
+        max_length=20,
+        choices=[('spam', 'Spam'), ('scam', 'Scam')],
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+
+
+
+
+
+
 
 # Not in use
 
@@ -821,28 +880,6 @@ class LeadCategory(Choice):
     """
     class Meta:
         verbose_name_plural = 'Lead categories'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Not in use
-
 
 class LeadComment(Standard):
     """Comment on a lead

@@ -117,6 +117,8 @@
                             <div class="d-flex flex-column flex-center mt-4">
                                 {% comment %} <a href="{% url 'leads:redirect_contact_whatsapp' contact.id %}" class="btn btn-success">WhatsApp</a> {% endcomment %}
                                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#whatsapp_modal">WhatsApp</button>
+                                <form action="{% url 'leads:redirect_contact_whatsapp' contact.id %}" method="post">
+                                {% csrf_token %}
                                 <div class="modal bg-white fade" tabindex="-1" id="whatsapp_modal">
                                     <div class="modal-dialog modal-fullscreen">
                                         <div class="modal-content shadow-none">
@@ -128,7 +130,6 @@
                                             </div>
                                 
                                             <div class="modal-body">
-                                                
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-45px me-5">
@@ -146,14 +147,14 @@
                                                 <div class="d-flex justify-content-center">
                                                     <div class="col-lg-6">
                                                         <div class="form-floating mt-2">
-                                                            <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Message Message Body" id="whatsapp_body" name="whatsapp_body">{% if form.whatsapp_body.value is not None and form.whatsapp_body.value|cut:' ' != '' %}{{ form.whatsapp_body.value }}{% endif %}</textarea>
+                                                            <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="WhatsApp Message Body" id="whatsapp_body" name="whatsapp_body"></textarea>
                                                             <label for="whatsapp_body">WhatsApp Message Body</label>
                                                         </div>
                                                     
                                                         <div class="mt-2">
-                                                            <button id="clear_whatsapp_body" class="btn btn-sm btn-light">Clear</button>
-                                                            <button id="last_whatsapp_body" class="btn btn-sm btn-light ms-1">Last Message</button>
-                                                            <button id="default_whatsapp_body" class="btn btn-sm btn-light ms-1">Default Message</button>
+                                                            <button type="button" id="clear_whatsapp_body" class="btn btn-sm btn-light">Clear</button>
+                                                            <button type="button" id="last_whatsapp_body" class="btn btn-sm btn-light ms-1">Last Message</button>
+                                                            <button type="button" id="default_whatsapp_body" class="btn btn-sm btn-light ms-1">Default Message</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -162,19 +163,76 @@
                                 
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-success">WhatsApp Lead Author</button>
+                                                <button type="submit" class="btn btn-success">WhatsApp Lead Author</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                </form>
                             </div>
                         {% endif %}
 
                         {% if contact.via_wechat == True %}
                             <div class="separator mt-4"></div>
                             <div class="d-flex flex-column flex-center mt-4">
-                                <a href="{% url 'leads:redirect_contact_wechat' contact.id %}" class="btn btn-success mb-2">WeChat</a>
-                                <div id="wechat_qrcode"></div>
+                                {% comment %} <a href="{% url 'leads:redirect_contact_wechat' contact.id %}" class="btn btn-success mb-2">WeChat</a> {% endcomment %}
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#wechat_modal">WeChat</button>
+                                <form action="{% url 'leads:redirect_contact_wechat' contact.id %}" method="post">
+                                {% csrf_token %}
+                                <div class="modal bg-white fade" tabindex="-1" id="wechat_modal">
+                                    <div class="modal-dialog modal-fullscreen">
+                                        <div class="modal-content shadow-none">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">WeChat Lead Author</h5>
+                                                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span class="svg-icon svg-icon-2x"></span>
+                                                </div>
+                                            </div>
+                                
+                                            <div class="modal-body">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="symbol symbol-45px me-5">
+                                                            {% include 'leads/includes/contact_avatar.html' with contact=contact %}
+                                                        </div>
+                                                        <div class="d-flex justify-content-start flex-column">
+                                                            {% include 'leads/includes/contact_avatar_details.html' with contact=contact do_not_render_contact_url=True %}
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-muted">{{ contact.age_desc }}</span>
+                                                </div>
+
+                                                <div class="separator my-4"></div>
+
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-floating mt-2">
+                                                            <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="WeChat Message Body" id="wechat_body" name="wechat_body"></textarea>
+                                                            <label for="wechat_body">WeChat Message Body</label>
+                                                        </div>
+                                                    
+                                                        <div class="mt-2 d-flex justify-content-between">
+                                                            <div class="">
+                                                                <button type="button" id="clear_wechat_body" class="btn btn-sm btn-light">Clear</button>
+                                                                <button type="button" id="last_wechat_body" class="btn btn-sm btn-light ms-1">Last Message</button>
+                                                                <button type="button" id="default_wechat_body" class="btn btn-sm btn-light ms-1">Default Message</button>
+                                                            </div>
+                                                            <button type="button" id="copy_wechat_body" class="btn btn-sm btn-primary ms-1" data-clipboard-target="#wechat_body">Copy</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-success" data-bs-dismiss="modal">WeChat Lead Author</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </form>
+                                <div id="wechat_qrcode" class="mt-2"></div>
                             </div>
                         {% endif %}
 
@@ -297,22 +355,108 @@ $(document).ready(function() {
 
         clear_whatsapp_body.click(function() {
             whatsapp_body.val('')
+            whatsapp_body.attr('rows', '2')
         })
+        
+        function set_last_whatsapp_body() {
+            whatsapp_body.val("{{ last_whatsapp_body }}")
+            whatsapp_body.attr('rows', '{{ last_whatsapp_body_rows }}')
+        }
 
         last_whatsapp_body.click(function() {
-            console.log("{{ last_whatsapp_body }}")
+            set_last_whatsapp_body()
         })
 
+        set_last_whatsapp_body()
+
+        function set_default_whatsapp_body() {
+            whatsapp_body.val("{{ default_whatsapp_body }}")
+            whatsapp_body.attr('rows', '{{ default_whatsapp_body_rows }}')
+        }
+
         default_whatsapp_body.click(function() {
-            console.log("{{ default_whatsapp_body }}")
+            set_default_whatsapp_body()
         })
+
+        set_default_whatsapp_body()
     }
 
     init_whatsapp_message_body_buttons()
+})
+
+$(document).ready(function() {
+    // WeChat message body. We cannot include this code because it requires server-side rendering.
+    function init_wechat_message_body_buttons() {
+        clear_wechat_body = $('#clear_wechat_body')
+        last_wechat_body = $('#last_wechat_body')
+        default_wechat_body = $('#default_wechat_body')
+        wechat_body = $('#wechat_body')
+
+        clear_wechat_body.click(function() {
+            wechat_body.val('')
+            wechat_body.attr('rows', '2')
+        })
+        
+        function set_last_wechat_body() {
+            wechat_body.val("{{ last_wechat_body }}")
+            wechat_body.attr('rows', '{{ last_wechat_body_rows }}')
+        }
+
+        last_wechat_body.click(function() {
+            set_last_wechat_body()
+        })
+
+        set_last_wechat_body()
+
+        function set_default_wechat_body() {
+            wechat_body.val("{{ default_wechat_body }}")
+            wechat_body.attr('rows', '{{ default_wechat_body_rows }}')
+        }
+
+        default_wechat_body.click(function() {
+            set_default_wechat_body()
+        })
+
+        set_default_wechat_body()
+    }
+
+    init_wechat_message_body_buttons()
+
+
+    // Select elements
+    const target = document.getElementById('wechat_body');
+    const button = document.getElementById('copy_wechat_body');
+
+    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+    var clipboard = new ClipboardJS(button, {
+        target: target,
+        text: function() {
+            return target.innerText;
+        }
+    });
+
+    // Success action handler
+    clipboard.on('success', function(e) {
+        const currentLabel = button.innerHTML;
+
+        // Exit label update when already in progress
+        if(button.innerHTML === 'Copied!'){
+            return;
+        }
+
+        // Update button label
+        button.innerHTML = 'Copied!';
+
+        // Revert button label after 3 seconds
+        setTimeout(function(){
+            button.innerHTML = currentLabel;
+        }, 3000)
+    });
 })
 {% endcomment %}
 {% block page_custom_javascript %}
 <script src="{% static 'leads/js/contact_details.js' %}"></script>
 <script>$(document).ready((function(){new QRCode(document.getElementById("wechat_qrcode"),{text:"{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",width:128,height:128,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H})}));</script>
-<script>$(document).ready((function(){clear_whatsapp_body=$("#clear_whatsapp_body"),last_whatsapp_body=$("#last_whatsapp_body"),default_whatsapp_body=$("#default_whatsapp_body"),whatsapp_body=$("#whatsapp_body"),clear_whatsapp_body.click((function(){whatsapp_body.val("")})),last_whatsapp_body.click((function(){console.log("{{ last_whatsapp_body }}")})),default_whatsapp_body.click((function(){console.log("{{ default_whatsapp_body }}")}))}));</script>
+<script>$(document).ready((function(){!function(){function a(){whatsapp_body.val("{{ last_whatsapp_body }}"),whatsapp_body.attr("rows","{{ last_whatsapp_body_rows }}")}function t(){whatsapp_body.val("{{ default_whatsapp_body }}"),whatsapp_body.attr("rows","{{ default_whatsapp_body_rows }}")}clear_whatsapp_body=$("#clear_whatsapp_body"),last_whatsapp_body=$("#last_whatsapp_body"),default_whatsapp_body=$("#default_whatsapp_body"),whatsapp_body=$("#whatsapp_body"),clear_whatsapp_body.click((function(){whatsapp_body.val(""),whatsapp_body.attr("rows","2")})),last_whatsapp_body.click((function(){a()})),a(),default_whatsapp_body.click((function(){t()})),t()}()}));</script>
+<script>$(document).ready((function(){!function(){function t(){wechat_body.val("{{ last_wechat_body }}"),wechat_body.attr("rows","{{ last_wechat_body_rows }}")}function e(){wechat_body.val("{{ default_wechat_body }}"),wechat_body.attr("rows","{{ default_wechat_body_rows }}")}clear_wechat_body=$("#clear_wechat_body"),last_wechat_body=$("#last_wechat_body"),default_wechat_body=$("#default_wechat_body"),wechat_body=$("#wechat_body"),clear_wechat_body.click((function(){wechat_body.val(""),wechat_body.attr("rows","2")})),last_wechat_body.click((function(){t()})),t(),default_wechat_body.click((function(){e()})),e()}();const t=document.getElementById("wechat_body"),e=document.getElementById("copy_wechat_body");new ClipboardJS(e,{target:t,text:function(){return t.innerText}}).on("success",(function(t){const c=e.innerHTML;"Copied!"!==e.innerHTML&&(e.innerHTML="Copied!",setTimeout((function(){e.innerHTML=c}),3e3))}))}));</script>
 {% endblock %}

@@ -1,0 +1,1 @@
+{{ count }} users have contacted the author.

@@ -1,38 +1,78 @@
-import pytz, datetime
-from urllib.parse import urljoin
-
 from django.urls import reverse
+from django.db.models import Count, Q, F, DateTimeField
+from django.db.models.functions import Trunc
+from django.db.models.expressions import RawSQL
 from django.shortcuts import render
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q, DateTimeField
-from django.db.models.functions import Trunc
-from django.db.models.expressions import RawSQL
 from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
-from django.http import HttpResponseRedirect, Http404, HttpResponsePermanentRedirect
+from django.views.decorators.http import require_http_methods
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
 
-from everybase import settings
-
 from common import models as commods
-from common.tasks.send_email import send_email
 from common.tasks.send_amplitude_event import send_amplitude_event
-from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
 
 from leads import models, forms
+from relationships.utilities.get_wechat_url import get_wechat_url
 
+from relationships.utilities.get_whatsapp_url import get_whatsapp_url
 from relationships.utilities.get_or_create_email import get_or_create_email
 from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
 
 MESSAGE_KEY__CONTACT_SENT = 'MESSAGE_KEY__CONTACT_SENT'
 MESSAGE_KEY__UNAUTHORIZED_ACCESS = 'MESSAGE_KEY__UNAUTHORIZED_ACCESS'
 
-def _page_obj(objects, page: int, items_per_page=20):
+# Helper methods
+
+def _page_obj(params, objects, page: int, items_per_page=20):
     paginator = Paginator(objects, items_per_page)
-    return paginator.get_page(page)
+    params['page_obj'] = paginator.get_page(page)
+
+def _set_whatsapp_bodies(params, contact):
+    params['default_whatsapp_body'] = render_to_string(
+        'leads/includes/text/default_whatsapp_message_body.txt', {
+        'first_name': contact.first_name,
+        'last_name': contact.last_name,
+        'lead_body': contact.lead.body,
+        'contact_comments': contact.comments
+    }).replace('\n', '\\n') # Replace newline to newline symbols to be rendered in JS
+    params['default_whatsapp_body_rows'] = params['default_whatsapp_body'].count('\\n')+1
+
+    last_action = models.ContactAction.objects.filter(
+        contact=contact,
+        type='whatsapp'
+    ).order_by('-created').first()
+    
+    if last_action is not None and last_action.body is not None and last_action.body.strip() != '':
+        params['last_whatsapp_body'] = last_action.body.replace('\n', '\\n')
+        params['last_whatsapp_body_rows'] = last_action.body.count('\\n')+1
+    else:
+        params['last_whatsapp_body_rows'] = 2
+
+def _set_wechat_bodies(params, contact):
+    params['default_wechat_body'] = render_to_string(
+        'leads/includes/text/default_wechat_message_body.txt', {
+        'first_name': contact.first_name,
+        'last_name': contact.last_name,
+        'lead_body': contact.lead.body,
+        'contact_comments': contact.comments
+    }).replace('\n', '\\n') # Replace newline to newline symbols to be rendered in JS
+    params['default_wechat_body_rows'] = params['default_wechat_body'].count('\\n')+1
+
+    last_action = models.ContactAction.objects.filter(
+        contact=contact,
+        type='wechat'
+    ).order_by('-created').first()
+    
+    if last_action is not None and last_action.body is not None and last_action.body.strip() != '':
+        params['last_wechat_body'] = last_action.body.replace('\n', '\\n')
+        params['last_wechat_body_rows'] = last_action.body.count('\\n')+1
+    else:
+        params['last_wechat_body_rows'] = 2
 
 def contact_lead(request, id):
     lead = models.Lead.objects.get(pk=id)
@@ -166,16 +206,14 @@ def lead_detail(request, id):
         return HttpResponseRedirect(reverse('home'))
 
     params = {'lead': lead}
-
-    # Paginate
-
-    params['page_obj'] = _page_obj(lead.contacts.all().order_by('-created'), request.GET.get('page'))
+    _page_obj(params, lead.contacts.all().order_by('-created'), request.GET.get('page'))
     return TemplateResponse(request, 'leads/lead_detail.html', params)
 
 @login_required
 def my_leads(request):
     leads = request.user.user.leads_order_by_created_desc()
-    params = {'page_obj': _page_obj(leads, request.GET.get('page'))}
+    params = {}
+    _page_obj(params, leads, request.GET.get('page'))
     return TemplateResponse(request, 'leads/my_leads.html', params)
 
 @login_required
@@ -201,85 +239,192 @@ def contact_detail_private_notes(request, id):
         'contact': contact,
         'form': form
     }
-    params['page_obj'] = _page_obj(contact.active_notes(), request.GET.get('page'))
-
-    # WhatsApp message bodies
-    
-
+    _page_obj(params, contact.active_notes(), request.GET.get('page'))
+    _set_whatsapp_bodies(params, contact)
+    _set_wechat_bodies(params, contact)
     return TemplateResponse(request, 'leads/contact_detail_private_notes.html', params)
 
 def contact_detail_other_contacts(request, id):
     contact = models.Contact.objects.get(pk=id)
-    params = {
-        'contact': contact,
-        'page_obj': _page_obj(contact.other_contacts(), request.GET.get('page'))
-    }
+    params = {'contact': contact}
+    _page_obj(params, contact.other_contacts(), request.GET.get('page'))
+    _set_whatsapp_bodies(params, contact)
+    _set_wechat_bodies(params, contact)
     return TemplateResponse(request, 'leads/contact_detail_other_contacts.html', params)
 
+@login_required
+def redirect_contact_whatsapp(request, id):
+    if request.method == 'POST':
+        contact = models.Contact.objects.get(pk=id)
+        text = request.POST.get('whatsapp_body')
+        text = text if type(text) == str and text.strip() != 0 else None
 
+        models.ContactAction.objects.create(
+            contact=contact,
+            type='whatsapp',
+            body=text
+        )
 
+        url = get_whatsapp_url(contact.phone_number.country_code, contact.phone_number.national_number, text)
+        return HttpResponseRedirect(url)
 
+@login_required
+def redirect_contact_wechat(request, id):
+    if request.method == 'POST':
+        contact = models.Contact.objects.get(pk=id)
+        text = request.POST.get('wechat_body')
+        text = text if type(text) == str and text.strip() != 0 else None
 
+        models.ContactAction.objects.create(
+            contact=contact,
+            type='wechat',
+            body=text
+        )
 
-def redirect_contact_wechat(_, id):
-    contact = models.Contact.objects.get(pk=id)
+        class WeixinSchemeRedirect(HttpResponsePermanentRedirect):
+            allowed_schemes = ['weixin']
 
-    class WeixinSchemeRedirect(HttpResponsePermanentRedirect):
-        allowed_schemes = ['weixin']
+        url = get_wechat_url(contact.via_wechat_id)
+        return WeixinSchemeRedirect(url)
 
-    if contact.is_wechat == True:
-        return WeixinSchemeRedirect(f'weixin://dl/chat?{contact.via_wechat_id}')
-    
-    return HttpResponseRedirect(reverse('home'))
-
-def redirect_contact_whatsapp(_, id):
-    contact = models.Contact.objects.get(pk=id)
-
-    if contact.via_whatsapp == True:
-        return HttpResponseRedirect(f'https://wa.me/{contact.phone_number.country_code}{contact.phone_number.national_number}')
-
-    return HttpResponseRedirect(reverse('home'))
-
-
-
-
-
-
-
-
-
-
+@require_http_methods(['GET'])
 def lead_list(request):
-    
-    # Default search - by created
+    g = lambda x : request.GET.get(x)
+    sourcing = g('sourcing')
+    promoting = g('promoting')
+    need_logistics = g('need_logistics')
+    sourcing_agent = g('sourcing_agent')
+    sales_agent = g('sales_agent')
+    logistics_agent = g('logistics_agent')
+    other = g('other')
+    user_country = g('user_country')
+    user_country_verified = g('user_country_verified')
+    reduce_spams_and_scams = g('reduce_spams_and_scams')
+    search_phrase = g('search_phrase')
 
-    params = {}
+    params = {'show_reset': False}
     
+    q = Q()
+
+    off = lambda x : x != 'on'
+    on = lambda x : x == 'on'
+    if off(sourcing) and off(promoting) and off(need_logistics) and off(sourcing_agent) and\
+        off(sales_agent) and off(logistics_agent) and off(other):
+        # All lead types are off, turn them all on - we won't show nothing.
+        sourcing = 'on'
+        promoting = 'on'
+        need_logistics = 'on'
+        sourcing_agent = 'on'
+        sales_agent = 'on'
+        logistics_agent = 'on'
+        other = 'on'
+    if on(sourcing) and on(promoting) and on(need_logistics) and on(sourcing_agent) and\
+        on(sales_agent) and on(logistics_agent) and on(other):
+        # All lead types are on, we don't need to exclude anything.
+        pass
+    else:
+        # One or more, but not all, lead types are off, filter off lead types.
+
+        if sourcing is None or sourcing != 'on':
+            q = q & ~Q(lead_type='buying')
+        
+        if promoting is None or promoting != 'on':
+            q = q & ~Q(lead_type='selling')
+
+        if need_logistics is None or need_logistics != 'on':
+            q = q & ~Q(lead_type='need_logistics')
+
+        if sourcing_agent is None or sourcing_agent != 'on':
+            q = q & ~Q(lead_type='sourcing_agent')
+
+        if sales_agent is None or sales_agent != 'on':
+            q = q & ~Q(lead_type='sales_agent')
+
+        if logistics_agent is None or logistics_agent != 'on':
+            q = q & ~Q(lead_type='logistics_agent')
+
+        if other is None or other != 'on':
+            q = q & ~Q(lead_type='other')
+
+        params['show_reset'] = True
+
+    if user_country is not None and user_country != 'any_country':
+        q = q & Q(author__country__programmatic_key=user_country)
+        params['show_reset'] = True
+
+    if user_country_verified == 'on':
+        q = q & Q(author__phone_number__country_code=F('author__country__country_code'))
+
     leads = models.Lead.objects\
         .filter(deleted__isnull=True)\
-        .order_by('-created')
+        .filter(q)
 
-    # Countries for select options
+    if reduce_spams_and_scams == 'on':
+        # Do not judge leads with less than 10 impressions.
+        # Filter leads with more than 10 impressions and more than 3 spam counts.
+        # Not implemented yet - for each contact, tolerate 5 more impressions and 1 more spam count.
+        spam_leads = leads.annotate(num_spam=Count('flags', filter=Q(flags__type='spam')))\
+            .filter(Q(impressions__gte=10) & Q(num_spam__gte=3))
+            # Following code doesn't work.
+            # .annotate(num_contacts=Count('contacts'))\
+            # .filter(Q(impressions__gte=10+(F('num_contacts')*5)) & Q(num_spam__gte=3+F('num_contacts')))\
+
+        leads = leads.exclude(id__in=spam_leads)
+
+        # Do not judge leads with less than 10 impressions.
+        # Filter leads with more than 10 impressions and more than 2 scam counts.
+        # Not implemented yet - for each contact, tolerate 5 more impressions and 1 more scam count.
+        scam_leads = leads.annotate(num_spam=Count('flags', filter=Q(flags__type='scam')))\
+            .filter(Q(impressions__gte=10) & Q(num_spam__gte=2))
+
+        leads = leads.exclude(id__in=scam_leads)
+
+        params['show_reset'] = True
+
+    # Baseline ordering
+    # Truncate to month on created, then rank within the month. I.e., entries within this month are prioritized.
+    order_by = [Trunc('created', 'month', output_field=DateTimeField()).desc()]
+
+    if search_phrase is not None and search_phrase.strip() != '':
+        body_vec = SearchVector('body_vec')
+        search_query = SearchQuery(search_phrase)
+        leads = leads.annotate(body_vec=RawSQL('body_vec', [], output_field=SearchVectorField()))\
+            .annotate(search_rank=SearchRank(body_vec, search_query))
+        
+        # Order by search rank within the baseline order (e.g., within the month)
+        order_by.append('-search_rank')
+
+        params['show_reset'] = True
+
+    # Thirdly, order by num_contacts.
+    order_by.append('num_contacts')
+    leads = leads.annotate(num_contacts=Count('contacts'))\
+        .order_by(*order_by)
+
+    # Pass values back
+    params['sourcing'] = sourcing
+    params['promoting'] = promoting
+    params['need_logistics'] = need_logistics
+    params['sourcing_agent'] = sourcing_agent
+    params['sales_agent'] = sales_agent
+    params['logistics_agent'] = logistics_agent
+    params['other'] = other
+    params['user_country'] = user_country
+    params['user_country_verified'] = user_country_verified
+    params['reduce_spams_and_scams'] = reduce_spams_and_scams
+    params['search_phrase'] = search_phrase
+
+    _page_obj(params, leads, request.GET.get('page'), items_per_page=50)
+
+    # Increment impression of all leads on this page
+    for lead in params['page_obj']:
+        lead.impressions += 1
+        lead.save()
+
     params['countries'] = commods.Country.objects.annotate(
         num_leads=Count('users_w_this_country')).order_by('-num_leads')
 
-    # Paginate
-
-    leads_per_page = 50
-    paginator = Paginator(leads, leads_per_page)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    params['page_obj'] = page_obj
-
-
-    # params['countries'] = commods.Country.objects.\
-    #         annotate(num_buy_leads=Count('leads_buy_country')).\
-    #         annotate(num_sell_leads=Count('leads_sell_country')).\
-    #         filter(Q(num_buy_leads__gt=0) | Q(num_sell_leads__gt=0)).\
-    #         order_by('-num_buy_leads')
-
-    template_name = 'leads/home.html'
-    return TemplateResponse(request, template_name, params)
+    return TemplateResponse(request, 'leads/home.html', params)
 
 
 
@@ -304,6 +449,49 @@ def lead_list(request):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# from operator import mod
+# import pytz, datetime
+# from urllib.parse import urljoin
+# from django.db.models import Count, Q, DateTimeField
+
+# from django.db.models.expressions import RawSQL
+# from django.http import Http404
+# from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
+
+# from everybase import settings
+# from common.tasks.send_email import send_email
+# from common.tasks.identify_amplitude_user import identify_amplitude_user
 
 
 
@@ -502,7 +690,7 @@ def lead_list(request):
 
 #     # Baseline ordering
 
-#     order_by = [Trunc('created', 'week', output_field=DateTimeField()).desc()]
+
 
 #     # Search
 
