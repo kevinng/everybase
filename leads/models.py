@@ -316,6 +316,20 @@ class Lead(Standard):
             deleted__isnull=True
         ).count()
 
+    def num_spam_flags(self):
+        return LeadFlag.objects.filter(
+            deleted__isnull=True,
+            lead=self,
+            type='spam'
+        ).count()
+
+    def num_scam_flags(self):
+        return LeadFlag.objects.filter(
+            deleted__isnull=True,
+            lead=self,
+            type='scam'
+        ).count()
+
     # def cover_photo(self):
     #     """Returns cover photo"""
     #     return fimods.File.objects\
@@ -565,7 +579,7 @@ class Contact(Standard):
         blank=True
     )
 
-    session_key = models.CharField(
+    cookie_uuid = models.CharField(
         max_length=50,
         null=True,
         blank=True,
@@ -693,7 +707,14 @@ class LeadFlag(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    session_key = models.CharField(
+    type = models.CharField(
+        max_length=20,
+        choices=[('spam', 'Spam'), ('scam', 'Scam')],
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    cookie_uuid = models.CharField(
         max_length=50,
         null=True,
         blank=True,
@@ -708,13 +729,9 @@ class LeadFlag(Standard):
         null=True,
         db_index=True
     )
-    type = models.CharField(
-        max_length=20,
-        choices=[('spam', 'Spam'), ('scam', 'Scam')],
-        null=True,
-        blank=True,
-        db_index=True
-    )
+
+    class Meta:
+        unique_together = ('lead', 'type', 'cookie_uuid', 'user')
 
 
 

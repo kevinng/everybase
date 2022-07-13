@@ -11,16 +11,16 @@ urlpatterns = [
     path('<int:id>/contact', views.contact_lead, name='contact_lead'),
     path('<int:id>/success', views.lead_created_success, name='lead_created_success'),
     path('<int:id>/wechat', views.redirect_contact_wechat, name='redirect_contact_wechat'),
-    path('<int:id>/whatsapp', views.redirect_contact_whatsapp, name='redirect_contact_whatsapp')
-
-
-# path('', views.lead_list, name='lead_list'),
-# TODO: I should have another page for an isolated contact form for sharing as well
-
+    path('<int:id>/whatsapp', views.redirect_contact_whatsapp, name='redirect_contact_whatsapp'),
+    path('spam', views.flag_spam, name='flag_spam'),
+    path('scam', views.flag_scam, name='flag_scam')
     
 
-    
-    
+
+
+
+    # path('', views.lead_list, name='lead_list'),
+    # TODO: I should have another page for an isolated contact form for sharing as well
 
     # NOTE: map other routes above slug routes
     # path('<slug:slug>', views.lead_detail, name='lead_detail'),

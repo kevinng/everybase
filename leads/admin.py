@@ -118,14 +118,14 @@ class LeadQueryAdmin(comadm.StandardAdmin):
 @admin.register(models.LeadFlag)
 class LeadFlagAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = ['id', 'lead', 'session_key', 'user', 'type']
+    list_display = ['id', 'lead', 'cookie_uuid', 'user', 'type']
     list_editable = [] # Override to speed up listing
-    search_fields = ['id', 'session_key', 'lead__body', 'user__first_name', 'user__last_name']
+    search_fields = ['id', 'cookie_uuid', 'lead__body', 'user__first_name', 'user__last_name']
 
     # Details page settings
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Details', {'fields': ['lead', 'session_key', 'user', 'type']}),
+        ('Details', {'fields': ['lead', 'cookie_uuid', 'user', 'type']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
     ]
     autocomplete_fields = ['lead', 'user']

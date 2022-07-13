@@ -1,3 +1,5 @@
+import uuid
+
 from django.urls import reverse
 from django.db.models import Count, Q, F, DateTimeField
 from django.db.models.functions import Trunc
@@ -9,8 +11,10 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
+from django.views.decorators.csrf import csrf_exempt
 
 from common import models as commods
 from common.tasks.send_amplitude_event import send_amplitude_event
@@ -379,6 +383,17 @@ def lead_list(request):
 
         leads = leads.exclude(id__in=scam_leads)
 
+        # Exclude leads flagged by this user
+        flagged_lead_ids = None
+        if request.user.is_authenticated:
+            flagged_lead_ids = models.LeadFlag.objects.filter(user=request.user.user).values_list('lead_id', flat=True)
+        else:
+            cookie_uuid = request.COOKIES.get('uuid')
+            if cookie_uuid is not None:
+                flagged_lead_ids = models.LeadFlag.objects.filter(cookie_uuid=cookie_uuid).values_list('lead_id', flat=True)
+        if flagged_lead_ids is not None:
+            leads = leads.exclude(id__in=flagged_lead_ids)
+
         params['show_reset'] = True
 
     # Baseline ordering
@@ -426,8 +441,63 @@ def lead_list(request):
 
     return TemplateResponse(request, 'leads/home.html', params)
 
+def _flag_lead(request, lead_id, type):
+    """Toggle lead flag on or off."""
 
+    if lead_id is None or (type is not 'spam' and type is not 'scam'):
+        return False
 
+    lead = models.Lead.objects.get(pk=lead_id)
+
+    # If user is not authenticated, session key will ensure uniqueness.
+    if request.user.is_authenticated:
+        flag, is_created = models.LeadFlag.objects.get_or_create(
+            lead=lead,
+            type=type,
+            user = request.user.user
+        )
+    else:
+        cookie_uuid = request.COOKIES.get('uuid')
+        if cookie_uuid is None:
+            cookie_uuid = uuid.uuid4()
+
+        flag, is_created = models.LeadFlag.objects.get_or_create(
+            lead=lead,
+            type=type,
+            cookie_uuid=cookie_uuid
+        )
+
+    if not is_created:
+        # Toggle off
+        flag.delete()
+
+    result = 'on' if is_created else 'off'
+    params = {'result': result}
+
+    if type == 'spam':
+        params['num_spam_flags'] = lead.num_spam_flags()
+    elif type == 'scam':
+        params['num_scam_flags'] = lead.num_scam_flags()
+
+    response = JsonResponse(params)
+
+    # Set UUID to track unauthenticated user
+    if not request.user.is_authenticated:
+        response.set_cookie('uuid', cookie_uuid)
+
+    return response
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def flag_spam(request):
+    lead_id = request.POST.get('lead_id')
+    return _flag_lead(request, lead_id, 'spam')
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def flag_scam(request):
+    lead_id = request.POST.get('lead_id')
+    return _flag_lead(request, lead_id, 'scam')
 
 
 

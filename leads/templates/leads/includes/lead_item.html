@@ -38,10 +38,13 @@ Parameters:
         <div class="d-flex justify-content-between">
             <div>
                 {% if not request.user.is_authenticated or request.user.user.id != lead.author.id %}
-                    <a href="#" class="btn btn-light-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark as spam to help other users.">Spam <span class="badge badge-warning ms-1">5</span></a>
-                    <a href="#" class="btn btn-active-light-warning btn-sm text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark as spam to help other users.">Spam <span class="badge badge-warning ms-1">5</span></a>
-                    <a href="#" class="btn btn-light-danger btn-sm ms-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark as scam to warn other users.">Scam <span class="badge badge-danger ms-1">2</span></a>
-                    <a href="#" class="btn btn-active-light-danger btn-sm text-danger ms-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark as scam to warn other users.">Scam <span class="badge badge-danger ms-1">2</span></a>
+                    {% load has_flagged_spam %}
+                    {% has_flagged_spam request lead as has_flagged_spam %}
+                    <button type="button" id="flag_spam_button__{{lead.id}}" onclick="flag_lead({{lead.id}}, 'spam', 'flag_spam_button__{{lead.id}}', 'flag_spam_badge__{{lead.id}}')" class="btn {% if has_flagged_spam %}btn-warning{% else %}text-warning{% endif %} btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark as spam to help other users.">Spam <span id="flag_spam_badge__{{lead.id}}" class="badge badge-warning ms-1">{{ lead.num_spam_flags }}</span></button>
+
+                    {% load has_flagged_scam %}
+                    {% has_flagged_scam request lead as has_flagged_scam %}
+                    <button type="button" id="flag_scam_button__{{lead.id}}" onclick="flag_lead({{lead.id}}, 'scam', 'flag_scam_button__{{lead.id}}', 'flag_scam_badge__{{lead.id}}')" class="btn {% if has_flagged_scam %}btn-danger{% else %}text-danger{% endif %} btn-sm ms-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark as scam to help other users.">Scam <span id="flag_scam_badge__{{lead.id}}" class="badge badge-danger ms-1">{{ lead.num_scam_flags }}</span></button>
 
                     {% comment %} <a href="#" class="btn btn-light-danger btn-sm"><i class="bi bi-hand-thumbs-down"></i> Bad <span class="badge badge-danger ms-1">2</span></a> {% endcomment %}
                     {% comment %} <a href="#" class="btn btn-active-light-danger btn-sm text-danger ms-2"><i class="bi text-danger bi-hand-thumbs-down"></i> Spam or Scam <span class="badge badge-danger ms-1">2</span></a> {% endcomment %}

@@ -84,6 +84,8 @@ def log_in(request):
                 send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.LOGIN)
                 url = reverse('confirm_whatsapp_login')
 
+            # Associate spam/
+
             url += f'?uuid={user.uuid}'
             return HttpResponseRedirect(_append_next(url, form.cleaned_data.get('next')))
     else:

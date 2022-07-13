@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content_body %}
-<div class="post d-flex flex-column-fluid" id="kt_post">
+<div class="post d-flex flex-column-fluid">
     {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
 
@@ -48,7 +48,7 @@
         {% endif %}
 
         {% comment %} Start: Search options {% endcomment %}
-        <form action="{% url 'home' %}" method="get">
+        <form id="search_form" action="{% url 'home' %}" method="get">
         <div>
             <div class="d-flex align-items-center">
                 {% comment %} <div class="col-lg-2 col-4 d-flex">
@@ -68,7 +68,7 @@
             <div class="d-flex justify-content-between align-items-center mt-2">
                 <div>
                     {% if show_reset is True %}<a href="{% url 'home' %}" class="btn btn-sm btn-outline btn-outline-primary text-hover-white me-2">Reset</a>{% endif %}
-                    <span class="text-dark fw-bolder">{{ page_obj|length }} leads found</span>
+                    <span class="text-dark fw-bolder">{{ page_obj.paginator.count }} leads found</span>
                 </div>
                 <div class="form-check form-check-custom">
                     <input class="form-check-input me-2" type="checkbox" name="reduce_spams_and_scams" id="reduce_spams_and_scams"{% if reduce_spams_and_scams == 'on' %} checked{% endif %} />
@@ -209,7 +209,7 @@
 
             <div class="d-flex align-items-center">
                 <div class="col-lg-3 col-6">
-                    <select class="form-select" data-control="select2" data-placeholder="Filter User Country" name='user_country' data-allow-clear="true">
+                    <select class="form-select" data-control="select2" data-placeholder="Filter User Country" name='user_country' id="user_country" data-allow-clear="true">
                         <option value="any_country"{% if form.country.value == 'any_country' %} selected{% endif %}>Any Country</option>
                         {% for country in countries %}
                             <option value="{{ country.programmatic_key }}"{% if user_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
@@ -272,18 +272,13 @@
     {% comment %} End: Container {% endcomment %}
 </div>
 
-<ul class="pagination mt-10">
-    <li class="page-item previous disabled"><span class="page-link text-muted">Previous Page</span></span></li>
-    {% comment %} <li class="page-item "><a href="#" class="page-link">1</a></li>
-    <li class="page-item active"><a href="#" class="page-link">2</a></li>
-    <li class="page-item "><a href="#" class="page-link">3</a></li>
-    <li class="page-item "><a href="#" class="page-link">4</a></li>
-    <li class="page-item "><a href="#" class="page-link">5</a></li>
-    <li class="page-item "><a href="#" class="page-link">6</a></li> {% endcomment %}
-    <li class="page-item next"><a class="page-link" href="#">Next Page</span></a></li>
-</ul>
+{% include 'includes/paginator.html' with hide_pages=True %}
 {% endblock %}
 
+{% comment %}
+
+
+{% endcomment %}
 {% block page_custom_javascript %}
 <script>
 $(document).ready(function() {
@@ -305,9 +300,29 @@ $(document).ready(function() {
     sm_logistics_agent = $('#sm_logistics_agent')
     sm_other = $('#sm_other')
 
+    search_form = $('#search_form')
+    reduce_spams_and_scams = $('#reduce_spams_and_scams')
+    user_country = $('#user_country')
+    user_country_verified = $('#user_country_verified')
+
+    var target = document.querySelector("#search_form")
+    var blockUI = new KTBlockUI(target)
+
+    function form_field_changed() {
+        search_form.submit()
+        blockUI.block()
+    }
+
     function link_and_submit_checkboxes(lg, sm) {
-        sm.change(function() {lg.prop('checked', this.checked) })
-        lg.change(function() { sm.prop('checked', this.checked) })
+        sm.change(function() {
+            lg.prop('checked', this.checked)
+            form_field_changed()
+        })
+
+        lg.change(function() {
+            sm.prop('checked', this.checked)
+            form_field_changed()
+        })
     }
 
     link_and_submit_checkboxes(sourcing, sm_sourcing)
@@ -317,6 +332,50 @@ $(document).ready(function() {
     link_and_submit_checkboxes(sales_agent, sm_sales_agent)
     link_and_submit_checkboxes(logistics_agent, sm_logistics_agent)
     link_and_submit_checkboxes(other, sm_other)
+
+    reduce_spams_and_scams.change(function() {
+        form_field_changed()
+    })
+
+    user_country_verified.change(function() {
+        form_field_changed()
+    })
+
+    user_country.change(function() {
+        form_field_changed()
+    })
 })
+
+// These functions are triggered by onclick, and have to be outside document.ready to work.
+
+function flag_lead(lead_id, type, button_id, badge_id) {
+    url = ''
+    if (type == 'spam') {
+        url = "{% url 'leads:flag_spam' %}"
+    } else if (type == 'scam') {
+        url = "{% url 'leads:flag_scam' %}"
+    }
+
+    if (url == '') {
+        return
+    }
+
+    $.post(url,
+        {'lead_id': lead_id},
+        function(data, status) {
+            btn = $('#' + button_id)
+            bdg = $('#' + badge_id)
+            if (type == 'spam') {
+                btn.toggleClass('btn-warning')
+                btn.toggleClass('text-warning')
+                bdg.html(data['num_spam_flags'])
+            } else {
+                btn.toggleClass('btn-danger')
+                btn.toggleClass('text-danger')
+                bdg.html(data['num_scam_flags'])
+            }
+        }
+    )
+}
 </script>
 {% endblock %}
