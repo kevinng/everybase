@@ -175,6 +175,12 @@ class User(commods.Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
+    register_cookie_uuid = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
     uuid = models.UUIDField(
         unique=True,
@@ -532,7 +538,34 @@ class User(commods.Standard):
 
     #     return title
 
+class LoginAction(commods.Standard):
+    """Login action.
 
+    Last updated: 14 July 2022, 9:52 PM
+    """
+    user = models.ForeignKey(
+        'User',
+        related_name='login_actions',
+        related_query_name='login_actions',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    cookie_uuid = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    type = models.CharField(
+        max_length=20,
+        choices=[
+            ('standard', 'Standard'),
+            ('magic', 'Magic')
+        ],
+        db_index=True
+    )
 
 
 

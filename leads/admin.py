@@ -84,34 +84,20 @@ class LeadAdmin(comadm.StandardAdmin):
             type='scam'
         ).count()
 
-_lead_detail_view_fields = ['lead', 'viewer', 'count']
-@admin.register(models.LeadDetailView)
-class LeadDetailViewAdmin(comadm.StandardAdmin):
+@admin.register(models.LeadQueryAction)
+class LeadQueryActionAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _lead_detail_view_fields
-    list_editable = comadm.standard_list_editable + _lead_detail_view_fields
-    list_filter = comadm.standard_list_filter
-    search_fields = comadm.standard_search_fields + ['viewer__first_name',
-        'viewer__last_name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _lead_detail_view_fields})]
-    autocomplete_fields = ['lead', 'viewer']
-
-@admin.register(models.LeadQuery)
-class LeadQueryAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = ['id', 'created', 'user', 'buy_sell', 'search_phrase', 'country', 'category']
+    list_display = ['id', 'created', 'user', 'cookie_uuid', 'search_phrase', 'country', 'verified_country', 'sourcing', 'promoting', 'sales_agent', 'sourcing_agent', 'need_logistics', 'logistics_agent', 'other']
     list_editable = [] # Override to speed up listing
+    list_filter = comadm.standard_list_filter + ['verified_country', 'sourcing', 'promoting', 'sales_agent', 'sourcing_agent', 'need_logistics', 'logistics_agent', 'other']
     search_fields = ['id', 'search_phrase', 'user__first_name', 'user__last_name']
 
     # Details page settings
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Details', {'fields': ['user', 'search_phrase', 'buy_sell', 'country', 'category']}),
+        ('Details', {'fields': ['user', 'search_phrase', 'country', 'verified_country', 'sourcing', 'promoting', 'sales_agent', 'sourcing_agent', 'need_logistics', 'logistics_agent', 'other']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
-        ('Not in use', {'fields': ['buy_country', 'sell_country', 'min_commission_percentage', 'max_commission_percentage', 'count']})
+        ('Not in use', {'fields': ['buy_sell', 'buy_country', 'sell_country', 'category', 'min_commission_percentage', 'max_commission_percentage', 'count']})
     ]
     autocomplete_fields = ['user']
 
@@ -131,6 +117,21 @@ class LeadFlagAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['lead', 'user']
 
 # Not in use
+
+# _lead_detail_view_fields = ['lead', 'viewer', 'count']
+# @admin.register(models.LeadDetailView)
+# class LeadDetailViewAdmin(comadm.StandardAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + _lead_detail_view_fields
+#     list_editable = comadm.standard_list_editable + _lead_detail_view_fields
+#     list_filter = comadm.standard_list_filter
+#     search_fields = comadm.standard_search_fields + ['viewer__first_name',
+#         'viewer__last_name']
+
+#     # Details page settings
+#     fieldsets = comadm.standard_fieldsets + \
+#         [('Details', {'fields': _lead_detail_view_fields})]
+#     autocomplete_fields = ['lead', 'viewer']
 
 # from files import admin as fiadm
 # import random, string

@@ -1,4 +1,4 @@
-from leads.utilities.get_application_count import get_application_count as _get_application_count
+from leads.utilities._archive.get_application_count import get_application_count as _get_application_count
 from django import template
 
 register = template.Library()

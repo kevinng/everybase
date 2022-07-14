@@ -937,10 +937,10 @@ class LeadComment(Standard):
             deleted__isnull=True
         ).order_by('created')
 
-class LeadQuery(Standard):
+class LeadQueryAction(Standard):
     """Lead query.
 
-    Last updated: 16 May 2022, 4:21 PM
+    Last updated: 14 July 2022, 9:52 PM
     """
     user = models.ForeignKey(
         'relationships.User',
@@ -951,13 +951,14 @@ class LeadQuery(Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    search_phrase = models.CharField(
-        max_length=200,
+    cookie_uuid = models.CharField(
+        max_length=50,
         null=True,
         blank=True,
         db_index=True
     )
-    buy_sell = models.CharField(
+
+    search_phrase = models.CharField(
         max_length=200,
         null=True,
         blank=True,
@@ -969,26 +970,49 @@ class LeadQuery(Standard):
         blank=True,
         db_index=True
     )
-    category = models.CharField(
-        max_length=200,
+    verified_country = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
     )
-
-    min_commission_percentage = models.FloatField(
+    sourcing = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
     )
-    max_commission_percentage = models.FloatField(
+    promoting = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sales_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    sourcing_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    need_logistics = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    logistics_agent = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    other = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
     )
 
     count = models.IntegerField(
-        default=0,
+        default=1,
         db_index=True
     )
 
@@ -1001,6 +1025,28 @@ class LeadQuery(Standard):
     )
     sell_country = models.CharField(
         max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    buy_sell = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    category = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    min_commission_percentage = models.FloatField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    max_commission_percentage = models.FloatField(
         null=True,
         blank=True,
         db_index=True

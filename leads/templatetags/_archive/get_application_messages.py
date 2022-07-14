@@ -1,4 +1,4 @@
-from leads.utilities.get_application_messages import get_application_messages as _get_application_messages
+from leads.utilities._archive.get_application_messages import get_application_messages as _get_application_messages
 from django import template
 
 register = template.Library()

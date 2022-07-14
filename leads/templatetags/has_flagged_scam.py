@@ -20,6 +20,7 @@ def has_flagged_scam(request, lead):
         except models.LeadFlag.DoesNotExist:
             return False
     else:
+        found = False
         try:
             flag = models.LeadFlag.objects.get(
                 lead=lead,
@@ -27,6 +28,11 @@ def has_flagged_scam(request, lead):
                 type='scam'
             )
         except models.LeadFlag.DoesNotExist:
-            return False
+            found = False
+
+        if not found:
+            # TODO User may have logged in after flagging the lead, so the flag may be tied to the cookie UUID and not the user.
+            pass
+
         
     return flag is not None

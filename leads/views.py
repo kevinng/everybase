@@ -1,5 +1,3 @@
-import uuid
-
 from django.urls import reverse
 from django.db.models import Count, Q, F, DateTimeField
 from django.db.models.functions import Trunc
@@ -21,8 +19,10 @@ from common.tasks.send_amplitude_event import send_amplitude_event
 from common.utilities.get_ip_address import get_ip_address
 
 from leads import models, forms
-from relationships.utilities.get_wechat_url import get_wechat_url
+from leads.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
+from leads.utilities.set_cookie_uuid import set_cookie_uuid
 
+from relationships.utilities.get_wechat_url import get_wechat_url
 from relationships.utilities.get_whatsapp_url import get_whatsapp_url
 from relationships.utilities.get_or_create_email import get_or_create_email
 from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
@@ -129,6 +129,7 @@ def contact_lead(request, id):
                 to_need_logistics_as_other=form.cleaned_data.get('to_need_logistics_as_other'),
             )
 
+# TODO: we don't have to save this, we just have to save the cookie UUID and look up the last contact
             # Save contact details to session so user won't have to reenter them
             request.session['last_contact__first_name'] = form.cleaned_data.get('first_name')
             request.session['last_contact__last_name'] = form.cleaned_data.get('last_name')
@@ -144,7 +145,7 @@ def contact_lead(request, id):
 
     elif request.method == 'GET':
         initial = {}
-
+# TODO: we don't have to save this, we just have to save the cookie UUID and look up the last contact
         # Read from session the fields and initialize contact lead form
         initial['first_name'] = request.session.get('last_contact__first_name')
         initial['last_name'] = request.session.get('last_contact__last_name')
@@ -457,10 +458,7 @@ def _flag_lead(request, lead_id, type):
             user = request.user.user
         )
     else:
-        cookie_uuid = request.COOKIES.get('uuid')
-        if cookie_uuid is None:
-            cookie_uuid = uuid.uuid4()
-
+        cookie_uuid, _ = get_or_create_cookie_uuid(request)
         flag, is_created = models.LeadFlag.objects.get_or_create(
             lead=lead,
             type=type,
@@ -480,11 +478,7 @@ def _flag_lead(request, lead_id, type):
         params['num_scam_flags'] = lead.num_scam_flags()
 
     response = JsonResponse(params)
-
-    # Set UUID to track unauthenticated user
-    if not request.user.is_authenticated:
-        response.set_cookie('uuid', cookie_uuid)
-
+    response, _ = set_cookie_uuid(response)
     return response
 
 @require_http_methods(['POST'])
