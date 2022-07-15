@@ -1,4 +1,6 @@
 import pytz, phonenumbers, random, urllib
+from leads.utilities.set_cookie_uuid import set_cookie_uuid
+from leads.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
 from datetime import datetime
 from ratelimit.decorators import ratelimit
 
@@ -84,8 +86,6 @@ def log_in(request):
                 send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.LOGIN)
                 url = reverse('confirm_whatsapp_login')
 
-            # Associate spam/
-
             url += f'?uuid={user.uuid}'
             return HttpResponseRedirect(_append_next(url, form.cleaned_data.get('next')))
     else:
@@ -106,12 +106,20 @@ def confirm_email_login(request):
     if request.method == 'POST':
         form = forms.ConfirmEmailLoginForm(request.POST)
         if form.is_valid():
-            use_email_code(form.user)
-            dju = authenticate(form.user.django_user.username) # Passwordless
+            user = form.user
+            use_email_code(user)
+            dju = authenticate(user.django_user.username) # Passwordless
             if dju is not None:
                 login(request, dju)
                 send_amplitude_event.delay('account - logged in', user_uuid=form.user.uuid, ip=get_ip_address(request))
-                return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
+                cookie_uuid, _ = get_or_create_cookie_uuid(request)
+                models.LoginAction.objects.create(
+                    user=user,
+                    cookie_uuid=cookie_uuid,
+                    type='standard'
+                )
+                response = _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
+                return set_cookie_uuid(response, cookie_uuid)
 
     elif request.method == 'GET':
         uuid = request.GET.get('uuid')
@@ -134,12 +142,21 @@ def confirm_whatsapp_login(request):
     if request.method == 'POST':
         form = forms.ConfirmWhatsAppLoginForm(request.POST)
         if form.is_valid():
-            use_whatsapp_code(form.user)
-            dju = authenticate(form.user.django_user.username) # Passwordless
+            user = form.user
+            use_whatsapp_code(user)
+            dju = authenticate(user.django_user.username) # Passwordless
             if dju is not None:
                 login(request, dju)
-                send_amplitude_event.delay('account - logged in', user_uuid=form.user.uuid, ip=get_ip_address(request))
-                return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
+                send_amplitude_event.delay('account - logged in', user_uuid=user.uuid, ip=get_ip_address(request))
+                cookie_uuid, _ = get_or_create_cookie_uuid(request)
+                print(cookie_uuid)
+                models.LoginAction.objects.create(
+                    user=user,
+                    cookie_uuid=cookie_uuid,
+                    type='standard'
+                )
+                response = _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
+                return set_cookie_uuid(response, cookie_uuid)
 
     elif request.method == 'GET':
         uuid = request.GET.get('uuid')

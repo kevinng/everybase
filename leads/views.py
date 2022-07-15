@@ -1,3 +1,5 @@
+import pytz, datetime
+
 from django.urls import reverse
 from django.db.models import Count, Q, F, DateTimeField
 from django.db.models.functions import Trunc
@@ -13,6 +15,8 @@ from django.http import JsonResponse
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
 from django.views.decorators.csrf import csrf_exempt
+
+from everybase import settings
 
 from common import models as commods
 from common.tasks.send_amplitude_event import send_amplitude_event
@@ -81,7 +85,7 @@ def _set_wechat_bodies(params, contact):
 def contact_lead(request, id):
     lead = models.Lead.objects.get(pk=id)
     kwargs = {'lead': lead}
-    cookie_uuid = request.COOKIES.get('cookie_uuid')
+    cookie_uuid, _ = get_or_create_cookie_uuid(request)
 
     if request.method == 'POST':
         form = forms.ContactLeadForm(request.POST, **kwargs)
@@ -162,11 +166,12 @@ def contact_lead(request, id):
         .order_by('-num_leads')
 
     template_name = 'leads/contact_lead.html'
-    return TemplateResponse(request, template_name, {
+    response = TemplateResponse(request, template_name, {
         'countries': countries,
         'lead': lead,
         'form': form
     })
+    return set_cookie_uuid(response, cookie_uuid)
 
 @login_required
 def lead_create(request):
@@ -384,15 +389,12 @@ def lead_list(request):
         leads = leads.exclude(id__in=scam_leads)
 
         # Exclude leads flagged by this user
-        flagged_lead_ids = None
-        if request.user.is_authenticated:
-            flagged_lead_ids = models.LeadFlag.objects.filter(user=request.user.user).values_list('lead_id', flat=True)
-        else:
-            cookie_uuid = request.COOKIES.get('uuid')
-            if cookie_uuid is not None:
-                flagged_lead_ids = models.LeadFlag.objects.filter(cookie_uuid=cookie_uuid).values_list('lead_id', flat=True)
-        if flagged_lead_ids is not None:
-            leads = leads.exclude(id__in=flagged_lead_ids)
+        user = request.user.user if request.user.is_authenticated else None
+        cookie_uuid = get_or_create_cookie_uuid(request)
+        flagged_lead_ids = models.LeadFlag.objects.filter(deleted__isnull=True).filter(
+            Q(user=user) | Q(cookie_uuid=cookie_uuid)
+        ).values_list('lead__id', flat=True)
+        leads = leads.exclude(id__in=flagged_lead_ids)
 
         params['show_reset'] = True
 
@@ -457,46 +459,44 @@ def lead_list(request):
     params['countries'] = commods.Country.objects.annotate(
         num_leads=Count('users_w_this_country')).order_by('-num_leads')
 
-    return TemplateResponse(request, 'leads/home.html', params)
+    response = TemplateResponse(request, 'leads/home.html', params)
+    return set_cookie_uuid(response, cookie_uuid)
 
 def _flag_lead(request, lead_id, type):
     """Toggle lead flag on or off."""
-
-    if lead_id is None or (type is not 'spam' and type is not 'scam'):
-        return False
-
     lead = models.Lead.objects.get(pk=lead_id)
 
-    # If user is not authenticated, session key will ensure uniqueness.
-    if request.user.is_authenticated:
-        flag, is_created = models.LeadFlag.objects.get_or_create(
-            lead=lead,
-            type=type,
-            user = request.user.user
-        )
-    else:
-        cookie_uuid, _ = get_or_create_cookie_uuid(request)
-        flag, is_created = models.LeadFlag.objects.get_or_create(
-            lead=lead,
-            type=type,
-            cookie_uuid=cookie_uuid
-        )
+    user = request.user.user if request.user.is_authenticated else None
+    cookie_uuid, _ = get_or_create_cookie_uuid(request)
+    flag, is_created = models.LeadFlag.objects.get_or_create(
+        lead=lead,
+        type=type,
+        user=user,
+        cookie_uuid=cookie_uuid
+    )
 
     if not is_created:
-        # Toggle off
-        flag.delete()
+        # Flag is not created anew, check the deleted field.
+        if flag.deleted is not None:
+            # Flag is deleted. Restore it.
+            flag.deleted = None
+        else:
+            # Flag is not deleted. Delete it.
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            flag.deleted = datetime.datetime.now(tz=sgtz)
+        flag.save()
 
     result = 'on' if is_created else 'off'
     params = {'result': result}
 
+    # Send updated count
     if type == 'spam':
         params['num_spam_flags'] = lead.num_spam_flags()
     elif type == 'scam':
         params['num_scam_flags'] = lead.num_scam_flags()
 
     response = JsonResponse(params)
-    response, _ = set_cookie_uuid(request, response, cookie_uuid)
-    return response
+    return set_cookie_uuid(response, cookie_uuid)
 
 @require_http_methods(['POST'])
 @csrf_exempt

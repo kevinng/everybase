@@ -104,7 +104,7 @@ class LeadQueryActionAdmin(comadm.StandardAdmin):
 @admin.register(models.LeadFlag)
 class LeadFlagAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = ['id', 'lead', 'cookie_uuid', 'user', 'type']
+    list_display = ['id', 'updated', 'deleted', 'lead', 'cookie_uuid', 'user', 'type']
     list_editable = [] # Override to speed up listing
     search_fields = ['id', 'cookie_uuid', 'lead__body', 'user__first_name', 'user__last_name']
 
