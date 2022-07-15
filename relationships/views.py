@@ -180,7 +180,9 @@ def register(request):
         form = forms.RegisterForm(request.POST)
         if form.is_valid():
             # Create Everybase user
+            cookie_uuid, _ = get_or_create_cookie_uuid(request)
             user = models.User.objects.create(
+                register_cookie_uuid=cookie_uuid,
                 registered=datetime.now(pytz.timezone(settings.TIME_ZONE)),
                 email=get_or_create_email(form.cleaned_data.get('email')),
                 phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
