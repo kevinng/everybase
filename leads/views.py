@@ -81,6 +81,7 @@ def _set_wechat_bodies(params, contact):
 def contact_lead(request, id):
     lead = models.Lead.objects.get(pk=id)
     kwargs = {'lead': lead}
+    cookie_uuid = request.COOKIES.get('cookie_uuid')
 
     if request.method == 'POST':
         form = forms.ContactLeadForm(request.POST, **kwargs)
@@ -97,6 +98,8 @@ def contact_lead(request, id):
                 last_name=form.cleaned_data.get('last_name'),
                 email=email,
                 phone_number=phone_number,
+
+                cookie_uuid=cookie_uuid,
 
                 via_whatsapp=form.cleaned_data.get('via_whatsapp'),
                 via_wechat=form.cleaned_data.get('via_wechat'),
@@ -129,32 +132,28 @@ def contact_lead(request, id):
                 to_need_logistics_as_other=form.cleaned_data.get('to_need_logistics_as_other'),
             )
 
-# TODO: we don't have to save this, we just have to save the cookie UUID and look up the last contact
-            # Save contact details to session so user won't have to reenter them
-            request.session['last_contact__first_name'] = form.cleaned_data.get('first_name')
-            request.session['last_contact__last_name'] = form.cleaned_data.get('last_name')
-            request.session['last_contact__email'] = form.cleaned_data.get('email')
-            request.session['last_contact__phone_number'] = str(form.cleaned_data.get('phone_number'))
-            request.session['last_contact__via_whatsapp'] = form.cleaned_data.get('via_whatsapp')
-            request.session['last_contact__via_wechat'] = form.cleaned_data.get('via_wechat')
-            request.session['last_contact__via_wechat_id'] = form.cleaned_data.get('via_wechat_id')
-            request.session['last_contact__country'] = form.cleaned_data.get('country')
-
             messages.info(request, MESSAGE_KEY__CONTACT_SENT)
             return HttpResponseRedirect(reverse('home'))
 
     elif request.method == 'GET':
         initial = {}
-# TODO: we don't have to save this, we just have to save the cookie UUID and look up the last contact
-        # Read from session the fields and initialize contact lead form
-        initial['first_name'] = request.session.get('last_contact__first_name')
-        initial['last_name'] = request.session.get('last_contact__last_name')
-        initial['email'] = request.session.get('last_contact__email')
-        initial['phone_number'] = request.session.get('last_contact__phone_number')
-        initial['via_whatsapp'] = request.session.get('last_contact__via_whatsapp')
-        initial['via_wechat'] = request.session.get('last_contact__via_wechat')
-        initial['via_wechat_id'] = request.session.get('last_contact__via_wechat_id')
-        initial['country'] = request.session.get('last_contact__country')
+
+        # Populate form with last contact's details
+
+        last_contact = models.Contact.objects\
+            .filter(cookie_uuid=cookie_uuid)\
+            .order_by('-created')\
+            .first()
+
+        if last_contact is not None:
+            initial['first_name'] = last_contact.first_name
+            initial['last_name'] = last_contact.last_name
+            initial['email'] = last_contact.email
+            initial['phone_number'] = last_contact.phone_number
+            initial['via_whatsapp'] = last_contact.via_whatsapp
+            initial['via_wechat'] = last_contact.via_wechat
+            initial['via_wechat_id'] = last_contact.via_wechat_id
+            initial['country'] = last_contact.country.programmatic_key
 
         form = forms.ContactLeadForm(initial=initial, **kwargs)
 
@@ -418,6 +417,8 @@ def lead_list(request):
         .order_by(*order_by)
 
     # Pass values back
+    params['search_phrase'] = search_phrase
+    params['reduce_spams_and_scams'] = reduce_spams_and_scams
     params['sourcing'] = sourcing
     params['promoting'] = promoting
     params['need_logistics'] = need_logistics
@@ -427,8 +428,24 @@ def lead_list(request):
     params['other'] = other
     params['user_country'] = user_country
     params['user_country_verified'] = user_country_verified
-    params['reduce_spams_and_scams'] = reduce_spams_and_scams
-    params['search_phrase'] = search_phrase
+
+    # Save this lead query
+    cookie_uuid, _ = get_or_create_cookie_uuid(request)
+    user = request.user.user if request.user.is_authenticated else None
+    models.LeadQueryAction.objects.create(
+        user=user,
+        cookie_uuid=cookie_uuid,
+        search_phrase=search_phrase,
+        user_country=user_country,
+        user_country_verified=user_country_verified=='on',
+        sourcing=sourcing=='on',
+        promoting=promoting=='on',
+        need_logistics=need_logistics=='on',
+        sourcing_agent=sourcing_agent=='on',
+        sales_agent=sales_agent=='on',
+        logistics_agent=logistics_agent=='on',
+        other=other=='on'
+    )
 
     _page_obj(params, leads, request.GET.get('page'), items_per_page=50)
 
@@ -478,7 +495,7 @@ def _flag_lead(request, lead_id, type):
         params['num_scam_flags'] = lead.num_scam_flags()
 
     response = JsonResponse(params)
-    response, _ = set_cookie_uuid(response)
+    response, _ = set_cookie_uuid(request, response, cookie_uuid)
     return response
 
 @require_http_methods(['POST'])

@@ -87,17 +87,17 @@ class LeadAdmin(comadm.StandardAdmin):
 @admin.register(models.LeadQueryAction)
 class LeadQueryActionAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = ['id', 'created', 'user', 'cookie_uuid', 'search_phrase', 'country', 'verified_country', 'sourcing', 'promoting', 'sales_agent', 'sourcing_agent', 'need_logistics', 'logistics_agent', 'other']
+    list_display = ['id', 'created', 'user', 'cookie_uuid', 'search_phrase', 'user_country', 'user_country_verified', 'sourcing', 'promoting', 'sales_agent', 'sourcing_agent', 'need_logistics', 'logistics_agent', 'other']
     list_editable = [] # Override to speed up listing
-    list_filter = comadm.standard_list_filter + ['verified_country', 'sourcing', 'promoting', 'sales_agent', 'sourcing_agent', 'need_logistics', 'logistics_agent', 'other']
+    list_filter = comadm.standard_list_filter + ['user_country_verified', 'sourcing', 'promoting', 'sales_agent', 'sourcing_agent', 'need_logistics', 'logistics_agent', 'other']
     search_fields = ['id', 'search_phrase', 'user__first_name', 'user__last_name']
 
     # Details page settings
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Details', {'fields': ['user', 'search_phrase', 'country', 'verified_country', 'sourcing', 'promoting', 'sales_agent', 'sourcing_agent', 'need_logistics', 'logistics_agent', 'other']}),
+        ('Details', {'fields': ['user', 'search_phrase', 'user_country', 'user_country_verified', 'sourcing', 'promoting', 'sales_agent', 'sourcing_agent', 'need_logistics', 'logistics_agent', 'other']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
-        ('Not in use', {'fields': ['buy_sell', 'buy_country', 'sell_country', 'category', 'min_commission_percentage', 'max_commission_percentage', 'count']})
+        ('Not in use', {'fields': ['buy_sell', 'country', 'buy_country', 'sell_country', 'category', 'min_commission_percentage', 'max_commission_percentage', 'count']})
     ]
     autocomplete_fields = ['user']
 

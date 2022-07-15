@@ -479,6 +479,13 @@ class Contact(Standard):
         blank=True
     )
 
+    cookie_uuid = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     via_whatsapp = models.BooleanField(
         null=True,
         blank=True
@@ -577,13 +584,6 @@ class Contact(Standard):
     comments = models.TextField(
         null=True,
         blank=True
-    )
-
-    cookie_uuid = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
     )
 
     # Not in use
@@ -964,13 +964,13 @@ class LeadQueryAction(Standard):
         blank=True,
         db_index=True
     )
-    country = models.CharField(
+    user_country = models.CharField(
         max_length=200,
         null=True,
         blank=True,
         db_index=True
     )
-    verified_country = models.BooleanField(
+    user_country_verified = models.BooleanField(
         null=True,
         blank=True,
         db_index=True
@@ -1017,6 +1017,12 @@ class LeadQueryAction(Standard):
     )
 
     # Not in use
+    country = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     buy_country = models.CharField(
         max_length=200,
         null=True,
