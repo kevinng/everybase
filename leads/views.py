@@ -296,8 +296,11 @@ def redirect_contact_wechat(request, id):
         url = get_wechat_url(contact.via_wechat_id)
         return WeixinSchemeRedirect(url)
 
-@require_http_methods(['GET'])
 def lead_list(request):
+    # Default, don't show reset button
+    params = {'show_reset': False}
+    cookie_uuid, _ = get_or_create_cookie_uuid(request)
+
     g = lambda x : request.GET.get(x)
     sourcing = g('sourcing')
     promoting = g('promoting')
@@ -310,8 +313,6 @@ def lead_list(request):
     user_country_verified = g('user_country_verified')
     reduce_spams_and_scams = g('reduce_spams_and_scams')
     search_phrase = g('search_phrase')
-
-    params = {'show_reset': False}
     
     q = Q()
 
@@ -390,7 +391,6 @@ def lead_list(request):
 
         # Exclude leads flagged by this user
         user = request.user.user if request.user.is_authenticated else None
-        cookie_uuid = get_or_create_cookie_uuid(request)
         flagged_lead_ids = models.LeadFlag.objects.filter(deleted__isnull=True).filter(
             Q(user=user) | Q(cookie_uuid=cookie_uuid)
         ).values_list('lead__id', flat=True)
@@ -432,9 +432,8 @@ def lead_list(request):
     params['user_country_verified'] = user_country_verified
 
     # Save this lead query
-    cookie_uuid, _ = get_or_create_cookie_uuid(request)
     user = request.user.user if request.user.is_authenticated else None
-    models.LeadQueryAction.objects.create(
+    lead_query_action = models.LeadQueryAction.objects.create(
         user=user,
         cookie_uuid=cookie_uuid,
         search_phrase=search_phrase,
@@ -458,6 +457,31 @@ def lead_list(request):
 
     params['countries'] = commods.Country.objects.annotate(
         num_leads=Count('users_w_this_country')).order_by('-num_leads')
+
+    # Handle sign-up search notification 
+    if request.method == 'POST':
+        form = forms.SignUpSearchNotification(request.POST)
+        if form.is_valid():
+            models.SearchNotification.objects.create(
+                cookie_uuid=cookie_uuid,
+                first_name=form.cleaned_data.get('first_name'),
+                last_name=form.cleaned_data.get('last_name'),
+                email=get_or_create_email(form.cleaned_data.get('email')),
+                phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
+                country=commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country')),
+                via_whatsapp=form.cleaned_data.get('via_whatsapp'),
+                via_wechat=form.cleaned_data.get('via_wechat'),
+                via_wechat_id=form.cleaned_data.get('via_wechat_id'),
+                lead_query_action=lead_query_action
+            )
+
+    # Pass form to template if search phrase is entered and we can't identify the user.
+    if not (search_phrase is None or search_phrase.strip() == ''):
+        any_contact = models.Contact.objects.filter(cookie_uuid=cookie_uuid).first()
+        any_search_notification = models.SearchNotification.objects.filter(cookie_uuid=cookie_uuid).first()
+        if not request.user.is_authenticated and any_contact is None and any_search_notification is None:
+            # User is not authenticated, and have not contacted any lead author, initialize empty form and pass it.
+            params['susn_form'] = forms.SignUpSearchNotification()
 
     response = TemplateResponse(request, 'leads/home.html', params)
     return set_cookie_uuid(response, cookie_uuid)

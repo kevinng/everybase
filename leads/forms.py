@@ -8,6 +8,17 @@ from leads import models
 from relationships.utilities.get_or_create_email import get_or_create_email
 from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
 
+class SignUpSearchNotification(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    country = forms.CharField()
+    email = forms.EmailField()
+    phone_number = PhoneNumberField()
+
+    via_whatsapp = forms.BooleanField(required=False)
+    via_wechat = forms.BooleanField(required=False)
+    via_wechat_id = forms.CharField(required=False)
+
 class LeadForm(forms.Form):
     body = forms.CharField()
     lead_type = forms.CharField()

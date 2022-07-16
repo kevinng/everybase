@@ -12,8 +12,96 @@
 
 {% block content_body %}
 <div class="post d-flex flex-column-fluid">
-    {% comment %} Start: Container {% endcomment %}
     <div id="kt_content_container" class="container-xxl">
+
+        {% comment %} Start: Search notification sign-up {% endcomment %}
+        {% if susn_form %}
+            <form action="{{ request.get_full_path }}" method="post">
+                {% csrf_token %}
+                <div class="alert alert-dismissible bg-secondary d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                    {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
+                    <span class="svg-icon svg-icon-2hx svg-icon-dark me-4 mb-5 mb-sm-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
+                            <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
+                        </svg>
+                    </span>
+                    {% comment %} End: SVG icon {% endcomment %}
+                    
+                    <div class="d-flex flex-column text-dark pe-0 pe-sm-10 col-10">
+                        <h4 class="mb-2 text-dark">Be notified when new "{{ search_phrase }}" leads are posted</h4>
+                        <span>Enter your contact details so we may notify you when new "{{ search_phrase }}" leads are posted.</span>
+                        <div class="form-floating col-lg-6 mt-4">
+                            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name"{% if susn_form.first_name.value is not None and susn_form.first_name.value|cut:' ' != '' %} value="{{ susn_form.first_name.value }}"{% endif %} required />
+                            <label for="first_name">First Name</label>
+                        </div>
+                        {% if susn_form.first_name.errors %}<div class="text-danger">{% for error in susn_form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="form-floating col-lg-6 mt-2">
+                            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name"{% if susn_form.last_name.value is not None and susn_form.last_name.value|cut:' ' != '' %} value="{{ susn_form.last_name.value }}"{% endif %} required />
+                            <label for="last_name">Last Name</label>
+                        </div>
+                        {% if susn_form.last_name.errors %}<div class="text-danger">{% for error in susn_form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="form-floating col-lg-6 mt-2">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com"{% if susn_form.email.value is not None and susn_form.email.value|cut:' ' != '' %} value="{{ susn_form.email.value }}"{% endif %} required />
+                            <label for="email">Email</label>
+                        </div>
+                        {% if susn_form.email.errors %}<div class="text-danger">{% for error in susn_form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="form-floating col-lg-6 mt-2">
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+1234567890"{% if susn_form.phone_number.value is not None and susn_form.phone_number.value|cut:' ' != '' %} value="{{ susn_form.phone_number.value }}"{% endif %} required />
+                            <label for="phone_number">Phone</label>
+                        </div>
+                        <div class="form-text">Include + symbol. E.g., +14155552671.</div>
+                        {% if susn_form.phone_number.errors %}<div class="text-danger">{% for error in susn_form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="form-check form-check-custom mt-4">
+                            <input class="form-check-input me-2" type="checkbox" name="via_whatsapp" id="via_whatsapp" {% if susn_form.via_whatsapp.value == True %}checked {% endif %}/>
+                            <label for="via_whatsapp">WhatsApp</label>
+                        </div>
+
+                        <div class="form-check form-check-custom mt-2">
+                            <input class="form-check-input me-2" type="checkbox" name="via_wechat" id="via_wechat" {% if susn_form.via_wechat.value == True %}checked {% endif %}/>
+                            <label for="via_wechat">WeChat</label>
+                        </div>
+
+                        <div id="via_wechat_id_div" class="form-floating col-lg-6 mt-2">
+                            <input type="text" class="form-control" name="via_wechat_id" id="via_wechat_id" placeholder="WeChat ID"{% if susn_form.via_wechat_id.value is not None and susn_form.via_wechat_id.value|cut:' ' != '' %} value="{{ susn_form.via_wechat_id.value }}"{% endif %}/>
+                            <label for="via_wechat_id">WeChat ID</label>
+                        </div>
+
+                        {% if susn_form.via_wechat_id.errors %}<div class="text-danger">{% for error in susn_form.via_wechat_id.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="col-lg-6 mt-6">
+                            <select name="country" class="form-select" data-control="select2" data-placeholder="Country" id="country">
+                                <option></option>
+                                {% for country in countries %}
+                                    <option value="{{ country.programmatic_key }}"{% if susn_form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if susn_form.country.errors %}<div class="text-danger">{% for error in susn_form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="col-lg-6 mt-6">
+                            <button type="submit" class="btn btn-success">Notify Me</button>
+                        </div>
+                    </div>
+
+                    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                        {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
+                        <span class="svg-icon svg-icon-2x svg-icon-dark">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                            </svg>
+                        </span>
+                        {% comment %} End: SVG icon {% endcomment %}
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+        {% comment %} End: Search notification sign-up {% endcomment %}
 
         {% if messages %}
             {% for message in messages %}
@@ -271,7 +359,6 @@
             {% endfor %}
         {% endif %}
     </div>
-    {% comment %} End: Container {% endcomment %}
 </div>
 
 {% include 'includes/paginator.html' with hide_pages=True %}
@@ -341,6 +428,23 @@ $(document).ready(function() {
     user_country.change(function() {
         form_field_changed()
     })
+
+    via_wechat_id_div = $('#via_wechat_id_div')
+    via_wechat = $('#via_wechat')
+
+    function toggle_via_wechat_id_div() {
+        if (via_wechat.is(':checked')) {
+            via_wechat_id_div.show()
+        } else {
+            via_wechat_id_div.hide()
+        }
+    }
+
+    toggle_via_wechat_id_div()
+
+    via_wechat.click(function() {
+        toggle_via_wechat_id_div()
+    })
 })
 
 // These functions are triggered by onclick, and have to be outside document.ready to work.
@@ -378,5 +482,5 @@ function flag_lead(lead_id, type, button_id, badge_id) {
 {% endcomment %}
 {% block page_custom_javascript %}
 <script src="{% static 'leads/js/home.js' %}"></script>
-<script>function flag_lead(l,a,g,s){url="","spam"==a?url="{% url 'leads:flag_spam' %}":"scam"==a&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:l},(function(l,t){btn=$("#"+g),bdg=$("#"+s),"spam"==a?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(l.num_spam_flags)):(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(l.num_scam_flags))}))}</script>
+<script>$(document).ready((function(){sourcing=$("#sourcing"),promoting=$("#promoting"),need_logistics=$("#need_logistics"),sourcing_agent=$("#sourcing_agent"),sales_agent=$("#sales_agent"),logistics_agent=$("#logistics_agent"),other=$("#other"),sm_sourcing=$("#sm_sourcing"),sm_promoting=$("#sm_promoting"),sm_need_logistics=$("#sm_need_logistics"),sm_sourcing_agent=$("#sm_sourcing_agent"),sm_sales_agent=$("#sm_sales_agent"),sm_logistics_agent=$("#sm_logistics_agent"),sm_other=$("#sm_other"),search_form=$("#search_form"),reduce_spams_and_scams=$("#reduce_spams_and_scams"),user_country=$("#user_country"),user_country_verified=$("#user_country_verified");var s=document.querySelector("#search_form"),e=new KTBlockUI(s);function _(){search_form.submit(),e.block()}function c(s,e){e.change((function(){s.prop("checked",this.checked),_()})),s.change((function(){e.prop("checked",this.checked),_()}))}function i(){via_wechat.is(":checked")?via_wechat_id_div.show():via_wechat_id_div.hide()}c(sourcing,sm_sourcing),c(promoting,sm_promoting),c(need_logistics,sm_need_logistics),c(sourcing_agent,sm_sourcing_agent),c(sales_agent,sm_sales_agent),c(logistics_agent,sm_logistics_agent),c(other,sm_other),reduce_spams_and_scams.change((function(){_()})),user_country_verified.change((function(){_()})),user_country.change((function(){_()})),via_wechat_id_div=$("#via_wechat_id_div"),via_wechat=$("#via_wechat"),i(),via_wechat.click((function(){i()}))}));</script>
 {% endblock %}

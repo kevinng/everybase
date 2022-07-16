@@ -116,6 +116,21 @@ class LeadFlagAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['lead', 'user']
 
+@admin.register(models.SearchNotification)
+class SearchNotificationAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = ['id', 'created', 'cookie_uuid', 'first_name', 'last_name', 'country', 'email', 'phone_number', 'via_whatsapp', 'via_wechat', 'via_wechat_id', 'lead_query_action']
+    list_editable = [] # Override to speed up listing
+    search_fields = ['id', 'cookie_uuid', 'first_name', 'last_name', 'email', 'phone_number']
+
+    # Details page settings
+    fieldsets = [
+        (None, {'fields': ['id']}),
+        ('Details', {'fields': ['cookie_uuid', 'first_name', 'last_name', 'country', 'email', 'phone_number', 'via_whatsapp', 'via_wechat', 'via_wechat_id', 'lead_query_action']}),
+        ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
+    ]
+    autocomplete_fields = ['country', 'email', 'phone_number', 'lead_query_action']
+
 # Not in use
 
 # _lead_detail_view_fields = ['lead', 'viewer', 'count']

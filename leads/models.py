@@ -1264,3 +1264,77 @@ class SavedLead(Standard):
 
     class Meta:
         unique_together = ('lead', 'saver')
+
+class SearchNotification(Standard):
+    """Search notification sign-up for when we do have the user's contact details.
+
+    Last updated: 16 July 2022, 11:08 PM
+    """
+    cookie_uuid = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    first_name = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    last_name = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    country = models.ForeignKey(
+        'common.Country',
+        related_name='search_notifications',
+        related_query_name='search_notifications',
+        on_delete=models.PROTECT,        
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    email = models.ForeignKey(
+        'relationships.Email',
+        related_name='search_notifications',
+        related_query_name='search_notifications',
+        on_delete=models.PROTECT,
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    phone_number = models.ForeignKey(
+        'relationships.PhoneNumber',
+        related_name='search_notifications',
+        related_query_name='search_notifications',
+        on_delete=models.PROTECT,
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    via_whatsapp = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    via_wechat = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    via_wechat_id = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True
+    )
+
+    lead_query_action = models.ForeignKey(
+        'LeadQueryAction',
+        related_name='search_notifications',
+        related_query_name='search_notifications',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True  
+    )
