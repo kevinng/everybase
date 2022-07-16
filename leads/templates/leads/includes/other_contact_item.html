@@ -19,7 +19,7 @@
 
     <div class="card-body">
         {% comment %} Start: Contact {% endcomment %}
-        <div class="text-dark">{{ contact.comments|linebreaks }}</div>
+        <div class="text-dark">{{ contact.lead.body|linebreaks }}</div>
         <div class="d-flex justify-content-between mt-2">
             <div>
                 {% include 'leads/includes/contact_badges.html' with contact=contact %}
