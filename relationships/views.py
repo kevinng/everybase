@@ -262,7 +262,7 @@ def profile_settings(request):
     inputs = {
         'first_name': user.first_name,
         'last_name': user.last_name,
-        'country': user.country.programmatic_key,
+        'country': user.country.programmatic_key if user.country is not None else 'country_not_set',
         'enable_whatsapp': user.enable_whatsapp
     }
 
@@ -296,12 +296,20 @@ def profile_settings(request):
                 user = request.user.user
                 user.first_name = form.cleaned_data.get('first_name')
                 user.last_name = form.cleaned_data.get('last_name')
-                user.country = commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country'))
+                
+                country_key = form.cleaned_data.get('country')
+                country = None
+                if not (country_key == 'country_not_set' or country_key is None or (type(country_key) == str and country_key.strip() == '')):
+                    try:
+                        country = commods.Country.objects.get(programmatic_key=country_key)
+                    except commods.Country.DoesNotExist:
+                        pass
+                user.country = country
                 user.save()
                 messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PROFILE_UPDATE_SUCCESS)
 
             elif request.POST.get('update_email') == 'update_email':
-                if user.email.email != form.cleaned_data.get('email').strip():
+                if (user.email is None or user.email.email != form.cleaned_data.get('email').strip()):
                     return HttpResponseRedirect(f"{reverse('users:update_email')}?email={form.cleaned_data.get('email')}")
 
             elif request.POST.get('update_phone_number') == 'update_phone_number':
@@ -311,7 +319,7 @@ def profile_settings(request):
                 encph = urllib.parse.quote(str(phone_number)) # Encode phone number so the + symbol is passed safely
                 verification_url = f"{reverse('users:update_phone_number')}?phone_number={encph}&enable_whatsapp={enable_whatsapp}"
 
-                if not are_phone_numbers_same(user.phone_number, phone_number):
+                if user.phone_number is None or not are_phone_numbers_same(user.phone_number, phone_number):
                     # Require verification even if the user wants to disable WhatsApp
                     return HttpResponseRedirect(verification_url)
                 elif user.enable_whatsapp != enable_whatsapp:

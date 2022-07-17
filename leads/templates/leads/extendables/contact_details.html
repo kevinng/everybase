@@ -37,6 +37,9 @@
 {% block content_body %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
     <div id="kt_content_container" class="container-xxl">
+
+        {% include 'relationships/includes/has_incomplete_profile.html' %}
+        
         <div class="card mb-5 mb-xl-10 shadow-sm">
             <div class="card-header">
                 <div class="card-title align-items-start flex-column">

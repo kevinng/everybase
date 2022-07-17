@@ -24,6 +24,9 @@
 
 <div class="post d-flex flex-column-fluid">
     <div class="container-xxl">
+
+        {% include 'relationships/includes/has_incomplete_profile.html' %}
+        
         {% if messages %}
             {% for message in messages %}
                 {% comment %} We need to string-strip message or the comparison will not work. {% endcomment %}
@@ -276,6 +279,7 @@
                         </label>
                         <div class="col-lg-8 fv-row">
                             <select name="country"data-control="select2" data-placeholder="Country" class="form-select form-select-lg fw-bold">
+                                <option value="country_not_set"{% if form.country.value == 'country_not_set' %} selected{% endif %}>Country Not Set</option>
                                 {% for country in countries %}
                                     <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                                 {% endfor %}

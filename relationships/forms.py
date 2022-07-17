@@ -148,19 +148,19 @@ class SettingsForm(forms.Form):
         if self.cleaned_data.get('update_email') == 'update_email':
             # 'Update email button' clicked
             email = self.cleaned_data.get('email').strip()
-            if email != self.user.email.email and email_exists(email):
-                raise ValidationError({'email': ['This email belongs to an existing user',]})
-            elif is_email_code_rate_limited(self.user):
+            if is_email_code_rate_limited(self.user):
                 raise ValidationError({'email': ["You're sending requests too quickly. Please try again later.",]})
+            elif self.user.email is not None and (email != self.user.email.email and email_exists(email)):
+                raise ValidationError({'email': ['This email belongs to an existing user',]})
             
         elif self.cleaned_data.get('update_phone_number') == 'update_phone_number':
             # 'Update phone number' button clicked
             phone_number = self.cleaned_data.get('phone_number')
-            
-            if not are_phone_numbers_same(phone_number, self.user.phone_number) and phone_number_exists(phone_number):
-                raise ValidationError({'phone_number': ['This phone number belongs to an existing user',]})
-            elif is_whatsapp_code_rate_limited(self.user):
+            if is_whatsapp_code_rate_limited(self.user):
                 raise ValidationError({'phone_number': ["You're sending requests too quickly. Please try again later.",]})
+            elif self.user.phone_number is not None and (not are_phone_numbers_same(phone_number, self.user.phone_number) and phone_number_exists(phone_number)):
+                raise ValidationError({'phone_number': ['This phone number belongs to an existing user',]})
+            
 
 class UpdateEmailForm(forms.Form):
     email = forms.CharField()

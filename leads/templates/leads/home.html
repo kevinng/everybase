@@ -13,6 +13,9 @@
 {% block content_body %}
 <div class="post d-flex flex-column-fluid">
     <div id="kt_content_container" class="container-xxl">
+
+        {% include 'relationships/includes/has_incomplete_profile.html' %}
+
         {% comment %} Start: Search notification sign-up {% endcomment %}
         {% if susn_form %}
             <form action="{{ request.get_full_path }}" method="post">
