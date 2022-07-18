@@ -21,13 +21,17 @@
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-45px me-5">
                             {% if lead.author.avatar == None %}
-                                <div class="symbol-label fs-3 bg-light-primary text-primary">{{ lead.author.first_name.0|upper }}{{ lead.author.last_name.0|upper }}</div>
+                                {% load user_full_name_initials %}
+                                {% user_full_name_initials lead.author as initials %}
+                                <div class="symbol-label fs-3 bg-light-primary text-primary">{% if initials is None %}?{% else %}{{ initials }}{% endif %}</div>
                             {% else %}
                                 <img src="{{ lead.author.avatar_thumbnail_url }}" />
                             {% endif %}
                         </div>
                         <div class="d-flex justify-content-start flex-column">
-                            <div class="text-dark fw-bolder fs-6">{{ lead.author.first_name|title }} {{ lead.author.last_name|title }}
+                            {% load user_full_name %}
+                            {% user_full_name lead.author as full_name %}
+                            <div class="text-dark fw-bolder fs-6">{% if full_name is None %}{% include 'relationships/includes/name_hidden.html' %}{% else %}{{ full_name }}{% endif %}
                             {% if lead.author.is_country_match_country_code %}
                                 {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
                                 <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +1">

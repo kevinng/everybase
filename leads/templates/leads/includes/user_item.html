@@ -4,7 +4,9 @@
     <div class="me-7 mb-4">
         <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
             {% if request.user.user.avatar == None %}
-                <div class="symbol-label fs-1 bg-light-primary text-primary">{{ request.user.user.first_name.0|upper }}{{ request.user.user.last_name.0|upper }}</div>
+                {% load user_full_name_initials %}
+                {% user_full_name_initials request.user.user as initials %}
+                <div class="symbol-label fs-1 bg-light-primary text-primary">{% if initials is None %}?{% else %}{{ initials }}{% endif %}</div>
             {% else %}
                 <img src="{{ request.user.user.avatar_thumbnail_url }}" />
             {% endif %}
@@ -19,7 +21,9 @@
             <div class="d-flex flex-column">
                 {% comment %} Start: Name {% endcomment %}
                 <div class="d-flex align-items-center mb-2">
-                    <span class="text-gray-900 fs-2 fw-bolder me-1">{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}</span>
+                    {% load user_full_name %}
+                    {% user_full_name request.user.user as full_name %}
+                    <span class="text-gray-900 fs-2 fw-bolder me-1">{% if full_name is None %}{% include 'relationships/includes/enter_your_name.html' %}{% else %}{{ full_name }}{% endif %}</span>
                 </div>
                 {% comment %} End: Name {% endcomment %}
                 {% comment %} Start: Info {% endcomment %}

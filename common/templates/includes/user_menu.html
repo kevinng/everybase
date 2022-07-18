@@ -6,7 +6,9 @@
         {% comment %} Start: Menu wrapper {% endcomment %}
         <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
             {% if request.user.user.avatar == None %}
-                <div class="symbol-label fs-3 bg-light-primary text-primary">{{ request.user.user.first_name.0|upper }}{{ request.user.user.last_name.0|upper }}</div>
+                {% load user_full_name_initials %}
+                {% user_full_name_initials request.user.user as initials %}
+                <div class="symbol-label fs-3 bg-light-primary text-primary">{% if initials is None %}?{% else %}{{ initials }}{% endif %}</div>
             {% else %}
                 <img src="{{ request.user.user.avatar_thumbnail_url }}" />
             {% endif %}
@@ -21,7 +23,9 @@
                 <div class="menu-content d-flex align-items-center px-3">
                     {% if request.user.user.avatar == None %}
                         <div class="symbol symbol-50px">
-                            <div class="symbol-label fs-3 bg-light-primary text-primary">{{ request.user.user.first_name.0|upper }}{{ request.user.user.last_name.0|upper }}</div>
+                            {% load user_full_name_initials %}    
+                            {% user_full_name_initials request.user.user as initials %}
+                            <div class="symbol-label fs-3 bg-light-primary text-primary">{% if initials is None %}?{% else %}{{ initials }}{% endif %}</div>
                         </div>
                     {% else %}
                         <div class="symbol symbol-50px">
@@ -31,7 +35,9 @@
 
                     {% comment %} Start: Username {% endcomment %}
                     <div class="d-flex flex-column ms-4">
-                        <div class="fw-bolder d-flex align-items-center fs-5">{{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}</div>
+                        {% load user_full_name %}
+                        {% user_full_name request.user.user as full_name %}
+                        <div class="fw-bolder d-flex align-items-center fs-5">{% if user_full_name is None %}{% include 'relationships/includes/enter_your_name.html' %}{% else %}{% endif %}</div>
                         <div class="fw-bold text-muted fs-7">{{ request.user.user.country.name }}</div>
                     </div>
                     {% comment %} End: Username {% endcomment %}

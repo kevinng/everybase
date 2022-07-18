@@ -5,10 +5,12 @@ Parameters:
 
 {% if user.avatar == None %}
     {% comment %} Use a different color for other users {% endcomment %}
+    {% load user_full_name_initials %}
+    {% user_full_name_initials user as initials %}
     {% if request.user.is_authenticated and request.user.user.id == user.id %}
-        <div class="symbol-label fs-3 bg-light-primary text-primary">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</div>
+        <div class="symbol-label fs-3 bg-light-primary text-primary">{% if initials is None %}?{% else %}{{ initials }}{% endif %}</div>
     {% else %}
-        <div class="symbol-label fs-3 bg-light-info text-info">{{ user.first_name.0|upper }}{{ user.last_name.0|upper }}</div>
+        <div class="symbol-label fs-3 bg-light-info text-info">{% if initials is None %}?{% else %}{{ initials }}{% endif %}</div>
     {% endif %}
 {% else %}
     <img src="{{ user.avatar_thumbnail_url }}" />
