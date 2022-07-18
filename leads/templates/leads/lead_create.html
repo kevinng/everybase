@@ -21,7 +21,7 @@
                 <div class="card-body">
                     <div class="mt-5">
                         <div class="form-floating mt-4 col-lg-6">
-                            <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="What are you looking for?" name="body" id="body">{% if form.body.value != None %}{{ form.body.value }}{% endif %}</textarea>
+                            <textarea class="form-control" data-kt-autosize="true" placeholder="What are you looking for?" name="body" id="body">{% if form.body.value != None %}{{ form.body.value }}{% endif %}</textarea>
                             <label for="body">What are you looking for?</label>
                         </div>
                         {% if form.body.errors %}<div class="text-danger">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
