@@ -447,6 +447,21 @@ $(document).ready(function() {
     via_wechat.click(function() {
         toggle_via_wechat_id_div()
     })
+
+    // Hide all lead body
+    lead_bodies = $('.lead_body')
+    lead_bodies.hide()
+
+    show_more_lead_bodies = $('.show_more_lead_body')
+    show_more_lead_bodies.click(function () {
+        // Hide button
+        $(this).hide()
+
+        // Hide preview and show full lead body
+        lead_body_preview = $(this).parent()
+        lead_body_preview.siblings('.lead_body').toggle()
+        lead_body_preview.toggle()
+    })
 })
 
 // These functions are triggered by onclick, and have to be outside document.ready to work.
@@ -484,6 +499,5 @@ function flag_lead(lead_id, type, button_id, badge_id) {
 {% endcomment %}
 {% block page_custom_javascript %}
 <script src="{% static 'leads/js/home.js' %}"></script>
-<script>$(document).ready((function(){sourcing=$("#sourcing"),promoting=$("#promoting"),need_logistics=$("#need_logistics"),sourcing_agent=$("#sourcing_agent"),sales_agent=$("#sales_agent"),logistics_agent=$("#logistics_agent"),other=$("#other"),sm_sourcing=$("#sm_sourcing"),sm_promoting=$("#sm_promoting"),sm_need_logistics=$("#sm_need_logistics"),sm_sourcing_agent=$("#sm_sourcing_agent"),sm_sales_agent=$("#sm_sales_agent"),sm_logistics_agent=$("#sm_logistics_agent"),sm_other=$("#sm_other"),search_form=$("#search_form"),reduce_spams_and_scams=$("#reduce_spams_and_scams"),user_country=$("#user_country"),user_country_verified=$("#user_country_verified");var s=document.querySelector("#search_form"),e=new KTBlockUI(s);function _(){search_form.submit(),e.block()}function c(s,e){e.change((function(){s.prop("checked",this.checked),_()})),s.change((function(){e.prop("checked",this.checked),_()}))}function i(){via_wechat.is(":checked")?via_wechat_id_div.show():via_wechat_id_div.hide()}c(sourcing,sm_sourcing),c(promoting,sm_promoting),c(need_logistics,sm_need_logistics),c(sourcing_agent,sm_sourcing_agent),c(sales_agent,sm_sales_agent),c(logistics_agent,sm_logistics_agent),c(other,sm_other),reduce_spams_and_scams.change((function(){_()})),user_country_verified.change((function(){_()})),user_country.change((function(){_()})),via_wechat_id_div=$("#via_wechat_id_div"),via_wechat=$("#via_wechat"),i(),via_wechat.click((function(){i()}))}));</script>
 <script>function flag_lead(l,a,g,s){url="","spam"==a?url="{% url 'leads:flag_spam' %}":"scam"==a&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:l},(function(l,t){btn=$("#"+g),bdg=$("#"+s),"spam"==a?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(l.num_spam_flags)):(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(l.num_scam_flags))}))}</script>
 {% endblock %}
