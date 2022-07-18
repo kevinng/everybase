@@ -1,4 +1,7 @@
+import requests, json
 from phonenumber_field.formfields import PhoneNumberField
+
+from everybase import settings
 
 from django import forms
 from common.utilities.is_censored import is_censored
@@ -7,6 +10,21 @@ from django.core.exceptions import ValidationError
 from leads import models
 from relationships.utilities.get_or_create_email import get_or_create_email
 from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
+
+_recaptcha_failed_msg = "We suspect you're a bot. Please wait a short while before posting."
+
+def _verify_recaptcha(form):
+    recaptcha_response = form.request.POST.get('g-recaptcha-response')
+    recaptcha_call = requests.post(settings.RECAPTCHA_VERIFICATION_URL, params={
+        'secret': settings.RECAPTCHA_SECRET_KEY,
+        'response': recaptcha_response
+    })
+    recaptcha_results = json.loads(recaptcha_call.text)
+    recaptcha_success = recaptcha_results.get('success')
+    recaptcha_score = recaptcha_results.get('score')
+    if (recaptcha_success is not True or recaptcha_score is None) or\
+        float(recaptcha_score) < float(settings.RECAPTCHA_THRESHOLD):
+        form.add_error(None, _recaptcha_failed_msg)
 
 class SignUpSearchNotification(forms.Form):
     first_name = forms.CharField()
@@ -23,8 +41,16 @@ class LeadForm(forms.Form):
     body = forms.CharField()
     lead_type = forms.CharField()
 
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+
     def clean(self):
         super(LeadForm, self).clean()
+
+        _verify_recaptcha(self)
+        
         if is_censored(self.cleaned_data.get('body')):
             raise ValidationError({'body': ["Don't include contact details. You'll receive email and phone number - when someone contacts you.",]})
 
@@ -68,10 +94,13 @@ class ContactLeadForm(forms.Form):
     def __init__(self, *args, **kwargs):
         # Make request object passed in a class variable
         self.lead = kwargs.pop('lead')
+        self.request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
 
     def clean(self):
         super(ContactLeadForm, self).clean()
+        
+        _verify_recaptcha(self)
 
         via_wechat = self.cleaned_data.get('via_wechat')
         via_wechat_id = self.cleaned_data.get('via_wechat_id')

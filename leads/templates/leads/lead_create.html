@@ -1,5 +1,7 @@
 {% extends 'extendables/b.html' %}
 
+{% load static %}
+
 {% block title %}Post Lead{% endblock %}
 {% block page_title %}Post Lead{% endblock %}
 {% block page_subtitle %}Find importers, exporters, buyers, sellers, agents and more.{% endblock %}
@@ -9,7 +11,7 @@
 {% endblock %}
 
 {% block content_body %}
-<form action="{% url 'leads:lead_create' %}" method="post">
+<form action="{% url 'leads:lead_create' %}" method="post" id="lead_create_form">
     {% csrf_token %}
     <div class="post d-flex flex-column-fluid" id="kt_post">
         {% comment %} Start: Container {% endcomment %}
@@ -89,16 +91,36 @@
 
                         {% if form.lead_type.errors %}<div class="text-danger mt-2">{% for error in form.lead_type.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                     </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="mt-6">
+                        {% for err in form.non_field_errors %}
+                            <div class="text-danger mt-2">{{ err }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
                 {% comment %} End: Card body {% endcomment %}
                 
                 <div class="card-footer d-flex justify-content-end py-6 px-9">
                     <a href="{% url 'home' %}" class="btn btn-light btn-active-light-primary me-2">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Post</button>
+                    <button type="submit" class="btn btn-primary g-recaptcha"
+                        data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
+                        data-callback="leadCreateFormOnSubmit" 
+                        data-action="submit">Post</button>
                 </div>
             </div>
         </div>
         {% comment %} End: Container {% endcomment %}
     </div>
 </form>
+{% endblock %}
+
+{% comment %}
+function leadCreateFormOnSubmit(token) {
+    document.getElementById("lead_create_form").submit()
+}
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'leads/js/lead_create.js' %}"></script>
 {% endblock %}

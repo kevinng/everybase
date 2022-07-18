@@ -84,7 +84,10 @@ def _set_wechat_bodies(params, contact):
 
 def contact_lead(request, id):
     lead = models.Lead.objects.get(pk=id)
-    kwargs = {'lead': lead}
+    kwargs = {
+        'lead': lead,
+        'request': request
+    }
     cookie_uuid, _ = get_or_create_cookie_uuid(request)
 
     if request.method == 'POST':
@@ -175,8 +178,9 @@ def contact_lead(request, id):
 
 @login_required
 def lead_create(request):
+    kwargs = {'request': request}
     if request.method == 'POST':
-        form = forms.LeadForm(request.POST)
+        form = forms.LeadForm(request.POST, **kwargs)
         if form.is_valid():
             lead = models.Lead.objects.create(
                 author=request.user.user,
@@ -196,7 +200,7 @@ def lead_create(request):
 
             return HttpResponseRedirect(reverse('leads:lead_created_success', args=(lead.id,)))
     elif request.method == 'GET':
-        form = forms.LeadForm()
+        form = forms.LeadForm(**kwargs)
 
     return render(request, 'leads/lead_create.html', {'form': form})
 

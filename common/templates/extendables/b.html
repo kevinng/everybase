@@ -16,6 +16,10 @@
 		<meta property="og:url" content="{% block og_url %}https://everybase.co{% endblock %}"/>
 		<meta property="og:site_name" content="Everybase"/>
 		<link rel="shortcut icon" href="{% static 'common/demo1/dist/assets/media/logos/favicon_everybase.ico' %}"/>
+
+        {% comment %} Resource hints to reduce the amount of time it takes to deliver resources used by ReCaptcha {% endcomment %}
+        <link rel="preconnect" href="https://www.google.com">
+        <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 		
         {% comment %} Start: Fonts {% endcomment %}
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"/>
@@ -189,6 +193,10 @@
 		<script src="{% static 'common/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
 		<script src="{% static 'common/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
         {% comment %} End: Global Javascript bundle {% endcomment %}
+
+        {% comment %} Start: ReCaptcha import {% endcomment %}
+        <script async src="https://www.google.com/recaptcha/api.js"></script>
+        {% comment %} End: ReCaptcha import {% endcomment %}
 
         {% comment %} Start: Page vendors Javascript {% endcomment %}
         {% block page_vendor_javascript %}{% endblock %}

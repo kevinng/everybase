@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content_body %}
-<form action="{% url 'leads:contact_lead' lead.id %}" method="post">
+<form action="{% url 'leads:contact_lead' lead.id %}" method="post" id="contact_lead_form">
 {% csrf_token %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
     <div id="kt_content_container" class="container-xxl">
@@ -210,11 +210,22 @@
                     </div>
 
                 {% endif %}
+
+                {% if form.non_field_errors %}
+                    <div class="mt-6">
+                    {% for err in form.non_field_errors %}
+                        <div class="text-danger mt-2">{{ err }}</div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
             <div class="card-footer">
                 <div class="d-flex flex-row-reverse mt-4">
-                    <button type="submit" class="btn btn-primary">Contact</button>
+                    <button type="submit" class="btn btn-primary g-recaptcha"
+                        data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
+                        data-callback="contactLeadFormOnSubmit" 
+                        data-action="submit">Contact</button>
                 </div>
             </div>
         </div>
@@ -242,6 +253,11 @@ $(document).ready(function() {
         toggle_via_wechat_id_div()
     })
 })
+
+// ReCaptcha callback functions - outside $(document).ready.
+function contactLeadFormOnSubmit(token) {
+    document.getElementById("contact_lead_form").submit()
+}
 {% endcomment %}
 {% block page_custom_javascript %}
 <script src="{% static 'leads/js/contact_lead.js' %}"></script>
