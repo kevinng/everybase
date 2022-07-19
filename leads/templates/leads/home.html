@@ -302,7 +302,7 @@
             <div class="d-flex align-items-center">
                 <div class="col-lg-3 col-6">
                     <select class="form-select" data-control="select2" data-placeholder="Filter User Country" name='user_country' id="user_country" data-allow-clear="true">
-                        <option value="any_country"{% if form.country.value == 'any_country' %} selected{% endif %}>Any Country</option>
+                        <option value="any_country"{% if form.country.value == 'any_country' %} selected{% endif %}>Any User Country</option>
                         {% for country in countries %}
                             <option value="{{ country.programmatic_key }}"{% if user_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
                         {% endfor %}
