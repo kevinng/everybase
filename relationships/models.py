@@ -541,7 +541,7 @@ class User(commods.Standard):
 class LoginAction(commods.Standard):
     """Login action.
 
-    Last updated: 14 July 2022, 9:52 PM
+    Last updated: 19 July 2022, 2:38 PM
     """
     user = models.ForeignKey(
         'User',
@@ -561,7 +561,8 @@ class LoginAction(commods.Standard):
     type = models.CharField(
         max_length=20,
         choices=[
-            ('standard', 'Standard'),
+            ('email', 'Email'),
+            ('whatsapp', 'WhatsApp'),
             ('magic', 'Magic')
         ],
         db_index=True

@@ -116,7 +116,7 @@ def confirm_email_login(request):
                 models.LoginAction.objects.create(
                     user=user,
                     cookie_uuid=cookie_uuid,
-                    type='standard'
+                    type='email'
                 )
                 response = _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
                 return set_cookie_uuid(response, cookie_uuid)
@@ -153,7 +153,7 @@ def confirm_whatsapp_login(request):
                 models.LoginAction.objects.create(
                     user=user,
                     cookie_uuid=cookie_uuid,
-                    type='standard'
+                    type='whatsapp'
                 )
                 response = _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
                 return set_cookie_uuid(response, cookie_uuid)
