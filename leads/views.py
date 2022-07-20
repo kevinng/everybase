@@ -1,6 +1,7 @@
 import pytz, datetime
 from urllib.parse import urljoin
 from common.tasks.send_email import send_email
+from common.tasks.identify_amplitude_user import identify_amplitude_user
 
 from django.urls import reverse
 from django.db.models import Count, Q, F, DateTimeField
@@ -215,6 +216,12 @@ def lead_create(request):
                 author=request.user.user,
                 body=form.cleaned_data.get('body'),
                 lead_type=form.cleaned_data.get('lead_type')
+            )
+
+            user = request.user.user
+            identify_amplitude_user.delay(
+                user_id=user.uuid,
+                user_properties={'num leads created': user.num_leads()}
             )
 
             send_amplitude_event.delay(
@@ -629,7 +636,7 @@ def flag_scam(request):
 
 # from everybase import settings
 
-# from common.tasks.identify_amplitude_user import identify_amplitude_user
+
 
 
 
