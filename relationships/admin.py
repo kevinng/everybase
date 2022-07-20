@@ -245,6 +245,18 @@ class LoginActionAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
+_magic_login_redirect_fields = ['uuid', 'next']
+@admin.register(models.MagicLinkRedirect)
+class MagicLoginRedirectAdmin(comadm.StandardAdmin):
+    list_display = comadm.standard_list_display + _magic_login_redirect_fields
+    list_editable = [] # Speed up loading
+    search_fields = comadm.standard_search_fields + _magic_login_redirect_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _magic_login_redirect_fields})
+    ]
+
 # _user_detail_views_fields = ['viewee', 'viewer', 'comments_view_count',
 #     'leads_view_count']
 # @admin.register(models.UserDetailView)

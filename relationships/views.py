@@ -397,8 +397,14 @@ def magic_login(request, uuid):
         dju = authenticate(uuid)
         if dju is not None:
             login(request, dju)
+
+    next_url = request.GET.get('next')
+    models.MagicLinkRedirect.objects.create(
+        uuid=uuid,
+        next=next_url
+    )
     
-    return _next_or_else_response(request.GET.get('next'), reverse('home'))
+    return _next_or_else_response(next_url, reverse('home'))
 
 def log_out(request):
     logout(request)
@@ -699,8 +705,6 @@ def log_out(request):
 
 #     template_name = 'relationships/superio/register.html'
 #     return TemplateResponse(request, template_name, params)
-
-
 
 # @login_required
 # def profile(request):

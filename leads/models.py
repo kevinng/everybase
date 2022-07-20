@@ -739,7 +739,6 @@ class LeadFlag(Standard):
 
 
 
-
 # Not in use
 
 class Application(Standard):

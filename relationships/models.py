@@ -571,6 +571,32 @@ class LoginAction(commods.Standard):
         db_index=True
     )
 
+class MagicLinkRedirect(commods.Standard):
+    """Magic link redirect.
+
+    Last updated: 20 July 2022, 2:59 PM
+    """
+    user = models.ForeignKey(
+        'relationships.User',
+        related_name='magic_link_redirects',
+        related_query_name='magic_link_redirects',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    uuid = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    next = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
 
 
 
