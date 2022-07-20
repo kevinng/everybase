@@ -447,21 +447,6 @@ $(document).ready(function() {
     via_wechat.click(function() {
         toggle_via_wechat_id_div()
     })
-
-    // Hide all lead body
-    lead_bodies = $('.lead_body')
-    lead_bodies.hide()
-
-    show_more_lead_bodies = $('.show_more_lead_body')
-    show_more_lead_bodies.click(function () {
-        // Hide button
-        $(this).hide()
-
-        // Hide preview and show full lead body
-        lead_body_preview = $(this).parent()
-        lead_body_preview.siblings('.lead_body').toggle()
-        lead_body_preview.toggle()
-    })
 })
 
 // These functions are triggered by onclick, and have to be outside document.ready to work.
@@ -500,4 +485,23 @@ function flag_lead(lead_id, type, button_id, badge_id) {
 {% block page_custom_javascript %}
 <script src="{% static 'leads/js/home.js' %}"></script>
 <script>function flag_lead(l,a,g,s){url="","spam"==a?url="{% url 'leads:flag_spam' %}":"scam"==a&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:l},(function(l,t){btn=$("#"+g),bdg=$("#"+s),"spam"==a?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(l.num_spam_flags)):(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(l.num_scam_flags))}))}</script>
+{% comment %}
+$(document).ready(function() {
+    // Hide all lead body
+    lead_bodies = $('.lead_body')
+    lead_bodies.hide()
+
+    show_more_lead_bodies = $('.show_more_lead_body')
+    show_more_lead_bodies.click(function () {
+        // Hide button
+        $(this).hide()
+
+        // Hide preview and show full lead body
+        lead_body_preview = $(this).parent()
+        lead_body_preview.siblings('.lead_body').toggle()
+        lead_body_preview.toggle()
+    })
+})
+{% endcomment %}
+<script src="{% static 'leads/js/lead_item.js' %}"></script>
 {% endblock %}

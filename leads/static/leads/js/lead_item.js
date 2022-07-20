@@ -1,0 +1,1 @@
+$(document).ready((function(){lead_bodies=$(".lead_body"),lead_bodies.hide(),show_more_lead_bodies=$(".show_more_lead_body"),show_more_lead_bodies.click((function(){$(this).hide(),lead_body_preview=$(this).parent(),lead_body_preview.siblings(".lead_body").toggle(),lead_body_preview.toggle()}))}));

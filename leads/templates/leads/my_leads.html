@@ -50,47 +50,5 @@
 {% endblock %}
 
 {% block page_custom_javascript %}
-{% comment %}
-Code to render the clipboard Javascript for each lead item after the Javascripts dependencies have been imported.
-We cannot minify this code, even if we use replacement tokens, because the minifier assumes there's only 1 instance of this code, and replace the tokened-code in minification.
-We minify the code manually by removing all newlines and spaces, preserving ';'.
-
-$(document).ready(function() {
-    // Select elements
-    const lead_{{ lead.id }}_target = document.getElementById('lead_{{ lead.id }}_clipboard');
-    const lead_{{ lead.id }}_button = lead_{{ lead.id }}_target.nextElementSibling;
-
-    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
-    var lead_{{ lead.id }}_clipboard = new ClipboardJS(lead_{{ lead.id }}_button, {
-        target: lead_{{ lead.id }}_target,
-        text: function() {
-            return lead_{{ lead.id }}_target.value;
-        }
-    });
-
-    // Success action handler
-    lead_{{ lead.id }}_clipboard.on('success', function(e) {
-        const currentLabel = lead_{{ lead.id }}_button.innerHTML;
-
-        // Exit label update when already in progress
-        if(lead_{{ lead.id }}_button.innerHTML === 'Copied!'){
-            return;
-        }
-
-        // Update button label
-        lead_{{ lead.id }}_button.innerHTML = 'Copied!';
-
-        // Revert button label after 3 seconds
-        setTimeout(function(){
-            lead_{{ lead.id }}_button.innerHTML = currentLabel;
-        }, 3000)
-    });
-
-})
-{% endcomment %}
-{% for lead in request.user.user.leads_with_author.all %}
-<script>
-$(document).ready(function() {const lead_{{ lead.id }}_target=document.getElementById('lead_{{ lead.id }}_clipboard');const lead_{{ lead.id }}_button=lead_{{ lead.id }}_target.nextElementSibling;var lead_{{ lead.id }}_clipboard=new ClipboardJS(lead_{{ lead.id }}_button, {target:lead_{{ lead.id }}_target,text:function(){return lead_{{ lead.id }}_target.value;}});lead_{{ lead.id }}_clipboard.on('success',function(e){const currentLabel=lead_{{ lead.id }}_button.innerHTML;if(lead_{{ lead.id }}_button.innerHTML==='Copied!'){return;}lead_{{ lead.id }}_button.innerHTML = 'Copied!';setTimeout(function(){lead_{{ lead.id }}_button.innerHTML=currentLabel;},3000)});})
-</script>
-{% endfor %}
+<script src="{% static 'leads/js/lead_item.js' %}"></script>
 {% endblock %}
