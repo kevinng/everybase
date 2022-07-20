@@ -1,4 +1,4 @@
-import requests
+import requests, json
 from celery import shared_task
 from everybase import settings
 
@@ -8,12 +8,12 @@ def identify_amplitude_user(user_id, user_properties):
         settings.AMPLITUDE_API_KEY.strip() == '':
         return None
 
-    # Amplitude posting function
+    user_properties_str = str(json.dumps(user_properties))
+    
     def post_amplitude():
-        return requests.post('https://api2.amplitude.com/identify', json={
+        return requests.post(settings.AMPLITUDE_IDENTIFY_URL, headers={}, files=[], data={
             'api_key': settings.AMPLITUDE_API_KEY,
-            'user_id': user_id,
-            'user_properties': user_properties
+            'identification': f'[{{"user_id":"{str(user_id)}","user_properties":{user_properties_str}}}]'
         })
 
     # Retry once if failed.
