@@ -80,6 +80,9 @@ class PhoneNumber(commods.Standard):
     def __str__(self):
         return f'+{self.country_code} {self.national_number}'
 
+    def value(self):
+        return f'+{self.country_code} {self.national_number}'
+
     class Meta:
         unique_together = ['country_code', 'national_number']
 

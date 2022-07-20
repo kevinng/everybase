@@ -168,7 +168,6 @@ def contact_lead(request, id):
         initial = {}
 
         # Populate form with last contact's details
-
         last_contact = models.Contact.objects\
             .filter(cookie_uuid=cookie_uuid)\
             .order_by('-created')\
@@ -183,6 +182,14 @@ def contact_lead(request, id):
             initial['via_wechat'] = last_contact.via_wechat
             initial['via_wechat_id'] = last_contact.via_wechat_id
             initial['country'] = last_contact.country.programmatic_key
+        elif request.user.is_authenticated:
+            # Populate form with user's profile details if no last contact is found but the user is authenticated
+            user = request.user.user
+            initial['first_name'] = user.first_name
+            initial['last_name'] = user.last_name
+            initial['email'] = user.email.email if user.email is not None else None
+            initial['phone_number'] = user.phone_number.value() if user.phone_number is not None else None
+            initial['country'] = user.country.programmatic_key if user.country is not None else None
 
         form = forms.ContactLeadForm(initial=initial, **kwargs)
 
