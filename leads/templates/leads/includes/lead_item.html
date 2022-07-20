@@ -25,7 +25,7 @@ Parameters:
     <div class="card-body">
         <div class="text-dark">
             {% comment %} Note: preview has no line breaks {% endcomment %}
-            <div class="lead_body_preview">{{ lead.body|truncatechars:50 }}{% if lead.body|length > 50 %} <span class="text-primary cursor-pointer show_more_lead_body">Show More</span>{% endif %}</div>
+            <div class="lead_body_preview" data-lead-id="{{ lead.id }}">{{ lead.body|truncatechars:50 }}{% if lead.body|length > 50 %} <span class="text-primary cursor-pointer show_more_lead_body">Show More</span>{% endif %}</div>
             <div class="lead_body">{{ lead.body|linebreaks }}</div>
         </div>
         <div class="d-flex justify-content-between mt-2">

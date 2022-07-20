@@ -500,6 +500,11 @@ $(document).ready(function() {
         lead_body_preview = $(this).parent()
         lead_body_preview.siblings('.lead_body').toggle()
         lead_body_preview.toggle()
+
+        lead_id = lead_body_preview.attr("data-lead-id")
+
+        // Log event
+        amplitude.getInstance().logEvent('discovery - showed more lead body', { 'lead_id': lead_id })
     })
 })
 {% endcomment %}
