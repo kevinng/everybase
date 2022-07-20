@@ -1,4 +1,4 @@
-import pytz, phonenumbers, random, urllib
+import pytz, urllib
 from leads.utilities.set_cookie_uuid import set_cookie_uuid
 from leads.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
 from datetime import datetime
@@ -7,7 +7,6 @@ from ratelimit.decorators import ratelimit
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.db.models import Count
-from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -15,8 +14,6 @@ from django.contrib.auth.models import User as DjangoUser
 from django.template.response import TemplateResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
 
 from everybase import settings
 
@@ -25,9 +22,6 @@ from common.tasks.send_email import send_email
 from common.tasks.send_amplitude_event import send_amplitude_event
 from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
-
-from chat.tasks._archive.send_welcome_message import send_welcome_message
-from chat.tasks.send_confirm_login import send_confirm_login
 
 from relationships import forms, models
 from relationships.tasks import send_email_code
@@ -149,7 +143,6 @@ def confirm_whatsapp_login(request):
                 login(request, dju)
                 send_amplitude_event.delay('account - logged in', user_uuid=user.uuid, ip=get_ip_address(request))
                 cookie_uuid, _ = get_or_create_cookie_uuid(request)
-                print(cookie_uuid)
                 models.LoginAction.objects.create(
                     user=user,
                     cookie_uuid=cookie_uuid,
@@ -433,7 +426,11 @@ def log_out(request):
 
 
 
-
+# import pytz, phonenumbers, random, urllib
+# from django.core.validators import validate_email
+# from django.core.exceptions import ValidationError
+# from chat.tasks._archive.send_welcome_message import send_welcome_message
+# from chat.tasks.send_confirm_login import send_confirm_login
 
 # def m(request, file_to_render):
 #     template_name = 'relationships/superio/%s' % file_to_render

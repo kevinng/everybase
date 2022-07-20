@@ -1,4 +1,6 @@
 import pytz, datetime
+from urllib.parse import urljoin
+from common.tasks.send_email import send_email
 
 from django.urls import reverse
 from django.db.models import Count, Q, F, DateTimeField
@@ -99,7 +101,7 @@ def contact_lead(request, id):
             country_key = form.cleaned_data.get('country')
             country = commods.Country.objects.get(programmatic_key=country_key)
 
-            models.Contact.objects.create(
+            contact = models.Contact.objects.create(
                 lead=lead,
                 first_name=form.cleaned_data.get('first_name'),
                 last_name=form.cleaned_data.get('last_name'),
@@ -138,6 +140,26 @@ def contact_lead(request, id):
                 to_need_logistics_as_logistics_agent=form.cleaned_data.get('to_need_logistics_as_logistics_agent'),
                 to_need_logistics_as_other=form.cleaned_data.get('to_need_logistics_as_other'),
             )
+
+            # Notify lead author by email
+            if lead.author.email is not None:
+                magic_login = urljoin(settings.BASE_URL, reverse('magic_login', args=(lead.author.uuid,)))
+                contact_details_url = reverse('leads:contact_detail_private_notes', args=(contact.id,))
+                target = f'{magic_login}?next={contact_details_url}'
+                send_email.delay(
+                    render_to_string('relationships/email/new_contact_subject.txt', {
+                        'first_name': contact.first_name,
+                        'last_name': contact.last_name
+                    }),
+                    render_to_string('relationships/email/new_contact.txt', {
+                        'first_name': contact.first_name,
+                        'last_name': contact.last_name,
+                        'lead_body': lead.body,
+                        'contact_details_url': target,
+                    }),
+                    'friend@everybase.co',
+                    [lead.author.email.email]
+                )
 
             messages.info(request, MESSAGE_KEY__CONTACT_SENT)
             return HttpResponseRedirect(reverse('home'))
@@ -599,7 +621,7 @@ def flag_scam(request):
 # from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
 
 # from everybase import settings
-# from common.tasks.send_email import send_email
+
 # from common.tasks.identify_amplitude_user import identify_amplitude_user
 
 
