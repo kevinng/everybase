@@ -2,6 +2,7 @@ import random, uuid
 from urllib.parse import urljoin
 
 from django.db import models
+from django.db.models import Q
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User as django_user
@@ -444,6 +445,19 @@ class User(commods.Standard):
 
     def num_leads(self):
         return lemods.Lead.objects.filter(author=self.id).count()
+
+    def num_contacts(self):
+        if self.email is None and self.phone_number is None:
+            return 0
+
+        q = Q()
+        if self.email is not None:
+            q = q | Q(email=self.email)
+
+        if self.phone_number is not None:
+            q = q | Q(phone_number=self.phone_number)
+
+        return lemods.Contact.objects.filter(q).count()
     
     def leads_order_by_created_desc(self):
         return lemods.Lead.objects.filter(author=self.id).order_by('-created')

@@ -10,7 +10,7 @@ class ContactAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = ['id', 'created', 'lead', 'first_name', 'last_name', 'country', 'email', 'phone_number']
     list_editable = [] # To speed up loading
-    search_fields = comadm.standard_search_fields + ['first_name', 'last_name', 'country__name', 'email', 'phone_number', 'comments', 'session_key', 'via_wechat_id']
+    search_fields = comadm.standard_search_fields + ['first_name', 'last_name', 'country__name', 'email', 'phone_number', 'comments', 'cookie_uuid', 'via_wechat_id']
     list_filter = comadm.standard_list_filter + ['via_whatsapp', 'via_wechat', 'to_selling_as_sales_agent', 'to_selling_as_sourcing_goods',
         'to_selling_as_other', 'to_buying_as_sourcing_agent', 'to_buying_as_promoting_goods', 'to_buying_as_other', 'to_sales_agent_as_seeking_cooperation',
         'to_sales_agent_as_sourcing_goods', 'to_sales_agent_as_other', 'to_sourcing_agent_as_seeking_cooperation', 'to_sourcing_agent_as_promoting_goods',
@@ -24,7 +24,7 @@ class ContactAdmin(comadm.StandardAdmin):
             'to_buying_as_promoting_goods', 'to_buying_as_other', 'to_sales_agent_as_seeking_cooperation', 'to_sales_agent_as_sourcing_goods',
             'to_sales_agent_as_other', 'to_sourcing_agent_as_seeking_cooperation', 'to_sourcing_agent_as_promoting_goods', 'to_sourcing_agent_as_other',
             'to_logistics_agent_as_need_logistics', 'to_logistics_agent_as_other', 'to_need_logistics_as_logistics_agent', 'to_need_logistics_as_other',
-            'comments', 'session_key']}),
+            'comments', 'cookie_uuid']}),
         ('Not in use', {'fields': ['via_telegram', 'via_telegram_username', 'via_line', 'via_line_id', 'via_viber']})]
     autocomplete_fields = ['country', 'lead', 'phone_number', 'email']
 

@@ -162,6 +162,23 @@ def contact_lead(request, id):
                     [lead.author.email.email]
                 )
 
+            if request.user.is_authenticated:
+                user = request.user.user
+                identify_amplitude_user.delay(
+                    user_id=user.uuid,
+                    user_properties={'num leads contacted': user.num_contacts()}
+                )
+
+            send_amplitude_event.delay(
+                'qualification - contacted lead author',
+                user_uuid=lead.author.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'lead id': lead.id,
+                    'lead type': lead.lead_type
+                }
+            )
+
             messages.info(request, MESSAGE_KEY__CONTACT_SENT)
             return HttpResponseRedirect(reverse('home'))
 
@@ -225,7 +242,7 @@ def lead_create(request):
             )
 
             send_amplitude_event.delay(
-                'created lead',
+                'discovery - created lead',
                 user_uuid=lead.author.uuid,
                 ip=get_ip_address(request),
                 event_properties={
