@@ -330,6 +330,19 @@ def redirect_contact_whatsapp(request, id):
             type='whatsapp',
             body=text
         )
+        
+        user = request.user.user
+        identify_amplitude_user.delay(
+            user_id=user.uuid,
+            user_properties={'num whatsapped': user.num_whatsapped()}
+        )
+
+        send_amplitude_event.delay(
+            'qualification - whatsapped',
+            user_uuid=user.uuid,
+            ip=get_ip_address(request),
+            event_properties={'contact id': contact.lead.id}
+        )
 
         url = get_whatsapp_url(contact.phone_number.country_code, contact.phone_number.national_number, text)
         return HttpResponseRedirect(url)
@@ -345,6 +358,19 @@ def redirect_contact_wechat(request, id):
             contact=contact,
             type='wechat',
             body=text
+        )
+
+        user = request.user.user
+        identify_amplitude_user.delay(
+            user_id=user.uuid,
+            user_properties={'num wechatted': user.num_wechatted()}
+        )
+
+        send_amplitude_event.delay(
+            'qualification - wechatted',
+            user_uuid=user.uuid,
+            ip=get_ip_address(request),
+            event_properties={'contact id': contact.lead.id}
         )
 
         class WeixinSchemeRedirect(HttpResponsePermanentRedirect):

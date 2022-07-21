@@ -160,7 +160,7 @@
             <div class="d-flex justify-content-between align-items-center mt-2">
                 <div>
                     {% if show_reset is True %}<a href="{% url 'home' %}" class="btn btn-sm btn-outline btn-outline-primary text-hover-white me-2">Reset</a>{% endif %}
-                    <span class="text-dark fw-bolder">{{ page_obj.paginator.count }} leads found</span>
+                    <span class="text-dark fw-bolder"><span data-kt-countup="true" data-kt-countup-value="{{ page_obj.paginator.count }}">0</span> leads found</span>
                 </div>
                 <div class="form-check form-check-custom">
                     <input class="form-check-input me-2" type="checkbox" name="reduce_spams_and_scams" id="reduce_spams_and_scams"{% if reduce_spams_and_scams == 'on' %} checked{% endif %} />
@@ -473,10 +473,24 @@ function flag_lead(lead_id, type, button_id, badge_id) {
                 btn.toggleClass('btn-warning')
                 btn.toggleClass('text-warning')
                 bdg.html(data['num_spam_flags'])
-            } else {
+
+                amplitude.getInstance().logEvent(
+                    'discovery - flagged lead', {
+                        'lead_id': lead_id,
+                        'type': 'spam'
+                    }
+                )
+            } else if (type == 'scam') {
                 btn.toggleClass('btn-danger')
                 btn.toggleClass('text-danger')
                 bdg.html(data['num_scam_flags'])
+
+                amplitude.getInstance().logEvent(
+                    'discovery - flagged lead', {
+                        'lead_id': lead_id,
+                        'type': 'scam'
+                    }
+                )
             }
         }
     )
@@ -484,7 +498,7 @@ function flag_lead(lead_id, type, button_id, badge_id) {
 {% endcomment %}
 {% block page_custom_javascript %}
 <script src="{% static 'leads/js/home.js' %}"></script>
-<script>function flag_lead(l,a,g,s){url="","spam"==a?url="{% url 'leads:flag_spam' %}":"scam"==a&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:l},(function(l,t){btn=$("#"+g),bdg=$("#"+s),"spam"==a?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(l.num_spam_flags)):(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(l.num_scam_flags))}))}</script>
+<script>function flag_lead(a,l,e,t){url="","spam"==l?url="{% url 'leads:flag_spam' %}":"scam"==l&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:a},(function(g,s){btn=$("#"+e),bdg=$("#"+t),"spam"==l?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(g.num_spam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{lead_id:a,type:"spam"})):"scam"==l&&(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(g.num_scam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{lead_id:a,type:"scam"}))}))}</script>
 {% comment %}
 $(document).ready(function() {
     // Hide all lead body

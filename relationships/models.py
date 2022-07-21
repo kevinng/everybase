@@ -458,6 +458,18 @@ class User(commods.Standard):
             q = q | Q(phone_number=self.phone_number)
 
         return lemods.Contact.objects.filter(q).count()
+
+    def num_whatsapped(self):
+        return lemods.ContactAction.objects.filter(
+            contact__lead__author=self,
+            type='whatsapp'
+        ).count()
+
+    def num_wechatted(self):
+        return lemods.ContactAction.objects.filter(
+            contact__lead__author=self,
+            type='wechat'
+        ).count()
     
     def leads_order_by_created_desc(self):
         return lemods.Lead.objects.filter(author=self.id).order_by('-created')
