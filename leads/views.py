@@ -260,7 +260,10 @@ def lead_create(request):
 @login_required
 def lead_created_success(request, id):
     lead = models.Lead.objects.get(pk=id)
-    return TemplateResponse(request, 'leads/lead_create_success.html', {'contact_lead_url': lead.contact_lead_url})
+    return TemplateResponse(request, 'leads/lead_create_success.html', {
+        'contact_lead_url': lead.contact_lead_url,
+        'lead_id': lead.id
+    })
 
 @login_required
 def lead_detail(request, id):

@@ -131,39 +131,42 @@
 {% comment %}
 $(document).ready(function() {
     // Select elements
-    const lead_target = document.getElementById('lead_clipboard');
-    const lead_button = lead_target.nextElementSibling;
+    const lead_target = document.getElementById('lead_clipboard')
+    const lead_button = lead_target.nextElementSibling
 
     // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
     var lead_clipboard = new ClipboardJS(lead_button, {
         target: lead_target,
         text: function() {
-            return lead_target.value;
+            return lead_target.value
         }
-    });
+    })
 
     // Success action handler
     lead_clipboard.on('success', function(e) {
-        const currentLabel = lead_button.innerHTML;
+        const currentLabel = lead_button.innerHTML
 
         // Exit label update when already in progress
         if(lead_button.innerHTML === 'Copied!'){
-            return;
+            return
         }
 
         // Update button label
-        lead_button.innerHTML = 'Copied!';
+        lead_button.innerHTML = 'Copied!'
 
         // Revert button label after 3 seconds
         setTimeout(function(){
-            lead_button.innerHTML = currentLabel;
+            lead_button.innerHTML = currentLabel
         }, 3000)
-    });
 
+        amplitude.getInstance().logEvent(
+            'qualification - copied lead link', {
+                'lead id': '{{ lead.id }}'
+            }
+        )
+    })
 })
 {% endcomment %}
 {% block page_custom_javascript %}
-<script>
-$(document).ready((function(){const n=document.getElementById("lead_clipboard"),e=n.nextElementSibling;new ClipboardJS(e,{target:n,text:function(){return n.value}}).on("success",(function(n){const t=e.innerHTML;"Copied!"!==e.innerHTML&&(e.innerHTML="Copied!",setTimeout((function(){e.innerHTML=t}),3e3))}))}));
-</script>
+<script>$(document).ready((function(){const e=document.getElementById("lead_clipboard"),n=e.nextElementSibling;new ClipboardJS(n,{target:e,text:function(){return e.value}}).on("success",(function(e){const t=n.innerHTML;"Copied!"!==n.innerHTML&&(n.innerHTML="Copied!",setTimeout((function(){n.innerHTML=t}),3e3),amplitude.getInstance().logEvent("qualification - copied lead link",{"lead id":"{{ lead.id }}"}))}))}));</script>
 {% endblock %}
