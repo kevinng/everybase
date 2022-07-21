@@ -105,7 +105,17 @@ def confirm_email_login(request):
             dju = authenticate(user.django_user.username) # Passwordless
             if dju is not None:
                 login(request, dju)
-                send_amplitude_event.delay('account - logged in', user_uuid=form.user.uuid, ip=get_ip_address(request))
+                
+                send_amplitude_event.delay(
+                    'account - logged in',
+                    user_uuid=form.user.uuid,
+                    ip=get_ip_address(request),
+                    event_properties={
+                        'login type': 'email',
+                        'next': form.cleaned_data.get('next')
+                    }
+                )
+
                 cookie_uuid, _ = get_or_create_cookie_uuid(request)
                 models.LoginAction.objects.create(
                     user=user,
@@ -141,7 +151,17 @@ def confirm_whatsapp_login(request):
             dju = authenticate(user.django_user.username) # Passwordless
             if dju is not None:
                 login(request, dju)
-                send_amplitude_event.delay('account - logged in', user_uuid=user.uuid, ip=get_ip_address(request))
+
+                send_amplitude_event.delay(
+                    'account - logged in',
+                    user_uuid=form.user.uuid,
+                    ip=get_ip_address(request),
+                    event_properties={
+                        'login type': 'whatsapp',
+                        'next': form.cleaned_data.get('next')
+                    }
+                )
+
                 cookie_uuid, _ = get_or_create_cookie_uuid(request)
                 models.LoginAction.objects.create(
                     user=user,
