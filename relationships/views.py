@@ -222,11 +222,28 @@ def register(request):
                 [user.email.email]
             )
 
+            identify_amplitude_user.delay(
+                user_id=user.uuid,
+                user_properties={
+                    'country': user.country.programmatic_key,
+                    'phone number country code': user.phone_number.country_code
+                }
+            )
+
+            send_amplitude_event.delay(
+                'account - registered',
+                user_uuid=user.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'country': user.country.programmatic_key,
+                    'phone number country code': user.phone_number.country_code
+                }
+            )
+
             # Verify WhatsApp number if user enabled WhatsApp
             if form.cleaned_data.get('enable_whatsapp') == True:
                 return HttpResponseRedirect(reverse('users:verify_whatsapp'))
 
-            send_amplitude_event.delay('account - registered', user_uuid=user.uuid, ip=get_ip_address(request))
             return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
     else:
         form = forms.RegisterForm()
@@ -279,14 +296,16 @@ def profile_settings(request):
         'enable_whatsapp': user.enable_whatsapp
     }
 
+    # Default email if user's email is set
     if user.email is not None:
         inputs['email'] = user.email.email
 
+    # Default phone number if user's phone number is set
     if user.phone_number is not None:
         inputs['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
 
     if request.method == 'POST':
-        # Override with relevant values depending on the button clicked
+        # Override form with relevant values depending on the button clicked, so only relevant fields are updated.
         if request.POST.get('update_profile') == 'update_profile':
             inputs['first_name'] = request.POST.get('first_name')
             inputs['last_name'] = request.POST.get('last_name')
@@ -307,6 +326,12 @@ def profile_settings(request):
         if form.is_valid():
             if request.POST.get('update_profile') == 'update_profile':
                 user = request.user.user
+
+                # Record old values
+                old_first_name = user.first_name
+                old_last_name = user.last_name
+                old_country_key = user.country.programmatic_key if user.country is not None else None
+
                 user.first_name = form.cleaned_data.get('first_name')
                 user.last_name = form.cleaned_data.get('last_name')
                 
@@ -320,6 +345,30 @@ def profile_settings(request):
                 user.country = country
                 user.save()
                 messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PROFILE_UPDATE_SUCCESS)
+
+                identify_amplitude_user.delay(
+                    user_id=user.uuid,
+                    user_properties={
+                        'country': user.country.programmatic_key,
+                        'phone number country code': user.phone_number.country_code
+                    }
+                )
+
+                amplitude_event_properties = {}
+                amplitude_event_properties['old first name'] = old_first_name
+                amplitude_event_properties['new first name'] = user.first_name
+                amplitude_event_properties['old last name'] = old_last_name
+                amplitude_event_properties['new last name'] = user.last_name
+                if old_country_key is not None:
+                    amplitude_event_properties['old country'] = old_country_key
+                amplitude_event_properties['new country'] = user.country.programmatic_key
+
+                send_amplitude_event.delay(
+                    'account - updated profile',
+                    user_uuid=user.uuid,
+                    ip=get_ip_address(request),
+                    event_properties=amplitude_event_properties
+                )
 
             elif request.POST.get('update_email') == 'update_email':
                 if (user.email is None or user.email.email != form.cleaned_data.get('email').strip()):
@@ -364,13 +413,26 @@ def update_email(request):
         if form.is_valid():
             # Validate email, in case it has been tempered
             email = form.cleaned_data.get('email')
+            old_email = user.email.email if user.email is not None else None
             if not email_exists(email):
                 user.email, _ = models.Email.objects.get_or_create(email=email)
                 user.save()
                 messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__EMAIL_UPDATE_SUCCESS)
+
+                event_properties = {}
+                if old_email is not None:
+                    event_properties['old email'] = old_email
+                event_properties['new email'] = user.email.email
+            
+                send_amplitude_event.delay(
+                    'account - updated email',
+                    user_uuid=user.uuid,
+                    ip=get_ip_address(request),
+                    event_properties=event_properties
+                )
             else:
                 messages.add_message(request, messages.ERROR, MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN)
-            
+
             return HttpResponseRedirect(reverse('users:settings'))
     else:
         email = request.GET.get('email')
@@ -389,13 +451,33 @@ def update_phone_number(request):
         if form.is_valid():
             # Validate phone number, in case it has been tempered
             phone_number = form.cleaned_data.get('phone_number')
-            enable_whatsapp = form.cleaned_data.get('enable_whatsapp') == 'True'
+            enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
+
+            # Record old values
+            old_phone_number = user.phone_number.value() if user.phone_number is not None else None
+            old_enable_whatsapp = user.enable_whatsapp
+
             if phone_number_exists(phone_number) is not None:
                 # User is changing phone_number and/or enable_whatsapp
                 user.enable_whatsapp = enable_whatsapp
                 user.phone_number = get_or_create_phone_number(phone_number)
                 user.save()
                 messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS)
+
+                event_properties = {}
+                if old_phone_number is not None:
+                    event_properties['old phone number'] = old_phone_number
+                event_properties['new phone number'] = user.phone_number.value()
+                if old_enable_whatsapp is not None:
+                    event_properties['old enable whatsapp'] = old_enable_whatsapp
+                event_properties['new enable whatsapp'] = user.enable_whatsapp
+            
+                send_amplitude_event.delay(
+                    'account - updated phone number',
+                    user_uuid=user.uuid,
+                    ip=get_ip_address(request),
+                    event_properties=event_properties
+                )
             else:
                 messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN)
 
@@ -429,6 +511,7 @@ def magic_login(request, uuid):
 def log_out(request):
     logout(request)
     return _next_or_else_response(request.GET.get('next'), reverse('home'))
+
 
 
 

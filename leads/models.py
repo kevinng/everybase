@@ -956,13 +956,18 @@ class LeadQueryAction(Standard):
         blank=True,
         db_index=True
     )
-
+    reduce_spams_and_scams = models.BooleanField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
     search_phrase = models.CharField(
         max_length=200,
         null=True,
         blank=True,
         db_index=True
     )
+
     user_country = models.CharField(
         max_length=200,
         null=True,

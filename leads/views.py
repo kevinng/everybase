@@ -494,6 +494,7 @@ def lead_list(request):
         user=user,
         cookie_uuid=cookie_uuid,
         search_phrase=search_phrase,
+        reduce_spams_and_scams=reduce_spams_and_scams=='on',
         user_country=user_country,
         user_country_verified=user_country_verified=='on',
         sourcing=sourcing=='on',
@@ -506,6 +507,27 @@ def lead_list(request):
     )
 
     _page_obj(params, leads, request.GET.get('page'), items_per_page=50)
+    
+    event_properties = {
+        'search phrase': search_phrase,
+        'reduce spams and scams': reduce_spams_and_scams=='on',
+        'sourcing goods': sourcing=='on',
+        'promoting goods': promoting=='on',
+        'need logistics': need_logistics=='on',
+        'sourcing agent': sourcing_agent=='on',
+        'sales agent': sales_agent=='on',
+        'logistics agent': logistics_agent=='on',
+        'other': other=='on',
+        'user country': user_country,
+        'user country verified': user_country_verified=='on',
+        'page': params['page_obj'].number
+    }
+    send_amplitude_event.delay(
+        'discovery - searched leads',
+        user_uuid=user.uuid,
+        ip=get_ip_address(request),
+        event_properties=event_properties
+    )
 
     # Increment impression of all leads on this page
     for lead in params['page_obj']:
