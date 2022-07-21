@@ -476,7 +476,7 @@ function flag_lead(lead_id, type, button_id, badge_id) {
 
                 amplitude.getInstance().logEvent(
                     'discovery - flagged lead', {
-                        'lead_id': lead_id,
+                        'lead id': lead_id,
                         'type': 'spam'
                     }
                 )
@@ -487,7 +487,7 @@ function flag_lead(lead_id, type, button_id, badge_id) {
 
                 amplitude.getInstance().logEvent(
                     'discovery - flagged lead', {
-                        'lead_id': lead_id,
+                        'lead id': lead_id,
                         'type': 'scam'
                     }
                 )
@@ -498,7 +498,7 @@ function flag_lead(lead_id, type, button_id, badge_id) {
 {% endcomment %}
 {% block page_custom_javascript %}
 <script src="{% static 'leads/js/home.js' %}"></script>
-<script>function flag_lead(a,l,e,t){url="","spam"==l?url="{% url 'leads:flag_spam' %}":"scam"==l&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:a},(function(g,s){btn=$("#"+e),bdg=$("#"+t),"spam"==l?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(g.num_spam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{lead_id:a,type:"spam"})):"scam"==l&&(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(g.num_scam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{lead_id:a,type:"scam"}))}))}</script>
+<script>function flag_lead(a,l,e,t){url="","spam"==l?url="{% url 'leads:flag_spam' %}":"scam"==l&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:a},(function(g,s){btn=$("#"+e),bdg=$("#"+t),"spam"==l?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(g.num_spam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"spam"})):"scam"==l&&(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(g.num_scam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"scam"}))}))}</script>
 {% comment %}
 $(document).ready(function() {
     // Hide all lead body

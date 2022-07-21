@@ -1,1 +1,0 @@
-$(document).ready((function(){function n(n){const e=document.getElementById(n),t=e.nextElementSibling;new ClipboardJS(t,{target:e,text:function(){return e.value}}).on("success",(function(n){const e=t.innerHTML;"Copied!"!==t.innerHTML&&(t.innerHTML="Copied!",setTimeout((function(){t.innerHTML=e}),3e3))}))}n("email_clipboard"),n("phone_number_clipboard")}));

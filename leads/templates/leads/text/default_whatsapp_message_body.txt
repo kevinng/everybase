@@ -1,0 +1,9 @@
+Hi {{ first_name }} {{ last_name }}, I got your contact from https://everybase.co
+
+My lead:
+
+{{ lead_body }}
+
+Your comments:
+
+{{ contact_comments }}

@@ -45,7 +45,7 @@ def _page_obj(params, objects, page: int, items_per_page=20):
 
 def _set_whatsapp_bodies(params, contact):
     params['default_whatsapp_body'] = render_to_string(
-        'leads/includes/text/default_whatsapp_message_body.txt', {
+        'leads/text/default_whatsapp_message_body.txt', {
         'first_name': contact.first_name,
         'last_name': contact.last_name,
         'lead_body': contact.lead.body,
@@ -59,14 +59,14 @@ def _set_whatsapp_bodies(params, contact):
     ).order_by('-created').first()
     
     if last_action is not None and last_action.body is not None and last_action.body.strip() != '':
-        params['last_whatsapp_body'] = last_action.body.replace('\n', '\\n')
-        params['last_whatsapp_body_rows'] = last_action.body.count('\\n')+1
+        params['last_whatsapp_body'] = last_action.body.replace('\r\n', '\\n')
+        params['last_whatsapp_body_rows'] = last_action.body.count('\r\n')+1
     else:
         params['last_whatsapp_body_rows'] = 2
 
 def _set_wechat_bodies(params, contact):
     params['default_wechat_body'] = render_to_string(
-        'leads/includes/text/default_wechat_message_body.txt', {
+        'leads/text/default_wechat_message_body.txt', {
         'first_name': contact.first_name,
         'last_name': contact.last_name,
         'lead_body': contact.lead.body,
@@ -80,8 +80,8 @@ def _set_wechat_bodies(params, contact):
     ).order_by('-created').first()
     
     if last_action is not None and last_action.body is not None and last_action.body.strip() != '':
-        params['last_wechat_body'] = last_action.body.replace('\n', '\\n')
-        params['last_wechat_body_rows'] = last_action.body.count('\\n')+1
+        params['last_wechat_body'] = last_action.body.replace('\r\n', '\\n')
+        params['last_wechat_body_rows'] = last_action.body.count('\r\n')+1
     else:
         params['last_wechat_body_rows'] = 2
 

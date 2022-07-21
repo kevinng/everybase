@@ -28,6 +28,18 @@ class ContactAdmin(comadm.StandardAdmin):
         ('Not in use', {'fields': ['via_telegram', 'via_telegram_username', 'via_line', 'via_line_id', 'via_viber']})]
     autocomplete_fields = ['country', 'lead', 'phone_number', 'email']
 
+_contact_action_fields = ['contact', 'type', 'body']
+@admin.register(models.ContactAction)
+class ContactActionAdmin(comadm.StandardAdmin):
+    list_display = comadm.standard_list_display + _contact_action_fields
+    list_editable = [] # To speed up loading
+    search_fields = comadm.standard_search_fields + ['body']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _contact_action_fields})]
+    autocomplete_fields = ['contact']
+
 class ContactInlineAdmin(admin.TabularInline):
     model = models.Contact
     extra = 0

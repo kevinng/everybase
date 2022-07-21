@@ -305,11 +305,12 @@
 <script src="{% static 'common/js/qrcode.min.js' %}"></script>
 {% endblock %}
 
-{% comment %} 
+{% comment %}
+// These JavaScript code includes server-side rendered values. So they cannot be included.
+
 $(document).ready(function() {
 
     // Initialize clipboards
-
     function init_clipboard(target_id) {
         const target = document.getElementById(target_id)
         const button = target.nextElementSibling
@@ -329,14 +330,30 @@ $(document).ready(function() {
             setTimeout(function(){
                 button.innerHTML = currentLabel;
             }, 3000)
+
+            if (target_id == 'email_clipboard') {
+                var identify = new amplitude.Identify().add('num emails copied', 1);
+                amplitude.getInstance().identify(identify)
+                amplitude.getInstance().logEvent(
+                    'qualification - copied email', {
+                        'contact id': '{{ contact.id }}'
+                    }
+                )
+            } else if (target_id == 'phone_number_clipboard') {
+                var identify = new amplitude.Identify().add('num phone numbers copied', 1);
+                amplitude.getInstance().identify(identify)
+                amplitude.getInstance().logEvent(
+                    'qualification - copied phone number', {
+                        'contact id': '{{ contact.id }}'
+                    }
+                )
+            }
         })
     }
 
     init_clipboard('email_clipboard')
     init_clipboard('phone_number_clipboard')
-})
 
-$(document).ready(function() {
     // QR code. We cannot include this code because it requires server-side rendering.
     var qrcode = new QRCode(document.getElementById("wechat_qrcode"), {
         text: "{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",
@@ -346,10 +363,8 @@ $(document).ready(function() {
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H
     })
-})
 
-$(document).ready(function() {
-    // WhatsApp message body. We cannot include this code because it requires server-side rendering.
+    // WhatsApp message body
     function init_whatsapp_message_body_buttons() {
         clear_whatsapp_body = $('#clear_whatsapp_body')
         last_whatsapp_body = $('#last_whatsapp_body')
@@ -385,10 +400,8 @@ $(document).ready(function() {
     }
 
     init_whatsapp_message_body_buttons()
-})
 
-$(document).ready(function() {
-    // WeChat message body. We cannot include this code because it requires server-side rendering.
+    // WeChat message body
     function init_wechat_message_body_buttons() {
         clear_wechat_body = $('#clear_wechat_body')
         last_wechat_body = $('#last_wechat_body')
@@ -425,7 +438,6 @@ $(document).ready(function() {
 
     init_wechat_message_body_buttons()
 
-
     // Select elements
     const target = document.getElementById('wechat_body');
     const button = document.getElementById('copy_wechat_body');
@@ -443,7 +455,7 @@ $(document).ready(function() {
         const currentLabel = button.innerHTML;
 
         // Exit label update when already in progress
-        if(button.innerHTML === 'Copied!'){
+        if (button.innerHTML === 'Copied!'){
             return;
         }
 
@@ -458,8 +470,5 @@ $(document).ready(function() {
 })
 {% endcomment %}
 {% block page_custom_javascript %}
-<script src="{% static 'leads/js/contact_details.js' %}"></script>
-<script>$(document).ready((function(){new QRCode(document.getElementById("wechat_qrcode"),{text:"{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",width:128,height:128,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H})}));</script>
-<script>$(document).ready((function(){!function(){function a(){whatsapp_body.val("{{ last_whatsapp_body }}"),whatsapp_body.attr("rows","{{ last_whatsapp_body_rows }}")}function t(){whatsapp_body.val("{{ default_whatsapp_body }}"),whatsapp_body.attr("rows","{{ default_whatsapp_body_rows }}")}clear_whatsapp_body=$("#clear_whatsapp_body"),last_whatsapp_body=$("#last_whatsapp_body"),default_whatsapp_body=$("#default_whatsapp_body"),whatsapp_body=$("#whatsapp_body"),clear_whatsapp_body.click((function(){whatsapp_body.val(""),whatsapp_body.attr("rows","2")})),last_whatsapp_body.click((function(){a()})),a(),default_whatsapp_body.click((function(){t()})),t()}()}));</script>
-<script>$(document).ready((function(){!function(){function t(){wechat_body.val("{{ last_wechat_body }}"),wechat_body.attr("rows","{{ last_wechat_body_rows }}")}function e(){wechat_body.val("{{ default_wechat_body }}"),wechat_body.attr("rows","{{ default_wechat_body_rows }}")}clear_wechat_body=$("#clear_wechat_body"),last_wechat_body=$("#last_wechat_body"),default_wechat_body=$("#default_wechat_body"),wechat_body=$("#wechat_body"),clear_wechat_body.click((function(){wechat_body.val(""),wechat_body.attr("rows","2")})),last_wechat_body.click((function(){t()})),t(),default_wechat_body.click((function(){e()})),e()}();const t=document.getElementById("wechat_body"),e=document.getElementById("copy_wechat_body");new ClipboardJS(e,{target:t,text:function(){return t.innerText}}).on("success",(function(t){const c=e.innerHTML;"Copied!"!==e.innerHTML&&(e.innerHTML="Copied!",setTimeout((function(){e.innerHTML=c}),3e3))}))}));</script>
+<script>$(document).ready((function(){function t(t){const e=document.getElementById(t),a=e.nextElementSibling;new ClipboardJS(a,{target:e,text:function(){return e.value}}).on("success",(function(e){const o=a.innerHTML;if("Copied!"!==a.innerHTML)if(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=o}),3e3),"email_clipboard"==t){var n=(new amplitude.Identify).add("num emails copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied email",{"contact id":"{{ contact.id }}"})}else if("phone_number_clipboard"==t){n=(new amplitude.Identify).add("num phone numbers copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied phone number",{"contact id":"{{ contact.id }}"})}}))}t("email_clipboard"),t("phone_number_clipboard");new QRCode(document.getElementById("wechat_qrcode"),{text:"{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",width:128,height:128,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});!function(){function t(){whatsapp_body.val("{{ last_whatsapp_body }}"),whatsapp_body.attr("rows","{{ last_whatsapp_body_rows }}")}function e(){whatsapp_body.val("{{ default_whatsapp_body }}"),whatsapp_body.attr("rows","{{ default_whatsapp_body_rows }}")}clear_whatsapp_body=$("#clear_whatsapp_body"),last_whatsapp_body=$("#last_whatsapp_body"),default_whatsapp_body=$("#default_whatsapp_body"),whatsapp_body=$("#whatsapp_body"),clear_whatsapp_body.click((function(){whatsapp_body.val(""),whatsapp_body.attr("rows","2")})),last_whatsapp_body.click((function(){t()})),t(),default_whatsapp_body.click((function(){e()})),e()}(),function(){function t(){wechat_body.val("{{ last_wechat_body }}"),wechat_body.attr("rows","{{ last_wechat_body_rows }}")}function e(){wechat_body.val("{{ default_wechat_body }}"),wechat_body.attr("rows","{{ default_wechat_body_rows }}")}clear_wechat_body=$("#clear_wechat_body"),last_wechat_body=$("#last_wechat_body"),default_wechat_body=$("#default_wechat_body"),wechat_body=$("#wechat_body"),clear_wechat_body.click((function(){wechat_body.val(""),wechat_body.attr("rows","2")})),last_wechat_body.click((function(){t()})),t(),default_wechat_body.click((function(){e()})),e()}();const e=document.getElementById("wechat_body"),a=document.getElementById("copy_wechat_body");new ClipboardJS(a,{target:e,text:function(){return e.innerText}}).on("success",(function(t){const e=a.innerHTML;"Copied!"!==a.innerHTML&&(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=e}),3e3))}))}));</script>
 {% endblock %}
