@@ -470,6 +470,11 @@ class User(commods.Standard):
             contact__lead__author=self,
             type='wechat'
         ).count()
+
+    def num_private_notes(self):
+        return lemods.ContactNote.objects.filter(
+            contact__lead__author=self
+        ).count()
     
     def leads_order_by_created_desc(self):
         return lemods.Lead.objects.filter(author=self.id).order_by('-created')

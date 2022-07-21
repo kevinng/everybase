@@ -292,10 +292,26 @@ def contact_detail_private_notes(request, id):
     if request.method == 'POST':
         form = forms.ContactNoteForm(request.POST)
         if form.is_valid():
-            models.ContactNote.objects.create(
+            note = models.ContactNote.objects.create(
                 contact=contact,
                 body=form.cleaned_data.get('body'),
                 relevance=form.cleaned_data.get('relevance')
+            )
+
+            user = request.user.user
+            identify_amplitude_user.delay(
+                user_id=user.uuid,
+                user_properties={'num private notes created': user.num_private_notes()}
+            )
+
+            send_amplitude_event.delay(
+                'qualification - created private note',
+                user_uuid=user.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'contact note id': note.id,
+                    'relevance': note.relevance
+                }
             )
 
             return HttpResponseRedirect(
@@ -309,14 +325,37 @@ def contact_detail_private_notes(request, id):
         'form': form
     }
     _page_obj(params, contact.active_notes(), request.GET.get('page'))
+
+    send_amplitude_event.delay(
+        'qualification - accessed private notes',
+        user_uuid=request.user.user.uuid,
+        ip=get_ip_address(request),
+        event_properties={
+            'contact id': contact.id,
+            'page': params['page_obj'].number
+        }
+    )
+
     _set_whatsapp_bodies(params, contact)
     _set_wechat_bodies(params, contact)
     return TemplateResponse(request, 'leads/contact_detail_private_notes.html', params)
 
+@login_required
 def contact_detail_other_contacts(request, id):
     contact = models.Contact.objects.get(pk=id)
     params = {'contact': contact}
     _page_obj(params, contact.other_contacts(), request.GET.get('page'))
+
+    send_amplitude_event.delay(
+        'qualification - accessed other contacts',
+        user_uuid=request.user.user.uuid,
+        ip=get_ip_address(request),
+        event_properties={
+            'contact id': contact.id,
+            'page': params['page_obj'].number
+        }
+    )
+
     _set_whatsapp_bodies(params, contact)
     _set_wechat_bodies(params, contact)
     return TemplateResponse(request, 'leads/contact_detail_other_contacts.html', params)
