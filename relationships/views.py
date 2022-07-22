@@ -505,6 +505,16 @@ def magic_login(request, uuid):
         uuid=uuid,
         next=next_url
     )
+
+    send_amplitude_event.delay(
+        'account - logged in',
+        user_uuid=uuid,
+        ip=get_ip_address(request),
+        event_properties={
+            'login type': 'magic',
+            'next': next_url
+        }
+    )
     
     return _next_or_else_response(next_url, reverse('home'))
 

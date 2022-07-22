@@ -303,6 +303,8 @@ class User(commods.Standard):
     slug_link = models.CharField(
         max_length=200,
         unique=True,
+        null=True,
+        blank=True,
         db_index=True
     )
     slug_tokens = models.TextField(

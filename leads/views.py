@@ -590,12 +590,20 @@ def lead_list(request):
         'user country verified': user_country_verified=='on',
         'page': params['page_obj'].number
     }
-    send_amplitude_event.delay(
-        'discovery - searched leads',
-        user_uuid=user.uuid,
-        ip=get_ip_address(request),
-        event_properties=event_properties
-    )
+    if request.user.is_authenticated:
+        send_amplitude_event.delay(
+            'discovery - searched leads',
+            user_uuid=user.uuid,
+            ip=get_ip_address(request),
+            event_properties=event_properties
+        )
+    elif request.GET.get('device_id') is not None:
+        send_amplitude_event.delay(
+            'discovery - searched leads',
+            device_id=request.GET.get('device_id'),
+            ip=get_ip_address(request),
+            event_properties=event_properties
+        )
 
     # Increment impression of all leads on this page
     for lead in params['page_obj']:
