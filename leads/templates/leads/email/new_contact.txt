@@ -1,0 +1,21 @@
+Dear {{ contact.lead.author.first_name }} {{ contact.lead.author.last_name }},
+
+{{ contact.first_name }} {{ contact.last_name }} contacted you on Everybase.
+
+Access contact details here:
+
+{{ contact_details_url }}
+{% if contact.lead.lead_type == 'buying' %}
+You're sourcing for goods, or is looking for sourcing agents to source goods on a commission basis:
+{% elif contact.lead.lead_type == 'selling' %}
+You're promoting goods, or is looking for sales agents to promote goods on a commission basis:
+{% elif contact.lead.lead_type == 'need_logistics' %}
+You're looking for logistics services:
+{% elif contact.lead.lead_type == 'sourcing_agent' %}
+You can source goods on a commission basis:
+{% elif contact.lead.lead_type == 'sales_agent' %}
+You can promote goods on a commission basis:
+{% elif contact.lead.lead_type == 'logistics_agent' %}
+You're looking for logistics services:
+{% endif %}
+"{{ contact.lead.body }}"

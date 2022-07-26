@@ -148,14 +148,11 @@ def contact_lead(request, id):
                 contact_details_url = reverse('leads:contact_detail_private_notes', args=(contact.id,))
                 target = f'{magic_login}?next={contact_details_url}'
                 send_email.delay(
-                    render_to_string('relationships/email/new_contact_subject.txt', {
-                        'first_name': contact.first_name,
-                        'last_name': contact.last_name
+                    render_to_string('leads/email/new_contact_subject.txt', {
+                        'contact': contact
                     }),
-                    render_to_string('relationships/email/new_contact.txt', {
-                        'first_name': contact.first_name,
-                        'last_name': contact.last_name,
-                        'lead_body': lead.body,
+                    render_to_string('leads/email/new_contact.txt', {
+                        'contact': contact,
                         'contact_details_url': target,
                     }),
                     'friend@everybase.co',
@@ -610,33 +607,34 @@ def lead_list(request):
         lead.impressions += 1
         lead.save()
 
-    params['countries'] = commods.Country.objects.annotate(
-        num_leads=Count('users_w_this_country')).order_by('-num_leads')
-
-    # Handle sign-up search notification 
-    if request.method == 'POST':
-        form = forms.SignUpSearchNotification(request.POST)
-        if form.is_valid():
-            models.SearchNotification.objects.create(
-                cookie_uuid=cookie_uuid,
-                first_name=form.cleaned_data.get('first_name'),
-                last_name=form.cleaned_data.get('last_name'),
-                email=get_or_create_email(form.cleaned_data.get('email')),
-                phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
-                country=commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country')),
-                via_whatsapp=form.cleaned_data.get('via_whatsapp'),
-                via_wechat=form.cleaned_data.get('via_wechat'),
-                via_wechat_id=form.cleaned_data.get('via_wechat_id'),
-                lead_query_action=lead_query_action
-            )
+    params['countries'] = commods.Country.objects.annotate(num_leads=Count('users_w_this_country')).order_by('-num_leads')
 
     # Pass form to template if search phrase is entered and we can't identify the user.
     if not (search_phrase is None or search_phrase.strip() == ''):
-        any_contact = models.Contact.objects.filter(cookie_uuid=cookie_uuid).first()
-        any_search_notification = models.SearchNotification.objects.filter(cookie_uuid=cookie_uuid).first()
-        if not request.user.is_authenticated and any_contact is None and any_search_notification is None:
-            # User is not authenticated, and have not contacted any lead author, initialize empty form and pass it.
-            params['susn_form'] = forms.SignUpSearchNotification()
+        if request.method == 'POST':
+            # Handle sign-up search notification
+            form = forms.SignUpSearchNotification(request.POST)
+            if form.is_valid():
+                models.SearchNotification.objects.create(
+                    cookie_uuid=cookie_uuid,
+                    first_name=form.cleaned_data.get('first_name'),
+                    last_name=form.cleaned_data.get('last_name'),
+                    email=get_or_create_email(form.cleaned_data.get('email')),
+                    phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
+                    country=commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country')),
+                    via_whatsapp=form.cleaned_data.get('via_whatsapp'),
+                    via_wechat=form.cleaned_data.get('via_wechat'),
+                    via_wechat_id=form.cleaned_data.get('via_wechat_id'),
+                    lead_query_action=lead_query_action
+                )
+            else:
+                params['susn_form'] = form
+        else:
+            any_contact = models.Contact.objects.filter(cookie_uuid=cookie_uuid).first()
+            any_search_notification = models.SearchNotification.objects.filter(cookie_uuid=cookie_uuid).first()
+            if not request.user.is_authenticated and any_contact is None and any_search_notification is None:
+                # User is not authenticated, and have not contacted any lead author, initialize empty form and pass it.
+                params['susn_form'] = forms.SignUpSearchNotification()
 
     response = TemplateResponse(request, 'leads/home.html', params)
     return set_cookie_uuid(response, cookie_uuid)

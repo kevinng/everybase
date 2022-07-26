@@ -30,7 +30,7 @@
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="radio" name="lead_type" id="buying" value="buying" />
                                 <label for="buying">
-                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span>
+                                    {% include 'leads/includes/badges/leads/sourcing_goods.html' %}
                                 </label>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="radio" name="lead_type" id="selling" value="selling" />
                                 <label for="selling">
-                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span>
+                                    {% include 'leads/includes/badges/leads/promoting_goods.html' %}
                                 </label>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="radio" name="lead_type" id="need_logistics" value="need_logistics" />
                                 <label for="need_logistics">
-                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/need_logistics.txt' %}">Need Logistics</span>
+                                    {% include 'leads/includes/badges/leads/need_logistics.html' %}
                                 </label>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="radio" name="lead_type" id="sourcing_agent" value="sourcing_agent" />
                                 <label for="sourcing_agent">
-                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span>
+                                    {% include 'leads/includes/badges/leads/sourcing_agent.html' %}
                                 </label>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="radio" name="lead_type" id="sales_agent" value="sales_agent" />
                                 <label for="sales_agent">
-                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sales_agent.txt' %}">Sales Agent</span>
+                                    {% include 'leads/includes/badges/leads/sales_agent.html' %}
                                 </label>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="radio" name="lead_type" id="logistics_agent" value="logistics_agent" />
                                 <label for="logistics_agent">
-                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span>
+                                    {% include 'leads/includes/badges/leads/logistics_agent.html' %}
                                 </label>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="radio" name="lead_type" id="other" value="other" />
                                 <label for="other">
-                                    <span class="badge badge-secondary">Other</span>
+                                    {% include 'leads/includes/badges/leads/other.html' %}
                                 </label>
                             </div>
                         </div>

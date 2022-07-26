@@ -2,17 +2,17 @@
     Only one of these badges apply, it describes the type of the lead.
 {% endcomment %}
 {% if lead.lead_type == 'buying' %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span>
+    {% include 'leads/includes/badges/leads/sourcing_goods.html' %}
 {% elif lead.lead_type == 'selling' %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span>
+    {% include 'leads/includes/badges/leads/promoting_goods.html' %}
 {% elif lead.lead_type == 'need_logistics' %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/need_logistics.txt' %}">Need Logistics</span>
+    {% include 'leads/includes/badges/leads/need_logistics.html' %}
 {% elif lead.lead_type == 'sourcing_agent' %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span>
+    {% include 'leads/includes/badges/leads/sourcing_agent.html' %}
 {% elif lead.lead_type == 'sales_agent' %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sales_agent.txt' %}">Sales Agent</span>
+    {% include 'leads/includes/badges/leads/sales_agent.html' %}
 {% elif lead.lead_type == 'logistics_agent' %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span>
+    {% include 'leads/includes/badges/leads/logistics_agent.html' %}
 {% elif lead.lead_type == 'other' %}
-    <span class="badge badge-secondary">Other</span>
+    {% include 'leads/includes/badges/leads/other.html' %}
 {% endif %}

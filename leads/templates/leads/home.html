@@ -52,7 +52,7 @@
                         {% if susn_form.email.errors %}<div class="text-danger">{% for error in susn_form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                         <div class="form-floating col-lg-6 mt-2">
-                            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+1234567890"{% if susn_form.phone_number.value is not None and susn_form.phone_number.value|cut:' ' != '' %} value="{{ susn_form.phone_number.value }}"{% endif %} required />
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+1234567890"{% if susn_form.phone_number.value is not None and susn_form.phone_number.value|cut:' ' != '' %} value="{{ susn_form.phone_number.value }}"{% endif %} />
                             <label for="phone_number">Phone</label>
                         </div>
                         <div class="form-text">Include + symbol. E.g., +14155552671.</div>
@@ -187,49 +187,49 @@
                     <div class="form-check form-check-custom">
                         <input class="form-check-input me-2" type="checkbox" name="sourcing" id="sourcing" {% if sourcing == 'on' %}checked {% endif %}/>
                         <label for="sourcing">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span>
+                            {% include 'leads/includes/badges/leads/sourcing_goods.html' %}
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="promoting" id="promoting" {% if promoting == 'on' %}checked {% endif %}/>
                         <label for="promoting">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span>
+                            {% include 'leads/includes/badges/leads/promoting_goods.html' %}
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="need_logistics" id="need_logistics" {% if need_logistics == 'on' %}checked {% endif %}/>
                         <label for="need_logistics">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/need_logistics.txt' %}">Need Logistics</span>
+                            {% include 'leads/includes/badges/leads/need_logistics.html' %}
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="sourcing_agent" id="sourcing_agent" {% if sourcing_agent == 'on' %}checked {% endif %}/>
                         <label for="sourcing_agent">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span>
+                            {% include 'leads/includes/badges/leads/sourcing_agent.html' %}
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="sales_agent" id="sales_agent" {% if sales_agent == 'on' %}checked {% endif %}/>
                         <label for="sales_agent">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sales_agent.txt' %}">Sales Agent</span>
+                            {% include 'leads/includes/badges/leads/sales_agent.html' %}
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="logistics_agent" id="logistics_agent" {% if logistics_agent == 'on' %}checked {% endif %}/>
                         <label for="logistics_agent">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span>
+                            {% include 'leads/includes/badges/leads/logistics_agent.html' %}
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="other" id="other" {% if other == 'on' %}checked {% endif %}/>
                         <label for="other">
-                            <span class="badge badge-secondary">Other</span>
+                            {% include 'leads/includes/badges/leads/other.html' %}
                         </label>
                     </div>
                 </div>
@@ -268,13 +268,15 @@
                 <div class="d-flex align-items-center">
                     <div class="form-check form-check-custom">
                         <input class="form-check-input me-2" type="checkbox" name="sm_sourcing_agent" id="sm_sourcing_agent" {% if sourcing_agent == 'on' %}checked {% endif %}/>
-                            <label for="sm_sourcing_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span>
+                        <label for="sm_sourcing_agent">
+                            {% include 'leads/includes/badges/leads/sourcing_agent.html' %}
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="sm_sales_agent" id="sm_sales_agent" {% if sales_agent == 'on' %}checked {% endif %}/>
-                            <label for="sm_sales_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sales_agent.txt' %}">Sales Agent</span>
+                        <label for="sm_sales_agent">
+                            {% include 'leads/includes/badges/leads/sales_agent.html' %}
                         </label>
                     </div>
                 </div>
@@ -285,14 +287,14 @@
                     <div class="form-check form-check-custom">
                         <input class="form-check-input me-2" type="checkbox" name="sm_logistics_agent" id="sm_logistics_agent" {% if logistics_agent == 'on' %}checked {% endif %}/>
                         <label for="sm_logistics_agent">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span>
+                            {% include 'leads/includes/badges/leads/logistics_agent.html' %}
                         </label>
                     </div>
 
                     <div class="form-check form-check-custom ms-3">
                         <input class="form-check-input me-2" type="checkbox" name="sm_other" id="sm_other" {% if other == 'on' %}checked {% endif %}/>
                         <label for="sm_other">
-                            <span class="badge badge-secondary">Other</span>
+                            {% include 'leads/includes/badges/leads/other.html' %}
                         </label>
                     </div>
                 </div>

@@ -1,15 +1,75 @@
-{% if contact.is_buyer == True %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact is a buyer.">Buyer</span>
+{% comment %} To promoting/selling {% endcomment %}
+
+{% if contact.to_selling_as_sales_agent is True %}
+    {% include 'leads/includes/badges/leads/sales_agent.html' %}
 {% endif %}
 
-{% if contact.is_seller == True %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact is a seller.">Seller</span>
+{% if contact.to_selling_as_sourcing_goods is True %}
+    {% include 'leads/includes/badges/leads/sourcing_goods.html' %}
 {% endif %}
 
-{% if contact.is_sell_comm == True %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact can help you sell on a commission basis.">Sell for Commission</span>
+{% if contact.to_selling_as_other is True %}
+    {% include 'leads/includes/badges/leads/other.html' %}
 {% endif %}
 
-{% if contact.is_buy_comm == True %}
-    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contact can help you source on a commission basis.">Source for Commission</span>
+{% comment %} To sourcing/buying {% endcomment %}
+
+{% if contact.to_buying_as_sourcing_agent is True %}
+    {% include 'leads/includes/badges/leads/sourcing_agent.html' %}
+{% endif %}
+
+{% if contact.to_buying_as_promoting_goods is True %}
+    {% include 'leads/includes/badges/leads/promoting_goods.html' %}
+{% endif %}
+
+{% if contact.to_buying_as_other is True %}
+    {% include 'leads/includes/badges/leads/other.html' %}
+{% endif %}
+
+{% comment %} To sales agent {% endcomment %}
+
+{% if contact.to_sales_agent_as_seeking_cooperation is True %}
+    {% include 'leads/includes/badges/contacts/seeking_cooperation_from_sales_agent.html' %}
+{% endif %}
+
+{% if contact.to_sales_agent_as_sourcing_goods is True %}
+    {% include 'leads/includes/badges/leads/sourcing_goods.html' %}
+{% endif %}
+
+{% if contact.to_sales_agent_as_other is True %}
+    {% include 'leads/includes/badges/leads/other.html' %}
+{% endif %}
+
+{% comment %} To sourcing agent {% endcomment %}
+
+{% if contact.to_sourcing_agent_as_seeking_cooperation is True %}
+    {% include 'leads/includes/badges/contacts/seeking_cooperation_from_sourcing_agent.html' %}
+{% endif %}
+
+{% if contact.to_sourcing_agent_as_promoting_goods is True %}
+    {% include 'leads/includes/badges/leads/promoting_goods.html' %}
+{% endif %}
+
+{% if contact.to_sourcing_agent_as_other is True %}
+    {% include 'leads/includes/badges/leads/other.html' %}
+{% endif %}
+
+{% comment %} To logistics agent {% endcomment %}
+
+{% if contact.to_logistics_agent_as_need_logistics is True %}
+    {% include 'leads/includes/badges/leads/need_logistics.html' %}
+{% endif %}
+
+{% if contact.to_logistics_agent_as_other is True %}
+    {% include 'leads/includes/badges/leads/other.html' %}
+{% endif %}
+
+{% comment %} To need logistics {% endcomment %}
+
+{% if contact.to_need_logistics_as_logistics_agent is True %}
+    {% include 'leads/includes/badges/leads/logistics_agent.html' %}
+{% endif %}
+
+{% if contact.to_need_logistics_as_other is True %}
+    {% include 'leads/includes/badges/leads/other.html' %}
 {% endif %}

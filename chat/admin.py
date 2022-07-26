@@ -25,7 +25,9 @@ class TwilioOutboundMessage(comadm.StandardAdmin):
         _twilio_outbound_message_fields
     list_filter = comadm.standard_list_filter + ['date_created', 'date_sent',
         'direction', 'error_message', 'error_code', 'api_version']
-    search_fields = comadm.standard_search_fields + ['message_sid']
+    search_fields = comadm.standard_search_fields + ['intent_key', 'message_key',
+        'account_sid', 'message_sid', 'from_str', 'to_str', 'body', 'uri',
+        'error_message', 'error_code', 'api_version']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [

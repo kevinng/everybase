@@ -346,12 +346,15 @@ def profile_settings(request):
                 user.save()
                 messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PROFILE_UPDATE_SUCCESS)
 
+                user_properties = {}
+                if user.country is not None:
+                    user_properties['country'] = user.country.programmatic_key
+                if user.phone_number is not None:
+                    user_properties['phone number country code'] = user.phone_number.country_code
+
                 identify_amplitude_user.delay(
                     user_id=user.uuid,
-                    user_properties={
-                        'country': user.country.programmatic_key,
-                        'phone number country code': user.phone_number.country_code
-                    }
+                    user_properties=user_properties
                 )
 
                 amplitude_event_properties = {}
@@ -361,7 +364,8 @@ def profile_settings(request):
                 amplitude_event_properties['new last name'] = user.last_name
                 if old_country_key is not None:
                     amplitude_event_properties['old country'] = old_country_key
-                amplitude_event_properties['new country'] = user.country.programmatic_key
+                if user.country is not None:
+                    amplitude_event_properties['new country'] = user.country.programmatic_key
 
                 send_amplitude_event.delay(
                     'account - updated profile',
@@ -494,6 +498,7 @@ def update_phone_number(request):
 
     return TemplateResponse(request, 'relationships/confirm_phone_number_change.html', {'form': form})
 
+@ratelimit(key='user_or_ip', rate='500/h', block=True, method=['GET'])
 def magic_login(request, uuid):
     if uuid is not None:
         dju = authenticate(uuid)

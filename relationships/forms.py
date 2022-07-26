@@ -83,17 +83,11 @@ class ConfirmWhatsAppLoginForm(forms.Form):
             raise ValidationError({'code': ['Invalid code.',]})
 
 class RegisterForm(forms.Form):
-    email = forms.EmailField()
+    email = forms.EmailField(max_length=254) # See: https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
     phone_number = PhoneNumberField(required=True)
     enable_whatsapp = forms.BooleanField(required=False)
-    first_name = forms.CharField(
-        min_length=1,
-        max_length=20
-    )
-    last_name = forms.CharField(
-        min_length=1,
-        max_length=20
-    )
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=20)
     country = forms.CharField()
 
     # Rendered in hidden fields
@@ -123,8 +117,8 @@ class VerifyWhatsAppForm(forms.Form):
             raise ValidationError({'code': ['Invalid code.',]})
 
 class SettingsForm(forms.Form):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=20)
     country = forms.CharField()
 
     # Required determined by button clicked

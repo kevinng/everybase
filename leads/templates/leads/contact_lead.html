@@ -125,92 +125,124 @@
                 
                     <div id="to_selling_as_sales_agent_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_selling_as_sales_agent" id="to_selling_as_sales_agent" {% if form.to_selling_as_sales_agent.value == True %}checked {% endif %}/>
-                        <label for="to_selling_as_sales_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sales_agent.txt' %}">Sales Agent</span></label>
+                        <label for="to_selling_as_sales_agent">
+                            {% include 'leads/includes/badges/leads/sales_agent.html' %}
+                        </label>
                     </div>
 
                     <div id="to_selling_as_sourcing_goods_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_selling_as_sourcing_goods" id="to_selling_as_sourcing_goods" {% if form.to_selling_as_sourcing_goods.value == True %}checked {% endif %}/>
-                        <label for="to_selling_as_sourcing_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span></label>
+                        <label for="to_selling_as_sourcing_goods">
+                            {% include 'leads/includes/badges/leads/sourcing_goods.html' %}
+                        </label>
                     </div>
 
                     <div id="to_selling_as_other_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_selling_as_other" id="to_selling_as_other" {% if form.to_selling_as_other.value == True %}checked {% endif %}/>
-                        <label for="to_selling_as_other"><span class="badge badge-secondary">Other</span></label>
+                        <label for="to_selling_as_other">
+                            {% include 'leads/includes/badges/leads/other.html' %}
+                        </label>
                     </div>
                 
                 {% elif lead.lead_type == 'buying' %}
 
                     <div id="to_buying_as_sourcing_agent_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_buying_as_sourcing_agent" id="to_buying_as_sourcing_agent" {% if form.to_buying_as_sourcing_agent.value == True %}checked {% endif %}/>
-                        <label for="to_buying_as_sourcing_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_agent.txt' %}">Sourcing Agent</span></label>
+                        <label for="to_buying_as_sourcing_agent">
+                            {% include 'leads/includes/badges/leads/sourcing_agent.html' %}
+                        </label>
                     </div>
 
                     <div id="to_buying_as_promoting_goods_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_buying_as_promoting_goods" id="to_buying_as_promoting_goods" {% if form.to_buying_as_promoting_goods.value == True %}checked {% endif %}/>
-                        <label for="to_buying_as_promoting_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span></label>
+                        <label for="to_buying_as_promoting_goods">
+                            {% include 'leads/includes/badges/leads/promoting_goods.html' %}
+                        </label>
                     </div>
 
                     <div id="to_buying_as_other_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_buying_as_other" id="to_buying_as_other" {% if form.to_buying_as_other.value == True %}checked {% endif %}/>
-                        <label for="to_buying_as_other"><span class="badge badge-secondary">Other</span></label>
+                        <label for="to_buying_as_other">
+                            {% include 'leads/includes/badges/leads/other.html' %}
+                        </label>
                     </div>
 
                 {% elif lead.lead_type == 'sales_agent' %}
 
                     <div id="to_sales_agent_as_seeking_cooperation_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_sales_agent_as_seeking_cooperation" id="to_sales_agent_as_seeking_cooperation" {% if form.to_sales_agent_as_seeking_cooperation.value == True %}checked {% endif %}/>
-                        <label for="to_sales_agent_as_seeking_cooperation"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/contacts/seeking_cooperation_from_sales_agent.txt' %}">Seeking Cooperation</span></label>
+                        <label for="to_sales_agent_as_seeking_cooperation">
+                            {% include 'leads/includes/badges/contacts/seeking_cooperation_from_sales_agent.html' %}
+                        </label>
                     </div>
 
                     <div id="to_sales_agent_as_sourcing_goods_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_sales_agent_as_sourcing_goods" id="to_sales_agent_as_sourcing_goods" {% if form.to_sales_agent_as_sourcing_goods.value == True %}checked {% endif %}/>
-                        <label for="to_sales_agent_as_sourcing_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span></label>
+                        <label for="to_sales_agent_as_sourcing_goods">
+                            {% include 'leads/includes/badges/leads/sourcing_goods.html' %}
+                        </label>
                     </div>
 
                     <div id="to_sales_agent_as_other_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_sales_agent_as_other" id="to_sales_agent_as_other" {% if form.to_sales_agent_as_other.value == True %}checked {% endif %}/>
-                        <label for="to_sales_agent_as_other"><span class="badge badge-secondary">Other</span></label>
+                        <label for="to_sales_agent_as_other">
+                            {% include 'leads/includes/badges/leads/other.html' %}
+                        </label>
                     </div>
 
                 {% elif lead.lead_type == 'sourcing_agent' %}
 
                     <div id="to_sourcing_agent_as_seeking_cooperation_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_sourcing_agent_as_seeking_cooperation" id="to_sourcing_agent_as_seeking_cooperation" {% if form.to_sourcing_agent_as_seeking_cooperation.value == True %}checked {% endif %}/>
-                        <label for="to_sourcing_agent_as_seeking_cooperation"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/contacts/seeking_cooperation_from_sourcing_agent.txt' %}">Seeking Cooperation</span></label>
+                        <label for="to_sourcing_agent_as_seeking_cooperation">
+                            {% include 'leads/includes/badges/contacts/seeking_cooperation_from_sourcing_agent.html' %}
+                        </label>
                     </div>
 
                     <div id="to_sourcing_agent_as_promoting_goods_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_sourcing_agent_as_promoting_goods" id="to_sourcing_agent_as_promoting_goods" {% if form.to_sourcing_agent_as_promoting_goods.value == True %}checked {% endif %}/>
-                        <label for="to_sourcing_agent_as_promoting_goods"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span></label>
+                        <label for="to_sourcing_agent_as_promoting_goods">
+                            {% include 'leads/includes/badges/leads/promoting_goods.html' %}
+                        </label>
                     </div>
 
                     <div id="to_sourcing_agent_as_other_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_sourcing_agent_as_other" id="to_sourcing_agent_as_other" {% if form.to_sourcing_agent_as_other.value == True %}checked {% endif %}/>
-                        <label for="to_sourcing_agent_as_other"><span class="badge badge-secondary">Other</span></label>
+                        <label for="to_sourcing_agent_as_other">
+                            {% include 'leads/includes/badges/leads/other.html' %}
+                        </label>
                     </div>
 
                 {% elif lead.lead_type == 'logistics_agent' %}
 
                     <div id="to_logistics_agent_as_need_logistics_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_logistics_agent_as_need_logistics" id="to_logistics_agent_as_need_logistics" {% if form.to_logistics_agent_as_need_logistics.value == True %}checked {% endif %}/>
-                        <label for="to_logistics_agent_as_need_logistics"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/need_logistics.txt' %}">Need Logistics</span></label>
+                        <label for="to_logistics_agent_as_need_logistics">
+                            {% include 'leads/includes/badges/leads/need_logistics.html' %}
+                        </label>
                     </div>
 
                     <div id="to_logistics_agent_as_other_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_logistics_agent_as_other" id="to_logistics_agent_as_other" {% if form.to_logistics_agent_as_other.value == True %}checked {% endif %}/>
-                        <label for="to_logistics_agent_as_other"><span class="badge badge-secondary">Other</span></label>
+                        <label for="to_logistics_agent_as_other">
+                            {% include 'leads/includes/badges/leads/other.html' %}
+                        </label>
                     </div>
 
                 {% elif lead.lead_type == 'need_logistics' %}
 
                     <div id="to_need_logistics_as_logistics_agent_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_need_logistics_as_logistics_agent" id="to_need_logistics_as_logistics_agent" {% if form.to_need_logistics_as_logistics_agent.value == True %}checked {% endif %}/>
-                        <label for="to_need_logistics_as_logistics_agent"><span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/logistics_agent.txt' %}">Logistics Agent</span></label>
+                        <label for="to_need_logistics_as_logistics_agent">
+                            {% include 'leads/includes/badges/leads/logistics_agent.html' %}
+                        </label>
                     </div>
 
                     <div id="to_need_logistics_as_other_div" class="form-check form-check-custom mt-2">
                         <input class="form-check-input me-2" type="checkbox" name="to_need_logistics_as_other" id="to_need_logistics_as_other" {% if form.to_need_logistics_as_other.value == True %}checked {% endif %}/>
-                        <label for="to_need_logistics_as_other"><span class="badge badge-secondary">Other</span></label>
+                        <label for="to_need_logistics_as_other">
+                            {% include 'leads/includes/badges/leads/other.html' %}
+                        </label>
                     </div>
 
                 {% endif %}

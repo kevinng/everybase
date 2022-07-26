@@ -27,18 +27,29 @@ def _verify_recaptcha(form):
         form.add_error(None, _recaptcha_failed_msg)
 
 class SignUpSearchNotification(forms.Form):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=20)
     country = forms.CharField()
-    email = forms.EmailField()
+    email = forms.EmailField(max_length=254)
     phone_number = PhoneNumberField()
 
     via_whatsapp = forms.BooleanField(required=False)
     via_wechat = forms.BooleanField(required=False)
     via_wechat_id = forms.CharField(required=False)
 
+    def clean(self):
+        super(SignUpSearchNotification, self).clean()
+        
+        via_wechat = self.cleaned_data.get('via_wechat')
+        via_wechat_id = self.cleaned_data.get('via_wechat_id')
+
+        err_msg = 'This field is required.'
+
+        if via_wechat is not None and via_wechat == True and (via_wechat_id is None or via_wechat_id.strip() == ''):
+            self.add_error('via_wechat_id', err_msg)
+
 class LeadForm(forms.Form):
-    body = forms.CharField()
+    body = forms.CharField(max_length=200)
     lead_type = forms.CharField()
 
     def __init__(self, *args, **kwargs):
@@ -55,16 +66,17 @@ class LeadForm(forms.Form):
             raise ValidationError({'body': ["Don't include contact details. You'll receive email and phone number - when someone contacts you.",]})
 
 class ContactLeadForm(forms.Form):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    country = forms.CharField()
-    email = forms.EmailField()
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=20)
+    country = forms.CharField(max_length=20)
+    email = forms.EmailField(max_length=254)
     phone_number = PhoneNumberField()
 
     via_whatsapp = forms.BooleanField(required=False)
     via_wechat = forms.BooleanField(required=False)
-    via_wechat_id = forms.CharField(required=False)
+    via_wechat_id = forms.CharField(required=False, min_length=6, max_length=20)
 
+    # Long comments are more likely to be spams.
     comments = forms.CharField(max_length=100)
 
     # Required depends on lead type

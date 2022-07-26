@@ -1,0 +1,1 @@
+{{ contact.first_name }} {{ contact.last_name }} contacted you on Everybase.co regarding: "{{ contact.lead.body|truncatechars:100 }}"
