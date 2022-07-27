@@ -7,7 +7,11 @@ def run():
     for o in Fibre2FashionBuyingOffer.objects.all():
         print(o)
         if o.email is not None:
-            user, _ = relmods.User.objects.get_or_create(email=o.email)
+            try:
+                user, _ = relmods.User.objects.get_or_create(email=o.email)
+            except relmods.User.MultipleObjectsReturned:
+                user = relmods.User.objects.filter(email=o.email).first()
+
             if o.description is not None and o.description.strip() != '':
                 lead = lemods.Lead.objects.create(
                     author=user,

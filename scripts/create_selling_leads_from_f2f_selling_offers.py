@@ -6,25 +6,29 @@ from growth.models import Fibre2FashionSellingOffer
 def run():
     print(f'Start porting F2F selling leads...')
 
-    print('Even leads only...')
-    for o in Fibre2FashionSellingOffer.objects.annotate(odd=F('id') % 2).filter(odd=False):
-        print(o)
-        if o.email is not None:
-            user, _ = relmods.User.objects.get_or_create(email=o.email)
-            if (o.title is not None and o.title.strip() != '') or (o.description is not None and o.description.strip() != ''):
-                lead = lemods.Lead.objects.create(
-                    author=user,
-                    body=o.title + ' ' + o.description,
-                    lead_type='selling'
-                )
+    # print('Even leads only...')
+    # for o in Fibre2FashionSellingOffer.objects.annotate(odd=F('id') % 2).filter(odd=False):
+    #     print(o)
+    #     if o.email is not None:
+    #         user, _ = relmods.User.objects.get_or_create(email=o.email)
+    #         if (o.title is not None and o.title.strip() != '') or (o.description is not None and o.description.strip() != ''):
+    #             lead = lemods.Lead.objects.create(
+    #                 author=user,
+    #                 body=o.title + ' ' + o.description,
+    #                 lead_type='selling'
+    #             )
 
-                print('Created ' + str(lead))
+    #             print('Created ' + str(lead))
 
     print('Odd leads only...')
-    for o in Fibre2FashionSellingOffer.objects.annotate(odd=F('id') % 2).filter(odd=True):
+    for o in Fibre2FashionSellingOffer.objects.annotate(odd=F('id') % 2).filter(odd=True).filter(id__gte=6199):
         print(o)
         if o.email is not None:
-            user, _ = relmods.User.objects.get_or_create(email=o.email)
+            try:
+                user, _ = relmods.User.objects.get_or_create(email=o.email)
+            except relmods.User.MultipleObjectsReturned:
+                user = relmods.User.objects.filter(email=o.email).first()
+            
             if (o.title is not None and o.title.strip() != '') or (o.description is not None and o.description.strip() != ''):
                 lead = lemods.Lead.objects.create(
                     author=user,

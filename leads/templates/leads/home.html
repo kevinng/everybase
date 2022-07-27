@@ -378,6 +378,10 @@
 $(document).ready(function() {
     // We have two sets of checkboxes to cater for different screensizes, and we want to link them up.
 
+    // Pass Amplitude device to the backend so we can track unauthenticated users.
+    device_id = $('#device_id')
+    device_id.val(amplitude.getInstance().getDeviceId())
+
     sourcing = $('#sourcing')
     promoting = $('#promoting')
     need_logistics = $('#need_logistics')
@@ -506,93 +510,7 @@ function flag_lead(lead_id, type, button_id, badge_id) {
 {% endcomment %}
 {% block page_custom_javascript %}
 {% comment %} <script src="{% static 'leads/js/home.js' %}"></script> {% endcomment %}
-<script>
-    $(document).ready(function() {
-        // We have two sets of checkboxes to cater for different screensizes, and we want to link them up.
-
-        // Pass Amplitude device to the backend so we can track unauthenticated users.
-        device_id = $('#device_id')
-        device_id.val(amplitude.getInstance().getDeviceId())
-    
-        sourcing = $('#sourcing')
-        promoting = $('#promoting')
-        need_logistics = $('#need_logistics')
-        sourcing_agent = $('#sourcing_agent')
-        sales_agent = $('#sales_agent')
-        logistics_agent = $('#logistics_agent')
-        other = $('#other')
-    
-        sm_sourcing = $('#sm_sourcing')
-        sm_promoting = $('#sm_promoting')
-        sm_need_logistics = $('#sm_need_logistics')
-        sm_sourcing_agent = $('#sm_sourcing_agent')
-        sm_sales_agent = $('#sm_sales_agent')
-        sm_logistics_agent = $('#sm_logistics_agent')
-        sm_other = $('#sm_other')
-    
-        search_form = $('#search_form')
-        reduce_spams_and_scams = $('#reduce_spams_and_scams')
-        user_country = $('#user_country')
-        user_country_verified = $('#user_country_verified')
-    
-        var target = document.querySelector("#search_form")
-        var blockUI = new KTBlockUI(target)
-    
-        function form_field_changed() {
-            search_form.submit()
-            blockUI.block()
-        }
-    
-        function link_and_submit_checkboxes(lg, sm) {
-            sm.change(function() {
-                lg.prop('checked', this.checked)
-                form_field_changed()
-            })
-    
-            lg.change(function() {
-                sm.prop('checked', this.checked)
-                form_field_changed()
-            })
-        }
-    
-        link_and_submit_checkboxes(sourcing, sm_sourcing)
-        link_and_submit_checkboxes(promoting, sm_promoting)
-        link_and_submit_checkboxes(need_logistics, sm_need_logistics)
-        link_and_submit_checkboxes(sourcing_agent, sm_sourcing_agent)
-        link_and_submit_checkboxes(sales_agent, sm_sales_agent)
-        link_and_submit_checkboxes(logistics_agent, sm_logistics_agent)
-        link_and_submit_checkboxes(other, sm_other)
-    
-        reduce_spams_and_scams.change(function() {
-            form_field_changed()
-        })
-    
-        user_country_verified.change(function() {
-            form_field_changed()
-        })
-    
-        user_country.change(function() {
-            form_field_changed()
-        })
-    
-        via_wechat_id_div = $('#via_wechat_id_div')
-        via_wechat = $('#via_wechat')
-    
-        function toggle_via_wechat_id_div() {
-            if (via_wechat.is(':checked')) {
-                via_wechat_id_div.show()
-            } else {
-                via_wechat_id_div.hide()
-            }
-        }
-    
-        toggle_via_wechat_id_div()
-    
-        via_wechat.click(function() {
-            toggle_via_wechat_id_div()
-        })
-    })
-</script>
+<script>$(document).ready((function(){device_id=$("#device_id"),device_id.val(amplitude.getInstance().getDeviceId()),sourcing=$("#sourcing"),promoting=$("#promoting"),need_logistics=$("#need_logistics"),sourcing_agent=$("#sourcing_agent"),sales_agent=$("#sales_agent"),logistics_agent=$("#logistics_agent"),other=$("#other"),sm_sourcing=$("#sm_sourcing"),sm_promoting=$("#sm_promoting"),sm_need_logistics=$("#sm_need_logistics"),sm_sourcing_agent=$("#sm_sourcing_agent"),sm_sales_agent=$("#sm_sales_agent"),sm_logistics_agent=$("#sm_logistics_agent"),sm_other=$("#sm_other"),search_form=$("#search_form"),reduce_spams_and_scams=$("#reduce_spams_and_scams"),user_country=$("#user_country"),user_country_verified=$("#user_country_verified");var e=document.querySelector("#search_form"),s=new KTBlockUI(e);function i(){search_form.submit(),s.block()}function _(e,s){s.change((function(){e.prop("checked",this.checked),i()})),e.change((function(){s.prop("checked",this.checked),i()}))}function c(){via_wechat.is(":checked")?via_wechat_id_div.show():via_wechat_id_div.hide()}_(sourcing,sm_sourcing),_(promoting,sm_promoting),_(need_logistics,sm_need_logistics),_(sourcing_agent,sm_sourcing_agent),_(sales_agent,sm_sales_agent),_(logistics_agent,sm_logistics_agent),_(other,sm_other),reduce_spams_and_scams.change((function(){i()})),user_country_verified.change((function(){i()})),user_country.change((function(){i()})),via_wechat_id_div=$("#via_wechat_id_div"),via_wechat=$("#via_wechat"),c(),via_wechat.click((function(){c()}))}));</script>
 <script>function flag_lead(a,l,e,t){url="","spam"==l?url="{% url 'leads:flag_spam' %}":"scam"==l&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:a},(function(g,s){btn=$("#"+e),bdg=$("#"+t),"spam"==l?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(g.num_spam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"spam"})):"scam"==l&&(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(g.num_scam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"scam"}))}))}</script>
 {% comment %}
 $(document).ready(function() {
