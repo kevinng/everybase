@@ -361,6 +361,9 @@
         {% if page_obj|length > 0 %}
             {% for lead in page_obj %}
                 {% include 'leads/includes/lead_item.html' with lead=lead %}
+                {% if forloop.counter|divisibleby:5 %}
+                    {% include 'includes/adsense_display_ad_unit.html' %}
+                {% endif %}
             {% endfor %}
         {% endif %}
     </div>
