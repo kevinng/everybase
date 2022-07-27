@@ -48,4 +48,4 @@ cached-property = "*"
 amplitude-analytics = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.10.5"
