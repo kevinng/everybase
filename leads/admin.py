@@ -67,8 +67,8 @@ class ContactNoteAdmin(comadm.StandardAdmin):
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'created', 'updated', 'impressions', 'num_spam_flags', 'num_scam_flags', 'num_contacts', 'author', 'lead_type', 'headline', 'details', 'body', 'has_insights']
-    list_editable = ['headline', 'details', 'body'] # Override to speed up loading
+    list_display = ['id', 'created', 'updated', 'impressions', 'num_spam_flags', 'num_scam_flags', 'num_contacts', 'author', 'lead_type', 'body', 'has_insights']
+    list_editable = [] # Override to speed up loading
     list_filter = ['created', 'lead_type', 'has_insights']
     search_fields = ['id', 'body', 'author__first_name', 'author__last_name', 'internal_notes']
 
