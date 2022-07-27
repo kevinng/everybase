@@ -1,5 +1,7 @@
 Dear {{ contact.lead.author.first_name }} {{ contact.lead.author.last_name }},
 
+Everybase is a platform that helps you find - importers, exporters, buyers, sellers, agents.
+
 {{ contact.first_name }} {{ contact.last_name }} contacted you on Everybase.
 
 Access contact details here:
