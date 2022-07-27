@@ -4,7 +4,7 @@ from leads import models as lemods
 from growth.models import Fibre2FashionSellingOffer
 
 def run():
-    print(f'Start porting {str(Fibre2FashionSellingOffer.objects.all().count())} F2F selling leads...')
+    print(f'Start porting F2F selling leads...')
 
     print('Even leads only...')
     for o in Fibre2FashionSellingOffer.objects.annotate(odd=F('id') % 2).filter(odd=False):
