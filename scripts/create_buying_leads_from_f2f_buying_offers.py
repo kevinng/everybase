@@ -1,17 +1,17 @@
 from relationships import models as relmods
 from leads import models as lemods
-from growth.models import Fibre2FashionSellingOffer
+from growth.models import Fibre2FashionBuyingOffer
 
 def run():
     print('start')
     limit = 10
-    for o in Fibre2FashionSellingOffer.objects.all():
+    for o in Fibre2FashionBuyingOffer.objects.all():
         print(o)
         user, _ = relmods.User.objects.get_or_create(email=o.email)
         lead = lemods.Lead.objects.create(
             author=user,
             body=o.description,
-            lead_type='selling'
+            lead_type='buying'
         )
 
         print('Created ' + str(lead))
