@@ -6,9 +6,8 @@ def run():
     limit = 10
     for o in Fibre2FashionSellingOffer.objects.all():
         print(o)
-        
         user, _ = relmods.User.objects.get_or_create(email=o.email)
-        if o.title is not None and o.description is not None and (o.title.strip() != '' or o.description.strip() != ''):
+        if (o.title is not None and o.title.strip() != '') or (o.description is not None and o.description.strip() != ''):
             lead = lemods.Lead.objects.create(
                 author=user,
                 body=o.title + ' ' + o.description,
