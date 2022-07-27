@@ -15,7 +15,7 @@ def run():
                 lead_type='buying'
             )
 
-        print('Created ' + str(lead))
+            print('Created ' + str(lead))
 
         # limit -= 1
         # if limit < 0:
