@@ -3,7 +3,7 @@ from leads import models as lemods
 from growth.models import Fibre2FashionSellingOffer
 
 def run():
-    print('Start porting F2F selling leads...')
+    print(f'Start porting {str(Fibre2FashionSellingOffer.objects.all().count())} F2F selling leads...')
     limit = 10
     for o in Fibre2FashionSellingOffer.objects.all():
         print(o)
@@ -17,6 +17,6 @@ def run():
 
         print('Created ' + str(lead))
 
-        limit -= 1
-        if limit < 0:
-            break
+        # limit -= 1
+        # if limit < 0:
+        #     break
