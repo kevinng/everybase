@@ -165,7 +165,7 @@ class Fibre2FashionBuyingOfferAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['import_job', 'harvested', 'source_link', 'category',
+        (None, {'fields': ['import_job', 'harvested', 'source_url', 'category',
             'sub_category', 'reference_no', 'description', 'email_str',
             'product_info_html', 'email', 'invalid_email']})]
     autocomplete_fields = ['import_job', 'email', 'invalid_email']
@@ -190,7 +190,7 @@ class Fibre2FashionSellingOfferAdmin(admin.ModelAdmin):
     save_on_top = True
     readonly_fields = comadm.standard_readonly_fields
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': ['import_job', 'harvested', 'source_link', 'category',
+        (None, {'fields': ['import_job', 'harvested', 'source_url', 'category',
             'sub_category', 'reference_no', 'description', 'email_str',
             'company_name', 'company_address', 'product_info_html', 'email',
             'invalid_email']})]
