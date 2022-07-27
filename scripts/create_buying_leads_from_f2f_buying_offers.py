@@ -3,6 +3,7 @@ from leads import models as lemods
 from growth.models import Fibre2FashionBuyingOffer
 
 def run():
+    print('Start porting F2F buying leads...')
     limit = 10
     for o in Fibre2FashionBuyingOffer.objects.all():
         print(o)
