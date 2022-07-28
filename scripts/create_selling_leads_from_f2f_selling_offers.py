@@ -21,7 +21,8 @@ def run():
     #             print('Created ' + str(lead))
 
     print('Odd leads only...')
-    for o in Fibre2FashionSellingOffer.objects.annotate(odd=F('id') % 2).filter(odd=True).filter(id__gte=6199):
+    # Continue from ID 6199
+    for o in Fibre2FashionSellingOffer.objects.annotate(odd=F('id') % 2).filter(odd=True).filter(id__gt=6199):
         print(o)
         if o.email is not None:
             try:
