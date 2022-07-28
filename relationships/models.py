@@ -464,22 +464,28 @@ class User(commods.Standard):
     def num_whatsapped(self):
         return lemods.ContactAction.objects.filter(
             contact__lead__author=self,
-            type='whatsapp'
+            type='whatsapp',
+            deleted__isnull=True
         ).count()
 
     def num_wechatted(self):
         return lemods.ContactAction.objects.filter(
             contact__lead__author=self,
-            type='wechat'
+            type='wechat',
+            deleted__isnull=True
         ).count()
 
     def num_private_notes(self):
         return lemods.ContactNote.objects.filter(
-            contact__lead__author=self
+            contact__lead__author=self,
+            deleted__isnull=True
         ).count()
     
     def leads_order_by_created_desc(self):
-        return lemods.Lead.objects.filter(author=self.id).order_by('-created')
+        return lemods.Lead.objects.filter(
+            author=self.id,
+            deleted__isnull=True
+        ).order_by('-created')
     
     def is_country_match_country_code(self):
         if self.phone_number is not None and self.country is not None:
