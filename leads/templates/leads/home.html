@@ -362,7 +362,7 @@
             {% for lead in page_obj %}
                 {% include 'leads/includes/lead_item.html' with lead=lead %}
                 {% if forloop.counter|divisibleby:5 %}
-                    <div class="mt-4" style="margin:auto">
+                    <div class="mt-4" align="center">
                         {% include 'includes/adsense_display_ad_unit.html' %}
                     </div>
                 {% endif %}
