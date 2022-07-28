@@ -66,7 +66,7 @@ class ContactNoteAdmin(comadm.StandardAdmin):
 @admin.register(models.Lead)
 class LeadAdmin(comadm.StandardAdmin):
     # List page settings
-    list_per_page = 10000
+    list_per_page = 5000
     list_display = ['id', 'created', 'updated', 'impressions', 'num_spam_flags', 'num_scam_flags', 'num_contacts', 'author', 'lead_type', 'body', 'has_insights']
     list_editable = [] # Override to speed up loading
     list_filter = ['created', 'lead_type', 'has_insights']
