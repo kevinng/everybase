@@ -527,9 +527,33 @@ def log_out(request):
     logout(request)
     return _next_or_else_response(request.GET.get('next'), reverse('home'))
 
+def user_detail(request, uuid):
+    template_name = 'relationships/user_detail__leads.html'
+    return TemplateResponse(request, template_name, {})
 
+def user_detail__following(request, uuid):
+    template_name = 'relationships/user_detail__following.html'
+    return TemplateResponse(request, template_name, {})
 
+# def user_detail__followers(request, uuid):
+#     template_name = 'relationships/user_detail__followers.html'
+#     return TemplateResponse(request, template_name, {})
 
+def user_detail__contacted(request, uuid):
+    template_name = 'relationships/user_detail__contacted.html'
+    return TemplateResponse(request, template_name, {})
+
+def user_detail__reviews(request, uuid):
+    template_name = 'relationships/user_detail__reviews.html'
+    return TemplateResponse(request, template_name, {})
+
+def user_detail__friends(request, uuid):
+    template_name = 'relationships/user_detail__following.html'
+    return TemplateResponse(request, template_name, {})
+
+def friend_requests(request, uuid):
+    template_name = 'relationships/friend_requests.html'
+    return TemplateResponse(request, template_name, {})
 
 
 

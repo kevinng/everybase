@@ -1,0 +1,449 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% comment %} TODO: change title {% endcomment %}
+{% block page_title %}My Leads{% endblock %}
+
+{% block page_subtitle %}
+<ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+    {% comment %} TODO: change 'Me' {% endcomment %}
+    <li class="breadcrumb-item text-muted">Me</li>
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+    <li class="breadcrumb-item text-dark">Leads</li>
+</ul>
+{% endblock %}
+
+{% block actions %}
+{% include 'leads/includes/toolbar_actions.html' %}
+{% endblock %}
+
+{% block content_body %}
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-xxl">
+
+        {% include 'relationships/includes/has_incomplete_profile.html' %}
+
+        
+
+        {% comment %} <div class="d-flex flex-column flex-lg-row"> {% endcomment %}
+
+
+
+            {% comment %} Start: Content {% endcomment %}
+            <div class="flex-lg-row-fluid ms-lg-15">
+
+
+                <div class="tab-content">
+                    {% block tab_content %}{% endblock %}
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header">
+        <div class="card-title align-items-start flex-column">
+            <div class="d-flex align-items-center">
+                <div class="symbol symbol-45px me-5">
+                    <div class="symbol-label fs-3 bg-light-primary text-primary">KN</div>
+                </div>
+                <div class="d-flex justify-content-start flex-column">
+                    <div class="text-dark fw-bolder fs-6">Kevin Ng
+                        <span class="text-muted fw-bold fs-7 ms-2">Singapore
+                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                            <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +65">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                </svg>
+                            </span>
+                            {% comment %} End: SVG icon {% endcomment %}
+                        </span>
+                    </div>
+                    <div class="fw-normal fs-7">I supply medical supplies, resources, etc, etc.</div>             
+                </div>
+            </div>
+        </div>
+        <div class="card-toolbar">
+            <span class="text-muted">2d ago</span>
+            {% comment %} <a href="#" class="btn btn-sm btn-flex bg-body btn-light fw-bold">Follow</a> {% endcomment %}
+            {% comment %} <a href="#" class="btn btn-sm fw-bold btn-primary ms-2">Connect</a> {% endcomment %}
+        </div>
+    </div>
+
+    <div class="card-body">
+        {% comment %} Start: Contact {% endcomment %}
+        <div class="text-dark">Hello world hello world</div>
+        <div class="d-flex justify-content-between mt-2">
+            <div>
+                {% comment %} {% include 'leads/includes/contact_badges.html' with contact=contact %} {% endcomment %}
+            </div>
+            <div>
+            </div>
+        </div>
+
+        <div class="separator my-10"></div>
+
+        <div class="ms-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <div class="symbol symbol-45px me-5">
+                        <div class="symbol-label fs-3 bg-light-primary text-primary">KN</div>
+                    </div>
+                    <div class="d-flex justify-content-start flex-column">
+                        <div class="text-dark fw-bolder fs-6">Kevin Ng
+                            <span class="text-muted fw-bold fs-7 ms-2">Singapore
+                                {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                                <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +65">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                {% comment %} End: SVG icon {% endcomment %}
+                            </span>
+                        </div>
+                        <div class="fw-normal fs-7">I supply medical supplies, resources, etc, etc.</div>             
+                    </div>
+                </div>
+                {% comment %} <span class="text-muted">{{ contact.age_desc }}</span> {% endcomment %}
+                <span class="text-muted">2d ago</span>
+            </div>
+
+            <div class="text-dark mt-8">Hello world hello world</div>
+            <div class="d-flex justify-content-between mt-2">
+                <div>
+                    {% comment %} {% include 'leads/includes/contact_badges.html' with contact=contact %} {% endcomment %}
+                    {% comment %} {% if this_contact.email.id == contact.email.id %} {% endcomment %}
+                        {% comment %} <span class="badge badge-light-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ contact.email.email }}">Same Email</span> {% endcomment %}
+                    {% comment %} {% endif %} {% endcomment %}
+
+                    {% comment %} {% if this_contact.phone_number.id == contact.phone_number.id %} {% endcomment %}
+                        {% comment %} <span class="badge badge-light-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="+{{ contact.phone_number.country_code }} {{ contact.phone_number.national_number }}">Same Phone</span> {% endcomment %}
+                    {% comment %} {% endif %} {% endcomment %}
+                </div>
+                <div>
+                </div>
+            </div>
+        </div>
+        {% comment %} End: Contact {% endcomment %}
+    </div>
+
+    <div class="card-footer">
+        <div class="d-flex flex-row-reverse">
+            {% comment %} if accept, mark as accepted, and provide link to contact details {% endcomment %}
+            <button class="btn btn-sm btn-primary">Accept Friend Request</button>
+            {% comment %} if reject, stay on the same page, mark this as rejected {% endcomment %}
+            <button class="btn btn-sm btn-light-danger me-2">Reject Friend Request</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header">
+        <div class="card-title align-items-start flex-column">
+            <div class="d-flex align-items-center">
+                <div class="symbol symbol-45px me-5">
+                    <div class="symbol-label fs-3 bg-light-primary text-primary">KN</div>
+                </div>
+                <div class="d-flex justify-content-start flex-column">
+                    <div class="text-dark fw-bolder fs-6">Kevin Ng
+                        <span class="text-muted fw-bold fs-7 ms-2">Singapore
+                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                            <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +65">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                </svg>
+                            </span>
+                            {% comment %} End: SVG icon {% endcomment %}
+                        </span>
+                    </div>
+                    <div class="fw-normal fs-7">I supply medical supplies, resources, etc, etc.</div>             
+                </div>
+            </div>
+        </div>
+        <div class="card-toolbar">
+            <span class="text-muted">2d ago</span>
+            {% comment %} <a href="#" class="btn btn-sm btn-flex bg-body btn-light fw-bold">Follow</a> {% endcomment %}
+            {% comment %} <a href="#" class="btn btn-sm fw-bold btn-primary ms-2">Connect</a> {% endcomment %}
+        </div>
+    </div>
+
+    <div class="card-body">
+        {% comment %} Start: Contact {% endcomment %}
+        <div class="text-dark">Hello world hello world</div>
+        <div class="d-flex justify-content-between mt-2">
+            <div>
+                {% comment %} {% include 'leads/includes/contact_badges.html' with contact=contact %} {% endcomment %}
+            </div>
+            <div>
+            </div>
+        </div>
+
+       
+    </div>
+
+    <div class="card-footer">
+        <div class="d-flex flex-row-reverse">
+            {% comment %} if accepted, show detail button {% endcomment %}
+            <button class="btn btn-sm btn-primary">Accept Friend Request</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+            {% comment %} </div> {% endcomment %}
+            {% comment %} End: Content {% endcomment %}
+        </div>
+    </div>
+</div>
+
+{% include 'includes/paginator.html' %}
+{% endblock %}
+
+{% block page_vendor_javascript %}
+<script src="{% static 'common/js/qrcode.min.js' %}"></script>
+{% endblock %}
+
+{% comment %}
+// These JavaScript code includes server-side rendered values. So they cannot be included.
+
+$(document).ready(function() {
+
+    // Initialize clipboards
+    function init_clipboard(target_id) {
+        const target = document.getElementById(target_id)
+        const button = target.nextElementSibling
+        var clipboard = new ClipboardJS(button, {
+            target: target,
+            text: function() {
+                return target.value
+            }
+        })
+
+        clipboard.on('success', function(e) {
+            const currentLabel = button.innerHTML
+            if (button.innerHTML === 'Copied!'){ return }
+            button.innerHTML = 'Copied!'
+    
+            // Revert button label after 3 seconds
+            setTimeout(function(){
+                button.innerHTML = currentLabel;
+            }, 3000)
+
+            if (target_id == 'email_clipboard') {
+                var identify = new amplitude.Identify().add('num emails copied', 1);
+                amplitude.getInstance().identify(identify)
+                amplitude.getInstance().logEvent(
+                    'qualification - copied email', {
+                        'contact id': '{{ contact.id }}'
+                    }
+                )
+            } else if (target_id == 'phone_number_clipboard') {
+                var identify = new amplitude.Identify().add('num phone numbers copied', 1);
+                amplitude.getInstance().identify(identify)
+                amplitude.getInstance().logEvent(
+                    'qualification - copied phone number', {
+                        'contact id': '{{ contact.id }}'
+                    }
+                )
+            }
+        })
+    }
+
+    init_clipboard('email_clipboard')
+    init_clipboard('phone_number_clipboard')
+
+    // QR code. We cannot include this code because it requires server-side rendering.
+    var qrcode = new QRCode(document.getElementById("wechat_qrcode"), {
+        text: "{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    })
+
+    // WhatsApp message body
+    function init_whatsapp_message_body_buttons() {
+        clear_whatsapp_body = $('#clear_whatsapp_body')
+        last_whatsapp_body = $('#last_whatsapp_body')
+        default_whatsapp_body = $('#default_whatsapp_body')
+        whatsapp_body = $('#whatsapp_body')
+
+        clear_whatsapp_body.click(function() {
+            whatsapp_body.val('')
+            whatsapp_body.attr('rows', '2')
+        })
+        
+        function set_last_whatsapp_body() {
+            whatsapp_body.val("{{ last_whatsapp_body }}")
+            whatsapp_body.attr('rows', '{{ last_whatsapp_body_rows }}')
+        }
+
+        last_whatsapp_body.click(function() {
+            set_last_whatsapp_body()
+        })
+
+        set_last_whatsapp_body()
+
+        function set_default_whatsapp_body() {
+            whatsapp_body.val("{{ default_whatsapp_body }}")
+            whatsapp_body.attr('rows', '{{ default_whatsapp_body_rows }}')
+        }
+
+        default_whatsapp_body.click(function() {
+            set_default_whatsapp_body()
+        })
+
+        set_default_whatsapp_body()
+    }
+
+    init_whatsapp_message_body_buttons()
+
+    // WeChat message body
+    function init_wechat_message_body_buttons() {
+        clear_wechat_body = $('#clear_wechat_body')
+        last_wechat_body = $('#last_wechat_body')
+        default_wechat_body = $('#default_wechat_body')
+        wechat_body = $('#wechat_body')
+
+        clear_wechat_body.click(function() {
+            wechat_body.val('')
+            wechat_body.attr('rows', '2')
+        })
+        
+        function set_last_wechat_body() {
+            wechat_body.val("{{ last_wechat_body }}")
+            wechat_body.attr('rows', '{{ last_wechat_body_rows }}')
+        }
+
+        last_wechat_body.click(function() {
+            set_last_wechat_body()
+        })
+
+        set_last_wechat_body()
+
+        function set_default_wechat_body() {
+            wechat_body.val("{{ default_wechat_body }}")
+            wechat_body.attr('rows', '{{ default_wechat_body_rows }}')
+        }
+
+        default_wechat_body.click(function() {
+            set_default_wechat_body()
+        })
+
+        set_default_wechat_body()
+    }
+
+    init_wechat_message_body_buttons()
+
+    // Select elements
+    const target = document.getElementById('wechat_body');
+    const button = document.getElementById('copy_wechat_body');
+
+    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+    var clipboard = new ClipboardJS(button, {
+        target: target,
+        text: function() {
+            return target.innerText;
+        }
+    });
+
+    // Success action handler
+    clipboard.on('success', function(e) {
+        const currentLabel = button.innerHTML;
+
+        // Exit label update when already in progress
+        if (button.innerHTML === 'Copied!'){
+            return;
+        }
+
+        // Update button label
+        button.innerHTML = 'Copied!';
+
+        // Revert button label after 3 seconds
+        setTimeout(function(){
+            button.innerHTML = currentLabel;
+        }, 3000)
+    });
+})
+{% endcomment %}
+{% block page_custom_javascript %}
+{% comment %} <script src="{% static 'leads/js/lead_item.js' %}"></script> {% endcomment %}
+{% comment %}
+TODO: redo the follow Javascript
+{% endcomment %}
+<script>$(document).ready((function(){function t(t){const e=document.getElementById(t),a=e.nextElementSibling;new ClipboardJS(a,{target:e,text:function(){return e.value}}).on("success",(function(e){const o=a.innerHTML;if("Copied!"!==a.innerHTML)if(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=o}),3e3),"email_clipboard"==t){var n=(new amplitude.Identify).add("num emails copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied email",{"contact id":"{{ contact.id }}"})}else if("phone_number_clipboard"==t){n=(new amplitude.Identify).add("num phone numbers copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied phone number",{"contact id":"{{ contact.id }}"})}}))}t("email_clipboard"),t("phone_number_clipboard");new QRCode(document.getElementById("wechat_qrcode"),{text:"{{ settings.BASE_URL }}",width:128,height:128,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});!function(){function t(){whatsapp_body.val("{{ last_whatsapp_body }}"),whatsapp_body.attr("rows","{{ last_whatsapp_body_rows }}")}function e(){whatsapp_body.val("{{ default_whatsapp_body }}"),whatsapp_body.attr("rows","{{ default_whatsapp_body_rows }}")}clear_whatsapp_body=$("#clear_whatsapp_body"),last_whatsapp_body=$("#last_whatsapp_body"),default_whatsapp_body=$("#default_whatsapp_body"),whatsapp_body=$("#whatsapp_body"),clear_whatsapp_body.click((function(){whatsapp_body.val(""),whatsapp_body.attr("rows","2")})),last_whatsapp_body.click((function(){t()})),t(),default_whatsapp_body.click((function(){e()})),e()}(),function(){function t(){wechat_body.val("{{ last_wechat_body }}"),wechat_body.attr("rows","{{ last_wechat_body_rows }}")}function e(){wechat_body.val("{{ default_wechat_body }}"),wechat_body.attr("rows","{{ default_wechat_body_rows }}")}clear_wechat_body=$("#clear_wechat_body"),last_wechat_body=$("#last_wechat_body"),default_wechat_body=$("#default_wechat_body"),wechat_body=$("#wechat_body"),clear_wechat_body.click((function(){wechat_body.val(""),wechat_body.attr("rows","2")})),last_wechat_body.click((function(){t()})),t(),default_wechat_body.click((function(){e()})),e()}();const e=document.getElementById("wechat_body"),a=document.getElementById("copy_wechat_body");new ClipboardJS(a,{target:e,text:function(){return e.innerText}}).on("success",(function(t){const e=a.innerHTML;"Copied!"!==a.innerHTML&&(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=e}),3e3))}))}));</script>
+
+
+
+<script>$(document).ready((function(){function t(t){const e=document.getElementById(t),a=e.nextElementSibling;new ClipboardJS(a,{target:e,text:function(){return e.value}}).on("success",(function(e){const o=a.innerHTML;if("Copied!"!==a.innerHTML)if(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=o}),3e3),"email_clipboard"==t){var n=(new amplitude.Identify).add("num emails copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied email",{"contact id":"{{ contact.id }}"})}else if("phone_number_clipboard"==t){n=(new amplitude.Identify).add("num phone numbers copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied phone number",{"contact id":"{{ contact.id }}"})}}))}t("email_clipboard"),t("phone_number_clipboard");new QRCode(document.getElementById("whatsapp_qrcode"),{text:"{{ settings.BASE_URL }}",width:128,height:128,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});!function(){function t(){whatsapp_body.val("{{ last_whatsapp_body }}"),whatsapp_body.attr("rows","{{ last_whatsapp_body_rows }}")}function e(){whatsapp_body.val("{{ default_whatsapp_body }}"),whatsapp_body.attr("rows","{{ default_whatsapp_body_rows }}")}clear_whatsapp_body=$("#clear_whatsapp_body"),last_whatsapp_body=$("#last_whatsapp_body"),default_whatsapp_body=$("#default_whatsapp_body"),whatsapp_body=$("#whatsapp_body"),clear_whatsapp_body.click((function(){whatsapp_body.val(""),whatsapp_body.attr("rows","2")})),last_whatsapp_body.click((function(){t()})),t(),default_whatsapp_body.click((function(){e()})),e()}(),function(){function t(){wechat_body.val("{{ last_wechat_body }}"),wechat_body.attr("rows","{{ last_wechat_body_rows }}")}function e(){wechat_body.val("{{ default_wechat_body }}"),wechat_body.attr("rows","{{ default_wechat_body_rows }}")}clear_wechat_body=$("#clear_wechat_body"),last_wechat_body=$("#last_wechat_body"),default_wechat_body=$("#default_wechat_body"),wechat_body=$("#wechat_body"),clear_wechat_body.click((function(){wechat_body.val(""),wechat_body.attr("rows","2")})),last_wechat_body.click((function(){t()})),t(),default_wechat_body.click((function(){e()})),e()}();const e=document.getElementById("wechat_body"),a=document.getElementById("copy_wechat_body");new ClipboardJS(a,{target:e,text:function(){return e.innerText}}).on("success",(function(t){const e=a.innerHTML;"Copied!"!==a.innerHTML&&(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=e}),3e3))}))}));</script>
+{% endblock %}

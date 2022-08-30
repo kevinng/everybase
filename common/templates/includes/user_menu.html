@@ -38,6 +38,7 @@
                         {% load user_full_name %}
                         {% user_full_name request.user.user as full_name %}
                         <div class="fw-bolder d-flex align-items-center fs-5">{% if full_name is None %}{% include 'relationships/includes/enter_your_name.html' %}{% else %}{{ full_name }}{% endif %}</div>
+                        <div class="fw-bold fs-7">Leng Guan Metal Pte Ltd</div>
                         <div class="fw-bold text-muted fs-7">{{ request.user.user.country.name }}</div>
                     </div>
                     {% comment %} End: Username {% endcomment %}
@@ -49,8 +50,46 @@
             <div class="separator my-2"></div>
             {% comment %} End: Separator {% endcomment %}
 
-            {% comment %} Start: My leads menu item {% endcomment %}
+
+
+
             <div class="menu-item px-5">
+                <a href="" class="menu-link px-5">Leads</a>
+            </div>
+
+            <div class="menu-item px-5">
+                <a href="" class="menu-link px-5">Friends</a>
+            </div>
+
+            <div class="menu-item px-5">
+                <a href="" class="menu-link px-5">Contacted</a>
+            </div>
+
+            <div class="menu-item px-5">
+                <a href="" class="menu-link px-5">Reviews</a>
+            </div>
+
+            <div class="separator my-2"></div>
+
+            <div class="menu-item px-5">
+                <a href="" class="menu-link px-5">
+                    <span class="menu-text">Friend Requests</span>
+
+                    <span class="menu-badge">
+                        <span class="badge badge-light-primary fw-bolder fs-7">20</span>
+                    </span>
+                </a>
+            </div>
+
+
+
+
+
+
+
+
+            {% comment %} Start: My leads menu item {% endcomment %}
+            {% comment %} <div class="menu-item px-5">
                 <a href="{% url 'leads:my_leads' %}" class="menu-link px-5">
                     <span class="menu-text">My Leads</span>
 
@@ -60,7 +99,7 @@
                         </span>
                     {% endif %}
                 </a>
-            </div>
+            </div> {% endcomment %}
             {% comment %} End: My leads menu item {% endcomment %}
 
             {% comment %} Start: Settings menu item {% endcomment %}

@@ -3,6 +3,7 @@ from leads import views
 
 app_name = 'leads'
 urlpatterns = [
+    path('', views.lead_list, name='lead_list'),
     path('my', views.my_leads, name='my_leads'),
     path('create', views.lead_create, name='lead_create'),
     path('<int:id>', views.lead_detail, name='lead_detail'),
@@ -13,7 +14,9 @@ urlpatterns = [
     path('<int:id>/wechat', views.redirect_contact_wechat, name='redirect_contact_wechat'),
     path('<int:id>/whatsapp', views.redirect_contact_whatsapp, name='redirect_contact_whatsapp'),
     path('spam', views.flag_spam, name='flag_spam'),
-    path('scam', views.flag_scam, name='flag_scam')
+    path('scam', views.flag_scam, name='flag_scam'),
+
+
     
 
 

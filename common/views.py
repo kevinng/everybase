@@ -4,6 +4,23 @@ from django.urls import reverse
 
 from leads import models as lemods
 
+
+def home(request):
+    template_name = 'home.html'
+    return TemplateResponse(request, template_name, {})
+
+def ads_txt(_):
+    filename = 'ads.txt'
+    content = 'google.com, pub-4994829786974999, DIRECT, f08c47fec0942fa0'
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
+    return response
+
+
+
+
+
+
 def e(request, file_to_render):
     template_name = 'examples/%s' % file_to_render
     return TemplateResponse(request, template_name, {})
@@ -38,12 +55,6 @@ def mm(request, file_to_render):
 
 #     return TemplateResponse(request, 'superio/home.html', {'leads': leads})
 
-def ads_txt(request):
-    filename = 'ads.txt'
-    content = 'google.com, pub-4994829786974999, DIRECT, f08c47fec0942fa0'
-    response = HttpResponse(content, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
-    return response
 
 
 

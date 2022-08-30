@@ -86,6 +86,16 @@ def _set_wechat_bodies(params, contact):
         params['last_wechat_body_rows'] = 2
 
 def contact_lead(request, id):
+    template_name = 'leads/contact_lead_new.html'
+    return TemplateResponse(request, template_name, {})
+
+
+
+
+
+
+
+
     lead = models.Lead.objects.get(pk=id)
     kwargs = {
         'lead': lead,

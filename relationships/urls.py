@@ -9,6 +9,18 @@ urlpatterns = [
     path('update_email', views.update_email, name='update_email'),
     path('update_phone_number', views.update_phone_number, name='update_phone_number'),
 
+    path('<uuid:uuid>', views.user_detail, name='user_detail'),
+
+    # NO following, only friends.
+    path('<uuid:uuid>/following', views.user_detail__following, name='following'),
+    # path('<uuid:uuid>/followers', views.user_detail, name='user_detail__followers'),
+    path('<uuid:uuid>/contacted', views.user_detail__contacted, name='contacted'),
+    path('<uuid:uuid>/reviews', views.user_detail__reviews, name='reviews'),
+
+    path('<uuid:uuid>/friends', views.user_detail__friends, name='friends'),
+
+    path('<uuid:uuid>/requests', views.friend_requests, name='requests'),
+
     # path('change_password', views.change_password, name='change_password'),
 
     # path('m/<str:file_to_render>', views.m),
