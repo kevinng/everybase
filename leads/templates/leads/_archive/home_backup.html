@@ -1,0 +1,539 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block page_title %}Leads{% endblock %}
+
+{% block page_subtitle %}Importers, exporters, buyers, sellers, agents and more.{% endblock %}
+
+{% block actions %}
+{% include 'leads/includes/toolbar_actions.html' with hide_search=True %}
+{% endblock %}
+
+{% block content_body %}
+<div class="post d-flex flex-column-fluid">
+    <div id="kt_content_container" class="container-xxl">
+
+        {% include 'relationships/includes/has_incomplete_profile.html' %}
+
+        {% comment %} Start: Search notification sign-up {% endcomment %}
+        {% if susn_form %}
+            <form action="{{ request.get_full_path }}" method="post">
+                {% csrf_token %}
+                <div class="alert alert-dismissible bg-secondary d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                    {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
+                    <span class="svg-icon svg-icon-2hx svg-icon-dark me-4 mb-5 mb-sm-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
+                            <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
+                        </svg>
+                    </span>
+                    {% comment %} End: SVG icon {% endcomment %}
+                    
+                    <div class="d-flex flex-column text-dark pe-0 pe-sm-10 col-10">
+                        <h4 class="mb-2 text-dark">Be notified when new "{{ search_phrase }}" leads are posted</h4>
+                        <span>Enter your contact details so we may notify you when new "{{ search_phrase }}" leads are posted.</span>
+                        <div class="form-floating col-lg-6 mt-4">
+                            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name"{% if susn_form.first_name.value is not None and susn_form.first_name.value|cut:' ' != '' %} value="{{ susn_form.first_name.value }}"{% endif %} required />
+                            <label for="first_name">First Name</label>
+                        </div>
+                        {% if susn_form.first_name.errors %}<div class="text-danger">{% for error in susn_form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="form-floating col-lg-6 mt-2">
+                            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name"{% if susn_form.last_name.value is not None and susn_form.last_name.value|cut:' ' != '' %} value="{{ susn_form.last_name.value }}"{% endif %} required />
+                            <label for="last_name">Last Name</label>
+                        </div>
+                        {% if susn_form.last_name.errors %}<div class="text-danger">{% for error in susn_form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="form-floating col-lg-6 mt-2">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com"{% if susn_form.email.value is not None and susn_form.email.value|cut:' ' != '' %} value="{{ susn_form.email.value }}"{% endif %} required />
+                            <label for="email">Email</label>
+                        </div>
+                        {% if susn_form.email.errors %}<div class="text-danger">{% for error in susn_form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="form-floating col-lg-6 mt-2">
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+1234567890"{% if susn_form.phone_number.value is not None and susn_form.phone_number.value|cut:' ' != '' %} value="{{ susn_form.phone_number.value }}"{% endif %} />
+                            <label for="phone_number">Phone</label>
+                        </div>
+                        <div class="form-text">Include + symbol. E.g., +14155552671.</div>
+                        {% if susn_form.phone_number.errors %}<div class="text-danger">{% for error in susn_form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="form-check form-check-custom mt-4">
+                            <input class="form-check-input me-2" type="checkbox" name="via_whatsapp" id="via_whatsapp" {% if susn_form.via_whatsapp.value == True %}checked {% endif %}/>
+                            <label for="via_whatsapp">WhatsApp</label>
+                        </div>
+
+                        <div class="form-check form-check-custom mt-2">
+                            <input class="form-check-input me-2" type="checkbox" name="via_wechat" id="via_wechat" {% if susn_form.via_wechat.value == True %}checked {% endif %}/>
+                            <label for="via_wechat">WeChat</label>
+                        </div>
+
+                        <div id="via_wechat_id_div" class="form-floating col-lg-6 mt-2">
+                            <input type="text" class="form-control" name="via_wechat_id" id="via_wechat_id" placeholder="WeChat ID"{% if susn_form.via_wechat_id.value is not None and susn_form.via_wechat_id.value|cut:' ' != '' %} value="{{ susn_form.via_wechat_id.value }}"{% endif %}/>
+                            <label for="via_wechat_id">WeChat ID</label>
+                        </div>
+
+                        {% if susn_form.via_wechat_id.errors %}<div class="text-danger">{% for error in susn_form.via_wechat_id.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="col-lg-6 mt-6">
+                            <select name="country" class="form-select" data-control="select2" data-placeholder="Country" id="country">
+                                <option></option>
+                                {% for country in countries %}
+                                    <option value="{{ country.programmatic_key }}"{% if susn_form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if susn_form.country.errors %}<div class="text-danger">{% for error in susn_form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="col-lg-6 mt-6">
+                            <button type="submit" class="btn btn-success">Notify Me</button>
+                        </div>
+                    </div>
+
+                    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                        {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
+                        <span class="svg-icon svg-icon-2x svg-icon-dark">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                            </svg>
+                        </span>
+                        {% comment %} End: SVG icon {% endcomment %}
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+        {% comment %} End: Search notification sign-up {% endcomment %}
+
+        {% if messages %}
+            {% for message in messages %}
+                {% comment %} We need to string-strip message or the comparison will not work. {% endcomment %}
+                {% if message|cut:' ' == 'MESSAGE_KEY__CONTACT_SENT' %}
+                    <div class="alert alert-dismissible bg-info d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                        {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
+                        <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
+                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
+                            </svg>
+                        </span>
+                        {% comment %} End: SVG icon {% endcomment %}
+                        
+                        <div class="d-flex flex-column text-light pe-0 pe-sm-10">
+                            <h4 class="mb-2 text-light">Contact Sent</h4>
+                            <span>We've sent your contact details to the lead author.</span>
+                        </div>
+
+                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                            {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
+                            <span class="svg-icon svg-icon-2x svg-icon-light">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                                </svg>
+                            </span>
+                            {% comment %} End: SVG icon {% endcomment %}
+                        </button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% comment %} Start: Search options {% endcomment %}
+        <form id="search_form" action="{% url 'home' %}" method="get">
+        <input type="hidden" id="device_id" name="device_id" value=""/>
+        <div>
+            <div class="d-flex align-items-center">
+                {% comment %} <div class="col-lg-2 col-4 d-flex">
+                    <select name="sort_by" class="form-select" data-control="select2" data-hide-search="true" data-placeholder="Sort By">
+                        <option value="best_match"{% if sort_by == 'best_match' %} selected{% endif %}>Best Match</option>
+                        <option value="latest"{% if sort_by == 'latest' %} selected{% endif %}>Latest</option>
+                        <option value="num_contacts"{% if sort_by == 'num_contacts' %} selected{% endif %}># Contacts</option>
+                    </select>
+                </div>
+
+                <div class="bullet bg-secondary h-35px w-1px ms-2"></div> {% endcomment %}
+                
+                <input type="text" class="form-control" name="search_phrase" placeholder="Enter search phrase"{% if search_phrase != None and search_phrase.strip != '' %} value="{{ search_phrase }}"{% endif %} />
+                <button type="submit" class="btn btn-primary ms-2">Search</button>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <div>
+                    {% if show_reset is True %}<a href="{% url 'home' %}" class="btn btn-sm btn-outline btn-outline-primary text-hover-white me-2">Reset</a>{% endif %}
+                    <span class="text-dark fw-bolder"><span data-kt-countup="true" data-kt-countup-value="{{ page_obj.paginator.count }}">0</span> leads found</span>
+                </div>
+                <div class="form-check form-check-custom">
+                    <input class="form-check-input me-2" type="checkbox" name="reduce_spams_and_scams" id="reduce_spams_and_scams"{% if reduce_spams_and_scams == 'on' %} checked{% endif %} />
+                    <label for="reduce_spams_and_scams">Reduce Spams & Scams
+                        {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                        <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hide leads with a lot of spam or scam flags.">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        {% comment %} End: SVG icon {% endcomment %}
+                    </label>
+                </div>
+            </div>
+
+            {% comment %} Start: Options to show on/above large {% endcomment %}
+            <div class="d-none d-lg-block">
+                <div class="separator my-2"></div>
+
+                <div class="d-flex align-items-center">
+                    <div class="form-check form-check-custom">
+                        <input class="form-check-input me-2" type="checkbox" name="sourcing" id="sourcing" {% if sourcing == 'on' %}checked {% endif %}/>
+                        <label for="sourcing">
+                            {% include 'leads/includes/badges/leads/sourcing_goods.html' %}
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="promoting" id="promoting" {% if promoting == 'on' %}checked {% endif %}/>
+                        <label for="promoting">
+                            {% include 'leads/includes/badges/leads/promoting_goods.html' %}
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="need_logistics" id="need_logistics" {% if need_logistics == 'on' %}checked {% endif %}/>
+                        <label for="need_logistics">
+                            {% include 'leads/includes/badges/leads/need_logistics.html' %}
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="sourcing_agent" id="sourcing_agent" {% if sourcing_agent == 'on' %}checked {% endif %}/>
+                        <label for="sourcing_agent">
+                            {% include 'leads/includes/badges/leads/sourcing_agent.html' %}
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="sales_agent" id="sales_agent" {% if sales_agent == 'on' %}checked {% endif %}/>
+                        <label for="sales_agent">
+                            {% include 'leads/includes/badges/leads/sales_agent.html' %}
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="logistics_agent" id="logistics_agent" {% if logistics_agent == 'on' %}checked {% endif %}/>
+                        <label for="logistics_agent">
+                            {% include 'leads/includes/badges/leads/logistics_agent.html' %}
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="other" id="other" {% if other == 'on' %}checked {% endif %}/>
+                        <label for="other">
+                            {% include 'leads/includes/badges/leads/other.html' %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            {% comment %} End: Options to show on/above large {% endcomment %}
+
+            {% comment %} Start: Options to show below large {% endcomment %}
+            <div class="d-block d-lg-none">
+                <div class="separator my-2"></div>
+
+                <div class="d-flex align-items-center">
+                    <div class="form-check form-check-custom">
+                        <input class="form-check-input me-2" type="checkbox" name="sm_sourcing" id="sm_sourcing" {% if sourcing == 'on' %}checked {% endif %}/>
+                        <label for="sm_sourcing">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Sourcing Goods</span>
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="sm_promoting" id="sm_promoting" {% if promoting == 'on' %}checked {% endif %}/>
+                        <label for="sm_promoting">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/promoting_goods.txt' %}">Promoting Goods</span>
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="sm_need_logistics" id="sm_need_logistics" {% if need_logistics == 'on' %}checked {% endif %}/>
+                        <label for="sm_need_logistics">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/need_logistics.txt' %}">Need Logistics</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="separator my-2"></div>
+
+                <div class="d-flex align-items-center">
+                    <div class="form-check form-check-custom">
+                        <input class="form-check-input me-2" type="checkbox" name="sm_sourcing_agent" id="sm_sourcing_agent" {% if sourcing_agent == 'on' %}checked {% endif %}/>
+                        <label for="sm_sourcing_agent">
+                            {% include 'leads/includes/badges/leads/sourcing_agent.html' %}
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="sm_sales_agent" id="sm_sales_agent" {% if sales_agent == 'on' %}checked {% endif %}/>
+                        <label for="sm_sales_agent">
+                            {% include 'leads/includes/badges/leads/sales_agent.html' %}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="separator my-2"></div>
+
+                <div class="d-flex align-items-center">
+                    <div class="form-check form-check-custom">
+                        <input class="form-check-input me-2" type="checkbox" name="sm_logistics_agent" id="sm_logistics_agent" {% if logistics_agent == 'on' %}checked {% endif %}/>
+                        <label for="sm_logistics_agent">
+                            {% include 'leads/includes/badges/leads/logistics_agent.html' %}
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-custom ms-3">
+                        <input class="form-check-input me-2" type="checkbox" name="sm_other" id="sm_other" {% if other == 'on' %}checked {% endif %}/>
+                        <label for="sm_other">
+                            {% include 'leads/includes/badges/leads/other.html' %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="separator my-2"></div>
+
+            <div class="d-flex align-items-center">
+                <div class="col-lg-3 col-6">
+                    <select class="form-select" data-control="select2" data-placeholder="Filter User Country" name='user_country' id="user_country" data-allow-clear="true">
+                        <option value="any_country"{% if form.country.value == 'any_country' %} selected{% endif %}>Any User Country</option>
+                        {% for country in countries %}
+                            <option value="{{ country.programmatic_key }}"{% if user_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-check form-check-custom ms-2">
+                    <input class="form-check-input me-2" type="checkbox" name="user_country_verified" id="user_country_verified" {% if user_country_verified == 'on' %}checked {% endif %}/>
+                    <label for="user_country_verified">Verified
+                        {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                        <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code.">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                            <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        {% comment %} End: SVG icon {% endcomment %}
+                    </label>
+                </div>
+            </div>
+
+            {% comment %} <div class="separator my-2"></div>
+
+            <div class="d-flex align-items-center">
+                <div class="col-lg-6 col-12">
+                    <label for="origin_countries" class="form-label">Origin Countries</label>
+                    <select class="form-select" data-control="select2" data-placeholder="Filter Origin Countries" name="origin_countries" id="origin_countries" data-allow-clear="true" multiple="multiple">
+                        <option></option>
+                        {% for country in countries %}
+                            <option value="{{ country.programmatic_key }}"{% if form.origin_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="separator my-2"></div>
+
+            <div class="d-flex align-items-center">
+                <div class="col-lg-6 col-12">
+                    <label for="destination_countries" class="form-label">Destination Countries</label>
+                    <select class="form-select" data-control="select2" data-placeholder="Filter Destination Countries" name="destination_countries" id="destination_countries" data-allow-clear="true" multiple="multiple">
+                        <option></option>
+                        {% for country in countries %}
+                            <option value="{{ country.programmatic_key }}"{% if form.destination_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div> {% endcomment %}
+        </div>
+        </form>
+        {% comment %} End: Search options {% endcomment %}
+
+        {% if page_obj|length > 0 %}
+            {% for lead in page_obj %}
+                {% include 'leads/includes/lead_item.html' with lead=lead %}
+                {% if forloop.counter|divisibleby:5 %}
+                    <div class="mt-4" align="center">
+                        {% include 'includes/adsense_display_ad_unit.html' %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{% include 'includes/paginator.html' with hide_pages=True %}
+{% endblock %}
+
+{% comment %}
+$(document).ready(function() {
+    // We have two sets of checkboxes to cater for different screensizes, and we want to link them up.
+
+    // Pass Amplitude device to the backend so we can track unauthenticated users.
+    device_id = $('#device_id')
+    device_id.val(amplitude.getInstance().getDeviceId())
+
+    sourcing = $('#sourcing')
+    promoting = $('#promoting')
+    need_logistics = $('#need_logistics')
+    sourcing_agent = $('#sourcing_agent')
+    sales_agent = $('#sales_agent')
+    logistics_agent = $('#logistics_agent')
+    other = $('#other')
+
+    sm_sourcing = $('#sm_sourcing')
+    sm_promoting = $('#sm_promoting')
+    sm_need_logistics = $('#sm_need_logistics')
+    sm_sourcing_agent = $('#sm_sourcing_agent')
+    sm_sales_agent = $('#sm_sales_agent')
+    sm_logistics_agent = $('#sm_logistics_agent')
+    sm_other = $('#sm_other')
+
+    search_form = $('#search_form')
+    reduce_spams_and_scams = $('#reduce_spams_and_scams')
+    user_country = $('#user_country')
+    user_country_verified = $('#user_country_verified')
+
+    var target = document.querySelector("#search_form")
+    var blockUI = new KTBlockUI(target)
+
+    function form_field_changed() {
+        search_form.submit()
+        blockUI.block()
+    }
+
+    function link_and_submit_checkboxes(lg, sm) {
+        sm.change(function() {
+            lg.prop('checked', this.checked)
+            form_field_changed()
+        })
+
+        lg.change(function() {
+            sm.prop('checked', this.checked)
+            form_field_changed()
+        })
+    }
+
+    link_and_submit_checkboxes(sourcing, sm_sourcing)
+    link_and_submit_checkboxes(promoting, sm_promoting)
+    link_and_submit_checkboxes(need_logistics, sm_need_logistics)
+    link_and_submit_checkboxes(sourcing_agent, sm_sourcing_agent)
+    link_and_submit_checkboxes(sales_agent, sm_sales_agent)
+    link_and_submit_checkboxes(logistics_agent, sm_logistics_agent)
+    link_and_submit_checkboxes(other, sm_other)
+
+    reduce_spams_and_scams.change(function() {
+        form_field_changed()
+    })
+
+    user_country_verified.change(function() {
+        form_field_changed()
+    })
+
+    user_country.change(function() {
+        form_field_changed()
+    })
+
+    via_wechat_id_div = $('#via_wechat_id_div')
+    via_wechat = $('#via_wechat')
+
+    function toggle_via_wechat_id_div() {
+        if (via_wechat.is(':checked')) {
+            via_wechat_id_div.show()
+        } else {
+            via_wechat_id_div.hide()
+        }
+    }
+
+    toggle_via_wechat_id_div()
+
+    via_wechat.click(function() {
+        toggle_via_wechat_id_div()
+    })
+})
+
+// These functions are triggered by onclick, and have to be outside document.ready to work.
+// This code have to be rendered inline because it has server-side rendered links.
+
+function flag_lead(lead_id, type, button_id, badge_id) {
+    url = ''
+    if (type == 'spam') {
+        url = "{% url 'leads:flag_spam' %}"
+    } else if (type == 'scam') {
+        url = "{% url 'leads:flag_scam' %}"
+    }
+
+    if (url == '') {
+        return
+    }
+
+    $.post(url,
+        {'lead_id': lead_id},
+        function(data, status) {
+            btn = $('#' + button_id)
+            bdg = $('#' + badge_id)
+            if (type == 'spam') {
+                btn.toggleClass('btn-warning')
+                btn.toggleClass('text-warning')
+                bdg.html(data['num_spam_flags'])
+
+                amplitude.getInstance().logEvent(
+                    'discovery - flagged lead', {
+                        'lead id': lead_id,
+                        'type': 'spam'
+                    }
+                )
+            } else if (type == 'scam') {
+                btn.toggleClass('btn-danger')
+                btn.toggleClass('text-danger')
+                bdg.html(data['num_scam_flags'])
+
+                amplitude.getInstance().logEvent(
+                    'discovery - flagged lead', {
+                        'lead id': lead_id,
+                        'type': 'scam'
+                    }
+                )
+            }
+        }
+    )
+}
+{% endcomment %}
+{% block page_custom_javascript %}
+{% comment %} <script src="{% static 'leads/js/home.js' %}"></script> {% endcomment %}
+<script>$(document).ready((function(){device_id=$("#device_id"),device_id.val(amplitude.getInstance().getDeviceId()),sourcing=$("#sourcing"),promoting=$("#promoting"),need_logistics=$("#need_logistics"),sourcing_agent=$("#sourcing_agent"),sales_agent=$("#sales_agent"),logistics_agent=$("#logistics_agent"),other=$("#other"),sm_sourcing=$("#sm_sourcing"),sm_promoting=$("#sm_promoting"),sm_need_logistics=$("#sm_need_logistics"),sm_sourcing_agent=$("#sm_sourcing_agent"),sm_sales_agent=$("#sm_sales_agent"),sm_logistics_agent=$("#sm_logistics_agent"),sm_other=$("#sm_other"),search_form=$("#search_form"),reduce_spams_and_scams=$("#reduce_spams_and_scams"),user_country=$("#user_country"),user_country_verified=$("#user_country_verified");var e=document.querySelector("#search_form"),s=new KTBlockUI(e);function i(){search_form.submit(),s.block()}function _(e,s){s.change((function(){e.prop("checked",this.checked),i()})),e.change((function(){s.prop("checked",this.checked),i()}))}function c(){via_wechat.is(":checked")?via_wechat_id_div.show():via_wechat_id_div.hide()}_(sourcing,sm_sourcing),_(promoting,sm_promoting),_(need_logistics,sm_need_logistics),_(sourcing_agent,sm_sourcing_agent),_(sales_agent,sm_sales_agent),_(logistics_agent,sm_logistics_agent),_(other,sm_other),reduce_spams_and_scams.change((function(){i()})),user_country_verified.change((function(){i()})),user_country.change((function(){i()})),via_wechat_id_div=$("#via_wechat_id_div"),via_wechat=$("#via_wechat"),c(),via_wechat.click((function(){c()}))}));</script>
+<script>function flag_lead(a,l,e,t){url="","spam"==l?url="{% url 'leads:flag_spam' %}":"scam"==l&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:a},(function(g,s){btn=$("#"+e),bdg=$("#"+t),"spam"==l?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(g.num_spam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"spam"})):"scam"==l&&(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(g.num_scam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"scam"}))}))}</script>
+{% comment %}
+$(document).ready(function() {
+    // Hide all lead body
+    lead_bodies = $('.lead_body')
+    lead_bodies.hide()
+
+    show_more_lead_bodies = $('.show_more_lead_body')
+    show_more_lead_bodies.click(function () {
+        // Hide button
+        $(this).hide()
+
+        // Hide preview and show full lead body
+        lead_body_preview = $(this).parent()
+        lead_body_preview.siblings('.lead_body').toggle()
+        lead_body_preview.toggle()
+
+        lead_id = lead_body_preview.attr("data-lead-id")
+
+        // Log event
+        amplitude.getInstance().logEvent('discovery - showed more lead body', { 'lead_id': lead_id })
+    })
+})
+{% endcomment %}
+<script src="{% static 'leads/js/lead_item.js' %}"></script>
+{% endblock %}

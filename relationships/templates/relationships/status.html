@@ -1,0 +1,113 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}Update Your Status{% endblock %}
+
+{% block page_title %}Update Your Status{% endblock %}
+
+{% block page_subtitle %}Your status lets others know your needs{% endblock %}
+
+{% block actions %}
+{% include 'leads/includes/toolbar_actions.html' with hide_lead_create=True %}
+{% endblock %}
+
+{% block content_body %}
+<form action="{% url 'leads:lead_create' %}" method="post" id="lead_create_form">
+    {% csrf_token %}
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        {% comment %} Start: Container {% endcomment %}
+        <div id="kt_content_container" class="container-xxl">
+            <div class="card shadow-sm mt-4">
+                {% comment %} Start: Card body {% endcomment %}
+                <div class="card-body">
+                    <div class="mt-5">
+                        <div class="form-floating mt-4 col-12">
+                            <textarea class="form-control" data-kt-autosize="true" placeholder="What are you looking for?" name="body" id="body">{% if form.body.value != None %}{{ form.body.value }}{% endif %}</textarea>
+                            <label for="body">Please update your status</label>
+                        </div>
+                        {% if form.body.errors %}<div class="text-danger">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                        <div class="mt-2 d-flex justify-content-end">
+                            <button type="button" id="clear_whatsapp_body" class="btn btn-sm btn-light">Clear Status</button>
+                        </div>
+
+                        <div class="form-check form-check-custom mt-4">
+                            <div class="me-3">
+                                <input class="form-check-input me-1" type="checkbox" name="lead_type" id="buying" value="buying" />
+                                <label for="buying">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Buying</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-check form-check-custom mt-2">
+                            <div class="me-3">
+                                <input class="form-check-input me-1" type="checkbox" name="lead_type" id="buying" value="buying" />
+                                <label for="buying">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Selling</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-check form-check-custom mt-2">
+                            <div class="me-3">
+                                <input class="form-check-input me-1" type="checkbox" name="lead_type" id="buying" value="buying" />
+                                <label for="buying">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Need Commission Agents</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-check form-check-custom mt-2">
+                            <div class="me-3">
+                                <input class="form-check-input me-1" type="checkbox" name="lead_type" id="buying" value="buying" />
+                                <label for="buying">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Commission Agent</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-check form-check-custom mt-2">
+                            <div class="me-3">
+                                <input class="form-check-input me-1" type="checkbox" name="lead_type" id="buying" value="buying" />
+                                <label for="buying">
+                                    <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Other</span>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="mt-6">
+                        {% for err in form.non_field_errors %}
+                            <div class="text-danger mt-2">{{ err }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% comment %} End: Card body {% endcomment %}
+                
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <a href="{% url 'home' %}" class="btn btn-light btn-active-light-primary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary g-recaptcha"
+                        data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
+                        data-callback="leadCreateFormOnSubmit" 
+                        data-action="submit">Update Status</button>
+                </div>
+            </div>
+        </div>
+        {% comment %} End: Container {% endcomment %}
+    </div>
+</form>
+{% endblock %}
+
+{% comment %}
+function leadCreateFormOnSubmit(token) {
+    document.getElementById("lead_create_form").submit()
+}
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'leads/js/lead_create.js' %}"></script>
+{% endblock %}

@@ -21,40 +21,40 @@
                 {% csrf_token %}
 
                 <div class="text-center mb-10">
-                    <h1 class="text-dark mb-3">Register for Everybase</h1>
+                    <h1 class="text-dark mb-3">Register</h1>
                     <div class="text-gray-400 fw-bold fs-4">Have an account?
                     <a href="{% url 'login' %}" class="link-primary fw-bolder">Login</a></div>
                 </div>
 
-                <div>
+                {% comment %} <div>
                     <label class="form-label fs-6 fw-bolder text-dark" for="email">Email Address</label>
                     <input class="form-control form-control-lg" type="text" name="email" id="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} />
-                </div>
+                </div> {% endcomment %}
                 {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="mt-6">
-                    <label class="form-label fs-6 fw-bolder text-dark" for="phone_number">Phone Number</label>
+                    <label class="form-label fs-6 fw-bolder text-dark" for="phone_number">WhatsApp Phone Number</label>
                     <input class="form-control form-control-lg" type="text" name="phone_number" id="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} />
                     <div class="form-text">Include + symbol. E.g., +14155552671.</div>
                 </div>
                 {% if form.phone_number.errors %}<div class="text-danger">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
-                <div class="form-check form-check-custom mt-4">
+                {% comment %} <div class="form-check form-check-custom mt-4">
                     <div class="me-3">
                         <input class="form-check-input me-2" type="checkbox" name="enable_whatsapp" id="enable_whatsapp" />
-                        <label for="enable_whatsapp">WhatsApp login
+                        <label for="enable_whatsapp">WhatsApp login {% endcomment %}
                             {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'relationships/tooltips/enable_whatsapp.txt' %}">
+                            {% comment %} <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'relationships/tooltips/enable_whatsapp.txt' %}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                     <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
                                     <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
                                     <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
                                     </svg>
-                            </span>
+                            </span> {% endcomment %}
                             {% comment %} End: SVG icon {% endcomment %}
-                        </label>
+                        {% comment %} </label>
                     </div>
-                </div>
+                </div> {% endcomment %}
 
                 <div class="mt-6">
                     <label class="form-label fs-6 fw-bolder text-dark" for="first_name">First Name</label>

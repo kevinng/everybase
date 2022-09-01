@@ -9,6 +9,12 @@ urlpatterns = [
     path('update_email', views.update_email, name='update_email'),
     path('update_phone_number', views.update_phone_number, name='update_phone_number'),
 
+    path('<uuid:uuid>/contacts', views.contacts, name='contacts'),
+    path('<uuid:uuid>/status', views.status, name='status'),
+
+
+
+
     path('<uuid:uuid>', views.user_detail, name='user_detail'),
 
     # NO following, only friends.

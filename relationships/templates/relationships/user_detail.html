@@ -1,0 +1,520 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% comment %} TODO: change title {% endcomment %}
+{% block page_title %}Kevin Ng{% endblock %}
+{% block page_title_separator %}{% endblock %}
+
+{% block actions %}
+{% include 'leads/includes/toolbar_actions.html' %}
+{% endblock %}
+
+{% block content_body %}
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-xxl">
+        {% include 'relationships/includes/has_incomplete_profile.html' %}
+
+
+
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="alert alert-dismissible bg-secondary d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                <!-- Start: SVG icon | path: icons/duotune/general/gen007.svg -->
+                <span class="svg-icon svg-icon-2hx svg-icon-dark me-4 mb-5 mb-sm-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
+                        <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
+                    </svg>
+                </span>
+                <!-- End: SVG icon -->
+                
+                <div class="d-flex flex-column text-dark pe-0 pe-sm-10 col-10">
+                    <h4 class="mb-2 text-dark">Review this user</h4>
+                    <span>Your review will help others make the right connections.</span>
+                    <div class="form-floating col-lg-6 mt-2">
+                        <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Comments" id="comments" name="comments">{% if form.comments.value is not None and form.comments.value|cut:' ' != '' %}{{ form.comments.value }}{% endif %}</textarea>
+                        <label for="comments">What do you think of Kevin Ng?</label>
+                    </div>
+                    
+                    <div class="form-check form-check-custom mt-4">
+                        <input class="form-check-input me-2" type="radio" name="review_rating" />
+                        <label for="via_whatsapp"><span class="badge badge-success">Will Work With This User</span></label>
+                    </div>
+
+                    <div class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="radio" name="review_rating" />
+                        <label for="via_wechat"><span class="badge badge-danger">Will Not Work With This User</span></label>
+                    </div>
+
+                    <div class="col-lg-6 mt-6">
+                        <button type="submit" class="btn btn-sm btn-primary">Post Review</button>
+                    </div>
+                </div>
+
+                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                    {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
+                    <span class="svg-icon svg-icon-2x svg-icon-dark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                        </svg>
+                    </span>
+                    {% comment %} End: SVG icon {% endcomment %}
+                </button>
+            </div>
+        </form>
+
+
+
+
+
+
+        
+
+        <div class="d-flex flex-column flex-lg-row">
+            {% comment %} Start: Sidebar {% endcomment %}
+            <div class="flex-column flex-lg-row-auto w-lg-250px w-xl-350px mb-5">
+
+                <div class="card mb-5 shadow-sm">
+                    <!--begin::Body-->
+                    <div class="card-body pt-15 px-0">
+                        <!--begin::Member-->
+                        <div class="d-flex flex-column text-center mb-9">
+                            <!--
+                            <div class="symbol symbol-80px symbol-lg-150px mb-4">
+                                <img src="/metronic8/demo1/assets/media/avatars/300-3.jpg" class="" alt="">
+                            </div>
+                            -->
+
+                            <div class="d-flex flex-center flex-column">
+                                <div class="symbol symbol-100px overflow-hidden mb-7">
+                                    <div class="symbol-label fs-3 bg-light-info text-info">KN</div>
+                                </div>
+                                {% comment %} {% if do_not_render_contact_url != True %}<a href="{% url 'leads:contact_detail_private_notes' contact.id %}">{% endif %} {% endcomment %}
+                                    <div class="fw-bolder fs-6">Kevin Ng</div>
+                                    <div class="fw-bold">Leng Guan Metal Pte Ltd</div>             
+
+                                {% comment %} {% if do_not_render_contact_url != True %}</a>{% endif %} {% endcomment %}
+                                <div>Singapore <span class="text-muted fw-bold text-muted fs-7">
+                                    {% comment %} {% if contact.is_country_match_country_code %} {% endcomment %}
+                                        {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                                        <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Country verified with phone number country code +{{ contact.country.country_code }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                            <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    {% comment %} {% endif %} {% endcomment %}
+                                </span>
+                                </div>
+                                <span class="text-muted d-block fw-semibold">I supply textile, goods, resources.</span>
+                            </div>
+
+                            <div class="d-flex flex-column flex-center mt-4">
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#whatsapp_modal">WhatsApp</button>
+                                {% comment %} <form action="{% url 'leads:redirect_contact_whatsapp' contact.id %}" method="post"> {% endcomment %}
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <div class="modal bg-white fade" tabindex="-1" id="whatsapp_modal">
+                                        <div class="modal-dialog modal-fullscreen">
+                                            <div class="modal-content shadow-none">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">WhatsApp Kevin Ng</h5>
+                                                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                                        <span class="svg-icon svg-icon-2x"></span>
+                                                    </div>
+                                                </div>
+                                    
+                                                <div class="modal-body">
+                                                    <div class="my-3">
+                                                        <div class="align-items-start flex-column">
+                                                            <div class="d-flex align-items-top">
+                                                                <div class="symbol symbol-45px me-5">
+                                                                    <div class="symbol-label fs-3 bg-light-info text-info">KN</div>
+                                                                </div>
+                                                                <div class="d-flex justify-content-start flex-column align-items-start">
+                                                                    <div class="text-dark fw-bolder fs-6">Kevin Ng Kevin Ng Kevin Ng</div>
+                                                                    <div class="fw-bold fs-7">Leng Guan Metal Pte Ltd</div>
+                                                                    <div class="text-muted fw-bold fs-7">United States of America</div>
+                                                                    <div class="fw-normal fs-7">I supply medical supplies, resources, etc, etc.</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="separator my-4"></div>
+
+                                                    <div class="d-flex justify-content-center">
+                                                        <div class="col-lg-6 col-12">
+                                                            <div class="form-floating mt-2">
+                                                                <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="WhatsApp Message Body" id="whatsapp_body" name="whatsapp_body"></textarea>
+                                                                <label for="whatsapp_body">Enter WhatsApp message</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                    
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-success">Go to WhatsApp</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--end::Member-->      
+                    </div>
+                    <!--end::Body-->
+                </div>
+            </div>
+            {% comment %} End: Sidebar {% endcomment %}
+
+            {% comment %} Start: Content {% endcomment %}
+
+            <div class="flex-lg-row-fluid ms-lg-15">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <div class="card-title">
+                            Your Status
+                        </div>
+                        <div class="card-toolbar">
+                            <span class="text-muted">Updated 2d ago</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="text-dark">
+                            Hello world hello world
+                        </div>
+                        <div class="d-flex mt-2">
+                            <div>
+                                {% include 'leads/includes/badges/leads/other.html' %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-end">
+                            <a href="#" class="btn btn-sm btn-primary">Update Status</a>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="fw-bold mt-8">20 users contacted Kevin Ng</h2>
+
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div>
+                        {% if show_reset is True %}<a href="{% url 'home' %}" class="btn btn-sm btn-outline btn-outline-primary text-hover-white me-2">Reset</a>{% endif %}
+                        <span class="text-dark fw-bolder"><span data-kt-countup="true" data-kt-countup-value="{{ page_obj.paginator.count }}">0</span> persons</span>
+                    </div>
+    
+                </div>
+
+                <div class="d-flex align-items-center mt-2">
+                    <div class="form-check form-check-custom">
+                        <input class="form-check-input me-2" type="checkbox" name="sourcing" id="sourcing" {% if sourcing == 'on' %}checked {% endif %}/>
+                        <label for="sourcing">
+                            <span class="badge badge-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Will Work With This User</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mt-2">
+                    <div class="form-check form-check-custom">
+                        <input class="form-check-input me-2" type="checkbox" name="promoting" id="promoting" {% if promoting == 'on' %}checked {% endif %}/>
+                        <label for="promoting">
+                            <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">Will Not Work With This User</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mt-2">
+                    <div class="form-check form-check-custom">
+                        <input class="form-check-input me-2" type="checkbox" name="sourcing" id="sourcing" {% if sourcing == 'on' %}checked {% endif %}/>
+                        <label for="sourcing">
+                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_goods.txt' %}">No Review</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header">
+                            <div class="card-title align-items-start flex-column">
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-45px me-5">
+                                        <div class="symbol-label fs-3 bg-light-info text-info">KN</div>
+                                    </div>
+                                    <div class="d-flex justify-content-start flex-column">
+                                        <div class="text-dark fw-bolder fs-6">Kevin Ng<span class="text-muted fw-bold fs-7 ms-2">Singapore
+                                                <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +{{ user.country.country_code }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                                    </svg>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="fw-normal fs-7">I supply medical supplies, resources, etc, etc.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-toolbar">
+                                <div class="text-muted">Contacted 2d ago</div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="text-dark">
+                                This user seem like a scam.
+                            </div>
+                            <div class="d-flex mt-2">
+                                <div>
+                                    <span class="badge badge-danger">Will Not Work With This User</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-end">
+                                <a href="#" class="btn btn-sm btn-info">User Details</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header">
+                            <div class="card-title align-items-start flex-column">
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-45px me-5">
+                                        <div class="symbol-label fs-3 bg-light-info text-info">KN</div>
+                                    </div>
+                                    <div class="d-flex justify-content-start flex-column">
+                                        <div class="text-dark fw-bolder fs-6">Kevin Ng<span class="text-muted fw-bold fs-7 ms-2">Singapore
+                                                <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +{{ user.country.country_code }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                                    </svg>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="fw-normal fs-7">I supply medical supplies, resources, etc, etc.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-toolbar">
+                                <div class="text-muted">Contacted 2d ago</div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="d-flex mt-2">
+                                <div>
+                                    <span class="badge badge-secondary">No Review</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-end">
+                                <a href="#" class="btn btn-sm btn-info">User Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% comment %} End: Content {% endcomment %}
+        </div>
+    </div>
+</div>
+
+{% include 'includes/paginator.html' %}
+{% endblock %}
+
+{% block page_vendor_javascript %}
+<script src="{% static 'common/js/qrcode.min.js' %}"></script>
+{% endblock %}
+
+{% comment %}
+// These JavaScript code includes server-side rendered values. So they cannot be included.
+
+$(document).ready(function() {
+
+    // Initialize clipboards
+    function init_clipboard(target_id) {
+        const target = document.getElementById(target_id)
+        const button = target.nextElementSibling
+        var clipboard = new ClipboardJS(button, {
+            target: target,
+            text: function() {
+                return target.value
+            }
+        })
+
+        clipboard.on('success', function(e) {
+            const currentLabel = button.innerHTML
+            if (button.innerHTML === 'Copied!'){ return }
+            button.innerHTML = 'Copied!'
+    
+            // Revert button label after 3 seconds
+            setTimeout(function(){
+                button.innerHTML = currentLabel;
+            }, 3000)
+
+            if (target_id == 'email_clipboard') {
+                var identify = new amplitude.Identify().add('num emails copied', 1);
+                amplitude.getInstance().identify(identify)
+                amplitude.getInstance().logEvent(
+                    'qualification - copied email', {
+                        'contact id': '{{ contact.id }}'
+                    }
+                )
+            } else if (target_id == 'phone_number_clipboard') {
+                var identify = new amplitude.Identify().add('num phone numbers copied', 1);
+                amplitude.getInstance().identify(identify)
+                amplitude.getInstance().logEvent(
+                    'qualification - copied phone number', {
+                        'contact id': '{{ contact.id }}'
+                    }
+                )
+            }
+        })
+    }
+
+    init_clipboard('email_clipboard')
+    init_clipboard('phone_number_clipboard')
+
+    // QR code. We cannot include this code because it requires server-side rendering.
+    var qrcode = new QRCode(document.getElementById("wechat_qrcode"), {
+        text: "{{ settings.BASE_URL }}{% url 'leads:redirect_contact_wechat' contact.id %}",
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    })
+
+    // WhatsApp message body
+    function init_whatsapp_message_body_buttons() {
+        clear_whatsapp_body = $('#clear_whatsapp_body')
+        last_whatsapp_body = $('#last_whatsapp_body')
+        default_whatsapp_body = $('#default_whatsapp_body')
+        whatsapp_body = $('#whatsapp_body')
+
+        clear_whatsapp_body.click(function() {
+            whatsapp_body.val('')
+            whatsapp_body.attr('rows', '2')
+        })
+        
+        function set_last_whatsapp_body() {
+            whatsapp_body.val("{{ last_whatsapp_body }}")
+            whatsapp_body.attr('rows', '{{ last_whatsapp_body_rows }}')
+        }
+
+        last_whatsapp_body.click(function() {
+            set_last_whatsapp_body()
+        })
+
+        set_last_whatsapp_body()
+
+        function set_default_whatsapp_body() {
+            whatsapp_body.val("{{ default_whatsapp_body }}")
+            whatsapp_body.attr('rows', '{{ default_whatsapp_body_rows }}')
+        }
+
+        default_whatsapp_body.click(function() {
+            set_default_whatsapp_body()
+        })
+
+        set_default_whatsapp_body()
+    }
+
+    init_whatsapp_message_body_buttons()
+
+    // WeChat message body
+    function init_wechat_message_body_buttons() {
+        clear_wechat_body = $('#clear_wechat_body')
+        last_wechat_body = $('#last_wechat_body')
+        default_wechat_body = $('#default_wechat_body')
+        wechat_body = $('#wechat_body')
+
+        clear_wechat_body.click(function() {
+            wechat_body.val('')
+            wechat_body.attr('rows', '2')
+        })
+        
+        function set_last_wechat_body() {
+            wechat_body.val("{{ last_wechat_body }}")
+            wechat_body.attr('rows', '{{ last_wechat_body_rows }}')
+        }
+
+        last_wechat_body.click(function() {
+            set_last_wechat_body()
+        })
+
+        set_last_wechat_body()
+
+        function set_default_wechat_body() {
+            wechat_body.val("{{ default_wechat_body }}")
+            wechat_body.attr('rows', '{{ default_wechat_body_rows }}')
+        }
+
+        default_wechat_body.click(function() {
+            set_default_wechat_body()
+        })
+
+        set_default_wechat_body()
+    }
+
+    init_wechat_message_body_buttons()
+
+    // Select elements
+    const target = document.getElementById('wechat_body');
+    const button = document.getElementById('copy_wechat_body');
+
+    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+    var clipboard = new ClipboardJS(button, {
+        target: target,
+        text: function() {
+            return target.innerText;
+        }
+    });
+
+    // Success action handler
+    clipboard.on('success', function(e) {
+        const currentLabel = button.innerHTML;
+
+        // Exit label update when already in progress
+        if (button.innerHTML === 'Copied!'){
+            return;
+        }
+
+        // Update button label
+        button.innerHTML = 'Copied!';
+
+        // Revert button label after 3 seconds
+        setTimeout(function(){
+            button.innerHTML = currentLabel;
+        }, 3000)
+    });
+})
+{% endcomment %}
+{% block page_custom_javascript %}
+{% comment %} <script src="{% static 'leads/js/lead_item.js' %}"></script> {% endcomment %}
+{% comment %}
+TODO: redo the follow Javascript
+{% endcomment %}
+<script>$(document).ready((function(){function t(t){const e=document.getElementById(t),a=e.nextElementSibling;new ClipboardJS(a,{target:e,text:function(){return e.value}}).on("success",(function(e){const o=a.innerHTML;if("Copied!"!==a.innerHTML)if(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=o}),3e3),"email_clipboard"==t){var n=(new amplitude.Identify).add("num emails copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied email",{"contact id":"{{ contact.id }}"})}else if("phone_number_clipboard"==t){n=(new amplitude.Identify).add("num phone numbers copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied phone number",{"contact id":"{{ contact.id }}"})}}))}t("email_clipboard"),t("phone_number_clipboard");new QRCode(document.getElementById("wechat_qrcode"),{text:"{{ settings.BASE_URL }}",width:128,height:128,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});!function(){function t(){whatsapp_body.val("{{ last_whatsapp_body }}"),whatsapp_body.attr("rows","{{ last_whatsapp_body_rows }}")}function e(){whatsapp_body.val("{{ default_whatsapp_body }}"),whatsapp_body.attr("rows","{{ default_whatsapp_body_rows }}")}clear_whatsapp_body=$("#clear_whatsapp_body"),last_whatsapp_body=$("#last_whatsapp_body"),default_whatsapp_body=$("#default_whatsapp_body"),whatsapp_body=$("#whatsapp_body"),clear_whatsapp_body.click((function(){whatsapp_body.val(""),whatsapp_body.attr("rows","2")})),last_whatsapp_body.click((function(){t()})),t(),default_whatsapp_body.click((function(){e()})),e()}(),function(){function t(){wechat_body.val("{{ last_wechat_body }}"),wechat_body.attr("rows","{{ last_wechat_body_rows }}")}function e(){wechat_body.val("{{ default_wechat_body }}"),wechat_body.attr("rows","{{ default_wechat_body_rows }}")}clear_wechat_body=$("#clear_wechat_body"),last_wechat_body=$("#last_wechat_body"),default_wechat_body=$("#default_wechat_body"),wechat_body=$("#wechat_body"),clear_wechat_body.click((function(){wechat_body.val(""),wechat_body.attr("rows","2")})),last_wechat_body.click((function(){t()})),t(),default_wechat_body.click((function(){e()})),e()}();const e=document.getElementById("wechat_body"),a=document.getElementById("copy_wechat_body");new ClipboardJS(a,{target:e,text:function(){return e.innerText}}).on("success",(function(t){const e=a.innerHTML;"Copied!"!==a.innerHTML&&(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=e}),3e3))}))}));</script>
+
+
+
+<script>$(document).ready((function(){function t(t){const e=document.getElementById(t),a=e.nextElementSibling;new ClipboardJS(a,{target:e,text:function(){return e.value}}).on("success",(function(e){const o=a.innerHTML;if("Copied!"!==a.innerHTML)if(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=o}),3e3),"email_clipboard"==t){var n=(new amplitude.Identify).add("num emails copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied email",{"contact id":"{{ contact.id }}"})}else if("phone_number_clipboard"==t){n=(new amplitude.Identify).add("num phone numbers copied",1);amplitude.getInstance().identify(n),amplitude.getInstance().logEvent("qualification - copied phone number",{"contact id":"{{ contact.id }}"})}}))}t("email_clipboard"),t("phone_number_clipboard");new QRCode(document.getElementById("whatsapp_qrcode"),{text:"{{ settings.BASE_URL }}",width:128,height:128,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});!function(){function t(){whatsapp_body.val("{{ last_whatsapp_body }}"),whatsapp_body.attr("rows","{{ last_whatsapp_body_rows }}")}function e(){whatsapp_body.val("{{ default_whatsapp_body }}"),whatsapp_body.attr("rows","{{ default_whatsapp_body_rows }}")}clear_whatsapp_body=$("#clear_whatsapp_body"),last_whatsapp_body=$("#last_whatsapp_body"),default_whatsapp_body=$("#default_whatsapp_body"),whatsapp_body=$("#whatsapp_body"),clear_whatsapp_body.click((function(){whatsapp_body.val(""),whatsapp_body.attr("rows","2")})),last_whatsapp_body.click((function(){t()})),t(),default_whatsapp_body.click((function(){e()})),e()}(),function(){function t(){wechat_body.val("{{ last_wechat_body }}"),wechat_body.attr("rows","{{ last_wechat_body_rows }}")}function e(){wechat_body.val("{{ default_wechat_body }}"),wechat_body.attr("rows","{{ default_wechat_body_rows }}")}clear_wechat_body=$("#clear_wechat_body"),last_wechat_body=$("#last_wechat_body"),default_wechat_body=$("#default_wechat_body"),wechat_body=$("#wechat_body"),clear_wechat_body.click((function(){wechat_body.val(""),wechat_body.attr("rows","2")})),last_wechat_body.click((function(){t()})),t(),default_wechat_body.click((function(){e()})),e()}();const e=document.getElementById("wechat_body"),a=document.getElementById("copy_wechat_body");new ClipboardJS(a,{target:e,text:function(){return e.innerText}}).on("success",(function(t){const e=a.innerHTML;"Copied!"!==a.innerHTML&&(a.innerHTML="Copied!",setTimeout((function(){a.innerHTML=e}),3e3))}))}));</script>
+{% endblock %}

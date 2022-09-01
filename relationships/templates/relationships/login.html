@@ -26,14 +26,14 @@
                 {% csrf_token %}
 
                 <div class="text-center">
-                    <h1 class="text-dark">Login to Everybase</h1>
-                    <div class="text-gray-400 fw-bold fs-4 mt-3">New Here? <a href="{% url 'register' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="link-primary fw-bolder">Register</a></div>
+                    <h1 class="text-dark">Login</h1>
+                    <div class="text-gray-400 fw-bold fs-4 mt-3">No Account? <a href="{% url 'register' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="link-primary fw-bolder">Register</a></div>
                 </div>
 
                 <div class="mt-10">
-                    <label class="form-label fs-6 fw-bolder text-dark">Email or WhatsApp Phone Number</label>
+                    <label class="form-label fs-6 fw-bolder text-dark">WhatsApp Phone Number</label>
                     <input class="form-control form-control-lg" type="text" name="email_or_phone_number"{% if form.email_or_phone_number.value != None %} value="{{ form.email_or_phone_number.value }}"{% endif %} required />
-                    <div class="form-text">For phone number - include + symbol. E.g., +14155552671.</div>
+                    <div class="form-text">Include + symbol. E.g., +14155552671.</div>
                 </div>
                 {% if form.email_or_phone_number.errors %}<div class="text-danger">{% for error in form.email_or_phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 

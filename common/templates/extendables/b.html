@@ -148,7 +148,7 @@
 									<h1 class="d-flex text-dark fw-bolder fs-3 align-items-center my-1">{% block page_title %}{% endblock %}</h1>
 
                                     {% comment %} Start: Separator {% endcomment %}
-									<span class="h-20px border-1 border-gray-200 border-start ms-3 mx-2 me-1"></span>
+									{% block page_title_separator %}<span class="h-20px border-1 border-gray-200 border-start ms-3 mx-2 me-1"></span>{% endblock %}
                                     {% comment %} End: Separator {% endcomment %}
 
                                     {% comment %} Start: Subtitle {% endcomment %}

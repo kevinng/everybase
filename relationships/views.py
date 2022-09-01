@@ -528,7 +528,7 @@ def log_out(request):
     return _next_or_else_response(request.GET.get('next'), reverse('home'))
 
 def user_detail(request, uuid):
-    template_name = 'relationships/user_detail__leads.html'
+    template_name = 'relationships/user_detail.html'
     return TemplateResponse(request, template_name, {})
 
 def user_detail__following(request, uuid):
@@ -555,6 +555,13 @@ def friend_requests(request, uuid):
     template_name = 'relationships/friend_requests.html'
     return TemplateResponse(request, template_name, {})
 
+def contacts(request, uuid):
+    template_name = 'relationships/contacts.html'
+    return TemplateResponse(request, template_name, {})
+
+def status(request, uuid):
+    template_name = 'relationships/status.html'
+    return TemplateResponse(request, template_name, {})
 
 
 
