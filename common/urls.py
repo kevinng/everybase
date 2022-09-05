@@ -3,9 +3,9 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
 urlpatterns = [
-    path('sm/<str:file_to_render>', views.sm), # Render Superio mock-ups
-    path('ml/<str:file_to_render>', views.ml), # Render Metronic layout builder exports
-    path('mm/<str:file_to_render>', views.mm), # Render Metronic mock-ups
+    # path('sm/<str:file_to_render>', views.sm), # Render Superio mock-ups
+    # path('ml/<str:file_to_render>', views.ml), # Render Metronic layout builder exports
+    # path('mm/<str:file_to_render>', views.mm), # Render Metronic mock-ups
 
     # path('country/',
     #     views.CountryList.as_view()),

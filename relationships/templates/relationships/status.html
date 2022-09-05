@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content_body %}
-<form action="{% url 'leads:lead_create' %}" method="post" id="lead_create_form">
+<form action="" method="post" id="lead_create_form">
     {% csrf_token %}
     <div class="post d-flex flex-column-fluid" id="kt_post">
         {% comment %} Start: Container {% endcomment %}
@@ -24,7 +24,7 @@
                     <div class="mt-5">
                         <div class="form-floating mt-4 col-12">
                             <textarea class="form-control" data-kt-autosize="true" placeholder="What are you looking for?" name="body" id="body">{% if form.body.value != None %}{{ form.body.value }}{% endif %}</textarea>
-                            <label for="body">Please update your status</label>
+                            <label for="body">E.g., I am looking for coals from Africa...</label>
                         </div>
                         {% if form.body.errors %}<div class="text-danger">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 

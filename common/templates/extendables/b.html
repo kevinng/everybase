@@ -4,6 +4,21 @@
 <html lang="en">
     {% comment %} Start: Head {% endcomment %}
 	<head>
+        {% comment %}
+        Stimulus JS
+        <script type="module">
+            import { Application, defaultSchema } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+
+            const customSchema = {
+                ...defaultSchema,
+                controllerAttribute: "data-stimulus-controller",
+                targetAttribute: "data-stimulus-target",
+                actionAttribute: 'data-stimulus-action'
+            }
+            window.Stimulus = Application.start(document.documentElement, customSchema)
+        </script>
+        {% endcomment %}
+        <script type="module">import{Application,defaultSchema}from"https://unpkg.com/@hotwired/stimulus/dist/stimulus.js";const customSchema={...defaultSchema,controllerAttribute:"data-stimulus-controller",targetAttribute:"data-stimulus-target",actionAttribute:"data-stimulus-action"};window.Stimulus=Application.start(document.documentElement,customSchema);</script>
         <base href=""/>
 		<title>{% block title %}Everybase - find importers, exporters, buyers, sellers, agents and more{% endblock %}</title>
 		<meta charset="utf-8" />

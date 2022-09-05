@@ -1,9 +1,9 @@
 {% extends 'relationships/extendables/simple.html' %}
 
-{% block title %}Login to Everybase{% endblock %}
+{% block title %}Lookup User{% endblock %}
 
-{% block meta_description %}Login to Everybase{% endblock %}
-{% block meta_og_title %}Login to Everybase{% endblock %}
+{% block meta_description %}Lookup User{% endblock %}
+{% block meta_og_title %}Lookup User{% endblock %}
 {% block meta_og_url_path %}{% url 'login' %}{% endblock %}
 {% block meta_og_site_name %}Everybase{% endblock %}
 
@@ -26,8 +26,7 @@
                 {% csrf_token %}
 
                 <div class="text-center">
-                    <h1 class="text-dark">Login</h1>
-                    <div class="text-gray-400 fw-bold fs-4 mt-3">No Account? <a href="{% url 'register' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="link-primary fw-bolder">Register</a></div>
+                    <h1 class="text-dark">Lookup User</h1>
                 </div>
 
                 <div class="mt-10">
@@ -38,7 +37,7 @@
                 {% if form.email_or_phone_number.errors %}<div class="text-danger">{% for error in form.email_or_phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="text-center mt-10">
-                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Next</button>
+                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Lookup</button>
                 </div>
             </form>
         </div>

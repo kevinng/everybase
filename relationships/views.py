@@ -66,8 +66,8 @@ def _next_or_else_response(next, default):
 # Named 'log_in' and not 'login' to prevent clash with Django login
 @ratelimit(key='user_or_ip', rate='30/h', block=True, method=['POST'])
 def log_in(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home')) # Go home if authenticated
+    # if request.user.is_authenticated:
+        # return HttpResponseRedirect(reverse('home')) # Go home if authenticated
     
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
@@ -92,52 +92,6 @@ def log_in(request):
 
     params = _pass_next({'form': form}, request.GET.get('next'))
     return TemplateResponse(request, 'relationships/login.html', params)
-
-def confirm_email_login(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home')) # Go home if authenticated
-
-    if request.method == 'POST':
-        form = forms.ConfirmEmailLoginForm(request.POST)
-        if form.is_valid():
-            user = form.user
-            use_email_code(user)
-            dju = authenticate(user.django_user.username) # Passwordless
-            if dju is not None:
-                login(request, dju)
-                
-                send_amplitude_event.delay(
-                    'account - logged in',
-                    user_uuid=form.user.uuid,
-                    ip=get_ip_address(request),
-                    event_properties={
-                        'login type': 'email',
-                        'next': form.cleaned_data.get('next')
-                    }
-                )
-
-                cookie_uuid, _ = get_or_create_cookie_uuid(request)
-                models.LoginAction.objects.create(
-                    user=user,
-                    cookie_uuid=cookie_uuid,
-                    type='email'
-                )
-                response = _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
-                return set_cookie_uuid(response, cookie_uuid)
-
-    elif request.method == 'GET':
-        uuid = request.GET.get('uuid')
-        user = user_uuid_exists(uuid)
-        if user is None:
-            return HttpResponseRedirect(reverse('login')) # Unlikely error (e.g., bug or user temperage). Direct to login. No need for message.
-
-        form = forms.ConfirmEmailLoginForm(initial={
-            'uuid': uuid,
-            'next': request.GET.get('next'),
-            'email': user.email.email
-        })
-
-    return TemplateResponse(request, 'relationships/confirm_email_login.html', {'form': form})
 
 def confirm_whatsapp_login(request):
     if request.user.is_authenticated:
@@ -186,8 +140,8 @@ def confirm_whatsapp_login(request):
     return TemplateResponse(request, 'relationships/confirm_whatsapp_login.html', {'form': form})
 
 def register(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home')) # Go home if authenticated
+    # if request.user.is_authenticated:
+        # return HttpResponseRedirect(reverse('home')) # Go home if authenticated
 
     if request.method == 'POST':
         form = forms.RegisterForm(request.POST)
@@ -275,16 +229,15 @@ def verify_whatsapp(request):
     params = _pass_next({'form': form}, request.GET.get('next'))
     return TemplateResponse(request, 'relationships/verify_whatsapp.html', params)
 
-@login_required
-def disable_whatsapp(request):
-    user = request.user.user
-    user.enable_whatsapp = False
-    user.save()
-    return _next_or_else_response(request.GET.get('next'), reverse('users:settings'))
-
 # Don't name profile settings function 'settings', it conflicts with everybase.settings.
 @login_required
 def profile_settings(request):
+    
+
+
+
+
+
     user = request.user.user
     kwargs = {'user': user}
 
@@ -498,31 +451,6 @@ def update_phone_number(request):
 
     return TemplateResponse(request, 'relationships/confirm_phone_number_change.html', {'form': form})
 
-@ratelimit(key='user_or_ip', rate='500/h', block=True, method=['GET'])
-def magic_login(request, uuid):
-    if uuid is not None:
-        dju = authenticate(uuid)
-        if dju is not None:
-            login(request, dju)
-
-    next_url = request.GET.get('next')
-    models.MagicLinkRedirect.objects.create(
-        uuid=uuid,
-        next=next_url
-    )
-
-    send_amplitude_event.delay(
-        'account - logged in',
-        user_uuid=uuid,
-        ip=get_ip_address(request),
-        event_properties={
-            'login type': 'magic',
-            'next': next_url
-        }
-    )
-    
-    return _next_or_else_response(next_url, reverse('home'))
-
 def log_out(request):
     logout(request)
     return _next_or_else_response(request.GET.get('next'), reverse('home'))
@@ -531,55 +459,190 @@ def user_detail(request, uuid):
     template_name = 'relationships/user_detail.html'
     return TemplateResponse(request, template_name, {})
 
-def user_detail__following(request, uuid):
-    template_name = 'relationships/user_detail__following.html'
+def contacts(request):
+    template_name = 'relationships/contacts.html'
     return TemplateResponse(request, template_name, {})
+
+def status(request):
+    template_name = 'relationships/status.html'
+    return TemplateResponse(request, template_name, {})
+
+def user_list(request):
+    template_name = 'relationships/user_list.html'
+    return TemplateResponse(request, template_name, {})
+
+def suggestions(request, uuid):
+    template_name = 'relationships/user_detail_suggestions.html'
+    return TemplateResponse(request, template_name, {})
+
+def lookup(request):
+    template_name = 'relationships/lookup.html'
+    return TemplateResponse(request, template_name, {})
+
+# CONVERT THIS TO RELATIONSHIPS
+# @login_required
+# def redirect_contact_whatsapp(request, id):
+#     if request.method == 'POST':
+#         contact = models.Contact.objects.get(pk=id)
+#         text = request.POST.get('whatsapp_body')
+#         text = text if type(text) == str and text.strip() != 0 else None
+
+#         models.ContactAction.objects.create(
+#             contact=contact,
+#             type='whatsapp',
+#             body=text
+#         )
+        
+#         user = request.user.user
+#         identify_amplitude_user.delay(
+#             user_id=user.uuid,
+#             user_properties={'num whatsapped': user.num_whatsapped()}
+#         )
+
+#         send_amplitude_event.delay(
+#             'qualification - whatsapped',
+#             user_uuid=user.uuid,
+#             ip=get_ip_address(request),
+#             event_properties={'contact id': contact.lead.id}
+#         )
+
+#         url = get_whatsapp_url(contact.phone_number.country_code, contact.phone_number.national_number, text)
+#         return HttpResponseRedirect(url)
+
+#CONVERT TO RELATIONSHIPS
+# def _set_whatsapp_bodies(params, contact):
+#     params['default_whatsapp_body'] = render_to_string(
+#         'leads/text/default_whatsapp_message_body.txt', {
+#         'first_name': contact.first_name,
+#         'last_name': contact.last_name,
+#         'lead_body': contact.lead.body,
+#         'contact_comments': contact.comments
+#     }).replace('\n', '\\n') # Replace newline to newline symbols to be rendered in JS
+#     params['default_whatsapp_body_rows'] = params['default_whatsapp_body'].count('\\n')+1
+
+#     last_action = models.ContactAction.objects.filter(
+#         contact=contact,
+#         type='whatsapp'
+#     ).order_by('-created').first()
+    
+#     if last_action is not None and last_action.body is not None and last_action.body.strip() != '':
+#         params['last_whatsapp_body'] = last_action.body.replace('\r\n', '\\n')
+#         params['last_whatsapp_body_rows'] = last_action.body.count('\r\n')+1
+#     else:
+#         params['last_whatsapp_body_rows'] = 2
+
+
+
+
+
+
+
+
+
+
+
+
+# @login_required
+# def disable_whatsapp(request):
+#     user = request.user.user
+#     user.enable_whatsapp = False
+#     user.save()
+#     return _next_or_else_response(request.GET.get('next'), reverse('users:settings'))
+
+# @ratelimit(key='user_or_ip', rate='500/h', block=True, method=['GET'])
+# def magic_login(request, uuid):
+#     if uuid is not None:
+#         dju = authenticate(uuid)
+#         if dju is not None:
+#             login(request, dju)
+
+#     next_url = request.GET.get('next')
+#     models.MagicLinkRedirect.objects.create(
+#         uuid=uuid,
+#         next=next_url
+#     )
+
+#     send_amplitude_event.delay(
+#         'account - logged in',
+#         user_uuid=uuid,
+#         ip=get_ip_address(request),
+#         event_properties={
+#             'login type': 'magic',
+#             'next': next_url
+#         }
+#     )
+    
+#     return _next_or_else_response(next_url, reverse('home'))
+
+# def user_detail__following(request, uuid):
+#     template_name = 'relationships/user_detail__following.html'
+#     return TemplateResponse(request, template_name, {})
 
 # def user_detail__followers(request, uuid):
 #     template_name = 'relationships/user_detail__followers.html'
 #     return TemplateResponse(request, template_name, {})
 
-def user_detail__contacted(request, uuid):
-    template_name = 'relationships/user_detail__contacted.html'
-    return TemplateResponse(request, template_name, {})
+# def user_detail__contacted(request, uuid):
+#     template_name = 'relationships/user_detail__contacted.html'
+#     return TemplateResponse(request, template_name, {})
 
-def user_detail__reviews(request, uuid):
-    template_name = 'relationships/user_detail__reviews.html'
-    return TemplateResponse(request, template_name, {})
+# def user_detail__reviews(request, uuid):
+#     template_name = 'relationships/user_detail__reviews.html'
+#     return TemplateResponse(request, template_name, {})
 
-def user_detail__friends(request, uuid):
-    template_name = 'relationships/user_detail__following.html'
-    return TemplateResponse(request, template_name, {})
+# def user_detail__friends(request, uuid):
+#     template_name = 'relationships/user_detail__following.html'
+#     return TemplateResponse(request, template_name, {})
 
-def friend_requests(request, uuid):
-    template_name = 'relationships/friend_requests.html'
-    return TemplateResponse(request, template_name, {})
+# def friend_requests(request, uuid):
+#     template_name = 'relationships/friend_requests.html'
+#     return TemplateResponse(request, template_name, {})
 
-def contacts(request, uuid):
-    template_name = 'relationships/contacts.html'
-    return TemplateResponse(request, template_name, {})
+# def confirm_email_login(request):
+#     if request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('home')) # Go home if authenticated
 
-def status(request, uuid):
-    template_name = 'relationships/status.html'
-    return TemplateResponse(request, template_name, {})
+#     if request.method == 'POST':
+#         form = forms.ConfirmEmailLoginForm(request.POST)
+#         if form.is_valid():
+#             user = form.user
+#             use_email_code(user)
+#             dju = authenticate(user.django_user.username) # Passwordless
+#             if dju is not None:
+#                 login(request, dju)
+                
+#                 send_amplitude_event.delay(
+#                     'account - logged in',
+#                     user_uuid=form.user.uuid,
+#                     ip=get_ip_address(request),
+#                     event_properties={
+#                         'login type': 'email',
+#                         'next': form.cleaned_data.get('next')
+#                     }
+#                 )
 
+#                 cookie_uuid, _ = get_or_create_cookie_uuid(request)
+#                 models.LoginAction.objects.create(
+#                     user=user,
+#                     cookie_uuid=cookie_uuid,
+#                     type='email'
+#                 )
+#                 response = _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
+#                 return set_cookie_uuid(response, cookie_uuid)
 
+#     elif request.method == 'GET':
+#         uuid = request.GET.get('uuid')
+#         user = user_uuid_exists(uuid)
+#         if user is None:
+#             return HttpResponseRedirect(reverse('login')) # Unlikely error (e.g., bug or user temperage). Direct to login. No need for message.
 
+#         form = forms.ConfirmEmailLoginForm(initial={
+#             'uuid': uuid,
+#             'next': request.GET.get('next'),
+#             'email': user.email.email
+#         })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#     return TemplateResponse(request, 'relationships/confirm_email_login.html', {'form': form})
 
 # import pytz, phonenumbers, random, urllib
 # from django.core.validators import validate_email
@@ -983,34 +1046,6 @@ def status(request, uuid):
 
 #     params = {'form': form}
 #     return render(request, 'relationships/superio/change_password.html', params)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # from django.core.paginator import Paginator
 # from django.db.models import DateTimeField

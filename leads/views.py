@@ -1,701 +1,701 @@
-import pytz, datetime
-from urllib.parse import urljoin
-from common.tasks.send_email import send_email
-from common.tasks.identify_amplitude_user import identify_amplitude_user
+# import pytz, datetime
+# from urllib.parse import urljoin
+# from common.tasks.send_email import send_email
+# from common.tasks.identify_amplitude_user import identify_amplitude_user
 
-from django.urls import reverse
-from django.db.models import Count, Q, F, DateTimeField
-from django.db.models.functions import Trunc
-from django.db.models.expressions import RawSQL
-from django.shortcuts import render
-from django.contrib import messages
-from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
-from django.template.loader import render_to_string
-from django.template.response import TemplateResponse
-from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse
-from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
-from django.views.decorators.csrf import csrf_exempt
+# from django.urls import reverse
+# from django.db.models import Count, Q, F, DateTimeField
+# from django.db.models.functions import Trunc
+# from django.db.models.expressions import RawSQL
+# from django.shortcuts import render
+# from django.contrib import messages
+# from django.core.paginator import Paginator
+# from django.contrib.auth.decorators import login_required
+# from django.template.loader import render_to_string
+# from django.template.response import TemplateResponse
+# from django.views.decorators.http import require_http_methods
+# from django.http import JsonResponse
+# from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
+# from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchVectorField
+# from django.views.decorators.csrf import csrf_exempt
 
-from everybase import settings
+# from everybase import settings
 
-from common import models as commods
-from common.tasks.send_amplitude_event import send_amplitude_event
-from common.utilities.get_ip_address import get_ip_address
+# from common import models as commods
+# from common.tasks.send_amplitude_event import send_amplitude_event
+# from common.utilities.get_ip_address import get_ip_address
 
-from leads import models, forms
-from leads.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
-from leads.utilities.set_cookie_uuid import set_cookie_uuid
+# from leads import models, forms
+# from leads.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
+# from leads.utilities.set_cookie_uuid import set_cookie_uuid
 
-from relationships.utilities.get_wechat_url import get_wechat_url
-from relationships.utilities.get_whatsapp_url import get_whatsapp_url
-from relationships.utilities.get_or_create_email import get_or_create_email
-from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
+# from relationships.utilities.get_wechat_url import get_wechat_url
+# from relationships.utilities.get_whatsapp_url import get_whatsapp_url
+# from relationships.utilities.get_or_create_email import get_or_create_email
+# from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
 
-MESSAGE_KEY__CONTACT_SENT = 'MESSAGE_KEY__CONTACT_SENT'
-MESSAGE_KEY__UNAUTHORIZED_ACCESS = 'MESSAGE_KEY__UNAUTHORIZED_ACCESS'
+# MESSAGE_KEY__CONTACT_SENT = 'MESSAGE_KEY__CONTACT_SENT'
+# MESSAGE_KEY__UNAUTHORIZED_ACCESS = 'MESSAGE_KEY__UNAUTHORIZED_ACCESS'
 
 # Helper methods
 
-def _page_obj(params, objects, page: int, items_per_page=20):
-    paginator = Paginator(objects, items_per_page)
-    params['page_obj'] = paginator.get_page(page)
+# def _page_obj(params, objects, page: int, items_per_page=20):
+#     paginator = Paginator(objects, items_per_page)
+#     params['page_obj'] = paginator.get_page(page)
 
-def _set_whatsapp_bodies(params, contact):
-    params['default_whatsapp_body'] = render_to_string(
-        'leads/text/default_whatsapp_message_body.txt', {
-        'first_name': contact.first_name,
-        'last_name': contact.last_name,
-        'lead_body': contact.lead.body,
-        'contact_comments': contact.comments
-    }).replace('\n', '\\n') # Replace newline to newline symbols to be rendered in JS
-    params['default_whatsapp_body_rows'] = params['default_whatsapp_body'].count('\\n')+1
+# def _set_whatsapp_bodies(params, contact):
+#     params['default_whatsapp_body'] = render_to_string(
+#         'leads/text/default_whatsapp_message_body.txt', {
+#         'first_name': contact.first_name,
+#         'last_name': contact.last_name,
+#         'lead_body': contact.lead.body,
+#         'contact_comments': contact.comments
+#     }).replace('\n', '\\n') # Replace newline to newline symbols to be rendered in JS
+#     params['default_whatsapp_body_rows'] = params['default_whatsapp_body'].count('\\n')+1
 
-    last_action = models.ContactAction.objects.filter(
-        contact=contact,
-        type='whatsapp'
-    ).order_by('-created').first()
+#     last_action = models.ContactAction.objects.filter(
+#         contact=contact,
+#         type='whatsapp'
+#     ).order_by('-created').first()
     
-    if last_action is not None and last_action.body is not None and last_action.body.strip() != '':
-        params['last_whatsapp_body'] = last_action.body.replace('\r\n', '\\n')
-        params['last_whatsapp_body_rows'] = last_action.body.count('\r\n')+1
-    else:
-        params['last_whatsapp_body_rows'] = 2
+#     if last_action is not None and last_action.body is not None and last_action.body.strip() != '':
+#         params['last_whatsapp_body'] = last_action.body.replace('\r\n', '\\n')
+#         params['last_whatsapp_body_rows'] = last_action.body.count('\r\n')+1
+#     else:
+#         params['last_whatsapp_body_rows'] = 2
 
-def _set_wechat_bodies(params, contact):
-    params['default_wechat_body'] = render_to_string(
-        'leads/text/default_wechat_message_body.txt', {
-        'first_name': contact.first_name,
-        'last_name': contact.last_name,
-        'lead_body': contact.lead.body,
-        'contact_comments': contact.comments
-    }).replace('\n', '\\n') # Replace newline to newline symbols to be rendered in JS
-    params['default_wechat_body_rows'] = params['default_wechat_body'].count('\\n')+1
+# def _set_wechat_bodies(params, contact):
+#     params['default_wechat_body'] = render_to_string(
+#         'leads/text/default_wechat_message_body.txt', {
+#         'first_name': contact.first_name,
+#         'last_name': contact.last_name,
+#         'lead_body': contact.lead.body,
+#         'contact_comments': contact.comments
+#     }).replace('\n', '\\n') # Replace newline to newline symbols to be rendered in JS
+#     params['default_wechat_body_rows'] = params['default_wechat_body'].count('\\n')+1
 
-    last_action = models.ContactAction.objects.filter(
-        contact=contact,
-        type='wechat'
-    ).order_by('-created').first()
+#     last_action = models.ContactAction.objects.filter(
+#         contact=contact,
+#         type='wechat'
+#     ).order_by('-created').first()
     
-    if last_action is not None and last_action.body is not None and last_action.body.strip() != '':
-        params['last_wechat_body'] = last_action.body.replace('\r\n', '\\n')
-        params['last_wechat_body_rows'] = last_action.body.count('\r\n')+1
-    else:
-        params['last_wechat_body_rows'] = 2
+#     if last_action is not None and last_action.body is not None and last_action.body.strip() != '':
+#         params['last_wechat_body'] = last_action.body.replace('\r\n', '\\n')
+#         params['last_wechat_body_rows'] = last_action.body.count('\r\n')+1
+#     else:
+#         params['last_wechat_body_rows'] = 2
 
-def contact_lead(request, id):
-    template_name = 'leads/contact_lead_new.html'
-    return TemplateResponse(request, template_name, {})
-
-
+# def contact_lead(request, id):
+#     template_name = 'leads/contact_lead_new.html'
+#     return TemplateResponse(request, template_name, {})
 
 
 
 
 
 
-    lead = models.Lead.objects.get(pk=id)
-    kwargs = {
-        'lead': lead,
-        'request': request
-    }
-    cookie_uuid, _ = get_or_create_cookie_uuid(request)
 
-    if request.method == 'POST':
-        form = forms.ContactLeadForm(request.POST, **kwargs)
-        if form.is_valid():
-            email = get_or_create_email(form.cleaned_data.get('email'))
-            phone_number = get_or_create_phone_number(form.cleaned_data.get('phone_number'))
 
-            country_key = form.cleaned_data.get('country')
-            country = commods.Country.objects.get(programmatic_key=country_key)
+#     lead = models.Lead.objects.get(pk=id)
+#     kwargs = {
+#         'lead': lead,
+#         'request': request
+#     }
+#     cookie_uuid, _ = get_or_create_cookie_uuid(request)
 
-            contact = models.Contact.objects.create(
-                lead=lead,
-                first_name=form.cleaned_data.get('first_name'),
-                last_name=form.cleaned_data.get('last_name'),
-                email=email,
-                phone_number=phone_number,
+#     if request.method == 'POST':
+#         form = forms.ContactLeadForm(request.POST, **kwargs)
+#         if form.is_valid():
+#             email = get_or_create_email(form.cleaned_data.get('email'))
+#             phone_number = get_or_create_phone_number(form.cleaned_data.get('phone_number'))
 
-                cookie_uuid=cookie_uuid,
+#             country_key = form.cleaned_data.get('country')
+#             country = commods.Country.objects.get(programmatic_key=country_key)
 
-                via_whatsapp=form.cleaned_data.get('via_whatsapp'),
-                via_wechat=form.cleaned_data.get('via_wechat'),
-                via_wechat_id=form.cleaned_data.get('via_wechat_id'),
+#             contact = models.Contact.objects.create(
+#                 lead=lead,
+#                 first_name=form.cleaned_data.get('first_name'),
+#                 last_name=form.cleaned_data.get('last_name'),
+#                 email=email,
+#                 phone_number=phone_number,
 
-                country=country,
+#                 cookie_uuid=cookie_uuid,
 
-                comments=form.cleaned_data.get('comments'),
+#                 via_whatsapp=form.cleaned_data.get('via_whatsapp'),
+#                 via_wechat=form.cleaned_data.get('via_wechat'),
+#                 via_wechat_id=form.cleaned_data.get('via_wechat_id'),
 
-                to_selling_as_sales_agent=form.cleaned_data.get('to_selling_as_sales_agent'),
-                to_selling_as_sourcing_goods=form.cleaned_data.get('to_selling_as_sourcing_goods'),
-                to_selling_as_other=form.cleaned_data.get('to_selling_as_other'),
+#                 country=country,
 
-                to_buying_as_sourcing_agent=form.cleaned_data.get('to_buying_as_sourcing_agent'),
-                to_buying_as_promoting_goods=form.cleaned_data.get('to_buying_as_promoting_goods'),
-                to_buying_as_other=form.cleaned_data.get('to_buying_as_other'),
+#                 comments=form.cleaned_data.get('comments'),
 
-                to_sales_agent_as_seeking_cooperation=form.cleaned_data.get('to_sales_agent_as_seeking_cooperation'),
-                to_sales_agent_as_sourcing_goods=form.cleaned_data.get('to_sales_agent_as_sourcing_goods'),
-                to_sales_agent_as_other=form.cleaned_data.get('to_sales_agent_as_other'),
+#                 to_selling_as_sales_agent=form.cleaned_data.get('to_selling_as_sales_agent'),
+#                 to_selling_as_sourcing_goods=form.cleaned_data.get('to_selling_as_sourcing_goods'),
+#                 to_selling_as_other=form.cleaned_data.get('to_selling_as_other'),
 
-                to_sourcing_agent_as_seeking_cooperation=form.cleaned_data.get('to_sourcing_agent_as_seeking_cooperation'),
-                to_sourcing_agent_as_promoting_goods=form.cleaned_data.get('to_sourcing_agent_as_promoting_goods'),
-                to_sourcing_agent_as_other=form.cleaned_data.get('to_sourcing_agent_as_other'),
+#                 to_buying_as_sourcing_agent=form.cleaned_data.get('to_buying_as_sourcing_agent'),
+#                 to_buying_as_promoting_goods=form.cleaned_data.get('to_buying_as_promoting_goods'),
+#                 to_buying_as_other=form.cleaned_data.get('to_buying_as_other'),
 
-                to_logistics_agent_as_need_logistics=form.cleaned_data.get('to_logistics_agent_as_need_logistics'),
-                to_logistics_agent_as_other=form.cleaned_data.get('to_logistics_agent_as_other'),
+#                 to_sales_agent_as_seeking_cooperation=form.cleaned_data.get('to_sales_agent_as_seeking_cooperation'),
+#                 to_sales_agent_as_sourcing_goods=form.cleaned_data.get('to_sales_agent_as_sourcing_goods'),
+#                 to_sales_agent_as_other=form.cleaned_data.get('to_sales_agent_as_other'),
 
-                to_need_logistics_as_logistics_agent=form.cleaned_data.get('to_need_logistics_as_logistics_agent'),
-                to_need_logistics_as_other=form.cleaned_data.get('to_need_logistics_as_other'),
-            )
+#                 to_sourcing_agent_as_seeking_cooperation=form.cleaned_data.get('to_sourcing_agent_as_seeking_cooperation'),
+#                 to_sourcing_agent_as_promoting_goods=form.cleaned_data.get('to_sourcing_agent_as_promoting_goods'),
+#                 to_sourcing_agent_as_other=form.cleaned_data.get('to_sourcing_agent_as_other'),
 
-            # Notify lead author by email
-            if lead.author.email is not None:
-                magic_login = urljoin(settings.BASE_URL, reverse('magic_login', args=(lead.author.uuid,)))
-                contact_details_url = reverse('leads:contact_detail_private_notes', args=(contact.id,))
-                target = f'{magic_login}?next={contact_details_url}'
-                send_email.delay(
-                    render_to_string('leads/email/new_contact_subject.txt', {
-                        'contact': contact
-                    }),
-                    render_to_string('leads/email/new_contact.txt', {
-                        'contact': contact,
-                        'contact_details_url': target,
-                    }),
-                    'friend@everybase.co',
-                    [lead.author.email.email]
-                )
+#                 to_logistics_agent_as_need_logistics=form.cleaned_data.get('to_logistics_agent_as_need_logistics'),
+#                 to_logistics_agent_as_other=form.cleaned_data.get('to_logistics_agent_as_other'),
 
-            if request.user.is_authenticated:
-                user = request.user.user
-                identify_amplitude_user.delay(
-                    user_id=user.uuid,
-                    user_properties={'num leads contacted': user.num_contacts()}
-                )
+#                 to_need_logistics_as_logistics_agent=form.cleaned_data.get('to_need_logistics_as_logistics_agent'),
+#                 to_need_logistics_as_other=form.cleaned_data.get('to_need_logistics_as_other'),
+#             )
 
-            send_amplitude_event.delay(
-                'qualification - contacted lead author',
-                user_uuid=lead.author.uuid,
-                ip=get_ip_address(request),
-                event_properties={
-                    'lead id': lead.id,
-                    'lead type': lead.lead_type
-                }
-            )
+#             # Notify lead author by email
+#             if lead.author.email is not None:
+#                 magic_login = urljoin(settings.BASE_URL, reverse('magic_login', args=(lead.author.uuid,)))
+#                 contact_details_url = reverse('leads:contact_detail_private_notes', args=(contact.id,))
+#                 target = f'{magic_login}?next={contact_details_url}'
+#                 send_email.delay(
+#                     render_to_string('leads/email/new_contact_subject.txt', {
+#                         'contact': contact
+#                     }),
+#                     render_to_string('leads/email/new_contact.txt', {
+#                         'contact': contact,
+#                         'contact_details_url': target,
+#                     }),
+#                     'friend@everybase.co',
+#                     [lead.author.email.email]
+#                 )
 
-            messages.info(request, MESSAGE_KEY__CONTACT_SENT)
-            return HttpResponseRedirect(reverse('home'))
+#             if request.user.is_authenticated:
+#                 user = request.user.user
+#                 identify_amplitude_user.delay(
+#                     user_id=user.uuid,
+#                     user_properties={'num leads contacted': user.num_contacts()}
+#                 )
 
-    elif request.method == 'GET':
-        initial = {}
+#             send_amplitude_event.delay(
+#                 'qualification - contacted lead author',
+#                 user_uuid=lead.author.uuid,
+#                 ip=get_ip_address(request),
+#                 event_properties={
+#                     'lead id': lead.id,
+#                     'lead type': lead.lead_type
+#                 }
+#             )
 
-        # Populate form with last contact's details
-        last_contact = models.Contact.objects\
-            .filter(cookie_uuid=cookie_uuid)\
-            .order_by('-created')\
-            .first()
+#             messages.info(request, MESSAGE_KEY__CONTACT_SENT)
+#             return HttpResponseRedirect(reverse('home'))
 
-        if last_contact is not None:
-            initial['first_name'] = last_contact.first_name
-            initial['last_name'] = last_contact.last_name
-            initial['email'] = last_contact.email
-            initial['phone_number'] = last_contact.phone_number
-            initial['via_whatsapp'] = last_contact.via_whatsapp
-            initial['via_wechat'] = last_contact.via_wechat
-            initial['via_wechat_id'] = last_contact.via_wechat_id
-            initial['country'] = last_contact.country.programmatic_key
-        elif request.user.is_authenticated:
-            # Populate form with user's profile details if no last contact is found but the user is authenticated
-            user = request.user.user
-            initial['first_name'] = user.first_name
-            initial['last_name'] = user.last_name
-            initial['email'] = user.email.email if user.email is not None else None
-            initial['phone_number'] = user.phone_number.value() if user.phone_number is not None else None
-            initial['country'] = user.country.programmatic_key if user.country is not None else None
+#     elif request.method == 'GET':
+#         initial = {}
 
-        form = forms.ContactLeadForm(initial=initial, **kwargs)
+#         # Populate form with last contact's details
+#         last_contact = models.Contact.objects\
+#             .filter(cookie_uuid=cookie_uuid)\
+#             .order_by('-created')\
+#             .first()
 
-    countries = commods.Country.objects\
-        .annotate(num_leads=Count('users_w_this_country'))\
-        .order_by('-num_leads')
+#         if last_contact is not None:
+#             initial['first_name'] = last_contact.first_name
+#             initial['last_name'] = last_contact.last_name
+#             initial['email'] = last_contact.email
+#             initial['phone_number'] = last_contact.phone_number
+#             initial['via_whatsapp'] = last_contact.via_whatsapp
+#             initial['via_wechat'] = last_contact.via_wechat
+#             initial['via_wechat_id'] = last_contact.via_wechat_id
+#             initial['country'] = last_contact.country.programmatic_key
+#         elif request.user.is_authenticated:
+#             # Populate form with user's profile details if no last contact is found but the user is authenticated
+#             user = request.user.user
+#             initial['first_name'] = user.first_name
+#             initial['last_name'] = user.last_name
+#             initial['email'] = user.email.email if user.email is not None else None
+#             initial['phone_number'] = user.phone_number.value() if user.phone_number is not None else None
+#             initial['country'] = user.country.programmatic_key if user.country is not None else None
 
-    template_name = 'leads/contact_lead.html'
-    response = TemplateResponse(request, template_name, {
-        'countries': countries,
-        'lead': lead,
-        'form': form
-    })
-    return set_cookie_uuid(response, cookie_uuid)
+#         form = forms.ContactLeadForm(initial=initial, **kwargs)
 
-@login_required
-def lead_create(request):
-    kwargs = {'request': request}
-    if request.method == 'POST':
-        form = forms.LeadForm(request.POST, **kwargs)
-        if form.is_valid():
-            lead = models.Lead.objects.create(
-                author=request.user.user,
-                body=form.cleaned_data.get('body'),
-                lead_type=form.cleaned_data.get('lead_type')
-            )
+#     countries = commods.Country.objects\
+#         .annotate(num_leads=Count('users_w_this_country'))\
+#         .order_by('-num_leads')
 
-            user = request.user.user
-            identify_amplitude_user.delay(
-                user_id=user.uuid,
-                user_properties={'num leads created': user.num_leads()}
-            )
+#     template_name = 'leads/contact_lead.html'
+#     response = TemplateResponse(request, template_name, {
+#         'countries': countries,
+#         'lead': lead,
+#         'form': form
+#     })
+#     return set_cookie_uuid(response, cookie_uuid)
 
-            send_amplitude_event.delay(
-                'discovery - created lead',
-                user_uuid=lead.author.uuid,
-                ip=get_ip_address(request),
-                event_properties={
-                    'lead id': lead.id,
-                    'lead type': lead.lead_type
-                }
-            )
+# @login_required
+# def lead_create(request):
+#     kwargs = {'request': request}
+#     if request.method == 'POST':
+#         form = forms.LeadForm(request.POST, **kwargs)
+#         if form.is_valid():
+#             lead = models.Lead.objects.create(
+#                 author=request.user.user,
+#                 body=form.cleaned_data.get('body'),
+#                 lead_type=form.cleaned_data.get('lead_type')
+#             )
 
-            return HttpResponseRedirect(reverse('leads:lead_created_success', args=(lead.id,)))
-    elif request.method == 'GET':
-        form = forms.LeadForm(**kwargs)
+#             user = request.user.user
+#             identify_amplitude_user.delay(
+#                 user_id=user.uuid,
+#                 user_properties={'num leads created': user.num_leads()}
+#             )
 
-    return render(request, 'leads/lead_create.html', {'form': form})
+#             send_amplitude_event.delay(
+#                 'discovery - created lead',
+#                 user_uuid=lead.author.uuid,
+#                 ip=get_ip_address(request),
+#                 event_properties={
+#                     'lead id': lead.id,
+#                     'lead type': lead.lead_type
+#                 }
+#             )
 
-@login_required
-def lead_created_success(request, id):
-    lead = models.Lead.objects.get(pk=id)
-    return TemplateResponse(request, 'leads/lead_create_success.html', {
-        'contact_lead_url': lead.contact_lead_url,
-        'lead_id': lead.id
-    })
+#             return HttpResponseRedirect(reverse('leads:lead_created_success', args=(lead.id,)))
+#     elif request.method == 'GET':
+#         form = forms.LeadForm(**kwargs)
 
-@login_required
-def lead_detail(request, id):
-    lead = models.Lead.objects.get(pk=id)
+#     return render(request, 'leads/lead_create.html', {'form': form})
 
-    # Disallow access if user doesn't own this lead
-    if request.user.user.id != lead.author.id:
-        messages.info(request, MESSAGE_KEY__UNAUTHORIZED_ACCESS)
-        return HttpResponseRedirect(reverse('home'))
+# @login_required
+# def lead_created_success(request, id):
+#     lead = models.Lead.objects.get(pk=id)
+#     return TemplateResponse(request, 'leads/lead_create_success.html', {
+#         'contact_lead_url': lead.contact_lead_url,
+#         'lead_id': lead.id
+#     })
 
-    params = {'lead': lead}
-    _page_obj(params, lead.contacts.all().order_by('-created'), request.GET.get('page'))
-    return TemplateResponse(request, 'leads/lead_detail.html', params)
+# @login_required
+# def lead_detail(request, id):
+#     lead = models.Lead.objects.get(pk=id)
 
-@login_required
-def my_leads(request):
-    leads = request.user.user.leads_order_by_created_desc()
-    params = {}
-    _page_obj(params, leads, request.GET.get('page'))
-    return TemplateResponse(request, 'leads/my_leads.html', params)
+#     # Disallow access if user doesn't own this lead
+#     if request.user.user.id != lead.author.id:
+#         messages.info(request, MESSAGE_KEY__UNAUTHORIZED_ACCESS)
+#         return HttpResponseRedirect(reverse('home'))
 
-@login_required
-def contact_detail_private_notes(request, id):
-    contact = models.Contact.objects.get(pk=id)
+#     params = {'lead': lead}
+#     _page_obj(params, lead.contacts.all().order_by('-created'), request.GET.get('page'))
+#     return TemplateResponse(request, 'leads/lead_detail.html', params)
 
-    if request.method == 'POST':
-        form = forms.ContactNoteForm(request.POST)
-        if form.is_valid():
-            note = models.ContactNote.objects.create(
-                contact=contact,
-                body=form.cleaned_data.get('body'),
-                relevance=form.cleaned_data.get('relevance')
-            )
+# @login_required
+# def my_leads(request):
+#     leads = request.user.user.leads_order_by_created_desc()
+#     params = {}
+#     _page_obj(params, leads, request.GET.get('page'))
+#     return TemplateResponse(request, 'leads/my_leads.html', params)
 
-            user = request.user.user
-            identify_amplitude_user.delay(
-                user_id=user.uuid,
-                user_properties={'num private notes created': user.num_private_notes()}
-            )
+# @login_required
+# def contact_detail_private_notes(request, id):
+#     contact = models.Contact.objects.get(pk=id)
 
-            send_amplitude_event.delay(
-                'qualification - created private note',
-                user_uuid=user.uuid,
-                ip=get_ip_address(request),
-                event_properties={
-                    'contact note id': note.id,
-                    'relevance': note.relevance
-                }
-            )
+#     if request.method == 'POST':
+#         form = forms.ContactNoteForm(request.POST)
+#         if form.is_valid():
+#             note = models.ContactNote.objects.create(
+#                 contact=contact,
+#                 body=form.cleaned_data.get('body'),
+#                 relevance=form.cleaned_data.get('relevance')
+#             )
 
-            return HttpResponseRedirect(
-                reverse('leads:contact_detail_private_notes', args=(contact.id,)))
+#             user = request.user.user
+#             identify_amplitude_user.delay(
+#                 user_id=user.uuid,
+#                 user_properties={'num private notes created': user.num_private_notes()}
+#             )
 
-    elif request.method == 'GET':
-        form = forms.ContactNoteForm()
+#             send_amplitude_event.delay(
+#                 'qualification - created private note',
+#                 user_uuid=user.uuid,
+#                 ip=get_ip_address(request),
+#                 event_properties={
+#                     'contact note id': note.id,
+#                     'relevance': note.relevance
+#                 }
+#             )
 
-    params = {
-        'contact': contact,
-        'form': form
-    }
-    _page_obj(params, contact.active_notes(), request.GET.get('page'))
+#             return HttpResponseRedirect(
+#                 reverse('leads:contact_detail_private_notes', args=(contact.id,)))
 
-    send_amplitude_event.delay(
-        'qualification - accessed private notes',
-        user_uuid=request.user.user.uuid,
-        ip=get_ip_address(request),
-        event_properties={
-            'contact id': contact.id,
-            'page': params['page_obj'].number
-        }
-    )
+#     elif request.method == 'GET':
+#         form = forms.ContactNoteForm()
 
-    _set_whatsapp_bodies(params, contact)
-    _set_wechat_bodies(params, contact)
-    return TemplateResponse(request, 'leads/contact_detail_private_notes.html', params)
+#     params = {
+#         'contact': contact,
+#         'form': form
+#     }
+#     _page_obj(params, contact.active_notes(), request.GET.get('page'))
 
-@login_required
-def contact_detail_other_contacts(request, id):
-    contact = models.Contact.objects.get(pk=id)
-    params = {'contact': contact}
-    _page_obj(params, contact.other_contacts(), request.GET.get('page'))
+#     send_amplitude_event.delay(
+#         'qualification - accessed private notes',
+#         user_uuid=request.user.user.uuid,
+#         ip=get_ip_address(request),
+#         event_properties={
+#             'contact id': contact.id,
+#             'page': params['page_obj'].number
+#         }
+#     )
 
-    send_amplitude_event.delay(
-        'qualification - accessed other contacts',
-        user_uuid=request.user.user.uuid,
-        ip=get_ip_address(request),
-        event_properties={
-            'contact id': contact.id,
-            'page': params['page_obj'].number
-        }
-    )
+#     _set_whatsapp_bodies(params, contact)
+#     _set_wechat_bodies(params, contact)
+#     return TemplateResponse(request, 'leads/contact_detail_private_notes.html', params)
 
-    _set_whatsapp_bodies(params, contact)
-    _set_wechat_bodies(params, contact)
-    return TemplateResponse(request, 'leads/contact_detail_other_contacts.html', params)
+# @login_required
+# def contact_detail_other_contacts(request, id):
+#     contact = models.Contact.objects.get(pk=id)
+#     params = {'contact': contact}
+#     _page_obj(params, contact.other_contacts(), request.GET.get('page'))
 
-@login_required
-def redirect_contact_whatsapp(request, id):
-    if request.method == 'POST':
-        contact = models.Contact.objects.get(pk=id)
-        text = request.POST.get('whatsapp_body')
-        text = text if type(text) == str and text.strip() != 0 else None
+#     send_amplitude_event.delay(
+#         'qualification - accessed other contacts',
+#         user_uuid=request.user.user.uuid,
+#         ip=get_ip_address(request),
+#         event_properties={
+#             'contact id': contact.id,
+#             'page': params['page_obj'].number
+#         }
+#     )
 
-        models.ContactAction.objects.create(
-            contact=contact,
-            type='whatsapp',
-            body=text
-        )
+#     _set_whatsapp_bodies(params, contact)
+#     _set_wechat_bodies(params, contact)
+#     return TemplateResponse(request, 'leads/contact_detail_other_contacts.html', params)
+
+# @login_required
+# def redirect_contact_whatsapp(request, id):
+#     if request.method == 'POST':
+#         contact = models.Contact.objects.get(pk=id)
+#         text = request.POST.get('whatsapp_body')
+#         text = text if type(text) == str and text.strip() != 0 else None
+
+#         models.ContactAction.objects.create(
+#             contact=contact,
+#             type='whatsapp',
+#             body=text
+#         )
         
-        user = request.user.user
-        identify_amplitude_user.delay(
-            user_id=user.uuid,
-            user_properties={'num whatsapped': user.num_whatsapped()}
-        )
+#         user = request.user.user
+#         identify_amplitude_user.delay(
+#             user_id=user.uuid,
+#             user_properties={'num whatsapped': user.num_whatsapped()}
+#         )
 
-        send_amplitude_event.delay(
-            'qualification - whatsapped',
-            user_uuid=user.uuid,
-            ip=get_ip_address(request),
-            event_properties={'contact id': contact.lead.id}
-        )
+#         send_amplitude_event.delay(
+#             'qualification - whatsapped',
+#             user_uuid=user.uuid,
+#             ip=get_ip_address(request),
+#             event_properties={'contact id': contact.lead.id}
+#         )
 
-        url = get_whatsapp_url(contact.phone_number.country_code, contact.phone_number.national_number, text)
-        return HttpResponseRedirect(url)
+#         url = get_whatsapp_url(contact.phone_number.country_code, contact.phone_number.national_number, text)
+#         return HttpResponseRedirect(url)
 
-@login_required
-def redirect_contact_wechat(request, id):
-    if request.method == 'POST':
-        contact = models.Contact.objects.get(pk=id)
-        text = request.POST.get('wechat_body')
-        text = text if type(text) == str and text.strip() != 0 else None
+# @login_required
+# def redirect_contact_wechat(request, id):
+#     if request.method == 'POST':
+#         contact = models.Contact.objects.get(pk=id)
+#         text = request.POST.get('wechat_body')
+#         text = text if type(text) == str and text.strip() != 0 else None
 
-        models.ContactAction.objects.create(
-            contact=contact,
-            type='wechat',
-            body=text
-        )
+#         models.ContactAction.objects.create(
+#             contact=contact,
+#             type='wechat',
+#             body=text
+#         )
 
-        user = request.user.user
-        identify_amplitude_user.delay(
-            user_id=user.uuid,
-            user_properties={'num wechatted': user.num_wechatted()}
-        )
+#         user = request.user.user
+#         identify_amplitude_user.delay(
+#             user_id=user.uuid,
+#             user_properties={'num wechatted': user.num_wechatted()}
+#         )
 
-        send_amplitude_event.delay(
-            'qualification - wechatted',
-            user_uuid=user.uuid,
-            ip=get_ip_address(request),
-            event_properties={'contact id': contact.lead.id}
-        )
+#         send_amplitude_event.delay(
+#             'qualification - wechatted',
+#             user_uuid=user.uuid,
+#             ip=get_ip_address(request),
+#             event_properties={'contact id': contact.lead.id}
+#         )
 
-        class WeixinSchemeRedirect(HttpResponsePermanentRedirect):
-            allowed_schemes = ['weixin']
+#         class WeixinSchemeRedirect(HttpResponsePermanentRedirect):
+#             allowed_schemes = ['weixin']
 
-        url = get_wechat_url(contact.via_wechat_id)
-        return WeixinSchemeRedirect(url)
+#         url = get_wechat_url(contact.via_wechat_id)
+#         return WeixinSchemeRedirect(url)
 
-def lead_list(request):
-    # Default, don't show reset button
-    params = {'show_reset': False}
-    cookie_uuid, _ = get_or_create_cookie_uuid(request)
+# def lead_list(request):
+#     # Default, don't show reset button
+#     params = {'show_reset': False}
+#     cookie_uuid, _ = get_or_create_cookie_uuid(request)
 
-    g = lambda x : request.GET.get(x)
-    sourcing = g('sourcing')
-    promoting = g('promoting')
-    need_logistics = g('need_logistics')
-    sourcing_agent = g('sourcing_agent')
-    sales_agent = g('sales_agent')
-    logistics_agent = g('logistics_agent')
-    other = g('other')
-    user_country = g('user_country')
-    user_country_verified = g('user_country_verified')
-    reduce_spams_and_scams = g('reduce_spams_and_scams')
-    search_phrase = g('search_phrase')
+#     g = lambda x : request.GET.get(x)
+#     sourcing = g('sourcing')
+#     promoting = g('promoting')
+#     need_logistics = g('need_logistics')
+#     sourcing_agent = g('sourcing_agent')
+#     sales_agent = g('sales_agent')
+#     logistics_agent = g('logistics_agent')
+#     other = g('other')
+#     user_country = g('user_country')
+#     user_country_verified = g('user_country_verified')
+#     reduce_spams_and_scams = g('reduce_spams_and_scams')
+#     search_phrase = g('search_phrase')
     
-    q = Q()
+#     q = Q()
 
-    off = lambda x : x != 'on'
-    on = lambda x : x == 'on'
-    if off(sourcing) and off(promoting) and off(need_logistics) and off(sourcing_agent) and\
-        off(sales_agent) and off(logistics_agent) and off(other):
-        # All lead types are off, turn them all on - we won't show nothing.
-        sourcing = 'on'
-        promoting = 'on'
-        need_logistics = 'on'
-        sourcing_agent = 'on'
-        sales_agent = 'on'
-        logistics_agent = 'on'
-        other = 'on'
-    if on(sourcing) and on(promoting) and on(need_logistics) and on(sourcing_agent) and\
-        on(sales_agent) and on(logistics_agent) and on(other):
-        # All lead types are on, we don't need to exclude anything.
-        pass
-    else:
-        # One or more, but not all, lead types are off, filter off lead types.
+#     off = lambda x : x != 'on'
+#     on = lambda x : x == 'on'
+#     if off(sourcing) and off(promoting) and off(need_logistics) and off(sourcing_agent) and\
+#         off(sales_agent) and off(logistics_agent) and off(other):
+#         # All lead types are off, turn them all on - we won't show nothing.
+#         sourcing = 'on'
+#         promoting = 'on'
+#         need_logistics = 'on'
+#         sourcing_agent = 'on'
+#         sales_agent = 'on'
+#         logistics_agent = 'on'
+#         other = 'on'
+#     if on(sourcing) and on(promoting) and on(need_logistics) and on(sourcing_agent) and\
+#         on(sales_agent) and on(logistics_agent) and on(other):
+#         # All lead types are on, we don't need to exclude anything.
+#         pass
+#     else:
+#         # One or more, but not all, lead types are off, filter off lead types.
 
-        if sourcing is None or sourcing != 'on':
-            q = q & ~Q(lead_type='buying')
+#         if sourcing is None or sourcing != 'on':
+#             q = q & ~Q(lead_type='buying')
         
-        if promoting is None or promoting != 'on':
-            q = q & ~Q(lead_type='selling')
+#         if promoting is None or promoting != 'on':
+#             q = q & ~Q(lead_type='selling')
 
-        if need_logistics is None or need_logistics != 'on':
-            q = q & ~Q(lead_type='need_logistics')
+#         if need_logistics is None or need_logistics != 'on':
+#             q = q & ~Q(lead_type='need_logistics')
 
-        if sourcing_agent is None or sourcing_agent != 'on':
-            q = q & ~Q(lead_type='sourcing_agent')
+#         if sourcing_agent is None or sourcing_agent != 'on':
+#             q = q & ~Q(lead_type='sourcing_agent')
 
-        if sales_agent is None or sales_agent != 'on':
-            q = q & ~Q(lead_type='sales_agent')
+#         if sales_agent is None or sales_agent != 'on':
+#             q = q & ~Q(lead_type='sales_agent')
 
-        if logistics_agent is None or logistics_agent != 'on':
-            q = q & ~Q(lead_type='logistics_agent')
+#         if logistics_agent is None or logistics_agent != 'on':
+#             q = q & ~Q(lead_type='logistics_agent')
 
-        if other is None or other != 'on':
-            q = q & ~Q(lead_type='other')
+#         if other is None or other != 'on':
+#             q = q & ~Q(lead_type='other')
 
-        params['show_reset'] = True
+#         params['show_reset'] = True
 
-    if user_country is not None and user_country != 'any_country':
-        q = q & Q(author__country__programmatic_key=user_country)
-        params['show_reset'] = True
+#     if user_country is not None and user_country != 'any_country':
+#         q = q & Q(author__country__programmatic_key=user_country)
+#         params['show_reset'] = True
 
-    if user_country_verified == 'on':
-        q = q & Q(author__phone_number__country_code=F('author__country__country_code'))
+#     if user_country_verified == 'on':
+#         q = q & Q(author__phone_number__country_code=F('author__country__country_code'))
 
-    leads = models.Lead.objects\
-        .filter(deleted__isnull=True)\
-        .filter(q)
+#     leads = models.Lead.objects\
+#         .filter(deleted__isnull=True)\
+#         .filter(q)
 
-    if reduce_spams_and_scams == 'on':
-        # Do not judge leads with less than 10 impressions.
-        # Filter leads with more than 10 impressions and more than 3 spam counts.
-        # Not implemented yet - for each contact, tolerate 5 more impressions and 1 more spam count.
-        spam_leads = leads.annotate(num_spam=Count('flags', filter=Q(flags__type='spam')))\
-            .filter(Q(impressions__gte=10) & Q(num_spam__gte=3))
-            # Following code doesn't work.
-            # .annotate(num_contacts=Count('contacts'))\
-            # .filter(Q(impressions__gte=10+(F('num_contacts')*5)) & Q(num_spam__gte=3+F('num_contacts')))\
+#     if reduce_spams_and_scams == 'on':
+#         # Do not judge leads with less than 10 impressions.
+#         # Filter leads with more than 10 impressions and more than 3 spam counts.
+#         # Not implemented yet - for each contact, tolerate 5 more impressions and 1 more spam count.
+#         spam_leads = leads.annotate(num_spam=Count('flags', filter=Q(flags__type='spam')))\
+#             .filter(Q(impressions__gte=10) & Q(num_spam__gte=3))
+#             # Following code doesn't work.
+#             # .annotate(num_contacts=Count('contacts'))\
+#             # .filter(Q(impressions__gte=10+(F('num_contacts')*5)) & Q(num_spam__gte=3+F('num_contacts')))\
 
-        leads = leads.exclude(id__in=spam_leads)
+#         leads = leads.exclude(id__in=spam_leads)
 
-        # Do not judge leads with less than 10 impressions.
-        # Filter leads with more than 10 impressions and more than 2 scam counts.
-        # Not implemented yet - for each contact, tolerate 5 more impressions and 1 more scam count.
-        scam_leads = leads.annotate(num_spam=Count('flags', filter=Q(flags__type='scam')))\
-            .filter(Q(impressions__gte=10) & Q(num_spam__gte=2))
+#         # Do not judge leads with less than 10 impressions.
+#         # Filter leads with more than 10 impressions and more than 2 scam counts.
+#         # Not implemented yet - for each contact, tolerate 5 more impressions and 1 more scam count.
+#         scam_leads = leads.annotate(num_spam=Count('flags', filter=Q(flags__type='scam')))\
+#             .filter(Q(impressions__gte=10) & Q(num_spam__gte=2))
 
-        leads = leads.exclude(id__in=scam_leads)
+#         leads = leads.exclude(id__in=scam_leads)
 
-        # Exclude leads flagged by this user
-        user = request.user.user if request.user.is_authenticated else None
-        flagged_lead_ids = models.LeadFlag.objects.filter(deleted__isnull=True).filter(
-            Q(user=user) | Q(cookie_uuid=cookie_uuid)
-        ).values_list('lead__id', flat=True)
-        leads = leads.exclude(id__in=flagged_lead_ids)
+#         # Exclude leads flagged by this user
+#         user = request.user.user if request.user.is_authenticated else None
+#         flagged_lead_ids = models.LeadFlag.objects.filter(deleted__isnull=True).filter(
+#             Q(user=user) | Q(cookie_uuid=cookie_uuid)
+#         ).values_list('lead__id', flat=True)
+#         leads = leads.exclude(id__in=flagged_lead_ids)
 
-        params['show_reset'] = True
+#         params['show_reset'] = True
 
-    # Baseline ordering
-    # Truncate to month on created, then rank within the month. I.e., entries within this month are prioritized.
-    order_by = [Trunc('created', 'month', output_field=DateTimeField()).desc()]
+#     # Baseline ordering
+#     # Truncate to month on created, then rank within the month. I.e., entries within this month are prioritized.
+#     order_by = [Trunc('created', 'month', output_field=DateTimeField()).desc()]
 
-    if search_phrase is not None and search_phrase.strip() != '':
-        body_vec = SearchVector('body_vec')
-        search_query = SearchQuery(search_phrase)
-        leads = leads.annotate(body_vec=RawSQL('body_vec', [], output_field=SearchVectorField()))\
-            .annotate(search_rank=SearchRank(body_vec, search_query))
+#     if search_phrase is not None and search_phrase.strip() != '':
+#         body_vec = SearchVector('body_vec')
+#         search_query = SearchQuery(search_phrase)
+#         leads = leads.annotate(body_vec=RawSQL('body_vec', [], output_field=SearchVectorField()))\
+#             .annotate(search_rank=SearchRank(body_vec, search_query))
         
-        # Order by search rank within the baseline order (e.g., within the month)
-        order_by.append('-search_rank')
+#         # Order by search rank within the baseline order (e.g., within the month)
+#         order_by.append('-search_rank')
 
-        params['show_reset'] = True
+#         params['show_reset'] = True
 
-    # Thirdly, order by num_contacts.
-    order_by.append('num_contacts')
-    leads = leads.annotate(num_contacts=Count('contacts'))\
-        .order_by(*order_by)
+#     # Thirdly, order by num_contacts.
+#     order_by.append('num_contacts')
+#     leads = leads.annotate(num_contacts=Count('contacts'))\
+#         .order_by(*order_by)
 
-    # Pass values back
-    params['search_phrase'] = search_phrase
-    params['reduce_spams_and_scams'] = reduce_spams_and_scams
-    params['sourcing'] = sourcing
-    params['promoting'] = promoting
-    params['need_logistics'] = need_logistics
-    params['sourcing_agent'] = sourcing_agent
-    params['sales_agent'] = sales_agent
-    params['logistics_agent'] = logistics_agent
-    params['other'] = other
-    params['user_country'] = user_country
-    params['user_country_verified'] = user_country_verified
+#     # Pass values back
+#     params['search_phrase'] = search_phrase
+#     params['reduce_spams_and_scams'] = reduce_spams_and_scams
+#     params['sourcing'] = sourcing
+#     params['promoting'] = promoting
+#     params['need_logistics'] = need_logistics
+#     params['sourcing_agent'] = sourcing_agent
+#     params['sales_agent'] = sales_agent
+#     params['logistics_agent'] = logistics_agent
+#     params['other'] = other
+#     params['user_country'] = user_country
+#     params['user_country_verified'] = user_country_verified
 
-    # Save this lead query
-    user = request.user.user if request.user.is_authenticated else None
-    lead_query_action = models.LeadQueryAction.objects.create(
-        user=user,
-        cookie_uuid=cookie_uuid,
-        search_phrase=search_phrase,
-        reduce_spams_and_scams=reduce_spams_and_scams=='on',
-        user_country=user_country,
-        user_country_verified=user_country_verified=='on',
-        sourcing=sourcing=='on',
-        promoting=promoting=='on',
-        need_logistics=need_logistics=='on',
-        sourcing_agent=sourcing_agent=='on',
-        sales_agent=sales_agent=='on',
-        logistics_agent=logistics_agent=='on',
-        other=other=='on'
-    )
+#     # Save this lead query
+#     user = request.user.user if request.user.is_authenticated else None
+#     lead_query_action = models.LeadQueryAction.objects.create(
+#         user=user,
+#         cookie_uuid=cookie_uuid,
+#         search_phrase=search_phrase,
+#         reduce_spams_and_scams=reduce_spams_and_scams=='on',
+#         user_country=user_country,
+#         user_country_verified=user_country_verified=='on',
+#         sourcing=sourcing=='on',
+#         promoting=promoting=='on',
+#         need_logistics=need_logistics=='on',
+#         sourcing_agent=sourcing_agent=='on',
+#         sales_agent=sales_agent=='on',
+#         logistics_agent=logistics_agent=='on',
+#         other=other=='on'
+#     )
 
-    _page_obj(params, leads, request.GET.get('page'), items_per_page=50)
+#     _page_obj(params, leads, request.GET.get('page'), items_per_page=50)
     
-    event_properties = {
-        'search phrase': search_phrase,
-        'reduce spams and scams': reduce_spams_and_scams=='on',
-        'sourcing goods': sourcing=='on',
-        'promoting goods': promoting=='on',
-        'need logistics': need_logistics=='on',
-        'sourcing agent': sourcing_agent=='on',
-        'sales agent': sales_agent=='on',
-        'logistics agent': logistics_agent=='on',
-        'other': other=='on',
-        'user country': user_country,
-        'user country verified': user_country_verified=='on',
-        'page': params['page_obj'].number
-    }
-    if request.user.is_authenticated:
-        send_amplitude_event.delay(
-            'discovery - searched leads',
-            user_uuid=user.uuid,
-            ip=get_ip_address(request),
-            event_properties=event_properties
-        )
-    elif request.GET.get('device_id') is not None:
-        send_amplitude_event.delay(
-            'discovery - searched leads',
-            device_id=request.GET.get('device_id'),
-            ip=get_ip_address(request),
-            event_properties=event_properties
-        )
+#     event_properties = {
+#         'search phrase': search_phrase,
+#         'reduce spams and scams': reduce_spams_and_scams=='on',
+#         'sourcing goods': sourcing=='on',
+#         'promoting goods': promoting=='on',
+#         'need logistics': need_logistics=='on',
+#         'sourcing agent': sourcing_agent=='on',
+#         'sales agent': sales_agent=='on',
+#         'logistics agent': logistics_agent=='on',
+#         'other': other=='on',
+#         'user country': user_country,
+#         'user country verified': user_country_verified=='on',
+#         'page': params['page_obj'].number
+#     }
+#     if request.user.is_authenticated:
+#         send_amplitude_event.delay(
+#             'discovery - searched leads',
+#             user_uuid=user.uuid,
+#             ip=get_ip_address(request),
+#             event_properties=event_properties
+#         )
+#     elif request.GET.get('device_id') is not None:
+#         send_amplitude_event.delay(
+#             'discovery - searched leads',
+#             device_id=request.GET.get('device_id'),
+#             ip=get_ip_address(request),
+#             event_properties=event_properties
+#         )
 
-    # Increment impression of all leads on this page
-    for lead in params['page_obj']:
-        lead.impressions += 1
-        lead.save()
+#     # Increment impression of all leads on this page
+#     for lead in params['page_obj']:
+#         lead.impressions += 1
+#         lead.save()
 
-    params['countries'] = commods.Country.objects.annotate(num_leads=Count('users_w_this_country')).order_by('-num_leads')
+#     params['countries'] = commods.Country.objects.annotate(num_leads=Count('users_w_this_country')).order_by('-num_leads')
 
-    # Pass form to template if search phrase is entered and we can't identify the user.
-    if not (search_phrase is None or search_phrase.strip() == ''):
-        if request.method == 'POST':
-            # Handle sign-up search notification
-            form = forms.SignUpSearchNotification(request.POST)
-            if form.is_valid():
-                models.SearchNotification.objects.create(
-                    cookie_uuid=cookie_uuid,
-                    first_name=form.cleaned_data.get('first_name'),
-                    last_name=form.cleaned_data.get('last_name'),
-                    email=get_or_create_email(form.cleaned_data.get('email')),
-                    phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
-                    country=commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country')),
-                    via_whatsapp=form.cleaned_data.get('via_whatsapp'),
-                    via_wechat=form.cleaned_data.get('via_wechat'),
-                    via_wechat_id=form.cleaned_data.get('via_wechat_id'),
-                    lead_query_action=lead_query_action
-                )
-            else:
-                params['susn_form'] = form
-        else:
-            any_contact = models.Contact.objects.filter(cookie_uuid=cookie_uuid).first()
-            any_search_notification = models.SearchNotification.objects.filter(cookie_uuid=cookie_uuid).first()
-            if not request.user.is_authenticated and any_contact is None and any_search_notification is None:
-                # User is not authenticated, and have not contacted any lead author, initialize empty form and pass it.
-                params['susn_form'] = forms.SignUpSearchNotification()
+#     # Pass form to template if search phrase is entered and we can't identify the user.
+#     if not (search_phrase is None or search_phrase.strip() == ''):
+#         if request.method == 'POST':
+#             # Handle sign-up search notification
+#             form = forms.SignUpSearchNotification(request.POST)
+#             if form.is_valid():
+#                 models.SearchNotification.objects.create(
+#                     cookie_uuid=cookie_uuid,
+#                     first_name=form.cleaned_data.get('first_name'),
+#                     last_name=form.cleaned_data.get('last_name'),
+#                     email=get_or_create_email(form.cleaned_data.get('email')),
+#                     phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
+#                     country=commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country')),
+#                     via_whatsapp=form.cleaned_data.get('via_whatsapp'),
+#                     via_wechat=form.cleaned_data.get('via_wechat'),
+#                     via_wechat_id=form.cleaned_data.get('via_wechat_id'),
+#                     lead_query_action=lead_query_action
+#                 )
+#             else:
+#                 params['susn_form'] = form
+#         else:
+#             any_contact = models.Contact.objects.filter(cookie_uuid=cookie_uuid).first()
+#             any_search_notification = models.SearchNotification.objects.filter(cookie_uuid=cookie_uuid).first()
+#             if not request.user.is_authenticated and any_contact is None and any_search_notification is None:
+#                 # User is not authenticated, and have not contacted any lead author, initialize empty form and pass it.
+#                 params['susn_form'] = forms.SignUpSearchNotification()
 
-    response = TemplateResponse(request, 'leads/home.html', params)
-    return set_cookie_uuid(response, cookie_uuid)
+#     response = TemplateResponse(request, 'leads/home.html', params)
+#     return set_cookie_uuid(response, cookie_uuid)
 
-def _flag_lead(request, lead_id, type):
-    """Toggle lead flag on or off."""
-    lead = models.Lead.objects.get(pk=lead_id)
+# def _flag_lead(request, lead_id, type):
+#     """Toggle lead flag on or off."""
+#     lead = models.Lead.objects.get(pk=lead_id)
 
-    user = request.user.user if request.user.is_authenticated else None
-    cookie_uuid, _ = get_or_create_cookie_uuid(request)
-    flag, is_created = models.LeadFlag.objects.get_or_create(
-        lead=lead,
-        type=type,
-        user=user,
-        cookie_uuid=cookie_uuid
-    )
+#     user = request.user.user if request.user.is_authenticated else None
+#     cookie_uuid, _ = get_or_create_cookie_uuid(request)
+#     flag, is_created = models.LeadFlag.objects.get_or_create(
+#         lead=lead,
+#         type=type,
+#         user=user,
+#         cookie_uuid=cookie_uuid
+#     )
 
-    if not is_created:
-        # Flag is not created anew, check the deleted field.
-        if flag.deleted is not None:
-            # Flag is deleted. Restore it.
-            flag.deleted = None
-        else:
-            # Flag is not deleted. Delete it.
-            sgtz = pytz.timezone(settings.TIME_ZONE)
-            flag.deleted = datetime.datetime.now(tz=sgtz)
-        flag.save()
+#     if not is_created:
+#         # Flag is not created anew, check the deleted field.
+#         if flag.deleted is not None:
+#             # Flag is deleted. Restore it.
+#             flag.deleted = None
+#         else:
+#             # Flag is not deleted. Delete it.
+#             sgtz = pytz.timezone(settings.TIME_ZONE)
+#             flag.deleted = datetime.datetime.now(tz=sgtz)
+#         flag.save()
 
-    result = 'on' if is_created else 'off'
-    params = {'result': result}
+#     result = 'on' if is_created else 'off'
+#     params = {'result': result}
 
-    # Send updated count
-    if type == 'spam':
-        params['num_spam_flags'] = lead.num_spam_flags()
-    elif type == 'scam':
-        params['num_scam_flags'] = lead.num_scam_flags()
+#     # Send updated count
+#     if type == 'spam':
+#         params['num_spam_flags'] = lead.num_spam_flags()
+#     elif type == 'scam':
+#         params['num_scam_flags'] = lead.num_scam_flags()
 
-    response = JsonResponse(params)
-    return set_cookie_uuid(response, cookie_uuid)
+#     response = JsonResponse(params)
+#     return set_cookie_uuid(response, cookie_uuid)
 
-@require_http_methods(['POST'])
-@csrf_exempt
-def flag_spam(request):
-    lead_id = request.POST.get('lead_id')
-    return _flag_lead(request, lead_id, 'spam')
+# @require_http_methods(['POST'])
+# @csrf_exempt
+# def flag_spam(request):
+#     lead_id = request.POST.get('lead_id')
+#     return _flag_lead(request, lead_id, 'spam')
 
-@require_http_methods(['POST'])
-@csrf_exempt
-def flag_scam(request):
-    lead_id = request.POST.get('lead_id')
-    return _flag_lead(request, lead_id, 'scam')
+# @require_http_methods(['POST'])
+# @csrf_exempt
+# def flag_scam(request):
+#     lead_id = request.POST.get('lead_id')
+#     return _flag_lead(request, lead_id, 'scam')
 
 
 

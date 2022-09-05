@@ -102,7 +102,7 @@
                         <div class="card-header my-3">
                             <div class="card-title align-items-start flex-column">
                                 <div class="text-muted fs-7 fw-normal mb-4 d-block d-lg-none">
-                                    You contacted this user 2d ago
+                                    You contacted user 2d ago
                                 </div>
                                 <div class="d-flex align-items-top">
                                     <div class="symbol symbol-45px me-5">
@@ -122,7 +122,7 @@
                                 </div>
                             </div>
                             <div class="card-toolbar d-flex align-items-start d-none d-lg-block">
-                                <span class="text-muted">Contacted 2d ago</span>
+                                <span class="text-muted">User contacted you 2d ago</span>
                             </div>
                         </div>
 
@@ -143,27 +143,27 @@
                                     </div>
                                 </div>
                                 <div class="text-muted d-none d-lg-block">
-                                    Updated 2d ago
+                                    Status updated 2d ago
                                 </div>
                             </div>
                             <div class="separator mt-4"></div>
                             <div class="ms-8 mt-4 d-flex justify-content-between">
                                 <div>
                                     <div class="text-muted fs-7 d-block d-lg-none mb-4">
-                                        You reviewed this user 2d ago
+                                        You reviewed 2d ago
                                     </div>
                                     <div>This user seems like a scam.</div>
                                     <span class="badge badge-danger mt-2">Will Not Work With This User</span>
                                 </div>
                                 <div class="text-muted d-none d-lg-block">
-                                    Reviewed 2d ago
+                                    You reviewed 2d ago
                                 </div>
                             </div>
                         </div>
 
                         <div class="card-footer">
                             <div class="d-flex justify-content-end">
-                                <a href="#" class="btn btn-sm btn-info">User Details</a>
+                                <a href="#" class="btn btn-sm btn-light-info">User Details</a>
                             </div>
                         </div>
                     </div>
@@ -227,17 +227,17 @@
                         Updated 2d ago
                     </div>
                 </div>
-                <div class="separator mt-4"></div>
+                {% comment %} <div class="separator mt-4"></div>
                 <div class="ms-8 mt-4 d-flex justify-content-between">
                     <div>
                         <span class="badge badge-secondary mt-2">No Review</span>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
 
             <div class="card-footer">
                 <div class="d-flex justify-content-end">
-                    <a href="#" class="btn btn-sm btn-info">User Details</a>
+                    <a href="#" class="btn btn-sm btn-info">Leave a Review</a>
                 </div>
             </div>
         </div>
@@ -383,8 +383,8 @@ function flag_lead(lead_id, type, button_id, badge_id) {
 {% endcomment %}
 {% block page_custom_javascript %}
 {% comment %} <script src="{% static 'leads/js/home.js' %}"></script> {% endcomment %}
-<script>$(document).ready((function(){device_id=$("#device_id"),device_id.val(amplitude.getInstance().getDeviceId()),sourcing=$("#sourcing"),promoting=$("#promoting"),need_logistics=$("#need_logistics"),sourcing_agent=$("#sourcing_agent"),sales_agent=$("#sales_agent"),logistics_agent=$("#logistics_agent"),other=$("#other"),sm_sourcing=$("#sm_sourcing"),sm_promoting=$("#sm_promoting"),sm_need_logistics=$("#sm_need_logistics"),sm_sourcing_agent=$("#sm_sourcing_agent"),sm_sales_agent=$("#sm_sales_agent"),sm_logistics_agent=$("#sm_logistics_agent"),sm_other=$("#sm_other"),search_form=$("#search_form"),reduce_spams_and_scams=$("#reduce_spams_and_scams"),user_country=$("#user_country"),user_country_verified=$("#user_country_verified");var e=document.querySelector("#search_form"),s=new KTBlockUI(e);function i(){search_form.submit(),s.block()}function _(e,s){s.change((function(){e.prop("checked",this.checked),i()})),e.change((function(){s.prop("checked",this.checked),i()}))}function c(){via_wechat.is(":checked")?via_wechat_id_div.show():via_wechat_id_div.hide()}_(sourcing,sm_sourcing),_(promoting,sm_promoting),_(need_logistics,sm_need_logistics),_(sourcing_agent,sm_sourcing_agent),_(sales_agent,sm_sales_agent),_(logistics_agent,sm_logistics_agent),_(other,sm_other),reduce_spams_and_scams.change((function(){i()})),user_country_verified.change((function(){i()})),user_country.change((function(){i()})),via_wechat_id_div=$("#via_wechat_id_div"),via_wechat=$("#via_wechat"),c(),via_wechat.click((function(){c()}))}));</script>
-<script>function flag_lead(a,l,e,t){url="","spam"==l?url="{% url 'leads:flag_spam' %}":"scam"==l&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:a},(function(g,s){btn=$("#"+e),bdg=$("#"+t),"spam"==l?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(g.num_spam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"spam"})):"scam"==l&&(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(g.num_scam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"scam"}))}))}</script>
+{% comment %} <script>$(document).ready((function(){device_id=$("#device_id"),device_id.val(amplitude.getInstance().getDeviceId()),sourcing=$("#sourcing"),promoting=$("#promoting"),need_logistics=$("#need_logistics"),sourcing_agent=$("#sourcing_agent"),sales_agent=$("#sales_agent"),logistics_agent=$("#logistics_agent"),other=$("#other"),sm_sourcing=$("#sm_sourcing"),sm_promoting=$("#sm_promoting"),sm_need_logistics=$("#sm_need_logistics"),sm_sourcing_agent=$("#sm_sourcing_agent"),sm_sales_agent=$("#sm_sales_agent"),sm_logistics_agent=$("#sm_logistics_agent"),sm_other=$("#sm_other"),search_form=$("#search_form"),reduce_spams_and_scams=$("#reduce_spams_and_scams"),user_country=$("#user_country"),user_country_verified=$("#user_country_verified");var e=document.querySelector("#search_form"),s=new KTBlockUI(e);function i(){search_form.submit(),s.block()}function _(e,s){s.change((function(){e.prop("checked",this.checked),i()})),e.change((function(){s.prop("checked",this.checked),i()}))}function c(){via_wechat.is(":checked")?via_wechat_id_div.show():via_wechat_id_div.hide()}_(sourcing,sm_sourcing),_(promoting,sm_promoting),_(need_logistics,sm_need_logistics),_(sourcing_agent,sm_sourcing_agent),_(sales_agent,sm_sales_agent),_(logistics_agent,sm_logistics_agent),_(other,sm_other),reduce_spams_and_scams.change((function(){i()})),user_country_verified.change((function(){i()})),user_country.change((function(){i()})),via_wechat_id_div=$("#via_wechat_id_div"),via_wechat=$("#via_wechat"),c(),via_wechat.click((function(){c()}))}));</script> {% endcomment %}
+{% comment %} <script>function flag_lead(a,l,e,t){url="","spam"==l?url="{% url 'leads:flag_spam' %}":"scam"==l&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:a},(function(g,s){btn=$("#"+e),bdg=$("#"+t),"spam"==l?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(g.num_spam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"spam"})):"scam"==l&&(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(g.num_scam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"scam"}))}))}</script> {% endcomment %}
 {% comment %}
 $(document).ready(function() {
     // Hide all lead body

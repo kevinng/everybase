@@ -1,297 +1,239 @@
 {% extends 'extendables/b.html' %}
 
 {% load static %}
-{% load string_equal %}
 
-{% block title %}Looking for {% if lead.lead_type == 'buying' %}Buying/Sourcing{% elif lead.lead_type == 'selling' %}Selling/Promoting{% endif %} Agent, {{ lead.headline }}{% endblock %}
+{% block page_title %}{{ lead.body|truncatechars:10 }}{% endblock %}
 
-{% comment %} Meta description limit to 320 characters {% endcomment %}
-{% block other_head_tags %}
-<meta name="description" content="{{ lead.details|slice:'0:320' }}">
+{% block page_subtitle %}
+<ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+    <li class="breadcrumb-item text-muted">Me</li>
+
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+
+    <li class="breadcrumb-item"><a class="text-muted" href="{% url 'leads:my_leads' %}">My Leads</a></li>
+
+    <li class="breadcrumb-item">
+        <span class="bullet bg-gray-300 w-5px h-2px"></span>
+    </li>
+
+    <li class="breadcrumb-item text-dark">{{ lead.body|truncatechars:10 }}</li>
+</ul>
 {% endblock %}
 
-{% block other_css %}
-<link href="{% static 'common/photoswipe/photoswipe.min.css' %}" rel="stylesheet" />
-<link href="{% static 'common/photoswipe/default-skin/default-skin.min.css' %}" rel="stylesheet" />
+{% block actions%}
+{% include 'leads/includes/toolbar_actions.html' %}
 {% endblock %}
 
-{% block content %}
+{% block content_body %}
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-xxl">
 
-{% comment %} start: breadcrumbs {% endcomment %}
-<div class="ml-10 mt-10"><a href="{% url 'leads:lead_list' %}" class="font-bold">Leads</a> > {{ lead.headline }}</div>
-{% comment %} end: breadcrumbs {% endcomment %}
+        {% include 'relationships/includes/has_incomplete_profile.html' %}
 
-{% comment %} start: title {% endcomment %}
-<div class="text-center text-2xl font-bold mt-10">{{ lead.headline }}</div>
-<div class="text-center text-base">{% if lead.author.id == request.user.user.id %}You're{% else %}{% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} is{% endif%} Looking for Agents</div>
-{% comment %} end: title {% endcomment %}
-
-<div class="flex flex-col lg:flex-row justify-center mt-6 mb-10 gap-2">
-    {% comment %} start: user detail side
-        This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
-    {% if lead.lead_type == 'selling' %}
-        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='lg:w-1/3 xl:w-1/4 lg:self-start' %}
-        {% comment %} hidden lg:block {% endcomment %}
-    {% else %}
-        {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Buyer' responsive_classes='lg:w-1/3 xl:w-1/4 lg:self-start' %}
-    {% endif %}
-    {% comment %} end: user detail side {% endcomment %}
-
-    {% comment %} start: details {% endcomment %}
-    <div class="w-full lg:w-6/12 xl:w-7/12 2xl:w-6/12 mt-4 lg:mt-0">
-
-        {% if user.user.id == lead.author.id %}
-            {% load get_application_count %}
-            {% get_application_count lead as application_count %}
-            {% include 'leads/includes/lead_detail_tabs.html' with selected='details' application_count=application_count %}
-        {% endif %}
-
-        {% comment %} start: Adsense ad unit {% endcomment %}
-        {% comment %} Note: does not respond to size change properly {% endcomment %}
-        {% comment %} <div class="mt-2">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4994829786974999"
-                crossorigin="anonymous"></script>
-            <ins class="adsbygoogle"
-                style="display:block; text-align:center;"
-                data-ad-layout="in-article"
-                data-ad-format="fluid"
-                data-ad-client="ca-pub-4994829786974999"
-                data-ad-slot="6351103973"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div> {% endcomment %}
-        {% comment %} end: Adsense ad unit {% endcomment %}
-
-        {% comment %} start: details {% endcomment %}
-        <div class="bg-white rounded pb-8 pt-4 mt-2 shadow-md">
-
-            <div class="flex justify-end">
-                {% if user.is_authenticated == True and user.user.id == lead.author.id %}
-                    {% comment %} start: edit button {% endcomment %}
-                    <a href="{% url 'leads:lead_edit' lead.slug_link %}" class="px-6 py-2 text-blue-500 shadow-md bg-slate-100 hover:bg-slate-200 rounded-md mr-8">Edit</a>
-                    {% comment %} end: edit button {% endcomment %}
-                {% endif %}
-            </div>
-
-            <div class="flex items-start justify-between px-8 mt-6">
-
-                {% comment %} start: thumbnails {% endcomment %}
-                {% if lead.display_images.all|length > 0 %}
-                    <div class="flex items-start justify-start gap-2 image-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-                        {% load thumbnail_url %}
-                        {% load image_url %}
-                        {% for file in lead.display_images.all %}
-                            {% thumbnail_url file as thumbnail_url %}
-                            {% image_url file as image_url %}
-                            <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-                                <a href="{{ image_url }}" itemprop="contentUrl" data-size="{{ file.width }}x{{ file.height }}">
-                                    <img src="{{ thumbnail_url }}" itemprop="thumbnail" class="shadow-md">
-                                </a>
-                            </figure>
-                        {% endfor %}
+        {% comment %} Start: Navbar {% endcomment %}
+        <div class="card mb-5 mb-xl-10 shadow-sm">
+            <div class="card-header">
+                <div class="card-title align-items-start flex-column">
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-45px me-5">
+                            {% include 'leads/includes/avatar.html' with user=request.user.user %}
+                        </div>
+                        <div class="d-flex justify-content-start flex-column">
+                            {% include 'leads/includes/avatar_details.html' with user=request.user.user %}
+                        </div>
                     </div>
-                {% else %}
-                    {% comment %} Placeholder {% endcomment %}
-                    <div></div>
-                {% endif %}
-                {% comment %} end: thumbnails {% endcomment %}
-                
-                {% comment %} start: age_desc {% endcomment %}
-                <div class="text-sm">{{ lead.age_desc }}</div>
-                {% comment %} end: age_desc {% endcomment %}
+                </div>
+                <div class="card-toolbar">
+                    <span class="text-muted">{{ lead.age_desc }}</span>
+                </div>
             </div>
 
-            {% comment %} start: lead_type {% endcomment %}
-            <div class="font-bold text-slate-400 mt-6 px-8">Selling or Buying?</div>
-            <div class="mt-1 px-8">{% if lead.lead_type == 'selling' %}Selling{% elif lead.lead_type == 'buying' %}Buying{% endif %}</div>
-            {% comment %} end: lead_type {% endcomment %}
-
-            {% comment %} start: author_type {% endcomment %}
-            <div class="font-bold text-slate-400 mt-6 px-8">Direct or Middleman?</div>
-            <div class="mt-1 px-8">{% if lead.author_type == 'direct' %}Direct {% if lead.lead_type == 'selling' %}Seller{% elif lead.lead_type == 'buying' %}Buyer{% endif %}{% elif lead.author_type == 'broker' %}Middleman{% endif %}</div>
-            {% comment %} end: author_type {% endcomment %}
-
-            {% comment %} start: buy_country {% endcomment %}
-            <div class="font-bold text-slate-400 mt-6 px-8">{% if lead.lead_type == 'selling' %}Source Country{% elif lead.lead_type == 'buying' %}Buy From This Country{% endif %}</div>
-            <div class="mt-1 px-8">{% if lead.buy_country is not None %}{{ lead.buy_country.name }}{% else %}Any Country{% endif %}</div>
-            <div class="mt-1 italic px-8">{% if lead.lead_type == 'selling' %}Country the goods/services are exported from or based in.{% elif lead.lead_type == 'buying' %}Country buyer would like to buy or source from.{% endif %}</div>
-            {% comment %} end: buy_country {% endcomment %}
-
-            {% comment %} start: sell_country {% endcomment %}
-            <div class="font-bold text-slate-400 mt-4 px-8">{% if lead.lead_type == 'selling' %}Sell In This Country{% elif lead.lead_type == 'buying' %}Destination Country{% endif %}</div>
-            <div class="mt-1 px-8">{% if lead.sell_country is not None %}{{ lead.sell_country.name }}{% else %}Any Country{% endif %}</div>
-            <div class="mt-1 italic px-8">{% if lead.lead_type == 'selling' %}Country seller would like to sell the goods/services in.{% elif lead.lead_type == 'buying' %}Country the goods/services are imported into or needed.{% endif %}</div>
-            {% comment %} end: sell_country {% endcomment %}
-
-            {% comment %} start: details {% endcomment %}
-            <div class="font-bold text-slate-400 mt-4 px-8">Goods & Services</div>
-            <div class="mt-1 break-words px-8">{{ lead.details|linebreaksbr }}</div>
-            {% comment %} end: details {% endcomment %}
-
-            {% comment %} start: details {% endcomment %}
-            <div class="font-bold text-slate-400 mt-4 px-8">What {% if lead.lead_type == 'selling' %}seller{% elif lead.lead_type == 'buying' %}buyer{% endif %} would like the agent to do</div>
-            <div class="mt-1 break-words px-8">{{ lead.agent_job|linebreaksbr }}</div>
-            {% comment %} end: details {% endcomment %}
-
-            {% comment %} start: agent commission section {% endcomment %}
-            <div class="bg-slate-200 font-bold py-2 px-5 text-slate-500 mt-4">Agent Commission</div>
-            {% comment %} end: agent commission section {% endcomment %}
-
-            {% comment %} start: commission {% endcomment %}
-            {% if lead.commission_type == 'percentage' %}
-
-                <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
-                <div class="mt-1 px-8">{{ lead.commission_percentage|floatformat:0 }}% of Sales</div>
-
-            {% elif lead.commission_type == 'earning' %}
-
-                <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
-                <div class="mt-1 px-8">{{ lead.currency.name }} {{ lead.commission_earnings|floatformat:2 }} per {{ lead.commission_quantity_unit_string }}</div>
-
-            {% elif lead.commission_type == 'other' %}
-
-                <div class="font-bold text-slate-400 mt-4 px-8">Commission</div>
-                <div class="mt-1 px-8 break-words">{{ lead.commission_type_other|linebreaksbr }}</div>
-
-            {% endif %}
-            {% comment %} end: commission {% endcomment %}
-
-            {% comment %} start: is_comm_negotiable {% endcomment %}
-            {% if lead.is_comm_negotiable == True %}
-                <div class="italic px-8">Commission may differ and is negotiable for each deal.</div>
-            {% endif %}
-            {% comment %} end: is_comm_negotiable {% endcomment %}
-
-            {% comment %} start: commission_payable_by {% endcomment %}
-            {% if lead.author_type == 'broker' %}
-                <div class="font-bold text-slate-400 mt-4 px-8">Commission Payable By</div>
-                <div class="mt-1 px-8 break-words">{% if lead.commission_payable_by == 'me' %}Me (as a middleman){% elif lead.commission_payable_by == 'buyer' %}Buyer (this user is a middleman){% elif lead.commission_payable_by == 'seller' %}Seller (this user is a middleman{% endif %}</div>
-            {% endif %}
-            {% comment %} end: commission_payable_by {% endcomment %}
-
-            {% comment %} start: commission_payable_after {% endcomment %}
-            <div class="font-bold text-slate-400 mt-4 px-8">When will commissions be paid?</div>
-            <div class="mt-1 px-8">{% if lead.commission_payable_after == 'initial_deposit_received' %}Initial Deposit Received{% elif lead.commission_payable_after == 'goods_shipped' %}Goods Shipped{% elif lead.commission_payable_after == 'buyer_received_goods_services' %}Buyer Received Goods and Services{% elif lead.commission_payable_after == 'full_payment_received' %}Full Payment Received{% elif lead.commission_payable_after == 'other' %}{{ lead.commission_payable_after_other }}{% endif %} </div>
-            {% comment %} end: commission_payable_after {% endcomment %}
-
-            {% comment %} start: other commission details {% endcomment %}
-            {% if lead.other_comm_details is not None and lead.other_comm_details|length > 0 %}
-                <div class="font-bold text-slate-400 mt-4 px-8">Other Commission Details</div>
-                <div class="mt-1 px-8 break-words">{{ lead.other_comm_details|linebreaksbr }}</div>
-            {% endif %}
-            {% comment %} end: other commission details {% endcomment %}
-        </div>
-        {% comment %} end: details {% endcomment %}
-
-        {% comment %} start: user detail side
-        This user detail will only show on larger screen sizes. We want user detail to show after lead details on smaller screens. {% endcomment %}
-        {% comment %} {% if lead.lead_type == 'selling' %}
-            {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Seller' responsive_classes='lg:hidden mt-2' %}
-        {% else %}
-            {% include 'relationships/includes/user_detail_side.html' with detail_user=lead.author header='Buyer' responsive_classes='lg:hidden mt-2' %}
-        {% endif %} {% endcomment %}
-        {% comment %} end: user detail side {% endcomment %}
-
-        {% if request.user.is_authenticated and lead.author != request.user.user %}
-
-        {% comment %} start: agent application form {% endcomment %}
-        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
-            <div class="text-xl font-bold text-center">Apply to be a {% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %} Agent</div>
-
-            {% load has_applied_lead %}
-            {% has_applied_lead request.user.user lead as has_applied_lead %}
-            {% if has_applied_lead == False %}
-
-            <form id="agent_application_form" action="{% url 'leads:lead_detail' lead.slug_link %}" method="post">
-                {% csrf_token %}
-                <div class="flex flex-col justify-center mt-2">
-                    <label for="answer_1" class="font-bold text-slate-400 mt-4">{{ lead.question_1 }}</label>
-                    <textarea id="answer_1" name="answer_1" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer">{% if form.answer_1.value is not None %}{{ form.answer_1.value }}{% endif %}</textarea>
-                    {% if form.answer_1.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_1.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
-                    <label for="answer_2" class="font-bold text-slate-400 mt-4">{{ lead.question_2 }}</label>
-                    <textarea id="answer_2" name="answer_2" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer">{% if form.answer_2.value is not None %}{{ form.answer_2.value }}{% endif %}</textarea>
-                    {% if form.answer_2.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_2.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-
-                    {% if lead.question_3 is not None and lead.question_3|length > 0 %}
-                        <label for="answer_3" class="font-bold text-slate-400 mt-4">{{ lead.question_3 }}</label>
-                        <textarea id="answer_3" name="answer_3" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter answer">{% if form.answer_3.value %}{{ form.answer_3.value }}{% endif %}</textarea>
-                        {% if form.answer_3.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.answer_3.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                    {% endif %}
-
-                    <label for="applicant_comments" class="font-bold text-slate-400 mt-4">Comments for the {% if lead.lead_type == 'buying' %}Buyer{% elif lead.lead_type == 'selling' %}Seller{% endif %} (Optional)</label>
-                    <textarea id="applicant_comments" name="applicant_comments" rows="4" class="growing w-full border rounded-md py-3 px-5 mt-2" placeholder="Enter comments"></textarea>
-                    {% if form.applicant_comments.errors %}<div class="px-1 mt-2 text-red-500">{% for error in form.applicant_comments.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+            <div class="card-body pt-9 pb-0">
+                <div class="text-dark">{{ lead.body|linebreaks }}</div>
+                <div class="mt-2">
+                    {% include 'leads/includes/lead_badges.html' with lead=lead %}
                 </div>
 
-                <button data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}" data-callback='onSubmit' data-action='submit' type="submit" class="g-recaptcha py-2 px-4 rounded-md shadow-md mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Apply</button>
+                <div class="col-lg-4 col-md-6 mt-12">
+                    <label class="form-label" for="lead_clipboard">Share this Link</label>
+                    <div class="input-group">
+                        <input id="lead_clipboard" type="text" class="form-control col-lg-2" value="{{ lead.contact_lead_url }}" readonly />
+                        <button class="btn btn-light-primary" data-clipboard-target="#lead_clipboard">Copy</button>
+                    </div>
+                </div>
 
-                {% if form.non_field_errors %}<div class="mt-2 text-red-500 px-1 text-center">{{ form.non_field_errors }}</div>{% endif %}
-            </form>
+                <div class="form-text">User may contact you via the form at this link. <a href="{{ lead.contact_lead_url }}" target="_blank">See how it looks like.</a></div>
 
-            {% else %}
-            
-            <div class="mt-4">
-                {% load get_application %}
-                {% get_application request.user.user lead as application %}
-                <a href="{% url 'applications:application_detail' application.id %}" class="py-2 px-4 rounded-md shadow-md text-white bg-blue-500 hover:bg-blue-600 block w-full text-center text-lg">My Agent Application</a>
-                <div class="mt-2 text-center">Applied {{ application.age_desc }}</div>
+                <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
+                    <li class="nav-item mt-2">
+                        <span class="nav-link text-active-primary ms-0 me-10 py-5 active">Contacts ({{ lead.num_contacts }})</span>
+                    </li>
+                </ul>
             </div>
-
-            {% endif %}
         </div>
-        {% comment %} end: agent application form {% endcomment %}
+        {% comment %} End: Navbar {% endcomment %}
 
-        {% elif not request.user.is_authenticated %}
 
-        <div class="bg-white rounded px-8 py-8 shadow-md mt-2">
-            <a href="{% url 'login' %}?next={% url 'leads:lead_detail' lead.slug_link %}#agent_application_form" class="py-2 px-4 rounded-md shadow-md block text-center mt-4 text-white bg-blue-500 hover:bg-blue-600 w-full text-lg">Apply to be a {% if lead.lead_type == 'buying' %}Buying{% elif lead.lead_type == 'selling' %}Selling{% endif %} Agent</a>
+
+
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header">
+        <div class="card-title align-items-start flex-column">
+            <div class="d-flex align-items-center">
+                <div class="symbol symbol-45px me-5">
+                    <div class="symbol-label fs-3 bg-light-primary text-primary">KN</div>
+                </div>
+                <div class="d-flex justify-content-start flex-column">
+                    <div class="text-dark fw-bolder fs-6">Kevin Ng
+                        <span class="text-muted fw-bold fs-7 ms-2">Singapore
+                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                            <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +65">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
+                                </svg>
+                            </span>
+                            {% comment %} End: SVG icon {% endcomment %}
+                        </span>
+                    </div>
+                    <div class="fw-normal fs-7">I supply medical supplies, resources, etc, etc.</div>             
+                </div>
+            </div>
         </div>
+        <div class="card-toolbar">
+            <span class="text-muted">2d ago</span>
+            {% comment %} <a href="#" class="btn btn-sm btn-flex bg-body btn-light fw-bold">Follow</a> {% endcomment %}
+            {% comment %} <a href="#" class="btn btn-sm fw-bold btn-primary ms-2">Connect</a> {% endcomment %}
+        </div>
+    </div>
 
+    <div class="card-body">
+        {% comment %} Start: Contact {% endcomment %}
+        <div class="text-dark">Hello world hello world</div>
+        <div class="d-flex justify-content-between mt-2">
+            <div>
+{% comment %} 
+
+
+TODO: include number of contacts
+{% endcomment %}
+
+                {% comment %} {% include 'leads/includes/contact_badges.html' with contact=contact %} {% endcomment %}
+                <span class="badge badge-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="This contact is not relevant or not useful.">Not Relevant</span>
+            </div>
+            <div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <div class="d-flex flex-row-reverse">            
+            <button class="btn btn-sm btn-info">Details</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<br>
+<br>
+        {% if lead.num_contacts == 0 %}
+            <div class="fs-4 fw-bold card shadow-sm">
+                <div class="card-body text-center">
+                    No one has contacted you on this lead yet.
+                </div>
+            </div>
+        {% else %}
+            {% comment %} Start: Contacts table {% endcomment %}
+            <div class="card shadow-sm">
+                <div class="card-body py-4">
+                    {% comment %} Start: Table {% endcomment %}
+                    <div class="dataTables_wrapper dt-bootstrap4 no-footer">
+                        <div class="table-responsive">
+                            <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                <thead>
+                                    <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                                        <th class="min-w-200px">User</th>
+                                        <th class="min-w-250px">Details</th>
+                                        <th class="min-w-250px">Last Private Note
+                                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen045.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/private_notes/private_notes.txt' %}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="text-gray-600 fw-bold">
+                                    {% if page_obj|length > 0 %}
+                                        {% for contact in page_obj %}
+                                            {% include 'leads/includes/contact_item.html' with contact=contact %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% comment %} End: Table {% endcomment %}
+                </div>
+            </div>
+            {% comment %} End: Contacts table {% endcomment %}
         {% endif %}
 
+        {% include 'includes/paginator.html' %}
     </div>
-    {% comment %} end: details {% endcomment %}
 </div>
-{% comment %} PhotoSwipe library HTML code to be inserted before end of body tag. {% endcomment %}
-{% include 'includes/photoswipe.html' %}
 {% endblock %}
 
-{% block other_script %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'common/photoswipe/photoswipe.min.js' %}"></script>
-<script src="{% static 'common/photoswipe/photoswipe-ui-default.min.js' %}"></script>
-<script src="{% static 'common/photoswipe/photoswipe-everybase.min.js' %}"></script>
-<script src="{% static 'common/js/growing_text_areas.min.js' %}"></script>
 {% comment %}
-Amplitude instrumentation. Rendered inline because there are rendered values.
-
 $(document).ready(function() {
-    // Amplitude call on document ready
-    function document_readied() {
-        var event = 'discovery - viewed lead detail'
-        var props = {
-            'lead_id': '{{ lead.id }}',
-            'buy_sell': '{{ lead.lead_type }}',
-            'buy_country': '{{ lead.buy_country.programmatic_key }}',
-            'sell_country': '{{ lead.sell_country.programmatic_key }}',
-            'commission_type': '{{ lead.commission_type }}',
-            'commission_percentage': '{% if lead.commission_percentage is None %}{% else %}{{ lead.commission_percentage }}{% endif %}',
-            'commission_earnings': '{% if lead.commission_earnings is None %}{% else %}{{ lead.commission_earnings }}{% endif %}',
-            'commission_quantity_unit_string': '{% if lead.commission_quantity_unit_string is None %}{% else %}{{ lead.commission_quantity_unit_string }}{% endif %}',
-            'is_comm_negotiable': '{% if lead.is_comm_negotiable is None %}False{% else %}{{ lead.is_comm_negotiable }}{% endif %}',
+    // Select elements
+    const lead_target = document.getElementById('lead_clipboard')
+    const lead_button = lead_target.nextElementSibling
+
+    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+    var lead_clipboard = new ClipboardJS(lead_button, {
+        target: lead_target,
+        text: function() {
+            return lead_target.value
         }
-        amplitude.getInstance().logEvent(event, props)
-    }
-    document_readied()
+    })
+
+    // Success action handler
+    lead_clipboard.on('success', function(e) {
+        const currentLabel = lead_button.innerHTML
+
+        // Exit label update when already in progress
+        if(lead_button.innerHTML === 'Copied!'){
+            return
+        }
+
+        // Update button label
+        lead_button.innerHTML = 'Copied!'
+
+        // Revert button label after 3 seconds
+        setTimeout(function(){
+            lead_button.innerHTML = currentLabel
+        }, 3000)
+
+        amplitude.getInstance().logEvent(
+            'qualification - copied lead link', {
+                'lead id': '{{ lead.id }}'
+            }
+        )
+    })
 })
 {% endcomment %}
-<script>$(document).ready((function(){amplitude.getInstance().logEvent("discovery - viewed lead detail",{lead_id:"{{ lead.id }}",buy_sell:"{{ lead.lead_type }}",buy_country:"{{ lead.buy_country.programmatic_key }}",sell_country:"{{ lead.sell_country.programmatic_key }}",commission_type:"{{ lead.commission_type }}",commission_percentage:"{% if lead.commission_percentage is None %}{% else %}{{ lead.commission_percentage }}{% endif %}",commission_earnings:"{% if lead.commission_earnings is None %}{% else %}{{ lead.commission_earnings }}{% endif %}",commission_quantity_unit_string:"{% if lead.commission_quantity_unit_string is None %}{% else %}{{ lead.commission_quantity_unit_string }}{% endif %}",is_comm_negotiable:"{% if lead.is_comm_negotiable is None %}False{% else %}{{ lead.is_comm_negotiable }}{% endif %}"})}));</script>
-{% comment %}
-reCAPTCHA implementation
-
-function onSubmit(token) {
-    document.getElementById("agent_application_form").submit();
-}
-{% endcomment %}
-<script>function onSubmit(t){document.getElementById("agent_application_form").submit()}</script>
+{% block page_custom_javascript %}
+<script>$(document).ready((function(){const e=document.getElementById("lead_clipboard"),n=e.nextElementSibling;new ClipboardJS(n,{target:e,text:function(){return e.value}}).on("success",(function(e){const t=n.innerHTML;"Copied!"!==n.innerHTML&&(n.innerHTML="Copied!",setTimeout((function(){n.innerHTML=t}),3e3),amplitude.getInstance().logEvent("qualification - copied lead link",{"lead id":"{{ lead.id }}"}))}))}));</script>
 {% endblock %}

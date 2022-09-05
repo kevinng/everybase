@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content_body %}
-<form class="form" action="{% url 'users:settings' %}" method="post">
+<form class="form" action="{% url 'profile_settings' %}" method="post">
 {% csrf_token %}
 
 <div class="post d-flex flex-column-fluid">
@@ -275,7 +275,7 @@
 
                     <div class="row mb-6">
                         <label class="col-lg-4 col-form-label fw-bold fs-6">
-                            <span class="required">Company Name</span>
+                            <span>Company Name</span>
                         </label>
                         <div class="col-lg-8 fv-row">
                             
@@ -297,7 +297,7 @@
 
                 <div class="card-footer d-flex justify-content-end py-6 px-9">
                     {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
-                    <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary">Update Profile</button>
+                    <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary">Update</button>
                 </div>
             </div>
         </div>
@@ -307,44 +307,16 @@
         <div class="card mb-5 mb-xl-10 shadow-sm">
             <div class="card-header border-0"data-bs-target="#kt_account_signin_method">
                 <div class="card-title m-0">
-                    <h3 class="fw-bolder m-0">WhatsApp</h3>
+                    <h3 class="fw-bolder m-0">Contacts</h3>
                 </div>
             </div>
 
             <div>
                 <div class="card-body border-top p-9">
-                    <div class="d-flex flex-wrap align-items-center">
-                        <div id="change_email_preview_div">
-                            <div class="fs-6 fw-bolder mb-1">Email</div>
-                            {% comment %} We set the user's current email here instead of the form email, so the current email shows if there're error in the form {% endcomment %}
-                            <div class="fw-bold text-gray-600">{% if request.user.user.email != None %}{{ request.user.user.email.email }}{% else %}No email set{% endif %}</div>
-                        </div>
-
-                        <div id="change_email_form_div" class="flex-row-fluid d-none">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <label for="email" class="form-label fs-6 fw-bolder required">Email</label>
-                                    <input type="email" class="form-control form-control-lg" id="email" placeholder="Email" name="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} />
-                                    {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                                </div>
-                            </div>
-                            <div class="d-flex mt-6">
-                                {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
-                                <button name="update_email" value="update_email" type="submit" class="btn btn-primary me-2 px-6">Update Email</button>
-                                <button id="change_email_button_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
-                            </div>
-                        </div>
-
-                        <div id="change_email_button_div" class="ms-auto">
-                            <button type="button" class="btn btn-light btn-active-light-primary">Change Email</button>
-                        </div>
-                    </div>
-
-                    <div class="separator separator-dashed my-6"></div>
 
                     <div class="d-flex flex-wrap align-items-center mb-10">
                         <div id="change_phone_number_preview_div">
-                            <div class="fs-6 fw-bolder mb-1">Phone Number</div>
+                            <div class="fs-6 fw-bolder mb-1">WhatsApp Phone Number</div>
                             {% comment %} We set the user's current phone number here instead of the form phone number, so the current phone number shows if there're error in the form {% endcomment %}
                             <div class="fw-bold text-gray-600">{% if request.user.user.phone_number != None %}+{{ request.user.user.phone_number.country_code }} {{ request.user.user.phone_number.national_number }}{% else %}No phone number set{% endif %}</div>
                         </div>
@@ -377,13 +349,42 @@
 
                             <div class="d-flex mt-6">
                                 {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
-                                <button name="update_phone_number" value="update_phone_number" type="submit" class="btn btn-primary me-2 px-6">Update Phone Number</button>
+                                <button name="update_phone_number" value="update_phone_number" type="submit" class="btn btn-primary me-2 px-6">Update</button>
                                 <button id="change_phone_number_button_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
                             </div>
                         </div>
 
                         <div id="change_phone_number_button_div" class="ms-auto">
-                            <button type="button" class="btn btn-light btn-active-light-primary">Change Phone Number</button>
+                            <button type="button" class="btn btn-light btn-active-light-primary">Change</button>
+                        </div>
+                    </div>
+
+                    <div class="separator separator-dashed my-6"></div>
+
+                    <div class="d-flex flex-wrap align-items-center">
+                        <div id="change_email_preview_div">
+                            <div class="fs-6 fw-bolder mb-1">Email</div>
+                            {% comment %} We set the user's current email here instead of the form email, so the current email shows if there're error in the form {% endcomment %}
+                            <div class="fw-bold text-gray-600">{% if request.user.user.email != None %}{{ request.user.user.email.email }}{% else %}No email set{% endif %}</div>
+                        </div>
+
+                        <div id="change_email_form_div" class="flex-row-fluid d-none">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label for="email" class="form-label fs-6 fw-bolder">Email</label>
+                                    <input type="email" class="form-control form-control-lg" id="email" placeholder="Email" name="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} />
+                                    {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                                </div>
+                            </div>
+                            <div class="d-flex mt-6">
+                                {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
+                                <button name="update_email" value="update_email" type="submit" class="btn btn-primary me-2 px-6">Update</button>
+                                <button id="change_email_button_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
+                            </div>
+                        </div>
+
+                        <div id="change_email_button_div" class="ms-auto">
+                            <button type="button" class="btn btn-light btn-active-light-primary">Change</button>
                         </div>
                     </div>
                 </div>

@@ -4,6 +4,21 @@
 <html lang="en">
     {% comment %} Start: Head {% endcomment %}
 	<head>
+        {% comment %}
+        Stimulus JS
+        <script type="module">
+            import { Application, defaultSchema } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+
+            const customSchema = {
+                ...defaultSchema,
+                controllerAttribute: "data-stimulus-controller",
+                targetAttribute: "data-stimulus-target",
+                actionAttribute: 'data-stimulus-action'
+            }
+            window.Stimulus = Application.start(document.documentElement, customSchema)
+        </script>
+        {% endcomment %}
+        <script type="module">import{Application,defaultSchema}from"https://unpkg.com/@hotwired/stimulus/dist/stimulus.js";const customSchema={...defaultSchema,controllerAttribute:"data-stimulus-controller",targetAttribute:"data-stimulus-target",actionAttribute:"data-stimulus-action"};window.Stimulus=Application.start(document.documentElement,customSchema);</script>
         <base href="../../../">
 		<title>{% block title %}{% endblock %}</title>
 		<meta charset="utf-8" />
@@ -27,7 +42,7 @@
 	</head>
     {% comment %} End: Head {% endcomment %}
     {% comment %} Start: Body {% endcomment %}
-	<body id="kt_body" class="bg-body">
+	<body class="bg-body">
         {% comment %} Start: Main {% endcomment %}
         {% comment %} Start: Root {% endcomment %}
 		<div class="d-flex flex-column flex-root">

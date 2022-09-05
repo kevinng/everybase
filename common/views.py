@@ -1,13 +1,9 @@
-from django.template.response import TemplateResponse
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.http import HttpResponse
+# from django.template.response import TemplateResponse
+# from django.http import HttpResponse, HttpResponseRedirect
+# from django.urls import reverse
 
-from leads import models as lemods
-
-
-def home(request):
-    template_name = 'home.html'
-    return TemplateResponse(request, template_name, {})
+# from leads import models as lemods
 
 def ads_txt(_):
     filename = 'ads.txt'
@@ -19,28 +15,29 @@ def ads_txt(_):
 
 
 
+# def home(request):
+#     template_name = 'home.html'
+#     return TemplateResponse(request, template_name, {})
 
+# def e(request, file_to_render):
+#     template_name = 'examples/%s' % file_to_render
+#     return TemplateResponse(request, template_name, {})
 
-def e(request, file_to_render):
-    template_name = 'examples/%s' % file_to_render
-    return TemplateResponse(request, template_name, {})
+# def m(request, file_to_render):
+#     template_name = 'mock_ups/%s' % file_to_render
+#     return TemplateResponse(request, template_name, {})
 
-def m(request, file_to_render):
-    template_name = 'mock_ups/%s' % file_to_render
-    return TemplateResponse(request, template_name, {})
+# def sm(request, file_to_render):
+#     template_name = 'superio/mock_ups/%s' % file_to_render
+#     return TemplateResponse(request, template_name, {})
 
-def sm(request, file_to_render):
-    template_name = 'superio/mock_ups/%s' % file_to_render
-    return TemplateResponse(request, template_name, {})
+# def ml(request, file_to_render):
+#     template_name = 'metronic/layout_builder/%s' % file_to_render
+#     return TemplateResponse(request, template_name, {})
 
-
-def ml(request, file_to_render):
-    template_name = 'metronic/layout_builder/%s' % file_to_render
-    return TemplateResponse(request, template_name, {})
-
-def mm(request, file_to_render):
-    template_name = 'metronic/mock_ups/%s' % file_to_render
-    return TemplateResponse(request, template_name, {})
+# def mm(request, file_to_render):
+#     template_name = 'metronic/mock_ups/%s' % file_to_render
+#     return TemplateResponse(request, template_name, {})
 
 
 
