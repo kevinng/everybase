@@ -2,130 +2,55 @@
 
 {% load static %}
 
-{% block page_title %}Search{% endblock %}
+{% block page_title %}Alert Contacts{% endblock %}
 
-{% block page_subtitle %}Find buyers, sellers, agents and more.{% endblock %}
+{% block page_subtitle %}Requirements matching your alert{% endblock %}
 
 {% block actions %}
-{% include 'leads/includes/toolbar_actions.html' with hide_search=True %}
+<a href="" class="btn btn-sm btn-secondary">Back to Alerts</a>
 {% endblock %}
 
 {% block content_body %}
 <div class="post d-flex flex-column-fluid">
     <div id="kt_content_container" class="container-xxl">
-
-        {% include 'relationships/includes/has_incomplete_profile.html' %}
-
-        {% comment %} Start: Search options {% endcomment %}
-        <form id="search_form" action="{% url 'home' %}" method="get">
-        <input type="hidden" id="device_id" name="device_id" value=""/>
-        <div>
-
-            <div class="d-flex align-items-center">                
-                <input type="text" class="form-control" name="search_phrase" placeholder="Search user requirements"{% if search_phrase != None and search_phrase.strip != '' %} value="{{ search_phrase }}"{% endif %} />
-                <button type="submit" class="btn btn-primary ms-2">Search</button>
+        <div class="card shadow-sm bg-secondary">
+            <div class="card-header pb-3 pt-4">
+                <div class="card-title">Alert Details</div>
+                <div class="card-toolbar d-flex flex-column align-items-end">
+                    <div class="badge badge-success">Running</div>
+                    <div class="text-muted mt-1">Started 2d ago</div>
+                    {% comment %} <span class="text-muted">Last matched 2d ago</span> {% endcomment %}
+                    {% comment %} <span class="text-muted">Stopped 2d ago</span> {% endcomment %}
+                </div>
             </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-2">
+            <div class="card-body">
                 <div>
-                    {% if show_reset is True %}<a href="{% url 'home' %}" class="btn btn-sm btn-outline btn-outline-primary text-hover-white me-2">Reset</a>{% endif %}
-                    <span class="text-dark fw-bolder"><span data-kt-countup="true" data-kt-countup-value="{{ page_obj.paginator.count }}">0</span> persons</span>
+                    icumsa, Brazil, sugar
                 </div>
-
-            </div>
-
-                <div class="separator my-2"></div>
-
-                <div class="d-flex align-items-center">
-                    <div class="form-check form-check-custom">
-                        <input class="form-check-input me-2" type="checkbox" name="sm_sourcing_agent" id="sm_sourcing_agent" {% if sourcing_agent == 'on' %}checked {% endif %}/>
-                        <label for="sm_sourcing_agent">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_agent.txt' %}">Buying</span>
-                        </label>
-                    </div>
-
-                    <div class="form-check form-check-custom ms-3">
-                        <input class="form-check-input me-2" type="checkbox" name="sm_sales_agent" id="sm_sales_agent" {% if sales_agent == 'on' %}checked {% endif %}/>
-                        <label for="sm_sales_agent">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_agent.txt' %}">Selling</span>
-                        </label>
-                    </div>
-
-                    <div class="form-check form-check-custom ms-3">
-                        <input class="form-check-input me-2" type="checkbox" name="sm_sales_agent" id="sm_sales_agent" {% if sales_agent == 'on' %}checked {% endif %}/>
-                        <label for="sm_sales_agent">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/sourcing_agent.txt' %}">Other</span>
-                        </label>
-                    </div>
+                <div class="d-flex mt-2">
+                    <span class="badge badge-dark">Other</span>
                 </div>
-
-                <div class="separator my-2"></div>
-
-                <div class="d-flex align-items-center">
-                    <div class="form-check form-check-custom">
-                        <input class="form-check-input me-2" type="checkbox" name="sm_logistics_agent" id="sm_logistics_agent" {% if logistics_agent == 'on' %}checked {% endif %}/>
-                        <label for="sm_logistics_agent">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/logistics_agent.txt' %}">Need Commission Agents</span>
-                        </label>
-                    </div>
-
-                    <div class="form-check form-check-custom ms-3">
-                        <input class="form-check-input me-2" type="checkbox" name="sm_other" id="sm_other" {% if other == 'on' %}checked {% endif %}/>
-                        <label for="sm_other">
-                            <span class="badge badge-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'leads/includes/tooltips/leads/logistics_agent.txt' %}">Commission Agents</span>
-                        </label>
-                    </div>
-                </div>
-
-            <div class="separator my-2"></div>
-
-            <div class="d-flex align-items-center">
-                <div class="col-lg-3 col-6">
-                    <select class="form-select" data-control="select2" data-placeholder="Filter User Country" name='user_country' id="user_country" data-allow-clear="true">
-                        <option value="any_country"{% if form.country.value == 'any_country' %} selected{% endif %}>Any Country</option>
-                        {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if user_country == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="mt-2">
+                    {% comment %} <span class="badge badge-dark">All Countries</span> {% endcomment %}
+                    <span class="badge badge-dark">Selected Countries</span>
+                    <span class="badge badge-dark">United States of America</span>
+                    <span class="badge badge-dark">United States of America</span>
+                    <span class="badge badge-dark">United States of America</span>
+                    <span class="badge badge-dark">United States of America</span>
                 </div>
             </div>
-
-            {% comment %} <div class="separator my-2"></div>
-
-            <div class="d-flex align-items-center">
-                <div class="col-lg-6 col-12">
-                    <label for="origin_countries" class="form-label">Origin Countries</label>
-                    <select class="form-select" data-control="select2" data-placeholder="Filter Origin Countries" name="origin_countries" id="origin_countries" data-allow-clear="true" multiple="multiple">
-                        <option></option>
-                        {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if form.origin_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+            <div class="card-footer d-flex flex-row-reverse">
+                <a href="" class="btn btn-sm btn-light-danger">Stop</a>
             </div>
-
-            <div class="separator my-2"></div>
-
-            <div class="d-flex align-items-center">
-                <div class="col-lg-6 col-12">
-                    <label for="destination_countries" class="form-label">Destination Countries</label>
-                    <select class="form-select" data-control="select2" data-placeholder="Filter Destination Countries" name="destination_countries" id="destination_countries" data-allow-clear="true" multiple="multiple">
-                        <option></option>
-                        {% for country in countries %}
-                            <option value="{{ country.programmatic_key }}"{% if form.destination_country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div> {% endcomment %}
         </div>
-        </form>
-        {% comment %} End: Search options {% endcomment %}
+
+        <div class="d-flex justify-content-between align-items-center mt-8">
+            <span class="text-dark fw-bolder"><span data-kt-countup="true" data-kt-countup-value="{{ page_obj.paginator.count }}">0</span> persons</span>
+        </div>
 
         {% comment %} {% if page_obj|length > 0 %} {% endcomment %}
             {% comment %} {% for lead in page_obj %} {% endcomment %}
                 {% comment %} {% include 'leads/includes/lead_item.html' with lead=lead %} {% endcomment %}
-
-
 
                 <div class="card shadow-sm mt-4">
                     <div class="card-header pb-3 pt-4">

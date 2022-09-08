@@ -139,6 +139,9 @@ def confirm_whatsapp_login(request):
     
     return TemplateResponse(request, 'relationships/confirm_whatsapp_login.html', {'form': form})
 
+def select_country(request):
+    return TemplateResponse(request, 'relationships/select_country.html', None)
+
 def register(request):
     # if request.user.is_authenticated:
         # return HttpResponseRedirect(reverse('home')) # Go home if authenticated
@@ -210,24 +213,24 @@ def register(request):
     return TemplateResponse(request, 'relationships/register.html', params)
 
 # User will be authenticated coming from register view
-@login_required
+# @login_required
 def verify_whatsapp(request):
-    user = request.user.user
-    kwargs = {'user': user}
+    # user = request.user.user
+    # kwargs = {'user': user}
 
-    if request.method == 'POST':
-        form = forms.VerifyWhatsAppForm(request.POST, **kwargs)
-        if form.is_valid():
-            use_whatsapp_code(user)
-            user.enable_whatsapp = True # Enable after verification, otherwise False.
-            user.save()
-            return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
-    else:
-        send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.UPDATE_PHONE_NUMBER)
-        form = forms.VerifyWhatsAppForm(**kwargs)
+    # if request.method == 'POST':
+    #     form = forms.VerifyWhatsAppForm(request.POST, **kwargs)
+    #     if form.is_valid():
+    #         use_whatsapp_code(user)
+    #         user.enable_whatsapp = True # Enable after verification, otherwise False.
+    #         user.save()
+    #         return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
+    # else:
+    #     send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.UPDATE_PHONE_NUMBER)
+    #     form = forms.VerifyWhatsAppForm(**kwargs)
 
-    params = _pass_next({'form': form}, request.GET.get('next'))
-    return TemplateResponse(request, 'relationships/verify_whatsapp.html', params)
+    # params = _pass_next({'form': form}, request.GET.get('next'))
+    return TemplateResponse(request, 'relationships/verify_whatsapp.html', None)
 
 # Don't name profile settings function 'settings', it conflicts with everybase.settings.
 @login_required
@@ -459,11 +462,11 @@ def user_detail(request, uuid):
     template_name = 'relationships/user_detail.html'
     return TemplateResponse(request, template_name, {})
 
-def contacts(request):
+def history(request):
     template_name = 'relationships/contacts.html'
     return TemplateResponse(request, template_name, {})
 
-def status(request):
+def requirements(request):
     template_name = 'relationships/status.html'
     return TemplateResponse(request, template_name, {})
 
@@ -478,6 +481,29 @@ def suggestions(request, uuid):
 def lookup(request):
     template_name = 'relationships/lookup.html'
     return TemplateResponse(request, template_name, {})
+
+def alert_list(request):
+    template_name = 'relationships/alerts.html'
+    return TemplateResponse(request, template_name, {})
+
+def alert_detail(request, id):
+    template_name = 'relationships/alert_detail.html'
+    return TemplateResponse(request, template_name, {})
+
+def alert_create(request):
+    template_name = 'relationships/alert_create.html'
+    return TemplateResponse(request, template_name, {})
+
+def alert_edit(request):
+    template_name = 'relationships/status.html'
+    return TemplateResponse(request, template_name, {})
+
+def alert_delete(request):
+    template_name = 'relationships/status.html'
+    return TemplateResponse(request, template_name, {})
+
+
+
 
 # CONVERT THIS TO RELATIONSHIPS
 # @login_required

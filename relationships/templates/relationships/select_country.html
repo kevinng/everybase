@@ -1,0 +1,53 @@
+{% extends 'relationships/extendables/simple.html' %}
+
+{% block title %}Verify WhatsApp Phone Number{% endblock %}
+
+{% block meta_description %}Verify WhatsApp phone number{% endblock %}
+{% block meta_og_title %}Verify WhatsApp Phone Number{% endblock %}
+{% block meta_og_site_name %}Everybase{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url({% static 'common/demo1/dist/assets/media/illustrations/sketchy-1/14.png' %}">
+    <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+        <a href="{% url 'home' %}" class="mb-12">
+            <img alt="Logo" src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
+        </a>
+
+        {{form.errors}}
+
+        <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <form class="form w-100 mb-10" action="" method="post">
+                {% csrf_token %}
+
+                <div class="text-center mb-10">
+                    <img alt="Logo" class="mh-125px" src="{% static 'common/demo1/dist/assets/media/svg/misc/smartphone.svg' %}" />
+                </div>
+
+                <div class="text-center mb-10">
+                    <h1 class="text-dark mb-3">Select Your Country</h1>
+                    <div class="text-muted fw-bold fs-5 mb-5">Your WhatsApp phone number country code matches more than one country.</div>
+                </div>
+
+                <div class="mt-10">
+                    <div class="mt-6">
+                        <label id="country" for="country" class="form-label fs-6 fw-bolder text-dark required">Country</label>
+                        <select name="country" class="form-select" data-control="select2" data-placeholder="Choose Country" id="country">
+                            <option></option>
+                            {% for country in countries %}
+                                <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                </div>
+
+                <div class="d-flex flex-center mt-10">
+                    <button type="submit" class="btn btn-lg btn-primary fw-bolder ms-2">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

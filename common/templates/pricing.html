@@ -1,0 +1,397 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block title %}Pricing{% endblock %}
+{% block page_title %}Pricing{% endblock %}
+{% block page_title_separator %}{% endblock %}
+
+{% block actions %}
+{% include 'leads/includes/toolbar_actions.html' with hide_lead_create=True %}
+{% endblock %}
+
+{% block content_body %}
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-xxl">
+        <div class="card" id="kt_pricing">
+            <div class="card-body p-lg-17">
+                {% comment %} Start: Plans {% endcomment %}
+                <div class="d-flex flex-column">
+                    <div class="text-center">
+                        <h1 class="fs-2hx fw-bolder mb-5" id="plans_header">Subscription Plans</h1>
+                        <div class="fw-bold fs-5 text-muted">Upgrade your efficiency</div>
+                        <div><a class="fw-bolder" href="{% url 'faq' %}">See FAQ for more information</a></div>
+                    </div>
+
+                    <div class="nav-group nav-group-outline mx-auto mt-13" data-kt-buttons="true">
+                        <button class="btn btn-color-gray-400 btn-active btn-active-secondary px-6 py-3 me-2 active" data-kt-plan="month">Monthly</button>
+                        <button class="btn btn-color-gray-400 btn-active btn-active-secondary px-6 py-3" data-kt-plan="annual">Annual</button>
+                    </div>
+                    
+                    <div class="row g-10 mt-8">
+                        {% comment %} Start: Free tier {% endcomment %}
+                        <div class="col-xl-4">
+                            <div class="d-flex h-100 align-items-center">
+                                <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
+                                    <div class="mb-7 text-center">
+                                        <h1 class="text-dark mb-5 fw-boldest">Basic</h1>
+                                        <div class="text-gray-400 fw-bold mb-5">Just starting out</div>
+                                        <div class="text-center">
+                                            <span class="mb-2 text-primary">$</span>
+                                            <span class="fs-3x fw-bolder text-primary" data-kt-plan-price-month="0" data-kt-plan-price-annual="0">0</span>
+                                            <span class="fs-7 fw-bold opacity-50">/
+                                            <span data-kt-element="period">Mon</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="w-100 mb-10">
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">10 user contact credits<sup>1</sup> per day</span>
+                                            {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">3 alert notification credits<sup>2</sup> per month</span>
+                                            {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">See last 10 items in contact history<sup>3</sup></span>
+                                            {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">See all users and requirements</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">Share requirements</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">Be contacted directly via WhatsApp</span>
+                                        </div>
+                                    </div>
+                                    {% comment %} <a href="#" class="btn btn-sm btn-primary">Upgrade</a> {% endcomment %}
+                                    <a href="#" class="btn btn-sm btn-primary">Downgrade</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% comment %} End: Free tier {% endcomment %}
+
+                        {% comment %} Start: Standard tier {% endcomment %}
+                        <div class="col-xl-4">
+                            <div class="d-flex h-100 align-items-center">
+                                <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-20 px-10">
+                                    <div class="mb-7 text-center">
+                                        <h1 class="text-dark mb-5 fw-boldest">Standard</h1>
+                                        <div class="text-gray-400 fw-bold mb-5">Recommended for everyone</div>
+                                        <div class="text-center">
+                                            <span class="mb-2 text-primary">$</span>
+                                            <span class="fs-3x fw-bolder text-primary" data-kt-plan-price-month="10" data-kt-plan-price-annual="8.50">10</span>
+                                            <span class="fs-7 fw-bold opacity-50">/
+                                            <span data-kt-element="period">Mon</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="w-100 mb-10">
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">100 user contact credits<sup>1</sup> per day</span>
+                                            {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">75 alert notification credits<sup>2</sup> per month</span>
+                                            {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">See last 200 items in contact history<sup>3</sup></span>
+                                            {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">See all users and requirements</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">Share requirements</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">Be contacted directly via WhatsApp</span>
+                                        </div>
+                                    </div>
+                                    <a href="#" class="btn btn-sm btn-primary">Upgrade</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% comment %} End: Standard tier {% endcomment %}
+
+                        {% comment %} End: Growth tier {% endcomment %}
+                        <div class="col-xl-4">
+                            <div class="d-flex h-100 align-items-center">
+                                <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
+                                    <div class="mb-7 text-center">
+                                        <h1 class="text-dark mb-5 fw-boldest">Growth</h1>
+                                        <div class="text-gray-400 fw-bold mb-5">Grow faster than everyone else</div>
+                                        <div class="text-center">
+                                            <span class="mb-2 text-primary">$</span>
+                                            <span class="fs-3x fw-bolder text-primary" data-kt-plan-price-month="30" data-kt-plan-price-annual="25">30</span>
+                                            <span class="fs-7 fw-bold opacity-50">/
+                                            <span data-kt-element="period">Mon</span></span>
+                                        </div>
+                                    </div>
+                                    <div class="w-100 mb-10">
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">400 user contact credits<sup>1</sup> per day</span>
+                                            {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">300 alert notification credits<sup>2</sup> per month</span>
+                                            <!--begin::Svg Icon | path: icons/duotune/general/gen043.svg-->
+                                            <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">See all contact history<sup>3</sup></span>
+                                            {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                            <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                    <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                </svg>
+                                            </span>
+                                            {% comment %} End: SVG icon {% endcomment %}
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">See all users and requirements</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">Share requirements</span>
+                                        </div>
+
+                                        <div class="d-flex align-items-center mb-5">
+                                            <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">Be contacted directly via WhatsApp</span>
+                                        </div>
+                                    </div>
+                                    <span class="btn-sm bg-secondary">Your Plan</span>
+                                    {% comment %} <a href="#" class="btn btn-sm btn-primary">Select</a> {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                        {% comment %} End: Growth tier {% endcomment %}
+                    </div>
+
+                    <div class="col-12 mt-8 d-flex justify-content-center">
+                        <div class="text-center col-lg-6 col-12"><sup>1</sup> When you click on a user's WhatsApp button, you'll be directed to the user's WhatsApp, and 1 credit will be deducted from your daily limit. Contacting the <u>same</u> user that day will <u>not</u> count towards your limit for the day.</div>
+                    </div>
+
+                    <div class="col-12 mt-8 d-flex justify-content-center">
+                        <div class="text-center col-lg-6 col-12"><sup>2</sup> Your <a href="">contact history</a> shows you whom you've contacted, and who've contacted you.</div>
+                    </div>
+
+                    <div class="col-12 mt-8 d-flex justify-content-center">
+                        <div class="text-center col-lg-6 col-12"><sup>3</sup> Create <a href="">alerts</a> to receive alert notifications via WhatsApp when users update their requirements, and the requirements match your needs. Each alert notification you receive via WhatsApp count towards your limit for the month.</div>
+                    </div>
+
+
+
+                    
+
+
+
+                    <div class="text-center mt-13">
+                        <h1 class="fs-2hx fw-bolder mb-5">Extra Credits</h1>
+                        <div class="fw-bold fs-5 text-muted">Continue working after you've hit your limits</div>
+                        <div><a class="fw-bolder" href="{% url 'faq' %}">See FAQ for more information</a></div>
+                    </div>
+
+                    <div class="row g-10 mt-8">
+                        <div class="col-xl-2"></div>
+                            {% comment %} Start: Contact users {% endcomment %}
+                            <div class="col-xl-4">
+                                <div class="d-flex h-100 align-items-center">
+                                    <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
+                                        <div class="mb-7 text-center">
+                                            <h1 class="text-dark mb-5 fw-boldest">Contact Users</h1>
+                                            <div class="text-gray-400 fw-bold mb-5">Contact users after you've hit your daily limit</div>
+                                            <div class="text-center">
+                                                <span class="mb-2 text-primary">$</span>
+                                                <span class="fs-3x fw-bolder text-primary">5</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-100 mb-10">
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">150 contact user credits</span>
+                                                {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                                <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                        <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                    </svg>
+                                                </span>
+                                                {% comment %} End: SVG icon {% endcomment %}
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-boldest fs-6 text-gray-800 flex-grow-1 pe-3">Bonus 150 credits for Standard/Growth plan accounts (total 300 credits)</span>
+                                                {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                                <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                        <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                    </svg>
+                                                </span>
+                                                {% comment %} End: SVG icon {% endcomment %}
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">90-day expiry</span>
+                                                {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                                <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                        <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                    </svg>
+                                                </span>
+                                                {% comment %} End: SVG icon {% endcomment %}
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">Credit only deducted if you've hit limit</span>
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn btn-sm btn-primary">Purchase</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% comment %} End: Contact users {% endcomment %}
+
+                            {% comment %} Start: Requirements alerts {% endcomment %}
+                            <div class="col-xl-4">
+                                <div class="d-flex h-100 align-items-center">
+                                    <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15 px-10">
+                                        <div class="mb-7 text-center">
+                                            <h1 class="text-dark mb-5 fw-boldest">Alert Notifications</h1>
+                                            <div class="text-gray-400 fw-bold mb-5">Receive alert notifications above your monthly limit</div>
+                                            <div class="text-center">
+                                                <span class="mb-2 text-primary">$</span>
+                                                <span class="fs-3x fw-bolder text-primary">20</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-100 mb-10">
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">75 alert notification credits</span>
+                                                {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                                <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                        <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                    </svg>
+                                                </span>
+                                                {% comment %} End: SVG icon {% endcomment %}
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-boldest fs-6 text-gray-800 flex-grow-1 pe-3">Bonus 125 alert notification credits for Standard/Growth plan accounts (total 200 credits)</span>
+                                                {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                                <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                        <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                    </svg>
+                                                </span>
+                                                {% comment %} End: SVG icon {% endcomment %}
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">90-day expiry</span>
+                                                {% comment %} Start: SVG icon: icons/duotune/general/gen043.svg {% endcomment %}
+                                                <span class="svg-icon svg-icon-1 svg-icon-success">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                                                        <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor" />
+                                                    </svg>
+                                                </span>
+                                                {% comment %} End: SVG icon {% endcomment %}
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-5">
+                                                <span class="fw-bold fs-6 text-gray-800 flex-grow-1 pe-3">Credit only deducted if you've hit limit</span>
+                                            </div>
+                                        </div>
+                                        <a href="#" class="btn btn-sm btn-primary">Purchase</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% comment %} End: Requirements alerts {% endcomment %}
+                        <div class="col-xl-2"></div>
+                    </div>
+                </div>
+                {% comment %} End: Plans {% endcomment %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_custom_javascript %}
+<script src="{% static 'common/demo1/dist/assets/js/custom/pages/pricing/general.js' %}"></script>
+{% endblock %}

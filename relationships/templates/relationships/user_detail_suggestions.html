@@ -29,53 +29,6 @@
 
 
 
-        <form action="" method="post">
-            {% csrf_token %}
-            <div class="alert alert-dismissible bg-secondary d-flex flex-column flex-sm-row w-100 p-5 mb-10">
-                <!-- Start: SVG icon | path: icons/duotune/general/gen007.svg -->
-                <span class="svg-icon svg-icon-2hx svg-icon-dark me-4 mb-5 mb-sm-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
-                        <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
-                    </svg>
-                </span>
-                <!-- End: SVG icon -->
-                
-                <div class="d-flex flex-column text-dark pe-0 pe-sm-10 col-10">
-                    <h4 class="mb-2 text-dark">Review this user</h4>
-                    <span>Your review will help others make the right connections.</span>
-                    <div class="form-floating col-lg-6 mt-2">
-                        <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Comments" id="comments" name="comments">{% if form.comments.value is not None and form.comments.value|cut:' ' != '' %}{{ form.comments.value }}{% endif %}</textarea>
-                        <label for="comments">What do you think of Kevin Ng?</label>
-                    </div>
-                    
-                    <div class="form-check form-check-custom mt-4">
-                        <input class="form-check-input me-2" type="radio" name="review_rating" />
-                        <label for="via_whatsapp"><span class="badge badge-success">Will Work With This User</span></label>
-                    </div>
-
-                    <div class="form-check form-check-custom mt-2">
-                        <input class="form-check-input me-2" type="radio" name="review_rating" />
-                        <label for="via_wechat"><span class="badge badge-danger">Will Not Work With This User</span></label>
-                    </div>
-
-                    <div class="col-lg-6 mt-6">
-                        <button type="submit" class="btn btn-sm btn-primary">Post Review</button>
-                    </div>
-                </div>
-
-                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                    {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
-                    <span class="svg-icon svg-icon-2x svg-icon-dark">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                        </svg>
-                    </span>
-                    {% comment %} End: SVG icon {% endcomment %}
-                </button>
-            </div>
-        </form>
 
 
 
@@ -156,16 +109,20 @@
                                                         </div>
                                                     </div>
 
+                                                    <div class="form-floating col-12 mt-2 d-flex justify-content-center">
+                                                        <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="WhatsApp Message Body" id="whatsapp_body" name="whatsapp_body"></textarea>
+                                                        <label for="whatsapp_body">Enter WhatsApp message</label>
+                                                    </div>
+
                                                     <div class="separator my-4"></div>
 
-                                                    <div class="d-flex justify-content-center">
-                                                        <div class="col-lg-6 col-12">
-                                                            <div class="form-floating mt-2">
-                                                                <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="WhatsApp Message Body" id="whatsapp_body" name="whatsapp_body"></textarea>
-                                                                <label for="whatsapp_body">Enter WhatsApp message</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <div class="fw-bold">You receive 100 contact credits each day. After contacting this user - you'll have 4 credits left for the day.</div>
+                                                    {% comment %} Disable button if not enough credits {% endcomment %}
+                                                    {% comment %} <div class="fw-bold">You do not have enough credits to contact this user.</div> {% endcomment %}
+                                                    {% comment %} <div class="mt-2"> {% endcomment %}
+                                                        {% comment %} <a class="btn btn-sm btn-secondary" href="">Upgrade Plan</a> {% endcomment %}
+                                                        {% comment %} <a class="btn btn-sm btn-secondary" href="">Buy More Credits</a> {% endcomment %}
+                                                    {% comment %} </div> {% endcomment %}
 
                                                 </div>
                                     
@@ -192,7 +149,7 @@
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between">
                         <div class="card-title">
-                            <a href="#" class="btn btn-sm btn-primary">Update Status</a>
+                            <a href="#" class="btn btn-sm btn-primary">Update Requirements</a>
                         </div>
                         {% comment %} <span class="text-muted">Updated 2d ago</span> {% endcomment %}
                         <div class="card-toolbar">
@@ -219,7 +176,7 @@
                 </div>
 
 
-                <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-6 fw-bold my-8">
+                {% comment %} <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-6 fw-bold my-8">
 
                     <li class="nav-item">
                         <a href="" class="nav-link text-active-primary pb-4 active">Suggestions (20)</a>
@@ -235,9 +192,9 @@
 
 
 
-                </ul>
+                </ul> {% endcomment %}
 
-                <div class="tab-content">
+                {% comment %} <div class="tab-content">
                     <div class="mt-6">
 
 
@@ -282,7 +239,7 @@
     
                         
                     </div>
-                </div>
+                </div> {% endcomment %}
 
 
 
@@ -293,7 +250,7 @@
     </div>
 </div>
 
-{% include 'includes/paginator.html' %}
+{% comment %} {% include 'includes/paginator.html' %} {% endcomment %}
 {% endblock %}
 
 {% block page_vendor_javascript %}

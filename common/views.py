@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-# from django.template.response import TemplateResponse
+from django.template.response import TemplateResponse
 # from django.http import HttpResponse, HttpResponseRedirect
 # from django.urls import reverse
 
@@ -12,12 +12,17 @@ def ads_txt(_):
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
     return response
 
+def pricing(request):
+    template_name = 'pricing.html'
+    return TemplateResponse(request, template_name, {})
 
+def earn_money(request):
+    template_name = 'earn_money.html'
+    return TemplateResponse(request, template_name, {})
 
-
-# def home(request):
-#     template_name = 'home.html'
-#     return TemplateResponse(request, template_name, {})
+def faq(request):
+    template_name = 'faq.html'
+    return TemplateResponse(request, template_name, {})
 
 # def e(request, file_to_render):
 #     template_name = 'examples/%s' % file_to_render

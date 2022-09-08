@@ -2,9 +2,9 @@
 
 {% load static %}
 
-{% block title %}Update Requirements{% endblock %}
+{% block title %}Create Alert{% endblock %}
 
-{% block page_title %}Update Requirements{% endblock %}
+{% block page_title %}Create Alert{% endblock %}
 
 {% block page_title_separator %}{% endblock %}
 {% comment %} {% block page_subtitle %}Lets others know your requirement{% endblock %} {% endcomment %}
@@ -30,26 +30,84 @@
                 </span>
                 {% comment %} End: SVG icon {% endcomment %}
                 <div class="d-flex flex-column">
-                    <h4 class="text-dark">Update Your Requirements</h4>
-                    <div class="mt-1">Let us know your needs.</div>
+                    <h4 class="text-dark">Create at least 1 alert</h4>
+                    <div class="mt-1">So, we can notify you when a user updates requirements and it fits your needs.</div>
                 </div>
             </div>
-            
+
+            <div class="alert alert-primary d-flex align-items-center p-5">
+                {% comment %} Start: SVG icon: duotune/general/gen045.svg {% endcomment %}
+                <span class="svg-icon svg-icon-2hx svg-icon-primary me-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                        <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                        <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                    </svg>
+                </span>
+                {% comment %} End: SVG icon {% endcomment %}
+                <div class="d-flex flex-column">
+                    <h4 class="text-dark">What's an alert?</h4>
+                    <div class="mt-1">An alert lets you receive a WhatsApp notification when a user updates requirements and it matches your needs.</div>
+                    <div class="mt-4">1 notification costs 1 credit.</div>
+                    <div class="fw-bolder">You have 2 credits left for the month.</div>
+                    <div>For more credits - upgrade your plan or buy extra credits.</div>
+                    <div class="mt-2"><a class="btn btn-sm btn-success" href="{% url 'pricing' %}">Upgrade Plan or Buy Extra Credits</a></div>
+                </div>
+            </div>
+
+
             <div class="card shadow-sm mt-4">
                 {% comment %} Start: Card body {% endcomment %}
                 <div class="card-body">
-                    <div class="mt-5">
-                        <div class="form-floating mt-4 col-12">
-                            <textarea class="form-control" data-kt-autosize="true" placeholder="What are you looking for?" name="body" id="body">{% if form.body.value != None %}{{ form.body.value }}{% endif %}</textarea>
-                            <label for="body">E.g., I am looking for coals from Africa...</label>
-                        </div>
-                        {% if form.body.errors %}<div class="text-danger">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                    <div class="mt-10">
+                        <label class="form-label required">Keywords</label>
 
-                        <div class="mt-2 d-flex justify-content-end">
-                            <button type="button" id="clear_whatsapp_body" class="btn btn-sm btn-light">Clear Text</button>
+                        <div class="mt-2">When a user updates requirements - if <u>all</u> the keywords specified here are in the requirements, you'll receive a WhatsApp notification.</div>
+
+                        <div class="form-floating col-lg-4 col-12 mt-6">
+                            <input type="text" class="form-control" placeholder="E.g., ICUMSA"></textarea>
+                            <label for="body">E.g., ICUMSA</label>
                         </div>
 
-                        <div class="form-check form-check-custom mt-4">
+                        <div class="form-floating mt-4 col-lg-4 col-12">
+                            <input type="text" class="form-control" placeholder="Leave blank if not required. E.g., Sugar."></textarea>
+                            <label for="body">E.g., Sugar.</label>
+                            <div class="text-muted">Leave blank if not required.</div>
+                        </div>
+
+                        <div class="form-floating mt-4 col-lg-4 col-12">
+                            <input type="text" class="form-control" placeholder="Leave blank if not required. E.g., Brazil"></textarea>
+                            <label for="body">E.g., Brazil</label>
+                            <div class="text-muted">Leave blank if not required.</div>
+                        </div>
+
+                        <label class="form-label required mt-8">Include Users from</label>
+
+                        <div class="form-check form-check-custom mt-3">
+                            <div class="me-3">
+                                <input class="form-check-input me-1" type="radio" name="include_all_countries" id="all_countries" value="all_countries" />
+                                <label class="form-label" for="all_countries">All Countries</label>
+                            </div>
+                        </div>
+
+                        <div class="form-check form-check-custom mt-2">
+                            <div class="me-3">
+                                <input class="form-check-input me-1" type="radio" name="include_all_countries" id="selected_countries" value="selected_countries" />
+                                <label class="form-label" for="selected_countries">Selected Countries</label>
+                            </div>
+                        </div>
+
+                        <div class="mt-2 col-lg-4 col-12">
+                            <select class="form-select form-select-lg" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
+                                <option></option>
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                            </select>
+                        </div>
+
+                        <label class="form-label mt-8">Include Tags</label>
+                        
+                        <div class="form-check form-check-custom mt-3">
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="checkbox" name="lead_type" id="buying" value="buying" />
                                 <label for="buying">
@@ -94,6 +152,8 @@
                             </div>
                         </div>
 
+
+
                     </div>
 
                     {% if form.non_field_errors %}
@@ -111,7 +171,7 @@
                     <button type="submit" class="btn btn-primary g-recaptcha"
                         data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
                         data-callback="leadCreateFormOnSubmit" 
-                        data-action="submit">Update Requirements</button>
+                        data-action="submit">Create Alert</button>
                 </div>
             </div>
         </div>

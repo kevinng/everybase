@@ -16,7 +16,7 @@
             <img alt="Logo" src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
         </a>
 
-        <div class="w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+        <div class="w-lg-600px col-12 bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
             <form class="form w-100 mb-10" action="{% url 'confirm_whatsapp_login' %}" method="post">
                 {% if next != None %}
                     <input type="hidden" name="next" value="{{ next }}">
@@ -50,7 +50,7 @@
 
                 <div class="d-flex flex-center mt-10">
                     <a href="{% url 'login' %}?login={{ form.email.value }}" class="btn btn-lg btn-light fw-bolder">Cancel</a>
-                    <button type="submit" class="btn btn-lg btn-primary fw-bolder">Login</button>
+                    <button type="submit" class="btn btn-lg btn-primary fw-bolder ms-2">Next</button>
                 </div>
             </form>
         </div>

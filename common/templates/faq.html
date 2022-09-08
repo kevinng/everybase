@@ -1,0 +1,568 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% comment %} {% block title %}Pricing{% endblock %} {% endcomment %}
+{% comment %} {% block page_title %}Pricing{% endblock %} {% endcomment %}
+{% block page_title_separator %}{% endblock %}
+
+{% block actions %}
+{% include 'leads/includes/toolbar_actions.html' with hide_lead_create=True %}
+{% endblock %}
+
+{% block content_body %}
+<div class="post d-flex flex-column-fluid">
+    <div id="kt_content_container" class="container-xxl">
+        {% comment %} Start: FAQ card {% endcomment %}
+        <div class="card">
+            <div class="card-body p-lg-15">
+                <div class="mb-13">
+                    {% comment %} Start: Header {% endcomment %}
+                    <div class="mb-15">
+                        <h4 class="fs-2x text-gray-800 w-bolder mb-6">Frequently Asked Questions</h4>
+                        <p class="fw-bold fs-4 text-gray-600 mb-2">Do not hesitate to contact us at <a href="mailto:friend@everybase.co">friend@everybase.co</a> if your questions are not answered here.</p>
+                    </div>
+                    {% comment %} End: Header {% endcomment %}
+
+                    {% comment %} Start: Row {% endcomment %}
+                    <div class="row mb-12">
+                        {% comment %} Start: Column {% endcomment %}
+                        <div class="col-md-6 pe-md-10 mb-10 mb-md-0">
+                            {% comment %} Start: Title {% endcomment %}
+                            <h2 class="text-gray-800 fw-bolder mb-4">Pricing</h2>
+                            {% comment %} End: Title {% endcomment %}
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#is_everybase_free_to_use">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg  {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">Is Everybase free-to-use?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="is_everybase_free_to_use" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">We have 3 subscription plans on Everybase - Basic, Standard and Growth. Basic is free, Standard and Growth are paid.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#what_are_the_key_differences_between_the_basic_standard_and_growth_plan">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">What are the key differences between the Basic, Standard and Growth plans?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="what_are_the_key_differences_between_the_basic_standard_and_growth_plan" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">The key differences are:
+                                        <ul>
+                                            <li>Number of users you may contact per day</li>
+                                            <li>Number of alert notifications you may receive per month</li>
+                                            <li>Contact history length</li>
+                                            <li>Prices of extra credits</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#how_do_extra_credits_to_contact_users_work">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">How do extra credits to contact users work?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="how_do_extra_credits_to_contact_users_work" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">Extra credits in your account are <u>only</u> deducted when you contact users above your daily limit. E.g., if your daily limit is 100 users/day, and you've only used 35 credits - extra credits in your account will <u>not</u> be deducted. Extra credits have an expiry of 90 days from the date of purchase.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#how_do_extra_credits_to_receive_alert_notifications_work">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">How do extra credits to receive alert notifications work?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="how_do_extra_credits_to_receive_alert_notifications_work" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">Extra credits in your account are <u>only</u> deducted when you receive alert notifications above your monthly limit. E.g., if your monthly limit is 75 notifications/month, and you've only used 35 credits - extra credits in your account will <u>not</u> be deducted. Extra credits have an expiry of 90 days from the date of purchase.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#what_happens_when_i_downgrade_or_cancel_a_plan">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">What happens when I downgrade or cancel a plan?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="what_happens_when_i_downgrade_or_cancel_a_plan" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">When you downgrade or cancel a paid plan, the current plan continues running until the end of the month.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#what_happens_when_i_upgrade_a_plan">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">What happens when I upgrade a plan?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="what_happens_when_i_upgrade_a_plan" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">When you upgrade to a plan, the upgraded plan takes effect immediately. If you're currently on a paid plan, unused time for the month will be used to offset the new plan's first-month subscription. The difference in contact and alert notification credits will be added to your account.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+                        </div>
+                        {% comment %} End: Column {% endcomment %}
+
+                        {% comment %} Start: Column {% endcomment %}
+                        <div class="col-md-6 ps-md-10">
+                            {% comment %} Start: Title {% endcomment %}
+                            <h2 class="text-gray-800 fw-bolder mb-4">Contacting Users</h2>
+                            {% comment %} End: Title {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#how_do_i_share_my_requirements_with_other_users">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">How do I share my requirements with other users? How do other users contact me?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="how_do_i_share_my_requirements_with_other_users" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">You may share your requirements with other users by updating it <a href="{% url 'update_requirements' %}">here</a>. Your requirements are accessible to all users. Other users will be able to contact you via WhatsApp by clicking on your WhatsApp button.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#how_do_i_contact_a_user_how_are_contact_user_credits_deducted">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">How do I contact a user? And how are contact user credits deducted?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="how_do_i_contact_a_user_how_are_contact_user_credits_deducted" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">Each user on Everybase has a verified WhatsApp account. By clicking on a user's WhatsApp button, you may be redirected to the user's WhatsApp. A contact user credit is deducted when you're redirected to the user's WhatsApp the first time for the day. Contacting the same user multiple times in the same day will <u>not</u> cause credits to be deducted multiple times.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#what_happens_if_i_hit_the_contact_user_limit_for_the_day">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">What happens if I hit the user contact limit for the day?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="what_happens_if_i_hit_the_contact_user_limit_for_the_day" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">All plans have a limit for the number of users you may contact in a day. When you hit that limit, you'll not be able to contact anymore users that day. You may either purchase extra credits to contact more users or wait for your credits to refresh the next day.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#when_does_user_contact_credits_refresh_for_the_day">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">When does user contact credits refresh for the day?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="when_does_user_contact_credits_refresh_for_the_day" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">User contact credits refresh daily at midnight GMT+8.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#how_do_i_see_users_whom_i_have_contacted_or_users_who_have_contacted_me">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">How do I see users whom I have contacted, or users who have contacted me?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="how_do_i_see_users_whom_i_have_contacted_or_users_who_have_contacted_me" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">You may see your contact history <a href="">here</a> - to see users whom you have contacted, and users who have contacted you. However, only accounts on the Growth plan will be able to see the full history.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+                        </div>
+                        {% comment %} End: Column {% endcomment %}
+                    </div>
+                    {% comment %} End: Row {% endcomment %}
+
+                    {% comment %} Start: Row {% endcomment %}
+                    <div class="row">
+                        {% comment %} Start: Column {% endcomment %}
+                        <div class="col-md-6 pe-md-10 mb-10 mb-md-0">
+                            {% comment %} Start: Title {% endcomment %}
+                            <h2 class="text-gray-800 w-bolder mb-4">Alert Notification</h2>
+                            {% comment %} End: Title {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#what_is_an_alert_and_what_is_an_alert_notification_and_how_are_alert_notification_credits_deducted">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">What is an alert? And what is an alert notification? And how are alert notification credits deducted?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="what_is_an_alert_and_what_is_an_alert_notification_and_how_are_alert_notification_credits_deducted" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">You <a href="{% url 'alerts:alert_list' %}">create an alert</a> to receive an alert notification via WhatsApp when a user updates requirements, and that requirements matches your needs. There is <u>no</u> limit on the number of alerts you can create. All plans <u>have</u> a limit on the number of alert notifications you may receive. An alert notification credit will be deducted when you receive an alert notification via WhatsApp.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#what_happens_if_i_hit_the_alert_notification_limit_for_the_month">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">What happens if I hit the alert notification limit for the month?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="what_happens_if_i_hit_the_alert_notification_limit_for_the_month" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">All plans have a limit for the number of alert notifications you may receive in a month. When you hit the limit, you'll not be able to receive anymore alert notifications that month. You may either upgrade your plan, purchase extra credits, or wait for your credits to refresh the next month. You'll miss all user requirements updates that matches your alert settings that happens when you're out of credits.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                                <div class="separator separator-dashed"></div>
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+                            
+                            {% comment %} Start: Q&A {% endcomment %}
+                            <div class="m-0">
+                                {% comment %} Start: Heading {% endcomment %}
+                                <div class="d-flex align-items-center collapsible py-3 toggle collapsed mb-0" data-bs-toggle="collapse" data-bs-target="#when_does_alert_notifications_credits_refresh_for_the_month">
+                                    <div class="btn btn-sm btn-icon mw-20px btn-active-color-primary me-5">
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen036.svg {% endcomment %}
+                                        <span class="svg-icon toggle-on svg-icon-primary svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="6.0104" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                        {% comment %} Start: SVG icon: icons/duotune/general/gen035.svg {% endcomment %}
+                                        <span class="svg-icon toggle-off svg-icon-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="5" fill="currentColor" />
+                                                <rect x="10.8891" y="17.8033" width="12" height="2" rx="1" transform="rotate(-90 10.8891 17.8033)" fill="currentColor" />
+                                                <rect x="6.01041" y="10.9247" width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
+                                        </span>
+                                        {% comment %} End: SVG icon {% endcomment %}
+                                    </div>
+                                    <h4 class="text-gray-700 fw-bolder cursor-pointer mb-0">When does alert notification credits refresh for the month?</h4>
+                                </div>
+                                {% comment %} End: Heading {% endcomment %}
+                                {% comment %} Start: Body {% endcomment %}
+                                <div id="when_does_alert_notifications_credits_refresh_for_the_month" class="collapse fs-6 ms-1">
+                                    <div class="mb-4 text-gray-600 fw-bold fs-6 ps-10">Alert notification credits refresh on the first day of the month at midnight GMT+8.</div>
+                                </div>
+                                {% comment %} End: Body {% endcomment %}
+                            </div>
+                            {% comment %} End: Q&A {% endcomment %}
+                        </div>
+                        {% comment %} End: Column {% endcomment %}
+                    </div>
+                    {% comment %} End: Row {% endcomment %}
+                </div>
+            </div>
+        </div>
+        {% comment %} End: FAQ card {% endcomment %}
+    </div>
+</div>
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block page_custom_javascript %}
+{% endblock %}

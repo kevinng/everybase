@@ -2,8 +2,8 @@
 
 {% load static %}
 
-{% block page_title %}History{% endblock %}
-{% block page_subtitle %}Whom you've contacted, and who contacted you.{% endblock %}
+{% block page_title %}Alerts{% endblock %}
+{% block page_subtitle %}{% endblock %}
 
 {% block actions %}
 {% include 'leads/includes/toolbar_actions.html' with hide_search=True %}
@@ -12,88 +12,72 @@
 {% block content_body %}
 <div class="post d-flex flex-column-fluid">
     <div id="kt_content_container" class="container-xxl">
-
-        {% include 'relationships/includes/has_incomplete_profile.html' %}
-
-
-
-
-
-        <div class="card shadow-sm mt-4">
-            <div class="card-body d-flex align-items-start">
-                <div class="symbol symbol-45px">
-                    <div class="symbol-label fs-3 bg-light-info text-info">KN</div>
-                </div>
-                <div class="ms-5 d-flex justify-content-start flex-column">
-                    <div class="text-dark fw-bolder fs-6"><a href="#" class="text-dark">Kevin Ng</a><span class="text-muted fw-bold fs-7 ms-2">2d ago</span></div>
-                    <div>I supply medical supplies, resources, etc, etc. I supply medical supplies, resources, etc, etc. I supply medical supplies, resources, etc, etc. I supply medical supplies, resources, etc, etc. I supply medical supplies, resources, etc, etc.</div>
-                </div>
+        <div class="alert alert-primary d-flex align-items-center p-5">
+            {% comment %} Start: SVG icon: duotune/general/gen045.svg {% endcomment %}
+            <span class="svg-icon svg-icon-2hx svg-icon-primary me-3">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                </svg>
+            </span>
+            {% comment %} End: SVG icon {% endcomment %}
+            <div class="d-flex flex-column">
+                <h4 class="text-dark">What's an alert?</h4>
+                <div class="mt-1">An alert lets you receive a WhatsApp notification when a user updates requirements and it matches your needs.</div>
+                <div class="mt-4">1 notification costs 1 credit.</div>
+                <div class="fw-bolder">You have 2 credits left for the month.</div>
+                <div>For more credits - upgrade your plan or buy extra credits.</div>
+                <div class="mt-2"><a class="btn btn-sm btn-success" href="{% url 'pricing' %}">Upgrade Plan or Buy Extra Credits</a></div>
             </div>
         </div>
 
+        <form action="" method="get">
+            <div class="form-check form-check-custom">
+                <input class="form-check-input me-2" type="checkbox" name="sm_logistics_agent" id="sm_logistics_agent" {% if logistics_agent == 'on' %}checked {% endif %}/>
+                <label for="sm_logistics_agent">Hide Stopped Alerts</label>
+            </div>
+        </form>
+
+        <div class="card shadow-sm mt-4 bg-info">
+            <div class="card-body">
+                <h1 class="text-white">You have no alerts set up.</h1>
+                
+                <a href="" class="btn btn-light-danger mt-4">Create an Alert</a>
+            </div>
+        </div>
 
         <div class="card shadow-sm mt-4">
+            <div class="card-header pb-3 pt-4">
+                <div class="card-title align-items-start flex-column">
+                    <button class="btn btn-sm btn-light-danger">Stop</button>
+                    {% comment %} <button class="btn btn-sm btn-light-success">Start</button> {% endcomment %}
+                </div>
+                <div class="card-toolbar d-flex flex-column align-items-end">
+                    <div class="badge badge-success">Running</div>
+                    <div class="text-muted mt-1">Started 2d ago</div>
+                    {% comment %} <span class="text-muted">Last matched 2d ago</span> {% endcomment %}
+                    {% comment %} <span class="text-muted">Stopped 2d ago</span> {% endcomment %}
+                </div>
+            </div>
             <div class="card-body">
-                <div class="d-flex align-items-start flex-row-reverse">
-                    <div class="symbol symbol-45px ms-5">
-                        <div class="symbol-label fs-3 bg-light-info text-info">KN</div>
-                    </div>
-                    <div class="d-flex justify-content-start flex-column">
-                        <div class="text-dark fw-bolder fs-6 d-flex flex-row-reverse align-items-center">
-                            <a href="#" class="text-dark ms-2">Kevin Ng</a><span class="text-muted fw-bold fs-7">2d ago</span>
-                        </div>
-                        <div class="text-end">
-                            I supply medical supplies, resources, etc, etc. I supply medical supplies, resources, etc, etc. I supply medical supplies, resources, etc, etc. I supply medical supplies, resources, etc, etc. I supply medical supplies, resources, etc, etc.
-                        </div>
-                    </div>
+                <div>
+                    icumsa, Brazil, sugar
                 </div>
-
-                <div class="separator mt-4"></div>
-
-                <div class="align-items-start flex-column mt-8">
-                    <div class="d-flex align-items-top">
-                        <div class="symbol symbol-45px me-5">
-                            <div class="symbol-label fs-3 bg-light-info text-info">KN</div>
-                        </div>
-                        <div class="d-flex justify-content-start flex-column">
-                            <div class="text-dark fw-bolder fs-6">Kevin Ng Kevin Ng Kevin Ng</div>
-                            <div class="fw-bold fs-7">Leng Guan Metal Pte Ltd</div>
-                            <div class="text-muted fw-bold fs-7">United States of America <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Verified with phone number country code +{{ user.country.country_code }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                <path d="M10.4343 12.4343L8.75 10.75C8.33579 10.3358 7.66421 10.3358 7.25 10.75C6.83579 11.1642 6.83579 11.8358 7.25 12.25L10.2929 15.2929C10.6834 15.6834 11.3166 15.6834 11.7071 15.2929L17.25 9.75C17.6642 9.33579 17.6642 8.66421 17.25 8.25C16.8358 7.83579 16.1642 7.83579 15.75 8.25L11.5657 12.4343C11.2533 12.7467 10.7467 12.7467 10.4343 12.4343Z" fill="currentColor"/>
-                                </svg>
-                            </span></div>
-                            <div class="fs-7">I supply medical supplies, resources, etc, etc.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-dark mt-8">
-                    <div class="lead_body_preview" data-lead-id="{{ lead.id }}">Hello world hello world <span class="text-primary cursor-pointer show_more_lead_body">Show More</span></div>
-                    <div class="lead_body" style="display: none;">ddsfsdaf{{ lead.body|linebreaks }}</div>
-                </div>
-                <div class="mt-2">
+                <div class="d-flex mt-2">
                     {% include 'leads/includes/badges/leads/other.html' %}
                 </div>
-            </div>
-        </div>
-
-        <div class="card shadow-sm mt-4 bg-info">
-            <div class="card-body">
-                <h1 class="text-white">You've not contacted anyone.</h1>
-                <h1 class="mt-6 text-white">No one has contacted you.</h1>
-            </div>
-        </div>
-
-        <div class="card shadow-sm mt-4 bg-info">
-            <div class="card-body">
-                <h1 class="text-white">You may only see the last 10 items in your contact history.</h1>
-
-                <h1 class="mt-6 text-white">Upgrade your plan to see more.</h1>
-
-                <div class="mt-12">
-                    <a href="{% url 'pricing' %}" class="btn btn-lg btn-light-danger">See Subscription Plans</a>
+                <div class="mt-2">
+                    {% comment %} <span class="badge badge-secondary">All Countries</span> {% endcomment %}
+                    <span class="badge badge-secondary">Selected Countries</span>
+                    <span class="badge badge-secondary">United States of America</span>
+                    <span class="badge badge-secondary">United States of America</span>
+                    <span class="badge badge-secondary">United States of America</span>
+                    <span class="badge badge-secondary">United States of America</span>
                 </div>
+            </div>
+            <div class="card-footer d-flex justify-content-end">
+                <a href="" class="btn btn-sm btn-light-info">Contacts (0)</a>
             </div>
         </div>
     </div>
