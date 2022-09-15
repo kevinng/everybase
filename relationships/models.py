@@ -163,7 +163,7 @@ class InvalidEmail(commods.Standard):
 class User(commods.Standard):
     """User details.
 
-    Last updated: 21 Jun 2022, 5:36 PM
+    Last updated: 13 September 2022, 6:39 PM
     """
     registered = models.DateTimeField(
         null=True,
@@ -186,6 +186,27 @@ class User(commods.Standard):
         db_index=True
     )
 
+    avatar = models.ForeignKey(
+        'files.File',
+        related_name='avatar_for_users',
+        related_query_name='avatar_for_users',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
+    slug_link = models.CharField(
+        max_length=200,
+        unique=True,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    slug_tokens = models.TextField(
+        null=True,
+        blank=True
+    )
     uuid = models.UUIDField(
         unique=True,
         default=uuid.uuid4,
@@ -193,11 +214,25 @@ class User(commods.Standard):
         db_index=True
     )
 
-    avatar = models.ForeignKey(
-        'files.File',
-        related_name='avatar_for_users',
-        related_query_name='avatar_for_users',
-        on_delete=models.PROTECT,
+    whatsapp_code_used = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    whatsapp_code = models.CharField(
+        max_length=20,
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    whatsapp_code_generated = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    whatsapp_code_purpose = models.CharField(
+        max_length=20,
+        choices=WHATSAPP_PURPOSE_CHOICES,
         null=True,
         blank=True,
         db_index=True
@@ -226,44 +261,7 @@ class User(commods.Standard):
         blank=True,
         db_index=True
     )
-    whatsapp_code_used = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    whatsapp_code = models.CharField(
-        max_length=20,
-        db_index=True,
-        null=True,
-        blank=True
-    )
-    whatsapp_code_generated = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    whatsapp_code_purpose = models.CharField(
-        max_length=20,
-        choices=WHATSAPP_PURPOSE_CHOICES,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    enable_whatsapp = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
 
-    email = models.ForeignKey(
-        'Email',
-        related_name='user',
-        related_query_name='user',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
     first_name = models.CharField(
         max_length=20,
         db_index=True,
@@ -275,6 +273,20 @@ class User(commods.Standard):
         db_index=True,
         null=True,
         blank=True
+    )
+    introduction = models.CharField(
+        default='',
+        max_length=40,
+        db_index=True
+    )
+    email = models.ForeignKey(
+        'Email',
+        related_name='user',
+        related_query_name='user',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
     )
     phone_number = models.ForeignKey(
         'PhoneNumber',
@@ -294,22 +306,11 @@ class User(commods.Standard):
         blank=True,
         db_index=True
     )
-    fb_profile = models.URLField(
+    company_name = models.CharField(
+        max_length=50,
         null=True,
         blank=True,
         db_index=True
-    )
-
-    slug_link = models.CharField(
-        max_length=200,
-        unique=True,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    slug_tokens = models.TextField(
-        null=True,
-        blank=True
     )
 
     has_insights = models.BooleanField(
@@ -322,97 +323,6 @@ class User(commods.Standard):
     )
 
     # Not in Use
-
-    impressions = models.IntegerField(
-        default=1, # Prevent division by 0
-        db_index=True
-    )
-    clicks = models.IntegerField(
-        default=0,
-        db_index=True
-    )
-
-    has_company = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    company_name = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    goods_string = models.TextField(
-        null=True,
-        blank=True
-    )
-    buy_agent_details = models.TextField(
-        null=True,
-        blank=True
-    )
-    sell_agent_details = models.TextField(
-        null=True,
-        blank=True
-    )
-    logistics_agent_details = models.TextField(
-        null=True,
-        blank=True
-    )
-
-    is_buyer = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_seller = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_buy_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_sell_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_logistics_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
-    state = models.ForeignKey(
-        'common.State',
-        related_name='users_w_this_state',
-        related_query_name='users_w_this_state',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    state_string = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    languages = models.ManyToManyField(
-        'common.Language',
-        related_name='users_w_this_language',
-        related_query_name='users_w_this_language',
-        blank=True,
-        db_index=True
-    )
-    languages_string = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True
-    )
 
     def avatar_url(self):
         path = settings.AWS_S3_KEY_AVATAR_IMAGE % (self.id)
