@@ -36,13 +36,15 @@ urlpatterns = [
     path('verify-whatsapp', relviews.verify_whatsapp, name='verify_whatsapp'),
 
     # User menu and settings
+    path('credits', relviews.credits, name='credits'),
     path('settings', relviews.profile_settings, name='profile_settings'),
     path('logout', relviews.log_out, name='logout'),
     path('update-phone-number', relviews.update_phone_number, name='update_phone_number'),
     path('update-requirements', relviews.requirements, name='update_requirements'),
     
     # Navigation bar
-    path('', relviews.user_list, name='home'), # AKA search
+    path('home', comviews.home, name='home'), # AKA search CHANGE 
+    path('', relviews.user_list, name='search'), # AKA search CHANGE TO SEARCH
     path('history', relviews.history, name='history'),
     path('lookup', relviews.lookup, name='lookup'),
     path('pricing', comviews.pricing, name='pricing'),

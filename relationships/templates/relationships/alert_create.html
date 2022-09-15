@@ -19,22 +19,6 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         {% comment %} Start: Container {% endcomment %}
         <div id="kt_content_container" class="container-xxl">
-            <div class="alert alert-info d-flex align-items-center p-5">
-                {% comment %} Start: SVG icon: duotune/general/gen045.svg {% endcomment %}
-                <span class="svg-icon svg-icon-2hx svg-icon-info me-3">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                        <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
-                        <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
-                    </svg>
-                </span>
-                {% comment %} End: SVG icon {% endcomment %}
-                <div class="d-flex flex-column">
-                    <h4 class="text-dark">Create at least 1 alert</h4>
-                    <div class="mt-1">So, we can notify you when a user updates requirements and it fits your needs.</div>
-                </div>
-            </div>
-
             <div class="alert alert-primary d-flex align-items-center p-5">
                 {% comment %} Start: SVG icon: duotune/general/gen045.svg {% endcomment %}
                 <span class="svg-icon svg-icon-2hx svg-icon-primary me-3">
@@ -46,12 +30,12 @@
                 </span>
                 {% comment %} End: SVG icon {% endcomment %}
                 <div class="d-flex flex-column">
-                    <h4 class="text-dark">What's an alert?</h4>
-                    <div class="mt-1">An alert lets you receive a WhatsApp notification when a user updates requirements and it matches your needs.</div>
-                    <div class="mt-4">1 notification costs 1 credit.</div>
-                    <div class="fw-bolder">You have 2 credits left for the month.</div>
-                    <div>For more credits - upgrade your plan or buy extra credits.</div>
-                    <div class="mt-2"><a class="btn btn-sm btn-success" href="{% url 'pricing' %}">Upgrade Plan or Buy Extra Credits</a></div>
+                    <h4 class="text-dark">Create an Alert</h4>
+                    <div class="mt-1">We'll notify you via WhatsApp if a user requirement matches these settings.</div>
+                    {% comment %} <div class="mt-4">1 notification costs 1 credit.</div> {% endcomment %}
+                    {% comment %} <div class="fw-bolder">You have 2 credits left for the month.</div> {% endcomment %}
+                    {% comment %} <div>For more credits - upgrade your plan or buy extra credits.</div> {% endcomment %}
+                    {% comment %} <div class="mt-2"><a class="btn btn-sm btn-success" href="{% url 'pricing' %}">Upgrade Plan or Buy Extra Credits</a></div> {% endcomment %}
                 </div>
             </div>
 
@@ -59,17 +43,68 @@
             <div class="card shadow-sm mt-4">
                 {% comment %} Start: Card body {% endcomment %}
                 <div class="card-body">
-                    <div class="mt-10">
-                        <label class="form-label required">Keywords</label>
-
-                        <div class="mt-2">When a user updates requirements - if <u>all</u> the keywords specified here are in the requirements, you'll receive a WhatsApp notification.</div>
-
-                        <div class="form-floating col-lg-4 col-12 mt-6">
-                            <input type="text" class="form-control" placeholder="E.g., ICUMSA"></textarea>
-                            <label for="body">E.g., ICUMSA</label>
+                    <div>
+                        <div class="mt-10">
+                            <label class="form-label required">Alert Name <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Give this alert a name to identify it.">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                </svg>
+                            </span></label>
+                            <input class="form-control" placeholder="E.g., Potential White Sugar Sellers"></input>
                         </div>
 
-                        <div class="form-floating mt-4 col-lg-4 col-12">
+                        <div class="mt-12">
+                            <label class="form-label required">Key phrases <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User requirement must have 1 or more of these key phrases.">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                </svg>
+                            </span></label>
+                            {% comment %} We'll notify you if your key phrases appears in a user requirements. {% endcomment %}
+                            {% comment %} <div class="text-gray-800">We'll notify you if your key phrases appears in a user requirements.</div> {% endcomment %}
+                            {% comment %} <input class="form-control mt-4" value="tag1, tag2, tag3" id="kt_tagify_1"/> {% endcomment %}
+                            {% comment %} <div class="form-floating col-lg-6 mt-2"> {% endcomment %}
+                                {% comment %} <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Key Phrases" id="comments" name="comments"></textarea> {% endcomment %}
+                                {% comment %} <label for="comments">Key Phrases</label> {% endcomment %}
+                            {% comment %} </div> {% endcomment %}
+                            <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="comments" name="comments" placeholder="E.g., Sugar"></textarea>
+                            <div class="text-muted ms-2">Enter 1 key phrase per line.</div>
+                        </div>
+
+                        <div class="mt-12">
+                            <label class="form-label required">Negative key phrases <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="These key phrases must NOT appear in the user requirements.">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                </svg>
+                            </span></label>
+                            {% comment %} We'll notify you if your key phrases appears in a user requirements. {% endcomment %}
+                            {% comment %} <div class="text-gray-800">We'll notify you if your key phrases appears in a user requirements.</div> {% endcomment %}
+                            {% comment %} <input class="form-control mt-4" value="tag1, tag2, tag3" id="kt_tagify_1"/> {% endcomment %}
+                            {% comment %} <div class="form-floating col-lg-6 mt-2"> {% endcomment %}
+                                {% comment %} <textarea class="form-control" data-kt-autosize="true" maxlength="100" placeholder="Key Phrases" id="comments" name="comments"></textarea> {% endcomment %}
+                                {% comment %} <label for="comments">Key Phrases</label> {% endcomment %}
+                            {% comment %} </div> {% endcomment %}
+                            <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="comments" name="comments" placeholder="E.g., Brown"></textarea>
+                            <div class="text-muted ms-2">Enter 1 key phrase per line.</div>
+                        </div>
+
+                        {% comment %} <label class="form-label required mt-10">Keyword</label> {% endcomment %}
+
+                        {% comment %} <div class="mt-2">When a user updates requirements - if <u>all</u> the keywords specified here are in the requirements, you'll receive a WhatsApp notification.</div> {% endcomment %}
+
+                        {% comment %} <div class="form-floating col-lg-4 col-12">
+                            <input type="text" class="form-control" placeholder="E.g., ICUMSA 45, sugar, brazil"></textarea>
+                            <label for="body">E.g., ICUMSA 45</label>
+                        </div> {% endcomment %}
+
+                        {% comment %} <div class="text-muted ms-2">Separate keywords with commas. Don't worry about spaces, upper or lower cases.</div> {% endcomment %}
+
+                        {% comment %} <div class="form-floating mt-4 col-lg-4 col-12">
                             <input type="text" class="form-control" placeholder="Leave blank if not required. E.g., Sugar."></textarea>
                             <label for="body">E.g., Sugar.</label>
                             <div class="text-muted">Leave blank if not required.</div>
@@ -79,18 +114,18 @@
                             <input type="text" class="form-control" placeholder="Leave blank if not required. E.g., Brazil"></textarea>
                             <label for="body">E.g., Brazil</label>
                             <div class="text-muted">Leave blank if not required.</div>
-                        </div>
+                        </div> {% endcomment %}
 
-                        <label class="form-label required mt-8">Include Users from</label>
+                        {% comment %} <label class="form-label required mt-12">Include users from</label>
 
-                        <div class="form-check form-check-custom mt-3">
+                        <div class="form-check form-check-custom">
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="radio" name="include_all_countries" id="all_countries" value="all_countries" />
                                 <label class="form-label" for="all_countries">All Countries</label>
                             </div>
                         </div>
 
-                        <div class="form-check form-check-custom mt-2">
+                        <div class="form-check form-check-custom">
                             <div class="me-3">
                                 <input class="form-check-input me-1" type="radio" name="include_all_countries" id="selected_countries" value="selected_countries" />
                                 <label class="form-label" for="selected_countries">Selected Countries</label>
@@ -98,14 +133,38 @@
                         </div>
 
                         <div class="mt-2 col-lg-4 col-12">
-                            <select class="form-select form-select-lg" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
+                            <select class="form-select form-select-lg" data-control="select2" data-close-on-select="false" data-placeholder="No country selected" data-allow-clear="true" multiple="multiple">
+                                <option></option>
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                            </select>
+                        </div> {% endcomment %}
+
+                        <label class="form-label mt-12">Negative countries <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exclude users from these countries.">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                            </svg>
+                        </span></label>
+                        {% comment %} <div class="text-gray-800">We'll <u>exclude</u> users from these countries.</div> {% endcomment %}
+
+                        <div class="col-lg-4 col-12 mt-4">
+                            <select class="form-select form-select-lg" data-control="select2" data-close-on-select="false" data-placeholder="No countries selected" data-allow-clear="true" multiple="multiple">
                                 <option></option>
                                 <option value="1">Option 1</option>
                                 <option value="2">Option 2</option>
                             </select>
                         </div>
 
-                        <label class="form-label mt-8">Include Tags</label>
+                        <label class="form-label mt-12 required">Intents <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Requirement must have 1 or more of these intents.">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                            </svg>
+                        </span></label>
+                        {% comment %} <div class="text-gray-800">We'll include requirements with these intents.</div> {% endcomment %}
                         
                         <div class="form-check form-check-custom mt-3">
                             <div class="me-3">
@@ -151,9 +210,6 @@
                                 </label>
                             </div>
                         </div>
-
-
-
                     </div>
 
                     {% if form.non_field_errors %}
@@ -187,4 +243,15 @@ function leadCreateFormOnSubmit(token) {
 {% endcomment %}
 {% block page_custom_javascript %}
 <script src="{% static 'leads/js/lead_create.js' %}"></script>
+<script>
+$(document).ready(function() {
+    // The DOM elements you wish to replace with Tagify
+    var input1 = document.querySelector("#kt_tagify_1");
+    var input2 = document.querySelector("#kt_tagify_2");
+
+    // Initialize Tagify components on the above inputs
+    new Tagify(input1);
+    new Tagify(input2);
+})
+</script>
 {% endblock %}

@@ -24,6 +24,10 @@ def faq(request):
     template_name = 'faq.html'
     return TemplateResponse(request, template_name, {})
 
+def home(request):
+    template_name = 'home.html'
+    return TemplateResponse(request, template_name, {})
+
 # def e(request, file_to_render):
 #     template_name = 'examples/%s' % file_to_render
 #     return TemplateResponse(request, template_name, {})

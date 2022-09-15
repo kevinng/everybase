@@ -2,57 +2,110 @@
 
 {% load static %}
 
-{% block page_title %}Alert Contacts{% endblock %}
+{% block page_title %}Alert{% endblock %}
+{% block page_title_separator %}{% endblock %}
+{% comment %} {% block page_subtitle %}sugar, Brazil, ICUMSA{% endblock %} {% endcomment %}
 
-{% block page_subtitle %}Requirements matching your alert{% endblock %}
-
-{% block actions %}
+{% comment %} {% block actions %}
 <a href="" class="btn btn-sm btn-secondary">Back to Alerts</a>
-{% endblock %}
+{% endblock %} {% endcomment %}
 
 {% block content_body %}
 <div class="post d-flex flex-column-fluid">
     <div id="kt_content_container" class="container-xxl">
-        <div class="card shadow-sm bg-secondary">
-            <div class="card-header pb-3 pt-4">
-                <div class="card-title">Alert Details</div>
-                <div class="card-toolbar d-flex flex-column align-items-end">
-                    <div class="badge badge-success">Running</div>
-                    <div class="text-muted mt-1">Started 2d ago</div>
-                    {% comment %} <span class="text-muted">Last matched 2d ago</span> {% endcomment %}
-                    {% comment %} <span class="text-muted">Stopped 2d ago</span> {% endcomment %}
+        <div class="d-flex flex-column flex-lg-row">
+            {% comment %} Start: Sidebar {% endcomment %}
+            <div class="flex-column flex-lg-row-auto w-lg-250px w-xl-350px mb-5">
+                <div class="card shadow-sm">
+                    <div class="card-header py-5">
+                        <div class="card-title">
+                            {% comment %} <button class="btn btn-success btn-sm">Start</button> {% endcomment %}
+                            {% comment %} <button class="btn btn-light-danger btn-sm">Stop</button> {% endcomment %}
+                            Alert Settings
+                        </div>
+                        <div class="card-toolbar d-flex flex-column align-items-end">
+                            <div class="badge badge-success">Running</div>
+                            <div class="text-muted fs-7 fw-normal mt-1">Started 2d ago</div>
+                        </div>
+                    </div>
+                    <div class="card-body mb-9">
+                        <div class="d-flex flex-column">
+                            <div class="fw-bolder">Key phrases <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="User requirement must have 1 or more of these key phrases.">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                </svg>
+                            </span></div>
+                            <div class="mt-2">
+                                crude<br />d2<br />d6<br />JP54<br />MAZUT
+                                {% comment %} <span class="badge badge-secondary">United States of America</span>
+                                <span class="badge badge-secondary">America</span>
+                                <span class="badge badge-secondary">States of America</span>
+                                <span class="badge badge-secondary">United States of America</span> {% endcomment %}
+                            </div>
+
+                            <div class="fw-bolder mt-6">Negative key phrases <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="These key phrases must NOT appear in the user requirements.">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                </svg>
+                            </span></div>
+                            <div class="mt-2">
+                                crude<br />d2<br />d6<br />JP54<br />MAZUT
+                                {% comment %} <span class="badge badge-secondary">United States of America</span>
+                                <span class="badge badge-secondary">America</span>
+                                <span class="badge badge-secondary">States of America</span>
+                                <span class="badge badge-secondary">United States of America</span> {% endcomment %}
+                            </div>
+
+                            <div class="fw-bolder mt-6">Negative countries <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Exclude users from these countries.">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                </svg>
+                            </span></div>
+                            <div class="mt-2">
+                                United States of America, China
+                                {% comment %} <span class="badge badge-secondary">United States of America</span>
+                                <span class="badge badge-secondary">America</span>
+                                <span class="badge badge-secondary">States of America</span>
+                                <span class="badge badge-secondary">United States of America</span> {% endcomment %}
+                            </div>
+
+                            <div class="fw-bolder mt-6">Intents <span class="svg-icon svg-icon-success svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Requirement must have 1 or more of these intents.">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                </svg>
+                            </span></div>
+                            <div class="mt-2">
+                                <span class="badge badge-secondary">United States of America</span>
+                                <span class="badge badge-secondary">America</span>
+                                <span class="badge badge-secondary">States of America</span>
+                                <span class="badge badge-secondary">United States of America</span>
+                            </div>
+                        </div>
+                        <!--end::Member-->
+                    </div>
+                    <!--end::Body-->
+                    <div class="card-footer d-flex justify-content-end">
+                        <a class="btn btn-sm btn-light-danger" href="">Stop</a>
+                        <a class="btn btn-sm btn-light-warning ms-2" href="">Edit</a>
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-                <div>
-                    icumsa, Brazil, sugar
-                </div>
-                <div class="d-flex mt-2">
-                    <span class="badge badge-dark">Other</span>
-                </div>
-                <div class="mt-2">
-                    {% comment %} <span class="badge badge-dark">All Countries</span> {% endcomment %}
-                    <span class="badge badge-dark">Selected Countries</span>
-                    <span class="badge badge-dark">United States of America</span>
-                    <span class="badge badge-dark">United States of America</span>
-                    <span class="badge badge-dark">United States of America</span>
-                    <span class="badge badge-dark">United States of America</span>
-                </div>
-            </div>
-            <div class="card-footer d-flex flex-row-reverse">
-                <a href="" class="btn btn-sm btn-light-danger">Stop</a>
-            </div>
-        </div>
+            {% comment %} End: Sidebar {% endcomment %}
 
-        <div class="d-flex justify-content-between align-items-center mt-8">
-            <span class="text-dark fw-bolder"><span data-kt-countup="true" data-kt-countup-value="{{ page_obj.paginator.count }}">0</span> persons</span>
-        </div>
+            {% comment %} Start: Content {% endcomment %}
 
-        {% comment %} {% if page_obj|length > 0 %} {% endcomment %}
-            {% comment %} {% for lead in page_obj %} {% endcomment %}
-                {% comment %} {% include 'leads/includes/lead_item.html' with lead=lead %} {% endcomment %}
+            <div class="flex-lg-row-fluid ms-lg-15">
+ 
 
-                <div class="card shadow-sm mt-4">
+                <div class="card shadow-sm">
                     <div class="card-header pb-3 pt-4">
                         <div class="card-title">
                             <div class="d-flex align-items-top">
@@ -88,6 +141,20 @@
                         </div>
                     </div>
                 </div>
+
+
+
+            </div>
+            {% comment %} End: Content {% endcomment %}
+        </div>
+
+        {% comment %} <div class="d-flex justify-content-between align-items-center">
+            <span class="text-dark fw-bolder"><span data-kt-countup="true" data-kt-countup-value="{{ page_obj.paginator.count }}">0</span> notifications</span>
+        </div> {% endcomment %}
+
+        {% comment %} {% if page_obj|length > 0 %} {% endcomment %}
+            {% comment %} {% for lead in page_obj %} {% endcomment %}
+                {% comment %} {% include 'leads/includes/lead_item.html' with lead=lead %} {% endcomment %}
 
 
                 {% comment %} {% if forloop.counter|divisibleby:5 %}

@@ -503,6 +503,11 @@ def alert_delete(request):
     return TemplateResponse(request, template_name, {})
 
 
+def credits(request):
+    template_name = 'relationships/credits.html'
+    return TemplateResponse(request, template_name, {})
+
+
 
 
 # CONVERT THIS TO RELATIONSHIPS

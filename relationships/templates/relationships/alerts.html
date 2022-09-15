@@ -24,11 +24,13 @@
             {% comment %} End: SVG icon {% endcomment %}
             <div class="d-flex flex-column">
                 <h4 class="text-dark">What's an alert?</h4>
-                <div class="mt-1">An alert lets you receive a WhatsApp notification when a user updates requirements and it matches your needs.</div>
+                
+                <div>We'll notify you via WhatsApp if a user requirement matches your alert settings.</div>
+                
                 <div class="mt-4">1 notification costs 1 credit.</div>
                 <div class="fw-bolder">You have 2 credits left for the month.</div>
                 <div>For more credits - upgrade your plan or buy extra credits.</div>
-                <div class="mt-2"><a class="btn btn-sm btn-success" href="{% url 'pricing' %}">Upgrade Plan or Buy Extra Credits</a></div>
+                <div class="mt-2"><a class="btn btn-sm btn-success" href="{% url 'pricing' %}">See Pricing</a></div>
             </div>
         </div>
 
@@ -49,8 +51,12 @@
 
         <div class="card shadow-sm mt-4">
             <div class="card-header pb-3 pt-4">
-                <div class="card-title align-items-start flex-column">
-                    <button class="btn btn-sm btn-light-danger">Stop</button>
+                <div class="card-title">
+                    Alert Name
+                    {% comment %} Alert {% endcomment %}
+                    {% comment %} <a href="" class="btn btn-sm btn-secondary">Notifications (0)</a> {% endcomment %}
+                    {% comment %} <button class="btn btn-sm btn-secondary ms-2">Edit</button> {% endcomment %}
+                    {% comment %} <button class="btn btn-sm btn-light-danger ms-2">Stop</button> {% endcomment %}
                     {% comment %} <button class="btn btn-sm btn-light-success">Start</button> {% endcomment %}
                 </div>
                 <div class="card-toolbar d-flex flex-column align-items-end">
@@ -61,23 +67,51 @@
                 </div>
             </div>
             <div class="card-body">
-                <div>
-                    icumsa, Brazil, sugar
+                <div class="d-flex flex-column">
+                    <div class="fw-bolder">Key phrases</div>
+                    <div class="mt-2">
+                        crude<br />d2<br />d6<br />JP54<br />MAZUT
+                        {% comment %} <span class="badge badge-secondary">United States of America</span>
+                        <span class="badge badge-secondary">United States of America</span>
+                        <span class="badge badge-secondary">United States of America</span>
+                        <span class="badge badge-secondary">United States of America</span> {% endcomment %}
+                    </div>
                 </div>
-                <div class="d-flex mt-2">
-                    {% include 'leads/includes/badges/leads/other.html' %}
+                <div class="d-flex flex-column mt-6">
+                    <div class="fw-bolder">Negative key phrases</div>
+                    <div class="mt-2">
+                        crude<br />d2<br />d6<br />JP54<br />MAZUT
+                        {% comment %} <span class="badge badge-secondary">United States of America</span>
+                        <span class="badge badge-secondary">United States of America</span>
+                        <span class="badge badge-secondary">United States of America</span>
+                        <span class="badge badge-secondary">United States of America</span> {% endcomment %}
+                    </div>
                 </div>
-                <div class="mt-2">
-                    {% comment %} <span class="badge badge-secondary">All Countries</span> {% endcomment %}
-                    <span class="badge badge-secondary">Selected Countries</span>
-                    <span class="badge badge-secondary">United States of America</span>
-                    <span class="badge badge-secondary">United States of America</span>
-                    <span class="badge badge-secondary">United States of America</span>
-                    <span class="badge badge-secondary">United States of America</span>
+                <div class="d-flex flex-column mt-6">
+                    <div class="fw-bolder">Negative countries</div>
+                    <div class="mt-2">
+                        United States of America<br />India
+                        {% comment %} <span class="badge badge-secondary">United States of America</span>
+                        <span class="badge badge-secondary">United States of America</span>
+                        <span class="badge badge-secondary">United States of America</span>
+                        <span class="badge badge-secondary">United States of America</span> {% endcomment %}
+                    </div>
+                </div>
+                <div class="d-flex flex-column mt-6">
+                    <div class="fw-bolder">Intents</div>
+                    <div class="mt-2">
+                        <span class="badge badge-secondary">Other</span>
+                        <span class="badge badge-secondary">Other</span>
+                        <span class="badge badge-secondary">Other</span>
+                    </div>
                 </div>
             </div>
-            <div class="card-footer d-flex justify-content-end">
-                <a href="" class="btn btn-sm btn-light-info">Contacts (0)</a>
+            <div class="card-footer d-flex justify-content-between">
+                <div>
+                    <a href="" class="btn btn-sm btn-light-danger">Stop</a>
+                    <a href="" class="btn btn-sm btn-light-warning">Edit</a>
+                </div>
+                <a href="" class="btn btn-sm btn-light-info">Details (0)</a>
             </div>
         </div>
     </div>
