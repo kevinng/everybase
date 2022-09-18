@@ -1,36 +1,15 @@
 import random, string
-
 from urllib.parse import urljoin
-
 from everybase import settings
-
 from django.utils.html import format_html
 from django.contrib import admin
-
 from relationships import models
 from common import admin as comadm
 from growth import models as gromods
-from leads import models as lemods
 
 from relationships.utilities.get_whatsapp_url import get_whatsapp_url
 
-@admin.register(models.PhoneNumberType)
-class PhoneNumberTypeAdmin(comadm.ChoiceAdmin):
-    pass
-
-_phone_number_fields = ['country_code', 'national_number']
-@admin.register(models.PhoneNumber)
-class PhoneNumberAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _phone_number_fields
-    list_editable = comadm.standard_list_editable + _phone_number_fields
-    list_filter = comadm.standard_list_filter + ['country_code']
-    search_fields = comadm.standard_search_fields + _phone_number_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _phone_number_fields + ['types']})]
-    autocomplete_fields = ['types']
+# Inlines
 
 class GmassEmailStatusInlineAdmin(admin.TabularInline):
     model = gromods.GmassEmailStatus
@@ -101,6 +80,31 @@ class UserInlineAdmin(admin.TabularInline):
         link += f'/relationships/user/{obj.id}/change'
         return format_html(f'<a href="{link}" target="{link}">{obj.first_name} {obj.last_name}</a>')
 
+class EmailInlineAdmin(admin.TabularInline):
+    model = models.Email
+    extra = 1
+    autocomplete_fields = ['import_job']
+
+# General
+
+@admin.register(models.PhoneNumberType)
+class PhoneNumberTypeAdmin(comadm.ChoiceAdmin):
+    pass
+
+_phone_number_fields = ['country_code', 'national_number']
+@admin.register(models.PhoneNumber)
+class PhoneNumberAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _phone_number_fields
+    list_editable = [] # Speed up loading
+    list_filter = comadm.standard_list_filter + ['country_code']
+    search_fields = comadm.standard_search_fields + _phone_number_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + \
+        [('Details', {'fields': _phone_number_fields + ['types']})]
+    autocomplete_fields = ['types']
+
 _email_fields = ['verified', 'email', 'notes', 'invalid_email', 'import_job']
 @admin.register(models.Email)
 class EmailAdmin(comadm.StandardAdmin):
@@ -114,7 +118,8 @@ class EmailAdmin(comadm.StandardAdmin):
     # Details page settings
     fieldsets = [
         (None, {'fields': ['id']}),
-        ('Details', {'fields': ['email', 'do_not_email', 'import_job', 'invalid_email']}),
+        ('Details', {'fields': ['email', 'do_not_email', 'import_job',
+            'invalid_email']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
     ]
     autocomplete_fields = ['import_job', 'invalid_email']
@@ -132,11 +137,6 @@ class EmailAdmin(comadm.StandardAdmin):
         # WorldOfChemicalsSupplierInlineAdmin
     ]
 
-class EmailInlineAdmin(admin.TabularInline):
-    model = models.Email
-    extra = 1
-    autocomplete_fields = ['import_job']
-
 _invalid_email_fields = ['email', 'import_job']
 @admin.register(models.InvalidEmail)
 class InvalidEmailAdmin(comadm.StandardAdmin):
@@ -153,44 +153,47 @@ class InvalidEmailAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['import_job']
     inlines = [EmailInlineAdmin]
 
-class LeadInlineAdmin(admin.TabularInline):
-    model = lemods.Lead
-    extra = 0
-    fields = ['lead_link']
-    readonly_fields = ['lead_link']
-
-    def lead_link(self, obj):
-        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
-        link += f'/leads/lead/{obj.id}/change'
-        return format_html(f'<a href="{link}" target="{link}">{obj.headline}</a>')
-
 @admin.register(models.User)
 class UserAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
-    list_display = ['id', 'updated', 'full_name', 'country', 'email', 'whatsapp_phone_number', 'created', 'register_cookie_uuid', 'has_insights']
+    list_display = ['id', 'updated', 'full_name', 'country', 'email',
+        'whatsapp_phone_number', 'created', 'register_cookie_uuid',
+        'has_insights']
     list_editable = [] # Override to speed up loading
     list_filter = ['created', 'has_insights']
-    search_fields = ['id', 'uuid', 'first_name', 'last_name', 'country__name', 'email__email', 'internal_notes', 'register_cookie_uuid']
+    search_fields = ['id', 'uuid', 'first_name', 'last_name', 'country__name',
+        'email__email', 'internal_notes', 'register_cookie_uuid']
 
     # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['uuid', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'django_user_link']
+    readonly_fields = comadm.standard_readonly_fields + ['uuid',
+        'whatsapp_phone_number', 'email_string', 'password_change_link',
+        'random_string_for_password', 'django_user_link']
     fieldsets = [
         (None, {'fields': ['id', 'uuid']}),
-        ('Growth', {'fields': ['registered', 'django_user', 'register_cookie_uuid', 'whatsapp_phone_number', 'email_string', 'password_change_link', 'random_string_for_password', 'fb_profile', 'django_user_link', 'has_insights', 'internal_notes']}),
-        ('Details', {'fields': ['first_name', 'last_name', 'email', 'phone_number', 'country']}),
-        ('Login', {'fields': ['email_code_used', 'email_code', 'email_code_generated', 'email_code_purpose','whatsapp_code_used', 'whatsapp_code', 'whatsapp_code_generated', 'whatsapp_code_purpose', 'enable_whatsapp']}),
+        ('Growth', {'fields': ['registered', 'django_user',
+            'register_cookie_uuid', 'whatsapp_phone_number', 'email_string',
+            'password_change_link', 'random_string_for_password', 'fb_profile',
+            'django_user_link', 'has_insights', 'internal_notes']}),
+        ('Details', {'fields': ['first_name', 'last_name', 'email',
+            'phone_number', 'country']}),
+        ('Login', {'fields': ['email_code_used', 'email_code',
+            'email_code_generated', 'email_code_purpose','whatsapp_code_used',
+            'whatsapp_code', 'whatsapp_code_generated', 'whatsapp_code_purpose',
+            'enable_whatsapp']}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
         ('Not in use', {'fields': [
             'slug_link', 'slug_tokens',
             'impressions', 'clicks',
-            'has_company', 'company_name', 'goods_string', 'buy_agent_details', 'sell_agent_details', 'logistics_agent_details',
-            'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent', 'is_logistics_agent',
+            'has_company', 'company_name', 'goods_string', 'buy_agent_details',
+                'sell_agent_details', 'logistics_agent_details',
+            'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent',
+                'is_logistics_agent',
             'state', 'state_string', 'languages', 'languages_string'
         ]})
     ]
     autocomplete_fields = ['django_user', 'country', 'phone_number', 'email']
-    inlines = [LeadInlineAdmin]
+    # inlines = [LeadInlineAdmin]
 
     def full_name(self, obj):
         return f'{obj.first_name} {obj.last_name}'
@@ -222,7 +225,8 @@ class UserAdmin(comadm.StandardAdmin):
             obj.phone_number.country_code,
             obj.phone_number.national_number
         )
-        return format_html(f'<a href="{link}" target="{link}">{obj.phone_number}</a>')
+        return format_html(
+            f'<a href="{link}" target="{link}">{obj.phone_number}</a>')
 
     def django_user_link(self, obj):
         if obj.django_user is None:
@@ -231,118 +235,6 @@ class UserAdmin(comadm.StandardAdmin):
         link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
         link += f'/auth/user/{obj.django_user.id}/change'
         return format_html(f'<a href="{link}" target="{link}">{link}</a>')
-
-_login_action_fields = ['user', 'cookie_uuid', 'type']
-@admin.register(models.LoginAction)
-class LoginActionAdmin(comadm.StandardAdmin):
-    list_display = comadm.standard_list_display + _login_action_fields
-    list_editable = [] # Speed up loading
-    search_fields = comadm.standard_search_fields + ['user__first_name', 'user__last_name', 'cookie_uuid']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _login_action_fields})
-    ]
-    autocomplete_fields = ['user']
-
-_magic_login_redirect_fields = ['uuid', 'next']
-@admin.register(models.MagicLinkRedirect)
-class MagicLoginRedirectAdmin(comadm.StandardAdmin):
-    list_display = comadm.standard_list_display + _magic_login_redirect_fields
-    list_editable = [] # Speed up loading
-    search_fields = comadm.standard_search_fields + _magic_login_redirect_fields
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _magic_login_redirect_fields})
-    ]
-
-_user_detail_views_fields = ['viewee', 'viewer', 'comments_view_count',
-    'leads_view_count']
-@admin.register(models.UserDetailView)
-class UserDetailViewAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _user_detail_views_fields
-    list_editable = comadm.standard_list_editable + _user_detail_views_fields
-    list_filter = comadm.standard_list_filter
-    search_fields = comadm.standard_search_fields + ['viewee__first_name',
-        'viewee__last_name', 'viewer__first_name', 'viewer__last_name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _user_detail_views_fields})
-    ]
-    autocomplete_fields = ['viewee', 'viewer']
-
-class ApplicationMessageInlineAdmin(admin.TabularInline):
-    model = lemods.ApplicationMessage
-    extra = 0
-    fields = ['application_link', 'body', 'applicant_link', 'lead_author_link']
-    readonly_fields = ['application_link', 'body', 'applicant_link', 'lead_author_link']
-
-    def application_link(self, obj):
-        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
-        link += f'/leads/application/{obj.application.id}/change'
-        return format_html(f'<a href="{link}" target="{link}">{obj.application}</a>')
-    
-    def applicant_link(self, obj):
-        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
-        link += f'/relationships/user/{obj.application.applicant.id}/change'
-        return format_html(f'<a href="{link}" target="{link}">{obj.application.applicant.first_name} {obj.application.applicant.last_name}</a>')
-
-    def lead_author_link(self, obj):
-        link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
-        link += f'/relationships/user/{obj.application.lead.author.id}/change'
-        return format_html(f'<a href="{link}" target="{link}">{obj.application.lead.author.first_name} {obj.application.lead.author.last_name}</a>')
-
-_user_comment_fields = ['commentee', 'commentor', 'body']
-@admin.register(models.UserComment)
-class UserCommentAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _user_comment_fields
-    list_editable = comadm.standard_list_editable + _user_comment_fields
-    search_fields = comadm.standard_search_fields + ['commentee__first_name',
-        'commentee__last_name', 'commentor__first_name', 'commentor__last_name',
-        'body']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _user_comment_fields})
-    ]
-    autocomplete_fields = ['commentee', 'commentor']
-
-_login_token_fields = ['user', 'activated', 'killed','token']
-@admin.register(models.LoginToken)
-class LoginTokenAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _login_token_fields
-    list_editable = comadm.standard_list_editable + _login_token_fields
-    list_filter = comadm.standard_list_filter + ['created']
-    search_fields = comadm.standard_search_fields + ['token']
-
-    # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['created']
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _login_token_fields})
-    ]
-    autocomplete_fields = ['user']
-
-_register_token_fields = ['user', 'activated', 'killed', 'token']
-@admin.register(models.RegisterToken)
-class RegisterTokenAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _register_token_fields
-    list_editable = comadm.standard_list_editable + _register_token_fields
-    list_filter = comadm.standard_list_filter + ['created']
-    search_fields = comadm.standard_search_fields + ['user__first_name',
-        'user__last_name', 'token']
-
-    # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['created']
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _register_token_fields})
-    ]
-    autocomplete_fields = ['user']
 
 _user_agent_fields = ['user', 'ip_address', 'is_routable', 'is_mobile',
     'is_tablet', 'is_touch_capable', 'is_pc', 'is_bot', 'browser',
@@ -370,38 +262,278 @@ class UserAgentAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
-_saved_user_fields = ['active', 'saver', 'savee']
-@admin.register(models.SavedUser)
-class SavedUserAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _saved_user_fields
-    list_editable = comadm.standard_list_editable + _saved_user_fields
-    list_filter = comadm.standard_list_filter + ['active']
-    search_fields = comadm.standard_search_fields + ['saver__id',
-        'saver__family_first_name', 'saver__family_last_name', 'savee__id',
-        'savee__family_first_name', 'savee__family_last_name',]
+_login_action_fields = ['user', 'cookie_uuid', 'type']
+@admin.register(models.LoginAction)
+class LoginActionAdmin(comadm.StandardAdmin):
+    list_display = comadm.standard_list_display + _login_action_fields
+    list_editable = [] # Speed up loading
+    search_fields = comadm.standard_search_fields + ['user__first_name',
+        'user__last_name', 'cookie_uuid']
 
     # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _saved_user_fields})]
-    autocomplete_fields = ['saver', 'savee']
-
-_user_query_fields = ['user', 'commented_only', 'saved_only', 'connected_only',
-'first_name', 'last_name', 'company_name', 'country', 'goods_string',
-'languages', 'is_buy_agent', 'buy_agent_details', 'is_sell_agent',
-'sell_agent_details', 'is_logistics_agent', 'logistics_agent_details']
-@admin.register(models.UserQuery)
-class UserQueryAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _user_query_fields
-    list_editable = comadm.standard_list_editable + _user_query_fields
-    search_fields = comadm.standard_search_fields + ['user__id',
-        'commented_only', 'saved_only', 'connected_only', 'first_name',
-        'last_name', 'company_name', 'country', 'goods_string', 'languages',
-        'is_buy_agent', 'buy_agent_details', 'is_sell_agent',
-        'sell_agent_details', 'is_logistics_agent', 'logistics_agent_details']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + \
-        [('Details', {'fields': _user_query_fields})]
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _login_action_fields})
+    ]
     autocomplete_fields = ['user']
+
+# Requirements
+
+_requirement_fields = ['user', 'requirements', 'is_buying', 'is_selling',
+    'is_need_commission_agents', 'is_commission_agent', 'is_other']
+@admin.register(models.Requirement)
+class RequirementAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _requirement_fields
+    list_editable = [] # Speed up loading
+    list_filter = comadm.standard_list_filter
+    search_fields = comadm.standard_search_fields + ['user__first_name',
+        'user__last_name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _requirement_fields})
+    ]
+    autocomplete_fields = ['user']
+
+_user_contact_action_fields = ['contactee', 'contactor', 'whatsapp_body',
+    'status']
+@admin.register(models.UserContactAction)
+class UserContactActionAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _user_contact_action_fields
+    list_editable = [] # Speed up loading
+    list_filter = comadm.standard_list_filter + ['status']
+    search_fields = comadm.standard_search_fields + ['contactee__first_name',
+        'contactee__last_name', 'contactor__first_name', 'contactor__last_name',
+        'whatsapp_body']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _user_contact_action_fields})
+    ]
+    autocomplete_fields = ['contactee', 'contactor']
+
+_user_detail_views_fields = ['viewee', 'viewer', 'count']
+@admin.register(models.UserDetailView)
+class UserDetailViewAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _user_detail_views_fields
+    list_editable = [] # Speed up loading
+    list_filter = comadm.standard_list_filter
+    search_fields = comadm.standard_search_fields + ['viewee__first_name',
+        'viewee__last_name', 'viewer__first_name', 'viewer__last_name']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _user_detail_views_fields})
+    ]
+    autocomplete_fields = ['viewee', 'viewer']
+
+# Alert
+
+_alert_fields = ['user', 'key_phrases', 'is_buying', 'is_selling',
+    'is_need_commission_agents', 'is_commission_agent', 'is_other']
+@admin.register(models.Alert)
+class AlertAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _alert_fields
+    list_editable = []
+    list_filter = comadm.standard_list_filter + ['is_buying', 'is_selling',
+        'is_need_commission_agents', 'is_commission_agent', 'is_other']
+    search_fields = comadm.standard_search_fields + ['user__first_name',
+        'user__last_name', 'key_phrases']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _alert_fields})
+    ]
+    autocomplete_fields = ['user']
+
+_alert_match_fields = ['alert', 'requirement', 'status']
+@admin.register(models.AlertMatch)
+class AlertMatchAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _alert_match_fields
+    list_editable = [] # Speed up loading
+    list_filter = comadm.standard_list_filter + ['status']
+    search_fields = comadm.standard_search_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _alert_match_fields})
+    ]
+    autocomplete_fields = ['alert', 'requirement']
+
+_key_phrase_fields = ['key_phrase']
+@admin.register(models.KeyPhrase)
+class KeyPhraseAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _key_phrase_fields
+    list_editable = [] # Speed up loading
+    list_filter = comadm.standard_list_filter
+    search_fields = comadm.standard_search_fields
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _key_phrase_fields})
+    ]
+
+_alert_key_phrase_fields = ['alert', 'key_phrase']
+@admin.register(models.AlertKeyPhrase)
+class AlertKeyPhraseAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = _alert_key_phrase_fields
+    search_fields = ['alert__id', 'key_phrase']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _alert_key_phrase_fields})
+    ]
+    autocomplete_fields = ['alert']
+
+_alert_country_fields = ['alert', 'country']
+@admin.register(models.AlertExcludeCountry)
+class AlertExcludeCountryAdmin(admin.ModelAdmin):
+    # List page settings
+    list_display = _alert_country_fields
+    search_fields = ['alert__id']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _alert_country_fields})
+    ]
+    autocomplete_fields = _alert_country_fields
+
+# from leads import models as lemods
+
+# class LeadInlineAdmin(admin.TabularInline):
+#     model = lemods.Lead
+#     extra = 0
+#     fields = ['lead_link']
+#     readonly_fields = ['lead_link']
+
+#     def lead_link(self, obj):
+#         link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+#         link += f'/leads/lead/{obj.id}/change'
+#         return format_html(
+#             f'<a href="{link}" target="{link}">{obj.headline}</a>')
+
+# class ApplicationMessageInlineAdmin(admin.TabularInline):
+#     model = lemods.ApplicationMessage
+#     extra = 0
+#     fields = ['application_link', 'body', 'applicant_link', 'lead_author_link']
+#     readonly_fields = ['application_link', 'body', 'applicant_link', 'lead_author_link']
+
+#     def application_link(self, obj):
+#         link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+#         link += f'/leads/application/{obj.application.id}/change'
+#         return format_html(f'<a href="{link}" target="{link}">{obj.application}</a>')
+    
+#     def applicant_link(self, obj):
+#         link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+#         link += f'/relationships/user/{obj.application.applicant.id}/change'
+#         return format_html(f'<a href="{link}" target="{link}">{obj.application.applicant.first_name} {obj.application.applicant.last_name}</a>')
+
+#     def lead_author_link(self, obj):
+#         link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
+#         link += f'/relationships/user/{obj.application.lead.author.id}/change'
+#         return format_html(f'<a href="{link}" target="{link}">{obj.application.lead.author.first_name} {obj.application.lead.author.last_name}</a>')
+
+# _user_comment_fields = ['commentee', 'commentor', 'body']
+# @admin.register(models.UserComment)
+# class UserCommentAdmin(comadm.StandardAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + _user_comment_fields
+#     list_editable = comadm.standard_list_editable + _user_comment_fields
+#     search_fields = comadm.standard_search_fields + ['commentee__first_name',
+#         'commentee__last_name', 'commentor__first_name', 'commentor__last_name',
+#         'body']
+
+#     # Details page settings
+#     fieldsets = comadm.standard_fieldsets + [
+#         (None, {'fields': _user_comment_fields})
+#     ]
+#     autocomplete_fields = ['commentee', 'commentor']
+
+# _login_token_fields = ['user', 'activated', 'killed','token']
+# @admin.register(models.LoginToken)
+# class LoginTokenAdmin(comadm.StandardAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + _login_token_fields
+#     list_editable = comadm.standard_list_editable + _login_token_fields
+#     list_filter = comadm.standard_list_filter + ['created']
+#     search_fields = comadm.standard_search_fields + ['token']
+
+#     # Details page settings
+#     readonly_fields = comadm.standard_readonly_fields + ['created']
+#     fieldsets = comadm.standard_fieldsets + [
+#         (None, {'fields': _login_token_fields})
+#     ]
+#     autocomplete_fields = ['user']
+
+# _register_token_fields = ['user', 'activated', 'killed', 'token']
+# @admin.register(models.RegisterToken)
+# class RegisterTokenAdmin(comadm.StandardAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + _register_token_fields
+#     list_editable = comadm.standard_list_editable + _register_token_fields
+#     list_filter = comadm.standard_list_filter + ['created']
+#     search_fields = comadm.standard_search_fields + ['user__first_name',
+#         'user__last_name', 'token']
+
+#     # Details page settings
+#     readonly_fields = comadm.standard_readonly_fields + ['created']
+#     fieldsets = comadm.standard_fieldsets + [
+#         (None, {'fields': _register_token_fields})
+#     ]
+#     autocomplete_fields = ['user']
+
+
+
+# _saved_user_fields = ['active', 'saver', 'savee']
+# @admin.register(models.SavedUser)
+# class SavedUserAdmin(comadm.StandardAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + _saved_user_fields
+#     list_editable = comadm.standard_list_editable + _saved_user_fields
+#     list_filter = comadm.standard_list_filter + ['active']
+#     search_fields = comadm.standard_search_fields + ['saver__id',
+#         'saver__family_first_name', 'saver__family_last_name', 'savee__id',
+#         'savee__family_first_name', 'savee__family_last_name',]
+
+#     # Details page settings
+#     fieldsets = comadm.standard_fieldsets + \
+#         [('Details', {'fields': _saved_user_fields})]
+#     autocomplete_fields = ['saver', 'savee']
+
+# _user_query_fields = ['user', 'commented_only', 'saved_only', 'connected_only',
+# 'first_name', 'last_name', 'company_name', 'country', 'goods_string',
+# 'languages', 'is_buy_agent', 'buy_agent_details', 'is_sell_agent',
+# 'sell_agent_details', 'is_logistics_agent', 'logistics_agent_details']
+# @admin.register(models.UserQuery)
+# class UserQueryAdmin(comadm.StandardAdmin):
+#     # List page settings
+#     list_display = comadm.standard_list_display + _user_query_fields
+#     list_editable = comadm.standard_list_editable + _user_query_fields
+#     search_fields = comadm.standard_search_fields + ['user__id',
+#         'commented_only', 'saved_only', 'connected_only', 'first_name',
+#         'last_name', 'company_name', 'country', 'goods_string', 'languages',
+#         'is_buy_agent', 'buy_agent_details', 'is_sell_agent',
+#         'sell_agent_details', 'is_logistics_agent', 'logistics_agent_details']
+
+#     # Details page settings
+#     fieldsets = comadm.standard_fieldsets + \
+#         [('Details', {'fields': _user_query_fields})]
+#     autocomplete_fields = ['user']
+
+# _magic_login_redirect_fields = ['uuid', 'next']
+# @admin.register(models.MagicLinkRedirect)
+# class MagicLoginRedirectAdmin(comadm.StandardAdmin):
+#     list_display = comadm.standard_list_display + _magic_login_redirect_fields
+#     list_editable = [] # Speed up loading
+#     search_fields = comadm.standard_search_fields + _magic_login_redirect_fields
+
+#     # Details page settings
+#     fieldsets = comadm.standard_fieldsets + [
+#         (None, {'fields': _magic_login_redirect_fields})
+#     ]
