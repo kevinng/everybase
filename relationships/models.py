@@ -1,17 +1,14 @@
-import random, uuid
-from urllib.parse import urljoin
+import random
+
+from relationships.constants.email_purposes import EMAIL_PURPOSE_CHOICES
+from relationships.constants.whatsapp_purposes import WHATSAPP_PURPOSE_CHOICES
 
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User as django_user
-from django.utils.text import slugify
 
-from everybase import settings
 from common import models as commods
-
-from relationships.constants.email_purposes import EMAIL_PURPOSE_CHOICES
-from relationships.constants.whatsapp_purposes import WHATSAPP_PURPOSE_CHOICES
 
 def validate_country_code(value):
     """Validates country code. Raise ValidationError if value is invalid.
@@ -182,7 +179,7 @@ class InvalidEmail(commods.Standard):
 class User(commods.Standard):
     """User details.
 
-    Last updated: 13 September 2022, 6:39 PM
+    Last updated: 29 September 2022, 1:58 PM
     """
     registered = models.DateTimeField(
         null=True,
@@ -205,32 +202,62 @@ class User(commods.Standard):
         db_index=True
     )
 
-    avatar = models.ForeignKey(
-        'files.File',
-        related_name='avatar_for_users',
-        related_query_name='avatar_for_users',
+    email = models.ForeignKey(
+        'Email',
+        related_name='user',
+        related_query_name='user',
         on_delete=models.PROTECT,
         null=True,
         blank=True,
         db_index=True
     )
-
-    slug_link = models.CharField(
-        max_length=200,
-        unique=True,
+    first_name = models.CharField(
+        max_length=20,
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    last_name = models.CharField(
+        max_length=20,
+        db_index=True,
+        null=True,
+        blank=True
+    )
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        related_name='user',
+        related_query_name='user',
+        on_delete=models.PROTECT,
         null=True,
         blank=True,
         db_index=True
     )
-    slug_tokens = models.TextField(
+    country = models.ForeignKey(
+        'common.Country',
+        related_name='users_as_country',
+        related_query_name='users_as_country',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    business_name = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    business_address = models.TextField(
         null=True,
         blank=True
     )
-    uuid = models.UUIDField(
-        unique=True,
-        default=uuid.uuid4,
-        editable=False,
-        db_index=True
+    business_description = models.TextField(
+        null=True,
+        blank=True
+    )
+    status = models.TextField(
+        null=True,
+        blank=True
     )
 
     whatsapp_code_used = models.DateTimeField(
@@ -281,57 +308,6 @@ class User(commods.Standard):
         db_index=True
     )
 
-    first_name = models.CharField(
-        max_length=20,
-        db_index=True,
-        null=True,
-        blank=True
-    )
-    last_name = models.CharField(
-        max_length=20,
-        db_index=True,
-        null=True,
-        blank=True
-    )
-    introduction = models.CharField(
-        default='',
-        max_length=40,
-        db_index=True
-    )
-    email = models.ForeignKey(
-        'Email',
-        related_name='user',
-        related_query_name='user',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    phone_number = models.ForeignKey(
-        'PhoneNumber',
-        related_name='user',
-        related_query_name='user',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        related_name='users_w_this_country',
-        related_query_name='users_w_this_country',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    company_name = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
     has_insights = models.BooleanField(
         null=True,
         blank=True
@@ -340,37 +316,6 @@ class User(commods.Standard):
         null=True,
         blank=True
     )
-
-    def avatar_url(self):
-        path = settings.AWS_S3_KEY_AVATAR_IMAGE % (self.id)
-        return urljoin(settings.MEDIA_URL, path)
-
-    def avatar_thumbnail_url(self):
-        path = settings.AWS_S3_KEY_AVATAR_IMAGE_THUMBNAIL % (self.id)
-        return urljoin(settings.MEDIA_URL, path)
-
-    def refresh_slug(self):
-        """Refresh the slug for this user."""
-        first_user = User.objects.all().order_by('-id').first()
-        if first_user is None:
-            this_id = 0
-        elif self.id is None:
-            # Compute ID because it's not been set.
-            # Collison due to race condition is possible but VERY unlikely.
-            this_id = User.objects.all().order_by('-id').first().id + 1
-        else:
-            this_id = self.id
-
-        # Create slug out of user's first/last name and company name   
-        self.slug_tokens = f'{self.first_name} {self.last_name}'
-        if self.company_name is not None and len(self.company_name) > 0:
-            self.slug_tokens = f'{self.slug_tokens} {self.company_name}'
-        self.slug_tokens += f' {this_id}'
-        self.slug_link = slugify(self.slug_tokens)
-
-    def save(self, *args, **kwargs):
-        self.refresh_slug()
-        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} [{self.id}]'
@@ -496,7 +441,7 @@ class UserAgent(commods.Standard):
 class LoginAction(commods.Standard):
     """Login action.
 
-    Last updated: 19 July 2022, 2:38 PM
+    Last updated: 29 September 2022, 7:09 PM
     """
     user = models.ForeignKey(
         'User',
@@ -513,66 +458,28 @@ class LoginAction(commods.Standard):
         blank=True,
         db_index=True
     )
-    type = models.CharField(
-        max_length=20,
-        choices=[
-            ('email', 'Email'),
-            ('whatsapp', 'WhatsApp'),
-            ('magic', 'Magic')
-        ],
-        db_index=True
-    )
 
-# Requirements
-
-class Requirement(commods.Standard):
-    """Snapshot of user requirements.
-
-    Last updated: 13 September 2022, 7:59 PM
+class ContactAction(commods.Standard):
+    """User contact action.
+    
+    Last updated: 29 September 2022, 7:07 PM
     """
-    user = models.ForeignKey(
-        'User',
-        related_name='user_requirements',
-        related_query_name='user_requirements',
-        on_delete=models.PROTECT,
-        db_index=True        
-    )
-    requirements = models.TextField()
-    is_buying = models.BooleanField(db_index=True)
-    is_selling = models.BooleanField(db_index=True)
-    is_need_commission_agents = models.BooleanField(db_index=True)
-    is_commission_agent = models.BooleanField(db_index=True)
-    is_other = models.BooleanField(db_index=True)
-
-class UserContactAction(commods.Standard):
     contactee = models.ForeignKey(
         'User',
-        related_name='user_contact_action_contactees',
-        related_query_name='user_contact_action_contactees',
+        related_name='contact_actions_as_contactees',
+        related_query_name='contact_actions_as_contactees',
         on_delete=models.PROTECT,
         db_index=True
     )
     contactor = models.ForeignKey(
         'User',
-        related_name='user_contact_action_contactors',
-        related_query_name='user_contact_action_contactors',
+        related_name='contact_actions_as_contactor',
+        related_query_name='contact_actions_as_contactor',
         on_delete=models.PROTECT,
         db_index=True
     )
 
-    whatsapp_body = models.TextField(null=True)
-    status = models.CharField(
-        max_length=20,
-        choices=[
-            ('success', 'Success'),
-            ('no_credits', 'No Credits')
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
-class UserDetailView(commods.Standard):
+class DetailView(commods.Standard):
     """User detail view
     
     Last updated: 13 September 2022, 7:59 PM
@@ -586,8 +493,8 @@ class UserDetailView(commods.Standard):
     )
     viewer = models.ForeignKey(
         'User',
-        related_name='user_detail_views_with_this_user_as_viewer',
-        related_query_name='user_detail_views_with_this_user_as_viewer',
+        related_name='detail_views_as_viewer',
+        related_query_name='detail_views_as_viewer',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -596,109 +503,261 @@ class UserDetailView(commods.Standard):
         db_index=True    
     )
 
+class Review(commods.Standard):
+    """Review
+
+    Last updated: 29 September 2022, 7:01 PM
+    """
+    reviewer = models.ForeignKey(
+        'User',
+        related_name='reviews_as_reviewer',
+        related_query_name='reviews_as_reviewer',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    reviewee = models.ForeignKey(
+        'User',
+        related_name='reviews_as_reviewee',
+        related_query_name='reviews_as_reviewee',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    rating = models.CharField(
+        max_length=40,
+        choices=[
+            ('good', 'Good Review'),
+            ('bad', 'Bad Review')
+        ],
+        db_index=True
+    )
+    body = models.TextField()
+
+class ReviewImage(commods.Standard):
+    """Review image
+
+    Last updated: 29 September 2022, 7:01 PM
+    """
+    review = models.ForeignKey(
+        'Review',
+        related_name='images',
+        related_query_name='images',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    file = models.ForeignKey(
+        'files.File',
+        related_name='reviews_as_image',
+        related_query_name='reviews_as_image',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+class ReviewComment(commods.Standard):
+    """Review comment
+
+    Last updated: 29 September 2022, 7:01 PM
+    """
+    review = models.ForeignKey(
+        'User',
+        related_name='responses_as_review',
+        related_query_name='responses_as_review',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    author = models.ForeignKey(
+        'User',
+        related_name='review_responses_as_author',
+        related_query_name='review_responses_as_author',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    body = models.TextField()
+
+class ReviewCommentImage(commods.Standard):
+    """Review comment image
+
+    Last updated: 29 September 2022, 7:01 PM
+    """
+    comment = models.ForeignKey(
+        'ReviewComment',
+        related_name='images_as_review_comment',
+        related_query_name='images_as_review_comment',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    file = models.ForeignKey(
+        'files.File',
+        related_name='review_response_images_as_file',
+        related_query_name='review_response_images_as_file',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# avatar = models.ForeignKey(
+#     'files.File',
+#     related_name='avatar_for_users',
+#     related_query_name='avatar_for_users',
+#     on_delete=models.PROTECT,
+#     null=True,
+#     blank=True,
+#     db_index=True
+# )
+
+# def avatar_url(self):
+#     path = settings.AWS_S3_KEY_AVATAR_IMAGE % (self.id)
+#     return urljoin(settings.MEDIA_URL, path)
+
+# def avatar_thumbnail_url(self):
+#     path = settings.AWS_S3_KEY_AVATAR_IMAGE_THUMBNAIL % (self.id)
+#     return urljoin(settings.MEDIA_URL, path)
+
+# def refresh_slug(self):
+#     """Refresh the slug for this user."""
+#     first_user = User.objects.all().order_by('-id').first()
+#     if first_user is None:
+#         this_id = 0
+#     elif self.id is None:
+#         # Compute ID because it's not been set.
+#         # Collison due to race condition is possible but VERY unlikely.
+#         this_id = User.objects.all().order_by('-id').first().id + 1
+#     else:
+#         this_id = self.id
+
+#     # Create slug out of user's first/last name and company name   
+#     self.slug_tokens = f'{self.first_name} {self.last_name}'
+#     if self.company_name is not None and len(self.company_name) > 0:
+#         self.slug_tokens = f'{self.slug_tokens} {self.company_name}'
+#     self.slug_tokens += f' {this_id}'
+#     self.slug_link = slugify(self.slug_tokens)
+
+# def save(self, *args, **kwargs):
+#     self.refresh_slug()
+#     return super().save(*args, **kwargs)
+
 # Alert
 
-class Alert(commods.Standard):
-    """Alert.
+# class Alert(commods.Standard):
+#     """Alert.
 
-    Last updated: 13 September 2022, 7:59 PM
-    """
-    user = models.ForeignKey(
-        'User',
-        related_name='user_alerts',
-        related_query_name='user_alerts',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     Last updated: 13 September 2022, 7:59 PM
+#     """
+#     user = models.ForeignKey(
+#         'User',
+#         related_name='user_alerts',
+#         related_query_name='user_alerts',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
     
-    key_phrases = models.TextField()
-    is_buying = models.BooleanField(db_index=True)
-    is_selling = models.BooleanField(db_index=True)
-    is_need_commission_agents = models.BooleanField(db_index=True)
-    is_commission_agent = models.BooleanField(db_index=True)
-    is_other = models.BooleanField(db_index=True)
+#     key_phrases = models.TextField()
+#     is_buying = models.BooleanField(db_index=True)
+#     is_selling = models.BooleanField(db_index=True)
+#     is_need_commission_agents = models.BooleanField(db_index=True)
+#     is_commission_agent = models.BooleanField(db_index=True)
+#     is_other = models.BooleanField(db_index=True)
 
-class AlertMatch(commods.Standard):
-    """Matching alert to user requirements.
+# class AlertMatch(commods.Standard):
+#     """Matching alert to user requirements.
 
-    Last updated: 13 September 2022, 7:59 PM
-    """
-    alert = models.ForeignKey(
-        'Alert',
-        related_name='alert_match_alerts',
-        related_query_name='alert_match_alerts',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    requirement = models.ForeignKey(
-        'Requirement',
-        related_name='alert_match_requirements',
-        related_query_name='alert_match_requirements',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    status = models.CharField(
-        max_length=20,
-        choices=[
-            ('match', 'Match'),
-            ('not_match', 'Not Match'),
-            ('failed', 'Failed'),
-            ('notified', 'Notified')
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     Last updated: 13 September 2022, 7:59 PM
+#     """
+#     alert = models.ForeignKey(
+#         'Alert',
+#         related_name='alert_match_alerts',
+#         related_query_name='alert_match_alerts',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     requirement = models.ForeignKey(
+#         'Requirement',
+#         related_name='alert_match_requirements',
+#         related_query_name='alert_match_requirements',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     status = models.CharField(
+#         max_length=20,
+#         choices=[
+#             ('match', 'Match'),
+#             ('not_match', 'Not Match'),
+#             ('failed', 'Failed'),
+#             ('notified', 'Notified')
+#         ],
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-class KeyPhrase(commods.Standard):
-    """Unique key phrase used in alerts.
+# class KeyPhrase(commods.Standard):
+#     """Unique key phrase used in alerts.
 
-    Last updated: 13 September 2022, 7:59 PM
-    """
-    key_phrase = models.CharField(
-        max_length=40,
-        db_index=True
-    )
+#     Last updated: 13 September 2022, 7:59 PM
+#     """
+#     key_phrase = models.CharField(
+#         max_length=40,
+#         db_index=True
+#     )
 
-class AlertKeyPhrase(models.Model):
-    """Key phrase used in an alert.
+# class AlertKeyPhrase(models.Model):
+#     """Key phrase used in an alert.
 
-    Last updated: 13 September 2022, 7:59 PM
-    """
-    alert = models.ForeignKey(
-        'Alert',
-        related_name='alert_key_phrases',
-        related_query_name='alert_key_phrases',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    key_phrase = models.ForeignKey(
-        'KeyPhrase',
-        related_name='alert_key_phrases',
-        related_query_name='alert_key_phrases',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     Last updated: 13 September 2022, 7:59 PM
+#     """
+#     alert = models.ForeignKey(
+#         'Alert',
+#         related_name='alert_key_phrases',
+#         related_query_name='alert_key_phrases',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     key_phrase = models.ForeignKey(
+#         'KeyPhrase',
+#         related_name='alert_key_phrases',
+#         related_query_name='alert_key_phrases',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
 
-class AlertExcludeCountry(models.Model):
-    """Country to exclude from an alert.
+# class AlertExcludeCountry(models.Model):
+#     """Country to exclude from an alert.
 
-    Last updated: 13 September 2022, 7:59 PM
-    """
-    alert = models.ForeignKey(
-        'Alert',
-        related_name='alert_exclude_countries',
-        related_query_name='alert_exclude_countries',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        related_name='alert_exclude_countries',
-        related_query_name='alert_exclude_countries',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     Last updated: 13 September 2022, 7:59 PM
+#     """
+#     alert = models.ForeignKey(
+#         'Alert',
+#         related_name='alert_exclude_countries',
+#         related_query_name='alert_exclude_countries',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     country = models.ForeignKey(
+#         'common.Country',
+#         related_name='alert_exclude_countries',
+#         related_query_name='alert_exclude_countries',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
 
 # from django.db.models import Q
 # import leads.models as lemods

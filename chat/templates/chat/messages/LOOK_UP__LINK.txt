@@ -1,0 +1,7 @@
+Visit this link to see details, review, or watch the phone number:
+
+{{ link }}
+
+Reply with option number:
+1. Look up or review another phone number
+2. Contact support

@@ -3,7 +3,32 @@ from phonenumber_field.formfields import PhoneNumberField
 from django import forms
 from django.core.exceptions import ValidationError
 
+from common import models as commods
 from relationships import models
+
+from relationships.utilities.get_or_create_phone_number import \
+    get_or_create_phone_number
+
+class RegisterEnterWhatsAppForm(forms.Form):
+    phone_number = PhoneNumberField(required=True)
+    country = forms.CharField()
+
+    def clean(self):
+        country = commods.Country.get(
+            programmatic_key=self.cleaned_data.get('country'))
+
+        phone = get_or_create_phone_number(
+            self.cleaned_data.get('phone_number'))
+        
+        # Country must match phone number country code
+        if phone.country_code != country.country_code:
+            raise ValidationError(
+                "Phone number country code doesn't match country.")
+            
+
+        
+
+
 
 from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
 from relationships.utilities.email_exists import email_exists
@@ -13,6 +38,47 @@ from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.is_email_code_valid import is_email_code_valid
 from relationships.utilities.is_whatsapp_code_valid import is_whatsapp_code_valid
 from relationships.utilities.user_uuid_exists import user_uuid_exists
+
+
+
+
+
+
+
+
+# class RegisterForm(forms.Form):
+#     email = forms.EmailField(max_length=254)
+#     phone_number = PhoneNumberField(required=True)
+#     enable_whatsapp = forms.BooleanField(required=False)
+#     first_name = forms.CharField(max_length=20)
+#     last_name = forms.CharField(max_length=20)
+#     country = forms.CharField()
+
+#     # Rendered in hidden fields
+#     next = forms.CharField(required=False)
+
+#     def clean(self):
+#         super(RegisterForm, self).clean()
+
+#         if email_exists(self.cleaned_data.get('email')):
+#             self.add_error('email', 'This email belongs to an existing user.')
+        
+#         if phone_number_exists(self.cleaned_data.get('phone_number')):
+#             self.add_error('phone_number', 'This phone number belongs to an existing user.')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class LoginForm(forms.Form):
     email_or_phone_number = forms.CharField()

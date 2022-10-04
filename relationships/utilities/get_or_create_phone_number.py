@@ -3,7 +3,11 @@ import phonenumbers, phonenumber_field
 from relationships import models as relmods
 
 def get_or_create_phone_number(
-        phone_number: Union[str, phonenumbers.phonenumber.PhoneNumber, phonenumber_field.phonenumber.PhoneNumber]
+        phone_number: Union[
+            str,
+            phonenumbers.phonenumber.PhoneNumber,
+            phonenumber_field.phonenumber.PhoneNumber
+        ]
     ) -> Union[relmods.PhoneNumber, bool]:
     """Returns phone number object reference created/got, or None if error.
 

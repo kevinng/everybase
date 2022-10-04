@@ -2,42 +2,56 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    {% comment %} Start: Head {% endcomment %}
-	<head>
+    <head>
         <base href=""/>
-		<title>{% block title %}Everybase - find importers, exporters, buyers, sellers, agents and more{% endblock %}</title>
-		<meta charset="utf-8" />
-		<meta name="description" content="{% block description %}Everybase - find importers, exporters, buyers, sellers, agents and more{% endblock %}"/>
-		<meta name="keywords" content="{% block keywords %}importers, exporters, buyers, sellers, agents and more{% endblock %}"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<meta property="og:locale" content="en_US"/>
-		<meta property="og:type" content="website"/>
-		<meta property="og:title" content="{% block og_title %}Everybase - find importers, exporters, buyers, sellers, agents and more{% endblock %}"/>
-		<meta property="og:url" content="{% block og_url %}https://everybase.co{% endblock %}"/>
-		<meta property="og:site_name" content="Everybase"/>
-		<link rel="shortcut icon" href="{% static 'common/demo1/dist/assets/media/logos/favicon_everybase.ico' %}"/>
+        {% comment %} <title>{% block title %}Everybase - avoid import/export scams, look up business reviews with a phone number{% endblock %}</title> {% endcomment %}
+        <meta charset="utf-8" />
+        {% comment %} <meta name="description" content="{% block description %}Everybase - avoid import/export scams, look up business reviews with a phone number{% endblock %}"/> {% endcomment %}
+        <meta name="description" content="{{ title_description }}"/>
+        {% comment %} <meta name="keywords" content="{% block keywords %}scams, frauds, cheats, import, export{% endblock %}"/> {% endcomment %}
+        <meta name="keywords" content="{{ keywords }}"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        
+        
+        {% comment %} Start: Meta Details for Social Apps  {% endcomment %}
+        <title>{{ title_description }}</title>
+        <meta property="og:locale" content="en_US"/>
+        <meta property="og:type" content="website"/>
+        {% comment %} <meta property="og:title" content="{% block og_title %}Everybase - avoid import/export scams, look up business reviews with a phone number{% endblock %}"/> {% endcomment %}
+        <meta property="og:title" content="{{ title_description }}"/>
+        {% comment %} <meta property="og:url" content="{% block og_url %}https://everybase.co{% endblock %}"/> {% endcomment %}
+        <meta property="og:url" content="{{ url }}"/>
+        <meta property="og:site_name" content="Everybase"/>
 
+
+        {% comment %} End: Meta Details for Social Apps {% endcomment %}
+        
+        
+        
+        
+        <link rel="shortcut icon" href="{% static 'common/demo1/dist/assets/media/logos/favicon_everybase.ico' %}"/>
+    
         {% comment %} Resource hints to reduce the amount of time it takes to deliver resources used by ReCaptcha {% endcomment %}
         <link rel="preconnect" href="https://www.google.com">
         <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-		
+    
         {% comment %} Start: Fonts {% endcomment %}
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"/>
         {% comment %} End: Fonts {% endcomment %}
-
-        {% comment %} Start: Page vendor stylesheets (used by this page) {% endcomment %}
-		{% block page_vendor_stylesheets %}{% endblock %}
-        {% comment %} End: Page vendor stylesheets {% endcomment %}
-
+    
         {% comment %} Start: Global stylesheets bundle (used by all pages) {% endcomment %}
-		<link href="{% static 'common/demo1/dist/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css"/>
-		<link href="{% static 'common/demo1/dist/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css"/>
+        <link href="{% static 'common/demo1/dist/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css"/>
+        <link href="{% static 'common/demo1/dist/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css"/>
         {% comment %} End: Global stylesheets bundle {% endcomment %}
 
+        {% comment %} Start: Page vendor stylesheets (used by this page) {% endcomment %}
+        {% block page_vendor_stylesheets %}{% endblock %}
+        {% comment %} End: Page vendor stylesheets {% endcomment %}
+    
         {% comment %} Start: Amplitude initialization {% endcomment %}
         {% comment %}
             We render the initialization code here because we need to ensure order-of-execution and render the user ID if user is authenticated.
-
+    
             (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
             ;r.type="text/javascript"
             ;r.integrity="sha384-VuGgAcmMrGHihvjXxxBVMIqoDFXc8/PO9q/08kCgq4Wn1iPnSmUbI3xhXaFozVFv"
@@ -75,8 +89,7 @@
             {% endif %}
         </script>
         {% comment %} End: Amplitude initialization {% endcomment %}
-	</head>
-    {% comment %} End: Head {% endcomment %}
+    </head>
 
     {% comment %} Start: Body {% endcomment %}
 	<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed toolbar-tablet-and-mobile-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
@@ -171,39 +184,6 @@
                         {% block content_body %}{% endblock %}
 					</div>
                     {% comment %} End: Content {% endcomment %}
-
-                    {% comment %} Start: Footer {% endcomment %}
-					<div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
-
-                        {% comment %} Start: Container {% endcomment %}
-						<div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
-
-                            {% comment %} Start: Copyright {% endcomment %}
-							<div class="text-dark order-2 order-md-1">
-								<span class="text-muted fw-bold me-1">© 2022</span>
-								<a href="https://everybase.co" class="text-gray-800 text-hover-primary">Everybase</a>
-							</div>
-                            {% comment %} End: Copyright {% endcomment %}
-
-                            {% comment %} Start: Menu {% endcomment %}
-							{% comment %}
-                            <ul class="menu menu-gray-600 menu-hover-primary fw-bold order-1">
-								<li class="menu-item">
-									<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-								</li>
-								<li class="menu-item">
-									<a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
-								</li>
-								<li class="menu-item">
-									<a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
-								</li>
-							</ul>
-                            {% endcomment %}
-                            {% comment %} End: Menu {% endcomment %}
-						</div>
-                        {% comment %} End: Container {% endcomment %}
-					</div>
-                    {% comment %} End: Footer {% endcomment %}
 				</div>
                 {% comment %} End: Wrapper {% endcomment %}
 			</div>
@@ -227,6 +207,8 @@
 		</div>
         {% comment %} End: Scrolltop {% endcomment %}
         {% endblock %}
+
+        {% block modals %}{% endblock %}
 
         {% comment %} Start: Javascript {% endcomment %}
 		<script>var hostUrl = "{% static 'common/demo1/dist/assets/' %}";</script>

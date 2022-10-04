@@ -1,0 +1,98 @@
+{% extends 'relationships/extendables/simple.html' %}
+
+{% block title %}Register for Everybase{% endblock %}
+
+{% block meta_description %}Register for Everybase{% endblock %}
+{% block meta_og_title %}Register for Everybase{% endblock %}
+{% block meta_og_url_path %}{% url 'register' %}{% endblock %}
+{% block meta_og_site_name %}Everybase{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed">
+    <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+        <a href="{% url 'home' %}" class="mb-12">
+            <img alt="Logo" src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
+        </a>
+
+        <div class="w-lg-500px col-12 bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <form class="form w-100" action="{% url 'register' %}" method="post">
+                {% csrf_token %}
+
+                <div class="text-center mb-10">
+                    <h1 class="text-dark mb-3">Link Email</h1>
+                    <div class="text-gray-700 fs-5">You may link your email with your phone number</div>
+                </div>
+
+                {% comment %} <div>
+                    <label class="form-label fs-6 fw-bolder text-dark required" for="phone_number">WhatsApp Phone Number
+                        <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Your WhatsApp phone number is used to log into Everybase.">                            
+                            <!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-08-29-071832/core/html/src/media/icons/duotune/general/gen044.svg-->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor"/>
+                                <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                            </svg>
+                            <!--end::Svg Icon-->
+                        </span>
+                    </label>
+                    <input class="form-control form-control-lg" type="text" name="phone_number" id="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} />
+                    <div class="form-text">Include + symbol. E.g., +14155552671.</div>
+                </div>
+                {% if form.phone_number.errors %}<div class="text-danger">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %} {% endcomment %}
+
+                {% comment %} <div class="form-check form-check-custom mt-4">
+                    <div class="me-3">
+                        <input class="form-check-input me-2" type="checkbox" name="enable_whatsapp" id="enable_whatsapp" />
+                        <label for="enable_whatsapp">WhatsApp login {% endcomment %}
+                            {% comment %} Start: SVG icon | path: assets/media/icons/duotune/general/gen043.svg {% endcomment %}
+                            {% comment %} <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'relationships/tooltips/enable_whatsapp.txt' %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
+                                    <rect x="11" y="17" width="7" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor"/>
+                                    <rect x="11" y="9" width="2" height="2" rx="1" transform="rotate(-90 11 9)" fill="currentColor"/>
+                                    </svg>
+                            </span> {% endcomment %}
+                            {% comment %} End: SVG icon {% endcomment %}
+                        {% comment %} </label>
+                    </div>
+                </div> {% endcomment %}
+
+                {% comment %} <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark required" for="first_name">First Name</label>
+                    <input class="form-control form-control-lg" type="text" name="first_name" id="first_name"{% if form.first_name.value != None %} value="{{ form.first_name.value }}"{% endif %} />
+                </div>
+                {% if form.first_name.errors %}<div class="text-danger">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark required" for="last_name">Last Name</label>
+                    <input class="form-control form-control-lg" type="text" name="last_name" id="last_name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %} />
+                </div>
+                {% if form.last_name.errors %}<div class="text-danger">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %} {% endcomment %}
+
+                {% comment %} <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark required" for="last_name">Introduction</label>
+                    <input class="form-control form-control-lg" placeholder="Introduce yourself" type="text" name="last_name" id="last_name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %} />
+                </div> {% endcomment %}
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="email">Email Address</label>
+                    <input class="form-control form-control-lg" placeholder="Enter your email address" type="text" name="email" id="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} />
+                </div>
+                {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                {% comment %} <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="last_name">Company Name</label>
+                    <input class="form-control form-control-lg" type="text" name="last_name" id="last_name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %} />
+                </div> {% endcomment %}
+
+                <div class="text-center mt-10">
+                    <button type="submit" class="btn btn-lg btn-primary w-100">Next</button>
+                    <button type="submit" class="btn btn-lg btn-secondary w-100 mt-2">Skip</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

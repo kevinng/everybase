@@ -1,0 +1,47 @@
+{% extends 'relationships/extendables/simple.html' %}
+
+{% block title %}Login to Everybase{% endblock %}
+
+{% block meta_description %}Login to Everybase{% endblock %}
+{% block meta_og_title %}Login to Everybase{% endblock %}
+{% block meta_og_url_path %}{% url 'login' %}{% endblock %}
+{% block meta_og_site_name %}Everybase{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed">
+    <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+        <a href="{% url 'home' %}" class="mb-12">
+            <img alt="Logo" src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
+        </a>
+        <div class="w-lg-500px col-12 bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <form class="form w-100" action="{% url 'login' %}" method="post">
+                {% if next != None %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                {% elif form.next.value != None %}
+                    <input type="hidden" name="next" value="{{ form.next.value }}">
+                {% endif %}
+
+                {% csrf_token %}
+
+                <div class="text-center">
+                    <h1 class="text-dark">Claim Phone Number</h1>
+                    <div class="text-gray-700 fs-5 mt-3">We'll send a confirmation code you via WhatsApp to verify your phone number.</div>
+                </div>
+
+                <div class="mt-10">
+                    <label class="form-label fs-6 fw-bolder text-dark">WhatsApp Phone Number</label>
+                    <input placeholder="Enter your WhatsApp phone number" class="form-control form-control-lg" type="text" name="email_or_phone_number"{% if form.email_or_phone_number.value != None %} value="{{ form.email_or_phone_number.value }}"{% endif %} required />
+                    <div class="form-text">Include + symbol. E.g., +14155552671.</div>
+                </div>
+                {% if form.email_or_phone_number.errors %}<div class="text-danger">{% for error in form.email_or_phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="text-center mt-10">
+                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Send Confirmation Code</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

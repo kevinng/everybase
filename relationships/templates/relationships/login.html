@@ -10,7 +10,7 @@
 {% load static %}
 
 {% block content %}
-<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url({% static 'common/demo1/dist/assets/media/illustrations/sketchy-1/14.png' %}">
+<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed">
     <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
         <a href="{% url 'home' %}" class="mb-12">
             <img alt="Logo" src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
@@ -27,19 +27,25 @@
 
                 <div class="text-center">
                     <h1 class="text-dark">Login</h1>
-                    <div class="text-gray-400 fw-bold fs-4 mt-3">No Account? <a href="{% url 'register' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="link-primary fw-bolder">Register</a></div>
+                    <div class="text-gray-700 fs-5 mt-3">No Account? <a href="{% url 'register' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="link-primary fw-bolder">Register</a></div>
                 </div>
 
                 <div class="mt-10">
                     <label class="form-label fs-6 fw-bolder text-dark">WhatsApp Phone Number</label>
-                    <input class="form-control form-control-lg" type="text" name="email_or_phone_number"{% if form.email_or_phone_number.value != None %} value="{{ form.email_or_phone_number.value }}"{% endif %} required />
+                    <input placeholder="Enter your WhatsApp phone number" class="form-control" type="text" name="email_or_phone_number"{% if form.email_or_phone_number.value != None %} value="{{ form.email_or_phone_number.value }}"{% endif %} required />
                     <div class="form-text">Include + symbol. E.g., +14155552671.</div>
                 </div>
                 {% if form.email_or_phone_number.errors %}<div class="text-danger">{% for error in form.email_or_phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
 
                 <div class="text-center mt-10">
-                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Next</button>
+                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5">Login with WhatsApp</button>
                 </div>
+
+                {% comment %} <div class="separator"></div>
+
+                <div class="text-center mt-10">
+                    <button type="submit" class="btn btn-lg btn-light-primary w-100 mb-5">Login with Facebook</button>
+                </div> {% endcomment %}
             </form>
         </div>
     </div>

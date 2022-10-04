@@ -1,0 +1,492 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block page_title %}Phone Number{% endblock %}
+{% comment %} {% block page_title_separator %}{% endblock %} {% endcomment %}
+{% block page_subtitle %}+65 96655575{% endblock %}
+
+{% block actions %}
+{% comment %} <a href="#" class="btn btn-sm btn-light-primary">Watch</a> {% endcomment %}
+{% comment %} <span class="h-20px border-1 border-gray-200 border-start ms-3 mx-2 me-1"></span> {% endcomment %}
+{% comment %} <a href="#" class="btn btn-sm btn-secondary">Claim</a> {% endcomment %}
+{% comment %} <a href="#" class="btn btn-sm btn-secondary">Edit</a> {% endcomment %}
+<a href="#" class="btn btn-sm btn-danger">Report</a>
+<span class="h-20px border-1 border-gray-200 border-start ms-3 mx-2 me-1"></span>
+<a href="#" class="btn btn-sm btn-primary">Pay</a>
+<a href="#" class="btn btn-sm btn-success">WhatsApp</a>
+{% endblock %}
+
+{% block content_body %}
+
+
+
+						<!--begin::Post-->
+						<div class="post d-flex flex-column-fluid" id="kt_post">
+							<!--begin::Container-->
+							<div id="kt_content_container" class="container-xxl">
+
+
+
+
+
+<!--begin::Navbar-->
+<div class="card mb-5 mb-xl-10">
+    <div class="card-header">
+        <div class="card-title">
+            +65 88933466 <span class="badge badge-success fw-bolder ms-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="This phone number has been claimed and verified to be owned by the user providing the supporting details on this page.">Claimed</a>
+        </div>
+        <div class="card-toolbar">
+            <span class="text-mute">2d ago</span>
+        </div>
+    </div>
+
+    <div class="card-body pt-9 pb-0">
+        <!--begin::Navs-->
+        <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
+            <!--begin::Nav item-->
+            <li class="nav-item mt-2">
+                <a class="nav-link text-active-primary ms-0 me-10 py-5 active" href="../../demo1/dist/account/overview.html">Details</a>
+            </li>
+            <!--end::Nav item-->
+            <!--begin::Nav item-->
+            <li class="nav-item mt-2">
+                <a class="nav-link text-active-primary ms-0 me-10 py-5" href="../../demo1/dist/account/settings.html">Reports (0)</a>
+            </li>
+            <!--end::Nav item-->
+
+        </ul>
+        <!--begin::Navs-->
+    </div>
+</div>
+<!--end::Navbar-->
+
+										<!--begin::Notice-->
+										<div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+											<!--begin::Icon-->
+											<!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+											<span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+													<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+													<rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor" />
+													<rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor" />
+												</svg>
+											</span>
+											<!--end::Svg Icon-->
+											<!--end::Icon-->
+											<!--begin::Wrapper-->
+											<div class="d-flex flex-stack flex-grow-1">
+												<!--begin::Content-->
+												<div class="fw-bold">
+													<h4 class="text-gray-900 fw-bolder">No reports has been filed against this phone number.</h4>
+													<div class="fs-6 text-gray-700">If you've had a bad experience with the owner of this phone number, you may file a report against this phone number. Your details will be captured, verified and shared with other users. Other users may contact you for more information.<br />
+                                                        <div class="mt-2">
+                                                        <a href="" class="btn btn-sm btn-danger fw-bolder" data-bs-toggle="modal" data-bs-target="#kt_modal_3">Report This Person</a>
+                                                        <a href="" class="btn btn-sm btn-light-primary fw-bolder" data-bs-toggle="tooltip" data-bs-placement="bottom">Watch for 30 Days</a>
+                                                        <a href="" class="btn btn-sm btn-primary fw-bolder" data-bs-toggle="tooltip" data-bs-placement="bottom">Watching for 30 Days</a>
+                                                        </div>
+                                                </div>
+                                                    {% comment %} if user clicked on thsi button, we'll send him a notification {% endcomment %}
+												</div>
+												<!--end::Content-->
+											</div>
+											<!--end::Wrapper-->
+										</div>
+										<!--end::Notice-->
+
+
+                                        <div class="modal bg-white fade" tabindex="-1" id="kt_modal_3">
+                                            <div class="modal-dialog modal-fullscreen">
+                                                <div class="modal-content shadow-none">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Report Bad Behavior</h5>
+                                        
+                                                        <!--begin::Close-->
+                                                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                                            <span class="svg-icon svg-icon-2x"></span>
+                                                        </div>
+                                                        <!--end::Close-->
+                                                    </div>
+                                        
+                                                    <div class="modal-body">
+
+                                                                <div class="mt-6">
+                                                                    <label class="form-label required">Reporting</label>
+                                                                    <div class="fw-bolder fs-2">Kevin Ng</div>
+                                                                    <div class="fw-bold fs-2">+65 88933466</div>
+                                                                </div>
+                                            
+                                                                <div class="mt-8">
+                                                                    <label class="form-label required">Bad Behavior Report</label>
+                                                                    <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="comments" name="comments" placeholder="E.g., This person cheated me of 100 RMB..."></textarea>
+                                                                    <div class="text-muted ms-2">Explain what happened.</div>
+                                                                </div>
+                                                                <div class="mt-8">
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                                    <label class="form-label">Supporting Files</label>
+                                                                            <!--begin::Dropzone-->
+                                                                    <div class="dropzone" id="kt_dropzonejs_example_1">
+                                                                        <!--begin::Message-->
+                                                                        <div class="dz-message needsclick">
+                                                                            <!--begin::Icon-->
+                                                                            <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                                                            <!--end::Icon-->
+                                            
+                                                                            <!--begin::Info-->
+                                                                            <div class="ms-4">
+                                                                                <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop files here or click to upload.</h3>
+                                                                                <span class="fs-7 fw-semibold text-gray-400">Upload up to 12 images or PDF.</span>
+                                                                            </div>
+                                                                            <!--end::Info-->
+                                                                        </div>
+                                                                    </div>
+                                                                    <!--end::Dropzone-->
+                                            
+                                                                </div>
+                                            
+                                            
+                                                                <div>
+                                                                    <label class="form-label required mt-8">Confirm</label>
+                                            
+                                                                <div class="form-check form-check-custom mt-2">
+                                                                    <input class="form-check-input me-2" type="checkbox" name="lead_type" id="buying" value="buying" />
+                                                                    <label for="buying">Other users may contact you for more information.</label>
+                                                                </div>
+                                            
+                                                                <div class="form-check form-check-custom mt-2">
+                                                                    <input class="form-check-input me-2" type="checkbox" name="lead_type" id="buying" value="buying" />
+                                                                    <label for="buying">You will not be able to edit this report after submission.</label>
+                                                                </div>
+                                            
+                                                                <div class="form-check form-check-custom mt-2">
+                                                                    <input class="form-check-input me-2" type="checkbox" name="lead_type" id="buying" value="buying" />
+                                                                    <label for="buying">You may submit one report against one phone number only.</label>
+                                                                </div>
+
+                                                            </div>
+
+                                                    </div>
+                                        
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary">Submit</button>
+                                                                                                                    
+                                                        {% comment %} <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                                            <a href="{% url 'home' %}" class="btn btn-light btn-active-light-primary me-2">Cancel</a>
+                                                            <button type="submit" class="btn btn-primary g-recaptcha"
+                                                                data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
+                                                                data-callback="leadCreateFormOnSubmit" 
+                                                                data-action="submit">Submit</button>
+                                                        </div> {% endcomment %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        
+
+
+
+                                        
+
+
+                            <div class="card shadow-sm mt-4">
+                                <div class="card-header pb-3 pt-4">
+                                    <div class="card-title">
+                                        <div class="d-flex align-items-top">
+                                            <div class="d-flex justify-content-start flex-column">
+                                                <div class="text-dark fw-bolder fs-6">Kevin Ng</div>
+                                                <div class="fw-bold fs-7">+65 8******6</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-toolbar">
+                                        <span class="text-muted">2d ago</span>
+                                    </div>
+                                </div>
+            
+                                <div class="card-body">
+                                    
+                                    <div class="mt-2">HelloHelloHelloHello... <a href="#" data-bs-toggle="modal" data-bs-target="#kt_modal_2">3029 chars (See More)</a></div>
+
+                                    <div class="mt-4 d-flex gap-2 flex-wrap align-items-center">
+                                        
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                            <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                                    </div>
+
+                                </div>
+
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge badge-light-success">Responded</span>
+                                        </div>
+                                        {% comment %} <button type="button" class="btn btn-sm btn-primary">Respond</button> {% endcomment %}
+                                        {% comment %} <button type="button" class="btn btn-sm btn-primary" disabled>Responded</button> {% endcomment %}
+                                        <button type="button" class="btn btn-sm btn-light-info" data-bs-toggle="modal" data-bs-target="#kt_modal_2">Details</button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {% comment %} <div class="fw-bolder">Preview</div> {% endcomment %}
+                                    {% comment %} <div class="fw-bold mt-4">This report has <span class="fw-bolder">2607</span> characters and <span class="fw-bolder">2</span> images or PDFs.</div> {% endcomment %}
+
+
+                                    {% comment %} <div class="fw-bolder mt-8">Reporter Details</div> {% endcomment %}
+                                    {% comment %} <div class="mt-2">
+                                        <span class="badge badge-dark my-1">Verified Phone Number</span>
+                                        <span class="badge badge-secondary my-1">Given Name</span>
+                                        <span class="badge badge-secondary my-1">Surname</span>
+                                        <span class="badge badge-secondary my-1">Business Name</span>
+                                        <span class="badge badge-dark my-1">Verified Email</span>
+                                        <span class="badge badge-secondary my-1">Verified Country</span>
+                                        <span class="badge badge-secondary my-1">Verified Longitude & Latitude</span>
+                                        <span class="badge badge-secondary my-1">Map</span>
+                                        <span class="badge badge-secondary my-1">Business Description</span>
+                                        <span class="badge badge-secondary my-1">IP Address</span>
+                                        <span class="badge badge-secondary my-1">Operating System</span>
+                                        <span class="badge badge-secondary my-1">Browser</span>
+                                        <span class="badge badge-secondary my-1">Device</span>
+                                    </div> {% endcomment %}
+                                {% comment %} <div class="card-footer">
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-sm btn-light-info" data-bs-toggle="modal" data-bs-target="#kt_modal_2">Details</button>
+                                    </div>
+                                </div> {% endcomment %}
+
+
+
+                            <div class="modal bg-white fade" tabindex="-1" id="kt_modal_2">
+                                <div class="modal-dialog modal-fullscreen">
+                                    <div class="modal-content shadow-none">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Please Make Payment to Access Report</h5>
+                            
+                                            <!--begin::Close-->
+                                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                                <span class="svg-icon svg-icon-2x"></span>
+                                            </div>
+                                            <!--end::Close-->
+                                        </div>
+                            
+                                        <div class="modal-body text-center">
+                                            <div class="fw-boldest fs-3">2-month access to <u>ALL</u> bad behavior reports filed against</div>
+                                            <div class="fs-1 mt-4">+65 88933466, Kevin Ng</div>
+                                            <div class="fw-boldest fs-1 mt-4">Only <u>US$ 1</u></div>
+
+                                            <div class="fw-bolder fs-4 mt-8 text-success">Payments you make via Everybase improve your payment statistics and reputation.</div>
+                                            <div class="mt-4">You'll be able to access <u>all</u> bad behavior reports for the aforementioned user for 2 months from the payment date, including new reports filed after payment.</div>
+
+                                            <div class="mt-4">Payment will be made securely via Stripe. You'll be redirected back to this page upon payment.</div>
+                                        </div>
+                            
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Pay & Access</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+                            {% include 'includes/paginator.html' with hide_pages=True %}
+						</div>
+						<!--end::Post-->
+
+
+{% endblock %}
+
+{% comment %}
+$(document).ready(function() {
+    // We have two sets of checkboxes to cater for different screensizes, and we want to link them up.
+
+    // Pass Amplitude device to the backend so we can track unauthenticated users.
+    device_id = $('#device_id')
+    device_id.val(amplitude.getInstance().getDeviceId())
+
+    sourcing = $('#sourcing')
+    promoting = $('#promoting')
+    need_logistics = $('#need_logistics')
+    sourcing_agent = $('#sourcing_agent')
+    sales_agent = $('#sales_agent')
+    logistics_agent = $('#logistics_agent')
+    other = $('#other')
+
+    sm_sourcing = $('#sm_sourcing')
+    sm_promoting = $('#sm_promoting')
+    sm_need_logistics = $('#sm_need_logistics')
+    sm_sourcing_agent = $('#sm_sourcing_agent')
+    sm_sales_agent = $('#sm_sales_agent')
+    sm_logistics_agent = $('#sm_logistics_agent')
+    sm_other = $('#sm_other')
+
+    search_form = $('#search_form')
+    reduce_spams_and_scams = $('#reduce_spams_and_scams')
+    user_country = $('#user_country')
+    user_country_verified = $('#user_country_verified')
+
+    var target = document.querySelector("#search_form")
+    var blockUI = new KTBlockUI(target)
+
+    function form_field_changed() {
+        search_form.submit()
+        blockUI.block()
+    }
+
+    function link_and_submit_checkboxes(lg, sm) {
+        sm.change(function() {
+            lg.prop('checked', this.checked)
+            form_field_changed()
+        })
+
+        lg.change(function() {
+            sm.prop('checked', this.checked)
+            form_field_changed()
+        })
+    }
+
+    link_and_submit_checkboxes(sourcing, sm_sourcing)
+    link_and_submit_checkboxes(promoting, sm_promoting)
+    link_and_submit_checkboxes(need_logistics, sm_need_logistics)
+    link_and_submit_checkboxes(sourcing_agent, sm_sourcing_agent)
+    link_and_submit_checkboxes(sales_agent, sm_sales_agent)
+    link_and_submit_checkboxes(logistics_agent, sm_logistics_agent)
+    link_and_submit_checkboxes(other, sm_other)
+
+    reduce_spams_and_scams.change(function() {
+        form_field_changed()
+    })
+
+    user_country_verified.change(function() {
+        form_field_changed()
+    })
+
+    user_country.change(function() {
+        form_field_changed()
+    })
+
+    via_wechat_id_div = $('#via_wechat_id_div')
+    via_wechat = $('#via_wechat')
+
+    function toggle_via_wechat_id_div() {
+        if (via_wechat.is(':checked')) {
+            via_wechat_id_div.show()
+        } else {
+            via_wechat_id_div.hide()
+        }
+    }
+
+    toggle_via_wechat_id_div()
+
+    via_wechat.click(function() {
+        toggle_via_wechat_id_div()
+    })
+})
+
+// These functions are triggered by onclick, and have to be outside document.ready to work.
+// This code have to be rendered inline because it has server-side rendered links.
+
+function flag_lead(lead_id, type, button_id, badge_id) {
+    url = ''
+    if (type == 'spam') {
+        url = "{% url 'leads:flag_spam' %}"
+    } else if (type == 'scam') {
+        url = "{% url 'leads:flag_scam' %}"
+    }
+
+    if (url == '') {
+        return
+    }
+
+    $.post(url,
+        {'lead_id': lead_id},
+        function(data, status) {
+            btn = $('#' + button_id)
+            bdg = $('#' + badge_id)
+            if (type == 'spam') {
+                btn.toggleClass('btn-warning')
+                btn.toggleClass('text-warning')
+                bdg.html(data['num_spam_flags'])
+
+                amplitude.getInstance().logEvent(
+                    'discovery - flagged lead', {
+                        'lead id': lead_id,
+                        'type': 'spam'
+                    }
+                )
+            } else if (type == 'scam') {
+                btn.toggleClass('btn-danger')
+                btn.toggleClass('text-danger')
+                bdg.html(data['num_scam_flags'])
+
+                amplitude.getInstance().logEvent(
+                    'discovery - flagged lead', {
+                        'lead id': lead_id,
+                        'type': 'scam'
+                    }
+                )
+            }
+        }
+    )
+}
+{% endcomment %}
+{% block page_custom_javascript %}
+{% comment %} <script src="{% static 'leads/js/home.js' %}"></script> {% endcomment %}
+{% comment %} <script>$(document).ready((function(){device_id=$("#device_id"),device_id.val(amplitude.getInstance().getDeviceId()),sourcing=$("#sourcing"),promoting=$("#promoting"),need_logistics=$("#need_logistics"),sourcing_agent=$("#sourcing_agent"),sales_agent=$("#sales_agent"),logistics_agent=$("#logistics_agent"),other=$("#other"),sm_sourcing=$("#sm_sourcing"),sm_promoting=$("#sm_promoting"),sm_need_logistics=$("#sm_need_logistics"),sm_sourcing_agent=$("#sm_sourcing_agent"),sm_sales_agent=$("#sm_sales_agent"),sm_logistics_agent=$("#sm_logistics_agent"),sm_other=$("#sm_other"),search_form=$("#search_form"),reduce_spams_and_scams=$("#reduce_spams_and_scams"),user_country=$("#user_country"),user_country_verified=$("#user_country_verified");var e=document.querySelector("#search_form"),s=new KTBlockUI(e);function i(){search_form.submit(),s.block()}function _(e,s){s.change((function(){e.prop("checked",this.checked),i()})),e.change((function(){s.prop("checked",this.checked),i()}))}function c(){via_wechat.is(":checked")?via_wechat_id_div.show():via_wechat_id_div.hide()}_(sourcing,sm_sourcing),_(promoting,sm_promoting),_(need_logistics,sm_need_logistics),_(sourcing_agent,sm_sourcing_agent),_(sales_agent,sm_sales_agent),_(logistics_agent,sm_logistics_agent),_(other,sm_other),reduce_spams_and_scams.change((function(){i()})),user_country_verified.change((function(){i()})),user_country.change((function(){i()})),via_wechat_id_div=$("#via_wechat_id_div"),via_wechat=$("#via_wechat"),c(),via_wechat.click((function(){c()}))}));</script> {% endcomment %}
+{% comment %} <script>function flag_lead(a,l,e,t){url="","spam"==l?url="{% url 'leads:flag_spam' %}":"scam"==l&&(url="{% url 'leads:flag_scam' %}"),""!=url&&$.post(url,{lead_id:a},(function(g,s){btn=$("#"+e),bdg=$("#"+t),"spam"==l?(btn.toggleClass("btn-warning"),btn.toggleClass("text-warning"),bdg.html(g.num_spam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"spam"})):"scam"==l&&(btn.toggleClass("btn-danger"),btn.toggleClass("text-danger"),bdg.html(g.num_scam_flags),amplitude.getInstance().logEvent("discovery - flagged lead",{"lead id":a,type:"scam"}))}))}</script> {% endcomment %}
+{% comment %}
+$(document).ready(function() {
+    // Hide all lead body
+    lead_bodies = $('.lead_body')
+    lead_bodies.hide()
+
+    show_more_lead_bodies = $('.show_more_lead_body')
+    show_more_lead_bodies.click(function () {
+        // Hide button
+        $(this).hide()
+
+        // Hide preview and show full lead body
+        lead_body_preview = $(this).parent()
+        lead_body_preview.siblings('.lead_body').toggle()
+        lead_body_preview.toggle()
+
+        lead_id = lead_body_preview.attr("data-lead-id")
+
+        // Log event
+        amplitude.getInstance().logEvent('discovery - showed more lead body', { 'lead_id': lead_id })
+    })
+})
+{% endcomment %}
+<script src="{% static 'leads/js/lead_item.js' %}"></script>
+{% endblock %}

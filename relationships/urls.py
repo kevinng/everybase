@@ -3,8 +3,8 @@ from relationships import views
 
 app_name = 'users'
 urlpatterns = [
-    path('<uuid:uuid>', views.suggestions, name='user_detail'),
-    path('<uuid:uuid>/reviews', views.user_detail, name='user_detail'),
+    # path('<uuid:uuid>', views.suggestions, name='user_detail'),
+    # path('<uuid:uuid>/reviews', views.user_detail, name='user_detail'),
 
     # path('m/<str:file_to_render>', views.m),
 

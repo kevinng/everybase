@@ -1,0 +1,5 @@
+Please verify your WhatsApp phone number.
+
+This is your confirmation code: {{ code }}
+
+Ignore this message if you didn't verify your WhatsApp phone number with Everybase (https://everybase.co).

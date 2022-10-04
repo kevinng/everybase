@@ -166,31 +166,23 @@ class UserAdmin(comadm.StandardAdmin):
         'email__email', 'internal_notes', 'register_cookie_uuid']
 
     # Details page settings
-    readonly_fields = comadm.standard_readonly_fields + ['uuid',
+    readonly_fields = comadm.standard_readonly_fields + [
         'whatsapp_phone_number', 'email_string', 'password_change_link',
         'random_string_for_password', 'django_user_link']
     fieldsets = [
         (None, {'fields': ['id', 'uuid']}),
         ('Growth', {'fields': ['registered', 'django_user',
             'register_cookie_uuid', 'whatsapp_phone_number', 'email_string',
-            'password_change_link', 'random_string_for_password', 'fb_profile',
+            'password_change_link', 'random_string_for_password',
             'django_user_link', 'has_insights', 'internal_notes']}),
-        ('Details', {'fields': ['first_name', 'last_name', 'email',
-            'phone_number', 'country']}),
+        ('Details', {'fields': ['email', 'first_name', 'last_name',
+            'phone_number', 'country', 'business_name', 'business_description',
+            'status']}),
         ('Login', {'fields': ['email_code_used', 'email_code',
             'email_code_generated', 'email_code_purpose','whatsapp_code_used',
             'whatsapp_code', 'whatsapp_code_generated', 'whatsapp_code_purpose',
             'enable_whatsapp']}),
-        ('Timestamps', {'fields': ['created', 'updated', 'deleted']}),
-        ('Not in use', {'fields': [
-            'slug_link', 'slug_tokens',
-            'impressions', 'clicks',
-            'has_company', 'company_name', 'goods_string', 'buy_agent_details',
-                'sell_agent_details', 'logistics_agent_details',
-            'is_buyer', 'is_seller', 'is_buy_agent', 'is_sell_agent',
-                'is_logistics_agent',
-            'state', 'state_string', 'languages', 'languages_string'
-        ]})
+        ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
     ]
     autocomplete_fields = ['django_user', 'country', 'phone_number', 'email']
     # inlines = [LeadInlineAdmin]
@@ -262,7 +254,7 @@ class UserAgentAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
-_login_action_fields = ['user', 'cookie_uuid', 'type']
+_login_action_fields = ['user', 'cookie_uuid']
 @admin.register(models.LoginAction)
 class LoginActionAdmin(comadm.StandardAdmin):
     list_display = comadm.standard_list_display + _login_action_fields
@@ -276,36 +268,15 @@ class LoginActionAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
-# Requirements
-
-_requirement_fields = ['user', 'requirements', 'is_buying', 'is_selling',
-    'is_need_commission_agents', 'is_commission_agent', 'is_other']
-@admin.register(models.Requirement)
-class RequirementAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _requirement_fields
-    list_editable = [] # Speed up loading
-    list_filter = comadm.standard_list_filter
-    search_fields = comadm.standard_search_fields + ['user__first_name',
-        'user__last_name']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _requirement_fields})
-    ]
-    autocomplete_fields = ['user']
-
-_user_contact_action_fields = ['contactee', 'contactor', 'whatsapp_body',
-    'status']
-@admin.register(models.UserContactAction)
-class UserContactActionAdmin(comadm.StandardAdmin):
+_user_contact_action_fields = ['contactee', 'contactor']
+@admin.register(models.ContactAction)
+class ContactActionAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_contact_action_fields
     list_editable = [] # Speed up loading
-    list_filter = comadm.standard_list_filter + ['status']
+    list_filter = comadm.standard_list_filter
     search_fields = comadm.standard_search_fields + ['contactee__first_name',
-        'contactee__last_name', 'contactor__first_name', 'contactor__last_name',
-        'whatsapp_body']
+        'contactee__last_name', 'contactor__first_name', 'contactor__last_name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
@@ -314,8 +285,8 @@ class UserContactActionAdmin(comadm.StandardAdmin):
     autocomplete_fields = ['contactee', 'contactor']
 
 _user_detail_views_fields = ['viewee', 'viewer', 'count']
-@admin.register(models.UserDetailView)
-class UserDetailViewAdmin(comadm.StandardAdmin):
+@admin.register(models.DetailView)
+class DetailViewAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_detail_views_fields
     list_editable = [] # Speed up loading
@@ -329,80 +300,88 @@ class UserDetailViewAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['viewee', 'viewer']
 
-# Alert
-
-_alert_fields = ['user', 'key_phrases', 'is_buying', 'is_selling',
-    'is_need_commission_agents', 'is_commission_agent', 'is_other']
-@admin.register(models.Alert)
-class AlertAdmin(comadm.StandardAdmin):
+_review_fields = ['reviewer', 'reviewee', 'rating', 'body']
+@admin.register(models.Review)
+class ReviewAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _alert_fields
-    list_editable = []
-    list_filter = comadm.standard_list_filter + ['is_buying', 'is_selling',
-        'is_need_commission_agents', 'is_commission_agent', 'is_other']
-    search_fields = comadm.standard_search_fields + ['user__first_name',
-        'user__last_name', 'key_phrases']
-
-    # Details page settings
-    fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _alert_fields})
-    ]
-    autocomplete_fields = ['user']
-
-_alert_match_fields = ['alert', 'requirement', 'status']
-@admin.register(models.AlertMatch)
-class AlertMatchAdmin(comadm.StandardAdmin):
-    # List page settings
-    list_display = comadm.standard_list_display + _alert_match_fields
+    list_display = comadm.standard_list_display + _review_fields
     list_editable = [] # Speed up loading
-    list_filter = comadm.standard_list_filter + ['status']
-    search_fields = comadm.standard_search_fields
+    list_filter = comadm.standard_list_filter + ['rating']
+    search_fields = comadm.standard_search_fields + ['reviewer__first_name',
+        'reviewer__last_name', 'reviewee__first_name', 'reviewee__last_name',
+        'body']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _alert_match_fields})
+        (None, {'fields': _review_fields})
     ]
-    autocomplete_fields = ['alert', 'requirement']
+    autocomplete_fields = ['reviewer', 'reviewee']
 
-_key_phrase_fields = ['key_phrase']
-@admin.register(models.KeyPhrase)
-class KeyPhraseAdmin(comadm.StandardAdmin):
+_review_image_fields = ['review', 'file']
+@admin.register(models.ReviewImage)
+class ReviewImageAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _key_phrase_fields
+    list_display = comadm.standard_list_display + _review_image_fields
     list_editable = [] # Speed up loading
-    list_filter = comadm.standard_list_filter
-    search_fields = comadm.standard_search_fields
+    search_fields = comadm.standard_search_fields + ['review__body']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _key_phrase_fields})
+        (None, {'fields': _review_image_fields})
     ]
+    autocomplete_fields = ['review', 'file']
 
-_alert_key_phrase_fields = ['alert', 'key_phrase']
-@admin.register(models.AlertKeyPhrase)
-class AlertKeyPhraseAdmin(admin.ModelAdmin):
+_review_response_fields = ['review', 'author']
+@admin.register(models.ReviewComment)
+class ReviewCommentAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = _alert_key_phrase_fields
-    search_fields = ['alert__id', 'key_phrase']
+    list_display = comadm.standard_list_display + _review_response_fields
+    list_editable = [] # Speed up loading
+    search_fields = comadm.standard_search_fields + ['review__body',
+        'author__first_name', 'author__last_name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _alert_key_phrase_fields})
+        (None, {'fields': _review_response_fields})
     ]
-    autocomplete_fields = ['alert']
 
-_alert_country_fields = ['alert', 'country']
-@admin.register(models.AlertExcludeCountry)
-class AlertExcludeCountryAdmin(admin.ModelAdmin):
+_review_comment_image_fields = ['comment', 'file']
+@admin.register(models.ReviewCommentImage)
+class ReviewCommentImageAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = _alert_country_fields
-    search_fields = ['alert__id']
+    list_display = comadm.standard_list_display + _review_comment_image_fields
+    list_editable = [] # Speed up loading
+    search_fields = comadm.standard_search_fields + ['comment__body']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _alert_country_fields})
+        (None, {'fields': _review_comment_image_fields})
     ]
-    autocomplete_fields = _alert_country_fields
+    autocomplete_fields = ['comment', 'file']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # from leads import models as lemods
 

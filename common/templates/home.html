@@ -2,99 +2,84 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    {% comment %} Start: Head {% endcomment %}
-	<head>
-        <base href=""/>
-		<title>Everybase - social network for importers and exporters</title>
-		<meta charset="utf-8" />
-		<meta name="description" content="Everybase - social network for importers and exporters"/>
-		<meta name="keywords" content="importers, exporters, buyers, sellers, agents"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<meta property="og:locale" content="en_US"/>
-		<meta property="og:type" content="website"/>
-		<meta property="og:title" content="Everybase - social network for importers and exporters"/>
-		<meta property="og:url" content="https://everybase.co"/>
-		<meta property="og:site_name" content="Everybase"/>
-		<link rel="shortcut icon" href="{% static 'common/demo1/dist/assets/media/logos/favicon_everybase.ico' %}"/>
+    <head>
+        {% include 'includes/shared_head_declarations.html' %}
 
-        {% comment %} Resource hints to reduce the amount of time it takes to deliver resources used by ReCaptcha {% endcomment %}
-        <link rel="preconnect" href="https://www.google.com">
-        <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-		
-        {% comment %} Start: Fonts {% endcomment %}
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"/>
-        {% comment %} End: Fonts {% endcomment %}
+        {% block page_vendor_stylesheets %}{% endblock %}
 
-        {% comment %} Start: Page vendor stylesheets (used by this page) {% endcomment %}
-		{% block page_vendor_stylesheets %}{% endblock %}
-        {% comment %} End: Page vendor stylesheets {% endcomment %}
+        {% comment %} {% include 'includes/head.html' with title_description='Everybase - avoid import/export scams, look up business reviews with a phone number' home='scams, frauds, cheats, import, export' url='https://everybase.co' %} {% endcomment %}
+        {% comment %} <title>{% block title %}Everybase - avoid import/export scams, look up business reviews with a phone number{% endblock %}</title> {% endcomment %}
+        
 
-        {% comment %} Start: Global stylesheets bundle (used by all pages) {% endcomment %}
-		<link href="{% static 'common/demo1/dist/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css"/>
-		<link href="{% static 'common/demo1/dist/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css"/>
-        {% comment %} End: Global stylesheets bundle {% endcomment %}
+        {% comment %} Social Meta Data
 
-        {% comment %} Start: Amplitude initialization {% endcomment %}
-        {% comment %}
-            We render the initialization code here because we need to ensure order-of-execution and render the user ID if user is authenticated.
+        <title>...</title>, max 65 chars
+        <meta name="description" content="..." />, max 155 chars
+        <meta property="og:title" content="..." />, max 35 chars
+        <meta property="og:url" content="..." />, full link to canonical webpage URL
+        <meta property="og:description" content="..." />, max 65 chars
+        <meta property="og:image" content="..." />, image, min dimensions 300 x 200, <300Kb, served with HTTPS connection with a valid non self-signed certificate
+        <meta property="og:image:url" content="..." />, equivalent to og:image
+        <meta property="og:image:secure_url" content="..." />, https:// URL for the image
+        <meta property="og:image:type" content="..." />, MIME type of the image. One of image/jpeg, image/gif, image/png.
+        <meta property="og:image:width" content="..." />, Image width
+        <meta property="og:image:height" content="..." />, Image height
+        <meta property="og:type" content="..." />, default 'website'
+        <meta property="og:locale" content="..." />, default 'en_US'
+        <meta property="fb:app_id" content="..." />, Facebook App ID
 
-            (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
-            ;r.type="text/javascript"
-            ;r.integrity="sha384-VuGgAcmMrGHihvjXxxBVMIqoDFXc8/PO9q/08kCgq4Wn1iPnSmUbI3xhXaFozVFv"
-            ;r.crossOrigin="anonymous";r.async=true
-            ;r.src="https://cdn.amplitude.com/libs/amplitude-8.18.1-min.gz.js"
-            ;r.onload=function(){if(!e.amplitude.runQueuedFunctions){console.log(
-            "[Amplitude] Error: could not load SDK")}};var s=t.getElementsByTagName("script"
-            )[0];s.parentNode.insertBefore(r,s);function i(e,t){e.prototype[t]=function(){
-            this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
-            var o=function(){this._q=[];return this};var a=["add","append","clearAll",
-            "prepend","set","setOnce","unset","preInsert","postInsert","remove"];for(
-            var c=0;c<a.length;c++){i(o,a[c])}n.Identify=o;var l=function(){this._q=[]
-            ;return this};var u=["setProductId","setQuantity","setPrice","setRevenueType",
-            "setEventProperties"];for(var p=0;p<u.length;p++){i(l,u[p])}n.Revenue=l;var d=[
-            "init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut",
-            "setVersionName","setDomain","setDeviceId","enableTracking",
-            "setGlobalUserProperties","identify","clearUserProperties","setGroup",
-            "logRevenueV2","regenerateDeviceId","groupIdentify","onInit","onNewSessionStart"
-            ,"logEventWithTimestamp","logEventWithGroups","setSessionId","resetSessionId",
-            "getDeviceId","getUserId","setMinTimeBetweenSessionsMillis",
-            "setEventUploadThreshold","setUseDynamicConfig","setServerZone","setServerUrl",
-            "sendEvents","setLibrary","setTransport"];function v(t){function e(e){
-            t[e]=function(){t._q.push([e].concat(Array.prototype.slice.call(arguments,0)))}}
-            for(var n=0;n<d.length;n++){e(d[n])}}v(n);n.getInstance=function(e){e=(
-            !e||e.length===0?"$default_instance":e).toLowerCase();if(
-            !Object.prototype.hasOwnProperty.call(n._iq,e)){n._iq[e]={_q:[]};v(n._iq[e])}
-            return n._iq[e]};e.amplitude=n})(window,document);
+        We use the image to convey the value proposition of the site.
         {% endcomment %}
-        <script>
-            !function(e,t){var n=e.amplitude||{_q:[],_iq:{}},r=t.createElement("script");r.type="text/javascript",r.integrity="sha384-VuGgAcmMrGHihvjXxxBVMIqoDFXc8/PO9q/08kCgq4Wn1iPnSmUbI3xhXaFozVFv",r.crossOrigin="anonymous",r.async=!0,r.src="https://cdn.amplitude.com/libs/amplitude-8.18.1-min.gz.js",r.onload=function(){e.amplitude.runQueuedFunctions||console.log("[Amplitude] Error: could not load SDK")};var s=t.getElementsByTagName("script")[0];function i(e,t){e.prototype[t]=function(){return this._q.push([t].concat(Array.prototype.slice.call(arguments,0))),this}}s.parentNode.insertBefore(r,s);for(var o=function(){return this._q=[],this},a=["add","append","clearAll","prepend","set","setOnce","unset","preInsert","postInsert","remove"],c=0;c<a.length;c++)i(o,a[c]);n.Identify=o;for(var l=function(){return this._q=[],this},u=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"],p=0;p<u.length;p++)i(l,u[p]);n.Revenue=l;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","enableTracking","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","groupIdentify","onInit","onNewSessionStart","logEventWithTimestamp","logEventWithGroups","setSessionId","resetSessionId","getDeviceId","getUserId","setMinTimeBetweenSessionsMillis","setEventUploadThreshold","setUseDynamicConfig","setServerZone","setServerUrl","sendEvents","setLibrary","setTransport"];function v(e){function t(t){e[t]=function(){e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}for(var n=0;n<d.length;n++)t(d[n])}v(n),n.getInstance=function(e){return e=(e&&0!==e.length?e:"$default_instance").toLowerCase(),Object.prototype.hasOwnProperty.call(n._iq,e)||(n._iq[e]={_q:[]},v(n._iq[e])),n._iq[e]},e.amplitude=n}(window,document);
-            {% if request.user.is_authenticated %}
-                amplitude.getInstance().init("{{ settings.AMPLITUDE_API_KEY }}", "{{ request.user.user.uuid }}")
-            {% else %}
-                amplitude.getInstance().init("{{ settings.AMPLITUDE_API_KEY }}")
-            {% endif %}
-        </script>
-        {% comment %} End: Amplitude initialization {% endcomment %}
-	</head>
-    {% comment %} End: Head {% endcomment %}
+        <title>Everybase helps importers/exporters avoid bad business</title>{% comment %} 54 chars {% endcomment %}
+        <meta name="description" content="Check if an exporter's phone number is reported for scams." />{% comment %} 58 chars {% endcomment %}
+        <meta property="og:site_name" content="Everybase"/>
+        <meta property="og:url" content="https://everybase.co/" />
+        <meta property="og:description" content="We collect reviews of importers and exporters worldwide. Check if an exporter's phone number is reported for scams." />{% comment %} 115 chars {% endcomment %}
+        <meta property="og:image" content="{% static 'common/demo1/dist/assets/media/home/og_image/home_og_image.png' %}" />
+        <meta property="og:image:url" content="{% static 'common/demo1/dist/assets/media/home/og_image/home_og_image.png' %}" />
+        <meta property="og:image:secure_url" content="{% static 'common/demo1/dist/assets/media/home/og_image/home_og_image.png' %}" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="300" />
+        <meta property="og:image:height" content="200" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="fb:app_id" content="{{ settings.FACEBOOK_APP_ID }}" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        
+        <link rel="shortcut icon" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon.ico' %}">
+        <link rel="icon" sizes="16x16 32x32 64x64" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon.ico' %}">
+        <link rel="icon" type="image/png" sizes="196x196" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-192.png' %}">
+        <link rel="icon" type="image/png" sizes="160x160" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-160.png' %}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-96.png' %}">
+        <link rel="icon" type="image/png" sizes="64x64" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-64.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-16.png' %}">
+        <link rel="apple-touch-icon" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-57.png' %}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-114.png' %}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-72.png' %}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-144.png' %}">
+        <link rel="apple-touch-icon" sizes="60x60" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-60.png' %}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-120.png' %}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-76.png' %}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-152.png' %}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-180.png' %}">
+        <meta name="msapplication-TileColor" content="#FFFFFF">
+        <meta name="msapplication-TileImage" content="{% static 'common/demo1/dist/assets/media/logos/faviconit/favicon-144.png' %}">
+        <meta name="msapplication-config" content="{% static 'common/demo1/dist/assets/media/logos/faviconit/browserconfig.xml' %}">
+    </head>
 
 	<body id="kt_body" data-bs-spy="scroll" data-bs-target="#kt_landing_menu" data-bs-offset="200" class="bg-white position-relative">
-
         {% comment %} Start: Root {% endcomment %}
 		<div class="d-flex flex-column flex-root">
 
-            {% comment %} Start: Header section {% endcomment %}
+            {% comment %} Start: Header Section {% endcomment %}
 			<div class="mb-0" id="home">
-
-                {% comment %} Start: Wrapper {% endcomment %}
 				<div class="bgi-no-repeat bgi-size-contain bgi-position-x-center bgi-position-y-bottom landing-dark-bg" style="background-image: url({% static 'common/demo1/dist/assets/media/svg/illustrations/landing.svg' %})">
                     {% comment %} Start: Header {% endcomment %}
 					<div class="landing-header" data-kt-sticky="true" data-kt-sticky-name="landing-header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
-                        {% comment %} Start: Container {% endcomment %}
 						<div class="container">
-                            {% comment %} Start: Wrapper {% endcomment %}
 							<div class="d-flex align-items-center justify-content-between">
-                                {% comment %} Start: Logo {% endcomment %}
 								<div class="d-flex align-items-center flex-equal">
                                     {% comment %} Start: Mobile menu toggle {% endcomment %}
 									<button class="btn btn-icon btn-active-color-primary me-3 d-flex d-lg-none" id="kt_landing_menu_toggle">
@@ -109,68 +94,60 @@
 									</button>
                                     {% comment %} End: Mobile menu toggle {% endcomment %}
 
-									<a href="{% url 'home' %}">
-                                        <img src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
-									</a>
+                                    <img src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
 								</div>
-                                {% comment %} End: Logo {% endcomment %}
                                 
-                                {% comment %} Start: Menu {% endcomment %}
 								<div class="d-lg-block" id="kt_header_nav_wrapper">
 									<div class="d-lg-block p-5 p-lg-0" data-kt-drawer="true" data-kt-drawer-name="landing-menu" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="200px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_landing_menu_toggle" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav_wrapper'}">
 										<div class="menu menu-column flex-nowrap menu-rounded menu-lg-row menu-title-gray-500 menu-state-title-primary nav nav-flush fs-5 fw-bold" id="kt_landing_menu">
-											<div class="menu-item">
-												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="" data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">Search</a>
-											</div>
-											<div class="menu-item">
-												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="#pricing" data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">Alerts</a>
+                                            <div class="menu-item">
+												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="{% url 'lookup' %}">Look Up</a>
 											</div>
                                             <div class="menu-item">
-												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="#pricing" data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">Lookup Users</a>
-											</div>
-                                            <div class="menu-item">
-												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="#pricing" data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">Pricing</a>
-											</div>
-                                            <div class="menu-item">
-												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="#pricing" data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">FAQ</a>
-											</div>
-                                            <div class="menu-item">
-												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="#pricing" data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">Earn Money</a>
+												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="https://wa.me/14152264655" target="_blank">Chatbot</a>
 											</div>
 										</div>
 									</div>
 								</div>
-                                {% comment %} End: Menu {% endcomment %}
 
-                                {% comment %} Start: Toolbar {% endcomment %}
 								<div class="flex-equal text-end ms-1">
-                                    <a href="" class="btn btn-sm btn-light-primary">Login</a>
-                                    <a href="" class="btn btn-sm btn-primary ms-1">Register</a>
+                                    <a href="{% url 'register__enter_whatsapp' %}" class="btn btn-sm btn-secondary">Sign Up</a>
+                                    <a href="{% url 'login' %}" class="btn btn-sm btn-primary">Login</a>
 								</div>
-                                {% comment %} End: Toolbar {% endcomment %}
 							</div>
-                            {% comment %} End: Wrapper {% endcomment %}
 						</div>
-                        {% comment %} End: Container {% endcomment %}
 					</div>
                     {% comment %} End: Header {% endcomment %}
-
+                    
                     {% comment %} Start: Hero {% endcomment %}
-					<div class="d-flex flex-column flex-center w-100 min-h-350px min-h-lg-500px px-9">
+					<div class="d-flex flex-column px-9">
 						<div class="text-center mb-5 mb-lg-10 py-10 py-lg-20">
-                            <div class="fw-bolder text-muted fs-3">Importers, Exporters, Buyers, Sellers, Agents, Traders...</div>
-                            <h1 class="text-white fs-2x mt-10">Receive a WhatsApp notification when a user's requirements matches your needs</h1>
-							<a href="" class="btn btn-primary mt-3">Create Alert</a>
-                            <div class="text-white fw-bold mt-1">Get started for free</div>
-                            <h1 class="text-white fs-2x mt-12">Broadcast your requirements</h1>
-							<a href="" class="btn btn-primary mt-3">Update Requirements</a>
-                            <div class="text-white fw-bold mt-1">Get started for free</div>
+                            <h1 style="background: linear-gradient(to right, #12CE5D 0%, #FFD80C 100%);-webkit-background-clip: text;-webkit-text-fill-color: transparent;" class="fs-3x mt-10">Avoid Bad Business</h1>
+                            <div>
+                                <div class="text-white fs-2 mt-4">We collect reviews of importers and exporters worldwide.</div>
+                                <div class="text-white fs-2 mt-4">Check if an exporter's phone number is reported for scams.</div>
+                            </div>
+                            <div class="mt-8">
+                                <div>
+                                    <a href="{% url 'lookup' %}" class="btn btn-secondary fw-bolder col-lg-6 col-12 m-1">Look Up Business</a>
+                                </div>
+                                <div>
+                                    <a href="{% url 'register__enter_whatsapp' %}" class="btn btn-secondary fw-bolder col-lg-6 col-12 m-1">Sign Up Free</a>
+                                </div>
+                            </div>
+                            <div class="mt-20">
+                                <div>
+                                    <a href="https://www.facebook.com/groups/importexportscams" class="btn btn-primary fw-bolder col-lg-6 col-12 m-1" target="_blank">Import/Export Scams Facebook Group</a>
+                                </div>
+                                <div>
+                                    <a href="https://wa.me/14152264655" class="btn btn-success fw-bolder col-lg-6 col-12 m-1" target="_blank">WhatsApp Chatbot</a>
+                                </div>
+                            </div>
 						</div>
 					</div>
-					{% comment %} End: Hero {% endcomment %}
+                    {% comment %} End: Hero {% endcomment %}
 				</div>
-                {% comment %} End: Wrapper {% endcomment %}
-                
+
                 {% comment %} Start: Curve bottom {% endcomment %}
 				<div class="landing-curve landing-dark-color mb-10 mb-lg-20">
 					<svg viewBox="15 12 1470 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -179,133 +156,137 @@
 				</div>
                 {% comment %} End: Curve bottom {% endcomment %}
 			</div>
-			{% comment %} End: Header section {% endcomment %}
+			{% comment %} End: Header Section {% endcomment %}
 
-            {% comment %} Start: Value propositions {% endcomment %}
+            {% comment %} Start: Value Propositions {% endcomment %}
 			<div class="z-index-2">
 				<div class="container">
                     {% comment %} Start: Heading {% endcomment %}
-					<div class="text-center mb-17">
-						<h2 class="fs-2x mb-5">How Everybase Works</h2>
-						{% comment %} <div class="fs-3 fw-bold text-muted fs-5 fw-bold">Get a WhatsApp notification when someone meets your requirements, or search users with your requirements.</div> {% endcomment %}
+					<div class="text-center">
+						<h1 class="fs-3x mb-5">We Collect Business Reviews Worldwide</h1>
+                        <div class="d-flex">
+                            <div class="col-lg-2"></div>
+                            <div class="fs-3 text-muted col-lg-8">We help you decide if the business (e.g., importer, exporter, agent) at a phone number is good or bad.</div>
+                            <div class="col-lg-2"></div>
+                        </div>
 					</div>
                     {% comment %} End: Heading {% endcomment %}
 
-                    {% comment %} Start: Row {% endcomment %}
-					<div class="row w-100 gy-10 mb-md-20">
-						<div class="col-md-4 px-5">
-							<div class="text-center mb-10 mb-md-0">
-								<img src="{% static 'common/demo1/dist/assets/media/illustrations/sketchy-1/2.png' %}" class="mh-125px mb-9" alt="" />
+					<div class="row w-100 gy-10 mt-6">
+                        <div class="col-md-4 px-5">
+							<div class="text-center">
+								<img src="{% static 'common/demo1/dist/assets/media/home/how_it_works/claim.png' %}" class="mh-125px mb-9" alt="" />
 								<div class="d-flex flex-center mb-5">
-									<span class="badge badge-circle badge-light-success fw-bolder p-5 me-3 fs-3">1</span>
-									<div class="fs-5 fs-lg-3 fw-bolder text-dark">Create Alert</div>
+									<div class="fs-1 fw-bolder">Look Up Business</div>
 								</div>
-								<div class="fw-bold fs-6 fs-lg-4 text-muted">Specify keywords and other settings to watch for in a user requirements.</div>
+								<div class="fs-4 text-gray-700">Look up details and reviews with <u>just</u> a phone number. Find out if anyone has reported a business for scams with just a phone number. <a href="{% url 'register' %}">Sign up for free</a>, so others may look you up and <span class="fw-bolder">we may notify you if someone reviews you.</span></div>
 							</div>
 						</div>
                         <div class="col-md-4 px-5">
-							<div class="text-center mb-10 mb-md-0">
-								<img src="{% static 'common/demo1/dist/assets/media/illustrations/sketchy-1/12.png' %}" class="mh-125px mb-9" alt="" />
+							<div class="text-center">
+								<img src="{% static 'common/demo1/dist/assets/media/home/how_it_works/report.png' %}" class="mh-125px mb-9" alt="" />
 								<div class="d-flex flex-center mb-5">
-									<span class="badge badge-circle badge-light-success fw-bolder p-5 me-3 fs-3">2</span>
-									<div class="fs-5 fs-lg-3 fw-bolder text-dark">Match Alert to Requirements</div>
+									<div class="fs-1 fw-bolder">Review Business</div>
 								</div>
-								<div class="fw-bold fs-6 fs-lg-4 text-muted">When another user updates requirements, the system will match your alert against the requirements.</div>
+								<div class="fs-4 text-gray-700">Report <u>scams</u>, <u>frauds</u>, <u>cheats</u>, or other <u>bad behaviors</u>, or recommend good businesses. <span class="fw-bolder">Invite your business contacts to give you a good review (don't worry, we'll hide their details).</span></div>
 							</div>
 						</div>
-
 						<div class="col-md-4 px-5">
-							<div class="text-center mb-10 mb-md-0">
-								<img src="{% static 'common/demo1/dist/assets/media/illustrations/sketchy-1/8.png' %}" class="mh-125px mb-9" alt="" />
+							<div class="text-center">
+								<img src="{% static 'common/demo1/dist/assets/media/home/how_it_works/look_up.png' %}" class="mh-125px mb-9" alt="" />
 								<div class="d-flex flex-center mb-5">
-									<span class="badge badge-circle badge-light-success fw-bolder p-5 me-3 fs-3">3</span>
-									<div class="fs-5 fs-lg-3 fw-bolder text-dark">Receive WhatsApp Notification</div>
+									<div class="fs-1 fw-bolder">Contact Reviewers for Details</div>
 								</div>
-								<div class="fw-bold fs-6 fs-lg-4 text-muted">If the new requirements match your alert, our chatbot will send you a notification.</div>
+								<div class="fs-4 text-gray-700">For a small fee, you may access the contacts of reviewers who've given a business bad reviews, so you may contact them for more details.</div>
 							</div>
 						</div>
-
 					</div>
-					{% comment %} End: Row {% endcomment %}
 
-
+					<div class="mt-20">
+                        <div class="text-center">
+                            <h1 class="fs-3x mb-5">Bad Reviews</h1>
+                            <div class="d-flex">
+                                <div class="col-lg-2"></div>
+                                <div class="fs-3 text-muted col-12 col-lg-8">Bad reviews can help you avoid scammers - especially in the import/export business.</div>
+                                <div class="col-lg-2"></div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-20">
+                            <img src="{% static 'common/demo1/dist/assets/media/home/how_it_works/reports.png' %}" class="card-rounded shadow mw-100" alt="" />
+                        </div>
+					</div>
 				</div>
 			</div>
-            {% comment %} End: Value propositions {% endcomment %}
+            {% comment %} End: Value Propositions {% endcomment %}
 
+            {% comment %} Start: Chatbot Promo {% endcomment %}
+			<div class="mt-20 mb-n20 position-relative z-index-2">
+				<div class="container">
+					<div class="d-flex flex-stack flex-wrap flex-md-nowrap card-rounded shadow p-8 p-lg-12 mb-n5 mb-lg-n13" style="background: linear-gradient(90deg, #20AA3E 0%, #03A588 100%);">
+						<div class="my-2 me-5">
+							<div class="fs-1 fs-lg-2qx fw-bolder text-white mb-2">Let Our WhatsApp Chatbot Help You</div>
+							<div class="fs-6 fs-lg-5 text-white fw-bold opacity-75">Look up businesses without leaving WhatsApp.</div>
+						</div>
+						<a href="https://wa.me/14152264655" class="btn btn-lg btn-outline border-2 btn-outline-white flex-shrink-0 my-2" target="_blank">WhatsApp Chatbot</a>
+					</div>
+				</div>
+			</div>
+            {% comment %} End: Chatbot Promo {% endcomment %}
 
-
-
-			<!--begin::Footer Section-->
-			<div>
-				{% comment %} <!--begin::Curve top-->
+            {% comment %} Start: Footer {% endcomment %}
+			<div class="mb-0">
+                {% comment %} Start: Curve Top {% endcomment %}
 				<div class="landing-curve landing-dark-color">
 					<svg viewBox="15 -1 1470 48" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path d="M1 48C4.93573 47.6644 8.85984 47.3311 12.7725 47H1489.16C1493.1 47.3311 1497.04 47.6644 1501 48V47H1489.16C914.668 -1.34764 587.282 -1.61174 12.7725 47H1V48Z" fill="currentColor"></path>
 					</svg>
 				</div>
-				<!--end::Curve top--> {% endcomment %}
-				<!--begin::Wrapper-->
-				<div>
-
-					<!--begin::Container-->
+                {% comment %} End: Curve Top {% endcomment %}
+				<div class="landing-dark-bg">
 					<div class="container">
-						<!--begin::Wrapper-->
-						<div class="d-flex flex-column flex-md-row flex-stack py-7 py-lg-10">
-							<!--begin::Copyright-->
-							<div class="d-flex align-items-center order-2 order-md-1">
-								<!--begin::Logo-->
-								<a href="{% url 'home' %}">
-									<img src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
-								</a>
-								<!--end::Logo image-->
-								<!--begin::Logo image-->
-								<span class="mx-5 fs-7 fw-bold text-gray-600 pt-1">© 2022</span>
-								<!--end::Logo image-->
+						<div class="row py-10">
+							<div class="col-12 mt-20">
+								<div class="rounded landing-dark-border p-9 mb-10">
+									<h2 class="text-white">Need Help?</h2>
+									<span class="fw-normal fs-4 text-gray-700">Email to <a href="mailto:friend@everybase.co" class="text-white opacity-50 text-hover-primary">friend@everybase.co</a>.</span>
+								</div>
+                                <div class="rounded landing-dark-border p-9 mb-10">
+									<h2 class="text-white">WhatsApp Chatbot</h2>
+									<span class="fw-normal fs-4 text-gray-700">Access chatbot at <a href="https://wa.me/14152264655" class="text-white opacity-50 text-hover-primary" target="_blank">+1 4152264655</a>.</span>
+								</div>
 							</div>
-							<!--end::Copyright-->
-							<!--begin::Menu-->
-							{% comment %} <ul class="menu menu-gray-600 menu-hover-primary fw-bold fs-6 fs-md-5 order-1 mb-5 mb-md-0">
-                                <li class="menu-item">
-									<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">Search</a>
-								</li>
-								<li class="menu-item mx-5">
-									<a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Alerts</a>
-								</li>
-                                <li class="menu-item">
-									<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">Lookup Users</a>
-								</li>
-								<li class="menu-item mx-5">
-									<a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Pricing</a>
-								</li>
-								<li class="menu-item">
-									<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">FAQ</a>
-								</li>
-                                <li class="menu-item">
-									<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">Earn Money</a>
-								</li>
-							</ul> {% endcomment %}
-							<!--end::Menu-->
+							<div class="col-lg-6 ps-lg-16"></div>
 						</div>
-						<!--end::Wrapper-->
 					</div>
-					<!--end::Container-->
+					<div class="landing-dark-separator"></div>
+					<div class="container">
+				        <div>
+                            <div class="container">
+                                <div class="d-flex flex-column flex-md-row flex-stack py-7 py-lg-10">
+                                    <div class="d-flex align-items-center order-2 order-md-1">
+                                        <a href="{% url 'home' %}">
+                                            <img src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
+                                        </a>
+                                        <span class="mx-5 fs-7 fw-bold text-gray-600 pt-1">© 2022, Singapore</span>
+                                    </div>
+                                </div>
+                            </div>
+				        </div>
+					</div>
 				</div>
-				<!--end::Wrapper-->
 			</div>
-			<!--end::Footer Section-->
-			<!--begin::Scrolltop-->
+            {% comment %} End: Footer {% endcomment %}
+
 			<div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
-				<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+				{% comment %} Start: SVG Icon | path: icons/duotune/arrows/arr066.svg {% endcomment %}
 				<span class="svg-icon">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 						<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
 						<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
 					</svg>
 				</span>
-				<!--end::Svg Icon-->
+				{% comment %} End: SVG Icon {% endcomment %}
 			</div>
-			<!--end::Scrolltop-->
 		</div>
         {% comment %} End: Root {% endcomment %}
 
@@ -317,11 +298,6 @@
 		<script src="{% static 'common/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
         {% comment %} End: Global Javascript bundle {% endcomment %}
 
-        {% comment %} Start: Page vendors Javascript {% endcomment %}
-		<script src="{% static 'common/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js' %}"></script>
-		<script src="{% static 'common/demo1/dist/assets/plugins/custom/typedjs/typedjs.bundle.js' %}"></script>
-        {% comment %} End: Page vendors Javascript {% endcomment %}
-
         {% comment %} Start: Page custom Javascript {% endcomment %}
 		<script src="{% static 'common/demo1/dist/assets/js/custom/landing.js' %}"></script>
 		<script src="{% static 'common/demo1/dist/assets/js/custom/pages/pricing/general.js' %}"></script>
@@ -330,5 +306,4 @@
 
         {% comment %} End: Javascript {% endcomment %}
 	</body>
-	<!--end::Body-->
 </html>

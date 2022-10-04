@@ -1,0 +1,15 @@
+Everybase (https://everybase.co) help you avoid bad importers and exporters.
+
+We collect good and bad reviews of importers and exporters worldwide.
+
+We link reviews to phone numbers.
+
+{% if registered %}Share your details with friends:
+https://everybase.co/d/Kn
+
+Tip: ask your friends to review you.{% else %}_Register {{ phone_number }} so we may notify you if someone reviews you._{% endif %}
+
+Reply with option number:
+1. Look up or review phone number
+{% if registered %}2. Contact support{% else %}2. Register {{ phone_number }}
+3. Contact support{% endif %}

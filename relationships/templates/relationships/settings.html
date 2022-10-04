@@ -7,7 +7,7 @@
 {% block page_title_separator %}{% endblock %}
 
 {% block actions %}
-{% include 'leads/includes/toolbar_actions.html' %}
+{% comment %} {% include 'leads/includes/toolbar_actions.html' %} {% endcomment %}
 {% endblock %}
 
 {% block content_body %}
@@ -17,7 +17,7 @@
 <div class="post d-flex flex-column-fluid">
     <div class="container-xxl">
 
-        {% include 'relationships/includes/has_incomplete_profile.html' %}
+        {% comment %} {% include 'relationships/includes/has_incomplete_profile.html' %} {% endcomment %}
         
         {% if messages %}
             {% for message in messages %}
@@ -202,195 +202,201 @@
 
 
 
+
         {% comment %} Start: Profile {% endcomment %}
-        <div class="card mb-5 mb-xl-10 shadow-sm">
-            <div class="card-header border-0">
-                <div class="card-title m-0">
-                    <h3 class="fw-bolder m-0">Profile</h3>
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <div class="card-title">
+                    <h3 class="fw-bolder">Profile</h3>
                 </div>
             </div>
 
-            <div>
-                <div class="card-body border-top p-9">
-                    <div class="row mb-6">
-                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Name</label>
-                        <div class="col-lg-8">
-                            <div class="row">
-                                <div class="col-lg-6 fv-row">
-                                    <input type="text" name="first_name" class="form-control form-control-lg mb-3 mb-lg-0" placeholder="First name"{% if form.first_name.value != None %} value="{{ form.first_name.value }}"{% endif %} />
-                                    {% if form.first_name.errors %}<div class="text-danger">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                                </div>
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">WhatsApp Phone Number</label>
+                    <div class="col-lg-8 d-flex align-items-center fw-bolder fs-4">+65 88933466</div>
+                </div>
 
-                                <div class="col-lg-6 fv-row">
-                                    <input type="text" name="last_name" class="form-control form-control-lg" placeholder="Last name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %} />
-                                    {% if form.last_name.errors %}<div class="text-danger">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-6">
-                        <label class="col-lg-4 col-form-label fw-bold fs-6">
-                            <span class="required">Country</span>
-                        </label>
-                        <div class="col-lg-8 fv-row">
-                            <select name="country"data-control="select2" data-placeholder="Country" class="form-select form-select-lg fw-bold">
-                                <option value="country_not_set"{% if form.country.value == 'country_not_set' %} selected{% endif %}>Country Not Set</option>
-                                {% for country in countries %}
-                                    <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                                {% endfor %}
-                            </select>
-                            {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                        </div>
-                    </div>
-
-
-
-                    <div class="row mb-6">
-                        <label class="col-lg-4 col-form-label fw-bold fs-6">
-                            <span class="required">Introduction</span>
-                        </label>
-                        <div class="col-lg-8 fv-row">
-                            
-
-
-
-
-                            <input type="text" name="first_name" class="form-control form-control-lg mb-3 mb-lg-0" placeholder="Introduce yourself" value="" />
-
-
-
-
-                            
-
-
-                        </div>
-                    </div>
-
-
-
-
-
-
-
-                    <div class="row mb-6">
-                        <label class="col-lg-4 col-form-label fw-bold fs-6">
-                            <span>Company Name</span>
-                        </label>
-                        <div class="col-lg-8 fv-row">
-                            
-
-
-
-
-                            <input type="text" name="first_name" class="form-control form-control-lg mb-3 mb-lg-0" placeholder="Company Name" value="" />
-
-
-
-
-                            
-
-
-                        </div>
+                <div class="row mt-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">First Name</label>
+                    <div class="col-lg-8">
+                        <input type="text" name="first_name" class="form-control" />
                     </div>
                 </div>
 
-                <div class="card-footer d-flex justify-content-end py-6 px-9">
-                    {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
-                    <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary">Update</button>
+                <div class="row mt-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">Last Name</label>
+                    <div class="col-lg-8">
+                        <input type="text" name="first_name" class="form-control" />
+                    </div>
                 </div>
+
+                <div class="row mt-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">Country</label>
+                    <div class="col-lg-8">
+                        <select name="country" data-control="select2" data-placeholder="Country" class="form-select fw-bold">
+                            {% for country in countries %}
+                                <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="row mt-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">Email</label>
+                    <div class="col-lg-8">
+                        <input type="text" name="first_name" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row mt-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Business Name</label>
+                    <div class="col-lg-8">
+                        <input type="text" name="first_name" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row mt-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Business Description</label>
+                    <div class="col-lg-8">
+                        <textarea class="form-control" data-kt-autosize="true"></textarea>
+                    </div>
+                </div>
+
+                <div class="row mt-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Telegram</label>
+                    <div class="col-lg-8 d-flex gap-2 align-items-center">
+                        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault"/>
+                        <label class="form-check-label" for="flexCheckDefault">Enable</label>
+                    </div>
+                </div>
+
+                <div class="row mt-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">WeChat ID</label>
+                    <div class="col-lg-8">
+                        <input type="text" name="first_name" class="form-control" />
+                        <div class="text-muted mt-2">Leave blank to disable WeChat.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-end">
+                {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
+                <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary btn-sm">Save</button>
             </div>
         </div>
         {% comment %} End: Profile {% endcomment %}
 
-        {% comment %} Start: Contact methods {% endcomment %}
-        <div class="card mb-5 mb-xl-10 shadow-sm">
-            <div class="card-header border-0"data-bs-target="#kt_account_signin_method">
-                <div class="card-title m-0">
-                    <h3 class="fw-bolder m-0">Contacts</h3>
+
+        {% comment %} <div class="row mt-6">
+            <label class="col-lg-4 col-form-label fw-bold fs-6">WeChat ID</label>
+            <div class="col-lg-8">
+                <input type="text" name="first_name" class="form-control" />
+                <div class="text-muted">Leave blank if you do not wish to be contacted via WeChat.</div>
+            </div>
+        </div>
+
+        <div class="row mt-6">
+            <label class="col-lg-4 col-form-label fw-bold fs-6">Telegram</label>
+            <div class="col-lg-8">
+                <div class="form-check form-check-custom">
+                    <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault"/>
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Default checkbox
+                    </label>
+                </div>
+                <div class="text-muted">Check if wish to be contacted via Telegram.</div>
+            </div>
+        </div> {% endcomment %}
+
+
+        {% comment %} <div class="card shadow-sm mt-4">
+            <div class="card-header">
+                <div class="card-title">
+                    <h3 class="fw-bolder">Email</h3>
                 </div>
             </div>
 
-            <div>
-                <div class="card-body border-top p-9">
-
-                    <div class="d-flex flex-wrap align-items-center mb-10">
-                        <div id="change_phone_number_preview_div">
-                            <div class="fs-6 fw-bolder mb-1">WhatsApp Phone Number</div>
-                            {% comment %} We set the user's current phone number here instead of the form phone number, so the current phone number shows if there're error in the form {% endcomment %}
-                            <div class="fw-bold text-gray-600">{% if request.user.user.phone_number != None %}+{{ request.user.user.phone_number.country_code }} {{ request.user.user.phone_number.national_number }}{% else %}No phone number set{% endif %}</div>
-                        </div>
-                        
-                        <div id="change_phone_number_form_div" class="flex-row-fluid d-none">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="fv-row mb-0">
-                                        <label for="phone_number" class="form-label fs-6 fw-bolder required">Phone Number</label>
-                                        <input type="text" class="form-control form-control-lg" name="phone_number" id="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} />
-                                    </div>
-                                    <div class="form-text mt-2">Include + symbol. E.g., +14155552671.</div>
-                                    {% if form.phone_number.errors %}<div class="text-danger">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                                </div>
-                            </div>
-
-                            {% comment %} <div class="form-check form-check-custom mt-4">
-                                <div class="me-3">
-                                    <input class="form-check-input me-2" type="checkbox" id="enable_whatsapp" name="enable_whatsapp"{% if form.enable_whatsapp.value == True %} checked{% endif %} />
-                                    <label for="enable_whatsapp">Enable WhatsApp login
-                                        <span class="svg-icon svg-icon-info svg-icon-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{% include 'relationships/tooltips/enable_whatsapp.txt' %}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor"/>
-                                                <path d="M11.276 13.654C11.276 13.2713 11.3367 12.9447 11.458 12.674C11.5887 12.394 11.738 12.1653 11.906 11.988C12.0833 11.8107 12.3167 11.61 12.606 11.386C12.942 11.1247 13.1893 10.896 13.348 10.7C13.5067 10.4947 13.586 10.2427 13.586 9.944C13.586 9.636 13.4833 9.356 13.278 9.104C13.082 8.84267 12.69 8.712 12.102 8.712C11.486 8.712 11.066 8.866 10.842 9.174C10.6273 9.482 10.52 9.82267 10.52 10.196L10.534 10.574H8.826C8.78867 10.3967 8.77 10.2333 8.77 10.084C8.77 9.552 8.90067 9.07133 9.162 8.642C9.42333 8.20333 9.81067 7.858 10.324 7.606C10.8467 7.354 11.4813 7.228 12.228 7.228C13.1987 7.228 13.9687 7.44733 14.538 7.886C15.1073 8.31533 15.392 8.92667 15.392 9.72C15.392 10.168 15.322 10.5507 15.182 10.868C15.042 11.1853 14.874 11.442 14.678 11.638C14.482 11.834 14.2253 12.0533 13.908 12.296C13.544 12.576 13.2733 12.8233 13.096 13.038C12.928 13.2527 12.844 13.528 12.844 13.864V14.326H11.276V13.654ZM11.192 15.222H12.928V17H11.192V15.222Z" fill="currentColor"/>
-                                            </svg>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div> {% endcomment %}
-
-                            <div class="d-flex mt-6">
-                                {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
-                                <button name="update_phone_number" value="update_phone_number" type="submit" class="btn btn-primary me-2 px-6">Update</button>
-                                <button id="change_phone_number_button_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
-                            </div>
-                        </div>
-
-                        <div id="change_phone_number_button_div" class="ms-auto">
-                            <button type="button" class="btn btn-light btn-active-light-primary">Change</button>
-                        </div>
+            <div class="card-body">
+                <div class="row mt-6">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">Email</label>
+                    <div class="col-lg-8">
+                        <input type="text" name="first_name" class="form-control" />
                     </div>
+                </div>
+            </div>
 
-                    <div class="separator separator-dashed my-6"></div>
+            <div class="card-footer d-flex justify-content-end">
+                <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary btn-sm">Save</button>
+            </div>
+        </div> {% endcomment %}
 
-                    <div class="d-flex flex-wrap align-items-center">
-                        <div id="change_email_preview_div">
-                            <div class="fs-6 fw-bolder mb-1">Email</div>
-                            {% comment %} We set the user's current email here instead of the form email, so the current email shows if there're error in the form {% endcomment %}
-                            <div class="fw-bold text-gray-600">{% if request.user.user.email != None %}{{ request.user.user.email.email }}{% else %}No email set{% endif %}</div>
-                        </div>
+        {% comment %} <div class="card shadow-sm mt-4">
+            <div class="card-header d-flex flex-column justify-content-center py-6">
+                <div class="card-title">
+                    <h3 class="fw-bolder">Chat </h3>
+                </div>
+                <div class="text-muted">Let others contact me via these apps</div>
+            </div>
 
-                        <div id="change_email_form_div" class="flex-row-fluid d-none">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <label for="email" class="form-label fs-6 fw-bolder">Email</label>
-                                    <input type="email" class="form-control form-control-lg" id="email" placeholder="Email" name="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} />
-                                    {% if form.email.errors %}<div class="text-danger">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                                </div>
-                            </div>
-                            <div class="d-flex mt-6">
-                                {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
-                                <button name="update_email" value="update_email" type="submit" class="btn btn-primary me-2 px-6">Update</button>
-                                <button id="change_email_button_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
-                            </div>
-                        </div>
+            <div class="card-body">
+                <div class="form-check form-check-custom mt-4">
+                    <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault"/>
+                    <label class="form-check-label" for="flexCheckDefault">Telegram</label>
+                </div>
 
-                        <div id="change_email_button_div" class="ms-auto">
-                            <button type="button" class="btn btn-light btn-active-light-primary">Change</button>
-                        </div>
-                    </div>
+                <div class="form-check form-check-custom mt-4">
+                    <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault"/>
+                    <label class="form-check-label" for="flexCheckDefault">WeChat</label>
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-end">
+                <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary btn-sm">Save</button>
+            </div>
+        </div> {% endcomment %}
+
+       {% comment %} Start: Profile {% endcomment %}
+        {% comment %} <div class="card shadow-sm mt-4">
+            <div class="card-header">
+                <div class="card-title">
+                    <h3 class="fw-bolder">Facebook</h3>
+                </div>
+
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Facebook ID</label>
+                    <div class="col-lg-8 d-flex align-items-center fw-bolder fs-4">1234567890</div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    {% comment %} End: Profile {% endcomment %}
+
+    {% comment %} <div class="card shadow-sm mt-4">
+        <div class="card-header">
+            <div class="card-title">
+                <h3 class="fw-bolder">WeChat</h3>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <label class="col-lg-4 col-form-label fw-bold fs-6">WeChat ID</label>
+                <div class="col-lg-8">
+                    <input type="text" name="first_name" class="form-control" />
                 </div>
             </div>
         </div>
-        {% comment %} End: Contact methods {% endcomment %}
+
+        <div class="card-footer d-flex justify-content-end gap-2">
+            <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary btn-sm">Save</button>
+        </div>
+    </div> {% endcomment %}
+
+
     </div>
 </div>
 

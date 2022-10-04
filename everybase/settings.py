@@ -62,6 +62,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -330,12 +331,16 @@ RECAPTCHA_THRESHOLD = config('RECAPTCHA_THRESHOLD')
 # Google Analytics 4 settings
 GA_WEB_STREAM_ID = config('GA_WEB_STREAM_ID')
 
+# Facebook App ID
+FACEBOOK_APP_ID = config('FACEBOOK_APP_ID')
+
 # Export parameters that can be used in templates
 SETTINGS_EXPORT = [
     'BASE_URL',
     'GA_WEB_STREAM_ID',
     'RECAPTCHA_SITE_KEY',
-    'AMPLITUDE_API_KEY'
+    'AMPLITUDE_API_KEY',
+    'FACEBOOK_APP_ID'
 ]
 
 # 5 MB 5242880

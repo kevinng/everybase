@@ -1,0 +1,108 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% comment %} {% block title %}Create Alert{% endblock %} {% endcomment %}
+
+{% block page_title %}Review User{% endblock %}
+
+{% block page_title_separator %}{% endblock %}
+{% comment %} {% block page_subtitle %}Lets others know your requirement{% endblock %} {% endcomment %}
+
+{% block actions %}
+{% comment %} {% include 'leads/includes/toolbar_actions.html' with hide_lead_create=True %} {% endcomment %}
+{% endblock %}
+
+{% block content_body %}
+<form action="" method="post" id="lead_create_form">
+    {% csrf_token %}
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        {% comment %} Start: Container {% endcomment %}
+        <div id="kt_content_container" class="container-xxl">
+            <div class="card shadow-sm mt-4">
+                {% comment %} Start: Card body {% endcomment %}
+                <div class="card-body">
+                    <div class="mt-6">
+                        <label class="form-label">Reviewing</label>
+                        {% comment %} <div class="fw-bolder fs-2">+65 88933466</div> {% endcomment %}
+                        <div class="fs-2 fw-bolder">Kevin Ng</div>
+                        <div class="fs-7 fw-bold text-muted">United States of America</div>
+                    </div>
+
+                    <div class="mt-8">
+                        <label class="form-label required">Review</label>
+                        <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="comments" name="comments" placeholder="E.g., this user cheated me of..."></textarea>
+                    </div>
+
+                    <div class="mt-8 d-flex gap-2 flex-column">
+                        <label class="form-label required">Rating</label>
+                        <div class="form-check form-check-custom">
+                            <input class="form-check-input" type="radio" value="" id="flexRadioDefault"/>
+                            <label class="form-check-label" for="flexRadioDefault"><span class="badge badge-success">Good Review</span></label>
+                        </div>
+                        
+                        <label class="form-check form-check-custom">
+                            <input class="form-check-input" type="radio" value=""/>
+                            <span class="form-check-label"><span class="badge badge-danger">Bad Review</span></span>
+                        </label>
+                    </div>
+
+                    <div class="mt-8">
+                        <div class="dropzone" id="kt_dropzonejs_example_1">
+                            <div class="dz-message needsclick">
+                                <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                <div class="ms-4">
+                                    <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop images here or click to upload.</h3>
+                                    <span class="fs-7 fw-semibold text-gray-400">Upload up to 12 images.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% comment %} End: Card body {% endcomment %}
+                
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <a href="{% url 'home' %}" class="btn btn-light btn-active-light-primary me-2 btn-sm">Cancel</a>
+                    <button type="submit" class="btn btn-primary g-recaptcha btn-sm"
+                        data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
+                        data-callback="leadCreateFormOnSubmit" 
+                        data-action="submit">Post</button>
+                </div>
+            </div>
+        </div>
+        {% comment %} End: Container {% endcomment %}
+    </div>
+</form>
+{% endblock %}
+
+{% comment %}
+function leadCreateFormOnSubmit(token) {
+    document.getElementById("lead_create_form").submit()
+}
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'leads/js/lead_create.js' %}"></script>
+<script>
+$(document).ready(function() {
+
+
+
+
+
+    var myDropzone = new Dropzone("#kt_dropzonejs_example_1", {
+        url: "https://keenthemes.com/scripts/void.php", // Set the url for your upload script location
+        paramName: "file", // The name that will be used to transfer the file
+        maxFiles: 10,
+        maxFilesize: 10, // MB
+        addRemoveLinks: true,
+        accept: function(file, done) {
+            if (file.name == "wow.jpg") {
+                done("Naha, you don't.");
+            } else {
+                done();
+            }
+        }
+    });
+})
+</script>
+{% endblock %}

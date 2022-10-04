@@ -1,0 +1,128 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% comment %} {% block title %}Create Alert{% endblock %} {% endcomment %}
+
+{% block page_title %}Report Bad Behavior{% endblock %}
+
+{% block page_title_separator %}{% endblock %}
+{% comment %} {% block page_subtitle %}Lets others know your requirement{% endblock %} {% endcomment %}
+
+{% block actions %}
+{% include 'leads/includes/toolbar_actions.html' with hide_lead_create=True %}
+{% endblock %}
+
+{% block content_body %}
+<form action="" method="post" id="lead_create_form">
+    {% csrf_token %}
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        {% comment %} Start: Container {% endcomment %}
+        <div id="kt_content_container" class="container-xxl">
+
+
+            <div class="card shadow-sm mt-4">
+                {% comment %} Start: Card body {% endcomment %}
+                <div class="card-body">
+                    <div class="mt-6">
+                        <label class="form-label required">Reporting Bad Behavior for Phone Number</label>
+                        <div class="fw-bolder fs-2">+65 88933466</div>
+                    </div>
+
+                    <div class="mt-8">
+                        <label class="form-label required">Bad Behavior Report</label>
+                        <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="comments" name="comments" placeholder="E.g., This person cheated me of 100 RMB..."></textarea>
+                        <div class="text-muted ms-2">Explain what happened that made you want to file a bad behavior report against this user.</div>
+                    </div>
+                    <div class="mt-8">
+
+
+
+
+
+
+
+
+
+
+
+
+                        <label class="form-label">Supporting Files</label>
+                                <!--begin::Dropzone-->
+        <div class="dropzone" id="kt_dropzonejs_example_1">
+            <!--begin::Message-->
+            <div class="dz-message needsclick">
+                <!--begin::Icon-->
+                <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                <!--end::Icon-->
+
+                <!--begin::Info-->
+                <div class="ms-4">
+                    <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop files here or click to upload.</h3>
+                    <span class="fs-7 fw-semibold text-gray-400">Upload up to 12 images or PDF.</span>
+                </div>
+                <!--end::Info-->
+            </div>
+        </div>
+        <!--end::Dropzone-->
+
+                    </div>
+
+
+                    <div>
+                        <label class="form-label required mt-8">Confirm</label>
+
+                    <div class="form-check form-check-custom mt-2">
+                        <input class="form-check-input me-2" type="checkbox" name="lead_type" id="buying" value="buying" />
+                        <label for="buying">Other users may contact you for more information.</label>
+                    </div>
+                </div>
+                    
+                </div>
+                {% comment %} End: Card body {% endcomment %}
+                
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <a href="{% url 'home' %}" class="btn btn-light btn-active-light-primary me-2">Cancel</a>
+                    <button type="submit" class="btn btn-primary g-recaptcha"
+                        data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
+                        data-callback="leadCreateFormOnSubmit" 
+                        data-action="submit">Submit</button>
+                </div>
+            </div>
+        </div>
+        {% comment %} End: Container {% endcomment %}
+    </div>
+</form>
+{% endblock %}
+
+{% comment %}
+function leadCreateFormOnSubmit(token) {
+    document.getElementById("lead_create_form").submit()
+}
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'leads/js/lead_create.js' %}"></script>
+<script>
+$(document).ready(function() {
+
+
+
+
+
+    var myDropzone = new Dropzone("#kt_dropzonejs_example_1", {
+        url: "https://keenthemes.com/scripts/void.php", // Set the url for your upload script location
+        paramName: "file", // The name that will be used to transfer the file
+        maxFiles: 10,
+        maxFilesize: 10, // MB
+        addRemoveLinks: true,
+        accept: function(file, done) {
+            if (file.name == "wow.jpg") {
+                done("Naha, you don't.");
+            } else {
+                done();
+            }
+        }
+    });
+})
+</script>
+{% endblock %}

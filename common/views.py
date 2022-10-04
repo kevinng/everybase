@@ -12,6 +12,20 @@ def ads_txt(_):
     response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
     return response
 
+def privacy(request):
+    template_name = 'privacy.html'
+    return TemplateResponse(request, template_name, {})
+
+def terms(request):
+    template_name = 'terms.html'
+    return TemplateResponse(request, template_name, {})
+
+
+
+
+
+
+
 def pricing(request):
     template_name = 'pricing.html'
     return TemplateResponse(request, template_name, {})

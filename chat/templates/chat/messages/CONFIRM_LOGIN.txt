@@ -2,4 +2,4 @@ You've attempted to login to Everybase.
 
 This is your confirmation code: {{ code }}
 
-Ignore this message if you didn't login to Everybase.
+Ignore this message if you didn't login to Everybase (https://everybase.co)

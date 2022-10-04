@@ -1,0 +1,145 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block page_title %}Kevinkevin Ngngngng's Following{% endblock %}
+{% block page_title_separator %}{% endblock %}
+{% comment %} {% block page_subtitle %}+65 96655575{% endblock %} {% endcomment %}
+
+{% block actions %}
+<button id="kt_clipboard_3" class="btn btn-sm btn-secondary" data-clipboard-text="https://everybase.co/i/hJuh7">Copy Link</button>
+<a href="#" class="btn btn-sm btn-primary">User Details</a>
+{% comment %} The following list of a user is public, don't make it private {% endcomment %}
+{% endblock %}
+
+{% block content_body %}
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <div id="kt_content_container" class="container-xxl">
+
+
+
+        {% comment %} Start: Page Tabs {% endcomment %}
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title d-flex flex-column py-4">
+                    <a href="" class="text-dark text-hover-primary">
+                        {% comment %} <div>+65 88933466</div>
+                        <div class="fs-7">
+                            <div>Kevin Ng</div>
+                            <div>United States of America</div>
+                        </div> {% endcomment %}
+                        <div>Kevin Ng</div>
+                        <div class="fs-7 text-muted">0 Followers</div>
+                        {% comment %} <div class="fs-7">
+                            <div>Kevin Ng</div>
+                        </div> {% endcomment %}
+                    </a>
+                </div>
+
+                {% comment %} <div class="card-title d-flex flex-column">+65 88933466</div> {% endcomment %}
+                <div class="card-toolbar">
+                    {% comment %} <div class="text-muted">Not Claimed</div> {% endcomment %}
+                    <div class="text-muted">2d ago</div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                
+                <div class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vehicula nibh tincidunt magna fermentum, ac ullamcorper metus molestie. Mauris quis nisl id nibh consectetur dapibus at non purus. Praesent ac tellus nulla. Aliquam erat volutpat. Maecenas et egestas nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris id facilisis leo. Nullam auctor rutrum malesuada.</div>
+                <div class="mt-4 d-flex gap-2 flex-wrap align-items-center">
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                </div>
+            </div>
+
+            {% comment %} <div class="card-footer d-flex justify-content-end gap-2">
+                <a href="" class="btn btn-sm btn-success">WhatsApp</a>
+                <a href="" class="btn btn-sm btn-primary">Details</a>
+            </div> {% endcomment %}
+        </div>
+        {% comment %} End: Page Tabs {% endcomment %}
+
+   
+        {% include 'includes/paginator.html' %}
+    </div>
+</div>
+{% endblock %}
+
+
+{% block page_vendor_javascript %}
+<script src="{% static 'common/js/qrcode.min.js' %}"></script>
+{% endblock %}
+
+
+{% block page_custom_javascript %}
+<script>
+$(document).ready(function() {
+    // Select element
+    target = document.getElementById('kt_clipboard_3');
+
+    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
+    clipboard = new ClipboardJS(target);
+
+    // Success action handler
+    clipboard.on('success', function (e) {
+        const currentLabel = target.innerHTML;
+
+        // Exit label update when already in progress
+        if (target.innerHTML === 'Copied!') {
+            return;
+        }
+
+        // Update button label
+        target.innerHTML = 'Copied!';
+
+        // Revert button label after 3 seconds
+        setTimeout(function () {
+            target.innerHTML = currentLabel;
+        }, 3000)
+    });
+
+
+
+
+
+    // QR code. We cannot include this code because it requires server-side rendering.
+    var qrcode = new QRCode(document.getElementById("wechat_qrcode"), {
+        text: "weixin://dl/chat?dasfasf",
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    })
+
+
+    var qrcode = new QRCode(document.getElementById("whatsapp_qrcode"), {
+        text: "weixin://dl/chat?dasfasf",
+        width: 128,
+        height: 128,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    })
+
+    
+
+
+
+
+
+
+
+})
+</script>
+{% endblock %}

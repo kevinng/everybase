@@ -1,6 +1,6 @@
 import pytz, urllib
-from leads.utilities.set_cookie_uuid import set_cookie_uuid
-from leads.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
+from relationships.utilities.set_cookie_uuid import set_cookie_uuid
+from relationships.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
 from datetime import datetime
 from ratelimit.decorators import ratelimit
 
@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User as DjangoUser
 from django.template.response import TemplateResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 
 from everybase import settings
@@ -63,11 +63,155 @@ def _next_or_else_response(next, default):
     else:
         return HttpResponseRedirect(default)
 
+# Registration
+
+def register__enter_whatsapp(request):
+    # Go to the personal profile if the user is already authenticated
+    # if request.user.is_authenticated:
+    #     return HttpResponseRedirect(reverse('home'))
+
+    # Get next URL - which we'll redirect to after registration
+    next_url = request.GET.get('next')
+
+    if request.method == 'POST':
+        form = forms.RegisterEnterWhatsAppForm(request.POST)
+        if form.is_valid():
+            cookie_uuid, _ = get_or_create_cookie_uuid(request)
+            phone_number = get_or_create_phone_number(
+                form.cleaned_data.get('phone_number'))
+            country = commods.Country.objects.get(
+                programmatic_key=form.cleaned_data.get('country'))
+
+            user = models.User.objects.filter(
+                phone_number=phone_number,
+                country=country,
+                registered__isnull=True
+            ).first()
+
+            if user is None:
+                user = models.User.objects.get_or_create(
+                    phone_number=phone_number,
+                    country=country,
+                    register_cookie_uuid=cookie_uuid,
+                )
+
+            # Create Django user and associate it
+            user.django_user, _ = DjangoUser.objects\
+                .get_or_create(username=str(user.uuid))
+            user.save()
+
+            # Send confirmation code
+            send_whatsapp_code.send_whatsapp_code(
+                user, whatsapp_purposes.VERIFY_WHATSAPP)
+
+            # Pass user ID to the next page, we'll render it hidden
+            params = {'uid': user.id}
+
+            # Pass next URL to the next page, we'll render it hidden
+            if next_url is not None and next_url != '':
+                params['next'] = next_url
+
+            return redirect('register__confirm_whatsapp', params)
+        else:
+            form = forms.RegisterEnterWhatsAppForm()
+        
+        params = _pass_next({
+            'form': form,
+            'countries': commods.Country.objects.annotate(
+                num_users=Count('users_as_country')).order_by('-num_users')
+            }, request.GET.get('next'))
+        
+        return TemplateResponse(request, 'relationships/register.html', params)
+
+            
+
+                
+                
+                
+
+
+    # if request.method == 'POST':
+    #     form = forms.RegisterForm(request.POST)
+    #     if form.is_valid():
+    #         # Create Everybase user
+    #         cookie_uuid, _ = get_or_create_cookie_uuid(request)
+    #         user = models.User.objects.create(
+    #             register_cookie_uuid=cookie_uuid,
+    #             registered=datetime.now(pytz.timezone(settings.TIME_ZONE)),
+    #             email=get_or_create_email(form.cleaned_data.get('email')),
+    #             phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
+    #             country=commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country')),
+    #             first_name=form.cleaned_data.get('first_name'),
+    #             last_name=form.cleaned_data.get('last_name'),
+    #             enable_whatsapp=False # Default, require verification to enable
+    #         )
+
+    #         # Create Django user and associate it
+    #         user.django_user, _ = DjangoUser.objects.get_or_create(username=str(user.uuid))
+    #         user.save()
+
+    #         # Authenticate passwordlessly
+    #         dju = authenticate(user.django_user.username)
+    #         if dju is not None:
+    #             login(request, dju)
+
+    #         # Send welcome email
+    #         send_email.delay(
+    #             render_to_string('relationships/email/welcome_subject.txt', {}),
+    #             render_to_string('relationships/email/welcome.txt', {}),
+    #             'friend@everybase.co',
+    #             [user.email.email]
+    #         )
+
+    #         identify_amplitude_user.delay(
+    #             user_id=user.uuid,
+    #             user_properties={
+    #                 'country': user.country.programmatic_key,
+    #                 'phone number country code': user.phone_number.country_code
+    #             }
+    #         )
+
+    #         send_amplitude_event.delay(
+    #             'account - registered',
+    #             user_uuid=user.uuid,
+    #             ip=get_ip_address(request),
+    #             event_properties={
+    #                 'country': user.country.programmatic_key,
+    #                 'phone number country code': user.phone_number.country_code
+    #             }
+    #         )
+
+    #         # Verify WhatsApp number if user enabled WhatsApp
+    #         if form.cleaned_data.get('enable_whatsapp') == True:
+    #             return HttpResponseRedirect(reverse('users:verify_whatsapp'))
+
+    #         return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
+    # else:
+    #     form = forms.RegisterForm()
+
+    # params = _pass_next({
+    #     'form': form,
+    #     'countries': commods.Country.objects.annotate(
+    #         num_users=Count('users_as_country')).order_by('-num_users')
+    # }, request.GET.get('next'))        
+    # return TemplateResponse(request, 'relationships/register.html', params)
+
+
+
+    return TemplateResponse(request, 'relationships/register__enter_whatsapp.html', None)
+
+
+
+
 # Named 'log_in' and not 'login' to prevent clash with Django login
 @ratelimit(key='user_or_ip', rate='30/h', block=True, method=['POST'])
 def log_in(request):
     # if request.user.is_authenticated:
         # return HttpResponseRedirect(reverse('home')) # Go home if authenticated
+
+
+    # TODO: WE NEED TO CHECK FOR REGISTERED TIMESTAMP BEFORE ALLOWING LOGIN
+
     
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
@@ -92,6 +236,18 @@ def log_in(request):
 
     params = _pass_next({'form': form}, request.GET.get('next'))
     return TemplateResponse(request, 'relationships/login.html', params)
+
+
+
+
+
+
+
+
+
+
+
+
 
 def confirm_whatsapp_login(request):
     if request.user.is_authenticated:
@@ -142,9 +298,11 @@ def confirm_whatsapp_login(request):
 def select_country(request):
     return TemplateResponse(request, 'relationships/select_country.html', None)
 
+
+
 def register(request):
     # if request.user.is_authenticated:
-        # return HttpResponseRedirect(reverse('home')) # Go home if authenticated
+    #     return HttpResponseRedirect(reverse('home')) # Go home if authenticated
 
     if request.method == 'POST':
         form = forms.RegisterForm(request.POST)
@@ -208,7 +366,7 @@ def register(request):
     params = _pass_next({
         'form': form,
         'countries': commods.Country.objects.annotate(
-            num_users=Count('users_w_this_country')).order_by('-num_users')
+            num_users=Count('users_as_country')).order_by('-num_users')
     }, request.GET.get('next'))        
     return TemplateResponse(request, 'relationships/register.html', params)
 
@@ -233,7 +391,7 @@ def verify_whatsapp(request):
     return TemplateResponse(request, 'relationships/verify_whatsapp.html', None)
 
 # Don't name profile settings function 'settings', it conflicts with everybase.settings.
-@login_required
+# @login_required
 def profile_settings(request):
     
 
@@ -241,126 +399,126 @@ def profile_settings(request):
 
 
 
-    user = request.user.user
-    kwargs = {'user': user}
+    # user = request.user.user
+    # kwargs = {'user': user}
 
-    # Default SettingsForm values to user's existing values
-    inputs = {
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'country': user.country.programmatic_key if user.country is not None else 'country_not_set',
-        'enable_whatsapp': user.enable_whatsapp
-    }
+    # # Default SettingsForm values to user's existing values
+    # inputs = {
+    #     'first_name': user.first_name,
+    #     'last_name': user.last_name,
+    #     'country': user.country.programmatic_key if user.country is not None else 'country_not_set',
+    #     'enable_whatsapp': user.enable_whatsapp
+    # }
 
-    # Default email if user's email is set
-    if user.email is not None:
-        inputs['email'] = user.email.email
+    # # Default email if user's email is set
+    # if user.email is not None:
+    #     inputs['email'] = user.email.email
 
-    # Default phone number if user's phone number is set
-    if user.phone_number is not None:
-        inputs['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
+    # # Default phone number if user's phone number is set
+    # if user.phone_number is not None:
+    #     inputs['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
 
-    if request.method == 'POST':
-        # Override form with relevant values depending on the button clicked, so only relevant fields are updated.
-        if request.POST.get('update_profile') == 'update_profile':
-            inputs['first_name'] = request.POST.get('first_name')
-            inputs['last_name'] = request.POST.get('last_name')
-            inputs['country'] = request.POST.get('country')
-            inputs['update_profile'] = 'update_profile'
+    # if request.method == 'POST':
+    #     # Override form with relevant values depending on the button clicked, so only relevant fields are updated.
+    #     if request.POST.get('update_profile') == 'update_profile':
+    #         inputs['first_name'] = request.POST.get('first_name')
+    #         inputs['last_name'] = request.POST.get('last_name')
+    #         inputs['country'] = request.POST.get('country')
+    #         inputs['update_profile'] = 'update_profile'
 
-        elif request.POST.get('update_email') == 'update_email':
-            inputs['email'] = request.POST.get('email')
-            inputs['update_email'] = 'update_email'
+    #     elif request.POST.get('update_email') == 'update_email':
+    #         inputs['email'] = request.POST.get('email')
+    #         inputs['update_email'] = 'update_email'
 
-        elif request.POST.get('update_phone_number') == 'update_phone_number':
-            inputs['phone_number'] = request.POST.get('phone_number')
-            inputs['enable_whatsapp'] = request.POST.get('enable_whatsapp')
-            inputs['update_phone_number'] = 'update_phone_number'
+    #     elif request.POST.get('update_phone_number') == 'update_phone_number':
+    #         inputs['phone_number'] = request.POST.get('phone_number')
+    #         inputs['enable_whatsapp'] = request.POST.get('enable_whatsapp')
+    #         inputs['update_phone_number'] = 'update_phone_number'
 
-        form = forms.SettingsForm(inputs, **kwargs)
+    #     form = forms.SettingsForm(inputs, **kwargs)
 
-        if form.is_valid():
-            if request.POST.get('update_profile') == 'update_profile':
-                user = request.user.user
+    #     if form.is_valid():
+    #         if request.POST.get('update_profile') == 'update_profile':
+    #             user = request.user.user
 
-                # Record old values
-                old_first_name = user.first_name
-                old_last_name = user.last_name
-                old_country_key = user.country.programmatic_key if user.country is not None else None
+    #             # Record old values
+    #             old_first_name = user.first_name
+    #             old_last_name = user.last_name
+    #             old_country_key = user.country.programmatic_key if user.country is not None else None
 
-                user.first_name = form.cleaned_data.get('first_name')
-                user.last_name = form.cleaned_data.get('last_name')
+    #             user.first_name = form.cleaned_data.get('first_name')
+    #             user.last_name = form.cleaned_data.get('last_name')
                 
-                country_key = form.cleaned_data.get('country')
-                country = None
-                if not (country_key == 'country_not_set' or country_key is None or (type(country_key) == str and country_key.strip() == '')):
-                    try:
-                        country = commods.Country.objects.get(programmatic_key=country_key)
-                    except commods.Country.DoesNotExist:
-                        pass
-                user.country = country
-                user.save()
-                messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PROFILE_UPDATE_SUCCESS)
+    #             country_key = form.cleaned_data.get('country')
+    #             country = None
+    #             if not (country_key == 'country_not_set' or country_key is None or (type(country_key) == str and country_key.strip() == '')):
+    #                 try:
+    #                     country = commods.Country.objects.get(programmatic_key=country_key)
+    #                 except commods.Country.DoesNotExist:
+    #                     pass
+    #             user.country = country
+    #             user.save()
+    #             messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PROFILE_UPDATE_SUCCESS)
 
-                user_properties = {}
-                if user.country is not None:
-                    user_properties['country'] = user.country.programmatic_key
-                if user.phone_number is not None:
-                    user_properties['phone number country code'] = user.phone_number.country_code
+    #             user_properties = {}
+    #             if user.country is not None:
+    #                 user_properties['country'] = user.country.programmatic_key
+    #             if user.phone_number is not None:
+    #                 user_properties['phone number country code'] = user.phone_number.country_code
 
-                identify_amplitude_user.delay(
-                    user_id=user.uuid,
-                    user_properties=user_properties
-                )
+    #             identify_amplitude_user.delay(
+    #                 user_id=user.uuid,
+    #                 user_properties=user_properties
+    #             )
 
-                amplitude_event_properties = {}
-                amplitude_event_properties['old first name'] = old_first_name
-                amplitude_event_properties['new first name'] = user.first_name
-                amplitude_event_properties['old last name'] = old_last_name
-                amplitude_event_properties['new last name'] = user.last_name
-                if old_country_key is not None:
-                    amplitude_event_properties['old country'] = old_country_key
-                if user.country is not None:
-                    amplitude_event_properties['new country'] = user.country.programmatic_key
+    #             amplitude_event_properties = {}
+    #             amplitude_event_properties['old first name'] = old_first_name
+    #             amplitude_event_properties['new first name'] = user.first_name
+    #             amplitude_event_properties['old last name'] = old_last_name
+    #             amplitude_event_properties['new last name'] = user.last_name
+    #             if old_country_key is not None:
+    #                 amplitude_event_properties['old country'] = old_country_key
+    #             if user.country is not None:
+    #                 amplitude_event_properties['new country'] = user.country.programmatic_key
 
-                send_amplitude_event.delay(
-                    'account - updated profile',
-                    user_uuid=user.uuid,
-                    ip=get_ip_address(request),
-                    event_properties=amplitude_event_properties
-                )
+    #             send_amplitude_event.delay(
+    #                 'account - updated profile',
+    #                 user_uuid=user.uuid,
+    #                 ip=get_ip_address(request),
+    #                 event_properties=amplitude_event_properties
+    #             )
 
-            elif request.POST.get('update_email') == 'update_email':
-                if (user.email is None or user.email.email != form.cleaned_data.get('email').strip()):
-                    return HttpResponseRedirect(f"{reverse('users:update_email')}?email={form.cleaned_data.get('email')}")
+    #         elif request.POST.get('update_email') == 'update_email':
+    #             if (user.email is None or user.email.email != form.cleaned_data.get('email').strip()):
+    #                 return HttpResponseRedirect(f"{reverse('users:update_email')}?email={form.cleaned_data.get('email')}")
 
-            elif request.POST.get('update_phone_number') == 'update_phone_number':
-                phone_number = form.cleaned_data.get('phone_number')
-                enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
+    #         elif request.POST.get('update_phone_number') == 'update_phone_number':
+    #             phone_number = form.cleaned_data.get('phone_number')
+    #             enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
 
-                encph = urllib.parse.quote(str(phone_number)) # Encode phone number so the + symbol is passed safely
-                verification_url = f"{reverse('users:update_phone_number')}?phone_number={encph}&enable_whatsapp={enable_whatsapp}"
+    #             encph = urllib.parse.quote(str(phone_number)) # Encode phone number so the + symbol is passed safely
+    #             verification_url = f"{reverse('users:update_phone_number')}?phone_number={encph}&enable_whatsapp={enable_whatsapp}"
 
-                if user.phone_number is None or not are_phone_numbers_same(user.phone_number, phone_number):
-                    # Require verification even if the user wants to disable WhatsApp
-                    return HttpResponseRedirect(verification_url)
-                elif user.enable_whatsapp != enable_whatsapp:
-                    if not enable_whatsapp:
-                        # Do not require verification to disable WhatsApp if phone number is unchanged
-                        user.enable_whatsapp = False
-                        user.save()
-                        messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS)
-                    else:
-                        # Require verification to enable WhatsApp even if phone number is the same
-                        return HttpResponseRedirect(verification_url)
+    #             if user.phone_number is None or not are_phone_numbers_same(user.phone_number, phone_number):
+    #                 # Require verification even if the user wants to disable WhatsApp
+    #                 return HttpResponseRedirect(verification_url)
+    #             elif user.enable_whatsapp != enable_whatsapp:
+    #                 if not enable_whatsapp:
+    #                     # Do not require verification to disable WhatsApp if phone number is unchanged
+    #                     user.enable_whatsapp = False
+    #                     user.save()
+    #                     messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS)
+    #                 else:
+    #                     # Require verification to enable WhatsApp even if phone number is the same
+    #                     return HttpResponseRedirect(verification_url)
 
-    else:
-        form = forms.SettingsForm(initial=inputs, **kwargs)
+    # else:
+    #     form = forms.SettingsForm(initial=inputs, **kwargs)
 
     return TemplateResponse(request, 'relationships/settings.html', {
-        'form': form,
+        # 'form': form,
         'countries': commods.Country.objects.annotate(
-            num_users=Count('users_w_this_country')).order_by('-num_users')
+            num_users=Count('users_as_country')).order_by('-num_users')
     })
 
 @login_required
@@ -482,6 +640,66 @@ def lookup(request):
     template_name = 'relationships/lookup.html'
     return TemplateResponse(request, template_name, {})
 
+def report(request):
+    template_name = 'relationships/report.html'
+    return TemplateResponse(request, template_name, {})
+
+def claim(request):
+    template_name = 'relationships/claim.html'
+    return TemplateResponse(request, template_name, {})
+
+def contact_detail(request):
+    template_name = 'relationships/contact_detail.html'
+    return TemplateResponse(request, template_name, {})
+
+def business_home(request):
+    template_name = 'relationships/business_home.html'
+    return TemplateResponse(request, template_name, {})
+
+def business_reviews(request):
+    template_name = 'relationships/business_reviews.html'
+    return TemplateResponse(request, template_name, {})
+
+def review_detail(request):
+    template_name = 'relationships/review_detail.html'
+    return TemplateResponse(request, template_name, {})
+
+def report_detail(request):
+    template_name = 'relationships/report_detail.html'
+    return TemplateResponse(request, template_name, {})
+
+def claim_number(request):
+    template_name = 'relationships/claim_number.html'
+    return TemplateResponse(request, template_name, {})
+
+def report_files(request):
+    template_name = 'relationships/report_detail_files.html'
+    return TemplateResponse(request, template_name, {})
+
+def report_create(request):
+    template_name = 'relationships/report_create.html'
+    return TemplateResponse(request, template_name, {})
+
+def contact_reports(request):
+    template_name = 'relationships/contact_reports.html'
+    return TemplateResponse(request, template_name, {})
+
+def link_email(request):
+    template_name = 'relationships/link_email.html'
+    return TemplateResponse(request, template_name, {})
+
+def verify_email(request):
+    template_name = 'relationships/verify_email.html'
+    return TemplateResponse(request, template_name, {})
+
+def enter_email(request):
+    template_name = 'relationships/enter_email.html'
+    return TemplateResponse(request, template_name, {})
+
+def following(request):
+    template_name = 'relationships/following.html'
+    return TemplateResponse(request, template_name, {})
+
 def alert_list(request):
     template_name = 'relationships/alerts.html'
     return TemplateResponse(request, template_name, {})
@@ -507,6 +725,13 @@ def credits(request):
     template_name = 'relationships/credits.html'
     return TemplateResponse(request, template_name, {})
 
+def enter_number(request):
+    template_name = 'relationships/enter_number.html'
+    return TemplateResponse(request, template_name, {})
+
+def enter_status(request):
+    template_name = 'relationships/enter_status.html'
+    return TemplateResponse(request, template_name, {})
 
 
 
