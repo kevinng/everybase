@@ -4,63 +4,59 @@
 <html lang="en">
     {% comment %} Start: Head {% endcomment %}
 	<head>
-        {% comment %}
-        Stimulus JS
-        <script type="module">
-            import { Application, defaultSchema } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+        {% include 'includes/shared_head_declarations.html' %}
 
-            const customSchema = {
-                ...defaultSchema,
-                controllerAttribute: "data-stimulus-controller",
-                targetAttribute: "data-stimulus-target",
-                actionAttribute: 'data-stimulus-action'
-            }
-            window.Stimulus = Application.start(document.documentElement, customSchema)
-        </script>
+        {% block page_vendor_stylesheets %}{% endblock %}
+
+        {% comment %} Social Meta Data
+
+        <title>...</title>, max 65 chars
+        <meta name="description" content="..." />, max 155 chars
+        <meta property="og:title" content="..." />, max 35 chars
+        <meta property="og:url" content="..." />, full link to canonical webpage URL
+        <meta property="og:description" content="..." />, max 65 chars
+        <meta property="og:image" content="..." />, image, min dimensions 300 x 200, <300Kb, served with HTTPS connection with a valid non self-signed certificate
+        <meta property="og:image:url" content="..." />, equivalent to og:image
+        <meta property="og:image:secure_url" content="..." />, https:// URL for the image
+        <meta property="og:image:type" content="..." />, MIME type of the image. One of image/jpeg, image/gif, image/png.
+        <meta property="og:image:width" content="..." />, Image width
+        <meta property="og:image:height" content="..." />, Image height
+        <meta property="og:type" content="..." />, default 'website'
+        <meta property="og:locale" content="..." />, default 'en_US'
+        <meta property="fb:app_id" content="..." />, Facebook App ID
+
+        We use the image to convey the value proposition of the site.
         {% endcomment %}
-        <script type="module">import{Application,defaultSchema}from"https://unpkg.com/@hotwired/stimulus/dist/stimulus.js";const customSchema={...defaultSchema,controllerAttribute:"data-stimulus-controller",targetAttribute:"data-stimulus-target",actionAttribute:"data-stimulus-action"};window.Stimulus=Application.start(document.documentElement,customSchema);</script>
-        <base href="../../../">
-		<title>{% block title %}{% endblock %}</title>
-		<meta charset="utf-8" />
-		<meta name="description" content="{% block meta_description %}{% endblock %}" />
-		<meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta property="og:locale" content="en_US" />
-		<meta property="og:type" content="{% block meta_og_type %}website{% endblock %}" />
-		<meta property="og:title" content="{% block meta_og_title %}{% endblock %}" />
-		<meta property="og:url" content="{{ settings.BASE_URL }}{% block meta_og_url_path %}{% endblock %}" />
-		<meta property="og:site_name" content="{% block meta_og_site_name %}{% endblock %}" />
-		<link rel="canonical" href="https://everybase.co" />
-        <link rel="shortcut icon" href="{% static 'common/demo1/dist/assets/media/logos/favicon_everybase.ico' %}"/>
-        {% comment %} Start: Fonts {% endcomment %}
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-        {% comment %} End: Fonts {% endcomment %}
-        {% comment %} Start: Global stylesheets bundle (used by all pages) {% endcomment %}
-		<link href="{% static 'common/demo1/dist/assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
-		<link href="{% static 'common/demo1/dist/assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
-        {% comment %} End: Global stylesheets bundle (used by all pages) {% endcomment %}
+
+        <title>{% block title %}Everybase helps importers/exporters avoid bad business{% endblock %}</title>{% comment %} 54 chars {% endcomment %}
+        <meta name="description" content="{% block meta_description %}Check if an exporter's phone number is reported for scams.{% endblock %}" />{% comment %} 58 chars {% endcomment %}
+        <meta property="og:site_name" content="Everybase"/>
+        <meta property="og:title" content="{% block meta_og_title %}Check if an exporter's phone number is reported for scams.{% endblock %}" />{% comment %} 58 chars {% endcomment %}
+        <meta property="og:url" content="{% block meta_og_url %}{{ request.path }}{% endblock %}" />
+        <meta property="og:description" content="{% block meta_og_description %}We collect reviews of importers and exporters worldwide. Check if an exporter's phone number is reported for scams.{% endblock %}" />{% comment %} 115 chars {% endcomment %}
+        <meta property="og:image" content="{% block meta_og_image %}{% static 'common/demo1/dist/assets/media/home/og_image/home_og_image.png' %}{% endblock %}" />
+        <meta property="og:image:url" content="{% block meta_og_image_url %}{% static 'common/demo1/dist/assets/media/home/og_image/home_og_image.png' %}{% endblock %}" />
+        <meta property="og:image:secure_url" content="{% block meta_og_image_secure_url %}{% static 'common/demo1/dist/assets/media/home/og_image/home_og_image.png' %}{% endblock %}" />
+        <meta property="og:image:type" content="{% block meta_og_image_type %}image/png{% endblock %}" />
+        <meta property="og:image:width" content="{% block meta_og_image_width %}300{% endblock %}" />
+        <meta property="og:image:height" content="{% block meta_og_image_height %}200{% endblock %}" />
+        <meta property="og:type" content="{% block meta_og_type %}website{% endblock %}" />
+        <meta property="og:locale" content="{% block meta_og_locale %}en_US{% endblock %}" />
+        <meta property="fb:app_id" content="{{ settings.FACEBOOK_APP_ID }}" />
 	</head>
     {% comment %} End: Head {% endcomment %}
+
     {% comment %} Start: Body {% endcomment %}
 	<body class="bg-body">
         {% comment %} Start: Main {% endcomment %}
-        {% comment %} Start: Root {% endcomment %}
 		<div class="d-flex flex-column flex-root">
             {% block content %}{% endblock %}
 		</div>
-        {% comment %} End: Root {% endcomment %}
         {% comment %} End: Main {% endcomment %}
 
-        {% comment %} Start: Javascript {% endcomment %}
-		<script>var hostUrl = "assets/";</script>
-        {% comment %} Start: Global Javascript bundle (used by all pages) {% endcomment %}
-		<script src="{% static 'common/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
-		<script src="{% static 'common/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
-        {% comment %} End: Global Javascript bundle {% endcomment %}
-        {% comment %} Start: Page custom Javascript {% endcomment %}
+        {% include 'includes/shared_body_declarations.html' %}
+        {% block page_vendor_javascript %}{% endblock %}
         {% block page_custom_javascript %}{% endblock %}
-        {% comment %} End: Page custom Javascript {% endcomment %}
-        {% comment %} End: Javascript {% endcomment %}
 	</body>
     {% comment %} End: Body {% endcomment %}
 </html>

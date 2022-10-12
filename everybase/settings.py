@@ -194,19 +194,11 @@ STATIC_URL = '/static/'
 STATICFILES_STORAGE = config('STATICFILES_STORAGE')
 DEFAULT_FILE_STORAGE = 'everybase.storage_backends.MediaStorage'
 
-# Object key format of user avatar in AWS S3
-AWS_S3_KEY_AVATAR_IMAGE = 'users/avatar/%s'
-AWS_S3_KEY_AVATAR_IMAGE_THUMBNAIL = 'users/avatar/t/%s'
-
-# Object key format of lead image objects in AWS S3. String positions, in order:
-#   lead ID
-#   file ID
-AWS_S3_KEY_LEAD_IMAGE = 'leads/%s/%s'
-AWS_S3_KEY_LEAD_IMAGE_THUMBNAIL = 'leads/%s/t/%s'
-AWS_S3_KEY_CACHE_IMAGE = 'cache/%s'
-
-# Lead image thumbnail size
-LEAD_IMAGE_THUMBNAIL_SIZE = 455, 295
+AWS_S3_KEY_STATUS_IMAGE = 'statuses/%s/%s' # User ID, file ID
+AWS_S3_KEY_STATUS_IMAGE_THUMBNAIL = 'statuses/%s/t/%s' # User ID, file ID
+STATUS_IMAGE_THUMBNAIL_SIZE = 300, 200
+MAX_STATUS_IMAGES = 12
+MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES = 1048576
 
 # Override message tags
 MESSAGE_TAGS = {
@@ -340,7 +332,9 @@ SETTINGS_EXPORT = [
     'GA_WEB_STREAM_ID',
     'RECAPTCHA_SITE_KEY',
     'AMPLITUDE_API_KEY',
-    'FACEBOOK_APP_ID'
+    'FACEBOOK_APP_ID',
+    'MAX_STATUS_IMAGES',
+    'MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES'
 ]
 
 # 5 MB 5242880

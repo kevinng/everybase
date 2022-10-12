@@ -3,27 +3,149 @@ from phonenumber_field.formfields import PhoneNumberField
 from django import forms
 from django.core.exceptions import ValidationError
 
-from common import models as commods
 from relationships import models
+from relationships.utilities.phone_number_exists import phone_number_exists
+from relationships.utilities.is_email_code_valid import is_email_code_valid
+from relationships.utilities.is_whatsapp_code_valid import is_whatsapp_code_valid
 
-from relationships.utilities.get_or_create_phone_number import \
-    get_or_create_phone_number
+class LoginForm(forms.Form):
+    phone_number = PhoneNumberField()
+    next = forms.CharField(required=False)
+
+    def clean(self):
+        super(LoginForm, self).clean()
+        p = self.cleaned_data.get('phone_number')
+        self.user = phone_number_exists(p)
+        if self.user is None:
+            self.add_error('phone_number', 'Account does not exist.')
+
+class ConfirmWhatsAppLoginForm(forms.Form):
+    code = forms.CharField()
+    next = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(ConfirmWhatsAppLoginForm, self).clean()
+        code = self.cleaned_data.get('code')
+        if code is not None and code.strip() != '' and\
+            is_whatsapp_code_valid(code, self.user) is not True:
+            self.add_error('code', 'Invalid code.')
 
 class RegisterEnterWhatsAppForm(forms.Form):
     phone_number = PhoneNumberField(required=True)
-    country = forms.CharField()
+    next = forms.CharField(required=False)
 
     def clean(self):
-        country = commods.Country.get(
-            programmatic_key=self.cleaned_data.get('country'))
+        super(RegisterEnterWhatsAppForm, self).clean()
+        if phone_number_exists(self.cleaned_data.get('phone_number')):
+            self.add_error('phone_number',
+                'This phone number belongs to an existing user. \
+                Login if this number belongs to you')
 
-        phone = get_or_create_phone_number(
-            self.cleaned_data.get('phone_number'))
+class RegisterSelectCountryForm(forms.Form):
+    country = forms.CharField()
+    next = forms.CharField(required=False)
+
+class RegisterConfirmWhatsAppForm(forms.Form):
+    code = forms.CharField()
+    next = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(RegisterConfirmWhatsAppForm, self).clean()
+        code = self.cleaned_data.get('code')
+        if code is not None and code.strip() != '' and\
+            is_whatsapp_code_valid(code, self.user) is not True:
+            self.add_error('code', 'Invalid code.')
+
+class RegisterEnterProfileForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField(max_length=254)
+    business_name = forms.CharField(required=False)
+    business_address = forms.CharField(required=False)
+    business_description = forms.CharField(required=False)
+    next = forms.CharField(required=False)
+
+    def clean(self):
+        super(RegisterEnterProfileForm, self).clean()
+
+        if email_exists(self.cleaned_data.get('email')):
+            self.add_error('email', 'This email belongs to an existing user.')
+
+class RegisterConfirmEmailForm(forms.Form):
+    code = forms.CharField()
+    next = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(RegisterConfirmEmailForm, self).clean()
+        code = self.cleaned_data.get('code')
+        if code is not None and code.strip() != '' and\
+            is_email_code_valid(code, self.user) is not True:
+            raise ValidationError({'code': ['Invalid code.',]})
+
+class RegisterEnterStatusForm(forms.Form):
+    status = forms.CharField()
+    form_uuid = forms.CharField()
+    next = forms.CharField(required=False)
+
+class UserDetailUpdateStatusForm(forms.Form):
+    status = forms.CharField()
+    form_uuid = forms.CharField()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# from common import models as commods
+# from relationships.utilities.get_or_create_phone_number import \
+    # get_or_create_phone_number
+
+    # def clean(self):
+    #     _country = self.cleaned_data.get('country')
+    #     _phone = self.cleaned_data.get('phone_number')
+
+    #     if _country is None and _phone is None:
+    #         return
+
+    #     country = commods.Country.objects.get(programmatic_key=_country)
+
+    #     phone = get_or_create_phone_number(_phone)
         
-        # Country must match phone number country code
-        if phone.country_code != country.country_code:
-            raise ValidationError(
-                "Phone number country code doesn't match country.")
+    #     # Country must match phone number country code
+    #     if phone.country_code != country.country_code:
+    #         raise ValidationError(
+    #             "Phone number country code doesn't match country.")
             
 
         
@@ -34,10 +156,9 @@ from relationships.utilities.are_phone_numbers_same import are_phone_numbers_sam
 from relationships.utilities.email_exists import email_exists
 from relationships.utilities.is_email_code_rate_limited import is_email_code_rate_limited
 from relationships.utilities.is_whatsapp_code_rate_limited import is_whatsapp_code_rate_limited
-from relationships.utilities.phone_number_exists import phone_number_exists
-from relationships.utilities.is_email_code_valid import is_email_code_valid
-from relationships.utilities.is_whatsapp_code_valid import is_whatsapp_code_valid
-from relationships.utilities.user_uuid_exists import user_uuid_exists
+
+
+from relationships.utilities._archive.user_uuid_exists import user_uuid_exists
 
 
 
@@ -80,33 +201,7 @@ from relationships.utilities.user_uuid_exists import user_uuid_exists
 
 
 
-class LoginForm(forms.Form):
-    email_or_phone_number = forms.CharField()
-    next = forms.CharField(required=False)
 
-    def clean(self):
-        super(LoginForm, self).clean()
-
-        # Either field will be set, if email/phone-number of existing user is found
-        self.email = None
-        self.phone_number = None
-
-        email_or_phone_number = self.cleaned_data.get('email_or_phone_number')
-        e = email_exists(email_or_phone_number)
-        p = phone_number_exists(email_or_phone_number, enable_whatsapp=True)
-
-        if e is None and p is None:
-            # Both functions returned error
-            raise ValidationError({'email_or_phone_number': ['Enter valid email or phone number.',]})
-        elif (e is False and p is None) or (e is None and p is False):
-            # Neither function returned an existing user
-            raise ValidationError({'email_or_phone_number': ['Account does not exist. If you have provided a phone number, WhatsApp login may have been disabled.',]})
-        elif isinstance(e, models.User):
-            self.user = e # Assign self.user to indicate user exists
-            self.email = e.email # Assign self.email to indicate valid email
-        elif isinstance(p, models.User):
-            self.user = p # Assign self.user to indicate user exists
-            self.phone_number = p.phone_number # Assign self.phone_number to indicate valid phone_number
 
 class ConfirmEmailLoginForm(forms.Form):
     code = forms.CharField()
@@ -128,25 +223,6 @@ class ConfirmEmailLoginForm(forms.Form):
         if is_email_code_valid(code, self.user) != True:
             raise ValidationError({'code': ['Invalid code.',]})
 
-class ConfirmWhatsAppLoginForm(forms.Form):
-    code = forms.CharField()
-
-    # Rendered in hidden fields
-    phone_number = forms.CharField()
-    uuid = forms.CharField()
-    next = forms.CharField(required=False)
-
-    def clean(self):
-        super(ConfirmWhatsAppLoginForm, self).clean()
-
-        self.user = user_uuid_exists(self.cleaned_data.get('uuid'))
-        if self.user is None:
-            # Invalid user UUID, tell user to request for another.
-            raise ValidationError({'code': ['An error has occurred. Please cancel, and request for another code.',]})
-
-        code = self.cleaned_data.get('code')
-        if is_whatsapp_code_valid(code, self.user) != True:
-            raise ValidationError({'code': ['Invalid code.',]})
 
 class RegisterForm(forms.Form):
     email = forms.EmailField(max_length=254) # See: https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
@@ -168,19 +244,6 @@ class RegisterForm(forms.Form):
         if phone_number_exists(self.cleaned_data.get('phone_number')):
             self.add_error('phone_number', 'This phone number belongs to an existing user.')
 
-class VerifyWhatsAppForm(forms.Form):
-    code = forms.CharField()
-    next = forms.CharField(required=False)
-
-    def __init__(self, *args, **kwargs):
-        # Make request object passed in a class variable
-        self.user = kwargs.pop('user')
-        super().__init__(*args, **kwargs)
-
-    def clean(self):
-        super(VerifyWhatsAppForm, self).clean()
-        if is_whatsapp_code_valid(self.cleaned_data.get('code'), self.user) is not True:
-            raise ValidationError({'code': ['Invalid code.',]})
 
 class SettingsForm(forms.Form):
     first_name = forms.CharField(max_length=20)
@@ -289,9 +352,33 @@ class UpdatePhoneNumberForm(forms.Form):
 
 
 
+# class LoginForm(forms.Form):
+#     phone_number = forms.CharField()
+#     next = forms.CharField(required=False)
 
+#     def clean(self):
+#         super(LoginForm, self).clean()
 
+#         # Either field will be set, if email/phone-number of existing user is found
+#         self.email = None
+#         self.phone_number = None
 
+#         email_or_phone_number = self.cleaned_data.get('email_or_phone_number')
+#         e = email_exists(email_or_phone_number)
+#         p = phone_number_exists(email_or_phone_number, enable_whatsapp=True)
+
+#         if e is None and p is None:
+#             # Both functions returned error
+#             raise ValidationError({'email_or_phone_number': ['Enter valid email or phone number.',]})
+#         elif (e is False and p is None) or (e is None and p is False):
+#             # Neither function returned an existing user
+#             raise ValidationError({'email_or_phone_number': ['Account does not exist. If you have provided a phone number, WhatsApp login may have been disabled.',]})
+#         elif isinstance(e, models.User):
+#             self.user = e # Assign self.user to indicate user exists
+#             self.email = e.email # Assign self.email to indicate valid email
+#         elif isinstance(p, models.User):
+#             self.user = p # Assign self.user to indicate user exists
+#             self.phone_number = p.phone_number # Assign self.phone_number to indicate valid phone_number
 
 # class ConfirmLoginForm(forms.Form):
 #     code = forms.CharField()

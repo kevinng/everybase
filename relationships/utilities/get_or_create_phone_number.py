@@ -36,9 +36,7 @@ def get_or_create_phone_number(
     else:
         return None
 
-    p, _ = relmods.PhoneNumber.objects.get_or_create(
+    return relmods.PhoneNumber.objects.get_or_create(
         country_code=country_code,
         national_number=national_number
     )
-
-    return p

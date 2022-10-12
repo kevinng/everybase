@@ -1,4 +1,4 @@
-import random
+import random, uuid
 
 from relationships.constants.email_purposes import EMAIL_PURPOSE_CHOICES
 from relationships.constants.whatsapp_purposes import WHATSAPP_PURPOSE_CHOICES
@@ -9,6 +9,8 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User as django_user
 
 from common import models as commods
+
+from common.utilities.diff_now_desc import diff_now_desc
 
 def validate_country_code(value):
     """Validates country code. Raise ValidationError if value is invalid.
@@ -98,7 +100,7 @@ class PhoneNumber(commods.Standard):
         return f'+{self.country_code} {self.national_number}'
 
     def value(self):
-        return f'+{self.country_code} {self.national_number}'
+        return f'{self.country_code}{self.national_number}'
 
     class Meta:
         unique_together = ['country_code', 'national_number']
@@ -195,8 +197,8 @@ class User(commods.Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    register_cookie_uuid = models.CharField(
-        max_length=50,
+
+    walked_through_status = models.DateTimeField(
         null=True,
         blank=True,
         db_index=True
@@ -254,6 +256,11 @@ class User(commods.Standard):
     business_description = models.TextField(
         null=True,
         blank=True
+    )
+    status_updated = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
     )
     status = models.TextField(
         null=True,
@@ -316,6 +323,21 @@ class User(commods.Standard):
         null=True,
         blank=True
     )
+
+    def status_images(self):
+        """Returns status images"""
+        return StatusFile.objects\
+            .filter(user=self, deleted__isnull=True, activated__isnull=False)\
+            .order_by('-created')
+
+    def status_updated_age_desc(self):
+        return diff_now_desc(self.status_updated)
+
+    def is_country_match_country_code(self):
+        if self.phone_number is not None and self.country is not None:
+            return self.country.country_code == self.phone_number.country_code
+
+        return False
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} [{self.id}]'
@@ -452,10 +474,12 @@ class LoginAction(commods.Standard):
         blank=True,
         db_index=True
     )
-    cookie_uuid = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
+    type = models.CharField(
+        max_length=40,
+        choices=[
+            ('magic', 'Magic Login'),
+            ('whatsapp', 'WhatsApp Login')
+        ],
         db_index=True
     )
 
@@ -464,20 +488,27 @@ class ContactAction(commods.Standard):
     
     Last updated: 29 September 2022, 7:07 PM
     """
-    contactee = models.ForeignKey(
-        'User',
-        related_name='contact_actions_as_contactees',
-        related_query_name='contact_actions_as_contactees',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
     contactor = models.ForeignKey(
         'User',
-        related_name='contact_actions_as_contactor',
-        related_query_name='contact_actions_as_contactor',
+        related_name='contact_actions',
+        related_query_name='contact_actions',
         on_delete=models.PROTECT,
         db_index=True
     )
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        related_name='contact_actions',
+        related_query_name='contact_actions',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    count = models.IntegerField(
+        default=0,
+        db_index=True    
+    )
+
+    class Meta:
+        unique_together = ('contactor', 'phone_number')
 
 class DetailView(commods.Standard):
     """User detail view
@@ -515,10 +546,10 @@ class Review(commods.Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    reviewee = models.ForeignKey(
-        'User',
-        related_name='reviews_as_reviewee',
-        related_query_name='reviews_as_reviewee',
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        related_name='reviews',
+        related_query_name='reviews',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -532,22 +563,22 @@ class Review(commods.Standard):
     )
     body = models.TextField()
 
-class ReviewImage(commods.Standard):
-    """Review image
+class ReviewFile(commods.Standard):
+    """Review file
 
     Last updated: 29 September 2022, 7:01 PM
     """
     review = models.ForeignKey(
         'Review',
-        related_name='images',
-        related_query_name='images',
+        related_name='files',
+        related_query_name='files',
         on_delete=models.PROTECT,
         db_index=True
     )
     file = models.ForeignKey(
         'files.File',
-        related_name='reviews_as_image',
-        related_query_name='reviews_as_image',
+        related_name='reviews_as_file',
+        related_query_name='reviews_as_file',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -573,28 +604,61 @@ class ReviewComment(commods.Standard):
     )
     body = models.TextField()
 
-class ReviewCommentImage(commods.Standard):
-    """Review comment image
+class ReviewCommentFile(commods.Standard):
+    """Review comment file
 
     Last updated: 29 September 2022, 7:01 PM
     """
     comment = models.ForeignKey(
         'ReviewComment',
-        related_name='images_as_review_comment',
-        related_query_name='images_as_review_comment',
+        related_name='files_as_review_comment',
+        related_query_name='files_as_review_comment',
         on_delete=models.PROTECT,
         db_index=True
     )
     file = models.ForeignKey(
         'files.File',
-        related_name='review_response_images_as_file',
-        related_query_name='review_response_images_as_file',
+        related_name='review_response_files_as_file',
+        related_query_name='review_response_files_as_file',
         on_delete=models.PROTECT,
         db_index=True
     )
 
+class StatusFile(commods.Standard):
+    """Status file
 
-
+    Last updated: 29 September 2022, 7:01 PM
+    """
+    form_uuid = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    activated = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    user = models.ForeignKey(
+        'User',
+        related_name='status_files_as_user',
+        related_query_name='status_files_as_user',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    file_uuid = models.UUIDField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    file = models.ForeignKey(
+        'files.File',
+        related_name='status_files_as_file',
+        related_query_name='status_files_as_file',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
 
 
 
@@ -1071,11 +1135,7 @@ class ReviewCommentImage(commods.Standard):
 #         deleted__isnull=True
 #     ).order_by('-created')
 
-# def is_country_match_country_code(self):
-#     if self.phone_number is not None and self.country is not None:
-#         return self.country.country_code == self.phone_number.country_code
 
-#     return False
 
 # Not in use
 

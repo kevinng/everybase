@@ -122,10 +122,12 @@ class ContactLeadForm(forms.Form):
         if via_wechat is not None and via_wechat == True and (via_wechat_id is None or via_wechat_id.strip() == ''):
             self.add_error('via_wechat_id', err_msg)
 
+        p, _ = get_or_create_phone_number(self.cleaned_data.get('phone_number'))
+
         previous_contact = models.Contact.objects.filter(
             lead=self.lead,
             email=get_or_create_email(self.cleaned_data.get('email')),
-            phone_number=get_or_create_phone_number(self.cleaned_data.get('phone_number'))
+            phone_number=p
         ).first()
 
         if previous_contact is not None:

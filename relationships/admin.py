@@ -158,30 +158,29 @@ class UserAdmin(comadm.StandardAdmin):
     # List page settings
     list_per_page = 100
     list_display = ['id', 'updated', 'full_name', 'country', 'email',
-        'whatsapp_phone_number', 'created', 'register_cookie_uuid',
-        'has_insights']
+        'whatsapp_phone_number', 'created', 'has_insights', 'registered']
     list_editable = [] # Override to speed up loading
-    list_filter = ['created', 'has_insights']
-    search_fields = ['id', 'uuid', 'first_name', 'last_name', 'country__name',
-        'email__email', 'internal_notes', 'register_cookie_uuid']
+    list_filter = ['created', 'has_insights', 'registered']
+    search_fields = ['id', 'first_name', 'last_name', 'country__name',
+        'email__email', 'internal_notes']
 
     # Details page settings
     readonly_fields = comadm.standard_readonly_fields + [
         'whatsapp_phone_number', 'email_string', 'password_change_link',
         'random_string_for_password', 'django_user_link']
     fieldsets = [
-        (None, {'fields': ['id', 'uuid']}),
+        (None, {'fields': ['id']}),
         ('Growth', {'fields': ['registered', 'django_user',
-            'register_cookie_uuid', 'whatsapp_phone_number', 'email_string',
+            'whatsapp_phone_number', 'email_string',
             'password_change_link', 'random_string_for_password',
             'django_user_link', 'has_insights', 'internal_notes']}),
         ('Details', {'fields': ['email', 'first_name', 'last_name',
-            'phone_number', 'country', 'business_name', 'business_description',
-            'status']}),
+            'phone_number', 'country', 'business_name', 'business_address',
+            'business_description', 'status', 'walked_through_status']}),
         ('Login', {'fields': ['email_code_used', 'email_code',
             'email_code_generated', 'email_code_purpose','whatsapp_code_used',
-            'whatsapp_code', 'whatsapp_code_generated', 'whatsapp_code_purpose',
-            'enable_whatsapp']}),
+            'whatsapp_code', 'whatsapp_code_generated', 'whatsapp_code_purpose'
+            ]}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
     ]
     autocomplete_fields = ['django_user', 'country', 'phone_number', 'email']
@@ -254,13 +253,13 @@ class UserAgentAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
-_login_action_fields = ['user', 'cookie_uuid']
+_login_action_fields = ['user']
 @admin.register(models.LoginAction)
 class LoginActionAdmin(comadm.StandardAdmin):
     list_display = comadm.standard_list_display + _login_action_fields
     list_editable = [] # Speed up loading
     search_fields = comadm.standard_search_fields + ['user__first_name',
-        'user__last_name', 'cookie_uuid']
+        'user__last_name']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
@@ -268,21 +267,21 @@ class LoginActionAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['user']
 
-_user_contact_action_fields = ['contactee', 'contactor']
+_user_contact_action_fields = ['contactor', 'phone_number']
 @admin.register(models.ContactAction)
 class ContactActionAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _user_contact_action_fields
     list_editable = [] # Speed up loading
     list_filter = comadm.standard_list_filter
-    search_fields = comadm.standard_search_fields + ['contactee__first_name',
-        'contactee__last_name', 'contactor__first_name', 'contactor__last_name']
+    search_fields = comadm.standard_search_fields + ['contactor__first_name',
+        'contactor__last_name', 'phone_number__national_number']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': _user_contact_action_fields})
     ]
-    autocomplete_fields = ['contactee', 'contactor']
+    autocomplete_fields = ['contactor', 'phone_number']
 
 _user_detail_views_fields = ['viewee', 'viewer', 'count']
 @admin.register(models.DetailView)
@@ -300,7 +299,7 @@ class DetailViewAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['viewee', 'viewer']
 
-_review_fields = ['reviewer', 'reviewee', 'rating', 'body']
+_review_fields = ['reviewer', 'phone_number', 'rating', 'body']
 @admin.register(models.Review)
 class ReviewAdmin(comadm.StandardAdmin):
     # List page settings
@@ -308,26 +307,25 @@ class ReviewAdmin(comadm.StandardAdmin):
     list_editable = [] # Speed up loading
     list_filter = comadm.standard_list_filter + ['rating']
     search_fields = comadm.standard_search_fields + ['reviewer__first_name',
-        'reviewer__last_name', 'reviewee__first_name', 'reviewee__last_name',
-        'body']
+        'reviewer__last_name', 'body']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': _review_fields})
     ]
-    autocomplete_fields = ['reviewer', 'reviewee']
+    autocomplete_fields = ['reviewer', 'phone_number']
 
-_review_image_fields = ['review', 'file']
-@admin.register(models.ReviewImage)
-class ReviewImageAdmin(comadm.StandardAdmin):
+_review_file_fields = ['review', 'file']
+@admin.register(models.ReviewFile)
+class ReviewFileAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _review_image_fields
+    list_display = comadm.standard_list_display + _review_file_fields
     list_editable = [] # Speed up loading
     search_fields = comadm.standard_search_fields + ['review__body']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _review_image_fields})
+        (None, {'fields': _review_file_fields})
     ]
     autocomplete_fields = ['review', 'file']
 
@@ -345,19 +343,36 @@ class ReviewCommentAdmin(comadm.StandardAdmin):
         (None, {'fields': _review_response_fields})
     ]
 
-_review_comment_image_fields = ['comment', 'file']
-@admin.register(models.ReviewCommentImage)
-class ReviewCommentImageAdmin(comadm.StandardAdmin):
+_review_comment_file_fields = ['comment', 'file']
+@admin.register(models.ReviewCommentFile)
+class ReviewCommentFileAdmin(comadm.StandardAdmin):
     # List page settings
-    list_display = comadm.standard_list_display + _review_comment_image_fields
+    list_display = comadm.standard_list_display + _review_comment_file_fields
     list_editable = [] # Speed up loading
     search_fields = comadm.standard_search_fields + ['comment__body']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
-        (None, {'fields': _review_comment_image_fields})
+        (None, {'fields': _review_comment_file_fields})
     ]
     autocomplete_fields = ['comment', 'file']
+
+_status_file_fields = ['form_uuid', 'activated', 'user', 'file_uuid',
+    'file']
+@admin.register(models.StatusFile)
+class StatusFileAdmin(comadm.StandardAdmin):
+    # List page settings
+    list_display = comadm.standard_list_display + _status_file_fields
+    list_editable = [] # Speed up loading
+    search_fields = comadm.standard_search_fields + ['form_uuid',
+        'file_uuid']
+
+    # Details page settings
+    fieldsets = comadm.standard_fieldsets + [
+        (None, {'fields': _status_file_fields})
+    ]
+    autocomplete_fields = ['user', 'file']
+
 
 
 

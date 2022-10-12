@@ -1,0 +1,66 @@
+{% extends 'relationships/extendables/simple.html' %}
+
+{% block title %}Verify Your Email{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed">
+    <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+        <a href="{% url 'home' %}" class="mb-12">
+            <img alt="Logo" src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
+        </a>
+
+        <div class="w-lg-500px col-12 bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <form class="form w-100" action="{% url 'register:confirm_email' user.id %}" method="post" x-data="{
+                code: {% if form.code.value != None %}'{{ form.code.value }}'{% else %}''{% endif %},
+                hasCode() {
+                    return this.code.length <= 0
+                }
+            }">
+                {% csrf_token %}
+                {% if form.next.value != None %}<input type="hidden" name="next" value="{{ form.next.value }}" />{% endif %}
+
+                <div class="text-center mb-10">
+                    <h1 class="text-dark mb-3">Verify Your Email</h1>
+                    <div class="text-gray-700 fs-5">Enter the confirmation code sent to:</div>
+                    <div class="fw-bold text-dark fs-3 mt-2">{{ user.email.email }}</div>
+                </div>
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="code">Confirmation Code</label>
+                    <input x-model="code" maxlength="6" minlength="6" class="form-control" type="text" name="code" id="code"{% if form.code.value != None %} value="{{ form.code.value }}"{% endif %} placeholder="Enter confirmation code" />
+                </div>
+                {% if form.code.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.code.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="text-center mt-10">
+                    <button type="submit" class="btn btn-lg btn-primary w-100" x-bind:disabled="hasCode">Next</button>
+                </div>
+            </form>
+
+            <form method="post" x-data="{
+                resendInterval: 120,
+                hideCodeSentInterval: 0,
+                showResendInterval() { return this.resendInterval > 0 },
+                showCodeSent() { return this.hideCodeSentInterval > 0 },
+                async resendCode() {
+                    fetch('{% url 'register:resend_email_code' user.id %}', { method: 'POST' })
+                    .then(() => {
+                        this.resendInterval = 2
+                        this.hideCodeSentInterval = 7
+                    })
+                },
+            }" x-init="window.setInterval(() => {
+                if (resendInterval > 0) resendInterval--;
+                if (hideCodeSentInterval > 0) hideCodeSentInterval--
+            }, 1000)" @submit.prevent="resendCode">
+                <div class="text-center mt-2">
+                    <button type="submit" class="btn btn-lg btn-secondary w-100" x-bind:disabled="showResendInterval">Resend Code</button>
+                    <div class="mt-2" x-show="showResendInterval">You may resend code in <span x-text="resendInterval"></span>s.</div>
+                    <div class="mt-2" x-show="showCodeSent">Code sent!</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

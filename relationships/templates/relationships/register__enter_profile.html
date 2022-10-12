@@ -1,0 +1,78 @@
+{% extends 'relationships/extendables/simple.html' %}
+
+{% load static %}
+
+{% block title %}Enter Profile{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed">
+    <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+        <a href="{% url 'home' %}" class="mb-12">
+            <img alt="Logo" src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
+        </a>
+
+        <div class="w-lg-500px col-12 bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <form class="form w-100" action="{% url 'register:enter_profile' user.id %}" method="post" x-data="{
+                firstName: {% if form.first_name.value != None %}'{{ form.first_name.value }}'{% else %}''{% endif %},
+                lastName: {% if form.last_name.value != None %}'{{ form.last_name.value }}'{% else %}''{% endif %},
+                email: {% if form.email.value != None %}'{{ form.email.value }}'{% else %}''{% endif %},
+                businessName: {% if form.business_name.value != None %}'{{ form.business_name.value }}'{% else %}''{% endif %},
+                businessAddress: {% if form.business_address.value != None %}'{{ form.business_address.value }}'{% else %}''{% endif %},
+                businessDescription: {% if form.business_description.value != None %}'{{ form.business_description.value }}'{% else %}''{% endif %},
+                hasRequiredFields() {
+                    return this.firstName.length <= 0 ||
+                        this.lastName.length <= 0 ||
+                        this.email.length <= 0
+                }
+            }">
+                {% csrf_token %}
+                {% if form.next.value != None %}<input type="hidden" name="next" value="{{ form.next.value }}" />{% endif %}
+
+                <div class="text-center mb-10">
+                    <h1 class="text-dark mb-3">Your Profile</h1>
+                </div>
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark required" for="first_name">First Name</label>
+                    <input x-model="firstName" class="form-control" type="text" name="first_name" id="first_name"{% if form.first_name.value != None %} value="{{ form.first_name.value }}"{% endif %} />
+                </div>
+                {% if form.first_name.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark required" for="last_name">Last Name</label>
+                    <input x-model="lastName" class="form-control" type="text" name="last_name" id="last_name"{% if form.last_name.value != None %} value="{{ form.last_name.value }}"{% endif %} />
+                </div>
+                {% if form.last_name.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark required" for="email">Email</label>
+                    <input x-model="email" class="form-control" type="text" name="email" id="email"{% if form.email.value != None %} value="{{ form.email.value }}"{% endif %} />
+                </div>
+                {% if form.email.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="business_name">Business Name</label>
+                    <input x-model="businessName" class="form-control" type="text" name="business_name" id="business_name"{% if form.business_name.value != None %} value="{{ form.business_name.value }}"{% endif %} />
+                </div>
+                {% if form.business_name.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.business_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="business_address">Business Address</label>
+                    <textarea x-model="businessAddress" class="form-control" data-kt-autosize="true" maxlength="100" id="business_address" name="business_address"></textarea>
+                </div>
+                {% if form.business_address.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.business_address.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark" for="business_description">Business Description</label>
+                    <textarea x-model="businessDescription" class="form-control" data-kt-autosize="true" maxlength="100" id="business_description" name="business_description"></textarea>
+                </div>
+                {% if form.business_description.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.business_description.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+
+                <div class="text-center mt-10">
+                    <button type="submit" class="btn btn-lg btn-primary w-100 mb-5" x-bind:disabled="hasRequiredFields">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

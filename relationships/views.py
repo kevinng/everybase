@@ -1,6 +1,17 @@
+from django.http import JsonResponse
+from common.tasks.delete_files import delete_files
+from common.utilities.id_from_key import id_from_key
+from common.utilities.key_from_id import key_from_id
+from files.templatetags.image_url import image_url
+from files.templatetags.thumbnail_url import thumbnail_url
+
+import json
 import pytz, urllib
-from relationships.utilities.set_cookie_uuid import set_cookie_uuid
-from relationships.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
+import random
+import relationships
+from relationships.utilities.get_whatsapp_url import get_whatsapp_url
+from relationships.utilities._archive.set_cookie_uuid import set_cookie_uuid
+# from relationships.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
 from datetime import datetime
 from ratelimit.decorators import ratelimit
 
@@ -14,8 +25,13 @@ from django.contrib.auth.models import User as DjangoUser
 from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+from django.http import Http404
 
 from everybase import settings
+
+import uuid
+
+from django.views.decorators.csrf import csrf_exempt
 
 from common import models as commods
 from common.tasks.send_email import send_email
@@ -24,8 +40,8 @@ from common.tasks.identify_amplitude_user import identify_amplitude_user
 from common.utilities.get_ip_address import get_ip_address
 
 from relationships import forms, models
-from relationships.tasks import send_email_code
-from relationships.tasks import send_whatsapp_code
+from relationships.tasks.send_email_code import send_email_code
+from relationships.tasks.send_whatsapp_code import send_whatsapp_code
 from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
 from relationships.utilities.email_exists import email_exists
 from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
@@ -33,8 +49,22 @@ from relationships.utilities.get_or_create_email import get_or_create_email
 from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.use_email_code import use_email_code
 from relationships.utilities.use_whatsapp_code import use_whatsapp_code
-from relationships.utilities.user_uuid_exists import user_uuid_exists
+from relationships.utilities._archive.user_uuid_exists import user_uuid_exists
 from relationships.constants import email_purposes, whatsapp_purposes
+
+from relationships.tasks.delete_orphan_files import delete_orphan_files
+from relationships.tasks.upload_status_files__delete_other_files import \
+    upload_status_files__delete_other_files
+from relationships.tasks.delete_file import delete_file
+
+from files import models as fimods
+
+from files.utilities.get_mime_type import get_mime_type
+from PIL import Image, ImageOps
+from io import BytesIO
+import boto3
+
+from django.http import HttpResponse
 
 MESSAGE_KEY__PROFILE_UPDATE_SUCCESS = 'MESSAGE_KEY__PROFILE_UPDATE_SUCCESS'
 MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN = 'MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN'
@@ -47,88 +77,777 @@ MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS = 'MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUC
 def _append_next(url, next):
     """Append next URL to input URL as a GET parameter."""
     if next is not None and next.strip() != '':
-        url += f'&next={next}'
+        url += f'?next={next}'
     return url
 
-def _pass_next(params, next):
-    """Add next URL to params dictionary."""
-    if next is not None and next.strip() != '':
-        params['next'] = next
-    return params
+# def _pass_next(params, next):
+#     """Add next URL to params dictionary."""
+#     if next is not None and next.strip() != '':
+#         params['next'] = next
+#     return params
 
-def _next_or_else_response(next, default):
-    """Return HTTPRedirectResponse to next if it's not none/empty, or default otherwise."""
+# Login/logout
+
+def log_out(request):
+    logout(request)
+    next = request.GET.get('next')
     if next is not None and next.strip() != '':
         return HttpResponseRedirect(next)
-    else:
-        return HttpResponseRedirect(default)
+
+    return redirect('home')
 
 # Registration
 
 def register__enter_whatsapp(request):
-    # Go to the personal profile if the user is already authenticated
-    # if request.user.is_authenticated:
-    #     return HttpResponseRedirect(reverse('home'))
-
-    # Get next URL - which we'll redirect to after registration
-    next_url = request.GET.get('next')
-
+    # If user is already authenticated and registered, direct user to detail.
+    if request.user.is_authenticated:
+        return redirect('user_detail', request.user.user.phone_number.value())
+    
     if request.method == 'POST':
         form = forms.RegisterEnterWhatsAppForm(request.POST)
         if form.is_valid():
-            cookie_uuid, _ = get_or_create_cookie_uuid(request)
-            phone_number = get_or_create_phone_number(
+            phone_number, _ = get_or_create_phone_number(
                 form.cleaned_data.get('phone_number'))
-            country = commods.Country.objects.get(
-                programmatic_key=form.cleaned_data.get('country'))
+
+            # Find Everybase user with this phone number, but has not completed
+            # registration. If such a user exists, use it. If not, create a
+            # new one.
 
             user = models.User.objects.filter(
-                phone_number=phone_number,
-                country=country,
-                registered__isnull=True
+                phone_number=phone_number, # Has this phone number
+                registered__isnull=True # Not completed registration
             ).first()
 
             if user is None:
-                user = models.User.objects.get_or_create(
-                    phone_number=phone_number,
-                    country=country,
-                    register_cookie_uuid=cookie_uuid,
-                )
+                # No unregistered user with this phone number. Create a new one.
+                user = models.User.objects.create(phone_number=phone_number)
 
-            # Create Django user and associate it
-            user.django_user, _ = DjangoUser.objects\
-                .get_or_create(username=str(user.uuid))
+            # Get list of countries matching this phone number's country code.
+            countries = commods.Country.objects.filter(
+                country_code=phone_number.country_code)
+
+            if countries.count() == 1:
+                # Phone number matches exactly 1 country.
+                # Link this country to the user.
+                user.country = countries.first()
+                user.save()
+
+                # Send WhatsApp confirmation code.
+                send_whatsapp_code.delay(
+                    user.id, whatsapp_purposes.VERIFY_WHATSAPP)
+
+                # User's country is determined. Direct to confirm WhatsApp code
+                # rightaway.
+                target_name = 'register:confirm_whatsapp'
+            else:
+                # User's country is not determined (there're a few matching
+                # countries). Direct user to select his country.
+                target_name = 'register:select_country'
+
+            return HttpResponseRedirect(
+                _append_next(
+                    reverse(target_name, args=(user.id,)),
+                    form.cleaned_data.get('next')
+                )
+            )
+    else:
+        form = forms.RegisterEnterWhatsAppForm(
+            initial={'next': request.GET.get('next')})
+
+    return TemplateResponse(
+        request, 'relationships/register__enter_whatsapp.html', {'form': form})
+
+def register__select_country(request, user_id):
+    # If user is already authenticated and registered, direct user to detail.
+    if request.user.is_authenticated:
+        return redirect('user_detail', request.user.user.phone_number.value())
+
+    # Prevent access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return redirect('register:start')
+
+    if request.method == 'POST':
+        form = forms.RegisterSelectCountryForm(request.POST)
+        if form.is_valid():
+            # Associate country with user.
+            user.country = commods.Country.objects.get(
+                programmatic_key=form.cleaned_data.get('country'))
             user.save()
 
-            # Send confirmation code
-            send_whatsapp_code.send_whatsapp_code(
-                user, whatsapp_purposes.VERIFY_WHATSAPP)
+            return HttpResponseRedirect(
+                _append_next(
+                        reverse(
+                            'register:confirm_whatsapp',
+                            args=(user.id,)
+                        ),
+                        form.cleaned_data.get('next')
+                    )
+                )
+    else:
+        form = forms.RegisterSelectCountryForm(
+            initial={'next': request.GET.get('next')})
 
-            # Pass user ID to the next page, we'll render it hidden
-            params = {'uid': user.id}
-
-            # Pass next URL to the next page, we'll render it hidden
-            if next_url is not None and next_url != '':
-                params['next'] = next_url
-
-            return redirect('register__confirm_whatsapp', params)
-        else:
-            form = forms.RegisterEnterWhatsAppForm()
-        
-        params = _pass_next({
+    return TemplateResponse(request,
+        'relationships/register__select_country.html', {
+            'user': user,
             'form': form,
-            'countries': commods.Country.objects.annotate(
-                num_users=Count('users_as_country')).order_by('-num_users')
-            }, request.GET.get('next'))
-        
-        return TemplateResponse(request, 'relationships/register.html', params)
+            'countries': commods.Country.objects.filter(
+                country_code=user.phone_number.country_code
+            )
+        }
+    )
 
+@csrf_exempt
+def register__resend_whatsapp_code(request, user_id):
+    # Prevent access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return Http404(None) # No error message for security reasons.
+
+    # Prevent access of a non-registering user.
+    if user.registered is not None:
+        return Http404(None) # No error message for security reasons.
+
+    if request.method == 'POST':
+        send_whatsapp_code(user.id, whatsapp_purposes.VERIFY_WHATSAPP)
+        return HttpResponse(status=204)
+
+def register__confirm_whatsapp(request, user_id):
+    # If user is already authenticated and registered, direct user to detail.
+    if request.user.is_authenticated:
+        return redirect('user_detail', request.user.user.phone_number.value())
+
+    # Prevent access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return redirect('register:start')
+
+    if request.method == 'POST':
+        form = forms.RegisterConfirmWhatsAppForm(request.POST, user=user)
+        if form.is_valid():
+            use_whatsapp_code(user)
+
+            return HttpResponseRedirect(
+                _append_next(
+                    reverse('register:enter_profile', args=(user.id,)),
+                    form.cleaned_data.get('next')
+                )
+            )
+    else:
+        # Send WhatsApp confirmation code and redirect user to confirm it.
+        send_whatsapp_code.delay(user.id, whatsapp_purposes.VERIFY_WHATSAPP)
+        form = forms.RegisterConfirmWhatsAppForm(
+            user=user,
+            initial={'next': request.GET.get('next')})
+
+    return TemplateResponse(request,
+        'relationships/register__confirm_whatsapp.html', {
+            'form': form,
+            'user': user
+        }
+    )
+
+def register__enter_profile(request, user_id):
+    # If user is already authenticated and registered, direct user to detail.
+    if request.user.is_authenticated:
+        return redirect('user_detail', request.user.user.phone_number.value())
+
+    # Prevent access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return redirect('register:start')
+
+    if request.method == 'POST':
+        form = forms.RegisterEnterProfileForm(request.POST)
+        if form.is_valid():
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.email = get_or_create_email(form.cleaned_data.get('email'))
+            user.business_name = form.cleaned_data.get('business_name')
+            user.business_address = form.cleaned_data.get('business_address')
+            user.business_description = \
+                form.cleaned_data.get('business_description')
+            user.save()
+
+            send_email_code(user.id, email_purposes.VERIFY_EMAIL)
+
+            return HttpResponseRedirect(
+                _append_next(
+                    reverse('register:confirm_email', args=(user.id,)),
+                    form.cleaned_data.get('next')
+                )
+            )
+    else:
+        form = forms.RegisterEnterProfileForm(
+            initial={'next': request.GET.get('next')})
+
+    return TemplateResponse(request,
+        'relationships/register__enter_profile.html', {
+            'form': form,
+            'user': user
+        }
+    )
+
+@csrf_exempt
+def register__resend_email_code(request, user_id):
+    # Prevent access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return Http404(None) # No error message for security reasons.
+
+    # Prevent access of a non-registering user.
+    if user.registered is not None:
+        return Http404(None) # No error message for security reasons.
+
+    if request.method == 'POST':
+        send_email_code(user.id, email_purposes.VERIFY_EMAIL)
+        return HttpResponse(status=204)
+
+def register__confirm_email(request, user_id):
+    # If user is already authenticated and registered, direct user to detail.
+    if request.user.is_authenticated:
+        return redirect('user_detail', request.user.user.phone_number.value())
+
+    # Prevent the access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return redirect('register:start')
+
+    if request.method == 'POST':
+        form = forms.RegisterConfirmEmailForm(request.POST, user=user)
+        if form.is_valid():
+            use_email_code(user)
+
+            # Create/link Django user
+            user.django_user, _ = \
+                DjangoUser.objects.get_or_create(username=str(user.id))
+
+            # Update user profile
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            user.registered = datetime.now(sgtz)
+
+            user.save()
+
+            # Authenticate passwordlessly
+            dju = authenticate(user.django_user.username)
+            if dju is not None:
+                login(request, dju)
+
+            return redirect(_append_next(
+                reverse('register:enter_status', args=(user.id,)),
+                form.cleaned_data.get('next')
+            ))
+    else:
+        form = forms.RegisterConfirmEmailForm(
+            user=user,
+            initial={'next': request.GET.get('next')})
+
+    return TemplateResponse(request,
+        'relationships/register__confirm_email.html', {
+            'form': form,
+            'user': user
+        }
+    )
+
+@login_required
+def register__enter_status(request, user_id):
+    # Prevent the access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return redirect('register:start')
+
+    # Prevent the access of another user.
+    if user.id != request.user.user.id:
+        return redirect('user_detail', user.phone_number.value())
+
+    # Prevent access to this view if status has already been set.
+    if user.status_updated is not None:
+        return redirect('user_detail', user.phone_number.value())
+
+    if request.method == 'POST':
+        form = forms.RegisterEnterStatusForm(request.POST)
+        if form.is_valid():
+            form_uuid = form.cleaned_data.get('form_uuid')
+
+            status_files = models.StatusFile.objects\
+                .filter(user=user)\
+                .exclude(form_uuid=form_uuid)
+
+            delete_objs = []
+            for sf in status_files:
+                file = sf.file
+                delete_objs.append({'Key': file.s3_object_key})
+                delete_objs.append({'Key': file.thumbnail_s3_object_key})
+                sf.delete()
+                file.delete()
             
+            # Delete orphan files if any.
+            if len(delete_objs) > 0:
+                delete_files.delay(delete_objs)
 
-                
-                
-                
+            user.status = form.cleaned_data.get('status')
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            now = datetime.now(tz=sgtz)
+            user.status_updated = now
+            user.save()
 
+            # Activate files that were submitted with this form.
+            files = models.StatusFile.objects.filter(form_uuid=form_uuid)
+            for file in files:
+                file.activated = now
+                file.save()
+
+            next = form.cleaned_data.get('next')
+            if next is not None and next.strip() != '':
+                return redirect(next)
+            else:
+                return redirect('user_detail', user.phone_number.value())
+    else:
+        form = forms.RegisterEnterStatusForm(
+            initial={'next': request.GET.get('next')})
+
+    return TemplateResponse(request,
+        'relationships/register__enter_status.html', {
+            'form': form,
+            'user': user,
+            'form_uuid': uuid.uuid4()
+        }
+    )
+
+@login_required
+@csrf_exempt
+def upload_status_file(request, user_id):
+    # Prevent access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        raise Http404(None) # No message for security reasons.
+
+    # Prevent the access of another user.
+    if user.id != request.user.user.id:
+        return HttpResponse(status=204)
+
+    form_uuid = request.POST.get('form_uuid')
+
+    # Delete unused files that were uploaded in abandoned forms.
+    upload_status_files__delete_other_files.delay(user.id, form_uuid)
+
+    try:
+        # Deny file creation if maximum number of images is exceeded.
+        if models.StatusFile.objects\
+            .filter(user=user, form_uuid=form_uuid).count() > \
+                settings.MAX_STATUS_IMAGES:
+            return HttpResponse(status=400)
+
+        file_object = request.FILES.get('file')
+
+        mime_type = get_mime_type(file_object)
+
+        file = fimods.File.objects.create(
+            uploader=user,
+            mime_type=mime_type,
+            filename=file_object.name,
+            s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+            thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+        )
+
+        key = settings.AWS_S3_KEY_STATUS_IMAGE % (user.id, file.id)
+        thumb_key = settings.AWS_S3_KEY_STATUS_IMAGE_THUMBNAIL % (user.id, file.id)
+
+        bucket = boto3.session.Session(
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        ).resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME)
+
+        s3_obj = bucket.put_object(
+            Key=key,
+            Body=file_object,
+            ContentType=mime_type
+        )
+
+        # Update file with S3 results
+        file.s3_object_key = key
+        file.thumbnail_s3_object_key = thumb_key
+        file.s3_object_content_length = s3_obj.content_length
+        file.e_tag = s3_obj.e_tag
+        file.content_type = s3_obj.content_type
+        file.last_modified = s3_obj.last_modified
+        file.save()
+
+        # Resize, save thumbnail, record sizes
+        with Image.open(file_object) as im:
+            # Resize preserving aspect ratio cropping from the center
+            thumbnail = ImageOps.fit(im, settings.STATUS_IMAGE_THUMBNAIL_SIZE)
+            output = BytesIO()
+            thumbnail.save(output, format='PNG')
+            output.seek(0)
+
+            # Upload thumbnail
+            bucket.put_object(
+                Key=thumb_key,
+                Body=output,
+                ContentType=mime_type
+            )
+
+            # Update file and thumbnail sizes
+            file.width, file.height = im.size
+            file.thumbnail_width, file.thumbnail_height = thumbnail.size
+            file.save()
+
+        # Create new status file for this user
+        models.StatusFile.objects.create(
+            form_uuid=form_uuid,
+            user=user,
+            file=file,
+            file_uuid=file.filename
+        )
+    except:
+        return HttpResponse(status=500)
+    
+    return HttpResponse(status=204)
+
+@login_required
+@csrf_exempt
+def delete_status_file(request, user_id):
+    # Prevent access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        raise Http404(None) # No message for security reasons.
+
+    # Prevent the access of another user.
+    if user.id != request.user.user.id:
+        return HttpResponse(status=204)
+
+    params = json.loads(request.body)
+    file_uuid = params.get('file_uuid')
+    form_uuid = params.get('form_uuid')
+
+    delete_file.delay(user_id, file_uuid, form_uuid)
+
+    return HttpResponse(status=204)
+
+@login_required
+@csrf_exempt
+def delete_orphan_files(request, user_id):
+    # Prevent access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        raise Http404(None) # No message for security reasons.
+
+    # Prevent the access of another user.
+    if user.id != request.user.user.id:
+        return HttpResponse(status=204)
+
+    delete_orphan_files.delay(user_id)
+
+    return HttpResponse(status=204)
+
+# No login required, not rate limited.
+# Internal links will use user_detail_with_id, which require authentication
+# and is rate limited. User detail page open graph sets phone number link
+# as canonical, so they'll be index.
+def user_detail(request, phone_number):
+    p, _ = get_or_create_phone_number(f'+{phone_number}')
+    if p is None:
+        raise Http404(None) # Don't give too much information.
+
+    try:
+        user = models.User.objects.filter(phone_number=p).first()
+    except models.User.DoesNotExist:
+        user = None
+
+    if request.method == 'POST':
+        # Prevent the access of another user.
+        if user.id != request.user.user.id:
+            return redirect('user_detail', user.phone_number.value())
+
+        form = forms.UserDetailUpdateStatusForm(request.POST)
+        if form.is_valid():
+            form_uuid = form.cleaned_data.get('form_uuid')
+
+            status_files = models.StatusFile.objects\
+                .filter(user=user)\
+                .exclude(form_uuid=form_uuid)
+
+            delete_objs = []
+            for sf in status_files:
+                file = sf.file
+                delete_objs.append({'Key': file.s3_object_key})
+                delete_objs.append({'Key': file.thumbnail_s3_object_key})
+                sf.delete()
+                file.delete()
+            
+            # Delete orphan files if any.
+            if len(delete_objs) > 0:
+                delete_files.delay(delete_objs)
+
+            user.status = form.cleaned_data.get('status')
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            now = datetime.now(tz=sgtz)
+            user.status_updated = now
+            user.save()
+
+            # Activate files that were submitted with this form.
+            files = models.StatusFile.objects.filter(form_uuid=form_uuid)
+            for file in files:
+                file.activated = now
+                file.save()
+
+            return redirect('user_detail', user.phone_number.value())
+        else:
+            is_show_update_form = True
+    else:
+        form = forms.UserDetailUpdateStatusForm()
+        is_show_update_form = False
+
+    absolute_url = request.build_absolute_uri(
+        reverse('user_detail', args=(user.phone_number.value(),)))
+
+    # Non URL-friendly version of ask text, for copying.
+    ask_text = render_to_string(
+        'relationships/texts/ask_text.txt', {
+            'url': absolute_url
+    })
+
+    # URL-friendly version of ask text, for WhatsApp link, etc.
+    ask_text_url = ask_text.replace('\n', '%0A').replace(' ', '%20')
+
+    return TemplateResponse(request,
+        'relationships/user_detail.html', {
+            'absolute_url': absolute_url,
+            'phone_number': p,
+            'user': user,
+            'form': form,
+            'is_show_update_form': is_show_update_form,
+            'ask_text': ask_text,
+            'ask_text_url': ask_text_url,
+
+# The dropzone form may need to work on form reload...
+            'form_uuid': uuid.uuid4(),
+        }
+    )
+
+@login_required
+@ratelimit(key='user_or_ip', rate='240/d', block=True)
+def user_reviews(request, phone_number):
+    template_name = 'relationships/business_reviews.html'
+    return TemplateResponse(request, template_name, {})
+
+@login_required
+def user_whatsapp(request, phone_number):
+    # We use phone number instead of user ID because an account may not be
+    # claimed. There's no need to rate limit this view because the phone
+    # number is in the URL, so a scraper should have no problem getting to it.
+    # Login is required so humans have to login before contacting (most won't
+    # hack the URL for the phone number just to bypass sign-up).
+
+    p, _ = get_or_create_phone_number(f'+{phone_number}')
+    if p is None:
+        raise Http404(None) # Don't give too much information.
+
+    try:
+        contactee = models.User.objects.filter(phone_number=p).first()
+    except models.User.DoesNotExist:
+        contactee = None
+
+    contactor = request.user.user
+
+    action = models.ContactAction.objects.get_or_create(
+        contactor=contactor,
+        phone_number=p
+    )
+    action.count += 1
+    action.save()
+    
+    # Temporary redirect so destination is not indexed.
+    response = HttpResponse(status=302)
+
+    response['Location'] = get_whatsapp_url(
+        phone_number.country_code,
+        phone_number.national_number
+    )
+
+    text = render_to_string(
+        'relationships/texts/user_whatsapp.txt', {
+            'url': reverse('users:user_detail', phone_number),
+            'contactor': contactor,
+            'contactee': contactee,
+            'phone_number': p
+    }).replace('\n', '%0A').replace(' ', '%20')
+
+    response['Location'] += f'?text={text}'
+
+    return response
+
+# Named 'log_in' and not 'login' to prevent clash with Django login
+@ratelimit(key='ip', rate='60/h', block=True, method=['POST'])
+def log_in(request):
+    if request.user.is_authenticated:
+        return redirect('user_detail', request.user.user.phone_number.value())
+    
+    if request.method == 'POST':
+        form = forms.LoginForm(request.POST)
+        if form.is_valid():
+            user = form.user
+            send_whatsapp_code.delay(user.id, whatsapp_purposes.LOGIN)
+            url = reverse('login:confirm', args=(user.id,))
+            return redirect(_append_next(
+                url, form.cleaned_data.get('next')))
+    else:
+        form = forms.LoginForm(
+            initial={'next': request.GET.get('next')})
+
+    return TemplateResponse(request, 'relationships/login.html',
+        {'form': form}, request.GET.get('next'))
+
+def confirm_whatsapp_login(request, user_id):
+    if request.user.is_authenticated:
+        return redirect('user_detail', user.phone_number.value)
+    
+    try:
+        user = models.User.objects.get(pk=user_id)
+    except models.User.DoesNotExist:
+        return redirect('login') # Unlikely error
+    
+    if request.method == 'POST':
+        form = forms.ConfirmWhatsAppLoginForm(request.POST, user=user)
+        if form.is_valid():
+            user = form.user
+            use_whatsapp_code(user)
+            dju = authenticate(user.django_user.username) # Passwordless
+            if dju is not None:
+                login(request, dju)
+                models.LoginAction.objects.create(user=user, type='whatsapp')
+                next = form.cleaned_data.get('next')
+                if next is not None and next.strip() != '':
+                    return redirect(next)
+                else:
+                    return redirect('user_detail', user.phone_number.value())
+    elif request.method == 'GET':
+        form = forms.ConfirmWhatsAppLoginForm(
+            user=user,
+            initial={
+            'next': request.GET.get('next')
+        })
+    
+    return TemplateResponse(request,
+        'relationships/login__confirm.html', {
+            'form': form,
+            'user': user
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # Named 'log_in' and not 'login' to prevent clash with Django login
+# @ratelimit(key='ip', rate='60/h', block=True, method=['POST'])
+# def log_in(request):
+#     if request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('home'))
+
+
+#     # TODO: WE NEED TO CHECK FOR REGISTERED TIMESTAMP BEFORE ALLOWING LOGIN
+
+    
+#     if request.method == 'POST':
+#         form = forms.LoginForm(request.POST)
+#         if form.is_valid():
+#             user = form.user
+#             if form.email is not None:
+#                 send_email_code.delay(user.id, email_purposes.LOGIN)
+#                 url = reverse('confirm_email_login')
+#             if form.phone_number is not None:
+#                 send_whatsapp_code.delay(user.id, whatsapp_purposes.LOGIN)
+#                 url = reverse('confirm_whatsapp_login')
+
+#             url += f'?uuid={user.uuid}'
+#             return HttpResponseRedirect(_append_next(url, form.cleaned_data.get('next')))
+#     else:
+#         initial = {}
+#         login_str = request.GET.get('login')
+#         if login_str is not None:
+#             initial['email_or_phone_number'] = login_str
+
+#         form = forms.LoginForm(initial=initial)
+
+#     params = _pass_next({'form': form}, request.GET.get('next'))
+#     return TemplateResponse(request, 'relationships/login.html', params)
+
+
+
+
+            # we won't do this under the last stage
+            # Create Django user and associate it
+            # user.django_user, _ = DjangoUser.objects\
+            #     .get_or_create(username=str(user.uuid))
+            # user.save()
+
+
+
+            # Pass user ID to the next page, we'll render it hidden. It'll be
+            # submitted with the form on the next page, so we'll know which
+            # user are we checking the confirmation code for.
+            # params = {'uid': user.id}
+
+            # if next_url is None or next_url == '':
+            #     next_url = form.cleaned_data.get('next')
+
+            # # Pass next URL to the next page, we'll render it hidden. It'll be
+            # # submitted with the form on the next page, so we may pass it to
+            # # the end of the registration process.            
+            # if next_url is not None and next_url.strip() != '':
+            #     params['next'] = next_url
+            
+            # return redirect('register__enter_whatsapp', params)
 
     # if request.method == 'POST':
     #     form = forms.RegisterForm(request.POST)
@@ -196,48 +915,41 @@ def register__enter_whatsapp(request):
     # }, request.GET.get('next'))        
     # return TemplateResponse(request, 'relationships/register.html', params)
 
+    # return TemplateResponse(request, 'relationships/register__enter_whatsapp.html', None)
+
+# # Named 'log_in' and not 'login' to prevent clash with Django login
+# @ratelimit(key='ip', rate='60/h', block=True, method=['POST'])
+# def log_in(request):
+#     if request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('home'))
 
 
-    return TemplateResponse(request, 'relationships/register__enter_whatsapp.html', None)
-
-
-
-
-# Named 'log_in' and not 'login' to prevent clash with Django login
-@ratelimit(key='user_or_ip', rate='30/h', block=True, method=['POST'])
-def log_in(request):
-    # if request.user.is_authenticated:
-        # return HttpResponseRedirect(reverse('home')) # Go home if authenticated
-
-
-    # TODO: WE NEED TO CHECK FOR REGISTERED TIMESTAMP BEFORE ALLOWING LOGIN
+#     # TODO: WE NEED TO CHECK FOR REGISTERED TIMESTAMP BEFORE ALLOWING LOGIN
 
     
-    if request.method == 'POST':
-        form = forms.LoginForm(request.POST)
-        if form.is_valid():
-            user = form.user
-            if form.email is not None:
-                send_email_code.send_email_code(user, email_purposes.LOGIN)
-                url = reverse('confirm_email_login')
-            elif form.phone_number is not None:
-                send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.LOGIN)
-                url = reverse('confirm_whatsapp_login')
+#     if request.method == 'POST':
+#         form = forms.LoginForm(request.POST)
+#         if form.is_valid():
+#             user = form.user
+#             if form.email is not None:
+#                 send_email_code.delay(user.id, email_purposes.LOGIN)
+#                 url = reverse('confirm_email_login')
+#             if form.phone_number is not None:
+#                 send_whatsapp_code.delay(user.id, whatsapp_purposes.LOGIN)
+#                 url = reverse('confirm_whatsapp_login')
 
-            url += f'?uuid={user.uuid}'
-            return HttpResponseRedirect(_append_next(url, form.cleaned_data.get('next')))
-    else:
-        initial = {}
-        login_str = request.GET.get('login')
-        if login_str is not None:
-            initial['email_or_phone_number'] = login_str
+#             url += f'?uuid={user.uuid}'
+#             return HttpResponseRedirect(_append_next(url, form.cleaned_data.get('next')))
+#     else:
+#         initial = {}
+#         login_str = request.GET.get('login')
+#         if login_str is not None:
+#             initial['email_or_phone_number'] = login_str
 
-        form = forms.LoginForm(initial=initial)
+#         form = forms.LoginForm(initial=initial)
 
-    params = _pass_next({'form': form}, request.GET.get('next'))
-    return TemplateResponse(request, 'relationships/login.html', params)
-
-
+#     params = _pass_next({'form': form}, request.GET.get('next'))
+#     return TemplateResponse(request, 'relationships/login.html', params)
 
 
 
@@ -249,130 +961,84 @@ def log_in(request):
 
 
 
-def confirm_whatsapp_login(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('home')) # Go home if authenticated
-    
-    if request.method == 'POST':
-        form = forms.ConfirmWhatsAppLoginForm(request.POST)
-        if form.is_valid():
-            user = form.user
-            use_whatsapp_code(user)
-            dju = authenticate(user.django_user.username) # Passwordless
-            if dju is not None:
-                login(request, dju)
-
-                send_amplitude_event.delay(
-                    'account - logged in',
-                    user_uuid=form.user.uuid,
-                    ip=get_ip_address(request),
-                    event_properties={
-                        'login type': 'whatsapp',
-                        'next': form.cleaned_data.get('next')
-                    }
-                )
-
-                cookie_uuid, _ = get_or_create_cookie_uuid(request)
-                models.LoginAction.objects.create(
-                    user=user,
-                    cookie_uuid=cookie_uuid,
-                    type='whatsapp'
-                )
-                response = _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
-                return set_cookie_uuid(response, cookie_uuid)
-
-    elif request.method == 'GET':
-        uuid = request.GET.get('uuid')
-        user = user_uuid_exists(uuid)
-        if user is None:
-            return HttpResponseRedirect(reverse('login')) # Unlikely error (e.g., bug or user temperage). Direct to login. No need for message.
-
-        form = forms.ConfirmWhatsAppLoginForm(initial={
-            'uuid': uuid,
-            'next': request.GET.get('next'),
-            'phone_number': f'{user.phone_number.country_code} {user.phone_number.national_number}'
-        })
-    
-    return TemplateResponse(request, 'relationships/confirm_whatsapp_login.html', {'form': form})
-
-def select_country(request):
-    return TemplateResponse(request, 'relationships/select_country.html', None)
+# def select_country(request):
+#     return TemplateResponse(request, 'relationships/select_country.html', None)
 
 
 
-def register(request):
-    # if request.user.is_authenticated:
-    #     return HttpResponseRedirect(reverse('home')) # Go home if authenticated
+# def register(request):
+#     # if request.user.is_authenticated:
+#     #     return HttpResponseRedirect(reverse('home')) # Go home if authenticated
 
-    if request.method == 'POST':
-        form = forms.RegisterForm(request.POST)
-        if form.is_valid():
-            # Create Everybase user
-            cookie_uuid, _ = get_or_create_cookie_uuid(request)
-            user = models.User.objects.create(
-                register_cookie_uuid=cookie_uuid,
-                registered=datetime.now(pytz.timezone(settings.TIME_ZONE)),
-                email=get_or_create_email(form.cleaned_data.get('email')),
-                phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
-                country=commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country')),
-                first_name=form.cleaned_data.get('first_name'),
-                last_name=form.cleaned_data.get('last_name'),
-                enable_whatsapp=False # Default, require verification to enable
-            )
+#     if request.method == 'POST':
+#         form = forms.RegisterForm(request.POST)
+#         if form.is_valid():
+#             # Create Everybase user
+#             cookie_uuid, _ = get_or_create_cookie_uuid(request)
+#             user = models.User.objects.create(
+#                 register_cookie_uuid=cookie_uuid,
+#                 registered=datetime.now(pytz.timezone(settings.TIME_ZONE)),
+#                 email=get_or_create_email(form.cleaned_data.get('email')),
+#                 phone_number=get_or_create_phone_number(form.cleaned_data.get('phone_number')),
+#                 country=commods.Country.objects.get(programmatic_key=form.cleaned_data.get('country')),
+#                 first_name=form.cleaned_data.get('first_name'),
+#                 last_name=form.cleaned_data.get('last_name'),
+#                 enable_whatsapp=False # Default, require verification to enable
+#             )
 
-            # Create Django user and associate it
-            user.django_user, _ = DjangoUser.objects.get_or_create(username=str(user.uuid))
-            user.save()
+#             # Create Django user and associate it
+#             user.django_user, _ = DjangoUser.objects.get_or_create(username=str(user.uuid))
+#             user.save()
 
-            # Authenticate passwordlessly
-            dju = authenticate(user.django_user.username)
-            if dju is not None:
-                login(request, dju)
+#             # Authenticate passwordlessly
+#             dju = authenticate(user.django_user.username)
+#             if dju is not None:
+#                 login(request, dju)
 
-            # Send welcome email
-            send_email.delay(
-                render_to_string('relationships/email/welcome_subject.txt', {}),
-                render_to_string('relationships/email/welcome.txt', {}),
-                'friend@everybase.co',
-                [user.email.email]
-            )
+#             # Send welcome email
+#             send_email.delay(
+#                 render_to_string('relationships/email/welcome_subject.txt', {}),
+#                 render_to_string('relationships/email/welcome.txt', {}),
+#                 'friend@everybase.co',
+#                 [user.email.email]
+#             )
 
-            identify_amplitude_user.delay(
-                user_id=user.uuid,
-                user_properties={
-                    'country': user.country.programmatic_key,
-                    'phone number country code': user.phone_number.country_code
-                }
-            )
+#             identify_amplitude_user.delay(
+#                 user_id=user.uuid,
+#                 user_properties={
+#                     'country': user.country.programmatic_key,
+#                     'phone number country code': user.phone_number.country_code
+#                 }
+#             )
 
-            send_amplitude_event.delay(
-                'account - registered',
-                user_uuid=user.uuid,
-                ip=get_ip_address(request),
-                event_properties={
-                    'country': user.country.programmatic_key,
-                    'phone number country code': user.phone_number.country_code
-                }
-            )
+#             send_amplitude_event.delay(
+#                 'account - registered',
+#                 user_uuid=user.uuid,
+#                 ip=get_ip_address(request),
+#                 event_properties={
+#                     'country': user.country.programmatic_key,
+#                     'phone number country code': user.phone_number.country_code
+#                 }
+#             )
 
-            # Verify WhatsApp number if user enabled WhatsApp
-            if form.cleaned_data.get('enable_whatsapp') == True:
-                return HttpResponseRedirect(reverse('users:verify_whatsapp'))
+#             # Verify WhatsApp number if user enabled WhatsApp
+#             if form.cleaned_data.get('enable_whatsapp') == True:
+#                 return HttpResponseRedirect(reverse('users:verify_whatsapp'))
 
-            return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
-    else:
-        form = forms.RegisterForm()
+#             return _next_or_else_response(form.cleaned_data.get('next'), reverse('home'))
+#     else:
+#         form = forms.RegisterForm()
 
-    params = _pass_next({
-        'form': form,
-        'countries': commods.Country.objects.annotate(
-            num_users=Count('users_as_country')).order_by('-num_users')
-    }, request.GET.get('next'))        
-    return TemplateResponse(request, 'relationships/register.html', params)
+#     params = _pass_next({
+#         'form': form,
+#         'countries': commods.Country.objects.annotate(
+#             num_users=Count('users_as_country')).order_by('-num_users')
+#     }, request.GET.get('next'))        
+#     return TemplateResponse(request, 'relationships/register.html', params)
 
 # User will be authenticated coming from register view
 # @login_required
-def verify_whatsapp(request):
+# def verify_whatsapp(request):
     # user = request.user.user
     # kwargs = {'user': user}
 
@@ -388,7 +1054,7 @@ def verify_whatsapp(request):
     #     form = forms.VerifyWhatsAppForm(**kwargs)
 
     # params = _pass_next({'form': form}, request.GET.get('next'))
-    return TemplateResponse(request, 'relationships/verify_whatsapp.html', None)
+    # return TemplateResponse(request, 'relationships/verify_whatsapp.html', None)
 
 # Don't name profile settings function 'settings', it conflicts with everybase.settings.
 # @login_required
@@ -521,104 +1187,106 @@ def profile_settings(request):
             num_users=Count('users_as_country')).order_by('-num_users')
     })
 
-@login_required
-def update_email(request):
-    user = request.user.user
-    kwargs = {'user': user}
+# @login_required
+# def update_email(request):
+#     user = request.user.user
+#     kwargs = {'user': user}
 
-    if request.method == 'POST':
-        form = forms.UpdateEmailForm(request.POST, **kwargs)
-        if form.is_valid():
-            # Validate email, in case it has been tempered
-            email = form.cleaned_data.get('email')
-            old_email = user.email.email if user.email is not None else None
-            if not email_exists(email):
-                user.email, _ = models.Email.objects.get_or_create(email=email)
-                user.save()
-                messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__EMAIL_UPDATE_SUCCESS)
+#     if request.method == 'POST':
+#         form = forms.UpdateEmailForm(request.POST, **kwargs)
+#         if form.is_valid():
+#             # Validate email, in case it has been tempered
+#             email = form.cleaned_data.get('email')
+#             old_email = user.email.email if user.email is not None else None
+#             if not email_exists(email):
+#                 user.email, _ = models.Email.objects.get_or_create(email=email)
+#                 user.save()
+#                 messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__EMAIL_UPDATE_SUCCESS)
 
-                event_properties = {}
-                if old_email is not None:
-                    event_properties['old email'] = old_email
-                event_properties['new email'] = user.email.email
+#                 event_properties = {}
+#                 if old_email is not None:
+#                     event_properties['old email'] = old_email
+#                 event_properties['new email'] = user.email.email
             
-                send_amplitude_event.delay(
-                    'account - updated email',
-                    user_uuid=user.uuid,
-                    ip=get_ip_address(request),
-                    event_properties=event_properties
-                )
-            else:
-                messages.add_message(request, messages.ERROR, MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN)
+#                 send_amplitude_event.delay(
+#                     'account - updated email',
+#                     user_uuid=user.uuid,
+#                     ip=get_ip_address(request),
+#                     event_properties=event_properties
+#                 )
+#             else:
+#                 messages.add_message(request, messages.ERROR, MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN)
 
-            return HttpResponseRedirect(reverse('users:settings'))
-    else:
-        email = request.GET.get('email')
+#             return HttpResponseRedirect(reverse('users:settings'))
+#     else:
+#         email = request.GET.get('email')
 
-        send_email_code.send_email_code(user, email_purposes.UPDATE_EMAIL, email)
-        form = forms.UpdateEmailForm(initial={'email': email}, **kwargs)
+#         send_email_code(
+#             user.id,
+#             email_purposes.UPDATE_EMAIL,
+#             email)
+#         form = forms.UpdateEmailForm(initial={'email': email}, **kwargs)
         
-    return TemplateResponse(request, 'relationships/confirm_email_change.html', {'form': form})
+#     return TemplateResponse(request, 'relationships/confirm_email_change.html', {'form': form})
 
-def update_phone_number(request):
-    user = request.user.user
-    kwargs = {'user': user}
+# def update_phone_number(request):
+#     user = request.user.user
+#     kwargs = {'user': user}
 
-    if request.method == 'POST':
-        form = forms.UpdatePhoneNumberForm(request.POST, **kwargs)
-        if form.is_valid():
-            # Validate phone number, in case it has been tempered
-            phone_number = form.cleaned_data.get('phone_number')
-            enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
+#     if request.method == 'POST':
+#         form = forms.UpdatePhoneNumberForm(request.POST, **kwargs)
+#         if form.is_valid():
+#             # Validate phone number, in case it has been tempered
+#             phone_number = form.cleaned_data.get('phone_number')
+#             enable_whatsapp = form.cleaned_data.get('enable_whatsapp')
 
-            # Record old values
-            old_phone_number = user.phone_number.value() if user.phone_number is not None else None
-            old_enable_whatsapp = user.enable_whatsapp
+#             # Record old values
+#             old_phone_number = user.phone_number.value() if user.phone_number is not None else None
+#             old_enable_whatsapp = user.enable_whatsapp
 
-            if phone_number_exists(phone_number) is not None:
-                # User is changing phone_number and/or enable_whatsapp
-                user.enable_whatsapp = enable_whatsapp
-                user.phone_number = get_or_create_phone_number(phone_number)
-                user.save()
-                messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS)
+#             if phone_number_exists(phone_number) is not None:
+#                 # User is changing phone_number and/or enable_whatsapp
+#                 user.enable_whatsapp = enable_whatsapp
+#                 user.phone_number = get_or_create_phone_number(phone_number)
+#                 user.save()
+#                 messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS)
 
-                event_properties = {}
-                if old_phone_number is not None:
-                    event_properties['old phone number'] = old_phone_number
-                event_properties['new phone number'] = user.phone_number.value()
-                if old_enable_whatsapp is not None:
-                    event_properties['old enable whatsapp'] = old_enable_whatsapp
-                event_properties['new enable whatsapp'] = user.enable_whatsapp
+#                 event_properties = {}
+#                 if old_phone_number is not None:
+#                     event_properties['old phone number'] = old_phone_number
+#                 event_properties['new phone number'] = user.phone_number.value()
+#                 if old_enable_whatsapp is not None:
+#                     event_properties['old enable whatsapp'] = old_enable_whatsapp
+#                 event_properties['new enable whatsapp'] = user.enable_whatsapp
             
-                send_amplitude_event.delay(
-                    'account - updated phone number',
-                    user_uuid=user.uuid,
-                    ip=get_ip_address(request),
-                    event_properties=event_properties
-                )
-            else:
-                messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN)
+#                 send_amplitude_event.delay(
+#                     'account - updated phone number',
+#                     user_uuid=user.uuid,
+#                     ip=get_ip_address(request),
+#                     event_properties=event_properties
+#                 )
+#             else:
+#                 messages.add_message(request, messages.SUCCESS, MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN)
 
-            return HttpResponseRedirect(reverse('users:settings'))
-    else:
-        phone_number = request.GET.get('phone_number')
+#             return HttpResponseRedirect(reverse('users:settings'))
+#     else:
+#         phone_number = request.GET.get('phone_number')
 
-        p = get_or_create_phone_number(phone_number)
-        send_whatsapp_code.send_whatsapp_code(user, whatsapp_purposes.UPDATE_PHONE_NUMBER, phone_number=p)
-        form = forms.UpdatePhoneNumberForm(initial={
-            'phone_number': phone_number,
-            'enable_whatsapp': request.GET.get('enable_whatsapp') == 'True'
-        }, **kwargs)
+#         p = get_or_create_phone_number(phone_number)
+#         send_whatsapp_code.delay(
+#             user.id,
+#             whatsapp_purposes.UPDATE_PHONE_NUMBER,
+#             phone_number=p)
+#         form = forms.UpdatePhoneNumberForm(initial={
+#             'phone_number': phone_number,
+#             'enable_whatsapp': request.GET.get('enable_whatsapp') == 'True'
+#         }, **kwargs)
 
-    return TemplateResponse(request, 'relationships/confirm_phone_number_change.html', {'form': form})
+#     return TemplateResponse(request, 'relationships/confirm_phone_number_change.html', {'form': form})
 
-def log_out(request):
-    logout(request)
-    return _next_or_else_response(request.GET.get('next'), reverse('home'))
 
-def user_detail(request, uuid):
-    template_name = 'relationships/user_detail.html'
-    return TemplateResponse(request, template_name, {})
+
+
 
 def history(request):
     template_name = 'relationships/contacts.html'
@@ -656,9 +1324,7 @@ def business_home(request):
     template_name = 'relationships/business_home.html'
     return TemplateResponse(request, template_name, {})
 
-def business_reviews(request):
-    template_name = 'relationships/business_reviews.html'
-    return TemplateResponse(request, template_name, {})
+
 
 def review_detail(request):
     template_name = 'relationships/review_detail.html'
@@ -729,9 +1395,7 @@ def enter_number(request):
     template_name = 'relationships/enter_number.html'
     return TemplateResponse(request, template_name, {})
 
-def enter_status(request):
-    template_name = 'relationships/enter_status.html'
-    return TemplateResponse(request, template_name, {})
+
 
 
 

@@ -1,0 +1,57 @@
+{% extends 'relationships/extendables/simple.html' %}
+
+{% load static %}
+
+{% block title %}Select Country{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed">
+    <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+        <a href="{% url 'home' %}" class="mb-12">
+            <img alt="Logo" src="{% static 'common/demo1/dist/assets/media/logos/logo.png' %}" />
+        </a>
+
+        <div class="w-lg-500px col-12 bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+            <form class="form w-100" action="{% url 'register:select_country' user.id %}" method="post">
+                {% csrf_token %}
+                {% if form.next.value != None %}<input type="hidden" name="next" value="{{ form.next.value }}" />{% endif %}
+
+                <div class="text-center mb-10">
+                    <h1 class="text-dark mb-3">Select Country</h1>
+                    <div class="text-gray-700 fs-5">Your phone number matches more than 1 country.</div>
+                </div>
+                
+                <div class="mt-6">
+                    <label class="form-label fs-6 fw-bolder text-dark">Country</label>
+                    <select name="country" class="form-select" data-control="select2" data-placeholder="Choose your country" id="country">
+                        <option></option>
+                        {% for country in countries %}
+                            <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if form.country.errors %}<div class="text-danger mt-2 ms-2">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                
+                <div class="text-center mt-10">
+                    <button id="submit" type="submit" class="btn btn-lg btn-primary w-100" disabled="true">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% comment %} 
+$(document).ready(function() {
+    $('#country').change(function () {
+        if ($(this).val().length > 0) {
+            $('#submit').removeAttr('disabled')
+        } else {
+            $('#submit').attr('disabled', true)
+        }
+    })
+})
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'common/js/register__select_country/country_select.js' %}"></script>
+{% endblock %}

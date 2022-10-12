@@ -19,7 +19,8 @@ def is_email_code_valid(
     if user.email_code is None or user.email_code_generated is None:
         return NO_CODE_GENERATED
     
-    if user.email_code_used is not None and user.email_code_used > user.email_code_generated:
+    if user.email_code_used is not None and user.email_code_used > \
+        user.email_code_generated:
         return USED
 
     sgtz = pytz.timezone(settings.TIME_ZONE)

@@ -122,16 +122,6 @@ class File(Standard):
         db_index=True
     )
 
-    lead = models.ForeignKey(
-        'leads.Lead',
-        related_name='files',
-        related_query_name='files',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-
     def __str__(self):
         return f'({self.s3_bucket_name}, {self.s3_object_key} [{self.id}])'
 

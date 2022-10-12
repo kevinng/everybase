@@ -1,0 +1,18 @@
+{% load static %}
+
+{% comment %} Start: Javascript {% endcomment %}
+<script>var hostUrl = "{% static 'common/demo1/dist/assets/' %}";</script>
+
+{% comment %} Start: Global Javascript bundle (used by all pages) {% endcomment %}
+<script src="{% static 'common/demo1/dist/assets/plugins/global/plugins.bundle.js' %}"></script>
+<script src="{% static 'common/demo1/dist/assets/js/scripts.bundle.js' %}"></script>
+
+{% comment %} End: Global Javascript bundle {% endcomment %}
+
+{% comment %} Start: ReCaptcha import {% endcomment %}
+<script async src="https://www.google.com/recaptcha/api.js"></script>
+{% comment %} End: ReCaptcha import {% endcomment %}
+
+{% comment %} Start: Alpine JS import {% endcomment %}
+<script defer src="{% static 'common/js/alpinejs@3.x.x.min.js' %}"></script>
+{% comment %} End: Alpine JS import {% endcomment %}

@@ -24,43 +24,47 @@ def trigger_handled_error(request):
     return render(request, 'chat/pages/error.html', {})
 
 urlpatterns = [
-    path('ads.txt', comviews.ads_txt, name='ads_txt'), # For Adsense and other ad networks.
-    path('privacy', comviews.privacy, name='privacy'),
-    path('terms', comviews.terms, name='terms'),
+    # For Adsense and other ad networks.
+    path('ads.txt', comviews.ads_txt, name='ads_txt'),
+
+    # Privacy and terms
+    path('privacy/', comviews.privacy, name='privacy'),
+    path('terms/', comviews.terms, name='terms'),
 
     path('', comviews.home, name='home'),
-    path('login', relviews.log_in, name='login'),
-    path('register-enter-whatsapp', relviews.register__enter_whatsapp, name='register__enter_whatsapp'),
-    path('register-confirm-whatsapp', relviews.register, name='register__confirm_whatsapp'),
-    path('register-enter-profile', relviews.register, name='register__enter_profile'),
-    path('register-confirm-email', relviews.register, name='register__confirm_email'),
-    path('register-enter-status', relviews.register, name='register__enter_status'),
+    path('login/', relviews.log_in, name='login'),
+    path('logout/', relviews.log_out, name='logout'),
+
+    path('p/<str:phone_number>/', relviews.user_detail, name='user_detail'),
+    path('r/<str:phone_number>/', relviews.user_reviews, name='user_reviews'),
+    path('w/<str:phone_number>/', relviews.user_whatsapp, name='user_whatsapp'),
+
+    path('users/', include('relationships.urls')),
+    path('register/', include('relationships.urls_register')),
+    path('login/', include('relationships.urls_login')),
+        
 
 
 
 
 
 
-    path('confirm-whatsapp-login', relviews.confirm_whatsapp_login, name='confirm_whatsapp_login'),
+    
     path('claim', relviews.claim, name='claim'),
-    path('verify-whatsapp', relviews.verify_whatsapp, name='verify_whatsapp'),
-    path('register', relviews.register, name='register'),
+    # path('register', relviews.register, name='register'),
     # path('register1', relviews.register1, name='register1'),
     path('verify-email', relviews.verify_email, name='verify_email'),
 
     path('enter-email', relviews.enter_email, name='enter_email'),
 
-    path('enter-status', relviews.enter_status, name='enter_status'),
+    # path('enter-status', relviews.enter_status, name='enter_status'),
 
     path('enter-phone-number', relviews.enter_number, name='enter_phone_number'),
 
     path('following', relviews.following, name='following'),
 
 
-    path('select-country', relviews.select_country, name='select_country'),
 
-    path('business_home', relviews.business_home, name='business_home'),
-    path('business_reviews', relviews.business_reviews, name='business_reviews'),
     path('review_detail', relviews.review_detail, name='review_detail'),
 
     path('contact_detail', relviews.contact_detail, name='contact_detail'),
@@ -73,7 +77,7 @@ urlpatterns = [
 
     path('lookup', relviews.lookup, name='lookup'),
     path('settings', relviews.profile_settings, name='profile_settings'),
-    path('logout', relviews.log_out, name='logout'),
+    
 
     # path('select-country', relviews.select_country, name='select-country'),
     # User menu and settings

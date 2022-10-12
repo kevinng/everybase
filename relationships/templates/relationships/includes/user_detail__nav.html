@@ -1,0 +1,8 @@
+<ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder mt-4 ms-4">
+    <li class="nav-item">
+        <a class="nav-link text-active-primary ms-0 me-10 py-5{% if active == 'detail' %} active{% endif %}" href="{% url 'user_detail' user.phone_number.value %}">Details</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-active-primary ms-0 me-10 py-5{% if active == 'reviews' %} active{% endif %}" href="{% url 'user_reviews' user.phone_number.value %}">Reviews</a>
+    </li>
+</ul>

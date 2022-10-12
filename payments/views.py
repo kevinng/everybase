@@ -56,5 +56,3 @@ def create_checkout_session(request):
             success_url=end_url,
             cancel_url=end_url
         )
-
-        CONTINUE FROM HERE

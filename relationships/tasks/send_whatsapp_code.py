@@ -1,10 +1,8 @@
 import random, pytz, datetime
-
+from celery import shared_task
 from everybase import settings
-
 from chat.tasks.send_message import send_message
 from chat.constants import intents, messages
-
 from relationships import models
 from relationships.constants import whatsapp_purposes
 from relationships.utilities.is_whatsapp_code_rate_limited import \
@@ -13,11 +11,12 @@ from relationships.utilities.is_whatsapp_code_rate_limited import \
 RATE_LIMITED = 'RATE_LIMITED'
 NO_INTENT_AND_OR_MESSAGE = 'NO_INTENT_AND_OR_MESSAGE'
 
+@shared_task
 def send_whatsapp_code(
-        user: models.User,
+        user_id: int,
         purpose: str,
         phone_number: models.PhoneNumber=None
-    ) -> bool:
+    ) -> str:
     """Send WhatsApp code to user. True if successful, error flag otherwise.
     
     Parameters:
@@ -33,6 +32,8 @@ def send_whatsapp_code(
     """
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(tz=sgtz)
+
+    user = models.User.objects.get(pk=user_id)
 
     if is_whatsapp_code_rate_limited(user):
         return RATE_LIMITED

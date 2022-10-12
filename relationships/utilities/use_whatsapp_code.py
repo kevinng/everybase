@@ -7,3 +7,4 @@ def use_whatsapp_code(user: models.User):
     sgtz = pytz.timezone(settings.TIME_ZONE)
     now = datetime.datetime.now(sgtz)
     user.whatsapp_code_used = now
+    user.save()
