@@ -502,7 +502,7 @@ class ContactAction(commods.Standard):
         on_delete=models.PROTECT,
         db_index=True
     )
-    count = models.IntegerField(
+    action_count = models.IntegerField(
         default=0,
         db_index=True    
     )

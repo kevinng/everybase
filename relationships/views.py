@@ -662,24 +662,21 @@ def user_whatsapp(request, phone_number):
 
     contactor = request.user.user
 
-    action = models.ContactAction.objects.get_or_create(
+    action, _ = models.ContactAction.objects.get_or_create(
         contactor=contactor,
         phone_number=p
     )
-    action.count += 1
+    action.action_count += 1
     action.save()
     
     # Temporary redirect so destination is not indexed.
     response = HttpResponse(status=302)
 
-    response['Location'] = get_whatsapp_url(
-        phone_number.country_code,
-        phone_number.national_number
-    )
+    response['Location'] = get_whatsapp_url(p.country_code, p.national_number)
 
     text = render_to_string(
         'relationships/texts/user_whatsapp.txt', {
-            'url': reverse('users:user_detail', phone_number),
+            'url': reverse('user_detail', args=(phone_number,)),
             'contactor': contactor,
             'contactee': contactee,
             'phone_number': p
