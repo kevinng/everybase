@@ -1,6 +1,6 @@
 {% load static %}
 
-{% comment %} {% if request.user.is_authenticated %} {% endcomment %}
+{% if request.user.is_authenticated %}
 {% comment %} Start: User menu {% endcomment %}
 <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
     {% comment %} Start: Menu wrapper {% endcomment %}
@@ -42,9 +42,8 @@
                 <div class="d-flex flex-column ms-4">
                     {% comment %} {% load user_full_name %} {% endcomment %}
                     {% comment %} {% user_full_name request.user.user as full_name %} {% endcomment %}
-                    <a href="#" class="fw-bolder d-flex align-items-center fs-5">
-                        {% comment %} {% if full_name is None %}{% include 'relationships/includes/enter_your_name.html' %}{% else %}{{ full_name }}{% endif %} {% endcomment %}
-                        Kevin Ng
+                    <a href="{% url 'user_detail' request.user.user.phone_number.value %}" class="fw-bolder d-flex align-items-center fs-5">
+                        {{ request.user.user.first_name }} {{ request.user.user.last_name }}
                     </a>
                     <div class="fw-bold text-muted fs-7">{{ request.user.user.country.name }}</div>
                 </div>
@@ -55,16 +54,8 @@
 
         <div class="separator my-2"></div>
 
-        {% comment %} <div class="menu-item px-5">
-            <a href="" class="menu-link px-5">My Reviews</a>
-        </div> {% endcomment %}
-
         <div class="menu-item px-5">
-            <a href="" class="menu-link px-5">My Profile</a>
-        </div>
-
-        <div class="menu-item px-5">
-            <a href="{% url 'profile_settings' %}" class="menu-link px-5">Settings</a>
+            <a href="{% url 'users:settings' %}" class="menu-link px-5">Settings</a>
         </div>
 
         <div class="menu-item px-5">
@@ -75,11 +66,11 @@
 </div>
 {% comment %} End: User menu {% endcomment %}
 
-{% comment %} {% else %} {% endcomment %}
+{% else %}
 {% comment %} Start: Actions for the unauthenticated {% endcomment %}
-{% comment %} <div class="d-flex align-items-center">
-    <a href="{% url 'register' %}" class="btn btn-sm btn-secondary me-2">Claim Number</a>
+<div class="d-flex align-items-center">
+    <a href="{% url 'register:start' %}" class="btn btn-sm btn-secondary me-2">Register</a>
     <a href="{% url 'login' %}" class="btn btn-sm btn-primary">Login</a>
-</div> {% endcomment %}
+</div>
 {% comment %} End: Actions for the unauthenticated {% endcomment %}
-{% comment %} {% endif %} {% endcomment %}
+{% endif %}

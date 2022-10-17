@@ -3,7 +3,8 @@ from phonenumber_field.formfields import PhoneNumberField
 from django import forms
 from django.core.exceptions import ValidationError
 
-from relationships import models
+from common import models as commods
+
 from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.is_email_code_valid import is_email_code_valid
 from relationships.utilities.is_whatsapp_code_valid import is_whatsapp_code_valid
@@ -67,12 +68,12 @@ class RegisterConfirmWhatsAppForm(forms.Form):
             self.add_error('code', 'Invalid code.')
 
 class RegisterEnterProfileForm(forms.Form):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=20)
     email = forms.EmailField(max_length=254)
-    business_name = forms.CharField(required=False)
-    business_address = forms.CharField(required=False)
-    business_description = forms.CharField(required=False)
+    business_name = forms.CharField(required=False, max_length=50)
+    business_address = forms.CharField(required=False, max_length=100)
+    business_description = forms.CharField(required=False, max_length=200)
     next = forms.CharField(required=False)
 
     def clean(self):
@@ -105,6 +106,59 @@ class RegisterEnterStatusForm(forms.Form):
 class UserDetailUpdateStatusForm(forms.Form):
     status = forms.CharField()
     form_uuid = forms.CharField()
+
+class SettingsForm(forms.Form):
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=20)
+    country = forms.CharField()
+    email = forms.EmailField(required=False)
+    business_name = forms.CharField(required=False, max_length=50)
+    business_address = forms.CharField(required=False, max_length=100)
+    business_description = forms.CharField(required=False, max_length=200)
+
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(SettingsForm, self).clean()
+
+        email = self.cleaned_data.get('email')
+        if is_email_code_rate_limited(self.user):
+            self.add_error('email', "You're sending requests too quickly. Please try again later.")
+        elif self.user.email is not None and (email != self.user.email.email and email_exists(email)):
+            self.add_error('email', 'This email belongs to an existing user.')
+
+        country_str = self.cleaned_data.get('country')
+        try:
+            country = commods.Country.objects.get(programmatic_key=country_str)
+            if commods.Country.objects.filter(
+               country_code=self.user.phone_number.country_code).filter(
+                country_code=country.country_code).first() is None:
+                self.add_error('country', 'Your country must match your phone number country code.')
+        except commods.Country.DoesNotExist:
+            self.add_error('country', 'Invalid country.')
+
+class SettingsConfirmEmailForm(forms.Form):
+    code = forms.CharField()
+    next = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        # Make request object passed in a class variable
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        super(SettingsConfirmEmailForm, self).clean()
+        code = self.cleaned_data.get('code')
+        if code is not None and code.strip() != '' and\
+            is_email_code_valid(code, self.user) is not True:
+            self.add_error('code', 'Invalid code.')
+
+
+
+
 
 
 
@@ -245,45 +299,7 @@ class RegisterForm(forms.Form):
             self.add_error('phone_number', 'This phone number belongs to an existing user.')
 
 
-class SettingsForm(forms.Form):
-    first_name = forms.CharField(max_length=20)
-    last_name = forms.CharField(max_length=20)
-    country = forms.CharField()
 
-    # Required determined by button clicked
-    email = forms.EmailField(required=False)
-    phone_number = PhoneNumberField(required=False)
-    enable_whatsapp = forms.BooleanField(required=False)
-
-    # Identifies button clicked
-    update_profile = forms.CharField(required=False)
-    update_email = forms.CharField(required=False)
-    update_phone_number = forms.CharField(required=False)
-
-    def __init__(self, *args, **kwargs):
-        # Make request object passed in a class variable
-        self.user = kwargs.pop('user')
-        super().__init__(*args, **kwargs)
-
-    def clean(self):
-        super(SettingsForm, self).clean()
-
-        if self.cleaned_data.get('update_email') == 'update_email':
-            # 'Update email button' clicked
-            email = self.cleaned_data.get('email').strip()
-            if is_email_code_rate_limited(self.user):
-                raise ValidationError({'email': ["You're sending requests too quickly. Please try again later.",]})
-            elif self.user.email is not None and (email != self.user.email.email and email_exists(email)):
-                raise ValidationError({'email': ['This email belongs to an existing user',]})
-            
-        elif self.cleaned_data.get('update_phone_number') == 'update_phone_number':
-            # 'Update phone number' button clicked
-            phone_number = self.cleaned_data.get('phone_number')
-            if is_whatsapp_code_rate_limited(self.user):
-                raise ValidationError({'phone_number': ["You're sending requests too quickly. Please try again later.",]})
-            elif self.user.phone_number is not None and (not are_phone_numbers_same(phone_number, self.user.phone_number) and phone_number_exists(phone_number)):
-                raise ValidationError({'phone_number': ['This phone number belongs to an existing user',]})
-            
 
 class UpdateEmailForm(forms.Form):
     email = forms.CharField()

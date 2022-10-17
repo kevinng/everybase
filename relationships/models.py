@@ -291,6 +291,15 @@ class User(commods.Standard):
         db_index=True
     )
 
+    pending_email = models.ForeignKey(
+        'Email',
+        related_name='user_as_pending_email',
+        related_query_name='user_as_pending_email',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        db_index=True
+    )
     email_code_used = models.DateTimeField(
         null=True,
         blank=True,

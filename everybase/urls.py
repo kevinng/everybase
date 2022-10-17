@@ -76,7 +76,6 @@ urlpatterns = [
     
 
     path('lookup', relviews.lookup, name='lookup'),
-    path('settings', relviews.profile_settings, name='profile_settings'),
     
 
     # path('select-country', relviews.select_country, name='select-country'),

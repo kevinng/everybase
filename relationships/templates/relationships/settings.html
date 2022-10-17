@@ -3,479 +3,116 @@
 {% load static %}
 
 {% block page_title %}Settings{% endblock %}
-
 {% block page_title_separator %}{% endblock %}
 
-{% block actions %}
-{% comment %} {% include 'leads/includes/toolbar_actions.html' %} {% endcomment %}
-{% endblock %}
-
 {% block content_body %}
-<form class="form" action="{% url 'profile_settings' %}" method="post">
-{% csrf_token %}
+<form class="form" action="{% url 'users:settings' %}" method="post">
+    {% csrf_token %}
+    <div class="post d-flex flex-column-fluid">
+        <div class="container-xxl">
+            {% comment %} Start: Profile {% endcomment %}
+            <div class="card shadow-sm" x-data="{
+                firstName: {% if form.first_name.value != None %}'{{ form.first_name.value }}'{% else %}''{% endif %},
+                originalFirstName: {% if form.first_name.value != None %}'{{ form.first_name.value }}'{% else %}''{% endif %},
+                lastName: {% if form.last_name.value != None %}'{{ form.last_name.value }}'{% else %}''{% endif %},
+                originalLastName: {% if form.last_name.value != None %}'{{ form.last_name.value }}'{% else %}''{% endif %},
+                country: {% if form.country.value != None %}'{{ form.country.value }}'{% else %}''{% endif %},
+                originalCountry: {% if form.country.value != None %}'{{ form.country.value }}'{% else %}''{% endif %},
+                email: {% if form.email.value != None %}'{{ form.email.value }}'{% else %}''{% endif %},
+                originalEmail: {% if form.email.value != None %}'{{ form.email.value }}'{% else %}''{% endif %},
+                businessName: {% if form.business_name.value != None %}'{{ form.business_name.value }}'{% else %}''{% endif %},
+                originalBusinessName: {% if form.business_name.value != None %}'{{ form.business_name.value }}'{% else %}''{% endif %},
+                businessAddress: {% if form.business_address.value != None %}'{{ form.business_address.value }}'{% else %}''{% endif %},
+                originalBusinessAddress: {% if form.business_address.value != None %}'{{ form.business_address.value }}'{% else %}''{% endif %},
+                businessDescription: {% if form.business_description.value != None %}'{{ form.business_description.value }}'{% else %}''{% endif %},
+                originalBusinessDescription: {% if form.business_description.value != None %}'{{ form.business_description.value }}'{% else %}''{% endif %},
+                fieldNotChanged() {
+                    return this.firstName == this.originalFirstName && this.lastName == this.originalLastName && this.country == this.originalCountry && this.email == this.originalEmail && this.businessName == this.originalBusinessName && this.businessAddress == this.originalBusinessAddress && this.businessDescription == this.originalBusinessDescription
+                }
+            }" x-init="() => {
+                select2 = $($refs.countrySelect).select2();
+                select2.on('select2:select', (event) => { country = event.target.value })
+                $watch('country', (value) => { select2.val(value).trigger('change') })
+              }">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h3 class="fw-bolder">Profile</h3>
+                    </div>
+                </div>
 
-<div class="post d-flex flex-column-fluid">
-    <div class="container-xxl">
+                <div class="card-body">
+                    <div class="row">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">WhatsApp Phone Number</label>
+                        <div class="col-lg-8 d-flex align-items-center fw-bolder fs-4">+{{ request.user.user.phone_number.country_code }} {{ request.user.user.phone_number.national_number }}</div>
+                    </div>
 
-        {% comment %} {% include 'relationships/includes/has_incomplete_profile.html' %} {% endcomment %}
-        
-        {% if messages %}
-            {% for message in messages %}
-                {% comment %} We need to string-strip message or the comparison will not work. {% endcomment %}
-                {% if message|cut:' ' == 'MESSAGE_KEY__PROFILE_UPDATE_SUCCESS' %}
-                    <div class="alert alert-dismissible bg-info d-flex flex-column flex-sm-row w-100 p-5 mb-10">
-                        {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
-                        <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
-                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
-                            </svg>
-                        </span>
-                        {% comment %} End: SVG icon {% endcomment %}
-                        
-                        <div class="d-flex flex-column text-light pe-0 pe-sm-10">
-                            <h4 class="mb-2 text-light">Profile Updated</h4>
-                            <span>Your profile have been updated.</span>
+                    <div class="row mt-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6 required" for="first_name">First Name</label>
+                        <div class="col-lg-8">
+                            <input type="text" x-model="firstName" name="first_name" class="form-control"{% if form.first_name.value != None %} value="{{ form.first_name.value }}" {% endif %}/>
+                            {% if form.first_name.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.first_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                        </div>                        
+                    </div>
+
+                    <div class="row mt-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6 required" for="last_name">Last Name</label>
+                        <div class="col-lg-8">
+                            <input type="text" x-model="lastName" name="last_name" id="last_name" class="form-control"{% if form.last_name.value != None %} value="{{ form.last_name.value }}" {% endif %}/>
+                            {% if form.last_name.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.last_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                         </div>
-
-                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                            {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-2x svg-icon-light">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
-                        </button>
                     </div>
-                {% comment %} We need to string-strip message or the comparison will not work. {% endcomment %}
-                {% elif message|cut:' ' == 'MESSAGE_KEY__EMAIL_UPDATE_SUCCESS' %}
-                    <div class="alert alert-dismissible bg-info d-flex flex-column flex-sm-row w-100 p-5 mb-10">
-                        {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
-                        <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
-                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
-                            </svg>
-                        </span>
-                        {% comment %} End: SVG icon {% endcomment %}
-                        
-                        <div class="d-flex flex-column text-light pe-0 pe-sm-10">
-                            <h4 class="mb-2 text-light">Email Updated</h4>
-                            <span>Your email have been updated to {{ form.email.value }}.</span>
+
+                    <div class="row mt-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6 required" for="country">Country</label>
+                        <div class="col-lg-8">
+                            <select name="country" x-ref="countrySelect" id="country" data-control="select2" data-placeholder="Country" class="form-select fw-bold">
+                                {% for country in countries %}
+                                    <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.country.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                         </div>
-
-                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                            {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-2x svg-icon-light">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
-                        </button>
                     </div>
-                {% comment %} We need to string-strip message or the comparison will not work. {% endcomment %}
-                {% elif message|cut:' ' == 'MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN' %}
-                    <div class="alert alert-dismissible bg-info d-flex flex-column flex-sm-row w-100 p-5 mb-10">
-                        {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
-                        <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
-                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
-                            </svg>
-                        </span>
-                        {% comment %} End: SVG icon {% endcomment %}
-                        
-                        <div class="d-flex flex-column text-light pe-0 pe-sm-10">
-                            <h4 class="mb-2 text-light">Try Again</h4>
-                            <span>Your email update didn't work. Try again.</span>
+
+                    <div class="row mt-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6 required" for="email">Email</label>
+                        <div class="col-lg-8">
+                            <input type="text" x-model="email" name="email" id="email" class="form-control"{% if form.email.value != None %} value="{{ form.email.value }}" {% endif %}/>
+                            {% if form.email.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.email.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                         </div>
-
-                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                            {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-2x svg-icon-light">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
-                        </button>
                     </div>
-                {% comment %} We need to string-strip message or the comparison will not work. {% endcomment %}
-                {% elif message|cut:' ' == 'MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS' %}
-                    <div class="alert alert-dismissible bg-info d-flex flex-column flex-sm-row w-100 p-5 mb-10">
-                        {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
-                        <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
-                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
-                            </svg>
-                        </span>
-                        {% comment %} End: SVG icon {% endcomment %}
-                        
-                        <div class="d-flex flex-column text-light pe-0 pe-sm-10">
-                            <h4 class="mb-2 text-light">Phone Number Updated</h4>
-                            <span>Your phone number have been updated to {{ form.phone_number.value }}. You have {% if form.enable_whatsapp.value %}enabled{% else %}disabled{% endif %} WhatsApp login.</span>
+
+                    <div class="row mt-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6" for="business_name">Business Name</label>
+                        <div class="col-lg-8">
+                            <input type="text" x-model="businessName" name="business_name" id="business_name" class="form-control"{% if form.business_name.value != None %} value="{{ form.business_name.value }}" {% endif %} />
+                            {% if form.business_name.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.business_name.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                         </div>
-
-                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                            {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-2x svg-icon-light">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
-                        </button>
                     </div>
-                {% elif message|cut:' ' == 'MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN' %}
-                    <div class="alert alert-dismissible bg-info d-flex flex-column flex-sm-row w-100 p-5 mb-10">
-                        {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
-                        <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
-                                <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
-                            </svg>
-                        </span>
-                        {% comment %} End: SVG icon {% endcomment %}
-                        
-                        <div class="d-flex flex-column text-light pe-0 pe-sm-10">
-                            <h4 class="mb-2 text-light">Try Again</h4>
-                            <span>Your phone number update didn't work. Please try again.</span>
+
+                    <div class="row mt-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6" for="business_address">Business Address</label>
+                        <div class="col-lg-8">
+                            <textarea x-model="businessAddress" class="form-control" data-kt-autosize="true" name="business_address" id="business_address">{% if form.business_address.value != None %}{{ form.business_address.value }}{% endif %}</textarea>
+                            {% if form.business_address.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.business_address.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                         </div>
-
-                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                            {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-2x svg-icon-light">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG icon {% endcomment %}
-                        </button>
                     </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
 
-        {% if form.errors %}
-            <div class="alert alert-dismissible bg-danger d-flex flex-column flex-sm-row w-100 p-5 mb-10">
-                {% comment %} Start: SVG icon | path: icons/duotune/general/gen007.svg {% endcomment %}
-                <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
-                        <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
-                    </svg>
-                </span>
-                {% comment %} End: SVG icon {% endcomment %}
-                
-                <div class="d-flex flex-column text-light pe-0 pe-sm-10">
-                    <h4 class="mb-2 text-light">Error</h4>
-                    <span>Unable to update. Please see error messages below.</span>
+                    <div class="row mt-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6" for="business_description">Business Description</label>
+                        <div class="col-lg-8">
+                            <textarea x-model="businessDescription" class="form-control" data-kt-autosize="true" name="business_description" id="business_description">{% if form.business_description.value != None %}{{ form.business_description.value }}{% endif %}</textarea>
+                            {% if form.business_description.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.business_description.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                        </div>
+                    </div>
                 </div>
 
-                <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                    {% comment %} Start: SVG icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
-                    <span class="svg-icon svg-icon-2x svg-icon-light">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
-                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
-                        </svg>
-                    </span>
-                    {% comment %} End: SVG icon {% endcomment %}
-                </button>
-            </div>
-        {% endif %}
-
-        {% comment %} <div class="card mb-5 mb-xl-10 shadow-sm">
-            <div class="card-body pt-9 pb-0">
-                {% include 'relationships/includes/user_item.html' %}  
-                {% include 'relationships/includes/user_detail_nav.html' with tab='settings' %}
-            </div>
-        </div> {% endcomment %}
-
-
-
-
-        {% comment %} Start: Profile {% endcomment %}
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <div class="card-title">
-                    <h3 class="fw-bolder">Profile</h3>
+                <div class="card-footer d-flex justify-content-end">
+                    <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary btn-sm" x-bind:disabled="fieldNotChanged">Save</button>
                 </div>
             </div>
-
-            <div class="card-body">
-                <div class="row">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6">WhatsApp Phone Number</label>
-                    <div class="col-lg-8 d-flex align-items-center fw-bolder fs-4">+65 88933466</div>
-                </div>
-
-                <div class="row mt-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">First Name</label>
-                    <div class="col-lg-8">
-                        <input type="text" name="first_name" class="form-control" />
-                    </div>
-                </div>
-
-                <div class="row mt-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">Last Name</label>
-                    <div class="col-lg-8">
-                        <input type="text" name="first_name" class="form-control" />
-                    </div>
-                </div>
-
-                <div class="row mt-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">Country</label>
-                    <div class="col-lg-8">
-                        <select name="country" data-control="select2" data-placeholder="Country" class="form-select fw-bold">
-                            {% for country in countries %}
-                                <option value="{{ country.programmatic_key }}"{% if form.country.value == country.programmatic_key %} selected{% endif %}>{{ country.name }}</option>
-                            {% endfor %}
-                        </select>
-                        {% if form.country.errors %}<div class="text-danger">{% for error in form.country.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                    </div>
-                </div>
-
-                <div class="row mt-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">Email</label>
-                    <div class="col-lg-8">
-                        <input type="text" name="first_name" class="form-control" />
-                    </div>
-                </div>
-
-                <div class="row mt-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6">Business Name</label>
-                    <div class="col-lg-8">
-                        <input type="text" name="first_name" class="form-control" />
-                    </div>
-                </div>
-
-                <div class="row mt-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6">Business Description</label>
-                    <div class="col-lg-8">
-                        <textarea class="form-control" data-kt-autosize="true"></textarea>
-                    </div>
-                </div>
-
-                <div class="row mt-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6">Telegram</label>
-                    <div class="col-lg-8 d-flex gap-2 align-items-center">
-                        <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault"/>
-                        <label class="form-check-label" for="flexCheckDefault">Enable</label>
-                    </div>
-                </div>
-
-                <div class="row mt-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6">WeChat ID</label>
-                    <div class="col-lg-8">
-                        <input type="text" name="first_name" class="form-control" />
-                        <div class="text-muted mt-2">Leave blank to disable WeChat.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-footer d-flex justify-content-end">
-                {% comment %} Only clicked button send their values, so we use this property to detect which submit button was clicked. {% endcomment %}
-                <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary btn-sm">Save</button>
-            </div>
+            {% comment %} End: Profile {% endcomment %}
         </div>
-        {% comment %} End: Profile {% endcomment %}
-
-
-        {% comment %} <div class="row mt-6">
-            <label class="col-lg-4 col-form-label fw-bold fs-6">WeChat ID</label>
-            <div class="col-lg-8">
-                <input type="text" name="first_name" class="form-control" />
-                <div class="text-muted">Leave blank if you do not wish to be contacted via WeChat.</div>
-            </div>
-        </div>
-
-        <div class="row mt-6">
-            <label class="col-lg-4 col-form-label fw-bold fs-6">Telegram</label>
-            <div class="col-lg-8">
-                <div class="form-check form-check-custom">
-                    <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault"/>
-                    <label class="form-check-label" for="flexCheckDefault">
-                        Default checkbox
-                    </label>
-                </div>
-                <div class="text-muted">Check if wish to be contacted via Telegram.</div>
-            </div>
-        </div> {% endcomment %}
-
-
-        {% comment %} <div class="card shadow-sm mt-4">
-            <div class="card-header">
-                <div class="card-title">
-                    <h3 class="fw-bolder">Email</h3>
-                </div>
-            </div>
-
-            <div class="card-body">
-                <div class="row mt-6">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6 required">Email</label>
-                    <div class="col-lg-8">
-                        <input type="text" name="first_name" class="form-control" />
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-footer d-flex justify-content-end">
-                <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary btn-sm">Save</button>
-            </div>
-        </div> {% endcomment %}
-
-        {% comment %} <div class="card shadow-sm mt-4">
-            <div class="card-header d-flex flex-column justify-content-center py-6">
-                <div class="card-title">
-                    <h3 class="fw-bolder">Chat </h3>
-                </div>
-                <div class="text-muted">Let others contact me via these apps</div>
-            </div>
-
-            <div class="card-body">
-                <div class="form-check form-check-custom mt-4">
-                    <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault"/>
-                    <label class="form-check-label" for="flexCheckDefault">Telegram</label>
-                </div>
-
-                <div class="form-check form-check-custom mt-4">
-                    <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault"/>
-                    <label class="form-check-label" for="flexCheckDefault">WeChat</label>
-                </div>
-            </div>
-
-            <div class="card-footer d-flex justify-content-end">
-                <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary btn-sm">Save</button>
-            </div>
-        </div> {% endcomment %}
-
-       {% comment %} Start: Profile {% endcomment %}
-        {% comment %} <div class="card shadow-sm mt-4">
-            <div class="card-header">
-                <div class="card-title">
-                    <h3 class="fw-bolder">Facebook</h3>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-                <div class="row">
-                    <label class="col-lg-4 col-form-label fw-bold fs-6">Facebook ID</label>
-                    <div class="col-lg-8 d-flex align-items-center fw-bolder fs-4">1234567890</div>
-                </div>
-            </div>
-        </div> {% endcomment %}
-    {% comment %} End: Profile {% endcomment %}
-
-    {% comment %} <div class="card shadow-sm mt-4">
-        <div class="card-header">
-            <div class="card-title">
-                <h3 class="fw-bolder">WeChat</h3>
-            </div>
-        </div>
-
-        <div class="card-body">
-            <div class="row">
-                <label class="col-lg-4 col-form-label fw-bold fs-6">WeChat ID</label>
-                <div class="col-lg-8">
-                    <input type="text" name="first_name" class="form-control" />
-                </div>
-            </div>
-        </div>
-
-        <div class="card-footer d-flex justify-content-end gap-2">
-            <button name="update_profile" value="update_profile" type="submit" class="btn btn-primary btn-sm">Save</button>
-        </div>
-    </div> {% endcomment %}
-
-
     </div>
-</div>
-
 </form>
-{% endblock %}
-
-{% comment %}
-We render the Javascript inline because we may toggle email/phone-number div in the event of an error.
-
-"use strict";
-
-// Class definition
-var settings_functions = function () {
-    // Private functions
-    var init_toggles = function () {
-
-        var change_email_preview_div = document.getElementById('change_email_preview_div');
-        var change_email_form_div = document.getElementById('change_email_form_div');
-        var change_email_button_div = document.getElementById('change_email_button_div');
-        var change_email_button_cancel = document.getElementById('change_email_button_cancel');
-
-        var change_phone_number_preview_div = document.getElementById('change_phone_number_preview_div');
-        var change_phone_number_form_div = document.getElementById('change_phone_number_form_div');
-        var change_phone_number_button_div = document.getElementById('change_phone_number_button_div');
-        var change_phone_number_button_cancel = document.getElementById('change_phone_number_button_cancel');
-
-        change_email_button_div.querySelector('button').addEventListener('click', function () {
-            toggle_change_email();
-        });
-
-        change_email_button_cancel.addEventListener('click', function () {
-            toggle_change_email();
-        });
-
-        change_phone_number_button_div.querySelector('button').addEventListener('click', function () {
-            toggle_change_phone_number();
-        });
-
-        change_phone_number_button_cancel.addEventListener('click', function () {
-            toggle_change_phone_number();
-        });
-
-        var toggle_change_email = function () {
-            change_email_preview_div.classList.toggle('d-none');
-            change_email_button_div.classList.toggle('d-none');
-            change_email_form_div.classList.toggle('d-none');
-        }
-
-        var toggle_change_phone_number = function () {
-            change_phone_number_preview_div.classList.toggle('d-none');
-            change_phone_number_button_div.classList.toggle('d-none');
-            change_phone_number_form_div.classList.toggle('d-none');
-        }
-
-        /* @preserve
-        Manually remove comment enclosure after minification
-        {% if form.email.errors %}toggle_change_email();{% endif %}
-        {% if form.phone_number.errors %}toggle_change_phone_number();{% endif %}
-        */
-    }
-
-    // Public methods
-    return {
-        init: function () {
-            init_toggles();
-        }
-    }
-}();
-
-// On document ready
-KTUtil.onDOMContentLoaded(function() {
-    settings_functions.init();
-});
-{% endcomment %}
-{% block page_custom_javascript %}
-<script>
-"use strict";var settings_functions={init:function(){!function(){var e=document.getElementById("change_email_preview_div"),n=document.getElementById("change_email_form_div"),t=document.getElementById("change_email_button_div"),c=document.getElementById("change_email_button_cancel"),o=document.getElementById("change_phone_number_preview_div"),i=document.getElementById("change_phone_number_form_div"),d=document.getElementById("change_phone_number_button_div"),l=document.getElementById("change_phone_number_button_cancel");t.querySelector("button").addEventListener("click",(function(){u()})),c.addEventListener("click",(function(){u()})),d.querySelector("button").addEventListener("click",(function(){g()})),l.addEventListener("click",(function(){g()}));var u=function(){e.classList.toggle("d-none"),t.classList.toggle("d-none"),n.classList.toggle("d-none")},g=function(){o.classList.toggle("d-none"),d.classList.toggle("d-none"),i.classList.toggle("d-none")}
-{% if form.email.errors %}u();{% endif %}
-{% if form.phone_number.errors %}g();{% endif %}
-}()}};KTUtil.onDOMContentLoaded((function(){settings_functions.init()}));
-</script>
 {% endblock %}

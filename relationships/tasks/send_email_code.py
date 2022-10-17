@@ -52,11 +52,17 @@ def send_email_code(
         body = render_to_string(
             'relationships/email/confirm_login.txt',
             {'code': user.email_code})
-    elif purpose == email_purposes.VERIFY_EMAIL:
+    elif purpose == email_purposes.REGISTER:
         subject = render_to_string(
             'relationships/email/verify_email_subject.txt', {})
         body = render_to_string(
             'relationships/email/verify_email.txt',
+            {'code': user.email_code})
+    elif purpose == email_purposes.UPDATE_EMAIL:
+        subject = render_to_string(
+            'relationships/email/update_email_subject.txt', {})
+        body = render_to_string(
+            'relationships/email/update_email.txt',
             {'code': user.email_code})
 
     if subject is not None and body is not None:

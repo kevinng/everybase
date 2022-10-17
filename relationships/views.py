@@ -144,12 +144,9 @@ def register__enter_whatsapp(request):
                 # countries). Direct user to select his country.
                 target_name = 'register:select_country'
 
-            return HttpResponseRedirect(
-                _append_next(
-                    reverse(target_name, args=(user.id,)),
-                    form.cleaned_data.get('next')
-                )
-            )
+            return redirect(_append_next(
+                reverse(target_name, args=(user.id,)),
+                form.cleaned_data.get('next')))
     else:
         form = forms.RegisterEnterWhatsAppForm(
             initial={'next': request.GET.get('next')})
@@ -176,15 +173,9 @@ def register__select_country(request, user_id):
                 programmatic_key=form.cleaned_data.get('country'))
             user.save()
 
-            return HttpResponseRedirect(
-                _append_next(
-                        reverse(
-                            'register:confirm_whatsapp',
-                            args=(user.id,)
-                        ),
-                        form.cleaned_data.get('next')
-                    )
-                )
+            return redirect(_append_next(
+                reverse('register:confirm_whatsapp', args=(user.id,)),
+                form.cleaned_data.get('next')))
     else:
         form = forms.RegisterSelectCountryForm(
             initial={'next': request.GET.get('next')})
@@ -194,10 +185,8 @@ def register__select_country(request, user_id):
             'user': user,
             'form': form,
             'countries': commods.Country.objects.filter(
-                country_code=user.phone_number.country_code
-            )
-        }
-    )
+                country_code=user.phone_number.country_code)
+        })
 
 @csrf_exempt
 def register__resend_whatsapp_code(request, user_id):
@@ -229,14 +218,12 @@ def register__confirm_whatsapp(request, user_id):
     if request.method == 'POST':
         form = forms.RegisterConfirmWhatsAppForm(request.POST, user=user)
         if form.is_valid():
-            use_whatsapp_code(user)
+            use_whatsapp_code(user, whatsapp_purposes.VERIFY_WHATSAPP)
 
-            return HttpResponseRedirect(
-                _append_next(
-                    reverse('register:enter_profile', args=(user.id,)),
-                    form.cleaned_data.get('next')
-                )
-            )
+            return redirect(_append_next(
+                reverse('register:enter_profile', args=(user.id,)),
+                form.cleaned_data.get('next')
+            ))
     else:
         # Send WhatsApp confirmation code and redirect user to confirm it.
         send_whatsapp_code.delay(user.id, whatsapp_purposes.VERIFY_WHATSAPP)
@@ -248,8 +235,7 @@ def register__confirm_whatsapp(request, user_id):
         'relationships/register__confirm_whatsapp.html', {
             'form': form,
             'user': user
-        }
-    )
+        })
 
 def register__enter_profile(request, user_id):
     # If user is already authenticated and registered, direct user to detail.
@@ -276,12 +262,10 @@ def register__enter_profile(request, user_id):
 
             send_email_code(user.id, email_purposes.VERIFY_EMAIL)
 
-            return HttpResponseRedirect(
-                _append_next(
-                    reverse('register:confirm_email', args=(user.id,)),
-                    form.cleaned_data.get('next')
-                )
-            )
+            return redirect(_append_next(
+                reverse('register:confirm_email', args=(user.id,)),
+                form.cleaned_data.get('next')
+            ))
     else:
         form = forms.RegisterEnterProfileForm(
             initial={'next': request.GET.get('next')})
@@ -290,8 +274,7 @@ def register__enter_profile(request, user_id):
         'relationships/register__enter_profile.html', {
             'form': form,
             'user': user
-        }
-    )
+        })
 
 @csrf_exempt
 def register__resend_email_code(request, user_id):
@@ -323,7 +306,7 @@ def register__confirm_email(request, user_id):
     if request.method == 'POST':
         form = forms.RegisterConfirmEmailForm(request.POST, user=user)
         if form.is_valid():
-            use_email_code(user)
+            use_email_code(user, email_purposes.REGISTER)
 
             # Create/link Django user
             user.django_user, _ = \
@@ -353,8 +336,7 @@ def register__confirm_email(request, user_id):
         'relationships/register__confirm_email.html', {
             'form': form,
             'user': user
-        }
-    )
+        })
 
 @login_required
 def register__enter_status(request, user_id):
@@ -419,8 +401,7 @@ def register__enter_status(request, user_id):
             'form': form,
             'user': user,
             'form_uuid': uuid.uuid4()
-        }
-    )
+        })
 
 @login_required
 @csrf_exempt
@@ -613,15 +594,6 @@ def user_detail(request, phone_number):
     absolute_url = request.build_absolute_uri(
         reverse('user_detail', args=(user.phone_number.value(),)))
 
-    # Non URL-friendly version of ask text, for copying.
-    ask_text = render_to_string(
-        'relationships/texts/ask_text.txt', {
-            'url': absolute_url
-    })
-
-    # URL-friendly version of ask text, for WhatsApp link, etc.
-    ask_text_url = ask_text.replace('\n', '%0A').replace(' ', '%20')
-
     return TemplateResponse(request,
         'relationships/user_detail.html', {
             'absolute_url': absolute_url,
@@ -629,13 +601,8 @@ def user_detail(request, phone_number):
             'user': user,
             'form': form,
             'is_show_update_form': is_show_update_form,
-            'ask_text': ask_text,
-            'ask_text_url': ask_text_url,
-
-# The dropzone form may need to work on form reload...
-            'form_uuid': uuid.uuid4(),
-        }
-    )
+            'form_uuid': uuid.uuid4()
+        })
 
 @login_required
 @ratelimit(key='user_or_ip', rate='240/d', block=True)
@@ -720,7 +687,7 @@ def confirm_whatsapp_login(request, user_id):
         form = forms.ConfirmWhatsAppLoginForm(request.POST, user=user)
         if form.is_valid():
             user = form.user
-            use_whatsapp_code(user)
+            use_whatsapp_code(user, whatsapp_purposes.LOGIN)
             dju = authenticate(user.django_user.username) # Passwordless
             if dju is not None:
                 login(request, dju)
@@ -743,10 +710,93 @@ def confirm_whatsapp_login(request, user_id):
             'user': user
         })
 
+# Don't name profile settings function 'settings', it conflicts with
+# everybase.settings.
+@login_required
+def users__settings(request):
+    user = request.user.user
 
+    if request.method == 'POST':
+        form = forms.SettingsForm(request.POST, user=user)
+        if form.is_valid():
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            country_str = form.cleaned_data.get('country')
+            try:
+                country = commods.Country.objects.get(
+                    programmatic_key=country_str)
+            except commods.Country.DoesNotExist:
+                country = None
+            business_name = form.cleaned_data.get('business_name')
+            business_address = form.cleaned_data.get('business_address')
 
+            # Override existing data without checking.
+            user.first_name = first_name
+            user.last_name = last_name
+            user.country = country
+            user.business_name = business_name
+            user.business_address = business_address
+            user.save()
 
+            email_str = form.cleaned_data.get('email')
+            email = get_or_create_email(email_str)
+            if user.email != email:
+                # Email changed, send WhatsApp code.
+                user.pending_email = email
+                user.save()
+                send_email_code.delay(
+                    user.id,
+                    email_purposes.UPDATE_EMAIL,
+                    user.pending_email.email
+                )
+                return redirect('users:confirm_email')
+    else:
+        form = forms.SettingsForm(initial={
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'country': user.country,
+            'business_name': user.business_name,
+            'business_address': user.business_address,
+            'business_description': user.business_description,
+            'email': user.email,
+        }, user=user)
 
+    return TemplateResponse(request, 'relationships/settings.html', {
+        'form': form,
+        'countries': commods.Country.objects.filter(
+            country_code=user.phone_number.country_code)
+    })
+
+@login_required
+def users__settings__confirm_email(request):
+    user = request.user.user
+
+    if request.method == 'POST':
+        form = forms.SettingsConfirmEmailForm(request.POST, user=user)
+        if form.is_valid():
+            use_email_code(user, email_purposes.UPDATE_EMAIL)
+            user.email = user.pending_email
+            user.save()
+            return redirect('users:settings')
+            
+    return TemplateResponse(request,
+        'relationships/settings__confirm_email.html')
+
+@login_required
+@csrf_exempt
+def users__settings__resend_email_code(request, user_id):
+    # Prevent access of a non-existent user.
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return Http404(None) # No error message for security reasons.
+
+    if request.user.user.id != user_id:
+        return Http404(None) # No error message for security reasons.
+
+    if request.method == 'POST':
+        send_email_code(user.id, email_purposes.UPDATE_EMAIL)
+        return HttpResponse(status=204)
 
 
 
@@ -921,7 +971,6 @@ def confirm_whatsapp_login(request, user_id):
 #         return HttpResponseRedirect(reverse('home'))
 
 
-#     # TODO: WE NEED TO CHECK FOR REGISTERED TIMESTAMP BEFORE ALLOWING LOGIN
 
     
 #     if request.method == 'POST':
@@ -1053,33 +1102,10 @@ def confirm_whatsapp_login(request, user_id):
     # params = _pass_next({'form': form}, request.GET.get('next'))
     # return TemplateResponse(request, 'relationships/verify_whatsapp.html', None)
 
-# Don't name profile settings function 'settings', it conflicts with everybase.settings.
-# @login_required
-def profile_settings(request):
-    
 
 
 
 
-
-    # user = request.user.user
-    # kwargs = {'user': user}
-
-    # # Default SettingsForm values to user's existing values
-    # inputs = {
-    #     'first_name': user.first_name,
-    #     'last_name': user.last_name,
-    #     'country': user.country.programmatic_key if user.country is not None else 'country_not_set',
-    #     'enable_whatsapp': user.enable_whatsapp
-    # }
-
-    # # Default email if user's email is set
-    # if user.email is not None:
-    #     inputs['email'] = user.email.email
-
-    # # Default phone number if user's phone number is set
-    # if user.phone_number is not None:
-    #     inputs['phone_number'] = f'+{user.phone_number.country_code} {user.phone_number.national_number}'
 
     # if request.method == 'POST':
     #     # Override form with relevant values depending on the button clicked, so only relevant fields are updated.
@@ -1098,7 +1124,7 @@ def profile_settings(request):
     #         inputs['enable_whatsapp'] = request.POST.get('enable_whatsapp')
     #         inputs['update_phone_number'] = 'update_phone_number'
 
-    #     form = forms.SettingsForm(inputs, **kwargs)
+        
 
     #     if form.is_valid():
     #         if request.POST.get('update_profile') == 'update_profile':
@@ -1178,11 +1204,7 @@ def profile_settings(request):
     # else:
     #     form = forms.SettingsForm(initial=inputs, **kwargs)
 
-    return TemplateResponse(request, 'relationships/settings.html', {
-        # 'form': form,
-        'countries': commods.Country.objects.annotate(
-            num_users=Count('users_as_country')).order_by('-num_users')
-    })
+
 
 # @login_required
 # def update_email(request):

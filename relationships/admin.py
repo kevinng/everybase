@@ -69,11 +69,11 @@ class WorldOfChemicalsSupplierInlineAdmin(admin.TabularInline):
         'invalid_alt_email', 'invalid_alt_email_2', 'invalid_alt_email_3']
 
 class UserInlineAdmin(admin.TabularInline):
-    # model = gromods.EmailStatus.emails.through
     model = models.User
     extra = 1
     fields = ['user_link']
     readonly_fields = ['user_link']
+    fk_name = 'email'
 
     def user_link(self, obj):
         link = urljoin(settings.BASE_URL, settings.ADMIN_PATH)
@@ -177,9 +177,10 @@ class UserAdmin(comadm.StandardAdmin):
         ('Details', {'fields': ['email', 'first_name', 'last_name',
             'phone_number', 'country', 'business_name', 'business_address',
             'business_description', 'status', 'walked_through_status']}),
-        ('Login', {'fields': ['email_code_used', 'email_code',
+        ('Administration', {'fields': ['email_code_used', 'email_code',
             'email_code_generated', 'email_code_purpose','whatsapp_code_used',
-            'whatsapp_code', 'whatsapp_code_generated', 'whatsapp_code_purpose'
+            'whatsapp_code', 'whatsapp_code_generated', 'whatsapp_code_purpose',
+            'pending_email'
             ]}),
         ('Timestamps', {'fields': ['created', 'updated', 'deleted']})
     ]
