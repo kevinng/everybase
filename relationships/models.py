@@ -575,19 +575,42 @@ class Review(commods.Standard):
 class ReviewFile(commods.Standard):
     """Review file
 
-    Last updated: 29 September 2022, 7:01 PM
+    Last updated: 17 October 2022, 7:22 PM
     """
-    review = models.ForeignKey(
-        'Review',
-        related_name='files',
-        related_query_name='files',
-        on_delete=models.PROTECT,
+    form_uuid = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    activated = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    file_uuid = models.UUIDField(
+        null=True,
+        blank=True,
         db_index=True
     )
     file = models.ForeignKey(
         'files.File',
-        related_name='reviews_as_file',
-        related_query_name='reviews_as_file',
+        related_name='review_file_as_file',
+        related_query_name='review_file_as_file',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    phone_number = models.ForeignKey(
+        'PhoneNumber',
+        related_name='review_file_as_phone_number',
+        related_query_name='review_file_as_phone_number',
+        on_delete=models.PROTECT,
+        db_index=True
+    )
+    reviewer = models.ForeignKey(
+        'User',
+        related_name='review_file_as_reviewer',
+        related_query_name='review_file_as_reviewer',
         on_delete=models.PROTECT,
         db_index=True
     )
@@ -630,6 +653,22 @@ class ReviewCommentFile(commods.Standard):
         related_name='review_response_files_as_file',
         related_query_name='review_response_files_as_file',
         on_delete=models.PROTECT,
+        db_index=True
+    )
+    form_uuid = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    activated = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True
+    )
+    file_uuid = models.UUIDField(
+        null=True,
+        blank=True,
         db_index=True
     )
 

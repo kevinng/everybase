@@ -37,6 +37,7 @@ urlpatterns = [
 
     path('p/<str:phone_number>/', relviews.user_detail, name='user_detail'),
     path('r/<str:phone_number>/', relviews.user_reviews, name='user_reviews'),
+    path('r/<str:phone_number>/new', relviews.review_create, name='review_create'),
     path('w/<str:phone_number>/', relviews.user_whatsapp, name='user_whatsapp'),
 
     path('users/', include('relationships.urls')),

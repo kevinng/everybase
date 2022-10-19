@@ -43,7 +43,7 @@
                     {% comment %} {% load user_full_name %} {% endcomment %}
                     {% comment %} {% user_full_name request.user.user as full_name %} {% endcomment %}
                     <a href="{% url 'user_detail' request.user.user.phone_number.value %}" class="fw-bolder d-flex align-items-center fs-5">
-                        {{ request.user.user.first_name }} {{ request.user.user.last_name }}
+                        {{ request.user.user.first_name|title }} {{ request.user.user.last_name|title }}
                     </a>
                     <div class="fw-bold text-muted fs-7">{{ request.user.user.country.name }}</div>
                 </div>

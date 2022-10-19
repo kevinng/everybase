@@ -316,19 +316,19 @@ class ReviewAdmin(comadm.StandardAdmin):
     ]
     autocomplete_fields = ['reviewer', 'phone_number']
 
-_review_file_fields = ['review', 'file']
+_review_file_fields = ['form_uuid', 'activated', 'file_uuid', 'file',
+    'phone_number', 'reviewer']
 @admin.register(models.ReviewFile)
 class ReviewFileAdmin(comadm.StandardAdmin):
     # List page settings
     list_display = comadm.standard_list_display + _review_file_fields
     list_editable = [] # Speed up loading
-    search_fields = comadm.standard_search_fields + ['review__body']
 
     # Details page settings
     fieldsets = comadm.standard_fieldsets + [
         (None, {'fields': _review_file_fields})
     ]
-    autocomplete_fields = ['review', 'file']
+    autocomplete_fields = ['file', 'phone_number', 'reviewer']
 
 _review_response_fields = ['review', 'author']
 @admin.register(models.ReviewComment)
@@ -344,7 +344,8 @@ class ReviewCommentAdmin(comadm.StandardAdmin):
         (None, {'fields': _review_response_fields})
     ]
 
-_review_comment_file_fields = ['comment', 'file']
+_review_comment_file_fields = ['comment', 'file', 'activated', 'form_uuid',
+    'file_uuid']
 @admin.register(models.ReviewCommentFile)
 class ReviewCommentFileAdmin(comadm.StandardAdmin):
     # List page settings

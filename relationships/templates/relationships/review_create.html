@@ -1,0 +1,225 @@
+{% extends 'extendables/b.html' %}
+
+{% load static %}
+
+{% block other_head_tags %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block page_title %}Review User{% endblock %}
+{% block page_title_separator %}{% endblock %}
+
+{% block actions %}
+<a href="{% url 'user_detail' phone_number.value %}" class="btn btn-sm btn-secondary">Back</a>
+{% endblock %}
+
+{% block content_body %}
+<form action="" method="post" id="review_form">
+    {% csrf_token %}
+    <input type="hidden" name="form_uuid" value="{{ form_uuid }}" />
+    <input type="hidden" id="num_files_processing" value="0" x-ref="num_files_processing" />
+    <input type="hidden" id="num_files_success" value="0" x-ref="num_files_success" />
+    <input type="hidden" id="num_files_error" value="0" x-ref="num_files_error" />
+    <input type="hidden" id="num_files_removed" value="0" x-ref="num_files_removed" />
+
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        {% comment %} Start: Container {% endcomment %}
+        <div id="kt_content_container" class="container-xxl">
+            <div class="card shadow-sm mt-4">
+                {% comment %} Start: Card body {% endcomment %}
+                <div class="card-body">
+                    <div class="mt-6">
+                        <label class="form-label">Reviewing</label>
+                        <a href="{% url 'user_detail' phone_number.value %}">
+                            {% if reviewee != None %}
+                                <div class="fs-2 fw-bolder">{{ reviewee.first_name|title }} {{ reviewee.last_name|title }}</div>
+                                <div class="fs-7 fw-bold text-muted">{{ reviewee.country.name }}</div>
+                            {% else %}
+                                <div class="fw-bolder fs-2">+{{ phone_number.country_code }} {{ phone_number.national_number }}</div>
+                            {% endif %}
+                        </a>
+                    </div>
+
+                    <div class="mt-8">
+                        <label class="form-label required">Review</label>
+                        <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="review" name="review" placeholder="E.g., this user cheated me of...">{% if form.review.value != 'None' %}{{ form.review.value }}{% endif %}</textarea>
+                        {% if form.review.errors %}<div class="text-danger mt-2 ms-2">{% for error in form.review.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                    </div>
+
+                    <div class="mt-8 d-flex gap-2 flex-column">
+                        <label class="form-label required">Rating</label>
+                        <div class="form-check form-check-custom">
+                            <input class="form-check-input" type="radio" value="good" name="rating" id="good_review" />
+                            <label for="good_review" class="form-check-label"><span class="badge badge-success">Good Review</span></label>
+                        </div>
+                        <label class="form-check form-check-custom">
+                            <input class="form-check-input" type="radio" value="bad" name="rating" id="bad_review" />
+                            <label for="bad_review" class="form-check-label"><span class="badge badge-danger">Bad Review</span></label>
+                        </label>
+                        {% if form.rating.errors %}<div class="text-danger mt-2 ms-2">{% for error in form.rating.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                    </div>
+
+                    <div class="mt-8">
+                        <div class="dropzone" id="review_dropzone">
+                            <div class="dz-message needsclick">
+                                <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                <div class="ms-4">
+                                    <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop images here or click to upload.</h3>
+                                    <span class="fs-7 fw-semibold text-gray-400">Upload up to {{ settings.MAX_REVIEW_IMAGES }} images.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="mt-6">
+                        {% for err in form.non_field_errors %}
+                            <div class="text-danger mt-2">{{ err }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% comment %} End: Card body {% endcomment %}
+                
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <a href="{% url 'user_detail' phone_number.value %}" class="btn btn-light btn-active-light-primary me-2 btn-sm">Cancel</a>
+                    <button id="submit"
+                        type="submit"
+                        class="btn btn-primary btn-sm"
+                        {% comment %} g-recaptcha  {% endcomment %}
+                        data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
+                        data-callback="post"
+                        data-action="submit">Post</button>
+                </div>
+            </div>
+        </div>
+        {% comment %} End: Container {% endcomment %}
+    </div>
+</form>
+{% endblock %}
+
+{% block page_custom_javascript %}
+<script>
+    {% comment %} Need to be outside document ready. {% endcomment %}
+    function post(token) {
+        document.getElementById("review_form").submit()
+    }
+
+$(document).ready(function() {
+
+        const submit = $('#submit')
+        const review = $('#review')
+        const rating = $("input[name='rating']")
+        let ratingChecked = false
+
+        // These fields will not be minified because they contain rendered values.
+        const uploadReviewImageURL = "{% url 'users:upload_review_file' reviewer.id phone_number.id  %}"
+        const formUUID = "{{ form_uuid }}"
+        const maxFiles = {{ settings.MAX_REVIEW_IMAGES }}
+        const maxFileSize = {{ settings.MAX_REVIEW_IMAGE_FILE_SIZE_IN_BYTES }}
+        const deleteReviewImageURL = "{% url 'users:delete_review_file' %}"
+
+        let numFilesProcessing = 0
+        let numFilesSuccess = 0
+        let numFilesError = 0
+        let numFilesRemoved = 0
+    
+        // Helper function to return the number of images in upload.
+        function numFilesUploading() {
+            // Removed = Success + Error
+            a = numFilesProcessing - numFilesRemoved
+            b = numFilesProcessing - numFilesSuccess - numFilesError
+            if (a > b) { return b }
+            return a
+        }
+    
+        // Helper function to generate UUID
+        function uuidv4() {
+            return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            )
+        }
+    
+        function setPostDisabled() {
+            if (review.val().length > 0 && ratingChecked && numFilesUploading() <= 0) {
+                submit.removeClass('disabled')
+            } else {
+                submit.addClass('disabled')    
+            }
+        }
+
+        review.on('keyup', function () {
+            setPostDisabled()
+        })
+
+        rating.on('change', function(e) {
+            ratingChecked = true
+            setPostDisabled()
+        })
+
+        setPostDisabled()
+
+        var review_dropzone = new Dropzone("#review_dropzone", {
+            url: uploadReviewImageURL,
+            params: { form_uuid: formUUID },
+            paramName: "file",
+            acceptedFiles: "image/*",
+            maxFiles: maxFiles,
+            maxFilesize: maxFileSize,
+            addRemoveLinks: true,
+            renameFile: function (file) {
+                uuid = uuidv4()
+                return uuid
+            },
+            init: function () {
+                this.on("processing", function (file) {
+                    numFilesProcessing += 1
+                    setPostDisabled()
+                })
+    
+                this.on("success", function (file, response) {
+                    numFilesSuccess += 1
+                    setPostDisabled()
+                })
+    
+                this.on("error", function (file, error, xhr) {
+                    numFilesError += 1
+                    setPostDisabled()
+                })
+    
+                this.on("removedfile", function (file, error, xhr) {
+                    let headers = new Headers()
+                    headers.append('Accept', 'application/json')
+                    headers.append('Content-Type', 'application/json')
+                    fetch(
+                        deleteReviewImageURL, {
+                        method: 'POST',
+                        mode: 'same-origin',
+                        credentials: 'include',
+                        redirect: 'follow',
+                        headers: headers,
+                        body: JSON.stringify({
+                            file_uuid: file.upload.filename,
+                            form_uuid: formUUID
+                        })
+                    })
+    
+                    // We put these functions outside fetch.then because hiding the
+                    // form will trigger the remove callback if there are images
+                    // in the dropzone.
+                    numFilesRemoved += 1
+                    setPostDisabled()
+                })
+            }
+        })
+
+
+
+
+
+
+
+
+
+
+})
+</script>
+{% endblock %}

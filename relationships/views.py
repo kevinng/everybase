@@ -9,9 +9,9 @@ import json
 import pytz, urllib
 import random
 import relationships
+import requests
 from relationships.utilities.get_whatsapp_url import get_whatsapp_url
 from relationships.utilities._archive.set_cookie_uuid import set_cookie_uuid
-# from relationships.utilities.get_or_set_cookie_uuid import get_or_create_cookie_uuid
 from datetime import datetime
 from ratelimit.decorators import ratelimit
 
@@ -42,9 +42,11 @@ from common.utilities.get_ip_address import get_ip_address
 from relationships import forms, models
 from relationships.tasks.send_email_code import send_email_code
 from relationships.tasks.send_whatsapp_code import send_whatsapp_code
-from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
+from relationships.utilities.are_phone_numbers_same import \
+    are_phone_numbers_same
 from relationships.utilities.email_exists import email_exists
-from relationships.utilities.get_or_create_phone_number import get_or_create_phone_number
+from relationships.utilities.get_or_create_phone_number import \
+    get_or_create_phone_number
 from relationships.utilities.get_or_create_email import get_or_create_email
 from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.use_email_code import use_email_code
@@ -52,10 +54,12 @@ from relationships.utilities.use_whatsapp_code import use_whatsapp_code
 from relationships.utilities._archive.user_uuid_exists import user_uuid_exists
 from relationships.constants import email_purposes, whatsapp_purposes
 
-from relationships.tasks.delete_orphan_files import delete_orphan_files
-from relationships.tasks.upload_status_files__delete_other_files import \
-    upload_status_files__delete_other_files
-from relationships.tasks.delete_file import delete_file
+from relationships.tasks.clear_abandoned_files import clear_abandoned_files as \
+    _clear_abandoned_files
+from relationships.tasks.delete_status_file import delete_status_file as \
+    _delete_status_file
+from relationships.tasks.delete_review_file import delete_review_file as \
+    _delete_review_file
 
 from files import models as fimods
 
@@ -72,6 +76,8 @@ MESSAGE_KEY__EMAIL_UPDATE_SUCCESS = 'MESSAGE_KEY__EMAIL_UPDATE_SUCCESS'
 MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN = 'MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN'
 MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS = 'MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS'
 
+_recaptcha_failed_msg = "We suspect you're a bot. Please wait a short while before posting."
+
 # Helper functions
 
 def _append_next(url, next):
@@ -79,12 +85,6 @@ def _append_next(url, next):
     if next is not None and next.strip() != '':
         url += f'?next={next}'
     return url
-
-# def _pass_next(params, next):
-#     """Add next URL to params dictionary."""
-#     if next is not None and next.strip() != '':
-#         params['next'] = next
-#     return params
 
 # Login/logout
 
@@ -418,8 +418,7 @@ def upload_status_file(request, user_id):
 
     form_uuid = request.POST.get('form_uuid')
 
-    # Delete unused files that were uploaded in abandoned forms.
-    upload_status_files__delete_other_files.delay(user.id, form_uuid)
+    _clear_abandoned_files.delay(user.id, form_uuid)
 
     try:
         # Deny file creation if maximum number of images is exceeded.
@@ -441,7 +440,8 @@ def upload_status_file(request, user_id):
         )
 
         key = settings.AWS_S3_KEY_STATUS_IMAGE % (user.id, file.id)
-        thumb_key = settings.AWS_S3_KEY_STATUS_IMAGE_THUMBNAIL % (user.id, file.id)
+        thumb_key = settings.AWS_S3_KEY_STATUS_IMAGE_THUMBNAIL % (user.id,
+            file.id)
 
         bucket = boto3.session.Session(
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
@@ -512,13 +512,13 @@ def delete_status_file(request, user_id):
     file_uuid = params.get('file_uuid')
     form_uuid = params.get('form_uuid')
 
-    delete_file.delay(user_id, file_uuid, form_uuid)
+    _delete_status_file.delay(user_id, file_uuid, form_uuid)
 
     return HttpResponse(status=204)
 
 @login_required
 @csrf_exempt
-def delete_orphan_files(request, user_id):
+def clear_abandoned_files(request, user_id):
     # Prevent access of a non-existent user.
     try:
         user = models.User.objects.get(id=user_id)
@@ -529,7 +529,7 @@ def delete_orphan_files(request, user_id):
     if user.id != request.user.user.id:
         return HttpResponse(status=204)
 
-    delete_orphan_files.delay(user_id)
+    _clear_abandoned_files.delay(user_id)
 
     return HttpResponse(status=204)
 
@@ -607,8 +607,28 @@ def user_detail(request, phone_number):
 @login_required
 @ratelimit(key='user_or_ip', rate='240/d', block=True)
 def user_reviews(request, phone_number):
-    template_name = 'relationships/business_reviews.html'
-    return TemplateResponse(request, template_name, {})
+    p, _ = get_or_create_phone_number(f'+{phone_number}')
+    if p is None:
+        raise Http404(None) # Don't give too much information.
+
+    try:
+        user = models.User.objects.filter(phone_number=p).first()
+    except models.User.DoesNotExist:
+        user = None
+
+
+
+
+
+
+
+
+
+    template_name = 'relationships/user__reviews.html'
+    return TemplateResponse(request, template_name, {
+        'phone_number': p,
+        'user': user,
+    })
 
 @login_required
 def user_whatsapp(request, phone_number):
@@ -798,12 +818,177 @@ def users__settings__resend_email_code(request, user_id):
         send_email_code(user.id, email_purposes.UPDATE_EMAIL)
         return HttpResponse(status=204)
 
+@login_required
+def review_create(request, phone_number):
+    p, _ = get_or_create_phone_number(f'+{phone_number}')
+    if p is None:
+        raise Http404(None) # Don't give too much information.
+    
+    reviewer = request.user.user
 
+    if request.method == 'POST':
+        form = forms.ReviewCreateForm(request.POST)
 
+        if models.Review.objects.filter(
+            reviewer=reviewer,
+            phone_number=phone_number
+        ).count() > 1:
+            # TODO redirect to review user created
+            pass
 
+        
+        # recaptcha_response = request.POST.get('g-recaptcha-response')
+        # recaptcha_call = requests.post(settings.RECAPTCHA_VERIFICATION_URL,
+        #     params={
+        #         'secret': settings.RECAPTCHA_SECRET_KEY,
+        #         'response': recaptcha_response
+        # })
 
+        # recaptcha_results = json.loads(recaptcha_call.text)
 
+        # if recaptcha_results.get('success') is not True or\
+        #     recaptcha_results.get('score') is None:
+        #     form.add_error(None, _recaptcha_failed_msg)
+        # elif recaptcha_results.get('success') is True and\
+        #     recaptcha_results.get('score') is not None and\
+        #     float(recaptcha_results.get('score')) < \
+        #         float(settings.RECAPTCHA_THRESHOLD):
+        #     form.add_error(None, _recaptcha_failed_msg)
+        # elif form.is_valid():
+        if form.is_valid():
+            review = form.cleaned_data.get('review')
+            rating = form.cleaned_data.get('rating')
+            models.Review.objects.create(
+                reviewer=reviewer,
+                phone_number=p,
+                body=review,
+                rating=rating
+            )
 
+            return redirect('user_reviews', phone_number)
+    else:
+        form = forms.ReviewCreateForm()
+
+    reviewee = models.User.objects.filter(phone_number=p).first()
+    return TemplateResponse(request, 'relationships/review_create.html', {
+        'reviewee': reviewee,
+        'reviewer': reviewer,
+        'phone_number': p,
+        'form': form,
+        'form_uuid': uuid.uuid4()
+    })
+
+@login_required
+@csrf_exempt
+def upload_review_file(request, reviewer_id, phone_number_id):
+    # Prevent review by a non-existent user.
+    try:
+        reviewer = models.User.objects.get(id=reviewer_id)
+    except models.User.DoesNotExist:
+        raise Http404(None) # No message for security reasons.
+
+    # Prevent review of a non-existent phone number.
+    try:
+        phone_number = models.PhoneNumber.objects.get(id=phone_number_id)
+    except models.User.DoesNotExist:
+        raise Http404(None) # No message for security reasons.
+
+    # Prevent the access of another user.
+    if reviewer.id != request.user.user.id:
+        return HttpResponse(status=204)
+
+    form_uuid = request.POST.get('form_uuid')
+
+    # Delete unused files that were uploaded in abandoned forms.
+    _clear_abandoned_files.delay(reviewer.id, form_uuid)
+
+    try:
+        # Deny file creation if maximum number of images is exceeded.
+        if models.ReviewFile.objects\
+            .filter(reviewer=reviewer, form_uuid=form_uuid).count() > \
+                settings.MAX_REVIEW_IMAGES:
+            return HttpResponse(status=400)
+
+        file_object = request.FILES.get('file')
+
+        mime_type = get_mime_type(file_object)
+
+        file = fimods.File.objects.create(
+            uploader=reviewer,
+            mime_type=mime_type,
+            filename=file_object.name,
+            s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+            thumbnail_s3_bucket_name=settings.AWS_STORAGE_BUCKET_NAME,
+        )
+
+        key = settings.AWS_S3_KEY_REVIEW_IMAGE % \
+            (phone_number.id, reviewer.id, file.id)
+        thumb_key = settings.AWS_S3_KEY_REVIEW_IMAGE_THUMBNAIL % \
+            (phone_number.id, reviewer.id, file.id)
+
+        bucket = boto3.session.Session(
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+        ).resource('s3').Bucket(settings.AWS_STORAGE_BUCKET_NAME)
+
+        s3_obj = bucket.put_object(
+            Key=key,
+            Body=file_object,
+            ContentType=mime_type
+        )
+
+        # Update file with S3 results
+        file.s3_object_key = key
+        file.thumbnail_s3_object_key = thumb_key
+        file.s3_object_content_length = s3_obj.content_length
+        file.e_tag = s3_obj.e_tag
+        file.content_type = s3_obj.content_type
+        file.last_modified = s3_obj.last_modified
+        file.save()
+
+        # Resize, save thumbnail, record sizes
+        with Image.open(file_object) as im:
+            # Resize preserving aspect ratio cropping from the center
+            thumbnail = ImageOps.fit(im, settings.REVIEW_IMAGE_THUMBNAIL_SIZE)
+            output = BytesIO()
+            thumbnail.save(output, format='PNG')
+            output.seek(0)
+
+            # Upload thumbnail
+            bucket.put_object(
+                Key=thumb_key,
+                Body=output,
+                ContentType=mime_type
+            )
+
+            # Update file and thumbnail sizes
+            file.width, file.height = im.size
+            file.thumbnail_width, file.thumbnail_height = thumbnail.size
+            file.save()
+
+        # Create new review file for this user
+        models.ReviewFile.objects.create(
+            form_uuid=form_uuid,
+            phone_number=phone_number,
+            reviewer=reviewer,
+            file=file,
+            file_uuid=file.filename
+        )
+    except:
+        return HttpResponse(status=500)
+    
+    return HttpResponse(status=204)
+
+@login_required
+@csrf_exempt
+def delete_review_file(request):
+    params = json.loads(request.body)
+    file_uuid = params.get('file_uuid')
+    form_uuid = params.get('form_uuid')
+
+    _delete_review_file.delay(request.user.user.id, file_uuid, form_uuid)
+
+    return HttpResponse(status=204)
 
 
 

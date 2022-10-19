@@ -156,7 +156,10 @@ class SettingsConfirmEmailForm(forms.Form):
             is_email_code_valid(code, self.user) is not True:
             self.add_error('code', 'Invalid code.')
 
-
+class ReviewCreateForm(forms.Form):
+    review = forms.CharField()
+    rating = forms.CharField()
+    form_uuid = forms.CharField()
 
 
 

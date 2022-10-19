@@ -27,7 +27,6 @@
 {% block content_body %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
     <div id="kt_content_container" class="container-xxl">
-        {% comment %} Start: Page Tabs {% endcomment %}
         <div class="card">
             <div class="card-header">
                 {% comment %} <div class="card-title d-flex flex-column py-4"> {% endcomment %}
@@ -56,21 +55,11 @@
             </div>
 
             <div class="card-body pb-0">
-                <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder mt-4">
-                    <li class="nav-item">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5" href="../../demo1/dist/account/overview.html">Details</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5 active" href="../../demo1/dist/account/settings.html">Reviews (0)</a>
-                    </li>
-                    {% comment %} <li class="nav-item">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5" href="../../demo1/dist/account/settings.html">Good (0)</a>
-                    </li> {% endcomment %}
-                </ul>
+
             </div>
         </div>
-        {% comment %} End: Page Tabs {% endcomment %}
 
+        {% include 'relationships/includes/user_detail__nav.html' with active='reviews' user=user %}
 
         <div class="alert bg-light-dark d-flex flex-column flex-sm-row w-100 p-5 mt-10">
             <span class="svg-icon svg-icon-2hx svg-icon-dark me-4 mb-5 mb-sm-0">

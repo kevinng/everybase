@@ -2,10 +2,10 @@
 
 {% load static %}
 
-{% block title %}{% if user != None %}{{ user.first_name }} {{ user.last_name }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
-{% block meta_description %}Importer/exporter reviews for {% if user != None %}{{ user.first_name }} {{ user.last_name }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
-{% block meta_og_description %}Importer/exporter reviews for {% if user != None %}{{ user.first_name }} {{ user.last_name }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
-{% block meta_og_title %}{% if user != None %}{{ user.first_name }} {{ user.last_name }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
+{% block title %}{% if user != None %}{{ user.first_name|title }} {{ user.last_name|title }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
+{% block meta_description %}Importer/exporter reviews for {% if user != None %}{{ user.first_name|title }} {{ user.last_name|title }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
+{% block meta_og_description %}Importer/exporter reviews for {% if user != None %}{{ user.first_name|title }} {{ user.last_name|title }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
+{% block meta_og_title %}{% if user != None %}{{ user.first_name|title }} {{ user.last_name|title }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
 {% block meta_og_url %}{{ absolute_url }}{% endblock %}
 {% block meta_og_image %}{% if user.status_images.all|length > 0 %}{% with user.status_images.all|first as image %}{% load thumbnail_url %}{% thumbnail_url image.file as thumbnail_url %}{{ thumbnail_url }}{% endwith %}{% else %}{% static 'common/demo1/dist/assets/media/home/og_image/home_og_image.png' %}{% endif %}{% endblock %}
 {% block meta_og_image_url %}{% if user.status_images.all|length > 0 %}{% with user.status_images.all|first as image %}{% load thumbnail_url %}{% thumbnail_url image.file as thumbnail_url %}{{ thumbnail_url }}{% endwith %}{% else %}{% static 'common/demo1/dist/assets/media/home/og_image/home_og_image.png' %}{% endif %}{% endblock %}
@@ -22,7 +22,7 @@
     {% endif %}
 {% endblock %}
 
-{% block page_title %}{% if user == None %}+ {{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name }} {{ user.last_name }}{% endif %}{% endblock %}
+{% block page_title %}{% if user == None %}+ {{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}{% endblock %}
 {% block page_title_separator %}{% endblock %}
 
 {% block actions %}
@@ -38,14 +38,24 @@
     Copy Link
 </button>
 <span class="h-20px border-1 border-gray-200 border-start mx-1"></span>
-<a href="#" class="btn btn-sm btn-primary">Review</a>
+
+{% if request.user.is_authenticated %}
+    {% load has_review %}
+    {% has_review request.user.user phone_number as has_review %}
+    {% if has_review == True %}
+        <a href="" class="btn btn-sm btn-primary">My Review</a>
+    {% else %}
+        <a href="{% url 'review_create' phone_number.value %}" class="btn btn-sm btn-primary">Review</a>
+    {% endif %}
+{% else %}
+<a href="{% url 'review_create' phone_number.value %}" class="btn btn-sm btn-primary">Review</a>
+{% endif %}
 <a href="{% url 'user_whatsapp' phone_number.value %}" class="btn btn-sm btn-success">WhatsApp</a>
 {% endblock %}
 
 {% block content_body %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
     <div id="kt_content_container" class="container-xxl">
-        {% comment %} Start: Page Tabs {% endcomment %}
         {% if request.user.is_authenticated and request.user.user.id == user.id %}
         <div class="card" x-data="{
             status: {% if form.status.value != None %}'{{ form.status.value }}'{% else %}''{% endif %},
@@ -61,7 +71,10 @@
                 this.status = ''
                 this.isShowingUpdateForm = false
                 Dropzone.forElement('#status_dropzone').removeAllFiles(true)
-                fetch('{% url 'users:delete_orphan_files' user.id %}', { method: 'POST' })
+                fetch('{% url 'users:clear_abandoned_files' user.id %}', { method: 'POST' })
+
+TODO delete orphan review files as well
+
             }
         }">
         {% else %}
@@ -69,7 +82,7 @@
         {% endif %}
             <div class="card-header">
                 <div class="card-title d-flex flex-column py-4">
-                    <div>{% if user == None %}+ {{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name }} {{ user.last_name }}{% endif %}</div>
+                    <div>{% if user == None %}+ {{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}</div>
                     {% if user != None %}<div class="fs-7 text-muted">{{ user.country.name }}</div>{% endif %}
                 </div>
                 <div class="card-toolbar">
@@ -164,7 +177,6 @@
             </form>
             {% endif %}
         </div>
-        {% comment %} End: Page Tabs {% endcomment %}
 
         {% include 'relationships/includes/user_detail__nav.html' with active='detail' user=user %}
 
@@ -299,8 +311,22 @@
 <script src="{% static 'common/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js' %}"></script>
 {% endblock %}
 
-{% block page_custom_javascript %}
+
+{% comment %}
 <script>
+// These fields will not be minified because they contain rendered values.
+const uploadStatusImageURL = "{% url 'users:upload_status_file' user.id %}"
+const formUUID = "{{ form_uuid }}"
+const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
+const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
+const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
+
+// We use hidden fields to bridge JQuery and Alpine JS.
+const numFilesProcessing = $('#num_files_processing')
+const numFilesSuccess = $('#num_files_success')
+const numFilesError = $('#num_files_error')
+const numFilesRemoved = $('#num_files_removed')
+
 $(document).ready(function() {
     lc_target = document.getElementById('lc_clipboard');
     lc_clipboard = new ClipboardJS(lc_target);
@@ -338,32 +364,6 @@ $(document).ready(function() {
         }, 3000)
     })
 
-
-
-
-
-    
-
-
-
-
-
-
-{% if request.user.is_authenticated and request.user.user.id == user.id %}
-
-    // These fields will not be minified because they contain rendered values.
-    const uploadStatusImageURL = "{% url 'users:upload_status_file' user.id %}"
-    const formUUID = "{{ form_uuid }}"
-    const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
-    const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
-    const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
-
-    // We use hidden fields to bridge JQuery and Alpine JS.
-    const numFilesProcessing = $('#num_files_processing')
-    const numFilesSuccess = $('#num_files_success')
-    const numFilesError = $('#num_files_error')
-    const numFilesRemoved = $('#num_files_removed')
-
     // Helper function to return the number of images in upload.
     function numFilesUploading() {
         // Removed = Success + Error
@@ -400,18 +400,15 @@ $(document).ready(function() {
         )
     }
 
-    // Enable save button (if conditions are right).
-    function enableSave() {
+    function setDisableSave() {
         if ($('#status').val().length > 0 && numFilesUploading() <= 0) {
             $('#save').removeAttr('disabled')
+        } else {
+            console.log('')
+            $('#save').attr('disabled', true)    
         }
     }
 
-    // Disable save button
-    function disableSave() {
-        $('#save').attr('disabled', true)
-    }
-    
     var status_dropzone = new Dropzone("#status_dropzone", {
         url: uploadStatusImageURL,
         params: { form_uuid: formUUID },
@@ -426,18 +423,18 @@ $(document).ready(function() {
         },
         init: function () {
             this.on("processing", function (file) {
-                disableSave()
+                setDisableSave()
                 plusNumFilesProcessing()
             })
 
             this.on("success", function (file, response) {
                 plusNumFilesSuccess()
-                enableSave()
+                setDisableSave()
             })
 
             this.on("error", function (file, error, xhr) {
                 plusNumFilesError()
-                enableSave()
+                setDisableSave()
             })
 
             this.on("removedfile", function (file, error, xhr) {
@@ -461,12 +458,60 @@ $(document).ready(function() {
                 // form will trigger the remove callback if there are images
                 // in the dropzone.
                 plusNumFilesRemoved()
-                enableSave()
+                setDisableSave()
             })
         }
     })
-
+})
+</script>
+{% endcomment %}
+{% block page_custom_javascript %}
+{% if request.user.is_authenticated and request.user.user.id == user.id %}
+<script>
+const uploadStatusImageURL = "{% url 'users:upload_status_file' user.id %}"
+const formUUID = "{{ form_uuid }}"
+const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
+const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
+const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
+const numFilesProcessing = $('#num_files_processing')
+const numFilesSuccess = $('#num_files_success')
+const numFilesError = $('#num_files_error')
+const numFilesRemoved = $('#num_files_removed')
+</script>
+<script src="{% static 'common/js/user_detail.js' %}"></script>
 {% endif %}
+
+<script>
+$(document).ready(function() {
+
+
+
+
+
+
+{% comment %} IF YOU PRESS CANCEL YOU SHOULD TRIGGER FLUSH OF ALL IMAGES
+YOU SHOULD NOT NEED TO CHECK IMAGES ON THE BACKEND, JUST FLUSH THEM PERIODICALLY
+
+REFACTOR THIS PART TO USE JUST 1 ENABLE SAVE BUTTON
+
+response = wrapped_callback(request, *callback_args, **callback_kwargs)
+File "/Users/kevinng/.local/share/virtualenvs/everybase-OoViAHis/lib/python3.10/site-packages/sentry_sdk/integrations/django/views.py", line 67, in sentry_wrapped_callback
+  return callback(request, *args, **kwargs)
+File "/Users/kevinng/.local/share/virtualenvs/everybase-OoViAHis/lib/python3.10/site-packages/django/contrib/auth/decorators.py", line 21, in _wrapped_view
+  return view_func(request, *args, **kwargs)
+File "/Users/kevinng/.local/share/virtualenvs/everybase-OoViAHis/lib/python3.10/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+  return view_func(*args, **kwargs)
+File "/Users/kevinng/Dropbox/Everybase/@ Code/everybase/relationships/views.py", line 539, in delete_orphan_files
+  delete_orphan_files.delay(user_id)
+AttributeError: 'function' object has no attribute 'delay'
+[19/Oct/2022 12:19:51] "POST /users/delete_orphan_status_files/136/ HTTP/1.1" 500 14148
+
+{% endcomment %}
+
+
+
+
+
 
 
 

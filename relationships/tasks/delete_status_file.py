@@ -4,7 +4,7 @@ from everybase import settings
 from relationships import models
 
 @shared_task
-def delete_file(
+def delete_status_file(
         user_id: int,
         file_uuid: int,
         form_uuid: str,
