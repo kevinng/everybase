@@ -40,7 +40,7 @@
 
                     <div class="mt-8">
                         <label class="form-label required">Review</label>
-                        <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="review" name="review" placeholder="E.g., this user cheated me of...">{% if form.review.value != 'None' %}{{ form.review.value }}{% endif %}</textarea>
+                        <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="review" name="review" placeholder="E.g., this user cheated me of...">{% if form.review.value != None %}{{ form.review.value }}{% endif %}</textarea>
                         {% if form.review.errors %}<div class="text-danger mt-2 ms-2">{% for error in form.review.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                     </div>
 

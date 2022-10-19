@@ -48,10 +48,10 @@
                 <div>{% if user.status != None %}{{ user.status|linebreaksbr }}{% else %}<span class="badge badge-secondary">No Status</span>{% endif %}</div>
                 <div class="mt-4">
                     <div class="d-flex gap-2">
-                        {% if user.status_images.all|length > 0 %}
+                        {% if user.status_files.all|length > 0 %}
                             {% load thumbnail_url %}
                             {% load image_url %}
-                            {% for image in user.status_images.all %}
+                            {% for image in user.status_files.all %}
                                 {% thumbnail_url image.file as thumbnail_url %}
                                 {% image_url image.file as image_url %}
                                 <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ image_url }}">

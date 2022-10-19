@@ -333,8 +333,8 @@ class User(commods.Standard):
         blank=True
     )
 
-    def status_images(self):
-        """Returns status images"""
+    def status_files(self):
+        """Returns status files."""
         return StatusFile.objects\
             .filter(user=self, deleted__isnull=True, activated__isnull=False)\
             .order_by('-created')
@@ -571,6 +571,13 @@ class Review(commods.Standard):
         db_index=True
     )
     body = models.TextField()
+
+    def review_files(self):
+        """Returns review files."""
+        return ReviewFile.objects\
+            .filter(reviewer=self.reviewer, phone_number=self.phone_number,
+                deleted__isnull=True, activated__isnull=False)\
+            .order_by('-created')
 
 class ReviewFile(commods.Standard):
     """Review file

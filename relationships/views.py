@@ -533,11 +533,7 @@ def clear_abandoned_files(request, user_id):
 
     return HttpResponse(status=204)
 
-# No login required, not rate limited.
-# Internal links will use user_detail_with_id, which require authentication
-# and is rate limited. User detail page open graph sets phone number link
-# as canonical, so they'll be index.
-def user_detail(request, phone_number):
+def _get_phone_user(phone_number):
     p, _ = get_or_create_phone_number(f'+{phone_number}')
     if p is None:
         raise Http404(None) # Don't give too much information.
@@ -547,30 +543,39 @@ def user_detail(request, phone_number):
     except models.User.DoesNotExist:
         user = None
 
+    return (p, user)
+
+def _user_detail__status_update(request, phone_number, user, route, template,
+    more_params={}):
+    """Shared status update code for all user detail views with status update
+    form.
+    """
     if request.method == 'POST':
         # Prevent the access of another user.
         if user.id != request.user.user.id:
-            return redirect('user_detail', user.phone_number.value())
+            return redirect(route, user.phone_number.value())
 
         form = forms.UserDetailUpdateStatusForm(request.POST)
         if form.is_valid():
             form_uuid = form.cleaned_data.get('form_uuid')
 
-            status_files = models.StatusFile.objects\
-                .filter(user=user)\
-                .exclude(form_uuid=form_uuid)
+            _clear_abandoned_files.delay(user.id, form_uuid, False)
 
-            delete_objs = []
-            for sf in status_files:
-                file = sf.file
-                delete_objs.append({'Key': file.s3_object_key})
-                delete_objs.append({'Key': file.thumbnail_s3_object_key})
-                sf.delete()
-                file.delete()
+            # status_files = models.StatusFile.objects\
+            #     .filter(user=user)\
+            #     .exclude(form_uuid=form_uuid)
+
+            # delete_objs = []
+            # for sf in status_files:
+            #     file = sf.file
+            #     delete_objs.append({'Key': file.s3_object_key})
+            #     delete_objs.append({'Key': file.thumbnail_s3_object_key})
+            #     sf.delete()
+            #     file.delete()
             
-            # Delete orphan files if any.
-            if len(delete_objs) > 0:
-                delete_files.delay(delete_objs)
+            # # Delete orphan files if any.
+            # if len(delete_objs) > 0:
+            #     delete_files.delay(delete_objs)
 
             user.status = form.cleaned_data.get('status')
             sgtz = pytz.timezone(settings.TIME_ZONE)
@@ -584,7 +589,7 @@ def user_detail(request, phone_number):
                 file.activated = now
                 file.save()
 
-            return redirect('user_detail', user.phone_number.value())
+            return redirect(route, user.phone_number.value())
         else:
             is_show_update_form = True
     else:
@@ -592,43 +597,41 @@ def user_detail(request, phone_number):
         is_show_update_form = False
 
     absolute_url = request.build_absolute_uri(
-        reverse('user_detail', args=(user.phone_number.value(),)))
+        reverse(route, args=(user.phone_number.value(),)))
 
-    return TemplateResponse(request,
-        'relationships/user_detail.html', {
-            'absolute_url': absolute_url,
-            'phone_number': p,
-            'user': user,
-            'form': form,
-            'is_show_update_form': is_show_update_form,
-            'form_uuid': uuid.uuid4()
-        })
+    params = {
+        'absolute_url': absolute_url,
+        'phone_number': phone_number,
+        'user': user,
+        'form': form,
+        'is_show_update_form': is_show_update_form,
+        'form_uuid': uuid.uuid4()
+    }
+
+    # Merge params with more params.
+    params = {**params, **more_params}
+
+    return TemplateResponse(request, template, params)
+
+# No login required, not rate limited.
+# Internal links will use user_detail_with_id, which require authentication
+# and is rate limited. User detail page open graph sets phone number link
+# as canonical, so they'll be index.
+def user_detail(request, phone_number):
+    phone_number, user = _get_phone_user(phone_number)
+    return _user_detail__status_update(request, phone_number, user,
+        'user_detail', 'relationships/user_detail.html')
 
 @login_required
 @ratelimit(key='user_or_ip', rate='240/d', block=True)
 def user_reviews(request, phone_number):
-    p, _ = get_or_create_phone_number(f'+{phone_number}')
-    if p is None:
-        raise Http404(None) # Don't give too much information.
+    phone_number, user = _get_phone_user(phone_number)
 
-    try:
-        user = models.User.objects.filter(phone_number=p).first()
-    except models.User.DoesNotExist:
-        user = None
+    more_params = {
+        'reviews': models.Review.objects.filter(phone_number=phone_number)}
 
-
-
-
-
-
-
-
-
-    template_name = 'relationships/user__reviews.html'
-    return TemplateResponse(request, template_name, {
-        'phone_number': p,
-        'user': user,
-    })
+    return _user_detail__status_update(request, phone_number, user,
+        'user_reviews', 'relationships/user_reviews.html', more_params)
 
 @login_required
 def user_whatsapp(request, phone_number):
@@ -858,6 +861,10 @@ def review_create(request, phone_number):
         if form.is_valid():
             review = form.cleaned_data.get('review')
             rating = form.cleaned_data.get('rating')
+            form_uuid = form.cleaned_data.get('form_uuid')
+            
+            _clear_abandoned_files.delay(reviewer.id, form_uuid, False)
+
             models.Review.objects.create(
                 reviewer=reviewer,
                 phone_number=p,

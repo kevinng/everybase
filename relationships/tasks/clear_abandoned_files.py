@@ -6,7 +6,8 @@ from relationships import models
 @shared_task
 def clear_abandoned_files(
         user_id: int,
-        form_uuid: str=None
+        form_uuid: str=None,
+        activated: bool=True
     ):
     """Delete status and review files from this user that's from abandoned
     forms. Files in use are identified by their activated timestamps and files
@@ -22,17 +23,17 @@ def clear_abandoned_files(
 
     status_files = models.StatusFile.objects\
         .filter(user=user)\
-        .filter(activated__isnull=True)\
+        .filter(activated__isnull=not activated)\
         .exclude(form_uuid=form_uuid)
 
     review_files = models.ReviewFile.objects\
         .filter(user=user)\
-        .filter(activated__isnull=True)\
+        .filter(activated__isnull=not activated)\
         .exclude(form_uuid=form_uuid)
 
     review_comment_files = models.ReviewCommentFile.objects\
         .filter(comment__author=user)\
-        .filter(activated__isnull=True)\
+        .filter(activated__isnull=not activated)\
         .exclude(form_uuid=form_uuid)
 
     delete_objs = []
