@@ -6,14 +6,22 @@
         this.isShowingUpdateForm = true
     },
     disableSave() {
-        let num_files_uploading = $refs.num_files_processing.value - $refs.num_files_success.value - $refs.num_files_error.value - $refs.num_files_removed.value
+        // Removed = Success + Error
+        let a = $refs.num_files_processing.value - $refs.num_files_removed.value
+        let b = $refs.num_files_processing.value - $refs.num_files_success.value - $refs.num_files_error.value
+        let num_files_uploading = 0
+        if (a > b) {
+            num_files_uploading = b
+        } else {
+            num_files_uploading = a
+        }
         return this.status.length <= 0 || num_files_uploading > 0
     },
     cancel() {
         this.status = ''
         this.isShowingUpdateForm = false
         Dropzone.forElement('#status_dropzone').removeAllFiles(true)
-        fetch('{% url 'users:clear_abandoned_files' user.id %}', { method: 'POST' })
+        fetch('{% url 'users:clear_files' user.id %}')
     }
 }">
 {% else %}
@@ -30,7 +38,7 @@
     </div>
 
     {% if request.user.is_authenticated and request.user.user.id == user.id %}
-    <form action="{% url 'user_detail' user.phone_number.value %}" method="post">
+    <form action="{% if page == 'detail' %}{% url 'user_detail' user.phone_number.value %}{% else %}{% url 'user_reviews' user.phone_number.value %}{% endif %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="form_uuid" value="{{ form_uuid }}" />
         <input type="hidden" id="num_files_processing" value="0" x-ref="num_files_processing" />
@@ -44,7 +52,7 @@
             <div x-show="!isShowingUpdateForm">
             {% else %}
             <div>
-            {% endif %}    
+            {% endif %}
                 <div>{% if user.status != None %}{{ user.status|linebreaksbr }}{% else %}<span class="badge badge-secondary">No Status</span>{% endif %}</div>
                 <div class="mt-4">
                     <div class="d-flex gap-2">
@@ -91,9 +99,10 @@
         </div>
         <div class="card-footer d-flex justify-content-between flex-wrap gap-2">
             <div class="d-flex justify-content-start gap-2 flex-wrap" x-show="!isShowingUpdateForm">
-                <a x-show="!isShowingUpdateForm" target="_blank" href="https://api.whatsapp.com/send?text={{ share_text_url }}" class="btn btn-sm btn-success">Share WhatsApp</a>
+                <a x-show="!isShowingUpdateForm" target="_blank" href="https://api.whatsapp.com/send?text={{ absolute_url }}" class="btn btn-sm btn-success">Share WhatsApp</a>
                 <a x-show="!isShowingUpdateForm" target="_blank" href="https://www.facebook.com/sharer/sharer.php?src=sp&u={{ absolute_url }}" class="btn btn-sm btn-facebook">Share Facebook</a>
             </div>
+            {% if request.user.is_authenticated and request.user.user.id == user.id %}
             <div class="d-flex justify-content-end gap-2 flex-wrap">
                 <button type="button" class="btn btn-sm btn-secondary" x-show="isShowingUpdateForm" @click="cancel" id="cancel">Cancel</button>
                 <button type="submit" class="btn btn-sm btn-primary" x-show="isShowingUpdateForm" id="save" x-bind:disabled="disableSave">Save</button>
@@ -110,6 +119,7 @@
                     Update Status
                 </button>
             </div>
+            {% endif %}
         </div>
 
     {% if request.user.is_authenticated and request.user.user.id == user.id %}

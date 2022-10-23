@@ -23,7 +23,7 @@
 
                 <div class="text-center mb-10">
                     <h1 class="text-dark mb-3">Register</h1>
-                    <div class="text-gray-700 fs-5">Have an account? <a href="{% url 'login' %}" class="link-primary fw-bolder">Login</a></div>
+                    <div class="text-gray-700 fs-5">Have an account? <a href="{% url 'login' %}{% if next != None %}?next={{ next }}{% elif form.next.value != None %}?next={{ form.next.value }}{% endif %}" class="link-primary fw-bolder">Login</a></div>
                 </div>
 
                 <div>

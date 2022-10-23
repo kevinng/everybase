@@ -6,11 +6,10 @@
     {% comment %} Start: Menu wrapper {% endcomment %}
     <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
         {% if request.user.user.avatar == None %}
-            {% comment %} {% load user_full_name_initials %} {% endcomment %}
-            {% comment %} {% user_full_name_initials request.user.user as initials %} {% endcomment %}
+            {% load user_full_name_initials %}
+            {% user_full_name_initials request.user.user as initials %}
             <div class="symbol-label fs-3 bg-light-primary text-primary">
-                {% comment %} {% if initials is None %}?{% else %}{{ initials }}{% endif %} {% endcomment %}
-                KN
+                {% if initials is None %}?{% else %}{{ initials }}{% endif %}
             </div>
         {% else %}
             <img src="{{ request.user.user.avatar_thumbnail_url }}" />
@@ -25,11 +24,10 @@
             <div class="menu-content d-flex align-items-center px-3">
                 {% if request.user.user.avatar == None %}
                     <div class="symbol symbol-50px">
-                        {% comment %} {% load user_full_name_initials %}     {% endcomment %}
-                        {% comment %} {% user_full_name_initials request.user.user as initials %} {% endcomment %}
+                        {% load user_full_name_initials %}    
+                        {% user_full_name_initials request.user.user as initials %}
                         <div class="symbol-label fs-3 bg-light-primary text-primary">
-                            {% comment %} {% if initials is None %}?{% else %}{{ initials }}{% endif %} {% endcomment %}
-                            KN
+                            {% if initials is None %}?{% else %}{{ initials }}{% endif %}
                         </div>
                     </div>
                 {% else %}

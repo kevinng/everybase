@@ -25,126 +25,8 @@
 {% block content_body %}
 <div class="post d-flex flex-column-fluid" id="kt_post">
     <div id="kt_content_container" class="container-xxl">
-        {% if request.user.is_authenticated and request.user.user.id == user.id %}
-        <div class="card" x-data="{
-            status: {% if form.status.value != None %}'{{ form.status.value }}'{% else %}''{% endif %},
-            isShowingUpdateForm: {% if is_show_update_form != None %}{% if is_show_update_form == True %}true{% else %}false{% endif %}{% endif %},
-            updateStatus() {
-                this.isShowingUpdateForm = true
-            },
-            disableSave() {
-                let num_files_uploading = $refs.num_files_processing.value - $refs.num_files_success.value - $refs.num_files_error.value - $refs.num_files_removed.value
-                return this.status.length <= 0 || num_files_uploading > 0
-            },
-            cancel() {
-                this.status = ''
-                this.isShowingUpdateForm = false
-                Dropzone.forElement('#status_dropzone').removeAllFiles(true)
-                fetch('{% url 'users:clear_abandoned_files' user.id %}', { method: 'POST' })
-            }
-        }">
-        {% else %}
-        <div class="card">
-        {% endif %}
-            <div class="card-header">
-                <div class="card-title d-flex flex-column py-4">
-                    <div>{% if user == None %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}</div>
-                    {% if user != None %}<div class="fs-7 text-muted">{{ user.country.name }}</div>{% endif %}
-                </div>
-                <div class="card-toolbar">
-                    <div class="text-muted">{{ user.status_updated_age_desc }}</div>
-                </div>
-            </div>
 
-            {% if request.user.is_authenticated and request.user.user.id == user.id %}
-            <form action="{% url 'user_detail' user.phone_number.value %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="form_uuid" value="{{ form_uuid }}" />
-                <input type="hidden" id="num_files_processing" value="0" x-ref="num_files_processing" />
-                <input type="hidden" id="num_files_success" value="0" x-ref="num_files_success" />
-                <input type="hidden" id="num_files_error" value="0" x-ref="num_files_error" />
-                <input type="hidden" id="num_files_removed" value="0" x-ref="num_files_removed" />
-            {% endif %}
-
-                <div class="card-body">
-                    {% if request.user.is_authenticated and request.user.user.id == user.id %}
-                    <div x-show="!isShowingUpdateForm">
-                    {% else %}
-                    <div>
-                    {% endif %}
-                        <div>{% if user.status != None %}{{ user.status|linebreaksbr }}{% else %}<span class="badge badge-secondary">No Status</span>{% endif %}</div>
-                        <div class="mt-4">
-                            <div class="d-flex gap-2">
-                                {% if user.status_files.all|length > 0 %}
-                                    {% load thumbnail_url %}
-                                    {% load image_url %}
-                                    {% for image in user.status_files.all %}
-                                        {% thumbnail_url image.file as thumbnail_url %}
-                                        {% image_url image.file as image_url %}
-                                        <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ image_url }}">
-                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded w-50px h-50px"
-                                                style="background-image:url('{{ thumbnail_url }}')">
-                                            </div>
-                                            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                            </div>
-                                        </a>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    {% if request.user.is_authenticated and request.user.user.id == user.id %}
-                    <div x-show="isShowingUpdateForm">
-                        <label class="form-label" for="status">Status</label>
-                        <textarea x-model="status" class="w-100 form-control" data-kt-autosize="true" maxlength="500" rows="3" maxlength="100" id="status" name="status" placeholder="E.g., I sell paper and I'm looking for buyers..."></textarea>
-                        <div class="form-text">Your status let others know what you're interested in. E.g., buying, selling.</div>
-                        {% if form.status.errors %}<div class="text-danger mt-2 ms-2">{% for error in form.status.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
-                    </div>
-
-                    <div class="mt-4" x-show="isShowingUpdateForm">
-                        <div class="dropzone" id="status_dropzone">
-                            <div class="dz-message needsclick">
-                                <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
-                                <div class="ms-4">
-                                    <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop images here or click to upload.</h3>
-                                    <span class="fs-7 fw-semibold text-gray-400">Upload up to {{ settings.MAX_STATUS_IMAGES }} images.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="card-footer d-flex justify-content-between flex-wrap gap-2">
-                    <div class="d-flex justify-content-start gap-2 flex-wrap" x-show="!isShowingUpdateForm">
-                        <a x-show="!isShowingUpdateForm" target="_blank" href="https://api.whatsapp.com/send?text={{ absolute_url }}" class="btn btn-sm btn-success">Share WhatsApp</a>
-                        <a x-show="!isShowingUpdateForm" target="_blank" href="https://www.facebook.com/sharer/sharer.php?src=sp&u={{ absolute_url }}" class="btn btn-sm btn-facebook">Share Facebook</a>
-                    </div>
-                    {% if request.user.is_authenticated and request.user.user.id == user.id %}
-                    <div class="d-flex justify-content-end gap-2 flex-wrap">
-                        <button type="button" class="btn btn-sm btn-secondary" x-show="isShowingUpdateForm" @click="cancel" id="cancel">Cancel</button>
-                        <button type="submit" class="btn btn-sm btn-primary" x-show="isShowingUpdateForm" id="save" x-bind:disabled="disableSave">Save</button>
-                        <button type="button" class="btn btn-sm btn-primary" x-show="!isShowingUpdateForm" @click="updateStatus"> 
-                            {% comment %} Start: SVG Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-09-15-053640/core/html/src/media/icons/duotune/general/gen055.svg {% endcomment %}
-                            <span class="svg-icon svg-icon-muted">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path opacity="0.3" fill-rule="evenodd" clip-rule="evenodd" d="M2 4.63158C2 3.1782 3.1782 2 4.63158 2H13.47C14.0155 2 14.278 2.66919 13.8778 3.04006L12.4556 4.35821C11.9009 4.87228 11.1726 5.15789 10.4163 5.15789H7.1579C6.05333 5.15789 5.15789 6.05333 5.15789 7.1579V16.8421C5.15789 17.9467 6.05333 18.8421 7.1579 18.8421H16.8421C17.9467 18.8421 18.8421 17.9467 18.8421 16.8421V13.7518C18.8421 12.927 19.1817 12.1387 19.7809 11.572L20.9878 10.4308C21.3703 10.0691 22 10.3403 22 10.8668V19.3684C22 20.8218 20.8218 22 19.3684 22H4.63158C3.1782 22 2 20.8218 2 19.3684V4.63158Z" fill="currentColor"/>
-                                    <path d="M10.9256 11.1882C10.5351 10.7977 10.5351 10.1645 10.9256 9.77397L18.0669 2.6327C18.8479 1.85165 20.1143 1.85165 20.8953 2.6327L21.3665 3.10391C22.1476 3.88496 22.1476 5.15129 21.3665 5.93234L14.2252 13.0736C13.8347 13.4641 13.2016 13.4641 12.811 13.0736L10.9256 11.1882Z" fill="currentColor"/>
-                                    <path d="M8.82343 12.0064L8.08852 14.3348C7.8655 15.0414 8.46151 15.7366 9.19388 15.6242L11.8974 15.2092C12.4642 15.1222 12.6916 14.4278 12.2861 14.0223L9.98595 11.7221C9.61452 11.3507 8.98154 11.5055 8.82343 12.0064Z" fill="currentColor"/>
-                                </svg>
-                            </span>
-                            {% comment %} End: SVG Icon {% endcomment %}
-                            Update Status
-                        </button>
-                    </div>
-                    {% endif %}
-                </div>
-
-            {% if request.user.is_authenticated and request.user.user.id == user.id %}
-            </form>
-            {% endif %}
-        </div>
+        {% include 'relationships/includes/user_detail__status.html' with page='detail' %}
 
         {% include 'relationships/includes/user_detail__nav.html' with active='detail' user=user %}
 
@@ -158,13 +40,6 @@
             </div>
 
             <div class="card-body">
-                <div class="row">
-                    <label class="col-lg-4 fw-bold text-muted">Name</label>
-                    <div class="col-lg-8">
-                        <span class="fw-bolder text-gray-800 fs-6">Kevin Ng</span>
-                    </div>
-                </div>
-
                 <div class="row mt-6">
                     <label class="col-lg-4 fw-bold text-muted d-flex align-items-center gap-1">Country
                         {% if user.is_country_match_country_code %}
@@ -187,7 +62,7 @@
                     <div class="row mt-6">
                         <label class="col-lg-4 fw-bold text-muted">Business Name</label>
                         <div class="col-lg-8">
-                            <span class="fw-bolder text-gray-800 fs-6">Leng Guan Metal Pte Ltd</span>
+                            <span class="fw-bolder text-gray-800 fs-6">{{ user.business_name }}</span>
                         </div>
                     </div>
                 {% endif %}
@@ -361,7 +236,6 @@ $(document).ready(function() {
         if ($('#status').val().length > 0 && numFilesUploading() <= 0) {
             $('#save').removeAttr('disabled')
         } else {
-            console.log('')
             $('#save').attr('disabled', true)    
         }
     }
@@ -380,8 +254,8 @@ $(document).ready(function() {
         },
         init: function () {
             this.on("processing", function (file) {
-                setDisableSave()
                 plusNumFilesProcessing()
+                setDisableSave()
             })
 
             this.on("success", function (file, response) {

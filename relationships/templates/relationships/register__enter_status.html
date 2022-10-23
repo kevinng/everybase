@@ -15,7 +15,15 @@
             <form class="form w-100" action="{% url 'register:enter_status' user.id %}" method="post" x-data="{
                 status: {% if form.status.value != None %}'{{ form.status.value }}'{% else %}''{% endif %},
                 disableSubmit() {
-                    let num_files_uploading = $refs.num_files_processing.value - $refs.num_files_success.value - $refs.num_files_error.value - $refs.num_files_removed.value
+                    // Removed = Success + Error
+                    let a = $refs.num_files_processing.value - $refs.num_files_removed.value
+                    let b = $refs.num_files_processing.value - $refs.num_files_success.value - $refs.num_files_error.value
+                    let num_files_uploading = 0
+                    if (a > b) {
+                        num_files_uploading = b
+                    } else {
+                        num_files_uploading = a
+                    }
                     return this.status.length <= 0 || num_files_uploading > 0
                 }
             }">
@@ -68,13 +76,13 @@ const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
 const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
 const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
 
-$(document).ready(function() {
-    // We use hidden fields to bridge JQuery and Alpine JS.
-    const numFilesProcessing = $('#num_files_processing')
-    const numFilesSuccess = $('#num_files_success')
-    const numFilesError = $('#num_files_error')
-    const numFilesRemoved = $('#num_files_removed')
+// We use hidden fields to bridge JQuery and Alpine JS.
+const numFilesProcessing = $('#num_files_processing')
+const numFilesSuccess = $('#num_files_success')
+const numFilesError = $('#num_files_error')
+const numFilesRemoved = $('#num_files_removed')
 
+$(document).ready(function() {
     // Helper function to return the number of images in upload.
     function numFilesUploading() {
         // Removed = Success + Error
@@ -111,18 +119,14 @@ $(document).ready(function() {
         )
     }
 
-    // Enable save button (if conditions are right).
-    function enableSubmit() {
+    function setDisableSave() {
         if ($('#status').val().length > 0 && numFilesUploading() <= 0) {
             $('#submit').removeAttr('disabled')
+        } else {
+            $('#submit').attr('disabled', true)
         }
     }
 
-    // Disable save button
-    function disableSubmit() {
-        $('#submit').attr('disabled', true)
-    }
-    
     var status_dropzone = new Dropzone("#status_dropzone", {
         url: uploadStatusImageURL,
         params: { form_uuid: formUUID },
@@ -137,18 +141,18 @@ $(document).ready(function() {
         },
         init: function () {
             this.on("processing", function (file) {
-                disableSubmit()
                 plusNumFilesProcessing()
+                setDisableSave()
             })
 
             this.on("success", function (file, response) {
                 plusNumFilesSuccess()
-                enableSubmit()
+                setDisableSave()
             })
 
             this.on("error", function (file, error, xhr) {
                 plusNumFilesError()
-                enableSubmit()
+                setDisableSave()
             })
 
             this.on("removedfile", function (file, error, xhr) {
@@ -172,7 +176,7 @@ $(document).ready(function() {
                 // form will trigger the remove callback if there are images
                 // in the dropzone.
                 plusNumFilesRemoved()
-                enableSubmit()
+                setDisableSave()
             })
         }
     })
@@ -180,12 +184,15 @@ $(document).ready(function() {
 {% endcomment %}
 {% block page_custom_javascript %}
 <script>
-// These fields will not be minified because they contain rendered values.
 const uploadStatusImageURL = "{% url 'users:upload_status_file' user.id %}"
 const formUUID = "{{ form_uuid }}"
 const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
 const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
 const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
+const numFilesProcessing = $('#num_files_processing')
+const numFilesSuccess = $('#num_files_success')
+const numFilesError = $('#num_files_error')
+const numFilesRemoved = $('#num_files_removed')
 </script>
 <script src="{% static 'common/js/register__enter_status.js' %}"></script>
 {% endblock %}

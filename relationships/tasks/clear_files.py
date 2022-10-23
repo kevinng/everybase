@@ -4,10 +4,10 @@ from everybase import settings
 from relationships import models
 
 @shared_task
-def clear_abandoned_files(
+def clear_files(
         user_id: int,
-        form_uuid: str=None,
-        activated: bool=True
+        form_uuid: str,
+        activated: bool
     ):
     """Delete status and review files from this user that's from abandoned
     forms. Files in use are identified by their activated timestamps and files
@@ -21,15 +21,21 @@ def clear_abandoned_files(
 
     # Form UUID should be unique across all tables.
 
-    status_files = models.StatusFile.objects\
-        .filter(user=user)\
-        .filter(activated__isnull=not activated)\
-        .exclude(form_uuid=form_uuid)
+    status_files = models.StatusFile.objects.filter(user=user)
+    
+    if form_uuid is not None:
+        status_files = status_files.exclude(form_uuid=form_uuid)
 
-    review_files = models.ReviewFile.objects\
-        .filter(reviewer=user)\
-        .filter(activated__isnull=not activated)\
-        .exclude(form_uuid=form_uuid)
+    if activated is not None:
+        status_files = status_files.filter(activated__isnull=not activated)
+
+    review_files = models.ReviewFile.objects.filter(reviewer=user)
+
+    if form_uuid is not None:
+        review_files = review_files.exclude(form_uuid=form_uuid)
+
+    if activated is not None:
+        review_files = review_files.filter(activated__isnull=not activated)
 
     delete_objs = []
 
@@ -46,7 +52,7 @@ def clear_abandoned_files(
         delete_objs.append({'Key': file.thumbnail_s3_object_key})
         rf.delete()
         file.delete()
-    
+
     # Delete orphan files if any.
     if len(delete_objs) > 0:
         bucket.delete_objects(Delete={'Objects': delete_objs})

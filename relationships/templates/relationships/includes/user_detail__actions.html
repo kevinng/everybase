@@ -9,8 +9,12 @@
     {% comment %} SVG Icon {% endcomment %}
     Copy Link
 </button>
-<span class="h-20px border-1 border-gray-200 border-start mx-1"></span>
+
+
 {% if request.user.is_authenticated and request.user.user.id != user.id %}
+
+<span class="h-20px border-1 border-gray-200 border-start mx-1"></span>
+
     {% load has_review %}
     {% has_review phone_number request.user.user as has_review %}
     {% if has_review == True %}
@@ -18,5 +22,11 @@
     {% else %}
         <a href="{% url 'review_create' phone_number.value %}" class="btn btn-sm btn-primary">Review</a>
     {% endif %}
+
+    <a href="{% url 'user_whatsapp' phone_number.value %}" class="btn btn-sm btn-success" target="_blank">WhatsApp</a>
+
+{% elif not request.user.is_authenticated %}
+
+    <a href="{% url 'user_whatsapp' phone_number.value %}" class="btn btn-sm btn-success" target="_blank">WhatsApp</a>
+
 {% endif %}
-<a href="{% url 'user_whatsapp' phone_number.value %}" class="btn btn-sm btn-success" target="_blank">WhatsApp</a>

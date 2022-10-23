@@ -31,7 +31,7 @@
 
                 <div class="mt-10">
                     <label for="phone_number" class="form-label fs-6 fw-bolder text-dark">WhatsApp Phone Number</label>
-                    <input x-model="phoneNumber" maxlength=16 placeholder="Enter your WhatsApp phone number" class="form-control" type="text" id="phone_number" name="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} required />
+                    <input x-model="phoneNumber" maxlength=16 class="form-control" type="text" id="phone_number" name="phone_number"{% if form.phone_number.value != None %} value="{{ form.phone_number.value }}"{% endif %} required />
                     <div class="form-text">Include + symbol. E.g., +14155552671.</div>
                 </div>
                 {% if form.phone_number.errors %}<div class="text-danger ms-2 mt-2">{% for error in form.phone_number.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}

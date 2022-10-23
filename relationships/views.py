@@ -7,7 +7,6 @@ from datetime import datetime
 from ratelimit.decorators import ratelimit
 
 from django.urls import reverse
-from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -34,8 +33,8 @@ from relationships.utilities.use_email_code import use_email_code
 from relationships.utilities.use_whatsapp_code import use_whatsapp_code
 from relationships.constants import email_purposes, whatsapp_purposes
 
-from relationships.tasks.clear_abandoned_files import clear_abandoned_files as \
-    _clear_abandoned_files
+from relationships.tasks.clear_files import clear_files as _clear_files
+from relationships.tasks.delete_objs import delete_objs as _delete_objs
 from relationships.tasks.delete_status_file import delete_status_file as \
     _delete_status_file
 from relationships.tasks.delete_review_file import delete_review_file as \
@@ -229,7 +228,7 @@ def register__enter_profile(request, user_id):
                 form.cleaned_data.get('business_description')
             user.save()
 
-            send_email_code(user.id, email_purposes.VERIFY_EMAIL)
+            send_email_code(user.id, email_purposes.REGISTER)
 
             return redirect(_append_next(
                 reverse('register:confirm_email', args=(user.id,)),
@@ -387,7 +386,7 @@ def upload_status_file(request, user_id):
 
     form_uuid = request.POST.get('form_uuid')
 
-    _clear_abandoned_files.delay(user.id, form_uuid)
+    _clear_files.delay(user.id, form_uuid, False)
 
     try:
         # Deny file creation if maximum number of images is exceeded.
@@ -487,7 +486,7 @@ def delete_status_file(request, user_id):
 
 @login_required
 @csrf_exempt
-def clear_abandoned_files(request, user_id):
+def clear_files(request, user_id):
     # Prevent access of a non-existent user.
     try:
         user = models.User.objects.get(id=user_id)
@@ -498,7 +497,29 @@ def clear_abandoned_files(request, user_id):
     if user.id != request.user.user.id:
         return HttpResponse(status=204)
 
-    _clear_abandoned_files.delay(user_id)
+    status_files_to_delete = models.StatusFile.objects\
+        .filter(user=user, activated__isnull=True)
+
+    objs = []
+
+    for sf in status_files_to_delete:
+        file = sf.file
+        objs.append({'Key': file.s3_object_key})
+        objs.append({'Key': file.thumbnail_s3_object_key})
+        sf.delete()
+        file.delete()
+
+    review_files_to_delete = models.ReviewFile.objects\
+        .filter(reviewer=user, activated__isnull=True)
+
+    for rf in review_files_to_delete:
+        file = rf.file
+        objs.append({'Key': file.s3_object_key})
+        objs.append({'Key': file.thumbnail_s3_object_key})
+        rf.delete()
+        file.delete()
+
+    _delete_objs.delay(objs)
 
     return HttpResponse(status=204)
 
@@ -528,19 +549,33 @@ def _user_detail__status_update(request, phone_number, user, route, template,
         if form.is_valid():
             form_uuid = form.cleaned_data.get('form_uuid')
 
-            _clear_abandoned_files.delay(user.id, form_uuid, False)
-
-            user.status = form.cleaned_data.get('status')
             sgtz = pytz.timezone(settings.TIME_ZONE)
             now = datetime.now(tz=sgtz)
-            user.status_updated = now
-            user.save()
 
             # Activate files that were submitted with this form.
             files = models.StatusFile.objects.filter(form_uuid=form_uuid)
             for file in files:
                 file.activated = now
                 file.save()
+
+            status_files_to_delete = models.StatusFile.objects\
+                .filter(user=user)\
+                .exclude(form_uuid=form_uuid)
+
+            objs = []
+
+            for sf in status_files_to_delete:
+                file = sf.file
+                objs.append({'Key': file.s3_object_key})
+                objs.append({'Key': file.thumbnail_s3_object_key})
+                sf.delete()
+                file.delete()
+
+            _delete_objs.delay(objs)
+
+            user.status = form.cleaned_data.get('status')
+            user.status_updated = now
+            user.save()
 
             return redirect(route, user.phone_number.value())
         else:
@@ -713,6 +748,7 @@ def users__settings(request):
                 country = None
             business_name = form.cleaned_data.get('business_name')
             business_address = form.cleaned_data.get('business_address')
+            business_description = form.cleaned_data.get('business_description')
 
             # Override existing data without checking.
             user.first_name = first_name
@@ -720,6 +756,7 @@ def users__settings(request):
             user.country = country
             user.business_name = business_name
             user.business_address = business_address
+            user.business_description = business_description
             user.save()
 
             email_str = form.cleaned_data.get('email')
@@ -738,7 +775,7 @@ def users__settings(request):
         form = forms.SettingsForm(initial={
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'country': user.country,
+            'country': user.country.programmatic_key,
             'business_name': user.business_name,
             'business_address': user.business_address,
             'business_description': user.business_description,
@@ -787,8 +824,14 @@ def review_create(request, phone_number):
     p, _ = get_or_create_phone_number(f'+{phone_number}')
     if p is None:
         raise Http404(None) # Don't give too much information.
+
+    reviewee = models.User.objects.filter(phone_number=p).first()
     
     reviewer = request.user.user
+
+    # Don't allow reviewee to review himself.
+    if reviewee is not None and reviewee.id == reviewer.id:
+        return redirect('user_detail', phone_number)
 
     if request.method == 'POST':
         form = forms.ReviewCreateForm(request.POST)
@@ -805,16 +848,27 @@ def review_create(request, phone_number):
             rating = form.cleaned_data.get('rating')
             form_uuid = form.cleaned_data.get('form_uuid')
             
-            _clear_abandoned_files.delay(reviewer.id, form_uuid, False)
-            
+            # Activate files that were submitted with this form.
             sgtz = pytz.timezone(settings.TIME_ZONE)
             now = datetime.now(tz=sgtz)
-
-            # Activate files that were submitted with this form.
             files = models.ReviewFile.objects.filter(form_uuid=form_uuid)
             for file in files:
                 file.activated = now
                 file.save()
+
+            objs = []
+
+            review_files = models.ReviewFile.objects\
+                .filter(reviewer=reviewer, activated__isnull=True)
+
+            for rf in review_files:
+                file = rf.file
+                objs.append({'Key': file.s3_object_key})
+                objs.append({'Key': file.thumbnail_s3_object_key})
+                rf.delete()
+                file.delete()
+    
+            _delete_objs.delay(objs)
 
             models.Review.objects.create(
                 reviewer=reviewer,
@@ -827,7 +881,6 @@ def review_create(request, phone_number):
     else:
         form = forms.ReviewCreateForm()
 
-    reviewee = models.User.objects.filter(phone_number=p).first()
     return TemplateResponse(request, 'relationships/review_create.html', {
         'reviewee': reviewee,
         'reviewer': reviewer,
@@ -858,7 +911,7 @@ def upload_review_file(request, reviewer_id, phone_number_id):
     form_uuid = request.POST.get('form_uuid')
 
     # Delete unused files that were uploaded in abandoned forms.
-    _clear_abandoned_files.delay(reviewer.id, form_uuid)
+    _clear_files.delay(reviewer.id, form_uuid, False)
 
     try:
         # Deny file creation if maximum number of images is exceeded.

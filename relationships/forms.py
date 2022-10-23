@@ -1,4 +1,5 @@
 from phonenumber_field.formfields import PhoneNumberField
+from relationships.utilities.email_exists import email_exists
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -8,6 +9,8 @@ from common import models as commods
 from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.is_email_code_valid import is_email_code_valid
 from relationships.utilities.is_whatsapp_code_valid import is_whatsapp_code_valid
+from relationships.utilities.is_email_code_rate_limited import \
+    is_email_code_rate_limited
 
 class LoginForm(forms.Form):
     phone_number = PhoneNumberField()
@@ -194,7 +197,7 @@ class LookUpForm(forms.Form):
 
 # from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
 # from relationships.utilities.email_exists import email_exists
-# from relationships.utilities.is_email_code_rate_limited import is_email_code_rate_limited
+# 
 # from relationships.utilities.is_whatsapp_code_rate_limited import is_whatsapp_code_rate_limited
 
 # from relationships.utilities._archive.user_uuid_exists import user_uuid_exists

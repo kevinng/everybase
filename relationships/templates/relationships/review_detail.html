@@ -5,12 +5,7 @@
 {% load image_url %}
 
 {% block page_title %}{{ reviewer.first_name|title }} {{ reviewer.last_name|title }}
-{% comment %} Start: SVG Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-10-09-043348/core/html/src/media/icons/duotune/arrows/arr023.svg {% endcomment %}
-<span class="svg-icon svg-icon-dark ms-2 me-2"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M6 4L14 12L6 20H10L17.3 12.7C17.7 12.3 17.7 11.7 17.3 11.3L10 4H6Z" fill="currentColor"/>
-</svg>
-</span>
-{% comment %} End: Svg Icon {% endcomment %}
+Reviews
 {% if reviewee != None %}{{ reviewee.first_name|title }}{{ reviewee.last_name|title }}{% else %}+{{ reviewee_phone_number.country_code }} {{ reviewee_phone_number.national_number }}{% endif %}{% endblock %}
 {% block page_title_separator %}{% endblock %}
 
