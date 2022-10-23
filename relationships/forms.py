@@ -157,10 +157,15 @@ class SettingsConfirmEmailForm(forms.Form):
             self.add_error('code', 'Invalid code.')
 
 class ReviewCreateForm(forms.Form):
-    review = forms.CharField()
+    review = forms.CharField(max_length=1000)
     rating = forms.CharField()
     form_uuid = forms.CharField()
 
+class ReviewCommentCreateForm(forms.Form):
+    body = forms.CharField(max_length=1000)
+
+class LookUpForm(forms.Form):
+    phone_number = PhoneNumberField(required=True)
 
 
 
@@ -182,47 +187,17 @@ class ReviewCreateForm(forms.Form):
 
 
 
-
-
-# from common import models as commods
-# from relationships.utilities.get_or_create_phone_number import \
-    # get_or_create_phone_number
-
-    # def clean(self):
-    #     _country = self.cleaned_data.get('country')
-    #     _phone = self.cleaned_data.get('phone_number')
-
-    #     if _country is None and _phone is None:
-    #         return
-
-    #     country = commods.Country.objects.get(programmatic_key=_country)
-
-    #     phone = get_or_create_phone_number(_phone)
-        
-    #     # Country must match phone number country code
-    #     if phone.country_code != country.country_code:
-    #         raise ValidationError(
-    #             "Phone number country code doesn't match country.")
-            
 
         
 
 
 
-from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
-from relationships.utilities.email_exists import email_exists
-from relationships.utilities.is_email_code_rate_limited import is_email_code_rate_limited
-from relationships.utilities.is_whatsapp_code_rate_limited import is_whatsapp_code_rate_limited
+# from relationships.utilities.are_phone_numbers_same import are_phone_numbers_same
+# from relationships.utilities.email_exists import email_exists
+# from relationships.utilities.is_email_code_rate_limited import is_email_code_rate_limited
+# from relationships.utilities.is_whatsapp_code_rate_limited import is_whatsapp_code_rate_limited
 
-
-from relationships.utilities._archive.user_uuid_exists import user_uuid_exists
-
-
-
-
-
-
-
+# from relationships.utilities._archive.user_uuid_exists import user_uuid_exists
 
 # class RegisterForm(forms.Form):
 #     email = forms.EmailField(max_length=254)
@@ -244,132 +219,77 @@ from relationships.utilities._archive.user_uuid_exists import user_uuid_exists
 #         if phone_number_exists(self.cleaned_data.get('phone_number')):
 #             self.add_error('phone_number', 'This phone number belongs to an existing user.')
 
+# class ConfirmEmailLoginForm(forms.Form):
+#     code = forms.CharField()
 
+#     # Rendered in hidden fields
+#     next = forms.CharField(required=False)
+#     uuid = forms.CharField()
+#     email = forms.CharField()
 
+#     def clean(self):
+#         super(ConfirmEmailLoginForm, self).clean()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-class ConfirmEmailLoginForm(forms.Form):
-    code = forms.CharField()
-
-    # Rendered in hidden fields
-    next = forms.CharField(required=False)
-    uuid = forms.CharField()
-    email = forms.CharField()
-
-    def clean(self):
-        super(ConfirmEmailLoginForm, self).clean()
-
-        self.user = user_uuid_exists(self.cleaned_data.get('uuid'))
-        if self.user is None:
-            # Invalid user UUID, tell user to request for another.
-            raise ValidationError({'code': ['An error has occurred. Please cancel, and request for another code.',]})
+#         self.user = user_uuid_exists(self.cleaned_data.get('uuid'))
+#         if self.user is None:
+#             # Invalid user UUID, tell user to request for another.
+#             raise ValidationError({'code': ['An error has occurred. Please cancel, and request for another code.',]})
         
-        code = self.cleaned_data.get('code')
-        if is_email_code_valid(code, self.user) != True:
-            raise ValidationError({'code': ['Invalid code.',]})
+#         code = self.cleaned_data.get('code')
+#         if is_email_code_valid(code, self.user) != True:
+#             raise ValidationError({'code': ['Invalid code.',]})
 
 
-class RegisterForm(forms.Form):
-    email = forms.EmailField(max_length=254) # See: https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
-    phone_number = PhoneNumberField(required=True)
-    enable_whatsapp = forms.BooleanField(required=False)
-    first_name = forms.CharField(max_length=20)
-    last_name = forms.CharField(max_length=20)
-    country = forms.CharField()
+# class RegisterForm(forms.Form):
+#     email = forms.EmailField(max_length=254) # See: https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+#     phone_number = PhoneNumberField(required=True)
+#     enable_whatsapp = forms.BooleanField(required=False)
+#     first_name = forms.CharField(max_length=20)
+#     last_name = forms.CharField(max_length=20)
+#     country = forms.CharField()
 
-    # Rendered in hidden fields
-    next = forms.CharField(required=False)
+#     # Rendered in hidden fields
+#     next = forms.CharField(required=False)
 
-    def clean(self):
-        super(RegisterForm, self).clean()
+#     def clean(self):
+#         super(RegisterForm, self).clean()
 
-        if email_exists(self.cleaned_data.get('email')):
-            self.add_error('email', 'This email belongs to an existing user.')
+#         if email_exists(self.cleaned_data.get('email')):
+#             self.add_error('email', 'This email belongs to an existing user.')
         
-        if phone_number_exists(self.cleaned_data.get('phone_number')):
-            self.add_error('phone_number', 'This phone number belongs to an existing user.')
+#         if phone_number_exists(self.cleaned_data.get('phone_number')):
+#             self.add_error('phone_number', 'This phone number belongs to an existing user.')
 
+# class UpdateEmailForm(forms.Form):
+#     email = forms.CharField()
+#     code = forms.CharField()
 
+#     def __init__(self, *args, **kwargs):
+#         # Make request object passed in a class variable
+#         self.user = kwargs.pop('user')
+#         super().__init__(*args, **kwargs)
 
+#     def clean(self):
+#         super(UpdateEmailForm, self).clean()
+#         if is_email_code_valid(self.cleaned_data.get('code'), self.user) is not True:
+#             raise ValidationError({'code': ['Invalid code.',]})
 
-class UpdateEmailForm(forms.Form):
-    email = forms.CharField()
-    code = forms.CharField()
+# class UpdatePhoneNumberForm(forms.Form):
+#     code = forms.CharField()
 
-    def __init__(self, *args, **kwargs):
-        # Make request object passed in a class variable
-        self.user = kwargs.pop('user')
-        super().__init__(*args, **kwargs)
+#     # Render in hidden fields
+#     phone_number = PhoneNumberField()
+#     enable_whatsapp = forms.CharField()
 
-    def clean(self):
-        super(UpdateEmailForm, self).clean()
-        if is_email_code_valid(self.cleaned_data.get('code'), self.user) is not True:
-            raise ValidationError({'code': ['Invalid code.',]})
+#     def __init__(self, *args, **kwargs):
+#         # Make request object passed in a class variable
+#         self.user = kwargs.pop('user')
+#         super().__init__(*args, **kwargs)
 
-class UpdatePhoneNumberForm(forms.Form):
-    code = forms.CharField()
-
-    # Render in hidden fields
-    phone_number = PhoneNumberField()
-    enable_whatsapp = forms.CharField()
-
-    def __init__(self, *args, **kwargs):
-        # Make request object passed in a class variable
-        self.user = kwargs.pop('user')
-        super().__init__(*args, **kwargs)
-
-    def clean(self):
-        super(UpdatePhoneNumberForm, self).clean()
-        if is_whatsapp_code_valid(self.cleaned_data.get('code'), self.user) is not True:
-            raise ValidationError({'code': ['Invalid code.',]})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#     def clean(self):
+#         super(UpdatePhoneNumberForm, self).clean()
+#         if is_whatsapp_code_valid(self.cleaned_data.get('code'), self.user) is not True:
+#             raise ValidationError({'code': ['Invalid code.',]})
 
 # class LoginForm(forms.Form):
 #     phone_number = forms.CharField()
@@ -632,19 +552,6 @@ class UpdatePhoneNumberForm(forms.Form):
         
 #         if has_error:
 #             raise ValidationError(None)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # from urllib import request
 # from common.utilities.is_censored import is_censored

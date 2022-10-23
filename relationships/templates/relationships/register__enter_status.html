@@ -187,5 +187,5 @@ const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
 const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
 const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
 </script>
-<script src="{% static 'common/js/register__enter_status/dropzone.js' %}"></script>
+<script src="{% static 'common/js/register__enter_status.js' %}"></script>
 {% endblock %}

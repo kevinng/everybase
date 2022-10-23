@@ -10,16 +10,13 @@
     Copy Link
 </button>
 <span class="h-20px border-1 border-gray-200 border-start mx-1"></span>
-
-{% if request.user.is_authenticated %}
+{% if request.user.is_authenticated and request.user.user.id != user.id %}
     {% load has_review %}
     {% has_review phone_number request.user.user as has_review %}
     {% if has_review == True %}
-        <a href="" class="btn btn-sm btn-primary">My Review</a>
+        <a href="{% url 'review_detail' phone_number.value request.user.user.phone_number.value %}" class="btn btn-sm btn-primary">My Review</a>
     {% else %}
         <a href="{% url 'review_create' phone_number.value %}" class="btn btn-sm btn-primary">Review</a>
     {% endif %}
-{% else %}
-<a href="{% url 'review_create' phone_number.value %}" class="btn btn-sm btn-primary">Review</a>
 {% endif %}
-<a href="{% url 'user_whatsapp' phone_number.value %}" class="btn btn-sm btn-success">WhatsApp</a>
+<a href="{% url 'user_whatsapp' phone_number.value %}" class="btn btn-sm btn-success" target="_blank">WhatsApp</a>

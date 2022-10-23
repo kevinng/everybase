@@ -1,57 +1,37 @@
-from django.http import JsonResponse
 from common.tasks.delete_files import delete_files
-from common.utilities.id_from_key import id_from_key
-from common.utilities.key_from_id import key_from_id
-from files.templatetags.image_url import image_url
-from files.templatetags.thumbnail_url import thumbnail_url
 
-import json
-import pytz, urllib
-import random
-import relationships
-import requests
-from relationships.utilities.get_whatsapp_url import get_whatsapp_url
-from relationships.utilities._archive.set_cookie_uuid import set_cookie_uuid
+import boto3, json, pytz, uuid
+from PIL import Image, ImageOps
+from io import BytesIO
 from datetime import datetime
 from ratelimit.decorators import ratelimit
 
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from django.db.models import Count
-from django.contrib import messages
+from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User as DjangoUser
 from django.template.response import TemplateResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
-from django.http import Http404
+from django.http import Http404, HttpResponse
 
 from everybase import settings
 
-import uuid
-
 from django.views.decorators.csrf import csrf_exempt
+from files.utilities.get_mime_type import get_mime_type
 
 from common import models as commods
-from common.tasks.send_email import send_email
-from common.tasks.send_amplitude_event import send_amplitude_event
-from common.tasks.identify_amplitude_user import identify_amplitude_user
-from common.utilities.get_ip_address import get_ip_address
-
 from relationships import forms, models
 from relationships.tasks.send_email_code import send_email_code
 from relationships.tasks.send_whatsapp_code import send_whatsapp_code
-from relationships.utilities.are_phone_numbers_same import \
-    are_phone_numbers_same
-from relationships.utilities.email_exists import email_exists
 from relationships.utilities.get_or_create_phone_number import \
     get_or_create_phone_number
+from relationships.utilities.get_whatsapp_url import get_whatsapp_url
 from relationships.utilities.get_or_create_email import get_or_create_email
-from relationships.utilities.phone_number_exists import phone_number_exists
 from relationships.utilities.use_email_code import use_email_code
 from relationships.utilities.use_whatsapp_code import use_whatsapp_code
-from relationships.utilities._archive.user_uuid_exists import user_uuid_exists
 from relationships.constants import email_purposes, whatsapp_purposes
 
 from relationships.tasks.clear_abandoned_files import clear_abandoned_files as \
@@ -63,20 +43,11 @@ from relationships.tasks.delete_review_file import delete_review_file as \
 
 from files import models as fimods
 
-from files.utilities.get_mime_type import get_mime_type
-from PIL import Image, ImageOps
-from io import BytesIO
-import boto3
-
-from django.http import HttpResponse
-
 MESSAGE_KEY__PROFILE_UPDATE_SUCCESS = 'MESSAGE_KEY__PROFILE_UPDATE_SUCCESS'
 MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN = 'MESSAGE_KEY__EMAIL_UPDATE_TRY_AGAIN'
 MESSAGE_KEY__EMAIL_UPDATE_SUCCESS = 'MESSAGE_KEY__EMAIL_UPDATE_SUCCESS'
 MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN = 'MESSAGE_KEY__PHONE_NUMBER_UPDATE_TRY_AGAIN'
 MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS = 'MESSAGE_KEY__PHONE_NUMBER_UPDATE_SUCCESS'
-
-_recaptcha_failed_msg = "We suspect you're a bot. Please wait a short while before posting."
 
 # Helper functions
 
@@ -90,10 +61,6 @@ def _append_next(url, next):
 
 def log_out(request):
     logout(request)
-    next = request.GET.get('next')
-    if next is not None and next.strip() != '':
-        return HttpResponseRedirect(next)
-
     return redirect('home')
 
 # Registration
@@ -561,22 +528,6 @@ def _user_detail__status_update(request, phone_number, user, route, template,
 
             _clear_abandoned_files.delay(user.id, form_uuid, False)
 
-            # status_files = models.StatusFile.objects\
-            #     .filter(user=user)\
-            #     .exclude(form_uuid=form_uuid)
-
-            # delete_objs = []
-            # for sf in status_files:
-            #     file = sf.file
-            #     delete_objs.append({'Key': file.s3_object_key})
-            #     delete_objs.append({'Key': file.thumbnail_s3_object_key})
-            #     sf.delete()
-            #     file.delete()
-            
-            # # Delete orphan files if any.
-            # if len(delete_objs) > 0:
-            #     delete_files.delay(delete_objs)
-
             user.status = form.cleaned_data.get('status')
             sgtz = pytz.timezone(settings.TIME_ZONE)
             now = datetime.now(tz=sgtz)
@@ -597,7 +548,7 @@ def _user_detail__status_update(request, phone_number, user, route, template,
         is_show_update_form = False
 
     absolute_url = request.build_absolute_uri(
-        reverse(route, args=(user.phone_number.value(),)))
+        reverse(route, args=(phone_number.value(),)))
 
     params = {
         'absolute_url': absolute_url,
@@ -627,8 +578,14 @@ def user_detail(request, phone_number):
 def user_reviews(request, phone_number):
     phone_number, user = _get_phone_user(phone_number)
 
-    more_params = {
-        'reviews': models.Review.objects.filter(phone_number=phone_number)}
+    reviews = models.Review.objects\
+        .filter(phone_number=phone_number)\
+        .order_by('-created')
+    reviews_per_page = 20
+    paginator = Paginator(reviews, reviews_per_page)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    more_params = {'page_obj': page_obj}
 
     return _user_detail__status_update(request, phone_number, user,
         'user_reviews', 'relationships/user_reviews.html', more_params)
@@ -694,8 +651,10 @@ def log_in(request):
         form = forms.LoginForm(
             initial={'next': request.GET.get('next')})
 
-    return TemplateResponse(request, 'relationships/login.html',
-        {'form': form}, request.GET.get('next'))
+    return TemplateResponse(request, 'relationships/login.html',{
+        'form': form,
+        'next': request.GET.get('next')
+    })
 
 def confirm_whatsapp_login(request, user_id):
     if request.user.is_authenticated:
@@ -839,31 +798,21 @@ def review_create(request, phone_number):
             # TODO redirect to review user created
             pass
 
-        
-        # recaptcha_response = request.POST.get('g-recaptcha-response')
-        # recaptcha_call = requests.post(settings.RECAPTCHA_VERIFICATION_URL,
-        #     params={
-        #         'secret': settings.RECAPTCHA_SECRET_KEY,
-        #         'response': recaptcha_response
-        # })
-
-        # recaptcha_results = json.loads(recaptcha_call.text)
-
-        # if recaptcha_results.get('success') is not True or\
-        #     recaptcha_results.get('score') is None:
-        #     form.add_error(None, _recaptcha_failed_msg)
-        # elif recaptcha_results.get('success') is True and\
-        #     recaptcha_results.get('score') is not None and\
-        #     float(recaptcha_results.get('score')) < \
-        #         float(settings.RECAPTCHA_THRESHOLD):
-        #     form.add_error(None, _recaptcha_failed_msg)
-        # elif form.is_valid():
         if form.is_valid():
             review = form.cleaned_data.get('review')
             rating = form.cleaned_data.get('rating')
             form_uuid = form.cleaned_data.get('form_uuid')
             
             _clear_abandoned_files.delay(reviewer.id, form_uuid, False)
+            
+            sgtz = pytz.timezone(settings.TIME_ZONE)
+            now = datetime.now(tz=sgtz)
+
+            # Activate files that were submitted with this form.
+            files = models.ReviewFile.objects.filter(form_uuid=form_uuid)
+            for file in files:
+                file.activated = now
+                file.save()
 
             models.Review.objects.create(
                 reviewer=reviewer,
@@ -992,11 +941,91 @@ def delete_review_file(request):
     params = json.loads(request.body)
     file_uuid = params.get('file_uuid')
     form_uuid = params.get('form_uuid')
-
     _delete_review_file.delay(request.user.user.id, file_uuid, form_uuid)
-
     return HttpResponse(status=204)
 
+@login_required
+def review_detail(request, reviewee_phone_number, reviewer_phone_number):
+    reviewee_ph, _ = get_or_create_phone_number(f'+{reviewee_phone_number}')
+    if reviewee_ph is None:
+        raise Http404(None) # Don't give too much information.
+
+    reviewer_ph, _ = get_or_create_phone_number(f'+{reviewer_phone_number}')
+    if reviewer_ph is None:
+        raise Http404(None) # Don't give too much information.
+
+    reviewee = models.User.objects.filter(phone_number=reviewee_ph).first()
+
+    reviewer = models.User.objects.filter(phone_number=reviewer_ph).first()
+    if reviewer is None:
+        raise Http404(None) # Don't give too much information.
+
+    review = models.Review.objects.filter(
+        reviewer=reviewer,
+        phone_number=reviewee_ph
+    ).first()
+    if review is None:
+        raise Http404(None) # Don't give too much information.
+
+    if request.method == 'POST':
+        # Prevent users other than the reviewee and reviewer from responding
+        # to this review.
+        
+        user = request.user.user
+
+        if (reviewee is not None and reviewee.id == user.id) or\
+            reviewer.id == user.id:
+            form = forms.ReviewCommentCreateForm(request.POST)
+            if form.is_valid():
+                body = form.cleaned_data.get('body')
+                models.ReviewComment.objects.create(
+                    author=request.user.user,
+                    review=review,
+                    body=body
+                )
+
+        return redirect('review_detail', reviewee_phone_number,
+            reviewer_phone_number)
+    else:
+        form = forms.ReviewCommentCreateForm()
+
+    absolute_url = request.build_absolute_uri(
+        reverse('review_detail', args=(
+            reviewee_phone_number,
+            reviewer_phone_number)))
+
+    responses = models.ReviewComment.objects\
+        .filter(review=review).order_by('-created')
+    responses_per_page = 20
+    paginator = Paginator(responses, responses_per_page)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    template_name = 'relationships/review_detail.html'
+    return TemplateResponse(request, template_name, {
+        'reviewee_phone_number': reviewee_ph,
+        'reviewer_phone_number': reviewer_ph,
+        'reviewee': reviewee,
+        'reviewer': reviewer,
+        'review': review,
+        'absolute_url': absolute_url,
+        'responses': responses,
+        'form': form,
+        'page_obj': page_obj
+    })
+
+def lookup(request):
+    if request.method == 'POST':
+        form = forms.LookUpForm(request.POST)
+        if form.is_valid():
+            phone_number = form.cleaned_data.get('phone_number')
+            p = f'{phone_number.country_code}{phone_number.national_number}'
+            return redirect('user_detail', p)
+    else:
+        form = forms.LookUpForm()
+
+    template_name = 'relationships/lookup.html'
+    return TemplateResponse(request, template_name, {'form': form})
 
 
 
@@ -1018,14 +1047,7 @@ def delete_review_file(request):
 
 
 
-
-
-
-
-
-
-
-
+# _recaptcha_failed_msg = "We suspect you're a bot. Please wait a short while before posting."
 
 # # Named 'log_in' and not 'login' to prevent clash with Django login
 # @ratelimit(key='ip', rate='60/h', block=True, method=['POST'])
@@ -1499,112 +1521,104 @@ def delete_review_file(request):
 
 
 
-def history(request):
-    template_name = 'relationships/contacts.html'
-    return TemplateResponse(request, template_name, {})
+# def history(request):
+#     template_name = 'relationships/contacts.html'
+#     return TemplateResponse(request, template_name, {})
 
-def requirements(request):
-    template_name = 'relationships/status.html'
-    return TemplateResponse(request, template_name, {})
+# def requirements(request):
+#     template_name = 'relationships/status.html'
+#     return TemplateResponse(request, template_name, {})
 
-def user_list(request):
-    template_name = 'relationships/user_list.html'
-    return TemplateResponse(request, template_name, {})
+# def user_list(request):
+#     template_name = 'relationships/user_list.html'
+#     return TemplateResponse(request, template_name, {})
 
-def suggestions(request, uuid):
-    template_name = 'relationships/user_detail_suggestions.html'
-    return TemplateResponse(request, template_name, {})
-
-def lookup(request):
-    template_name = 'relationships/lookup.html'
-    return TemplateResponse(request, template_name, {})
-
-def report(request):
-    template_name = 'relationships/report.html'
-    return TemplateResponse(request, template_name, {})
-
-def claim(request):
-    template_name = 'relationships/claim.html'
-    return TemplateResponse(request, template_name, {})
-
-def contact_detail(request):
-    template_name = 'relationships/contact_detail.html'
-    return TemplateResponse(request, template_name, {})
-
-def business_home(request):
-    template_name = 'relationships/business_home.html'
-    return TemplateResponse(request, template_name, {})
+# def suggestions(request, uuid):
+#     template_name = 'relationships/user_detail_suggestions.html'
+#     return TemplateResponse(request, template_name, {})
 
 
 
-def review_detail(request):
-    template_name = 'relationships/review_detail.html'
-    return TemplateResponse(request, template_name, {})
+# def report(request):
+#     template_name = 'relationships/report.html'
+#     return TemplateResponse(request, template_name, {})
 
-def report_detail(request):
-    template_name = 'relationships/report_detail.html'
-    return TemplateResponse(request, template_name, {})
+# def claim(request):
+#     template_name = 'relationships/claim.html'
+#     return TemplateResponse(request, template_name, {})
 
-def claim_number(request):
-    template_name = 'relationships/claim_number.html'
-    return TemplateResponse(request, template_name, {})
+# def contact_detail(request):
+#     template_name = 'relationships/contact_detail.html'
+#     return TemplateResponse(request, template_name, {})
 
-def report_files(request):
-    template_name = 'relationships/report_detail_files.html'
-    return TemplateResponse(request, template_name, {})
-
-def report_create(request):
-    template_name = 'relationships/report_create.html'
-    return TemplateResponse(request, template_name, {})
-
-def contact_reports(request):
-    template_name = 'relationships/contact_reports.html'
-    return TemplateResponse(request, template_name, {})
-
-def link_email(request):
-    template_name = 'relationships/link_email.html'
-    return TemplateResponse(request, template_name, {})
-
-def verify_email(request):
-    template_name = 'relationships/verify_email.html'
-    return TemplateResponse(request, template_name, {})
-
-def enter_email(request):
-    template_name = 'relationships/enter_email.html'
-    return TemplateResponse(request, template_name, {})
-
-def following(request):
-    template_name = 'relationships/following.html'
-    return TemplateResponse(request, template_name, {})
-
-def alert_list(request):
-    template_name = 'relationships/alerts.html'
-    return TemplateResponse(request, template_name, {})
-
-def alert_detail(request, id):
-    template_name = 'relationships/alert_detail.html'
-    return TemplateResponse(request, template_name, {})
-
-def alert_create(request):
-    template_name = 'relationships/alert_create.html'
-    return TemplateResponse(request, template_name, {})
-
-def alert_edit(request):
-    template_name = 'relationships/status.html'
-    return TemplateResponse(request, template_name, {})
-
-def alert_delete(request):
-    template_name = 'relationships/status.html'
-    return TemplateResponse(request, template_name, {})
+# def business_home(request):
+#     template_name = 'relationships/business_home.html'
+#     return TemplateResponse(request, template_name, {})
 
 
-def credits(request):
-    template_name = 'relationships/credits.html'
-    return TemplateResponse(request, template_name, {})
 
-def enter_number(request):
-    template_name = 'relationships/enter_number.html'
-    return TemplateResponse(request, template_name, {})
+
+
+# def claim_number(request):
+#     template_name = 'relationships/claim_number.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def report_files(request):
+#     template_name = 'relationships/report_detail_files.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def report_create(request):
+#     template_name = 'relationships/report_create.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def contact_reports(request):
+#     template_name = 'relationships/contact_reports.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def link_email(request):
+#     template_name = 'relationships/link_email.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def verify_email(request):
+#     template_name = 'relationships/verify_email.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def enter_email(request):
+#     template_name = 'relationships/enter_email.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def following(request):
+#     template_name = 'relationships/following.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def alert_list(request):
+#     template_name = 'relationships/alerts.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def alert_detail(request, id):
+#     template_name = 'relationships/alert_detail.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def alert_create(request):
+#     template_name = 'relationships/alert_create.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def alert_edit(request):
+#     template_name = 'relationships/status.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def alert_delete(request):
+#     template_name = 'relationships/status.html'
+#     return TemplateResponse(request, template_name, {})
+
+
+# def credits(request):
+#     template_name = 'relationships/credits.html'
+#     return TemplateResponse(request, template_name, {})
+
+# def enter_number(request):
+#     template_name = 'relationships/enter_number.html'
+#     return TemplateResponse(request, template_name, {})
 
 
 

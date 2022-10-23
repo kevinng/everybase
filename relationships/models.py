@@ -572,6 +572,9 @@ class Review(commods.Standard):
     )
     body = models.TextField()
 
+    def response_count(self):
+        return ReviewComment.objects.filter(review=self).count()
+
     def review_files(self):
         """Returns review files."""
         return ReviewFile.objects\
@@ -628,7 +631,7 @@ class ReviewComment(commods.Standard):
     Last updated: 29 September 2022, 7:01 PM
     """
     review = models.ForeignKey(
-        'User',
+        'Review',
         related_name='responses_as_review',
         related_query_name='responses_as_review',
         on_delete=models.PROTECT,
@@ -642,42 +645,6 @@ class ReviewComment(commods.Standard):
         db_index=True
     )
     body = models.TextField()
-
-class ReviewCommentFile(commods.Standard):
-    """Review comment file
-
-    Last updated: 29 September 2022, 7:01 PM
-    """
-    comment = models.ForeignKey(
-        'ReviewComment',
-        related_name='files_as_review_comment',
-        related_query_name='files_as_review_comment',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    file = models.ForeignKey(
-        'files.File',
-        related_name='review_response_files_as_file',
-        related_query_name='review_response_files_as_file',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    form_uuid = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    activated = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    file_uuid = models.UUIDField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
 
 class StatusFile(commods.Standard):
     """Status file

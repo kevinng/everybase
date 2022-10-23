@@ -1,6 +1,8 @@
 {% extends 'extendables/b.html' %}
 
 {% load static %}
+{% load thumbnail_url %}
+{% load image_url %}
 
 {% block title %}{% if user != None %}{{ user.first_name|title }} {{ user.last_name|title }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
 {% block meta_description %}Importer/exporter reviews for {% if user != None %}{{ user.first_name|title }} {{ user.last_name|title }} {% endif %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% endblock %}
@@ -22,7 +24,7 @@
     {% endif %}
 {% endblock %}
 
-{% block page_title %}{% if user == None %}+ {{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}{% endblock %}
+{% block page_title %}{% if user == None %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}{% endblock %}
 {% block page_title_separator %}{% endblock %}
 
 {% block actions %}
@@ -55,7 +57,7 @@
         {% endif %}
             <div class="card-header">
                 <div class="card-title d-flex flex-column py-4">
-                    <div>{% if user == None %}+ {{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}</div>
+                    <div>{% if user == None %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}</div>
                     {% if user != None %}<div class="fs-7 text-muted">{{ user.country.name }}</div>{% endif %}
                 </div>
                 <div class="card-toolbar">
@@ -83,8 +85,6 @@
                         <div class="mt-4">
                             <div class="d-flex gap-2">
                                 {% if user.status_files.all|length > 0 %}
-                                    {% load thumbnail_url %}
-                                    {% load image_url %}
                                     {% for image in user.status_files.all %}
                                         {% thumbnail_url image.file as thumbnail_url %}
                                         {% image_url image.file as image_url %}
@@ -125,9 +125,10 @@
                 </div>
                 <div class="card-footer d-flex justify-content-between flex-wrap gap-2">
                     <div class="d-flex justify-content-start gap-2 flex-wrap" x-show="!isShowingUpdateForm">
-                        <a x-show="!isShowingUpdateForm" target="_blank" href="https://api.whatsapp.com/send?text={{ share_text_url }}" class="btn btn-sm btn-success">Share WhatsApp</a>
+                        <a x-show="!isShowingUpdateForm" target="_blank" href="https://api.whatsapp.com/send?text={{ absolute_url }}" class="btn btn-sm btn-success">Share WhatsApp</a>
                         <a x-show="!isShowingUpdateForm" target="_blank" href="https://www.facebook.com/sharer/sharer.php?src=sp&u={{ absolute_url }}" class="btn btn-sm btn-facebook">Share Facebook</a>
                     </div>
+                    {% if request.user.is_authenticated and request.user.user.id == user.id %}
                     <div class="d-flex justify-content-end gap-2 flex-wrap">
                         <button type="button" class="btn btn-sm btn-secondary" x-show="isShowingUpdateForm" @click="cancel" id="cancel">Cancel</button>
                         <button type="submit" class="btn btn-sm btn-primary" x-show="isShowingUpdateForm" id="save" x-bind:disabled="disableSave">Save</button>
@@ -144,6 +145,7 @@
                             Update Status
                         </button>
                     </div>
+                    {% endif %}
                 </div>
 
             {% if request.user.is_authenticated and request.user.user.id == user.id %}
@@ -152,6 +154,10 @@
         </div>
 
         {% include 'relationships/includes/user_detail__nav.html' with active='reviews' user=user %}
+
+        {% if page_obj|length > 0 %}
+            {% include 'includes/paginator.html' %}
+        {% endif %}
 
         {% load has_review %}
         {% has_review phone_number as has_review %}
@@ -184,41 +190,8 @@
                 </button>
             </div>
         {% else %}
-            {% comment %} Start: Filter Options {% endcomment %}
-            <form id="search_form" action="" method="get" class="mt-8 d-flex justify-content-between ms-2">
-                <div class="d-flex flex-column gap-2">
-                    <div class="form-check form-check-custom d-flex gap-2">
-                        <input class="form-check-input" type="checkbox" name="bad" id="bad" />
-                        <label for="bad">
-                            {% include 'relationships/includes/review_type__bad.html' %}
-                        </label>
-                    </div>
-                    <div class="form-check form-check-custom d-flex gap-2">
-                        <input class="form-check-input" type="checkbox" name="good" id="good" />
-                        <label for="good">
-                            {% include 'relationships/includes/review_type__good.html' %}
-                        </label>
-                    </div>
-                </div>
-
-                <div>
-                    {% if request.user.is_authenticated %}
-                        {% load has_review %}
-                        {% has_review phone_number request.user.user as has_review %}
-                        {% if has_review == True %}
-                            <a href="" class="btn btn-sm btn-primary">My Review</a>
-                        {% else %}
-                            <a href="{% url 'review_create' phone_number.value %}" class="btn btn-sm btn-primary">Review</a>
-                        {% endif %}
-                    {% else %}
-                    <a href="{% url 'review_create' phone_number.value %}" class="btn btn-sm btn-primary">Review</a>
-                    {% endif %}
-                </div>
-            </form>
-            {% comment %} End: Filter Options {% endcomment %}
-
-            {% if reviews != None %}
-                {% for r in reviews %}
+            <div class="mt-10">
+                {% for r in page_obj %}
                     <div class="card shadow-sm mt-4">
                         <div class="card-header pb-3 pt-4">
                             <div class="card-title d-flex flex-column">
@@ -234,68 +207,73 @@
                         </div>
         
                         <div class="card-body">
-                            {% comment %} Deal with line breaks allow it to print {% endcomment %}
-                            {% if r.rating == 'bad' %}
-                                {% include 'relationships/includes/review_type__bad.html' %}
-                            {% elif r.rating == 'good' %}
-                                {% include 'relationships/includes/review_type__good.html' %}
-                            {% endif %}
-                            <div class="mt-2">{{ r.body|truncatechars:100 }}{% if r.body|length > 100 %}...{% endif %} <a href="" class="fw-bolder fs-6">Details</a></div>
+                            <div class="mt-2">{{ r.body|truncatechars:100 }}{% if r.body|length > 100 %}...{% endif %} <a href="{% url 'review_detail' phone_number.value r.reviewer.phone_number.value %}" class="fw-bolder fs-6">Details</a></div>
+                            {% if r.review_files.all|length > 0 %}
                             <div class="mt-4 d-flex gap-2 flex-wrap align-items-center">
-                                {% if r.review_files.all|length > 0 %}
-                                    {% load thumbnail_url %}
-                                    {% for image in r.review_files.all %}
-                                        {% thumbnail_url image.file as thumbnail_url %}
-                                        {% image_url image.file as image_url %}
-                                        <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ image_url }}">
-                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded w-50px h-50px"
-                                                style="background-image:url('{{ thumbnail_url }}')">
-                                            </div>
-                                            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                            </div>
-                                        </a>
-                                    {% endfor %}
-                                {% endif %}
+                                {% for image in r.review_files.all %}
+                                    {% thumbnail_url image.file as thumbnail_url %}
+                                    {% image_url image.file as image_url %}
+                                    <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ image_url }}">
+                                        <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded w-50px h-50px"
+                                            style="background-image:url('{{ thumbnail_url }}')">
+                                        </div>
+                                        <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                            <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                        </div>
+                                    </a>
+                                {% endfor %}
                             </div>
+                            {% endif %}
                         </div>
         
                         <div class="card-footer">
-                            <div class="d-flex justify-content-end">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    {% if r.rating == 'bad' %}
+                                        {% include 'relationships/includes/review_type__bad.html' %}
+                                    {% elif r.rating == 'good' %}
+                                        {% include 'relationships/includes/review_type__good.html' %}
+                                    {% endif %}
+                                </div>
                                 <div class="d-flex gap-4 align-items-center">
-                                    <div class="fw-bold">3 Responses</div>
-                                    <button type="button" class="btn btn-sm btn-primary">Details</button>
+                                    <div class="fw-bold">{{ r.response_count }} Responses</div>
+                                    <a href="{% url 'review_detail' phone_number.value r.reviewer.phone_number.value %}" class="btn btn-sm btn-primary">Details</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-            {% endif %}
-            
-            {% include 'includes/paginator.html' %}
+                
+                {% if page_obj|length > 0 %}
+                    {% include 'includes/paginator.html' %}
+                {% endif %}
+            </div>
         {% endif %}
     </div>
 </div>
 {% endblock %}
 
 {% block page_vendor_javascript %}
-<script src="{% static 'common/js/introjs.min.js' %}"></script>
 <script src="{% static 'common/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js' %}"></script>
 {% endblock %}
 
 {% block page_custom_javascript %}
+<script src="{% static 'common/js/user_detail__shared.js' %}"></script>
 {% if request.user.is_authenticated and request.user.user.id == user.id %}
 <script>
+// These fields will not be minified because they contain rendered values.
 const uploadStatusImageURL = "{% url 'users:upload_status_file' user.id %}"
 const formUUID = "{{ form_uuid }}"
 const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
 const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
 const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
+
+// We use hidden fields to bridge JQuery and Alpine JS.
 const numFilesProcessing = $('#num_files_processing')
 const numFilesSuccess = $('#num_files_success')
 const numFilesError = $('#num_files_error')
 const numFilesRemoved = $('#num_files_removed')
 </script>
-<script src="{% static 'common/js/user_detail_shared.js' %}"></script>
+<script src="{% static 'common/js/user_detail__shared__owner.js' %}"></script>
 {% endif %}
 {% endblock %}

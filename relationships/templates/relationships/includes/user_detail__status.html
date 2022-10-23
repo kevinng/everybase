@@ -21,7 +21,7 @@
 {% endif %}
     <div class="card-header">
         <div class="card-title d-flex flex-column py-4">
-            <div>{% if user == None %}+ {{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}</div>
+            <div>{% if user == None %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}</div>
             {% if user != None %}<div class="fs-7 text-muted">{{ user.country.name }}</div>{% endif %}
         </div>
         <div class="card-toolbar">

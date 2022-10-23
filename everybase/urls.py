@@ -28,74 +28,26 @@ urlpatterns = [
     path('ads.txt', comviews.ads_txt, name='ads_txt'),
 
     # Privacy and terms
-    path('privacy/', comviews.privacy, name='privacy'),
-    path('terms/', comviews.terms, name='terms'),
+    path('privacy', comviews.privacy, name='privacy'),
+    path('terms', comviews.terms, name='terms'),
 
     path('', comviews.home, name='home'),
-    path('login/', relviews.log_in, name='login'),
-    path('logout/', relviews.log_out, name='logout'),
+    path('login', relviews.log_in, name='login'),
+    path('logout', relviews.log_out, name='logout'),
 
-    path('p/<str:phone_number>/', relviews.user_detail, name='user_detail'),
-    path('r/<str:phone_number>/', relviews.user_reviews, name='user_reviews'),
-    path('r/<str:phone_number>/new', relviews.review_create, name='review_create'),
-    path('w/<str:phone_number>/', relviews.user_whatsapp, name='user_whatsapp'),
+    path('lookup', relviews.lookup, name='lookup'),
+
+    path('p/<str:phone_number>', relviews.user_detail, name='user_detail'),
+    path('r/<str:phone_number>', relviews.user_reviews, name='user_reviews'),
+    path('r/<str:phone_number>/new', relviews.review_create,
+        name='review_create'),
+    path('r/<str:reviewee_phone_number>/<str:reviewer_phone_number>',
+        relviews.review_detail, name='review_detail'),
+    path('w/<str:phone_number>', relviews.user_whatsapp, name='user_whatsapp'),
 
     path('users/', include('relationships.urls')),
     path('register/', include('relationships.urls_register')),
     path('login/', include('relationships.urls_login')),
-        
-
-
-
-
-
-
-    
-    path('claim', relviews.claim, name='claim'),
-    # path('register', relviews.register, name='register'),
-    # path('register1', relviews.register1, name='register1'),
-    path('verify-email', relviews.verify_email, name='verify_email'),
-
-    path('enter-email', relviews.enter_email, name='enter_email'),
-
-    # path('enter-status', relviews.enter_status, name='enter_status'),
-
-    path('enter-phone-number', relviews.enter_number, name='enter_phone_number'),
-
-    path('following', relviews.following, name='following'),
-
-
-
-    path('review_detail', relviews.review_detail, name='review_detail'),
-
-    path('contact_detail', relviews.contact_detail, name='contact_detail'),
-    path('contact_reports', relviews.contact_reports, name='contact_reports'),
-    path('report_create', relviews.report_create, name='report_create'),
-    path('report_detail', relviews.report_detail, name='report_detail'),
-    
-
-    
-
-    path('lookup', relviews.lookup, name='lookup'),
-    
-
-    # path('select-country', relviews.select_country, name='select-country'),
-    # User menu and settings
-    # path('credits', relviews.credits, name='credits'),
-    # path('update-phone-number', relviews.update_phone_number, name='update_phone_number'),
-    # path('update-requirements', relviews.requirements, name='update_requirements'),
-    # path('link_email', relviews.link_email, name='link_email'),
-    # Navigation bar
-    # path('home', comviews.home, name='home'), # AKA search CHANGE
-    # path('', relviews.user_list, name='search'), # AKA search CHANGE TO SEARCH
-    # path('history', relviews.history, name='history'),
-    # path('report', relviews.report, name='report'),
-    # path('claim', relviews.claim, name='claim'),
-    # path('faq', comviews.faq, name='faq'),
-    # path('pricing', comviews.pricing, name='pricing'),
-    # path('earn-money', comviews.earn_money, name='earn_money'),
-    # path('claim_number', relviews.claim_number, name='claim_number'),
-    # path('report_files', relviews.report_files, name='report_files'),
 
     # App URLs
     # path('common/', include('common.urls')),

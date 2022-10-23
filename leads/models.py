@@ -1,1482 +1,1482 @@
-import uuid as uuidlib
-from urllib.parse import urljoin
+# # import uuid as uuidlib
+# # from urllib.parse import urljoin
 
-from django.db import models
-from django.db.models import Q
-from django.urls import reverse
-from django.utils.text import slugify
+# # from django.db import models
+# # from django.db.models import Q
+# # from django.urls import reverse
+# # from django.utils.text import slugify
 
-from everybase import settings
+# # from everybase import settings
 
-from common.models import Standard, Choice
+# # from common.models import Standard, Choice
     
-class Lead(Standard):
-    """Lead.
+# # class Lead(Standard):
+# #     """Lead.
 
-    Last updated: 13 July 2022, 4:05 AM
-    """
-    uuid = models.UUIDField(
-        unique=True,
-        default=uuidlib.uuid4,
-        editable=False,
-        db_index=True
-    )
+# #     Last updated: 13 July 2022, 4:05 AM
+# #     """
+# #     uuid = models.UUIDField(
+# #         unique=True,
+# #         default=uuidlib.uuid4,
+# #         editable=False,
+# #         db_index=True
+# #     )
 
-    author = models.ForeignKey(
-        'relationships.User',
-        related_name='leads_with_author',
-        related_query_name='leads_with_author',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    lead_type = models.CharField(
-        max_length=20,
-        choices=[
-            ('buying', 'Buying'),
-            ('selling', 'Selling'),
-            ('need_logistics', 'Need Logistics'),
-            ('sourcing_agent', 'Sourcing Agent'),
-            ('sales_agent', 'Sales Agent'),
-            ('logistics_agent', 'Logistics Agent'),
-            ('other', 'Other')
-        ],
-        db_index=True
-    )
+# #     author = models.ForeignKey(
+# #         'relationships.User',
+# #         related_name='leads_with_author',
+# #         related_query_name='leads_with_author',
+# #         on_delete=models.PROTECT,
+# #         db_index=True
+# #     )
+# #     lead_type = models.CharField(
+# #         max_length=20,
+# #         choices=[
+# #             ('buying', 'Buying'),
+# #             ('selling', 'Selling'),
+# #             ('need_logistics', 'Need Logistics'),
+# #             ('sourcing_agent', 'Sourcing Agent'),
+# #             ('sales_agent', 'Sales Agent'),
+# #             ('logistics_agent', 'Logistics Agent'),
+# #             ('other', 'Other')
+# #         ],
+# #         db_index=True
+# #     )
 
-    body = models.TextField(
-        blank=True,
-        null=True
-    )
+# #     body = models.TextField(
+# #         blank=True,
+# #         null=True
+# #     )
 
-    has_insights = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    internal_notes = models.TextField(
-        null=True,
-        blank=True
-    )
+# #     has_insights = models.BooleanField(
+# #         null=True,
+# #         blank=True
+# #     )
+# #     internal_notes = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
 
-    slug_link = models.CharField(
-        max_length=200,
-        unique=True,
-        db_index=True
-    )
-    slug_tokens = models.TextField(
-        null=True,
-        blank=True
-    )
+# #     slug_link = models.CharField(
+# #         max_length=200,
+# #         unique=True,
+# #         db_index=True
+# #     )
+# #     slug_tokens = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
 
-    impressions = models.IntegerField(
-        default=1, # Prevent division by 0
-        db_index=True
-    )
+# #     impressions = models.IntegerField(
+# #         default=1, # Prevent division by 0
+# #         db_index=True
+# #     )
 
-    # Not in use
+# #     # Not in use
 
-    category = models.ForeignKey(
-        'LeadCategory',
-        related_name='leads',
-        related_query_name='leads',
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-        db_index=True
-    )
+# #     category = models.ForeignKey(
+# #         'LeadCategory',
+# #         related_name='leads',
+# #         related_query_name='leads',
+# #         on_delete=models.PROTECT,
+# #         blank=True,
+# #         null=True,
+# #         db_index=True
+# #     )
 
-    headline = models.CharField(
-        max_length=80,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    details = models.TextField(
-        null=True,
-        blank=True
-    )
+# #     headline = models.CharField(
+# #         max_length=80,
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     details = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
 
-    currency = models.ForeignKey(
-        'payments.Currency',
-        on_delete=models.PROTECT,
-        related_name='leads_currency',
-        related_query_name='leads_currency',
-        db_index=True,
-        null=True,
-        blank=True
-    )
-    author_type = models.CharField(
-        max_length=20,
-        default='direct',
-        choices=[
-            ('direct', 'Direct'),
-            ('broker', 'Broker') # Middleman
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    agent_job = models.TextField(
-        null=True,
-        blank=True
-    )
-    is_promoted = models.BooleanField(
-        blank=True,
-        null=True,
-        db_index=True
-    )
+# #     currency = models.ForeignKey(
+# #         'payments.Currency',
+# #         on_delete=models.PROTECT,
+# #         related_name='leads_currency',
+# #         related_query_name='leads_currency',
+# #         db_index=True,
+# #         null=True,
+# #         blank=True
+# #     )
+# #     author_type = models.CharField(
+# #         max_length=20,
+# #         default='direct',
+# #         choices=[
+# #             ('direct', 'Direct'),
+# #             ('broker', 'Broker') # Middleman
+# #         ],
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     agent_job = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
+# #     is_promoted = models.BooleanField(
+# #         blank=True,
+# #         null=True,
+# #         db_index=True
+# #     )
     
-    commission_type = models.CharField(
-        max_length=20,
-        choices=[
-            ('negotiable', 'Negotiable'),
-            ('earning', 'Earning'),
-            ('percentage', 'Percentage'),
-            ('usd_mt', 'USD per MT'),
-            ('other', 'Other')
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    comm_details = models.TextField(
-        null=True,
-        blank=True
-    )
-    commission_earnings = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_quantity_unit_string = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_type_other = models.TextField(
-        null=True,
-        blank=True
-    )
-    commission_payable_by = models.CharField(
-        max_length=20,
-        choices=[
-            ('me', 'Me'),
-            ('buyer', 'Buyer'),
-            ('seller', 'Seller')
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_payable_after = models.CharField(
-        max_length=50,
-        choices=[
-            ('initial_deposit_received', 'Initial deposit received'),
-            ('goods_shipped', 'Goods shipped'),
-            ('buyer_received_goods_services', 'Buyer received goods/services'),
-            ('full_payment_received', 'Full payment received'),
-            ('other', 'Other')
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_payable_after_other = models.TextField(
-        null=True,
-        blank=True
-    )
-    other_comm_details = models.TextField(
-        null=True,
-        blank=True
-    )
-    is_comm_negotiable = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    commission_usd_mt = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    min_commission_percentage = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    max_commission_percentage = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='leads_country',
-        related_query_name='leads_country',
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    buy_country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='leads_buy_country',
-        related_query_name='leads_buy_country',
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sell_country = models.ForeignKey(
-        'common.Country',
-        on_delete=models.PROTECT,
-        related_name='leads_sell_country',
-        related_query_name='leads_sell_country',
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    questions = models.TextField(
-        null=True,
-        blank=True
-    )
+# #     commission_type = models.CharField(
+# #         max_length=20,
+# #         choices=[
+# #             ('negotiable', 'Negotiable'),
+# #             ('earning', 'Earning'),
+# #             ('percentage', 'Percentage'),
+# #             ('usd_mt', 'USD per MT'),
+# #             ('other', 'Other')
+# #         ],
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     comm_details = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
+# #     commission_earnings = models.FloatField(
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     commission_quantity_unit_string = models.CharField(
+# #         max_length=200,
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     commission_type_other = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
+# #     commission_payable_by = models.CharField(
+# #         max_length=20,
+# #         choices=[
+# #             ('me', 'Me'),
+# #             ('buyer', 'Buyer'),
+# #             ('seller', 'Seller')
+# #         ],
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     commission_payable_after = models.CharField(
+# #         max_length=50,
+# #         choices=[
+# #             ('initial_deposit_received', 'Initial deposit received'),
+# #             ('goods_shipped', 'Goods shipped'),
+# #             ('buyer_received_goods_services', 'Buyer received goods/services'),
+# #             ('full_payment_received', 'Full payment received'),
+# #             ('other', 'Other')
+# #         ],
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     commission_payable_after_other = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
+# #     other_comm_details = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
+# #     is_comm_negotiable = models.BooleanField(
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     commission_usd_mt = models.FloatField(
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     min_commission_percentage = models.FloatField(
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     max_commission_percentage = models.FloatField(
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     country = models.ForeignKey(
+# #         'common.Country',
+# #         on_delete=models.PROTECT,
+# #         related_name='leads_country',
+# #         related_query_name='leads_country',
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     buy_country = models.ForeignKey(
+# #         'common.Country',
+# #         on_delete=models.PROTECT,
+# #         related_name='leads_buy_country',
+# #         related_query_name='leads_buy_country',
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     sell_country = models.ForeignKey(
+# #         'common.Country',
+# #         on_delete=models.PROTECT,
+# #         related_name='leads_sell_country',
+# #         related_query_name='leads_sell_country',
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     questions = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
     
-    question_1 = models.TextField(
-        blank=True,
-        null=True
-    )
-    question_2 = models.TextField(
-        blank=True,
-        null=True
-    )
-    question_3 = models.TextField(
-        blank=True,
-        null=True
-    )
+# #     question_1 = models.TextField(
+# #         blank=True,
+# #         null=True
+# #     )
+# #     question_2 = models.TextField(
+# #         blank=True,
+# #         null=True
+# #     )
+# #     question_3 = models.TextField(
+# #         blank=True,
+# #         null=True
+# #     )
 
-    clicks = models.IntegerField(
-        default=0,
-        db_index=True
-    )
+# #     clicks = models.IntegerField(
+# #         default=0,
+# #         db_index=True
+# #     )
 
-    title = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True
-    )
+# #     title = models.CharField(
+# #         max_length=200,
+# #         null=True,
+# #         blank=True
+# #     )
 
-    avg_deal_size = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    need_agent = models.BooleanField(
-        db_index=True,
-        null=True,
-        blank=True
-    )
-    need_logistics_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    other_logistics_agent_details = models.TextField(
-        null=True,
-        blank=True
-    )
+# #     avg_deal_size = models.FloatField(
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     need_agent = models.BooleanField(
+# #         db_index=True,
+# #         null=True,
+# #         blank=True
+# #     )
+# #     need_logistics_agent = models.BooleanField(
+# #         null=True,
+# #         blank=True,
+# #         db_index=True
+# #     )
+# #     other_logistics_agent_details = models.TextField(
+# #         null=True,
+# #         blank=True
+# #     )
 
-    def __str__(self):
-        body = self.body[:20] if self.body is not None else ''
-        return f'{self.lead_type}, {body}, [{self.id}]'
+# #     def __str__(self):
+# #         body = self.body[:20] if self.body is not None else ''
+# #         return f'{self.lead_type}, {body}, [{self.id}]'
     
-    def refresh_slug(self):
-        first_lead = Lead.objects.all().order_by('-id').first()
-        if first_lead is None:
-            this_id = 0
-        elif self.id is None:
-            # Compute ID because it's not been set.
-            # Race condition and collison possible but very unlikely.
-            this_id = Lead.objects.all().order_by('-id').first().id + 1
-        else:
-            this_id = self.id
+# #     def refresh_slug(self):
+# #         first_lead = Lead.objects.all().order_by('-id').first()
+# #         if first_lead is None:
+# #             this_id = 0
+# #         elif self.id is None:
+# #             # Compute ID because it's not been set.
+# #             # Race condition and collison possible but very unlikely.
+# #             this_id = Lead.objects.all().order_by('-id').first().id + 1
+# #         else:
+# #             this_id = self.id
 
-        self.slug_tokens = f'{self.headline} {this_id}'
-        self.slug_link = slugify(self.slug_tokens)
+# #         self.slug_tokens = f'{self.headline} {this_id}'
+# #         self.slug_link = slugify(self.slug_tokens)
 
-    def save(self, *args, **kwargs):
-        self.refresh_slug()
-        return super().save(*args, **kwargs)
+# #     def save(self, *args, **kwargs):
+# #         self.refresh_slug()
+# #         return super().save(*args, **kwargs)
 
-    def contact_lead_url(self):
-        return urljoin(settings.BASE_URL, reverse('leads:contact_lead', args=[self.id]))
+# #     def contact_lead_url(self):
+# #         return urljoin(settings.BASE_URL, reverse('leads:contact_lead', args=[self.id]))
 
-    def num_contacts(self):
-        return Contact.objects.filter(
-            lead=self,
-            deleted__isnull=True
-        ).count()
+# #     def num_contacts(self):
+# #         return Contact.objects.filter(
+# #             lead=self,
+# #             deleted__isnull=True
+# #         ).count()
 
-    def num_spam_flags(self):
-        return LeadFlag.objects.filter(
-            deleted__isnull=True,
-            lead=self,
-            type='spam'
-        ).count()
+# #     def num_spam_flags(self):
+# #         return LeadFlag.objects.filter(
+# #             deleted__isnull=True,
+# #             lead=self,
+# #             type='spam'
+# #         ).count()
 
-    def num_scam_flags(self):
-        return LeadFlag.objects.filter(
-            deleted__isnull=True,
-            lead=self,
-            type='scam'
-        ).count()
+# #     def num_scam_flags(self):
+# #         return LeadFlag.objects.filter(
+# #             deleted__isnull=True,
+# #             lead=self,
+# #             type='scam'
+# #         ).count()
 
-    # def cover_photo(self):
-    #     """Returns cover photo"""
-    #     return fimods.File.objects\
-    #         .filter(lead=self, deleted__isnull=True)\
-    #         .order_by('-created')\
-    #         .first()
+#     # def cover_photo(self):
+#     #     """Returns cover photo"""
+#     #     return fimods.File.objects\
+#     #         .filter(lead=self, deleted__isnull=True)\
+#     #         .order_by('-created')\
+#     #         .first()
 
-    # def num_applications(self):
-    #     """Number of applications on this lead"""
-    #     return Application.objects.filter(
-    #         lead=self,
-    #         deleted__isnull=True
-    #     ).count()
+#     # def num_applications(self):
+#     #     """Number of applications on this lead"""
+#     #     return Application.objects.filter(
+#     #         lead=self,
+#     #         deleted__isnull=True
+#     #     ).count()
 
-    # def display_images(self):
-    #     """Returns display images."""
-    #     NUM_DISPLAY_IMAGES = 1
+#     # def display_images(self):
+#     #     """Returns display images."""
+#     #     NUM_DISPLAY_IMAGES = 1
 
-    #     return fimods.File.objects\
-    #         .filter(lead=self, deleted__isnull=True)\
-    #         .order_by('-created')[:NUM_DISPLAY_IMAGES]
+#     #     return fimods.File.objects\
+#     #         .filter(lead=self, deleted__isnull=True)\
+#     #         .order_by('-created')[:NUM_DISPLAY_IMAGES]
 
-    # def num_images(self):
-    #     """Returns the number of display images for this lead"""
-    #     return fimods.File.objects\
-    #         .filter(lead=self, deleted__isnull=True)\
-    #         .order_by('-created')[:3].count()
+#     # def num_images(self):
+#     #     """Returns the number of display images for this lead"""
+#     #     return fimods.File.objects\
+#     #         .filter(lead=self, deleted__isnull=True)\
+#     #         .order_by('-created')[:3].count()
 
-    # def num_comments(self):
-    #     """Number of comments on this lead"""
-    #     return LeadComment.objects.filter(
-    #         lead=self,
-    #         deleted__isnull=True
-    #     ).count()
+#     # def num_comments(self):
+#     #     """Number of comments on this lead"""
+#     #     return LeadComment.objects.filter(
+#     #         lead=self,
+#     #         deleted__isnull=True
+#     #     ).count()
 
-    # def avg_deal_comm(self):
-    #     return self.commission / 100 * self.avg_deal_size
+#     # def avg_deal_comm(self):
+#     #     return self.commission / 100 * self.avg_deal_size
 
-    # def root_comments(self):
-    #     """Returns root comments only (i.e., comments that are not replies to
-    #     a comment. We do not chain replies and all replies are to root comments.
-    #     """
-    #     return LeadComment.objects.filter(
-    #         lead=self,
-    #         reply_to__isnull=True
-    #     ).order_by('created')
+#     # def root_comments(self):
+#     #     """Returns root comments only (i.e., comments that are not replies to
+#     #     a comment. We do not chain replies and all replies are to root comments.
+#     #     """
+#     #     return LeadComment.objects.filter(
+#     #         lead=self,
+#     #         reply_to__isnull=True
+#     #     ).order_by('created')
 
-    # def seo_title(self):
-    #     """Returns SEO-optimized title"""
-    #     lead_type = 'Buyer Importer' if self.lead_type == 'buying' else 'Seller Exporter'
-    #     country = self.buy_country.name if self.lead_type == 'buying' else self.sell_country.name
-    #     title = f'{ lead_type }, { country }'
+#     # def seo_title(self):
+#     #     """Returns SEO-optimized title"""
+#     #     lead_type = 'Buyer Importer' if self.lead_type == 'buying' else 'Seller Exporter'
+#     #     country = self.buy_country.name if self.lead_type == 'buying' else self.sell_country.name
+#     #     title = f'{ lead_type }, { country }'
 
-    #     if self.slug_tokens is not None and len(self.slug_tokens.strip()) != 0:
-    #         tokens = self.slug_tokens.split(',')
-    #         tokens = [t.strip() for t in tokens]
-    #         if len(tokens) > 0:
-    #             keywords = tokens[0]
-    #             for t in tokens[1:]:
-    #                 if len(keywords) < 40:
-    #                     keywords += ' ' + t
-    #                 else:
-    #                     break
+#     #     if self.slug_tokens is not None and len(self.slug_tokens.strip()) != 0:
+#     #         tokens = self.slug_tokens.split(',')
+#     #         tokens = [t.strip() for t in tokens]
+#     #         if len(tokens) > 0:
+#     #             keywords = tokens[0]
+#     #             for t in tokens[1:]:
+#     #                 if len(keywords) < 40:
+#     #                     keywords += ' ' + t
+#     #                 else:
+#     #                     break
                 
-    #             title += ' - ' + keywords
+#     #             title += ' - ' + keywords
 
-    #     return title
+#     #     return title
 
-class Contact(Standard):
-    """Contact.
+# class Contact(Standard):
+#     """Contact.
 
-    Last updated: 13 July 2022, 3:15 AM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='contacts',
-        related_query_name='contacts',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     Last updated: 13 July 2022, 3:15 AM
+#     """
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='contacts',
+#         related_query_name='contacts',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
 
-    first_name = models.CharField(
-        max_length=20,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    last_name = models.CharField(
-        max_length=20,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        related_name='contacts',
-        related_query_name='contacts',
-        on_delete=models.PROTECT,        
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    email = models.ForeignKey(
-        'relationships.Email',
-        related_name='contacts',
-        related_query_name='contacts',
-        on_delete=models.PROTECT,
-        db_index=True,
-        null=True,
-        blank=True
-    )
-    phone_number = models.ForeignKey(
-        'relationships.PhoneNumber',
-        related_name='contacts',
-        related_query_name='contacts',
-        on_delete=models.PROTECT,
-        db_index=True,
-        null=True,
-        blank=True
-    )
+#     first_name = models.CharField(
+#         max_length=20,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     last_name = models.CharField(
+#         max_length=20,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     country = models.ForeignKey(
+#         'common.Country',
+#         related_name='contacts',
+#         related_query_name='contacts',
+#         on_delete=models.PROTECT,        
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     email = models.ForeignKey(
+#         'relationships.Email',
+#         related_name='contacts',
+#         related_query_name='contacts',
+#         on_delete=models.PROTECT,
+#         db_index=True,
+#         null=True,
+#         blank=True
+#     )
+#     phone_number = models.ForeignKey(
+#         'relationships.PhoneNumber',
+#         related_name='contacts',
+#         related_query_name='contacts',
+#         on_delete=models.PROTECT,
+#         db_index=True,
+#         null=True,
+#         blank=True
+#     )
 
-    cookie_uuid = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     cookie_uuid = models.CharField(
+#         max_length=50,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    via_whatsapp = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    via_wechat = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    via_wechat_id = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True
-    )
+#     via_whatsapp = models.BooleanField(
+#         null=True,
+#         blank=True
+#     )
+#     via_wechat = models.BooleanField(
+#         null=True,
+#         blank=True
+#     )
+#     via_wechat_id = models.CharField(
+#         max_length=50,
+#         null=True,
+#         blank=True
+#     )
 
-    to_selling_as_sales_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_selling_as_sourcing_goods = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_selling_as_other = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_buying_as_sourcing_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_buying_as_promoting_goods = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_buying_as_other = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_sales_agent_as_seeking_cooperation = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_sales_agent_as_sourcing_goods = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_sales_agent_as_other = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_sourcing_agent_as_seeking_cooperation = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_sourcing_agent_as_promoting_goods = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_sourcing_agent_as_other = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_logistics_agent_as_need_logistics = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_logistics_agent_as_other = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_need_logistics_as_logistics_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    to_need_logistics_as_other = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     to_selling_as_sales_agent = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_selling_as_sourcing_goods = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_selling_as_other = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_buying_as_sourcing_agent = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_buying_as_promoting_goods = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_buying_as_other = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_sales_agent_as_seeking_cooperation = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_sales_agent_as_sourcing_goods = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_sales_agent_as_other = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_sourcing_agent_as_seeking_cooperation = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_sourcing_agent_as_promoting_goods = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_sourcing_agent_as_other = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_logistics_agent_as_need_logistics = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_logistics_agent_as_other = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_need_logistics_as_logistics_agent = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     to_need_logistics_as_other = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    comments = models.TextField(
-        null=True,
-        blank=True
-    )
+#     comments = models.TextField(
+#         null=True,
+#         blank=True
+#     )
 
-    # Not in use
+#     # Not in use
 
-    via_telegram = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    via_telegram_username = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True
-    )
-    via_line = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    via_line_id = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True
-    )
-    via_viber = models.BooleanField(
-        null=True,
-        blank=True
-    )
+#     via_telegram = models.BooleanField(
+#         null=True,
+#         blank=True
+#     )
+#     via_telegram_username = models.CharField(
+#         max_length=50,
+#         null=True,
+#         blank=True
+#     )
+#     via_line = models.BooleanField(
+#         null=True,
+#         blank=True
+#     )
+#     via_line_id = models.CharField(
+#         max_length=50,
+#         null=True,
+#         blank=True
+#     )
+#     via_viber = models.BooleanField(
+#         null=True,
+#         blank=True
+#     )
 
-    def is_country_match_country_code(self):
-        if self.country is None or self.phone_number is None:
-            return False
+#     def is_country_match_country_code(self):
+#         if self.country is None or self.phone_number is None:
+#             return False
 
-        return self.country.country_code == self.phone_number.country_code
+#         return self.country.country_code == self.phone_number.country_code
 
-    def last_note(self):
-        return ContactNote.objects.filter(
-            contact=self,
-            deleted__isnull=True
-        ).order_by('-created').first()
+#     def last_note(self):
+#         return ContactNote.objects.filter(
+#             contact=self,
+#             deleted__isnull=True
+#         ).order_by('-created').first()
 
-    def active_notes(self):
-        return ContactNote.objects.filter(
-            contact=self,
-            deleted__isnull=True
-        ).order_by('-created')
+#     def active_notes(self):
+#         return ContactNote.objects.filter(
+#             contact=self,
+#             deleted__isnull=True
+#         ).order_by('-created')
 
-    def other_contacts(self):
-        return Contact.objects\
-            .filter(lead__author=self.lead.author)\
-            .filter(
-                Q(email=self.email) |\
-                Q(phone_number=self.phone_number) |\
-                (Q(via_wechat_id__isnull=True) & Q(via_wechat_id=self.via_wechat_id)))\
-            .exclude(id=self.id)\
-            .order_by('-created')
+#     def other_contacts(self):
+#         return Contact.objects\
+#             .filter(lead__author=self.lead.author)\
+#             .filter(
+#                 Q(email=self.email) |\
+#                 Q(phone_number=self.phone_number) |\
+#                 (Q(via_wechat_id__isnull=True) & Q(via_wechat_id=self.via_wechat_id)))\
+#             .exclude(id=self.id)\
+#             .order_by('-created')
 
-class ContactNote(Standard):
-    """Contact note.
+# class ContactNote(Standard):
+#     """Contact note.
 
-    Last updated: 17 Jun 2022, 7:24 PM
-    """
-    relevance = models.CharField(
-        max_length=20,
-        choices=[
-            ('relevant', 'Relevant'),
-            ('maybe_later', 'Maybe Later'),
-            ('not_relevant', 'Not Relevant')
-        ],
-        null=True,
-        blank=True
-    )
-    contact = models.ForeignKey(
-        'Contact',
-        related_name='notes',
-        related_query_name='notes',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    body = models.TextField(
-        null=True,
-        blank=True
-    )
+#     Last updated: 17 Jun 2022, 7:24 PM
+#     """
+#     relevance = models.CharField(
+#         max_length=20,
+#         choices=[
+#             ('relevant', 'Relevant'),
+#             ('maybe_later', 'Maybe Later'),
+#             ('not_relevant', 'Not Relevant')
+#         ],
+#         null=True,
+#         blank=True
+#     )
+#     contact = models.ForeignKey(
+#         'Contact',
+#         related_name='notes',
+#         related_query_name='notes',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     body = models.TextField(
+#         null=True,
+#         blank=True
+#     )
 
-class ContactAction(Standard):
-    """Contact action.
+# class ContactAction(Standard):
+#     """Contact action.
 
-    Last updated: 11 July 2022, 9:02 PM
-    """
-    contact = models.ForeignKey(
-        'Contact',
-        related_name='actions',
-        related_query_name='actions',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    type = models.CharField(
-        max_length=20,
-        choices=[
-            ('whatsapp', 'WhatsApp'),
-            ('wechat', 'WeChat'),
-            ('telegram', 'Telegram'),
-            ('viber', 'Viber'),
-            ('line', 'LINE'),
-            ('copy_email', 'Copy Email'),
-            ('copy_phone', 'Copy Phone')
-        ],
-        db_index=True
-    )
-    body = models.TextField(
-        blank=True,
-        null=True
-    )
+#     Last updated: 11 July 2022, 9:02 PM
+#     """
+#     contact = models.ForeignKey(
+#         'Contact',
+#         related_name='actions',
+#         related_query_name='actions',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     type = models.CharField(
+#         max_length=20,
+#         choices=[
+#             ('whatsapp', 'WhatsApp'),
+#             ('wechat', 'WeChat'),
+#             ('telegram', 'Telegram'),
+#             ('viber', 'Viber'),
+#             ('line', 'LINE'),
+#             ('copy_email', 'Copy Email'),
+#             ('copy_phone', 'Copy Phone')
+#         ],
+#         db_index=True
+#     )
+#     body = models.TextField(
+#         blank=True,
+#         null=True
+#     )
 
-class LeadFlag(Standard):
-    """Lead flag - e.g., spam, scam.
+# class LeadFlag(Standard):
+#     """Lead flag - e.g., spam, scam.
 
-    Last updated: 13 July 2022, 2:45 PM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='flags',
-        related_query_name='flags',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    type = models.CharField(
-        max_length=20,
-        choices=[('spam', 'Spam'), ('scam', 'Scam')],
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    cookie_uuid = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='flags',
-        related_query_name='flags',
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-        db_index=True
-    )
+#     Last updated: 13 July 2022, 2:45 PM
+#     """
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='flags',
+#         related_query_name='flags',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     type = models.CharField(
+#         max_length=20,
+#         choices=[('spam', 'Spam'), ('scam', 'Scam')],
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     cookie_uuid = models.CharField(
+#         max_length=50,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     user = models.ForeignKey(
+#         'relationships.User',
+#         related_name='flags',
+#         related_query_name='flags',
+#         on_delete=models.PROTECT,
+#         blank=True,
+#         null=True,
+#         db_index=True
+#     )
 
-    class Meta:
-        unique_together = ('lead', 'type', 'cookie_uuid', 'user')
+#     class Meta:
+#         unique_together = ('lead', 'type', 'cookie_uuid', 'user')
 
-class LeadQueryAction(Standard):
-    """Lead query.
+# class LeadQueryAction(Standard):
+#     """Lead query.
 
-    Last updated: 14 July 2022, 9:52 PM
-    """
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='lead_query_logs',
-        related_query_name='lead_query_logs',
-        blank=True,
-        null=True,
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    cookie_uuid = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    tracker = models.ForeignKey(
-        'Tracker',
-        related_name='lead_query_actions',
-        related_query_name='lead_query_actions',
-        on_delete=models.PROTECT,
-        db_index=True,
-        null=True,
-        blank=True
-    )
+#     Last updated: 14 July 2022, 9:52 PM
+#     """
+#     user = models.ForeignKey(
+#         'relationships.User',
+#         related_name='lead_query_logs',
+#         related_query_name='lead_query_logs',
+#         blank=True,
+#         null=True,
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     cookie_uuid = models.CharField(
+#         max_length=50,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     tracker = models.ForeignKey(
+#         'Tracker',
+#         related_name='lead_query_actions',
+#         related_query_name='lead_query_actions',
+#         on_delete=models.PROTECT,
+#         db_index=True,
+#         null=True,
+#         blank=True
+#     )
 
-    reduce_spams_and_scams = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    search_phrase = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     reduce_spams_and_scams = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     search_phrase = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    user_country = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    user_country_verified = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sourcing = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    promoting = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sales_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sourcing_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    need_logistics = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    logistics_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    other = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     user_country = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     user_country_verified = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     sourcing = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     promoting = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     sales_agent = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     sourcing_agent = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     need_logistics = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     logistics_agent = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     other = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    count = models.IntegerField(
-        default=1,
-        db_index=True
-    )
+#     count = models.IntegerField(
+#         default=1,
+#         db_index=True
+#     )
 
-    # Not in use
-    country = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    buy_country = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    sell_country = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    buy_sell = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    category = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    min_commission_percentage = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    max_commission_percentage = models.FloatField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     # Not in use
+#     country = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     buy_country = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     sell_country = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     buy_sell = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     category = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     min_commission_percentage = models.FloatField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     max_commission_percentage = models.FloatField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    class Meta:
-        verbose_name_plural = 'Lead queries'
+#     class Meta:
+#         verbose_name_plural = 'Lead queries'
 
-class SearchNotification(Standard):
-    """Search notification sign-up for when we do have the user's contact details.
+# class SearchNotification(Standard):
+#     """Search notification sign-up for when we do have the user's contact details.
 
-    Last updated: 16 July 2022, 11:08 PM
-    """
-    cookie_uuid = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    first_name = models.CharField(
-        max_length=20,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    last_name = models.CharField(
-        max_length=20,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        related_name='search_notifications',
-        related_query_name='search_notifications',
-        on_delete=models.PROTECT,        
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    email = models.ForeignKey(
-        'relationships.Email',
-        related_name='search_notifications',
-        related_query_name='search_notifications',
-        on_delete=models.PROTECT,
-        db_index=True,
-        null=True,
-        blank=True
-    )
-    phone_number = models.ForeignKey(
-        'relationships.PhoneNumber',
-        related_name='search_notifications',
-        related_query_name='search_notifications',
-        on_delete=models.PROTECT,
-        db_index=True,
-        null=True,
-        blank=True
-    )
-    via_whatsapp = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    via_wechat = models.BooleanField(
-        null=True,
-        blank=True
-    )
-    via_wechat_id = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True
-    )
+#     Last updated: 16 July 2022, 11:08 PM
+#     """
+#     cookie_uuid = models.CharField(
+#         max_length=50,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     first_name = models.CharField(
+#         max_length=20,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     last_name = models.CharField(
+#         max_length=20,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     country = models.ForeignKey(
+#         'common.Country',
+#         related_name='search_notifications',
+#         related_query_name='search_notifications',
+#         on_delete=models.PROTECT,        
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     email = models.ForeignKey(
+#         'relationships.Email',
+#         related_name='search_notifications',
+#         related_query_name='search_notifications',
+#         on_delete=models.PROTECT,
+#         db_index=True,
+#         null=True,
+#         blank=True
+#     )
+#     phone_number = models.ForeignKey(
+#         'relationships.PhoneNumber',
+#         related_name='search_notifications',
+#         related_query_name='search_notifications',
+#         on_delete=models.PROTECT,
+#         db_index=True,
+#         null=True,
+#         blank=True
+#     )
+#     via_whatsapp = models.BooleanField(
+#         null=True,
+#         blank=True
+#     )
+#     via_wechat = models.BooleanField(
+#         null=True,
+#         blank=True
+#     )
+#     via_wechat_id = models.CharField(
+#         max_length=50,
+#         null=True,
+#         blank=True
+#     )
 
-    lead_query_action = models.ForeignKey(
-        'LeadQueryAction',
-        related_name='search_notifications',
-        related_query_name='search_notifications',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True  
-    )
+#     lead_query_action = models.ForeignKey(
+#         'LeadQueryAction',
+#         related_name='search_notifications',
+#         related_query_name='search_notifications',
+#         on_delete=models.PROTECT,
+#         null=True,
+#         blank=True,
+#         db_index=True  
+#     )
     
-class MentionedCountry(Standard):
-    """Country mentioned in a lead.
+# class MentionedCountry(Standard):
+#     """Country mentioned in a lead.
 
-    Last updated: 11 August 2022, 4:28 PM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='mentioned_countries',
-        related_query_name='mentioned_countries',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    country = models.ForeignKey(
-        'common.Country',
-        related_name='mentioned_countries',
-        related_query_name='mentioned_countries',
-        on_delete=models.PROTECT,
-        db_index=True  
-    )
+#     Last updated: 11 August 2022, 4:28 PM
+#     """
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='mentioned_countries',
+#         related_query_name='mentioned_countries',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     country = models.ForeignKey(
+#         'common.Country',
+#         related_name='mentioned_countries',
+#         related_query_name='mentioned_countries',
+#         on_delete=models.PROTECT,
+#         db_index=True  
+#     )
 
-class MentionedIncoterm(Standard):
-    """Incoterm mentioned in a lead.
+# class MentionedIncoterm(Standard):
+#     """Incoterm mentioned in a lead.
 
-    Last updated: 11 August 2022, 4:28 PM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='mentioned_incoterms',
-        related_query_name='mentioned_incoterms',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    incoterm = models.ForeignKey(
-        'Incoterm',
-        related_name='mentioned_incoterms',
-        related_query_name='mentioned_incoterms',
-        on_delete=models.PROTECT,
-        db_index=True  
-    )
+#     Last updated: 11 August 2022, 4:28 PM
+#     """
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='mentioned_incoterms',
+#         related_query_name='mentioned_incoterms',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     incoterm = models.ForeignKey(
+#         'Incoterm',
+#         related_name='mentioned_incoterms',
+#         related_query_name='mentioned_incoterms',
+#         on_delete=models.PROTECT,
+#         db_index=True  
+#     )
 
-class MentionedProduct(Standard):
-    """Product mentioned in a lead.
+# class MentionedProduct(Standard):
+#     """Product mentioned in a lead.
 
-    Last updated: 11 August 2022, 4:28 PM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='mentioned_products',
-        related_query_name='mentioned_products',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    product = models.ForeignKey(
-        'Product',
-        related_name='mentioned_products',
-        related_query_name='mentioned_products',
-        on_delete=models.PROTECT,
-        db_index=True  
-    )
+#     Last updated: 11 August 2022, 4:28 PM
+#     """
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='mentioned_products',
+#         related_query_name='mentioned_products',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     product = models.ForeignKey(
+#         'Product',
+#         related_name='mentioned_products',
+#         related_query_name='mentioned_products',
+#         on_delete=models.PROTECT,
+#         db_index=True  
+#     )
 
-class MentionedPaymentTerm(Standard):
-    """Payment term mentioned in a lead.
+# class MentionedPaymentTerm(Standard):
+#     """Payment term mentioned in a lead.
 
-    Last updated: 11 August 2022, 4:28 PM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='mentioned_payment_terms',
-        related_query_name='mentioned_payment_terms',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    term = models.ForeignKey(
-        'PaymentTerm',
-        related_name='mentioned_payment_terms',
-        related_query_name='mentioned_payment_terms',
-        on_delete=models.PROTECT,
-        db_index=True  
-    )
+#     Last updated: 11 August 2022, 4:28 PM
+#     """
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='mentioned_payment_terms',
+#         related_query_name='mentioned_payment_terms',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     term = models.ForeignKey(
+#         'PaymentTerm',
+#         related_name='mentioned_payment_terms',
+#         related_query_name='mentioned_payment_terms',
+#         on_delete=models.PROTECT,
+#         db_index=True  
+#     )
 
-class Incoterm(Standard, Choice):
-    """Incoterms. E.g., CIF, ex-mill.
+# class Incoterm(Standard, Choice):
+#     """Incoterms. E.g., CIF, ex-mill.
 
-    Last updated: 11 August 2022, 4:28 PM
-    """
-    pass
+#     Last updated: 11 August 2022, 4:28 PM
+#     """
+#     pass
 
-class Product(Standard, Choice):
-    """Product (type). E.g., sugar.
+# class Product(Standard, Choice):
+#     """Product (type). E.g., sugar.
 
-    Last updated: 11 August 2022, 4:28 PM
-    """
-    pass
+#     Last updated: 11 August 2022, 4:28 PM
+#     """
+#     pass
 
-class PaymentTerm(Standard, Choice):
-    """Payment term. E.g., LC.
+# class PaymentTerm(Standard, Choice):
+#     """Payment term. E.g., LC.
 
-    Last updated: 11 August 2022, 4:28 PM
-    """
-    pass
+#     Last updated: 11 August 2022, 4:28 PM
+#     """
+#     pass
 
-class Tracker(Standard):
-    """Tracker. For tracking user and/or lead specific interactions on the site.
+# class Tracker(Standard):
+#     """Tracker. For tracking user and/or lead specific interactions on the site.
 
-    Last updated: 11 August 2022, 4:28 PM
-    """
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='trackers',
-        related_query_name='trackers',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    lead = models.ForeignKey(
-        'leads.Lead',
-        related_name='trackers',
-        related_query_name='trackers',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    type = models.CharField(
-        max_length=20,
-        choices=[
-            ('rec_usr_ld', 'Recommendation for user based on his lead')
-        ],
-        db_index=True
-    )
-
-
+#     Last updated: 11 August 2022, 4:28 PM
+#     """
+#     user = models.ForeignKey(
+#         'relationships.User',
+#         related_name='trackers',
+#         related_query_name='trackers',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     lead = models.ForeignKey(
+#         'leads.Lead',
+#         related_name='trackers',
+#         related_query_name='trackers',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     type = models.CharField(
+#         max_length=20,
+#         choices=[
+#             ('rec_usr_ld', 'Recommendation for user based on his lead')
+#         ],
+#         db_index=True
+#     )
 
 
 
 
-# Not in use
 
-class LeadDetailView(Standard):
-    """Lead detail view.
 
-    Last updated: 17 Jun 2022, 7:24 PM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='lead_detail_views',
-        related_query_name='lead_detail_views',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    viewer = models.ForeignKey(
-        'relationships.User',
-        related_name='lead_detail_views',
-        related_query_name='lead_detail_views',
-        on_delete=models.PROTECT,
-        db_index=True  
-    )
+# # Not in use
 
-    count = models.IntegerField(
-        default=0,
-        db_index=True
-    )
+# class LeadDetailView(Standard):
+#     """Lead detail view.
 
-    class Meta:
-        unique_together = ('viewer', 'lead')
+#     Last updated: 17 Jun 2022, 7:24 PM
+#     """
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='lead_detail_views',
+#         related_query_name='lead_detail_views',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     viewer = models.ForeignKey(
+#         'relationships.User',
+#         related_name='lead_detail_views',
+#         related_query_name='lead_detail_views',
+#         on_delete=models.PROTECT,
+#         db_index=True  
+#     )
 
-class Application(Standard):
-    """Agent application.
+#     count = models.IntegerField(
+#         default=0,
+#         db_index=True
+#     )
 
-    Last updated: 28 May 2022, 9:47 PM
-    """
-    last_messaged = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    stopped_follow_up = models.DateTimeField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     class Meta:
+#         unique_together = ('viewer', 'lead')
 
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='applications',
-        related_query_name='applications',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    applicant = models.ForeignKey(
-        'relationships.User',
-        related_name='applications_as_applicant',
-        related_query_name='applications_as_applicant',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+# class Application(Standard):
+#     """Agent application.
 
-    has_experience = models.BooleanField(
-        blank=True,
-        null=True
-    )
-    has_buyers = models.BooleanField(
-        blank=True,
-        null=True
-    )
+#     Last updated: 28 May 2022, 9:47 PM
+#     """
+#     last_messaged = models.DateTimeField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     stopped_follow_up = models.DateTimeField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    questions = models.TextField(
-        blank=True,
-        null=True
-    )
-    answers = models.TextField(
-        blank=True,
-        null=True
-    )
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='applications',
+#         related_query_name='applications',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     applicant = models.ForeignKey(
+#         'relationships.User',
+#         related_name='applications_as_applicant',
+#         related_query_name='applications_as_applicant',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
 
-    applicant_comments = models.TextField(
-        blank=True,
-        null=True
-    )
+#     has_experience = models.BooleanField(
+#         blank=True,
+#         null=True
+#     )
+#     has_buyers = models.BooleanField(
+#         blank=True,
+#         null=True
+#     )
 
-    has_insights = models.BooleanField(
-        blank=True,
-        null=True
-    )
-    internal_notes = models.TextField(
-        blank=True,
-        null=True
-    )
+#     questions = models.TextField(
+#         blank=True,
+#         null=True
+#     )
+#     answers = models.TextField(
+#         blank=True,
+#         null=True
+#     )
 
-    # Not in use
+#     applicant_comments = models.TextField(
+#         blank=True,
+#         null=True
+#     )
 
-    deleted_by = models.CharField(
-        max_length=20,
-        choices=[
-            ('agent', 'Agent'),
-            ('author', 'Author')
-        ],
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     has_insights = models.BooleanField(
+#         blank=True,
+#         null=True
+#     )
+#     internal_notes = models.TextField(
+#         blank=True,
+#         null=True
+#     )
 
-    question_1 = models.TextField(
-        blank=True,
-        null=True
-    )
-    answer_1 = models.TextField(
-        blank=True,
-        null=True
-    )
-    question_2 = models.TextField(
-        blank=True,
-        null=True
-    )
-    answer_2 = models.TextField(
-        blank=True,
-        null=True
-    )
-    question_3 = models.TextField(
-        blank=True,
-        null=True
-    )
-    answer_3 = models.TextField(
-        blank=True,
-        null=True
-    )
+#     # Not in use
 
-    response = models.CharField(
-        max_length=200,
-        choices=[
-            ('rejected', 'Rejected'),
-            ('started_work', 'Started Work'),
-            ('stopped_work', 'Stopped Work'),
-        ],
-        blank=True,
-        null=True
-    )
+#     deleted_by = models.CharField(
+#         max_length=20,
+#         choices=[
+#             ('agent', 'Agent'),
+#             ('author', 'Author')
+#         ],
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    def num_messages(self):
-        return ApplicationMessage.objects.filter(
-            application=self
-        ).count()
+#     question_1 = models.TextField(
+#         blank=True,
+#         null=True
+#     )
+#     answer_1 = models.TextField(
+#         blank=True,
+#         null=True
+#     )
+#     question_2 = models.TextField(
+#         blank=True,
+#         null=True
+#     )
+#     answer_2 = models.TextField(
+#         blank=True,
+#         null=True
+#     )
+#     question_3 = models.TextField(
+#         blank=True,
+#         null=True
+#     )
+#     answer_3 = models.TextField(
+#         blank=True,
+#         null=True
+#     )
 
-    def __str__(self):
-        return f'{self.applicant.first_name} {self.applicant.last_name}, {self.lead.headline} [{self.id}]'
+#     response = models.CharField(
+#         max_length=200,
+#         choices=[
+#             ('rejected', 'Rejected'),
+#             ('started_work', 'Started Work'),
+#             ('stopped_work', 'Stopped Work'),
+#         ],
+#         blank=True,
+#         null=True
+#     )
 
-class ApplicationMessage(Standard):
-    """Application message.
+#     def num_messages(self):
+#         return ApplicationMessage.objects.filter(
+#             application=self
+#         ).count()
 
-    Last updated: 7 April 2022, 10:06 PM
-    """
-    application = models.ForeignKey(
-        'Application',
-        related_name='messages',
-        related_query_name='messages',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    author = models.ForeignKey(
-        'relationships.User',
-        related_name='application_messages',
-        related_query_name='application_messages',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     def __str__(self):
+#         return f'{self.applicant.first_name} {self.applicant.last_name}, {self.lead.headline} [{self.id}]'
 
-    body = models.TextField(
-        blank=True,
-        null=True
-    )
+# class ApplicationMessage(Standard):
+#     """Application message.
 
-    def __str__(self):
-        return f'{self.author.first_name} {self.author.last_name}: {self.body} [{self.id}]'
+#     Last updated: 7 April 2022, 10:06 PM
+#     """
+#     application = models.ForeignKey(
+#         'Application',
+#         related_name='messages',
+#         related_query_name='messages',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     author = models.ForeignKey(
+#         'relationships.User',
+#         related_name='application_messages',
+#         related_query_name='application_messages',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
 
-class LeadCategory(Choice):
-    """Lead category.
+#     body = models.TextField(
+#         blank=True,
+#         null=True
+#     )
 
-    Last updated: 24 May 2022, 2:45 PM
-    """
-    class Meta:
-        verbose_name_plural = 'Lead categories'
+#     def __str__(self):
+#         return f'{self.author.first_name} {self.author.last_name}: {self.body} [{self.id}]'
 
-class LeadComment(Standard):
-    """Comment on a lead
+# class LeadCategory(Choice):
+#     """Lead category.
 
-    Last updated: 14 February 2022, 11:33 AM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='lead_comments',
-        related_query_name='lead_comments',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    commentor = models.ForeignKey(
-        'relationships.User',
-        related_name='lead_comments_as_commentor',
-        related_query_name='lead_comments_as_commentor',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     Last updated: 24 May 2022, 2:45 PM
+#     """
+#     class Meta:
+#         verbose_name_plural = 'Lead categories'
 
-    body = models.TextField()
+# class LeadComment(Standard):
+#     """Comment on a lead
 
-    reply_to = models.ForeignKey(
-        'LeadComment',
-        related_name='replies',
-        related_query_name='replies',
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     Last updated: 14 February 2022, 11:33 AM
+#     """
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='lead_comments',
+#         related_query_name='lead_comments',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     commentor = models.ForeignKey(
+#         'relationships.User',
+#         related_name='lead_comments_as_commentor',
+#         related_query_name='lead_comments_as_commentor',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
 
-    def reply_comments(self):
-        """Returns replies to this lead"""
-        return LeadComment.objects.filter(
-            reply_to=self,
-            deleted__isnull=True
-        ).order_by('created')
+#     body = models.TextField()
 
-class ApplicationQueryLog(Standard):
-    """Application query log.
+#     reply_to = models.ForeignKey(
+#         'LeadComment',
+#         related_name='replies',
+#         related_query_name='replies',
+#         on_delete=models.PROTECT,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    Last updated: 7 April 2022, 10:06 PM
-    """
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='application_query_logs',
-        related_query_name='application_query_logs',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
+#     def reply_comments(self):
+#         """Returns replies to this lead"""
+#         return LeadComment.objects.filter(
+#             reply_to=self,
+#             deleted__isnull=True
+#         ).order_by('created')
 
-    status = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
+# class ApplicationQueryLog(Standard):
+#     """Application query log.
 
-class WhatsAppClick(Standard):
-    """User's click on to WhatsApp button
+#     Last updated: 7 April 2022, 10:06 PM
+#     """
+#     user = models.ForeignKey(
+#         'relationships.User',
+#         related_name='application_query_logs',
+#         related_query_name='application_query_logs',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
 
-    Last updated: 11 February 2022, 10:15 PM
-    """
-    contactee = models.ForeignKey(
-        'relationships.User',
-        related_name='whatsapp_clicks_contactee',
-        related_query_name='whatsapp_clicks_contactee',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    contactor = models.ForeignKey(
-        'relationships.User',
-        related_name='whatsapp_clicks_contactor',
-        related_query_name='whatsapp_clicks_contactor',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    count = models.IntegerField(default=0)
+#     status = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-class WhatsAppMessageBody(Standard):
-    """Message body when a user contacts another user
+# class WhatsAppClick(Standard):
+#     """User's click on to WhatsApp button
 
-    Last updated: 28 January 2022, 6:26 PM
-    """
-    contactee = models.ForeignKey(
-        'relationships.User',
-        related_name='whatsapp_message_bodies_contactee',
-        related_query_name='whatsapp_message_bodies_contactee',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    contactor = models.ForeignKey(
-        'relationships.User',
-        related_name='whatsapp_message_bodies_contactor',
-        related_query_name='whatsapp_message_bodies_contactor',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    body = models.TextField()
+#     Last updated: 11 February 2022, 10:15 PM
+#     """
+#     contactee = models.ForeignKey(
+#         'relationships.User',
+#         related_name='whatsapp_clicks_contactee',
+#         related_query_name='whatsapp_clicks_contactee',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     contactor = models.ForeignKey(
+#         'relationships.User',
+#         related_name='whatsapp_clicks_contactor',
+#         related_query_name='whatsapp_clicks_contactor',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     count = models.IntegerField(default=0)
 
-class FilterFormPost(Standard):
-    """Filter form post by a user.
+# class WhatsAppMessageBody(Standard):
+#     """Message body when a user contacts another user
 
-    Last updated: 7 December 2021, 8:06 PM
-    """
-    title = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    details = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     Last updated: 28 January 2022, 6:26 PM
+#     """
+#     contactee = models.ForeignKey(
+#         'relationships.User',
+#         related_name='whatsapp_message_bodies_contactee',
+#         related_query_name='whatsapp_message_bodies_contactee',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     contactor = models.ForeignKey(
+#         'relationships.User',
+#         related_name='whatsapp_message_bodies_contactor',
+#         related_query_name='whatsapp_message_bodies_contactor',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     body = models.TextField()
 
-    is_buying = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_selling = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_direct = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_agent = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+# class FilterFormPost(Standard):
+#     """Filter form post by a user.
 
-    user_country = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    lead_country = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     Last updated: 7 December 2021, 8:06 PM
+#     """
+#     title = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     details = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    is_initial_deposit = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_goods_shipped = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_payment_received = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_goods_received = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
-    is_others = models.BooleanField(
-        null=True,
-        blank=True,
-        db_index=True
-    )
+#     is_buying = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     is_selling = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     is_direct = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     is_agent = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-    user = models.ForeignKey(
-        'relationships.User',
-        related_name='filter_form_posts',
-        related_query_name='filter_form_posts',
-        on_delete=models.PROTECT,
-        db_index=True,
-        null=True,
-        blank=True
-    )
+#     user_country = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     lead_country = models.CharField(
+#         max_length=200,
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
 
-class WhatsAppLeadAuthorClick(Standard):
-    """User's click on to WhatsApp lead author
+#     is_initial_deposit = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     is_goods_shipped = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     is_payment_received = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     is_goods_received = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+#     is_others = models.BooleanField(
+#         null=True,
+#         blank=True,
+#         db_index=True
+#     )
+
+#     user = models.ForeignKey(
+#         'relationships.User',
+#         related_name='filter_form_posts',
+#         related_query_name='filter_form_posts',
+#         on_delete=models.PROTECT,
+#         db_index=True,
+#         null=True,
+#         blank=True
+#     )
+
+# class WhatsAppLeadAuthorClick(Standard):
+#     """User's click on to WhatsApp lead author
     
-    Last updated: 28 January 2022, 6:26 PM
-    """
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='whatsapp_lead_author_clicks',
-        related_query_name='whatsapp_lead_author_clicks',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    contactor = models.ForeignKey(
-        'relationships.User',
-        related_name='whatsapp_lead_author_clicks',
-        related_query_name='whatsapp_lead_author_clicks',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    count = models.IntegerField(
-        default=0,
-        db_index=True
-    )
+#     Last updated: 28 January 2022, 6:26 PM
+#     """
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='whatsapp_lead_author_clicks',
+#         related_query_name='whatsapp_lead_author_clicks',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     contactor = models.ForeignKey(
+#         'relationships.User',
+#         related_name='whatsapp_lead_author_clicks',
+#         related_query_name='whatsapp_lead_author_clicks',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     count = models.IntegerField(
+#         default=0,
+#         db_index=True
+#     )
 
-    class Meta:
-        unique_together = ('lead', 'contactor')
+#     class Meta:
+#         unique_together = ('lead', 'contactor')
 
-class SavedLead(Standard):
-    """Saved lead.
+# class SavedLead(Standard):
+#     """Saved lead.
 
-    Last updated: 28 February 2022, 10:32 PM
-    """
-    active = models.BooleanField(
-        default=True,
-        db_index=True
-    )
-    saver = models.ForeignKey(
-        'relationships.User',
-        related_name='saved_leads_saver',
-        related_query_name='saved_leads_saver',
-        on_delete=models.PROTECT,
-        db_index=True
-    )
-    lead = models.ForeignKey(
-        'Lead',
-        related_name='saved_leads_lead',
-        related_query_name='saved_leads_lead',
-        on_delete=models.PROTECT,
-        db_index=True  
-    )
+#     Last updated: 28 February 2022, 10:32 PM
+#     """
+#     active = models.BooleanField(
+#         default=True,
+#         db_index=True
+#     )
+#     saver = models.ForeignKey(
+#         'relationships.User',
+#         related_name='saved_leads_saver',
+#         related_query_name='saved_leads_saver',
+#         on_delete=models.PROTECT,
+#         db_index=True
+#     )
+#     lead = models.ForeignKey(
+#         'Lead',
+#         related_name='saved_leads_lead',
+#         related_query_name='saved_leads_lead',
+#         on_delete=models.PROTECT,
+#         db_index=True  
+#     )
 
-    class Meta:
-        unique_together = ('lead', 'saver')
+#     class Meta:
+#         unique_together = ('lead', 'saver')

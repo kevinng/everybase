@@ -15,14 +15,7 @@
 {% block meta_og_image_height %}{% if user.status_files.all|length > 0 %}{% with user.status_files.all|first as image %}{{ image.file.thumbnail_height }}{% endwith %}{% else %}200{% endif %}{% endblock %}
 {% block meta_og_type %}article{% endblock %}
 
-{% block page_vendor_stylesheets %}
-    {% if user.walked_through_status == None %}
-        {% comment %} Only load walkthrough dependencies when necessary. {% endcomment %}
-        <link href="{% static 'common/css/introjs.min.css' %}" rel="stylesheet">
-    {% endif %}
-{% endblock %}
-
-{% block page_title %}{% if user == None %}+ {{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}{% endblock %}
+{% block page_title %}{% if user == None %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}{% endblock %}
 {% block page_title_separator %}{% endblock %}
 
 {% block actions %}
@@ -55,7 +48,7 @@
         {% endif %}
             <div class="card-header">
                 <div class="card-title d-flex flex-column py-4">
-                    <div>{% if user == None %}+ {{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}</div>
+                    <div>{% if user == None %}+{{ phone_number.country_code }} {{ phone_number.national_number }}{% else %}{{ user.first_name|title }} {{ user.last_name|title }}{% endif %}</div>
                     {% if user != None %}<div class="fs-7 text-muted">{{ user.country.name }}</div>{% endif %}
                 </div>
                 <div class="card-toolbar">
@@ -78,7 +71,7 @@
                     <div x-show="!isShowingUpdateForm">
                     {% else %}
                     <div>
-                    {% endif %}    
+                    {% endif %}
                         <div>{% if user.status != None %}{{ user.status|linebreaksbr }}{% else %}<span class="badge badge-secondary">No Status</span>{% endif %}</div>
                         <div class="mt-4">
                             <div class="d-flex gap-2">
@@ -128,6 +121,7 @@
                         <a x-show="!isShowingUpdateForm" target="_blank" href="https://api.whatsapp.com/send?text={{ absolute_url }}" class="btn btn-sm btn-success">Share WhatsApp</a>
                         <a x-show="!isShowingUpdateForm" target="_blank" href="https://www.facebook.com/sharer/sharer.php?src=sp&u={{ absolute_url }}" class="btn btn-sm btn-facebook">Share Facebook</a>
                     </div>
+                    {% if request.user.is_authenticated and request.user.user.id == user.id %}
                     <div class="d-flex justify-content-end gap-2 flex-wrap">
                         <button type="button" class="btn btn-sm btn-secondary" x-show="isShowingUpdateForm" @click="cancel" id="cancel">Cancel</button>
                         <button type="submit" class="btn btn-sm btn-primary" x-show="isShowingUpdateForm" id="save" x-bind:disabled="disableSave">Save</button>
@@ -144,6 +138,7 @@
                             Update Status
                         </button>
                     </div>
+                    {% endif %}
                 </div>
 
             {% if request.user.is_authenticated and request.user.user.id == user.id %}
@@ -254,11 +249,11 @@
                 <h4 class="fw-semibold">This Number Has Not Been Claimed</h4>
                 <span>Ask user to claim and verify this phone number.</span>
                 <div class="mt-4">
-                    <a href="" class="btn btn-success btn-sm">WhatsApp User</a>
+                    <a href="{% url 'user_whatsapp' phone_number.value %}" class="btn btn-success btn-sm" target="_blank">WhatsApp User</a>
                 </div>
                 <span class="mt-4">You may review this user.</span>
                 <div class="mt-4">
-                    <a href="" class="btn btn-primary btn-sm">Review User</a>
+                    <a href="{% url 'review_create' phone_number.value %}" class="btn btn-primary btn-sm" target="_blank">Review User</a>
                 </div>
             </div>
 
@@ -285,19 +280,9 @@
 
 
 {% comment %}
-<script>
-// These fields will not be minified because they contain rendered values.
-const uploadStatusImageURL = "{% url 'users:upload_status_file' user.id %}"
-const formUUID = "{{ form_uuid }}"
-const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
-const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
-const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
 
-// We use hidden fields to bridge JQuery and Alpine JS.
-const numFilesProcessing = $('#num_files_processing')
-const numFilesSuccess = $('#num_files_success')
-const numFilesError = $('#num_files_error')
-const numFilesRemoved = $('#num_files_removed')
+Shared user detail code, authenticated or not, claimed or not.
+==============================================================
 
 $(document).ready(function() {
     lc_target = document.getElementById('lc_clipboard');
@@ -317,8 +302,25 @@ $(document).ready(function() {
             lc_target.innerHTML = currentLabel;
         }, 3000)
     })
+})
 
+Shared user detail code, authenticated, belongs to user
+=======================================================
 
+// These fields will not be minified because they contain rendered values.
+const uploadStatusImageURL = "{% url 'users:upload_status_file' user.id %}"
+const formUUID = "{{ form_uuid }}"
+const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
+const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
+const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
+
+// We use hidden fields to bridge JQuery and Alpine JS.
+const numFilesProcessing = $('#num_files_processing')
+const numFilesSuccess = $('#num_files_success')
+const numFilesError = $('#num_files_error')
+const numFilesRemoved = $('#num_files_removed')
+
+$(document).ready(function() {
     // Helper function to return the number of images in upload.
     function numFilesUploading() {
         // Removed = Success + Error
@@ -418,30 +420,9 @@ $(document).ready(function() {
         }
     })
 })
-</script>
-{% endcomment %}
-{% block page_custom_javascript %}
-{% if request.user.is_authenticated and request.user.user.id == user.id %}
-<script>
-const uploadStatusImageURL = "{% url 'users:upload_status_file' user.id %}"
-const formUUID = "{{ form_uuid }}"
-const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
-const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
-const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
-const numFilesProcessing = $('#num_files_processing')
-const numFilesSuccess = $('#num_files_success')
-const numFilesError = $('#num_files_error')
-const numFilesRemoved = $('#num_files_removed')
-</script>
-<script src="{% static 'common/js/user_detail_shared.js' %}"></script>
-{% endif %}
-<script>
 
-
-
-
-
-
+Only for this page, authenticated or not, claimed
+=================================================
 
 $(document).ready(function() {
     bac_target = document.getElementById('business_address_clipboard');
@@ -461,16 +442,28 @@ $(document).ready(function() {
             bac_target.innerHTML = currentLabel;
         }, 3000)
     })
-
-
-    {% comment %} introJs().setOptions({
-        steps: [{
-          intro: "share-button"
-        }, {
-          element: document.querySelector('#share-button'),
-          intro: "Click here to login!"
-        }]
-      }).start(); {% endcomment %}
 })
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'common/js/user_detail__shared.js' %}"></script>
+{% if request.user.is_authenticated and request.user.user.id == user.id %}
+<script>
+// These fields will not be minified because they contain rendered values.
+const uploadStatusImageURL = "{% url 'users:upload_status_file' user.id %}"
+const formUUID = "{{ form_uuid }}"
+const maxFiles = {{ settings.MAX_STATUS_IMAGES }}
+const maxFileSize = {{ settings.MAX_STATUS_IMAGE_FILE_SIZE_IN_BYTES }}
+const deleteStatusImageURL = "{% url 'users:delete_status_file' user.id %}"
+
+// We use hidden fields to bridge JQuery and Alpine JS.
+const numFilesProcessing = $('#num_files_processing')
+const numFilesSuccess = $('#num_files_success')
+const numFilesError = $('#num_files_error')
+const numFilesRemoved = $('#num_files_removed')
 </script>
+<script src="{% static 'common/js/user_detail__shared__owner.js' %}"></script>
+{% endif %}
+{% if user != None %}
+<script src="{% static 'common/js/user_detail__claimed.js' %}"></script>
+{% endif %}
 {% endblock %}

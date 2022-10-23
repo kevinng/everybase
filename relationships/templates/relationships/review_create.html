@@ -8,11 +8,11 @@
 {% block page_title_separator %}{% endblock %}
 
 {% block actions %}
-<a href="{% url 'user_detail' phone_number.value %}" class="btn btn-sm btn-secondary">Back</a>
+<a href="{% url 'user_detail' phone_number.value %}" class="btn btn-sm btn-secondary">Cancel</a>
 {% endblock %}
 
 {% block content_body %}
-<form action="" method="post" id="review_form">
+<form action="{% url 'review_create' phone_number.value %}" method="post" id="review_form">
     {% csrf_token %}
     <input type="hidden" name="form_uuid" value="{{ form_uuid }}" />
     <input type="hidden" id="num_files_processing" value="0" x-ref="num_files_processing" />
@@ -40,7 +40,7 @@
 
                     <div class="mt-8">
                         <label class="form-label required">Review</label>
-                        <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="review" name="review" placeholder="E.g., this user cheated me of...">{% if form.review.value != None %}{{ form.review.value }}{% endif %}</textarea>
+                        <textarea class="form-control" data-kt-autosize="true" maxlength="1000" id="review" name="review" placeholder="E.g., this user cheated me of...">{% if form.review.value != None %}{{ form.review.value }}{% endif %}</textarea>
                         {% if form.review.errors %}<div class="text-danger mt-2 ms-2">{% for error in form.review.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
                     </div>
 
@@ -80,14 +80,8 @@
                 {% comment %} End: Card body {% endcomment %}
                 
                 <div class="card-footer d-flex justify-content-end py-6 px-9">
-                    <a href="{% url 'user_detail' phone_number.value %}" class="btn btn-light btn-active-light-primary me-2 btn-sm">Cancel</a>
-                    <button id="submit"
-                        type="submit"
-                        class="btn btn-primary btn-sm"
-                        {% comment %} g-recaptcha  {% endcomment %}
-                        data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
-                        data-callback="post"
-                        data-action="submit">Post</button>
+                    <a href="{% url 'user_detail' phone_number.value %}" class="btn btn-secondary me-2 btn-sm">Cancel</a>
+                    <button id="submit" type="submit" class="btn btn-primary btn-sm">Post</button>
                 </div>
             </div>
         </div>
@@ -98,11 +92,6 @@
 
 {% block page_custom_javascript %}
 <script>
-    {% comment %} Need to be outside document ready. {% endcomment %}
-    function post(token) {
-        document.getElementById("review_form").submit()
-    }
-
 $(document).ready(function() {
 
         const submit = $('#submit')

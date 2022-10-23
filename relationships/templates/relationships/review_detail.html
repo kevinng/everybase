@@ -1,37 +1,43 @@
 {% extends 'extendables/b.html' %}
 
 {% load static %}
+{% load thumbnail_url %}
+{% load image_url %}
 
-{% block page_title %}KevinKevff NgKevinK Reviews +65 88933466{% endblock %}
+{% block page_title %}{{ reviewer.first_name|title }} {{ reviewer.last_name|title }}
+{% comment %} Start: SVG Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-10-09-043348/core/html/src/media/icons/duotune/arrows/arr023.svg {% endcomment %}
+<span class="svg-icon svg-icon-dark ms-2 me-2"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 4L14 12L6 20H10L17.3 12.7C17.7 12.3 17.7 11.7 17.3 11.3L10 4H6Z" fill="currentColor"/>
+</svg>
+</span>
+{% comment %} End: Svg Icon {% endcomment %}
+{% if reviewee != None %}{{ reviewee.first_name|title }}{{ reviewee.last_name|title }}{% else %}+{{ reviewee_phone_number.country_code }} {{ reviewee_phone_number.national_number }}{% endif %}{% endblock %}
 {% block page_title_separator %}{% endblock %}
-{% comment %} {% block page_subtitle %}+65 96655575{% endblock %} {% endcomment %}
 
 {% block actions %}
-<a href="#" class="btn btn-sm btn-secondary">
-    <!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-09-15-053640/core/html/src/media/icons/duotune/arrows/arr063.svg-->
-<span class="svg-icon svg-icon-muted svg-icon-base"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect opacity="0.5" x="6" y="11" width="13" height="2" rx="1" fill="currentColor"/>
-    <path d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z" fill="currentColor"/>
-    </svg>
+<a href="{% url 'user_reviews' reviewee_phone_number.value %}" class="btn btn-sm btn-secondary">
+    {% comment %} Start: SVG Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-09-15-053640/core/html/src/media/icons/duotune/arrows/arr063.svg {% endcomment %}
+    <span class="svg-icon svg-icon-muted svg-icon-base">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect opacity="0.5" x="6" y="11" width="13" height="2" rx="1" fill="currentColor"/>
+            <path d="M8.56569 11.4343L12.75 7.25C13.1642 6.83579 13.1642 6.16421 12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75L5.70711 11.2929C5.31658 11.6834 5.31658 12.3166 5.70711 12.7071L11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25C13.1642 17.8358 13.1642 17.1642 12.75 16.75L8.56569 12.5657C8.25327 12.2533 8.25327 11.7467 8.56569 11.4343Z" fill="currentColor"/>
+        </svg>
     </span>
-    <!--end::Svg Icon-->
-    Back</a>
+    {% comment %} End: SVG Icon {% endcomment %}
+    Back
+</a>
 
-
-<button id="kt_clipboard_3" class="btn btn-sm btn-secondary" data-clipboard-text="https://everybase.co/i/hJuh7">
-    <!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-09-15-053640/core/html/src/media/icons/duotune/coding/cod007.svg-->
-<span class="svg-icon svg-icon-muted"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.3" d="M18.4 5.59998C18.7766 5.9772 18.9881 6.48846 18.9881 7.02148C18.9881 7.55451 18.7766 8.06577 18.4 8.44299L14.843 12C14.466 12.377 13.9547 12.5887 13.4215 12.5887C12.8883 12.5887 12.377 12.377 12 12C11.623 11.623 11.4112 11.1117 11.4112 10.5785C11.4112 10.0453 11.623 9.53399 12 9.15698L15.553 5.604C15.9302 5.22741 16.4415 5.01587 16.9745 5.01587C17.5075 5.01587 18.0188 5.22741 18.396 5.604L18.4 5.59998ZM20.528 3.47205C20.0614 3.00535 19.5074 2.63503 18.8977 2.38245C18.288 2.12987 17.6344 1.99988 16.9745 1.99988C16.3145 1.99988 15.661 2.12987 15.0513 2.38245C14.4416 2.63503 13.8876 3.00535 13.421 3.47205L9.86801 7.02502C9.40136 7.49168 9.03118 8.04568 8.77863 8.6554C8.52608 9.26511 8.39609 9.91855 8.39609 10.5785C8.39609 11.2384 8.52608 11.8919 8.77863 12.5016C9.03118 13.1113 9.40136 13.6653 9.86801 14.132C10.3347 14.5986 10.8886 14.9688 11.4984 15.2213C12.1081 15.4739 12.7616 15.6039 13.4215 15.6039C14.0815 15.6039 14.7349 15.4739 15.3446 15.2213C15.9543 14.9688 16.5084 14.5986 16.975 14.132L20.528 10.579C20.9947 10.1124 21.3649 9.55844 21.6175 8.94873C21.8701 8.33902 22.0001 7.68547 22.0001 7.02551C22.0001 6.36555 21.8701 5.71201 21.6175 5.10229C21.3649 4.49258 20.9947 3.93867 20.528 3.47205Z" fill="currentColor"/>
-    <path d="M14.132 9.86804C13.6421 9.37931 13.0561 8.99749 12.411 8.74695L12 9.15698C11.6234 9.53421 11.4119 10.0455 11.4119 10.5785C11.4119 11.1115 11.6234 11.6228 12 12C12.3766 12.3772 12.5881 12.8885 12.5881 13.4215C12.5881 13.9545 12.3766 14.4658 12 14.843L8.44699 18.396C8.06999 18.773 7.55868 18.9849 7.02551 18.9849C6.49235 18.9849 5.98101 18.773 5.604 18.396C5.227 18.019 5.0152 17.5077 5.0152 16.9745C5.0152 16.4413 5.227 15.93 5.604 15.553L8.74701 12.411C8.28705 11.233 8.28705 9.92498 8.74701 8.74695C8.10159 8.99737 7.5152 9.37919 7.02499 9.86804L3.47198 13.421C2.52954 14.3635 2.00009 15.6417 2.00009 16.9745C2.00009 18.3073 2.52957 19.5855 3.47202 20.528C4.41446 21.4704 5.69269 21.9999 7.02551 21.9999C8.35833 21.9999 9.63656 21.4704 10.579 20.528L14.132 16.975C14.5987 16.5084 14.9689 15.9544 15.2215 15.3447C15.4741 14.735 15.6041 14.0815 15.6041 13.4215C15.6041 12.7615 15.4741 12.108 15.2215 11.4983C14.9689 10.8886 14.5987 10.3347 14.132 9.86804Z" fill="currentColor"/>
-    </svg>
+<button id="link_clipboard" class="btn btn-sm btn-secondary" data-clipboard-text="{{ absolute_url }}">
+    {% comment %} Start: SVG Icon | path: /var/www/preview.keenthemes.com/kt-products/docs/metronic/html/releases/2022-09-15-053640/core/html/src/media/icons/duotune/coding/cod007.svg {% endcomment %}
+    <span class="svg-icon svg-icon-muted">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.3" d="M18.4 5.59998C18.7766 5.9772 18.9881 6.48846 18.9881 7.02148C18.9881 7.55451 18.7766 8.06577 18.4 8.44299L14.843 12C14.466 12.377 13.9547 12.5887 13.4215 12.5887C12.8883 12.5887 12.377 12.377 12 12C11.623 11.623 11.4112 11.1117 11.4112 10.5785C11.4112 10.0453 11.623 9.53399 12 9.15698L15.553 5.604C15.9302 5.22741 16.4415 5.01587 16.9745 5.01587C17.5075 5.01587 18.0188 5.22741 18.396 5.604L18.4 5.59998ZM20.528 3.47205C20.0614 3.00535 19.5074 2.63503 18.8977 2.38245C18.288 2.12987 17.6344 1.99988 16.9745 1.99988C16.3145 1.99988 15.661 2.12987 15.0513 2.38245C14.4416 2.63503 13.8876 3.00535 13.421 3.47205L9.86801 7.02502C9.40136 7.49168 9.03118 8.04568 8.77863 8.6554C8.52608 9.26511 8.39609 9.91855 8.39609 10.5785C8.39609 11.2384 8.52608 11.8919 8.77863 12.5016C9.03118 13.1113 9.40136 13.6653 9.86801 14.132C10.3347 14.5986 10.8886 14.9688 11.4984 15.2213C12.1081 15.4739 12.7616 15.6039 13.4215 15.6039C14.0815 15.6039 14.7349 15.4739 15.3446 15.2213C15.9543 14.9688 16.5084 14.5986 16.975 14.132L20.528 10.579C20.9947 10.1124 21.3649 9.55844 21.6175 8.94873C21.8701 8.33902 22.0001 7.68547 22.0001 7.02551C22.0001 6.36555 21.8701 5.71201 21.6175 5.10229C21.3649 4.49258 20.9947 3.93867 20.528 3.47205Z" fill="currentColor"/>
+            <path d="M14.132 9.86804C13.6421 9.37931 13.0561 8.99749 12.411 8.74695L12 9.15698C11.6234 9.53421 11.4119 10.0455 11.4119 10.5785C11.4119 11.1115 11.6234 11.6228 12 12C12.3766 12.3772 12.5881 12.8885 12.5881 13.4215C12.5881 13.9545 12.3766 14.4658 12 14.843L8.44699 18.396C8.06999 18.773 7.55868 18.9849 7.02551 18.9849C6.49235 18.9849 5.98101 18.773 5.604 18.396C5.227 18.019 5.0152 17.5077 5.0152 16.9745C5.0152 16.4413 5.227 15.93 5.604 15.553L8.74701 12.411C8.28705 11.233 8.28705 9.92498 8.74701 8.74695C8.10159 8.99737 7.5152 9.37919 7.02499 9.86804L3.47198 13.421C2.52954 14.3635 2.00009 15.6417 2.00009 16.9745C2.00009 18.3073 2.52957 19.5855 3.47202 20.528C4.41446 21.4704 5.69269 21.9999 7.02551 21.9999C8.35833 21.9999 9.63656 21.4704 10.579 20.528L14.132 16.975C14.5987 16.5084 14.9689 15.9544 15.2215 15.3447C15.4741 14.735 15.6041 14.0815 15.6041 13.4215C15.6041 12.7615 15.4741 12.108 15.2215 11.4983C14.9689 10.8886 14.5987 10.3347 14.132 9.86804Z" fill="currentColor"/>
+        </svg>
     </span>
-    <!--end::Svg Icon-->
-    Copy Link</button>
-{% comment %} <a href="#" class="btn btn-sm btn-secondary">Watch</a> {% endcomment %}
-{% comment %} <a href="#" class="btn btn-sm btn-dark">Watching</a> {% endcomment %}
-{% comment %} <a href="#" class="btn btn-sm btn-primary">Review</a> {% endcomment %}
-{% comment %} <a href="#" class="btn btn-sm btn-success">WhatsApp</a> {% endcomment %}
-
+    {% comment %} End: Svg Icon {% endcomment %}
+    Copy Link
+</button>
 {% endblock %}
 
 {% block content_body %}
@@ -41,282 +47,181 @@
         <div class="card mb-5 mb-xl-10">
             <div class="card-header">
                 <div class="card-title d-flex flex-column py-4">
-                    <a href="" class="text-dark text-hover-primary">
-                        {% comment %} <div>+65 88933466</div>
-                        <div class="fs-7">
-                            <div>Kevin Ng</div>
-                            <div>United States of America</div>
-                        </div> {% endcomment %}
-                        <div>Kevin Ng</div>
-                        <div class="fs-7 text-muted">United States of America</div>
-                        {% comment %} <div class="fs-7">
-                            <div>Kevin Ng</div>
-                        </div> {% endcomment %}
+                    <a href="{% url 'user_detail' reviewer.phone_number.value %}" class="text-dark text-hover-primary">
+                        <div>{{ reviewer.first_name|title }} {{ reviewer.last_name|title }}</div>
+                        <div class="fs-7 text-muted">{{ reviewer.country.name }}</div>
                     </a>
                 </div>
 
-                {% comment %} <div class="card-title d-flex flex-column">+65 88933466</div> {% endcomment %}
                 <div class="card-toolbar d-flex flex-column justify-content-center align-items-end">
-                    {% comment %} <div class="text-muted">Not Claimed</div> {% endcomment %}
-                    <div class="text-muted">2d ago</div>
+                    <div class="text-muted">{{ review.age_desc }}</div>
                 </div>
             </div>
 
-            <div class="card-body pb-0">
-                <div><span class="badge badge-danger">Bad Review</span></div>
-                <div class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vehicula nibh tincidunt magna fermentum, ac ullamcorper metus molestie. Mauris quis nisl id nibh consectetur dapibus at non purus. Praesent ac tellus nulla. Aliquam erat volutpat. Maecenas et egestas nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris id facilisis leo. Nullam auctor rutrum malesuada.</div>
+            <div class="card-body">
+                <div class="mt-2">{{ review.body|linebreaks }}</div>
+                {% if review.review_files.all|length > 0 %}
                 <div class="mt-4 d-flex gap-2 flex-wrap align-items-center">
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
+                    {% for image in review.review_files.all %}
+                        {% thumbnail_url image.file as thumbnail_url %}
+                        {% image_url image.file as image_url %}
+                        <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ image_url }}">
+                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded w-50px h-50px"
+                                style="background-image:url('{{ thumbnail_url }}')">
+                            </div>
+                            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                            </div>
+                        </a>
+                    {% endfor %}
                 </div>
+                {% endif %}
+            </div>
 
-                <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder mt-4">
-                    <li class="nav-item">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5 active" href="../../demo1/dist/account/settings.html">Responses (0)</a>
-                    </li>
-                </ul>
+            <div class="card-footer">
+                {% if review.rating == 'bad' %}
+                    {% include 'relationships/includes/review_type__bad.html' %}
+                {% elif review.rating == 'good' %}
+                    {% include 'relationships/includes/review_type__good.html' %}
+                {% endif %}
             </div>
         </div>
         {% comment %} End: Page Tabs {% endcomment %}
 
-        {% comment %} Start: Owner {% endcomment %}
-        <div class="card mt-4 me-10">
-            <div class="card-header">
-                {% comment %} <div class="card-title d-flex flex-column py-4"> {% endcomment %}
-                <div class="card-title d-flex flex-column">
-                    <span class="text-dark">
-                        {% comment %} Not claimed {% endcomment %}
-                        <div>+65 88933466</div>
-                        {% comment %} <div>+65 88933466</div>
-                        <div class="fs-7">
-                            <div>Kevin Ng</div>
-                            <div>United States of America</div>
-                        </div> {% endcomment %}
-                        {% comment %} <div>Kevin Ng</div> {% endcomment %}
-                        {% comment %} <div class="fs-7 text-muted">United States of America</div> {% endcomment %}
-                        {% comment %} <div class="fs-7">
-                            <div>Kevin Ng</div>
-                        </div> {% endcomment %}
-                    </a>
-                </div>
-                {% comment %} <div class="card-toolbar">
-                    <span class="text-muted">2d ago</span>
-                </div> {% endcomment %}
-            </div>
-            <div class="card-body">
-                <div>
-                    <label class="form-label required">Response</label>
-                    <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="comments" name="comments" placeholder="E.g., I didn't cheat him..."></textarea>
-                </div>
-
-                <div class="dropzone mt-4" id="kt_dropzonejs_example_1">
-                    <div class="dz-message needsclick">
-                        <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
-                        <div class="ms-4">
-                            <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop images here or click to select</h3>
-                            <span class="fs-7 fw-semibold text-gray-400">Upload up to 10 images</span>
+        {% comment %} Start: Response {% endcomment %}
+        {% if request.user.is_authenticated %}
+            {% comment %} Only reviewee and reviewer allowed to respond. {% endcomment %}
+            {% if request.user.user.id == reviewee.id or request.user.user.id == reviewer.id %}
+                {% comment %} Only allow reviewer and reviewee to respond. {% endcomment %}
+                {% if request.user.user.id == reviewee.id or request.user.user.id == reviewer.id %}
+                    <form action="{% url 'review_detail' reviewee_phone_number.value reviewer_phone_number.value %}" method="post">
+                        {% csrf_token %}
+                        <div class="card mt-4" x-data="{
+                            body: '{% if form.body.value != None %}{{ form.body.value }}{% else %}{% endif %}',
+                            disablePost() {
+                                return this.body.length <= 0
+                            }
+                        }">
+                            <div class="card-body">
+                                <div>
+                                    <label class="form-label required">Response</label>
+                                    <textarea class="form-control" x-model="body" data-kt-autosize="true" maxlength="1000" id="body" name="body" placeholder="E.g., I didn't cheat him..."></textarea>
+                                </div>
+                                {% if form.body.errors %}<div class="text-danger mt-2 ms-2">{% for error in form.body.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
+                            </div>
+                            
+                            <div class="card-footer d-flex justify-content-end py-6 px-9 gap-1">
+                                <button type="submit" class="btn btn-primary btn-sm" x-bind:disabled="disablePost">Post</button>
+                            </div>
                         </div>
+                    </form>
+                {% endif %}
+            {% endif %}
+        {% else %}
+        <div class="alert bg-light-dark d-flex flex-column flex-sm-row w-100 p-5 mt-10">
+            <span class="svg-icon svg-icon-2hx svg-icon-dark me-4 mb-5 mb-sm-0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path opacity="0.3" d="M12 22C13.6569 22 15 20.6569 15 19C15 17.3431 13.6569 16 12 16C10.3431 16 9 17.3431 9 19C9 20.6569 10.3431 22 12 22Z" fill="currentColor"></path>
+                    <path d="M19 15V18C19 18.6 18.6 19 18 19H6C5.4 19 5 18.6 5 18V15C6.1 15 7 14.1 7 13V10C7 7.6 8.7 5.6 11 5.1V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V5.1C15.3 5.6 17 7.6 17 10V13C17 14.1 17.9 15 19 15ZM11 10C11 9.4 11.4 9 12 9C12.6 9 13 8.6 13 8C13 7.4 12.6 7 12 7C10.3 7 9 8.3 9 10C9 10.6 9.4 11 10 11C10.6 11 11 10.6 11 10Z" fill="currentColor"></path>
+                </svg>
+            </span>
+
+            <div class="d-flex flex-column pe-0 pe-sm-10">
+                <h4 class="fw-semibold">Are you the owner of this phone number?</h4>
+                <span>Register to respond to this review.</span>
+                <div class="mt-4">
+                    {% comment %} TODO: add next URL to come back to this page. {% endcomment %}
+                    <a href="{% url 'register:start' %}" class="btn btn-primary btn-sm">Register</a>
+                </div>
+            </div>
+
+            <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                {% comment %} SVG Icon | path: icons/duotune/arrows/arr061.svg {% endcomment %}
+                <span class="svg-icon svg-icon-1 svg-icon-dark">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"></rect>
+                        <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"></rect>
+                    </svg>
+                </span>
+                {% comment %} End: SVG Icon {% endcomment %}
+            </button>
+        </div>
+        {% endif %}
+        {% comment %} End: Response {% endcomment %}
+
+        {% if page_obj|length > 0 %}
+            {% include 'includes/paginator.html' %}
+        {% endif %}
+
+        {% comment %} Start: Responses {% endcomment %}
+        {% for r in page_obj %}
+            <div class="card mt-4
+                {% if r.author.id == reviewee.id %}
+                    me-10
+                {% else %}
+                    ms-10
+                {% endif %}
+            ">
+            {% if r.author.id == reviewee.id %}
+                <div class="card-header">
+                    <div class="card-title d-flex flex-column">
+                        <a href="{% url 'user_detail' r.author.phone_number.value %}" class="text-dark text-hover-primary">
+            {% else %}
+                <div class="card-header d-flex flex-row-reverse">
+                    <div class="card-title d-flex flex-column py-4">
+                        <a href="{% url 'user_detail' r.author.phone_number.value %}" class="text-dark text-hover-primary d-flex flex-column align-items-end">
+            {% endif %}
+                            <div>{{ r.author.first_name|title }} {{ r.author.last_name|title }}</div>
+                            <div class="fs-7 text-muted">{{ r.author.country.name }}</div>
+                        </a>
+                    </div>
+                    <div class="card-toolbar">
+                        <span class="text-muted">{{ r.age_desc }}</span>
                     </div>
                 </div>
-            </div>
-            
-            <div class="card-footer d-flex justify-content-end py-6 px-9 gap-1">
-                <button type="submit" class="btn btn-primary btn-sm g-recaptcha"
-                    data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
-                    data-callback="leadCreateFormOnSubmit" 
-                    data-action="submit">Submit</button>
-            </div>
-        </div>
-        {% comment %} End: Owner {% endcomment %}
 
-        {% comment %} Start: Owner {% endcomment %}
-        <div class="card mt-4 ms-10">
-            <div class="card-header d-flex flex-row-reverse">
-                <div class="card-title d-flex flex-column py-4">
-                    <span class="text-dark d-flex flex-column align-items-end">
-                        <div>Kevin Ng</div>
-                        <div class="fs-7 text-muted">United States of America</div>
-                    </span>
+                <div class="card-body">
+                    <div class="mt-2">{{ r.body|linebreaksbr }}</div>
                 </div>
             </div>
-            <div class="card-body">
-                <div>
-                    <label class="form-label required">Response</label>
-                    <textarea class="form-control" data-kt-autosize="true" maxlength="100" id="comments" name="comments" placeholder="E.g., I didn't cheat him..."></textarea>
-                </div>
-
-                <div class="dropzone mt-4" id="kt_dropzonejs_example_1">
-                    <div class="dz-message needsclick">
-                        <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
-                        <div class="ms-4">
-                            <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop images here or click to select</h3>
-                            <span class="fs-7 fw-semibold text-gray-400">Upload up to 10 images</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card-footer d-flex justify-content-end py-6 px-9 gap-1">
-                <button type="submit" class="btn btn-primary btn-sm g-recaptcha"
-                    data-sitekey="{{ settings.RECAPTCHA_SITE_KEY }}"
-                    data-callback="leadCreateFormOnSubmit" 
-                    data-action="submit">Submit</button>
-            </div>
-        </div>
-        {% comment %} End: Owner {% endcomment %}
-
-        {% comment %} Start: Owner {% endcomment %}
-        <div class="card mt-4 me-10">
-            <div class="card-header">
-                {% comment %} <div class="card-title d-flex flex-column py-4"> {% endcomment %}
-                <div class="card-title d-flex flex-column">
-                    <a href="" class="text-dark text-hover-primary">
-                        {% comment %} Not claimed {% endcomment %}
-                        <div>+65 88933466</div>
-                        {% comment %} <div>+65 88933466</div>
-                        <div class="fs-7">
-                            <div>Kevin Ng</div>
-                            <div>United States of America</div>
-                        </div> {% endcomment %}
-                        {% comment %} <div>Kevin Ng</div> {% endcomment %}
-                        {% comment %} <div class="fs-7 text-muted">United States of America</div> {% endcomment %}
-                        {% comment %} <div class="fs-7">
-                            <div>Kevin Ng</div>
-                        </div> {% endcomment %}
-                    </a>
-                </div>
-                <div class="card-toolbar">
-                    <span class="text-muted">2d ago</span>
-                </div>
-            </div>
-
-            <div class="card-body">
-                <div class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vehicula nibh tincidunt magna fermentum, ac ullamcorper metus molestie. Mauris quis nisl id nibh consectetur dapibus at non purus. Praesent ac tellus nulla. Aliquam erat volutpat. Maecenas et egestas nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris id facilisis leo. Nullam auctor rutrum malesuada.</div>
-                <div class="mt-4 d-flex gap-2 flex-wrap align-items-center">
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                </div>
-            </div>
-        </div>
-        {% comment %} End: Owner {% endcomment %}
-
-        {% comment %} Start: Owner {% endcomment %}
-        <div class="card mt-4 ms-10">
-            <div class="card-header d-flex flex-row-reverse">
-                <div class="card-title d-flex flex-column py-4">
-                    <a href="" class="text-dark text-hover-primary d-flex flex-column align-items-end">
-                        <div>Kevin Ng</div>
-                        <div class="fs-7 text-muted">United States of America</div>
-                    </a>
-                </div>
-                <div class="card-toolbar">
-                    <span class="text-muted">2d ago</span>
-                </div>
-            </div>
-
-            <div class="card-body text-end">
-                <span class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vehicula nibh tincidunt magna fermentum, ac ullamcorper metus molestie. Mauris quis nisl id nibh consectetur dapibus at non purus. Praesent ac tellus nulla. Aliquam erat volutpat. Maecenas et egestas nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris id facilisis leo. Nullam auctor rutrum malesuada.</span>
-                <div class="mt-4 d-flex gap-2 flex-wrap align-items-center justify-content-end">
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x400/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                    <img src="{% static 'common/demo1/dist/assets/media/stock/600x600/img-1.jpg' %}" class="rounded w-50px" alt="" />
-                </div>
-            </div>
-        </div>
-        {% comment %} End: Owner {% endcomment %}
+        {% endfor %}
+        {% comment %} End: Responses {% endcomment %}
         
-        {% comment %} {% include 'includes/paginator.html' %} {% endcomment %}
+        {% if page_obj|length > 0 %}
+            {% include 'includes/paginator.html' %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 
 
 {% block page_vendor_javascript %}
-<script src="{% static 'common/js/qrcode.min.js' %}"></script>
+<script src="{% static 'common/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js' %}"></script>
 {% endblock %}
 
-
-{% block page_custom_javascript %}
-<script>
+{% comment %}
 $(document).ready(function() {
-    // Select element
-    target = document.getElementById('kt_clipboard_3');
+    target = document.getElementById('link_clipboard')
 
-    // Init clipboard -- for more info, please read the offical documentation: https://clipboardjs.com/
-    clipboard = new ClipboardJS(target);
+    clipboard = new ClipboardJS(target)
 
-    // Success action handler
     clipboard.on('success', function (e) {
-        const currentLabel = target.innerHTML;
-
+        const currentLabel = target.innerHTML
         // Exit label update when already in progress
         if (target.innerHTML === '<span class="svg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity="0.3" d="M18.4 5.59998C18.7766 5.9772 18.9881 6.48846 18.9881 7.02148C18.9881 7.55451 18.7766 8.06577 18.4 8.44299L14.843 12C14.466 12.377 13.9547 12.5887 13.4215 12.5887C12.8883 12.5887 12.377 12.377 12 12C11.623 11.623 11.4112 11.1117 11.4112 10.5785C11.4112 10.0453 11.623 9.53399 12 9.15698L15.553 5.604C15.9302 5.22741 16.4415 5.01587 16.9745 5.01587C17.5075 5.01587 18.0188 5.22741 18.396 5.604L18.4 5.59998ZM20.528 3.47205C20.0614 3.00535 19.5074 2.63503 18.8977 2.38245C18.288 2.12987 17.6344 1.99988 16.9745 1.99988C16.3145 1.99988 15.661 2.12987 15.0513 2.38245C14.4416 2.63503 13.8876 3.00535 13.421 3.47205L9.86801 7.02502C9.40136 7.49168 9.03118 8.04568 8.77863 8.6554C8.52608 9.26511 8.39609 9.91855 8.39609 10.5785C8.39609 11.2384 8.52608 11.8919 8.77863 12.5016C9.03118 13.1113 9.40136 13.6653 9.86801 14.132C10.3347 14.5986 10.8886 14.9688 11.4984 15.2213C12.1081 15.4739 12.7616 15.6039 13.4215 15.6039C14.0815 15.6039 14.7349 15.4739 15.3446 15.2213C15.9543 14.9688 16.5084 14.5986 16.975 14.132L20.528 10.579C20.9947 10.1124 21.3649 9.55844 21.6175 8.94873C21.8701 8.33902 22.0001 7.68547 22.0001 7.02551C22.0001 6.36555 21.8701 5.71201 21.6175 5.10229C21.3649 4.49258 20.9947 3.93867 20.528 3.47205Z" fill="currentColor"/><path d="M14.132 9.86804C13.6421 9.37931 13.0561 8.99749 12.411 8.74695L12 9.15698C11.6234 9.53421 11.4119 10.0455 11.4119 10.5785C11.4119 11.1115 11.6234 11.6228 12 12C12.3766 12.3772 12.5881 12.8885 12.5881 13.4215C12.5881 13.9545 12.3766 14.4658 12 14.843L8.44699 18.396C8.06999 18.773 7.55868 18.9849 7.02551 18.9849C6.49235 18.9849 5.98101 18.773 5.604 18.396C5.227 18.019 5.0152 17.5077 5.0152 16.9745C5.0152 16.4413 5.227 15.93 5.604 15.553L8.74701 12.411C8.28705 11.233 8.28705 9.92498 8.74701 8.74695C8.10159 8.99737 7.5152 9.37919 7.02499 9.86804L3.47198 13.421C2.52954 14.3635 2.00009 15.6417 2.00009 16.9745C2.00009 18.3073 2.52957 19.5855 3.47202 20.528C4.41446 21.4704 5.69269 21.9999 7.02551 21.9999C8.35833 21.9999 9.63656 21.4704 10.579 20.528L14.132 16.975C14.5987 16.5084 14.9689 15.9544 15.2215 15.3447C15.4741 14.735 15.6041 14.0815 15.6041 13.4215C15.6041 12.7615 15.4741 12.108 15.2215 11.4983C14.9689 10.8886 14.5987 10.3347 14.132 9.86804Z" fill="currentColor"/></svg></span>Copied!') {
-            return;
+            return
         }
 
         // Update button label
-        target.innerHTML = '<span class="svg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity="0.3" d="M18.4 5.59998C18.7766 5.9772 18.9881 6.48846 18.9881 7.02148C18.9881 7.55451 18.7766 8.06577 18.4 8.44299L14.843 12C14.466 12.377 13.9547 12.5887 13.4215 12.5887C12.8883 12.5887 12.377 12.377 12 12C11.623 11.623 11.4112 11.1117 11.4112 10.5785C11.4112 10.0453 11.623 9.53399 12 9.15698L15.553 5.604C15.9302 5.22741 16.4415 5.01587 16.9745 5.01587C17.5075 5.01587 18.0188 5.22741 18.396 5.604L18.4 5.59998ZM20.528 3.47205C20.0614 3.00535 19.5074 2.63503 18.8977 2.38245C18.288 2.12987 17.6344 1.99988 16.9745 1.99988C16.3145 1.99988 15.661 2.12987 15.0513 2.38245C14.4416 2.63503 13.8876 3.00535 13.421 3.47205L9.86801 7.02502C9.40136 7.49168 9.03118 8.04568 8.77863 8.6554C8.52608 9.26511 8.39609 9.91855 8.39609 10.5785C8.39609 11.2384 8.52608 11.8919 8.77863 12.5016C9.03118 13.1113 9.40136 13.6653 9.86801 14.132C10.3347 14.5986 10.8886 14.9688 11.4984 15.2213C12.1081 15.4739 12.7616 15.6039 13.4215 15.6039C14.0815 15.6039 14.7349 15.4739 15.3446 15.2213C15.9543 14.9688 16.5084 14.5986 16.975 14.132L20.528 10.579C20.9947 10.1124 21.3649 9.55844 21.6175 8.94873C21.8701 8.33902 22.0001 7.68547 22.0001 7.02551C22.0001 6.36555 21.8701 5.71201 21.6175 5.10229C21.3649 4.49258 20.9947 3.93867 20.528 3.47205Z" fill="currentColor"/><path d="M14.132 9.86804C13.6421 9.37931 13.0561 8.99749 12.411 8.74695L12 9.15698C11.6234 9.53421 11.4119 10.0455 11.4119 10.5785C11.4119 11.1115 11.6234 11.6228 12 12C12.3766 12.3772 12.5881 12.8885 12.5881 13.4215C12.5881 13.9545 12.3766 14.4658 12 14.843L8.44699 18.396C8.06999 18.773 7.55868 18.9849 7.02551 18.9849C6.49235 18.9849 5.98101 18.773 5.604 18.396C5.227 18.019 5.0152 17.5077 5.0152 16.9745C5.0152 16.4413 5.227 15.93 5.604 15.553L8.74701 12.411C8.28705 11.233 8.28705 9.92498 8.74701 8.74695C8.10159 8.99737 7.5152 9.37919 7.02499 9.86804L3.47198 13.421C2.52954 14.3635 2.00009 15.6417 2.00009 16.9745C2.00009 18.3073 2.52957 19.5855 3.47202 20.528C4.41446 21.4704 5.69269 21.9999 7.02551 21.9999C8.35833 21.9999 9.63656 21.4704 10.579 20.528L14.132 16.975C14.5987 16.5084 14.9689 15.9544 15.2215 15.3447C15.4741 14.735 15.6041 14.0815 15.6041 13.4215C15.6041 12.7615 15.4741 12.108 15.2215 11.4983C14.9689 10.8886 14.5987 10.3347 14.132 9.86804Z" fill="currentColor"/></svg></span>Copied!';
+        target.innerHTML = '<span class="svg-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity="0.3" d="M18.4 5.59998C18.7766 5.9772 18.9881 6.48846 18.9881 7.02148C18.9881 7.55451 18.7766 8.06577 18.4 8.44299L14.843 12C14.466 12.377 13.9547 12.5887 13.4215 12.5887C12.8883 12.5887 12.377 12.377 12 12C11.623 11.623 11.4112 11.1117 11.4112 10.5785C11.4112 10.0453 11.623 9.53399 12 9.15698L15.553 5.604C15.9302 5.22741 16.4415 5.01587 16.9745 5.01587C17.5075 5.01587 18.0188 5.22741 18.396 5.604L18.4 5.59998ZM20.528 3.47205C20.0614 3.00535 19.5074 2.63503 18.8977 2.38245C18.288 2.12987 17.6344 1.99988 16.9745 1.99988C16.3145 1.99988 15.661 2.12987 15.0513 2.38245C14.4416 2.63503 13.8876 3.00535 13.421 3.47205L9.86801 7.02502C9.40136 7.49168 9.03118 8.04568 8.77863 8.6554C8.52608 9.26511 8.39609 9.91855 8.39609 10.5785C8.39609 11.2384 8.52608 11.8919 8.77863 12.5016C9.03118 13.1113 9.40136 13.6653 9.86801 14.132C10.3347 14.5986 10.8886 14.9688 11.4984 15.2213C12.1081 15.4739 12.7616 15.6039 13.4215 15.6039C14.0815 15.6039 14.7349 15.4739 15.3446 15.2213C15.9543 14.9688 16.5084 14.5986 16.975 14.132L20.528 10.579C20.9947 10.1124 21.3649 9.55844 21.6175 8.94873C21.8701 8.33902 22.0001 7.68547 22.0001 7.02551C22.0001 6.36555 21.8701 5.71201 21.6175 5.10229C21.3649 4.49258 20.9947 3.93867 20.528 3.47205Z" fill="currentColor"/><path d="M14.132 9.86804C13.6421 9.37931 13.0561 8.99749 12.411 8.74695L12 9.15698C11.6234 9.53421 11.4119 10.0455 11.4119 10.5785C11.4119 11.1115 11.6234 11.6228 12 12C12.3766 12.3772 12.5881 12.8885 12.5881 13.4215C12.5881 13.9545 12.3766 14.4658 12 14.843L8.44699 18.396C8.06999 18.773 7.55868 18.9849 7.02551 18.9849C6.49235 18.9849 5.98101 18.773 5.604 18.396C5.227 18.019 5.0152 17.5077 5.0152 16.9745C5.0152 16.4413 5.227 15.93 5.604 15.553L8.74701 12.411C8.28705 11.233 8.28705 9.92498 8.74701 8.74695C8.10159 8.99737 7.5152 9.37919 7.02499 9.86804L3.47198 13.421C2.52954 14.3635 2.00009 15.6417 2.00009 16.9745C2.00009 18.3073 2.52957 19.5855 3.47202 20.528C4.41446 21.4704 5.69269 21.9999 7.02551 21.9999C8.35833 21.9999 9.63656 21.4704 10.579 20.528L14.132 16.975C14.5987 16.5084 14.9689 15.9544 15.2215 15.3447C15.4741 14.735 15.6041 14.0815 15.6041 13.4215C15.6041 12.7615 15.4741 12.108 15.2215 11.4983C14.9689 10.8886 14.5987 10.3347 14.132 9.86804Z" fill="currentColor"/></svg></span>Copied!'
 
         // Revert button label after 3 seconds
         setTimeout(function () {
-            target.innerHTML = currentLabel;
+            target.innerHTML = currentLabel
         }, 3000)
-    });
-
-
-
-
-
-
-
-
-
-
-    var myDropzone = new Dropzone("#kt_dropzonejs_example_1", {
-        url: "https://keenthemes.com/scripts/void.php", // Set the url for your upload script location
-        paramName: "file", // The name that will be used to transfer the file
-        maxFiles: 10,
-        maxFilesize: 2, // MB
-        addRemoveLinks: true,
-        accept: function(file, done) {
-            if (file.name == "wow.jpg") {
-                done("Naha, you don't.");
-            } else {
-                done();
-            }
-        }
-    });
-
-
+    })
 })
-</script>
+{% endcomment %}
+{% block page_custom_javascript %}
+<script src="{% static 'common/js/review_detail.js' %}"></script>
 {% endblock %}

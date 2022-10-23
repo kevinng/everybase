@@ -39,19 +39,14 @@ def phone_number_exists(
             national_number=national_number
         )
 
-        users = models.User.objects.filter(
-            phone_number=p.id, # User has phone number
-            registered__isnull=False, # User is registered
-            django_user__isnull=False, # User has a Django user linked
-            deleted__isnull=True, # User is not deleted
-        )
-
-        user = users.first()
-        
-        if user is not None:
-            # Phone number belongs to an existing user
-            return user
-        
-        return False
     except models.PhoneNumber.DoesNotExist:
         return None
+
+    users = models.User.objects.filter(
+        phone_number=p.id, # User has phone number
+        registered__isnull=False, # User is registered
+        django_user__isnull=False, # User has a Django user linked
+        deleted__isnull=True, # User is not deleted
+    )
+
+    return users.first()

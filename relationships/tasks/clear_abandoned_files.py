@@ -27,12 +27,7 @@ def clear_abandoned_files(
         .exclude(form_uuid=form_uuid)
 
     review_files = models.ReviewFile.objects\
-        .filter(user=user)\
-        .filter(activated__isnull=not activated)\
-        .exclude(form_uuid=form_uuid)
-
-    review_comment_files = models.ReviewCommentFile.objects\
-        .filter(comment__author=user)\
+        .filter(reviewer=user)\
         .filter(activated__isnull=not activated)\
         .exclude(form_uuid=form_uuid)
 
@@ -50,13 +45,6 @@ def clear_abandoned_files(
         delete_objs.append({'Key': file.s3_object_key})
         delete_objs.append({'Key': file.thumbnail_s3_object_key})
         rf.delete()
-        file.delete()
-
-    for rcf in review_comment_files:
-        file = rcf.file
-        delete_objs.append({'Key': file.s3_object_key})
-        delete_objs.append({'Key': file.thumbnail_s3_object_key})
-        rcf.delete()
         file.delete()
     
     # Delete orphan files if any.
