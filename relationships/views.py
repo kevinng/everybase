@@ -22,6 +22,7 @@ from django.views.decorators.csrf import csrf_exempt
 from files.utilities.get_mime_type import get_mime_type
 
 from common import models as commods
+
 from relationships import forms, models
 from relationships.tasks.send_email_code import send_email_code
 from relationships.tasks.send_whatsapp_code import send_whatsapp_code
@@ -42,6 +43,8 @@ from relationships.tasks.delete_review_file import delete_review_file as \
 
 from common.tasks.send_amplitude_event import send_amplitude_event
 from common.tasks.identify_amplitude_user import identify_amplitude_user
+
+from common.utilities.get_ip_address import get_ip_address
 
 from files import models as fimods
 
@@ -610,6 +613,16 @@ def _user_detail__status_update(request, phone_number, user, route, template,
 # as canonical, so they'll be index.
 def user_detail(request, phone_number):
     phone_number, user = _get_phone_user(phone_number)
+
+    send_amplitude_event.delay(
+        'review - viewed user detail',
+        user_uuid=user.uuid,
+        ip=get_ip_address(request),
+        event_properties={
+            'viewee country code': user.phone_number.country_code
+        }
+    )
+
     return _user_detail__status_update(request, phone_number, user,
         'user_detail', 'relationships/user_detail.html')
 
@@ -744,11 +757,7 @@ def users__settings(request):
             send_amplitude_event.delay(
                 'account - updated settings',
                 user_uuid=user.uuid,
-                ip=get_ip_address(request),
-                event_properties={
-                    'lead id': lead.id,
-                    'lead type': lead.lead_type
-                }
+                ip=get_ip_address(request)
             )
 
             first_name = form.cleaned_data.get('first_name')
@@ -847,19 +856,30 @@ def review_create(request, phone_number):
         return redirect('user_detail', phone_number)
 
     if request.method == 'POST':
-        form = forms.ReviewCreateForm(request.POST)
-
         if models.Review.objects.filter(
             reviewer=reviewer,
             phone_number=phone_number
         ).count() > 1:
-            # TODO redirect to review user created
-            pass
+            return redirect('review_detail', reviewee.phone_number.value,
+                reviewer.phone_number.value)
+
+        form = forms.ReviewCreateForm(request.POST)
 
         if form.is_valid():
             review = form.cleaned_data.get('review')
             rating = form.cleaned_data.get('rating')
             form_uuid = form.cleaned_data.get('form_uuid')
+            
+            send_amplitude_event.delay(
+                'review - created review',
+                user_uuid=reviewer.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'reviewee country code': reviewee.phone_number.country_code,
+                    'reviewer country code': reviewer.phone_number.country_code,
+                    'review type': rating
+                }
+            )
             
             # Activate files that were submitted with this form.
             sgtz = pytz.timezone(settings.TIME_ZONE)
@@ -1052,6 +1072,18 @@ def review_detail(request, reviewee_phone_number, reviewer_phone_number):
                     body=body
                 )
 
+        send_amplitude_event.delay(
+            'review - responded review',
+            user_uuid=reviewer.uuid,
+            ip=get_ip_address(request),
+            event_properties={
+                'responder country code': request.user.user.phone_number\
+                    .country_code,
+                'reviewee country code': reviewee.phone_number.country_code,
+                'reviewer country code': reviewer.phone_number.country_code
+            }
+        )
+
         return redirect('review_detail', reviewee_phone_number,
             reviewer_phone_number)
     else:
@@ -1068,6 +1100,17 @@ def review_detail(request, reviewee_phone_number, reviewer_phone_number):
     paginator = Paginator(responses, responses_per_page)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
+    send_amplitude_event.delay(
+        'review - viewed review',
+        user_uuid=reviewer.uuid,
+        ip=get_ip_address(request),
+        event_properties={
+            'viewer country code': request.user.user.phone_number.country_code,
+            'reviewee country code': reviewee.phone_number.country_code,
+            'reviewer country code': reviewer.phone_number.country_code
+        }
+    )
 
     template_name = 'relationships/review_detail.html'
     return TemplateResponse(request, template_name, {
@@ -1088,6 +1131,15 @@ def lookup(request):
         if form.is_valid():
             phone_number = form.cleaned_data.get('phone_number')
             p = f'{phone_number.country_code}{phone_number.national_number}'
+
+            send_amplitude_event.delay(
+                'review - viewed user detail',
+                ip=get_ip_address(request),
+                event_properties={
+                    'phone number country code': phone_number.country_code
+                }
+            )
+
             return redirect('user_detail', p)
     else:
         form = forms.LookUpForm()

@@ -198,6 +198,13 @@ class User(commods.Standard):
         db_index=True
     )
 
+    uuid = models.UUIDField(
+        # unique=True,
+        default=uuid.uuid4,
+        editable=False,
+        db_index=True
+    )
+
     walked_through_status = models.DateTimeField(
         null=True,
         blank=True,
