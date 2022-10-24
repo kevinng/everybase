@@ -76,11 +76,11 @@
 									<div class="d-lg-block p-5 p-lg-0" data-kt-drawer="true" data-kt-drawer-name="landing-menu" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="200px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_landing_menu_toggle" data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav_wrapper'}">
 										<div class="menu menu-column flex-nowrap menu-rounded menu-lg-row menu-title-gray-500 menu-state-title-primary nav nav-flush fs-5 fw-bold" id="kt_landing_menu">
                                             <div class="menu-item">
-												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="{% url 'lookup' %}">Look Up</a>
+												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="{% url 'lookup' %}">Look Up Phone Number</a>
 											</div>
-                                            <div class="menu-item">
+                                            {% comment %} <div class="menu-item">
 												<a class="menu-link nav-link py-3 px-4 px-xxl-6" href="https://wa.me/14152264655" target="_blank">Chatbot</a>
-											</div>
+											</div> {% endcomment %}
 										</div>
 									</div>
 								</div>
@@ -111,7 +111,7 @@
                             </div>
                             <div class="mt-8">
                                 <div>
-                                    <a href="{% url 'lookup' %}" class="btn btn-secondary fw-bolder col-lg-6 col-12 m-1">Look Up Business</a>
+                                    <a href="{% url 'lookup' %}" class="btn btn-secondary fw-bolder col-lg-6 col-12 m-1">Look Up Phone Number</a>
                                 </div>
                                 <div>
                                     <a href="{% url 'register:start' %}" class="btn btn-secondary fw-bolder col-lg-6 col-12 m-1">Sign Up Free</a>
@@ -121,9 +121,9 @@
                                 <div>
                                     <a href="https://www.facebook.com/groups/importexportscams" class="btn btn-primary fw-bolder col-lg-6 col-12 m-1" target="_blank">Import/Export Scams Facebook Group</a>
                                 </div>
-                                <div>
+                                {% comment %} <div>
                                     <a href="https://wa.me/14152264655" class="btn btn-success fw-bolder col-lg-6 col-12 m-1" target="_blank">WhatsApp Chatbot</a>
-                                </div>
+                                </div> {% endcomment %}
                             </div>
 						</div>
 					</div>
@@ -145,10 +145,10 @@
 				<div class="container">
                     {% comment %} Start: Heading {% endcomment %}
 					<div class="text-center">
-						<h1 class="fs-3x mb-5">We Collect Business Reviews Worldwide</h1>
+						<h1 class="fs-3x mb-5">We Collect Reviews Worldwide</h1>
                         <div class="d-flex">
                             <div class="col-lg-2"></div>
-                            <div class="fs-3 text-muted col-lg-8">We help you decide if the business (e.g., importer, exporter, agent) at a phone number is good or bad.</div>
+                            <div class="fs-3 text-muted col-lg-8">We help you decide if an importer or exporter at a phone number is good or bad.</div>
                             <div class="col-lg-2"></div>
                         </div>
 					</div>
@@ -202,7 +202,7 @@
             {% comment %} End: Value Propositions {% endcomment %}
 
             {% comment %} Start: Chatbot Promo {% endcomment %}
-			<div class="mt-20 mb-n20 position-relative z-index-2">
+			{% comment %} <div class="mt-20 mb-n20 position-relative z-index-2">
 				<div class="container">
 					<div class="d-flex flex-stack flex-wrap flex-md-nowrap card-rounded shadow p-8 p-lg-12 mb-n5 mb-lg-n13" style="background: linear-gradient(90deg, #20AA3E 0%, #03A588 100%);">
 						<div class="my-2 me-5">
@@ -212,7 +212,7 @@
 						<a href="https://wa.me/14152264655" class="btn btn-lg btn-outline border-2 btn-outline-white flex-shrink-0 my-2" target="_blank">WhatsApp Chatbot</a>
 					</div>
 				</div>
-			</div>
+			</div> {% endcomment %}
             {% comment %} End: Chatbot Promo {% endcomment %}
 
             {% comment %} Start: Footer {% endcomment %}
@@ -233,10 +233,10 @@
 									<h2 class="text-white">Need Help?</h2>
 									<span class="fw-normal fs-4 text-gray-700">Email to <a href="mailto:friend@everybase.co" class="text-white opacity-50 text-hover-primary">friend@everybase.co</a>.</span>
 								</div>
-                                <div class="rounded landing-dark-border p-9 mb-10">
+                                {% comment %} <div class="rounded landing-dark-border p-9 mb-10">
 									<h2 class="text-white">WhatsApp Chatbot</h2>
 									<span class="fw-normal fs-4 text-gray-700">Access chatbot at <a href="https://wa.me/14152264655" class="text-white opacity-50 text-hover-primary" target="_blank">+1 4152264655</a>.</span>
-								</div>
+								</div> {% endcomment %}
 							</div>
 							<div class="col-lg-6 ps-lg-16"></div>
 						</div>

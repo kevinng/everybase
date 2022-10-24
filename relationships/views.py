@@ -40,6 +40,9 @@ from relationships.tasks.delete_status_file import delete_status_file as \
 from relationships.tasks.delete_review_file import delete_review_file as \
     _delete_review_file
 
+from common.tasks.send_amplitude_event import send_amplitude_event
+from common.tasks.identify_amplitude_user import identify_amplitude_user
+
 from files import models as fimods
 
 MESSAGE_KEY__PROFILE_UPDATE_SUCCESS = 'MESSAGE_KEY__PROFILE_UPDATE_SUCCESS'
@@ -738,6 +741,16 @@ def users__settings(request):
     if request.method == 'POST':
         form = forms.SettingsForm(request.POST, user=user)
         if form.is_valid():
+            send_amplitude_event.delay(
+                'account - updated settings',
+                user_uuid=user.uuid,
+                ip=get_ip_address(request),
+                event_properties={
+                    'lead id': lead.id,
+                    'lead type': lead.lead_type
+                }
+            )
+
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
             country_str = form.cleaned_data.get('country')
