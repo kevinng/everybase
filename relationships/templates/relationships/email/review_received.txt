@@ -1,0 +1,5 @@
+A user has given you a {{ rating }} review on Everybase.
+
+Login and respond to the review here:
+
+{{ url }}

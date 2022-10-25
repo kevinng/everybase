@@ -1,4 +1,5 @@
 from common.tasks.delete_files import delete_files
+from common.tasks.send_email import send_email
 
 import boto3, json, pytz, uuid
 from PIL import Image, ImageOps
@@ -869,7 +870,7 @@ def review_create(request, phone_number):
             review = form.cleaned_data.get('review')
             rating = form.cleaned_data.get('rating')
             form_uuid = form.cleaned_data.get('form_uuid')
-            
+
             send_amplitude_event.delay(
                 'review - created review',
                 user_uuid=reviewer.uuid,
@@ -909,6 +910,24 @@ def review_create(request, phone_number):
                 body=review,
                 rating=rating
             )
+
+            if reviewee is not None:
+                # Email reviewee if phone number has been claimed.
+                subject = render_to_string(
+                    'relationships/email/review_received_subject.txt')
+
+                url = request.build_absolute_uri(
+                    reverse('review_detail', args=(p.value(),
+                        reviewer.phone_number.value())))
+
+                body = render_to_string(
+                    'relationships/email/review_received.txt', {
+                        'rating': 'good' if rating == 'good' else 'bad',
+                        'url': url
+                })
+
+                send_email.delay(subject, body,
+                    'friend@everybase.co', [reviewee.email.email])
 
             return redirect('user_reviews', phone_number)
     else:
@@ -1083,6 +1102,28 @@ def review_detail(request, reviewee_phone_number, reviewer_phone_number):
                 'reviewer country code': reviewer.phone_number.country_code
             }
         )
+
+        if request.user.user.id == reviewee.id:
+            receiver = reviewer
+        else:
+            receiver = reviewee
+
+        subject = render_to_string(
+            'relationships/email/response_received_subject.txt')
+
+        url = request.build_absolute_uri(
+            reverse('review_detail', args=(
+                reviewee_phone_number,
+                reviewer_phone_number)))
+
+        body = render_to_string(
+            'relationships/email/response_received.txt', {
+                'rating': 'good' if review.rating == 'good' else 'bad',
+                'url': url
+        })
+
+        send_email.delay(subject, body, 'friend@everybase.co', [
+            receiver.email.email])
 
         return redirect('review_detail', reviewee_phone_number,
             reviewer_phone_number)
