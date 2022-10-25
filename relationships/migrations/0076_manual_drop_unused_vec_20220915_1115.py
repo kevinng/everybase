@@ -11,21 +11,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(
-            # sql='''
-            #     ALTER TABLE relationships_user DROP COLUMN languages_string_vec CASCADE;
-            #     ALTER TABLE relationships_user DROP COLUMN state_string_vec CASCADE;
-            #     ALTER TABLE relationships_user DROP COLUMN buy_agent_details_vec CASCADE;
-            #     ALTER TABLE relationships_user DROP COLUMN sell_agent_details_vec CASCADE;
-            #     ALTER TABLE relationships_user DROP COLUMN logistics_details_vec CASCADE;
-            #     ALTER TABLE relationships_user DROP COLUMN search_to_user_ratio CASCADE;
-            # '''
-            sql='''
-                ALTER TABLE relationships_user DROP COLUMN state_string_vec CASCADE;
-                ALTER TABLE relationships_user DROP COLUMN buy_agent_details_vec CASCADE;
-                ALTER TABLE relationships_user DROP COLUMN sell_agent_details_vec CASCADE;
-                ALTER TABLE relationships_user DROP COLUMN logistics_details_vec CASCADE;
-                ALTER TABLE relationships_user DROP COLUMN search_to_user_ratio CASCADE;
-            '''
-        )
+        # migrations.RunSQL(
+        #     sql='''
+        #         ALTER TABLE relationships_user DROP COLUMN languages_string_vec CASCADE;
+        #         ALTER TABLE relationships_user DROP COLUMN state_string_vec CASCADE;
+        #         ALTER TABLE relationships_user DROP COLUMN buy_agent_details_vec CASCADE;
+        #         ALTER TABLE relationships_user DROP COLUMN sell_agent_details_vec CASCADE;
+        #         ALTER TABLE relationships_user DROP COLUMN logistics_details_vec CASCADE;
+        #         ALTER TABLE relationships_user DROP COLUMN search_to_user_ratio CASCADE;
+        #     '''
+        # )
     ]
