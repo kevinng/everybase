@@ -33,9 +33,7 @@
             {% if user != None %}<div class="fs-7 text-muted">{{ user.country.name }}</div>{% endif %}
         </div>
         <div class="card-toolbar">
-            {% if user != None %}
-                <div class="text-muted">{{ user.status_updated_age_desc }}</div>
-            {% endif %}
+            <div class="text-muted">{{ user.status_updated_age_desc }}</div>
         </div>
     </div>
 

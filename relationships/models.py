@@ -347,6 +347,9 @@ class User(commods.Standard):
             .order_by('-created')
 
     def status_updated_age_desc(self):
+        if self.status_updated is None:
+            return ''
+
         return diff_now_desc(self.status_updated)
 
     def is_country_match_country_code(self):
