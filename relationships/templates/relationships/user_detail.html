@@ -337,7 +337,7 @@ const numFilesRemoved = $('#num_files_removed')
 </script>
 <script src="{% static 'common/js/user_detail__shared__owner.js' %}"></script>
 {% endif %}
-{% if user != None %}
+{% if user != None and user.business_address != None and user.business_address.strip != '' %}
 <script src="{% static 'common/js/user_detail__claimed.js' %}"></script>
 {% endif %}
 {% endblock %}
