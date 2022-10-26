@@ -41,5 +41,6 @@ def run():
             tom.delete()
 
         models.UserAgent.objects.filter(user=u).delete()
+        models.LoginAction.objects.filter(user=u).delete()
 
         u.delete()
