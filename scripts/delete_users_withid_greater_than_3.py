@@ -7,18 +7,15 @@ def run():
 
     for u in users:
         for tim in cmods.TwilioInboundMessage.objects.filter(from_user=u):
+            cmods.TwilioInboundMessageLogEntry.objects.filter(message=tim).delete()
             tim.delete()
 
-        for tim in cmods.TwilioInboundMessage.objects.filter(to_user=u):
-            tim.delete()
+        cmods.TwilioInboundMessage.objects.filter(to_user=u).delete()
 
-        for f in fimods.File.objects.filter(uploader=u):
-            f.delete()
+        fimods.File.objects.filter(uploader=u).delete()
 
-        for tom in cmods.TwilioOutboundMessage.objects.filter(from_user=u):
-            tom.delete()
+        cmods.TwilioOutboundMessage.objects.filter(from_user=u).delete()
 
-        for tom in cmods.TwilioOutboundMessage.objects.filter(to_user=u):
-            tom.delete()
+        cmods.TwilioOutboundMessage.objects.filter(to_user=u).delete()
 
         u.delete()
