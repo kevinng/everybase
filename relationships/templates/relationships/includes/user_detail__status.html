@@ -79,7 +79,7 @@
             {% if request.user.is_authenticated and request.user.user.id == user.id %}
             <div x-show="isShowingUpdateForm">
                 <label class="form-label" for="status">Status</label>
-                <textarea x-model="status" class="w-100 form-control" data-kt-autosize="true" maxlength="500" rows="3" maxlength="100" id="status" name="status" placeholder="E.g., I sell paper and I'm looking for buyers..."></textarea>
+                <textarea x-model="status" class="w-100 form-control" data-kt-autosize="true" maxlength="500" rows="3" maxlength="100" id="status" name="status" placeholder="E.g., I sell paper and I'm looking for buyers...">{% if user.status != None %}{{ user.status }}{% endif %}</textarea>
                 <div class="form-text">Your status let others know what you're interested in. E.g., buying, selling.</div>
                 {% if form.status.errors %}<div class="text-danger mt-2 ms-2">{% for error in form.status.errors %}{{ error|escape }}{% if not forloop.last %} {% endif %}{% endfor %}</div>{% endif %}
             </div>
