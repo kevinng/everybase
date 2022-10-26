@@ -36,14 +36,6 @@
 
         {% include 'relationships/includes/user_detail__status.html' with page='detail' %}
 
-        <div class="my-4 d-none d-lg-block" align="center">
-            {% include 'includes/adsense_display_ad_unit_standard.html' %}
-        </div>
-
-        <div class="my-4 d-block d-lg-none" align="center">
-            {% include 'includes/adsense_display_ad_unit_mobile.html' %}
-        </div>
-
         {% include 'relationships/includes/user_detail__nav.html' with active='detail' user=user %}
 
         {% if user != None %}
