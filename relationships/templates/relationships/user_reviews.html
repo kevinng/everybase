@@ -35,6 +35,14 @@
 <div class="post d-flex flex-column-fluid" id="kt_post">
     <div id="kt_content_container" class="container-xxl">
 
+        <div class="my-4 d-none d-lg-block" align="center">
+            {% include 'includes/adsense_display_ad_unit_standard.html' %}
+        </div>
+
+        <div class="my-4 d-block d-lg-none" align="center">
+            {% include 'includes/adsense_display_ad_unit_mobile.html' %}
+        </div>
+
         {% include 'relationships/includes/user_detail__status.html' with page='reviews' %}
 
         {% include 'relationships/includes/user_detail__nav.html' with active='reviews' user=user %}
@@ -188,6 +196,14 @@
                 {% endif %}
             </div>
         {% endif %}
+
+        <div class="my-4 d-none d-lg-block" align="center">
+            {% include 'includes/adsense_display_ad_unit_standard.html' %}
+        </div>
+
+        <div class="my-4 d-block d-lg-none" align="center">
+            {% include 'includes/adsense_display_ad_unit_mobile.html' %}
+        </div>
     </div>
 </div>
 {% endblock %}
