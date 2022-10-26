@@ -13,6 +13,7 @@ def run():
                     cmods.TwilioStatusCallbackLogEntry.objects.filter(callback=tsc).delete()
                     tsc.delete()
                 tom.delete()
+            cmods.TwilioInboundMessageMedia.objects.filter(message=tim).delete()
             tim.delete()
 
         for tim in cmods.TwilioInboundMessage.objects.filter(to_user=u):
@@ -22,7 +23,7 @@ def run():
                     cmods.TwilioStatusCallbackLogEntry.objects.filter(callback=tsc).delete()
                     tsc.delete()
                 tom.delete()
-
+            cmods.TwilioInboundMessageMedia.objects.filter(message=tim).delete()
             tim.delete()
 
         fimods.File.objects.filter(uploader=u).delete()
