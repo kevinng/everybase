@@ -27,13 +27,7 @@
     <div id="kt_content_container" class="container-xxl">
 
         <div class="my-4" align="center">
-            <span class="d-lg-block">
-                {% include 'includes/adsense_display_ad_unit_standard.html' %}
-            </span>
-
-            <span class="d-lg-none">
-                {% include 'includes/adsense_display_ad_unit_mobile.html' %}
-            </span>
+            {% include 'includes/adsense_display_ad_unit_mobile.html' %}
         </div>
 
         {% include 'relationships/includes/user_detail__status.html' with page='detail' %}
@@ -156,13 +150,7 @@
         {% endif %}
 
         <div class="my-4" align="center">
-            <span class="d-lg-block">
-                {% include 'includes/adsense_display_ad_unit_standard.html' %}
-            </span>
-
-            <span class="d-lg-none">
-                {% include 'includes/adsense_display_ad_unit_mobile.html' %}
-            </span>
+            {% include 'includes/adsense_display_ad_unit_mobile.html' %}
         </div>
     </div>
 </div>
