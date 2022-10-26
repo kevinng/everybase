@@ -39,4 +39,6 @@ def run():
                 tsc.delete()
             tom.delete()
 
+        models.UserAgent.objects.filter(user=u).delete()
+
         u.delete()
