@@ -18,8 +18,12 @@ def run():
 
         fimods.File.objects.filter(uploader=u).delete()
 
-        cmods.TwilioOutboundMessage.objects.filter(from_user=u).delete()
-        
-        cmods.TwilioOutboundMessage.objects.filter(to_user=u).delete()
+        for tom in cmods.TwilioOutboundMessage.objects.filter(from_user=u):
+            cmods.TwilioStatusCallback.objects.filter(message=tom).delete()
+            tom.delete()
+
+        for tom in cmods.TwilioOutboundMessage.objects.filter(to_user=u):
+            cmods.TwilioStatusCallback.objects.filter(message=tom).delete()
+            tom.delete()
 
         u.delete()
