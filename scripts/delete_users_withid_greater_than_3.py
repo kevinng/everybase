@@ -9,14 +9,18 @@ def run():
         for tim in cmods.TwilioInboundMessage.objects.filter(from_user=u):
             cmods.TwilioInboundMessageLogEntry.objects.filter(message=tim).delete()
             for tom in cmods.TwilioOutboundMessage.objects.filter(twilml_response_to=tim):
-                cmods.TwilioStatusCallback.objects.filter(message=tom).delete()    
+                for tsc in cmods.TwilioStatusCallback.objects.filter(message=tom):
+                    cmods.TwilioStatusCallbackLogEntry.objects.filter(callback=tsc).delete()
+                    tsc.delete()
                 tom.delete()
             tim.delete()
 
         for tim in cmods.TwilioInboundMessage.objects.filter(to_user=u):
             cmods.TwilioInboundMessageLogEntry.objects.filter(message=tim).delete()
             for tom in cmods.TwilioOutboundMessage.objects.filter(twilml_response_to=tim):
-                cmods.TwilioStatusCallback.objects.filter(message=tom).delete()    
+                for tsc in cmods.TwilioStatusCallback.objects.filter(message=tom):
+                    cmods.TwilioStatusCallbackLogEntry.objects.filter(callback=tsc).delete()
+                    tsc.delete()
                 tom.delete()
 
             tim.delete()
@@ -24,11 +28,15 @@ def run():
         fimods.File.objects.filter(uploader=u).delete()
 
         for tom in cmods.TwilioOutboundMessage.objects.filter(from_user=u):
-            cmods.TwilioStatusCallback.objects.filter(message=tom).delete()
+            for tsc in cmods.TwilioStatusCallback.objects.filter(message=tom):
+                cmods.TwilioStatusCallbackLogEntry.objects.filter(callback=tsc).delete()
+                tsc.delete()
             tom.delete()
 
         for tom in cmods.TwilioOutboundMessage.objects.filter(to_user=u):
-            cmods.TwilioStatusCallback.objects.filter(message=tom).delete()
+            for tsc in cmods.TwilioStatusCallback.objects.filter(message=tom):
+                cmods.TwilioStatusCallbackLogEntry.objects.filter(callback=tsc).delete()
+                tsc.delete()
             tom.delete()
 
         u.delete()
