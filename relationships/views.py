@@ -1155,16 +1155,26 @@ def review_detail(request, reviewee_phone_number, reviewer_phone_number):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    send_amplitude_event.delay(
-        'review - viewed review',
-        user_uuid=reviewer.uuid,
-        ip=get_ip_address(request),
-        event_properties={
-            'viewer country code': request.user.user.phone_number.country_code,
-            'reviewee country code': reviewee.phone_number.country_code,
-            'reviewer country code': reviewer.phone_number.country_code
-        }
-    )
+
+    ep = {}
+    if request.user.is_authenticated:
+        ep['viewer country code'] = request.user.user.phone_number.country_code
+    
+    if reviewee is not None:
+        ep['reviewee country code'] = reviewee.phone_number.country_code
+
+    if reviewer is not None:
+        ep['reviewer country code'] = reviewer.phone_number.country_code
+
+    ip = get_ip_address(request)
+
+    if reviewer is not None:
+        send_amplitude_event.delay(
+            'review - viewed review',
+            user_uuid=reviewer.uuid, ip=ip, event_properties=ep)
+    else:
+        send_amplitude_event.delay(
+            'review - viewed review', ip=ip, event_properties=ep)
 
     template_name = 'relationships/review_detail.html'
     return TemplateResponse(request, template_name, {
