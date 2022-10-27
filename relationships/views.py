@@ -876,16 +876,24 @@ def review_create(request, phone_number):
             rating = form.cleaned_data.get('rating')
             form_uuid = form.cleaned_data.get('form_uuid')
 
-            send_amplitude_event.delay(
-                'review - created review',
-                user_uuid=reviewer.uuid,
-                ip=get_ip_address(request),
-                event_properties={
-                    'reviewee country code': reviewee.phone_number.country_code,
-                    'reviewer country code': reviewer.phone_number.country_code,
-                    'review type': rating
-                }
-            )
+            ep = {}
+            if reviewee is not None:
+                ep['reviewee country code'] = reviewee.phone_number.country_code
+            
+            if reviewer is not None:
+                ep['reviewer country code'] = reviewer.phone_number.country_code
+
+            ep['review type'] = rating
+            ip = get_ip_address(request)
+
+            if reviewer is not None:
+                send_amplitude_event.delay(
+                    'review - created review',
+                    user_uuid=reviewer.uuid, ip=ip, event_properties=ep)
+            else:
+                send_amplitude_event.delay(
+                    'review - created review',
+                    ip=ip, event_properties=ep)
             
             # Activate files that were submitted with this form.
             sgtz = pytz.timezone(settings.TIME_ZONE)
