@@ -44,7 +44,7 @@
                 async resendCode() {
                     fetch('{% url 'register:resend_whatsapp_code' user.id %}', { method: 'POST' })
                     .then(() => {
-                        this.resendInterval = 2
+                        this.resendInterval = 120
                         this.hideCodeSentInterval = 7
                     })
                 },

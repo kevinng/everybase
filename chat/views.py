@@ -109,6 +109,8 @@ class TwilioIncomingMessageView(APIView):
             traceback.print_exc()
             return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
+        return HttpResponse(status=HTTPStatus.INTERNAL_SERVER_ERROR)
+
 class TwilioIncomingStatusView(APIView):
     """Webhook to receiving incoming Twilio status via a POST request."""
     def post(self, request, msg_id=None):
