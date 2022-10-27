@@ -615,14 +615,23 @@ def _user_detail__status_update(request, phone_number, user, route, template,
 def user_detail(request, phone_number):
     phone_number, user = _get_phone_user(phone_number)
 
-    send_amplitude_event.delay(
-        'review - viewed user detail',
-        user_uuid=user.uuid,
-        ip=get_ip_address(request),
-        event_properties={
-            'viewee country code': user.phone_number.country_code
-        }
-    )
+    if request.user.is_authenticated:
+        send_amplitude_event.delay(
+            'review - viewed user detail',
+            user_uuid=request.user.user.uuid,
+            ip=get_ip_address(request),
+            event_properties={
+                'viewee country code': user.phone_number.country_code
+            }
+        )
+    else:
+        send_amplitude_event.delay(
+            'review - viewed user detail',
+            ip=get_ip_address(request),
+            event_properties={
+                'viewee country code': user.phone_number.country_code
+            }
+        )
 
     return _user_detail__status_update(request, phone_number, user,
         'user_detail', 'relationships/user_detail.html')
